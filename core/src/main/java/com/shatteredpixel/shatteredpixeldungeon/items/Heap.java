@@ -43,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.journal.DocumentPage;
 import com.shatteredpixel.shatteredpixeldungeon.items.journal.Guidebook;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.TenguBomb;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.BiggerGambleBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.BurntBag;
@@ -59,6 +60,7 @@ import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Reflection;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -116,9 +118,14 @@ public class Heap implements Bundlable {
 		}
 
 
-			type = Type.HEAP;
-			sprite.link();
-			sprite.drop();
+		type = Type.HEAP;
+		ArrayList<Item> bonus = RingOfWealth.tryForBonusDrop(hero, 1);
+		if (bonus != null && !bonus.isEmpty()) {
+			items.addAll(0, bonus);
+			RingOfWealth.showFlareForBonusDrop(sprite);
+		}
+		sprite.link();
+		sprite.drop();
 
 	}
 	

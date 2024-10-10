@@ -73,6 +73,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourg
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.fishingrods.FishingRod;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAggression;
@@ -930,7 +931,7 @@ public abstract class Mob extends Char {
 
 	public float lootChance(){
 
-		float dropBonus = 1f;
+		float dropBonus = RingOfWealth.dropChanceMultiplier( Dungeon.hero );
 
 		Talent.BountyHunterTracker bhTracker = Dungeon.hero.buff(Talent.BountyHunterTracker.class);
 		if (bhTracker != null){
@@ -988,17 +989,17 @@ public abstract class Mob extends Char {
             Dungeon.level.drop(RingOfWealth.genConsumableDrop(-5), pos).sprite.drop();
         }
 
-//		//ring of wealth logic
-//		if (Ring.getBuffedBonus(Dungeon.hero, RingOfWealth.Wealth.class) > 0) {
-//			int rolls = 1;
-//			if (properties.contains(Property.BOSS)) rolls = 15;
-//			else if (properties.contains(Property.MINIBOSS)) rolls = 5;
-//			ArrayList<Item> bonus = RingOfWealth.tryForBonusDrop(Dungeon.hero, rolls);
-//			if (bonus != null && !bonus.isEmpty()) {
-//				for (Item b : bonus) Dungeon.level.drop(b, pos).sprite.drop();
-//				RingOfWealth.showFlareForBonusDrop(sprite);
-//			}
-//		}
+		//ring of wealth logic
+		if (Ring.getBuffedBonus(Dungeon.hero, RingOfWealth.Wealth.class) > 0) {
+			int rolls = 1;
+			if (properties.contains(Property.BOSS)) rolls = 15;
+			else if (properties.contains(Property.MINIBOSS)) rolls = 5;
+			ArrayList<Item> bonus = RingOfWealth.tryForBonusDrop(Dungeon.hero, rolls);
+			if (bonus != null && !bonus.isEmpty()) {
+				for (Item b : bonus) Dungeon.level.drop(b, pos).sprite.drop();
+				RingOfWealth.showFlareForBonusDrop(sprite);
+			}
+		}
 
 		//lucky enchant logic
 		if (buff(Lucky.LuckProc.class) != null){

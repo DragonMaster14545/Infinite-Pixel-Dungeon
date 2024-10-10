@@ -107,7 +107,6 @@ public class Hook extends NPC {
 
     @Override
     protected void onAdd() {
-        RingOfWealth.level = power;
         super.onAdd();
     }
 
@@ -117,14 +116,6 @@ public class Hook extends NPC {
             items.clear();
             new Flare(6, 20).color(0xFF0000, true).show(sprite, 3f);
             Sample.INSTANCE.play( Assets.Sounds.DEGRADE );
-        }
-        ArrayList<Item> bonus = RingOfWealth.tryForBonusDrop(tries);
-        if (!bonus.isEmpty()) {
-            items.addAll(bonus);
-            RingOfWealth.showFlareForBonusDrop(sprite);
-            Sample.INSTANCE.play( Assets.Sounds.CHARGEUP );
-            sprite.showStatus( CharSprite.POSITIVE, "!!!");
-            spend(1f);
         }
         return super.act();
     }

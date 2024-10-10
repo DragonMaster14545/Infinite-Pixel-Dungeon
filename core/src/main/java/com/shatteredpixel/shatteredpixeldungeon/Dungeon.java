@@ -841,7 +841,7 @@ public class Dungeon {
 			Potion.save( bundle );
 			Ring.save( bundle );
 
-            RingOfWealth.store(bundle);
+            //RingOfWealth.store(bundle);
 
 			Actor.storeNextID( bundle );
 			
