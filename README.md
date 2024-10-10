@@ -1,4 +1,4 @@
-#Infinite Pixel Dungeon
+# Infinite Pixel Dungeon
 
 This is a fork of the unfortunately not continued [Experienced Pixel Dungeon](https://github.com/TrashboxBobylev/Experienced-Pixel-Dungeon-Redone)
 Thanks to [TrashboxBobylev](https://github.com/TrashboxBobylev) for the great work on the original

@@ -155,7 +155,7 @@ public class PsycheChest extends Item {
             }
             InterlevelScene.mode = InterlevelScene.Mode.RESET;
             if (hero.HP > hero.HT * 0.55d) hero.HP -= Math.round(hero.HT * 0.55d);
-            Dungeon.resetDamage *= 1.045d;
+            //Dungeon.resetDamage *= 1.045d;
             Game.switchScene(InterlevelScene.class);
             Catalog.countUse(getClass());
         } else if (action.contains(AC_RESET) && (hero.HP < Math.round(hero.HT * 0.55d))){
