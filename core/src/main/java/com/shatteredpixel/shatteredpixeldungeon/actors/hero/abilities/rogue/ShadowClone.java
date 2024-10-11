@@ -41,6 +41,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Brimstone;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CityLevel;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MobSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
@@ -370,7 +371,7 @@ public class ShadowClone extends ArmorAbility {
 
 			texture( HeroClass.ROGUE.spritesheet() );
 
-			TextureFilm film = new TextureFilm( Dungeon.hero != null ? ((HeroSprite)(Dungeon.hero.sprite)).tiers() : HeroSprite.tiers(Assets.Sprites.ROGUE, 15), 6, 12, 15 );
+			TextureFilm film = new TextureFilm( Dungeon.hero != null ? ((HeroSprite)(Dungeon.hero.sprite)).tiers() : HeroSprite.tiers(Assets.Sprites.ROGUE, 15), 0, 12, 15 );
 
 			idle = new Animation( 1, true );
 			idle.frames( film, 0, 0, 0, 1, 0, 0, 1, 1 );
