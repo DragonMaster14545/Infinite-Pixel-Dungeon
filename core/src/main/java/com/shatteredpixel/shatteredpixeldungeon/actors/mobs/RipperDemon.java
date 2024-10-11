@@ -49,11 +49,11 @@ public class RipperDemon extends Mob {
 	{
 		spriteClass = RipperSprite.class;
 
-		HP = HT = 60;
-		defenseSkill = 22;
+		HP = HT = Dungeon.getCycleMultiplier(60);
+		defenseSkill = Dungeon.getCycleMultiplier(22);
 		viewDistance = Light.DISTANCE;
 
-		EXP = 9; //for corrupting
+		EXP = Dungeon.getCycleMultiplier(9); //for corrupting
 		maxLvl = -2;
 
 		HUNTING = new Hunting();
@@ -62,33 +62,6 @@ public class RipperDemon extends Mob {
 
 		properties.add(Property.DEMONIC);
 		properties.add(Property.UNDEAD);
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 724;
-                defenseSkill = 86;
-                EXP = 65;
-                break;
-            case 2:
-                HP = HT = 12100;
-                defenseSkill = 300;
-                EXP = 622;
-                break;
-            case 3:
-                HP = HT = 360000;
-                defenseSkill = 810;
-                EXP = 10000;
-                break;
-            case 4:
-                HP = HT = 150000000;
-                defenseSkill = 8700;
-                EXP = 1000000;
-                break;
-			case 5:
-				HP = HT = 4000000000L;
-				defenseSkill = 125500;
-				EXP = 165000000;
-				break;
-        }
 	}
 
 	@Override
@@ -98,26 +71,12 @@ public class RipperDemon extends Mob {
 
 	@Override
 	public long damageRoll() {
-        switch (Dungeon.cycle) {
-            case 1: return Dungeon.NormalLongRange(79, 91);
-            case 2: return Dungeon.NormalLongRange(270, 440);
-            case 3: return Dungeon.NormalLongRange(2100, 2800);
-            case 4: return Dungeon.NormalLongRange(65000, 180000);
-			case 5: return Dungeon.NormalLongRange(3400000, 8000000);
-        }
-		return Dungeon.NormalLongRange( 15, 25 );
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(15), Dungeon.getCycleMultiplier(25) );
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
-        switch (Dungeon.cycle){
-            case 1: return 120;
-            case 2: return 430;
-            case 3: return 1175;
-            case 4: return 11000;
-			case 5: return 142750;
-        }
-		return 30;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(30);
 	}
 
 	@Override
@@ -127,14 +86,7 @@ public class RipperDemon extends Mob {
 
 	@Override
 	public long cycledDrRoll() {
-        switch (Dungeon.cycle){
-            case 1: return Dungeon.NormalLongRange(34, 64);
-            case 2: return Dungeon.NormalLongRange(100, 217);
-            case 3: return Dungeon.NormalLongRange(1200, 2100);
-            case 4: return Dungeon.NormalLongRange(90000, 140000);
-			case 5: return Dungeon.NormalLongRange(4500000, 8000000);
-        }
-		return Dungeon.NormalLongRange(0, 4);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(4));
 	}
 
 	private static final String LAST_ENEMY_POS = "last_enemy_pos";

@@ -328,7 +328,7 @@ public enum Icons {
 				break;
 
 			case TARGET:
-				icon.frame( icon.texture.uvRectBySize( 0, 64, 16, 16 ) );
+				icon.frame( icon.texture.uvRectBySize( 0, 32, 16, 16 ) );
 				break;
 			case WELL_HEALTH:
 				icon.frame( icon.texture.uvRectBySize( 128, 64, 16, 16 ) );

@@ -523,7 +523,7 @@ public class Hero extends Char {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public long attackSkill(Char target ) {
 		KindOfWeapon wep = belongings.attackingWeapon();
 		
 		float accuracy = 1;
@@ -586,7 +586,7 @@ public class Hero extends Char {
 	}
 	
 	@Override
-	public int defenseSkill( Char enemy ) {
+	public long defenseSkill(Char enemy ) {
 
 		if (buff(Combo.ParryTracker.class) != null){
 			if (canAttack(enemy) && !isCharmedBy(enemy)){

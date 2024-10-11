@@ -36,38 +36,11 @@ public class Rat extends Mob {
 	{
 		spriteClass = RatSprite.class;
 		
-		HP = HT = 8;
-		defenseSkill = 2;
+		HP = HT = Dungeon.getCycleMultiplier(8);
+		defenseSkill = Dungeon.getCycleMultiplier(2);
 
 		maxLvl = 5;
-
-		switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 100;
-                defenseSkill = 26;
-                EXP = 15;
-                break;
-            case 2:
-                HP = HT = 1250;
-                defenseSkill = 120;
-                EXP = 120;
-                break;
-            case 3:
-                HP = HT = 18900;
-                defenseSkill = 340;
-                EXP = 878;
-                break;
-            case 4:
-                HP = HT = 1000000;
-                defenseSkill = 1200;
-                EXP = 26000;
-                break;
-			case 5:
-				HP = HT = 425000000;
-				defenseSkill = 18000;
-				EXP = 10000000;
-				break;
-        }
+		EXP = Dungeon.getCycleMultiplier(1);
 	}
 
 	@Override
@@ -81,38 +54,17 @@ public class Rat extends Mob {
 
 	@Override
 	public long damageRoll() {
-	    switch (Dungeon.cycle) {
-            case 1: return Dungeon.NormalLongRange(25, 31);
-            case 2: return Dungeon.NormalLongRange(110, 145);
-            case 3: return Dungeon.NormalLongRange(475, 589);
-            case 4: return Dungeon.NormalLongRange(3200, 5000);
-			case 5: return Dungeon.NormalLongRange(345000, 485000);
-        }
-        return Dungeon.NormalLongRange(1, 4);
+        return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(1), Dungeon.getCycleMultiplier(4));
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
-	    switch (Dungeon.cycle){
-            case 1: return 38;
-            case 2: return 175;
-            case 3: return 520;
-            case 4: return 1350;
-			case 5: return 19500;
-        }
-		return 8;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(8);
 	}
 	
 	@Override
 	public long cycledDrRoll() {
-        switch (Dungeon.cycle){
-            case 1: return Dungeon.NormalLongRange(5, 15);
-            case 2: return Dungeon.NormalLongRange(60, 100);
-            case 3: return Dungeon.NormalLongRange(250, 434);
-            case 4: return Dungeon.NormalLongRange(2000, 4500);
-			case 5: return Random.NormalIntRange(325000, 450000);
-        }
-		return Random.NormalIntRange(0, 1);
+		return Random.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(1));
 	}
 
 	private static final String RAT_ALLY = "rat_ally";

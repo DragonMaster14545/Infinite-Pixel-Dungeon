@@ -89,7 +89,7 @@ public class Wandmaker extends NPC {
 	}
 	
 	@Override
-	public int defenseSkill( Char enemy ) {
+	public long defenseSkill(Char enemy ) {
 		return INFINITE_EVASION;
 	}
 
@@ -381,12 +381,7 @@ public class Wandmaker extends NPC {
 				given = false;
 				wand1 = (Wand) Generator.random(Generator.Category.WAND);
 				wand1.cursed = false;
-				wand1.upgrade();
-                switch (Dungeon.cycle){
-                    case 1: wand1.upgrade(4); break;
-                    case 2: wand1.upgrade(35); break;
-                }
-
+				wand1.upgrade(Dungeon.getCycleMultiplier(2));
 				wand2 = (Wand) Generator.random(Generator.Category.WAND);
 				ArrayList<Item> toUndo = new ArrayList<>();
 				while (wand2.getClass() == wand1.getClass()) {
@@ -397,11 +392,7 @@ public class Wandmaker extends NPC {
 					Generator.undoDrop(i);
 				}
 				wand2.cursed = false;
-				wand2.upgrade();
-                switch (Dungeon.cycle){
-                    case 1: wand2.upgrade(4); break;
-                    case 2: wand2.upgrade(35); break;
-                }
+				wand2.upgrade(Dungeon.getCycleMultiplier(2));
 
 			}
 		}

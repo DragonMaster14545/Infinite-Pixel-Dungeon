@@ -53,10 +53,10 @@ public class Necromancer extends Mob {
 	{
 		spriteClass = NecromancerSprite.class;
 		
-		HP = HT = 40;
-		defenseSkill = 14;
+		HP = HT = Dungeon.getCycleMultiplier(40);
+		defenseSkill = Dungeon.getCycleMultiplier(14);
 		
-		EXP = 7;
+		EXP = Dungeon.getCycleMultiplier(7);
 		maxLvl = 14;
 		
 		loot = new PotionOfHealing();
@@ -65,33 +65,6 @@ public class Necromancer extends Mob {
 		properties.add(Property.UNDEAD);
 		
 		HUNTING = new Hunting();
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 350;
-                defenseSkill = 43;
-                EXP = 31;
-                break;
-            case 2:
-                HP = HT = 4123;
-                defenseSkill = 195;
-                EXP = 291;
-                break;
-            case 3:
-                HP = HT = 120000;
-                defenseSkill = 489;
-                EXP = 2500;
-                break;
-            case 4:
-                HP = HT = 7800000;
-                defenseSkill = 2800;
-                EXP = 64000;
-                break;
-			case 5:
-				HP = HT = 1655000000;
-				defenseSkill = 55500;
-				EXP = 33500000;
-				break;
-        }
 	}
 	
 	public boolean summoning = false;
@@ -123,14 +96,7 @@ public class Necromancer extends Mob {
 
 	@Override
 	public long cycledDrRoll() {
-        switch (Dungeon.cycle){
-            case 1: return Dungeon.NormalLongRange(8, 28);
-            case 2: return Dungeon.NormalLongRange(75, 180);
-            case 3: return Dungeon.NormalLongRange(400, 700);
-            case 4: return Dungeon.NormalLongRange(7000, 12000);
-			case 5: return Dungeon.NormalLongRange(480000, 775000);
-        }
-		return Dungeon.NormalLongRange(0, 5);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(5));
 	}
 	
 	@Override
@@ -211,7 +177,7 @@ public class Necromancer extends Mob {
 				sprite.parent.add(new Beam.HealthRay(sprite.center(), mySkeleton.sprite.center()));
 			}
 			
-			mySkeleton.HP = Math.min(mySkeleton.HP + mySkeleton.HT/5 + Dungeon.cycle * 20, mySkeleton.HT);
+			mySkeleton.HP = Math.min(mySkeleton.HP + mySkeleton.HT/5 + Dungeon.cycle * 20L, mySkeleton.HT);
 			if (mySkeleton.sprite.visible) {
 				mySkeleton.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString( mySkeleton.HT/5 ), FloatingText.HEALING );
 			}
@@ -427,21 +393,7 @@ if (enemySeen){
 			maxLvl = -5;
 			
 			//20/25 health to start
-			HP = 20;
-            switch (Dungeon.cycle){
-                case 1:
-                    HP =  180;
-                    break;
-                case 2:
-                    HP =  1800;
-                    break;
-                case 3:
-                    HP =  40000;
-                    break;
-                case 4:
-                    HP = 3000000;
-                    break;
-            }
+			HP = Dungeon.getCycleMultiplier(20);
 		}
 
 		@Override

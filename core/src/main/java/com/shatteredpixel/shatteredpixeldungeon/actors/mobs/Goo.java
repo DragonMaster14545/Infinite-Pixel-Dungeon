@@ -55,42 +55,14 @@ import com.watabou.utils.Random;
 public class Goo extends Mob {
 
 	{
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 120 : 100;
-		EXP = 10;
-		defenseSkill = 8;
+		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? Dungeon.getCycleMultiplier(120) : Dungeon.getCycleMultiplier(100);
+		EXP = Dungeon.getCycleMultiplier(10);
+		defenseSkill = Dungeon.getCycleMultiplier(8);
 		spriteClass = GooSprite.class;
 
 		properties.add(Property.BOSS);
 		properties.add(Property.DEMONIC);
 		properties.add(Property.ACIDIC);
-
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 800;
-                defenseSkill = 36;
-                EXP = 65;
-                break;
-            case 2:
-                HP = HT = 12450;
-                defenseSkill = 170;
-                EXP = 1200;
-                break;
-            case 3:
-                HP = HT = 140000;
-                defenseSkill = 415;
-                EXP = 15000;
-                break;
-            case 4:
-                HP = HT = 30000000;
-                defenseSkill = 2200;
-                EXP = 2000000;
-                break;
-			case 5:
-				HP = HT = 2325000000L;
-				defenseSkill = 40000;
-				EXP = 200000000;
-				break;
-        }
 	}
 
 	private int pumpedUp = 0;
@@ -98,27 +70,9 @@ public class Goo extends Mob {
 
 	@Override
 	public long damageRoll() {
-		int min = 1;
+		long min = Dungeon.getCycleMultiplier(1);
 
-		int max = (HP*2 <= HT) ? 12 : 8;
-        switch (Dungeon.cycle){
-            case 1:
-                min = 30;
-                max = (HP*2 <= HT) ? 64 : 48;
-                break;
-            case 2:
-                min = 190;
-                max = (HP*2 <= HT) ? 289 : 224;
-                break;
-            case 3:
-                min = 550;
-                max = (HP*2 <= HT) ? 934 : 731;
-                break;
-            case 4:
-                min = 8000;
-                max = (HP*2 <= HT) ? 26000 : 11000;
-                break;
-        }
+		long max = (HP*2 <= HT) ? Dungeon.getCycleMultiplier(12) : Dungeon.getCycleMultiplier(18);
 		if (pumpedUp > 0) {
 			pumpedUp = 0;
 			if (enemy == Dungeon.hero) {
@@ -127,50 +81,26 @@ public class Goo extends Mob {
 			}
 			return Dungeon.NormalLongRange( min*3, max*3 );
 		} else {
-			return Random.NormalIntRange( min, max );
+			return Random.NormalLongRange( min, max );
 		}
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
-		int attack = 10;
-		if (HP*2 <= HT) attack = 15;
-        switch (Dungeon.cycle){
-            case 1:
-                attack = 50;
-                if (HP*2 <= HT) attack = 60;
-                break;
-            case 2:
-                attack = 225;
-                if (HP*2 <= HT) attack = 275;
-                break;
-            case 3:
-                attack = 580;
-                if (HP*2 <= HT) attack = 624;
-                break;
-            case 4:
-                attack = 2500;
-                if (HP*2 <= HT) attack = 3000;
-                break;
-        }
+	public long attackSkill(Char target ) {
+		long attack = Dungeon.getCycleMultiplier(10);
+		if (HP*2 <= HT) attack = Dungeon.getCycleMultiplier(15);
 		if (pumpedUp > 0) attack *= 2;
 		return attack;
 	}
 
 	@Override
-	public int defenseSkill(Char enemy) {
+	public long defenseSkill(Char enemy) {
 		return (int)(super.defenseSkill(enemy) * ((HP*2 <= HT)? 1.5 : 1));
 	}
 
 	@Override
 	public long cycledDrRoll() {
-        switch (Dungeon.cycle){
-            case 1: return Dungeon.NormalLongRange(8, 15);
-            case 2: return Dungeon.NormalLongRange(130, 178);
-            case 3: return Dungeon.NormalLongRange(330, 600);
-            case 4: return Dungeon.NormalLongRange(5000, 10000);
-        }
-		return Dungeon.NormalLongRange(0, 2);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(2));
 	}
 
 	@Override

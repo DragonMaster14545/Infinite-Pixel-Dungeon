@@ -137,7 +137,7 @@ public abstract class Mob extends Char {
 	
 	protected int target = -1;
 	
-	public int defenseSkill = 0;
+	public long defenseSkill = 0;
 	
 	public long EXP = 1;
 	public int maxLvl = Integer.MAX_VALUE;
@@ -692,7 +692,7 @@ public abstract class Mob extends Char {
 	}
 	
 	@Override
-	public int defenseSkill( Char enemy ) {
+	public long defenseSkill(Char enemy ) {
 		if ( !surprisedBy(enemy)
 				&& paralysed == 0
 				&& !(alignment == Alignment.ALLY && enemy == Dungeon.hero)) {
@@ -764,13 +764,7 @@ public abstract class Mob extends Char {
 	}
 
 	public long cycledDrRoll(){
-		switch (Dungeon.cycle){
-			default: return 0;
-			case 1: return 0;
-			case 2: return 0;
-			case 3: return 0;
-			case 4: return 0;
-		}
+		return 0;
 	}
 
 	@Override
@@ -858,7 +852,7 @@ public abstract class Mob extends Char {
 				}
 				Dungeon.hero.earnExp(exp, getClass());
 				if (Dungeon.hero.perks.contains(Perks.Perk.ADDITIONAL_MONEY)){
-					Dungeon.level.drop(new Gold(Dungeon.Int( 6 + Dungeon.escalatingDepth() * 2, 12 + Dungeon.escalatingDepth() * 4 )), pos).sprite.drop();
+					Dungeon.level.drop(new Gold(Dungeon.Long( 6 + Dungeon.escalatingDepth() * 2, 12 + Dungeon.escalatingDepth() * 4 )), pos).sprite.drop();
 				}
 				if (Dungeon.hero.buff(Overload.class) != null ||
 						this.buff(Overload.class) != null) {

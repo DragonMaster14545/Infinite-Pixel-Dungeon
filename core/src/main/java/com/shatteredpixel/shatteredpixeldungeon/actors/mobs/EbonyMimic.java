@@ -95,7 +95,7 @@ public class EbonyMimic extends Mimic {
 	}
 
 	@Override
-	public void setLevel(int level) {
+	public void setLevel(long level) {
 		super.setLevel(Math.round(level*1.25f));
 	}
 

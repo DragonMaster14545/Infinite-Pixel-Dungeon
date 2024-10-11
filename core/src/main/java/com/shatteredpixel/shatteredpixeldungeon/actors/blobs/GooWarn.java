@@ -62,10 +62,10 @@ public class GooWarn extends Blob {
 
 	//to prevent multiple arcane bombs from visually stacking their effects
 	public void seed(Level level, int cell, int amount ) {
-		if (cur == null) cur = new int[level.length()];
-		if (off == null) off = new int[cur.length];
+		if (cur == null) cur = new long[level.length()];
+		if (off == null) off = new long[cur.length];
 
-		int toAdd = amount - cur[cell];
+		long toAdd = amount - cur[cell];
 		if (toAdd > 0){
 			cur[cell] += toAdd;
 			volume += toAdd;

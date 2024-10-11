@@ -98,7 +98,7 @@ public class Ghost extends NPC {
 	}
 
 	@Override
-	public int defenseSkill( Char enemy ) {
+	public long defenseSkill(Char enemy ) {
 		return INFINITE_EVASION;
 	}
 	
@@ -339,7 +339,7 @@ public class Ghost extends NPC {
 
 				//50%:+0, 30%:+1, 15%:+2, 5%:+3
 				float itemLevelRoll = Dungeon.Float();
-				int itemLevel;
+				long itemLevel;
 				if (itemLevelRoll < 0.5f){
 					itemLevel = 0;
 				} else if (itemLevelRoll < 0.8f){
@@ -349,10 +349,7 @@ public class Ghost extends NPC {
 				} else {
 					itemLevel = 3;
 				}
-                switch (Dungeon.cycle){
-                    case 1: itemLevel += 5; break;
-                    case 2: itemLevel += 25;
-                }
+                itemLevel += Dungeon.getCycleMultiplier(5);
 				weapon.upgrade(itemLevel);
 				armor.upgrade(itemLevel);
                 ((MeleeWeapon)weapon).tier += Dungeon.cycle * 5;

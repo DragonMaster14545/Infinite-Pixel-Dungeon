@@ -64,25 +64,8 @@ import java.util.ArrayList;
 public class GnollGeomancer extends Mob {
 
 	{
-		HP = HT = 150;
+		HP = HT = Dungeon.getCycleMultiplier(150);
 		spriteClass = GnollGeomancerSprite.class;
-		switch (Dungeon.cycle){
-			case 1:
-				HP = HT = 450;
-				break;
-			case 2:
-				HP = HT = 935;
-				break;
-			case 3:
-				HP = HT = 1750;
-				break;
-			case 4:
-				HP = HT = 3200;
-				break;
-			case 5:
-				HP = HT = 8000;
-				break;
-		}
 
 		EXP = 20;
 
@@ -154,38 +137,17 @@ public class GnollGeomancer extends Mob {
 
 	@Override
 	public long damageRoll() {
-		switch (Dungeon.cycle) {
-			case 1: return Dungeon.NormalLongRange(35, 45);
-			case 2: return Dungeon.NormalLongRange(155, 175);
-			case 3: return Dungeon.NormalLongRange(564, 670);
-			case 4: return Dungeon.NormalLongRange(4650, 6900);
-			case 5: return Dungeon.NormalLongRange(700000, 1150000);
-		}
-		return Dungeon.NormalLongRange( 3, 6 );
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(3), Dungeon.getCycleMultiplier(6) );
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
-		switch (Dungeon.cycle){
-			case 1: return 95;
-			case 2: return 335;
-			case 3: return 785;
-			case 4: return 4500;
-			case 5: return 72750;
-		}
-		return 20;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(20);
 	}
 
 	@Override
 	public long cycledDrRoll() {
-		switch (Dungeon.cycle){
-			case 1: return Dungeon.NormalLongRange(30, 45);
-			case 2: return Dungeon.NormalLongRange(100, 265);
-			case 3: return Dungeon.NormalLongRange(570, 950);
-			case 4: return Dungeon.NormalLongRange(17000, 38000);
-			case 5: return Dungeon.NormalLongRange(1625000, 3000000);
-		}
-		return Dungeon.NormalLongRange(0, 6);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(6));
 	}
 
 	@Override
@@ -730,14 +692,7 @@ public class GnollGeomancer extends Mob {
 						}
 
 						if (ch != null && !(ch instanceof GnollGeomancer)){
-							long dmg = Dungeon.NormalLongRange(6, 12);
-							switch (Dungeon.cycle) {
-								case 1: dmg = Dungeon.NormalLongRange(48, 72); break;
-								case 2: dmg = Dungeon.NormalLongRange(240, 295); break;
-								case 3: dmg = Dungeon.NormalLongRange(960, 1250); break;
-								case 4: dmg = Dungeon.NormalLongRange(7400, 13000); break;
-								case 5: dmg =  Dungeon.NormalLongRange(175000, 800000); break;
-							}
+							long dmg = Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(6), Dungeon.getCycleMultiplier(12));
 							ch.damage(dmg, new GnollGeomancer.Boulder());
 
 							if (ch.isAlive()){
@@ -841,14 +796,7 @@ public class GnollGeomancer extends Mob {
 
 		@Override
 		public void affectChar(Char ch) {
-			long dmg = Dungeon.NormalLongRange(6, 12);
-			switch (Dungeon.cycle) {
-				case 1: dmg = Dungeon.NormalLongRange(48, 72); break;
-				case 2: dmg = Dungeon.NormalLongRange(240, 295); break;
-				case 3: dmg = Dungeon.NormalLongRange(960, 1250); break;
-				case 4: dmg = Dungeon.NormalLongRange(7400, 13000); break;
-				case 5: dmg =  Dungeon.NormalLongRange(175000, 800000); break;
-			}
+			long dmg = Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(6), Dungeon.getCycleMultiplier(12));
 			ch.damage(dmg, this);
 			if (ch.isAlive()) {
 				Buff.prolong(ch, Paralysis.class, ch instanceof GnollGuard ? 10 : 3);

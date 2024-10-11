@@ -38,74 +38,32 @@ public class Slime extends Mob {
 	{
 		spriteClass = SlimeSprite.class;
 		
-		HP = HT = 20;
-		defenseSkill = 5;
+		HP = HT = Dungeon.getCycleMultiplier(20);
+		defenseSkill = Dungeon.getCycleMultiplier(5);
 		
-		EXP = 4;
+		EXP = Dungeon.getCycleMultiplier(4);
 		maxLvl = 9;
 		
 		lootChance = 0.2f; //by default, see lootChance()
-
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 200;
-                defenseSkill = 30;
-                EXP = 22;
-                break;
-            case 2:
-                HP = HT = 2135;
-                defenseSkill = 150;
-                EXP = 196;
-                break;
-            case 3:
-                HP = HT = 40000;
-                defenseSkill = 415;
-                EXP = 1500;
-                break;
-            case 4:
-                HP = HT = 3000000;
-                defenseSkill = 1900;
-                EXP = 43000;
-                break;
-			case 5:
-				HP = HT = 675000000;
-				defenseSkill = 33000;
-				EXP = 19500000;
-				break;
-        }
 	}
 	
 	@Override
 	public long damageRoll() {
-        switch (Dungeon.cycle) {
-            case 1: return Dungeon.NormalLongRange(32, 38);
-            case 2: return Dungeon.NormalLongRange(164, 189);
-            case 3: return Dungeon.NormalLongRange(560, 740);
-            case 4: return Dungeon.NormalLongRange(7000, 9000);
-			case 5: return Dungeon.NormalLongRange(475000, 635000);
-        }
-	    return Random.NormalIntRange( 2, 5 );
+	    return Random.NormalLongRange( Dungeon.getCycleMultiplier(2), Dungeon.getCycleMultiplier(5) );
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
-        switch (Dungeon.cycle){
-            case 1: return 46;
-            case 2: return 225;
-            case 3: return 580;
-            case 4: return 2200;
-			case 5: return 32000;
-        }
-		return 12;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(12);
 	}
 	
 	@Override
 	public void damage(long dmg, Object src) {
 		double scaleFactor = AscensionChallenge.statModifier(this);
 		long scaledDmg = Math.round(dmg/scaleFactor);
-		if (scaledDmg >= 5 + Dungeon.cycle * 75 && Dungeon.cycle < 2){
+		if (scaledDmg >= 5 + Dungeon.cycle * 75L && Dungeon.cycle < 2){
 			//takes 5/6/7/8/9/10 dmg at 5/7/10/14/19/25 incoming dmg
-			scaledDmg = 4 + Dungeon.cycle * 75 + (int)(Math.sqrt(8*(scaledDmg - 4) + 1) - 1)/2;
+			scaledDmg = 4 + Dungeon.cycle * 75L + (int)(Math.sqrt(8*(scaledDmg - 4) + 1) - 1)/2;
 		}
 		dmg = (long) (scaledDmg*AscensionChallenge.statModifier(this));
 		super.damage(dmg, src);

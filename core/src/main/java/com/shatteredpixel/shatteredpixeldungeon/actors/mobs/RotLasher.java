@@ -40,10 +40,10 @@ public class RotLasher extends Mob {
 	{
 		spriteClass = RotLasherSprite.class;
 
-		HP = HT = 80;
+		HP = HT = Dungeon.getCycleMultiplier(80);
 		defenseSkill = 0;
 
-		EXP = 1;
+		EXP = Dungeon.getCycleMultiplier(1);
 
 		loot = Generator.Category.SEED;
 		lootChance = 0.75f;
@@ -53,18 +53,6 @@ public class RotLasher extends Mob {
 
 		properties.add(Property.IMMOVABLE);
 		properties.add(Property.MINIBOSS);
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 365;
-                defenseSkill = 0;
-                EXP = 15;
-                break;
-            case 2:
-                HP = HT = 4895;
-                defenseSkill = 0;
-                EXP = 128;
-                break;
-        }
 	}
 
 	@Override
@@ -110,29 +98,17 @@ public class RotLasher extends Mob {
 
 	@Override
 	public long damageRoll() {
-        switch (Dungeon.cycle) {
-            case 1: return Dungeon.NormalLongRange(45, 63);
-            case 2: return Dungeon.NormalLongRange(250, 324);
-        }
-		return Dungeon.NormalLongRange(10, 20);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(10), Dungeon.getCycleMultiplier(20));
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
-        switch (Dungeon.cycle){
-            case 1: return 60;
-            case 2: return 280;
-        }
-		return 25;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(25);
 	}
 
 	@Override
 	public long cycledDrRoll() {
-        switch (Dungeon.cycle){
-            case 1: return Dungeon.NormalLongRange(14, 34);
-            case 2: return Dungeon.NormalLongRange(140, 234);
-        }
-		return Dungeon.NormalLongRange(0, 8);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(8));
 	}
 	
 	{

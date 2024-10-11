@@ -50,7 +50,7 @@ public class GooTreasureBag extends TreasureBag{
     protected ArrayList<Item> items() {
         ArrayList<Item> items = new ArrayList<>();
         items.add(new GooBlob().quantity(Random.Int(2, 4)));
-        items.add(new Gold().quantity(Random.Int( 400 + Dungeon.escalatingDepth() * 60, 850 + Dungeon.escalatingDepth() * 85 )));
+        items.add(new Gold().quantity(Random.Long( 400 + Dungeon.escalatingDepth() * 60, 850 + Dungeon.escalatingDepth() * 85 )));
         if (Dungeon.cycle > 0) {
             items.add(new RatSkull());
             for (int i = 0; i < 5; i++) items.add(Reflection.newInstance(ExoticPotion.exoToReg.get(Generator.randomUsingDefaults(Generator.Category.POTION).getClass())));

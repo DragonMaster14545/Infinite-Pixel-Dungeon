@@ -65,46 +65,19 @@ import com.watabou.utils.Random;
 public abstract class YogFist extends Mob {
 
 	{
-		HP = HT = 300;
-		defenseSkill = 20;
+		HP = HT = Dungeon.getCycleMultiplier(300);
+		defenseSkill = Dungeon.getCycleMultiplier(20);
 
 		viewDistance = Light.DISTANCE;
 
 		//for doomed resistance
-		EXP = 25;
+		EXP = Dungeon.getCycleMultiplier(25);
 		maxLvl = -2;
 
 		state = HUNTING;
 
 		properties.add(Property.BOSS);
 		properties.add(Property.DEMONIC);
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 3750;
-                defenseSkill = 89;
-                EXP = 150;
-                break;
-            case 2:
-                HP = HT = 50000;
-                defenseSkill = 324;
-                EXP = 1800;
-                break;
-            case 3:
-                HP = HT = 3000000;
-                defenseSkill = 1100;
-                EXP = 50000;
-                break;
-            case 4:
-                HP = HT = 600000000;
-                defenseSkill = 16500;
-                EXP = 9000000;
-                break;
-			case 5:
-				HP = HT = 30000000000L;
-				defenseSkill = 0;
-				EXP = 9000000000L;
-				break;
-        }
 	}
 
 	private float rangedCooldown;
@@ -203,39 +176,18 @@ public abstract class YogFist extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
-        switch (Dungeon.cycle){
-            case 1: return 160;
-            case 2: return 525;
-            case 3: return 1300;
-            case 4: return 20000;
-			case 5: return 275000;
-        }
-		return 36;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(36);
 	}
 
 	@Override
 	public long damageRoll() {
-        switch (Dungeon.cycle) {
-            case 1: return Dungeon.NormalLongRange(86, 121);
-            case 2: return Dungeon.NormalLongRange(375, 580);
-            case 3: return Dungeon.NormalLongRange(2800, 4500);
-            case 4: return Dungeon.NormalLongRange(350000, 460000);
-			case 5: return Dungeon.NormalLongRange(6000000, 12500000);
-        }
-		return Dungeon.NormalLongRange( 18, 36 );
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(18), Dungeon.getCycleMultiplier(36) );
 	}
 
 	@Override
 	public long cycledDrRoll() {
-        switch (Dungeon.cycle){
-            case 1: return Dungeon.NormalLongRange(50, 89);
-            case 2: return Dungeon.NormalLongRange(250, 430);
-            case 3: return Dungeon.NormalLongRange(1750, 3200);
-            case 4: return Dungeon.NormalLongRange(370000, 480000);
-			case 5: return Dungeon.NormalLongRange(8000000, 16500000);
-        }
-		return Dungeon.NormalLongRange(0, 15);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(15));
 	}
 
 	{
@@ -293,7 +245,7 @@ public abstract class YogFist extends Mob {
 			}
 
 			for (int i : PathFinder.NEIGHBOURS9) {
-				int vol = Fire.volumeAt(pos+i, Fire.class);
+				long vol = Fire.volumeAt(pos+i, Fire.class);
 				if (vol < 4 && !Dungeon.level.water[pos + i] && !Dungeon.level.solid[pos + i]){
 					GameScene.add( Blob.seed( pos + i, 4 - vol, Fire.class ) );
 				}
@@ -316,7 +268,7 @@ public abstract class YogFist extends Mob {
 
 			for (int i : PathFinder.NEIGHBOURS9){
 				if (!Dungeon.level.water[enemy.pos+i] && !Dungeon.level.solid[enemy.pos+i]){
-					int vol = Fire.volumeAt(enemy.pos+i, Fire.class);
+					long vol = Fire.volumeAt(enemy.pos+i, Fire.class);
 					if (vol < 4){
 						GameScene.add( Blob.seed( enemy.pos + i, 4 - vol, Fire.class ) );
 					}
@@ -507,14 +459,7 @@ public abstract class YogFist extends Mob {
 
 		@Override
 		public long damageRoll() {
-            switch (Dungeon.cycle) {
-                case 1: return Dungeon.NormalLongRange(121, 145);
-                case 2: return Dungeon.NormalLongRange(489, 675);
-                case 3: return Dungeon.NormalLongRange(3100, 5412);
-                case 4: return Dungeon.NormalLongRange(435000, 540000);
-				case 5: return Dungeon.NormalLongRange(8500000, 17500000);
-            }
-			return Dungeon.NormalLongRange( 22, 44 );
+			return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(22), Dungeon.getCycleMultiplier(44) );
 		}
 
 		@Override
@@ -565,13 +510,7 @@ public abstract class YogFist extends Mob {
 			if (hit( this, enemy, true )) {
 
                 long dmg = Dungeon.NormalLongRange(10, 20);
-                switch (Dungeon.cycle){
-                    case 1: dmg = Dungeon.NormalLongRange(90, 131); break;
-                    case 2: dmg = Dungeon.NormalLongRange(200, 389); break;
-                    case 3: dmg = Dungeon.NormalLongRange(2300, 3000); break;
-                    case 4: dmg = Dungeon.NormalLongRange(170000, 250000); break;
-					case 5: dmg = Dungeon.NormalLongRange(3250000, 7200000); break;
-                }
+				dmg = Dungeon.getCycleMultiplier(dmg);
                 enemy.damage(dmg, new LightBeam() );
 				Buff.prolong( enemy, Blindness.class, Blindness.DURATION/2f );
 
@@ -639,13 +578,7 @@ public abstract class YogFist extends Mob {
 			if (hit( this, enemy, true )) {
 
                 long dmg = Dungeon.NormalLongRange(10, 20);
-                switch (Dungeon.cycle){
-                    case 1: dmg = Dungeon.NormalLongRange(90, 131); break;
-                    case 2: dmg = Dungeon.NormalLongRange(200, 389); break;
-                    case 3: dmg = Dungeon.NormalLongRange(2300, 3000); break;
-                    case 4: dmg = Dungeon.NormalLongRange(175000, 250000); break;
-					case 5: dmg = Dungeon.NormalLongRange(3250000, 7200000); break;
-                }
+				dmg = Dungeon.getCycleMultiplier(dmg);
                 enemy.damage(dmg, new DarkBolt() );
 
 				Light l = enemy.buff(Light.class);

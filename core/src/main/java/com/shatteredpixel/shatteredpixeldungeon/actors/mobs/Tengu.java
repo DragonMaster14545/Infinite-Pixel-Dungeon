@@ -90,91 +90,35 @@ public class Tengu extends Mob {
 	{
 		spriteClass = TenguSprite.class;
 		
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 250 : 200;
-		EXP = 20;
-		defenseSkill = 15;
+		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? Dungeon.getCycleMultiplier(250) : Dungeon.getCycleMultiplier(200);
+		EXP = Dungeon.getCycleMultiplier(20);
+		defenseSkill = Dungeon.getCycleMultiplier(15);
 		
 		HUNTING = new Hunting();
 
 		properties.add(Property.BOSS);
 		
 		viewDistance = 12;
-
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 1000;
-                defenseSkill = 43;
-                EXP = 120;
-                break;
-            case 2:
-                HP = HT = 18000;
-                defenseSkill = 210;
-                EXP = 4100;
-                break;
-            case 3:
-                HP = HT = 600000;
-                defenseSkill = 520;
-                EXP = 60000;
-                break;
-            case 4:
-                HP = HT = 75000000;
-                defenseSkill = 3600;
-                EXP = 7500000;
-                break;
-			case 5:
-				HP = HT = 8000000000L;
-				defenseSkill = 60000;
-				EXP = 750000000;
-				break;
-        }
 	}
 
 	@Override
 	public long damageRoll() {
-        switch (Dungeon.cycle) {
-            case 1: return Dungeon.NormalLongRange(42, 60);
-            case 2: return Dungeon.NormalLongRange(225, 312);
-            case 3: return Dungeon.NormalLongRange(750, 1000);
-            case 4: return Dungeon.NormalLongRange(14000, 23000);
-			case 5: return Dungeon.NormalLongRange(1000000, 2250000);
-        }
-		return Dungeon.NormalLongRange( 6, 12 );
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(6), Dungeon.getCycleMultiplier(12) );
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public long attackSkill(Char target ) {
 
 		if (Dungeon.level.adjacent(pos, target.pos)){
-            switch (Dungeon.cycle){
-                case 1: return 54;
-                case 2: return 275;
-                case 3: return 660;
-                case 4: return 3000;
-				case 5: return 42500;
-            }
-			return 10;
+			return Dungeon.getCycleMultiplier(10);
 		} else {
-            switch (Dungeon.cycle){
-                case 1: return 60;
-                case 2: return 294;
-                case 3: return 730;
-                case 4: return 4100;
-				case 5: return 46500;
-            }
-			return 20;
+			return Dungeon.getCycleMultiplier(20);
 		}
 	}
 	
 	@Override
 	public long cycledDrRoll() {
-        switch (Dungeon.cycle){
-            case 1: return Dungeon.NormalLongRange(10, 24);
-            case 2: return Dungeon.NormalLongRange(80, 195);
-            case 3: return Dungeon.NormalLongRange(400, 800);
-            case 4: return Dungeon.NormalLongRange(8000, 14000);
-			case 5: return Dungeon.NormalLongRange(460000, 950000);
-        }
-		return Dungeon.NormalLongRange(0, 5);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(5));
 	}
 
 	boolean loading = false;

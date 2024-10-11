@@ -163,7 +163,7 @@ public class SpiritHawk extends ArmorAbility {
 		}
 
 		@Override
-		public int attackSkill(Char target) {
+		public long attackSkill(Char target) {
 			return 60;
 		}
 
@@ -171,7 +171,7 @@ public class SpiritHawk extends ArmorAbility {
 		private float timeRemaining = 100f;
 
 		@Override
-		public int defenseSkill(Char enemy) {
+		public long defenseSkill(Char enemy) {
 			if (Dungeon.hero.hasTalent(Talent.SWIFT_SPIRIT) &&
 					dodgesUsed < 2*Dungeon.hero.pointsInTalent(Talent.SWIFT_SPIRIT)) {
 				dodgesUsed++;

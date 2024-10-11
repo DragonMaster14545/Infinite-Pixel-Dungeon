@@ -44,7 +44,7 @@ public class Wraith extends Mob {
 
 	private static final float SPAWN_DELAY	= 2f;
 	
-	protected int level;
+	protected long level;
 	
 	{
 		spriteClass = WraithSprite.class;
@@ -81,11 +81,11 @@ public class Wraith extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public long attackSkill(Char target ) {
 		return 10 + level;
 	}
 	
-	public void adjustStats( int level ) {
+	public void adjustStats( long level ) {
 		this.level = level;
 		defenseSkill = attackSkill( null ) * 5;
 		enemySeen = true;

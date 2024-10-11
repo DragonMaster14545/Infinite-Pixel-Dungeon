@@ -43,11 +43,11 @@ public class GreatCrab extends Crab {
 	{
 		spriteClass = GreatCrabSprite.class;
 
-		HP = HT = 25;
-		defenseSkill = 0; //see damage()
+		HP = HT = Dungeon.getCycleMultiplier(25);
+		defenseSkill = Dungeon.getCycleMultiplier(0); //see damage()
 		baseSpeed = 1f;
 
-		EXP = 6;
+		EXP = Dungeon.getCycleMultiplier(6);
 
 		WANDERING = new Wandering();
 		state = WANDERING;
@@ -56,18 +56,6 @@ public class GreatCrab extends Crab {
 		lootChance = 1f;
 
 		properties.add(Property.MINIBOSS);
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 200;
-                defenseSkill = 0;
-                EXP = 21;
-                break;
-            case 2:
-                HP = HT = 2100;
-                defenseSkill = 0;
-                EXP = 204;
-                break;
-        }
 	}
 
 	private int moving = 0;
@@ -104,7 +92,7 @@ public class GreatCrab extends Crab {
 	}
 
 	@Override
-	public int defenseSkill( Char enemy ) {
+	public long defenseSkill(Char enemy ) {
 		//crab blocks all melee attacks from its current target
 		if (enemySeen
 				&& state != SLEEPING

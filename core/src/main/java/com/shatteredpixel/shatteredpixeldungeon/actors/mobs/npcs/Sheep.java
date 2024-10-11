@@ -67,7 +67,7 @@ public class Sheep extends NPC {
 	}
 
 	@Override
-	public int defenseSkill(Char enemy) {
+	public long defenseSkill(Char enemy) {
 		return INFINITE_EVASION;
 	}
 

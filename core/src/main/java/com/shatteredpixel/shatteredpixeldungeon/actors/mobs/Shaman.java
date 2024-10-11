@@ -47,77 +47,29 @@ import com.watabou.utils.Random;
 public abstract class Shaman extends Mob {
 	
 	{
-		HP = HT = 35;
-		defenseSkill = 15;
+		HP = HT = Dungeon.getCycleMultiplier(35);
+		defenseSkill = Dungeon.getCycleMultiplier(15);
 		
-		EXP = 8;
+		EXP = Dungeon.getCycleMultiplier(8);
 		maxLvl = 16;
 		
 		loot = Generator.Category.WAND;
 		lootChance = 0.03f; //initially, see rollToDropLoot
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 375;
-                defenseSkill = 55;
-                EXP = 41;
-                break;
-            case 2:
-                HP = HT = 5121;
-                defenseSkill = 221;
-                EXP = 412;
-                break;
-            case 3:
-                HP = HT = 97500;
-                defenseSkill = 525;
-                EXP = 3900;
-                break;
-            case 4:
-                HP = HT = 8000000;
-                defenseSkill = 3300;
-                EXP = 120000;
-                break;
-			case 5:
-				HP = HT = 1600000000;
-				defenseSkill = 57500;
-				EXP = 36000000;
-				break;
-        }
 	}
 	
 	@Override
 	public long damageRoll() {
-        switch (Dungeon.cycle) {
-            case 1: return Dungeon.NormalLongRange(43, 58);
-            case 2: return Dungeon.NormalLongRange(235, 265);
-            case 3: return Dungeon.NormalLongRange(880, 1200);
-            case 4: return Dungeon.NormalLongRange(18000, 27500);
-			case 5: return Dungeon.NormalLongRange(1500000, 2250000);
-        }
-		return Dungeon.NormalLongRange( 5, 10 );
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(5), Dungeon.getCycleMultiplier(10) );
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
-        switch (Dungeon.cycle){
-            case 1: return 75;
-            case 2: return 275;
-            case 3: return 735;
-            case 4: return 3700;
-			case 5: return 56500;
-        }
-		return 18;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(18);
 	}
 	
 	@Override
 	public long cycledDrRoll() {
-        switch (Dungeon.cycle){
-            case 1: return Dungeon.NormalLongRange(18, 36);
-            case 2: return Dungeon.NormalLongRange(70, 198);
-            case 3: return Dungeon.NormalLongRange(450, 790);
-            case 4: return Dungeon.NormalLongRange(10000, 26000);
-			case 5: return Dungeon.NormalLongRange(850000, 1450000);
-        }
-		return Dungeon.NormalLongRange(0, 6);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(6));
 	}
 
 	@Override
@@ -174,13 +126,7 @@ public abstract class Shaman extends Mob {
 			}
 			
 			long dmg = Dungeon.NormalLongRange( 6, 15 );
-            switch (Dungeon.cycle) {
-                case 1: dmg = Dungeon.NormalLongRange(48, 62); break;
-                case 2: dmg = Dungeon.NormalLongRange(250, 324); break;
-                case 3: dmg = Dungeon.NormalLongRange(895, 1200); break;
-                case 4: dmg = Dungeon.NormalLongRange(17000, 26000); break;
-				case 5: dmg = Dungeon.NormalLongRange(1400000, 2150000); break;
-            }
+			dmg = Dungeon.getCycleMultiplier(dmg);
 			dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
 			enemy.damage( dmg, new EarthenBolt() );
 			

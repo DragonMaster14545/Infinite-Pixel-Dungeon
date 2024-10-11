@@ -41,29 +41,15 @@ public class RotHeart extends Mob {
 	{
 		spriteClass = RotHeartSprite.class;
 
-		HP = HT = 80;
+		HP = HT = Dungeon.getCycleMultiplier(80);
 		defenseSkill = 0;
 
-		EXP = 4;
+		EXP = Dungeon.getCycleMultiplier(4);
 
 		state = PASSIVE;
 
 		properties.add(Property.IMMOVABLE);
 		properties.add(Property.MINIBOSS);
-
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 900;
-                defenseSkill = 0;
-                EXP = 35;
-                break;
-            case 2:
-                HP = HT = 11345;
-                defenseSkill = 0;
-                EXP = 300;
-                break;
-
-        }
 		properties.add(Property.STATIC);
 	}
 
@@ -139,17 +125,13 @@ public class RotHeart extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public long attackSkill(Char target ) {
 		return 0;
 	}
 
 	@Override
 	public long cycledDrRoll() {
-        switch (Dungeon.cycle){
-            case 1: return Dungeon.NormalLongRange(8, 28);
-            case 2: return Dungeon.NormalLongRange(100, 184);
-        }
-		return Dungeon.NormalLongRange(0, 5);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(5));
 	}
 	
 	{

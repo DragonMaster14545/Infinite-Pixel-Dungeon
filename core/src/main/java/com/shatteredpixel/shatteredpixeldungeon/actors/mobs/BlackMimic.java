@@ -91,7 +91,7 @@ public class BlackMimic extends Mob {
 		int powerLevel = Dungeon.hero != null ? Dungeon.hero.lvl : 0;
 
 		HP = HT = 900 + Math.round(powerLevel*32*Math.pow(7, Dungeon.cycle));
-		EXP = 2000;
+		EXP = Dungeon.getCycleMultiplier(2000);
 		defenseSkill = 20 + powerLevel / 3 * 2;
 
 		properties.add(Property.BOSS);
@@ -99,23 +99,6 @@ public class BlackMimic extends Mob {
 		properties.add(Property.DEMONIC);
 		properties.add(Property.UNDEAD);
 		properties.add(Property.LARGE);
-        switch (Dungeon.cycle){
-            case 1:
-                EXP = 6000;
-                break;
-            case 2:
-                EXP = 500000;
-                break;
-            case 3:
-                EXP = 25000000;
-                break;
-            case 4:
-                EXP = 2100000000;
-                break;
-			case 5:
-				EXP = 45000000000L;
-				break;
-        }
 	}
 
 	@Override
@@ -126,7 +109,7 @@ public class BlackMimic extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public long attackSkill(Char target ) {
 		return 30 + Math.round(Dungeon.hero.lvl * 1.25f);
 	}
 
@@ -809,7 +792,7 @@ public class BlackMimic extends Mob {
 	}
 
 	public static class CorrosoGas extends CorrosiveGas{
-        public CorrosoGas setStr(int str){
+        public CorrosoGas setStr(long str){
             if (str > strength) {
                 strength = str;
             }

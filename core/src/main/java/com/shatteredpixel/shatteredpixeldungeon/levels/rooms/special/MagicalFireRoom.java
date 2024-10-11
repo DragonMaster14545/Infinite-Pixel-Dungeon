@@ -241,7 +241,7 @@ public class MagicalFireRoom extends SpecialRoom {
 		}
 
 		@Override
-		public void seed(Level level, int cell, int amount) {
+		public void seed(Level level, int cell, long amount) {
 			super.seed(level, cell, amount);
 			level.passable[cell] = cur[cell] == 0 && (Terrain.flags[level.map[cell]] & Terrain.PASSABLE) != 0;
 		}

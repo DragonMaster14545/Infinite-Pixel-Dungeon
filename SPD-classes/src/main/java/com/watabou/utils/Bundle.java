@@ -313,7 +313,7 @@ public class Bundle {
 		}
 	}
 
-	public void put( String key, int value ) {
+	public void put(String key, long value ) {
 		try {
 			data.put( key, value );
 		} catch (JSONException e) {
@@ -321,7 +321,7 @@ public class Bundle {
 		}
 	}
 
-	public void put( String key, long value ) {
+	public void put( String key, int value ) {
 		try {
 			data.put( key, value );
 		} catch (JSONException e) {

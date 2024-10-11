@@ -47,10 +47,10 @@ public class DM100 extends Mob implements Callback {
 	{
 		spriteClass = DM100Sprite.class;
 		
-		HP = HT = 20;
-		defenseSkill = 8;
+		HP = HT = Dungeon.getCycleMultiplier(20);
+		defenseSkill = Dungeon.getCycleMultiplier(8);
 		
-		EXP = 6;
+		EXP = Dungeon.getCycleMultiplier(6);
 		maxLvl = 13;
 		
 		loot = Generator.Category.SCROLL;
@@ -58,70 +58,21 @@ public class DM100 extends Mob implements Callback {
 		
 		properties.add(Property.ELECTRIC);
 		properties.add(Property.INORGANIC);
-
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 300;
-                defenseSkill = 36;
-                EXP = 26;
-                break;
-            case 2:
-                HP = HT = 2500;
-                defenseSkill = 180;
-                EXP = 280;
-                break;
-            case 3:
-                HP = HT = 60000;
-                defenseSkill = 450;
-                EXP = 2200;
-                break;
-            case 4:
-                HP = HT = 4000000;
-                defenseSkill = 2560;
-                EXP = 62000;
-                break;
-			case 5:
-				HP = HT = 850000000;
-				defenseSkill = 36000;
-				EXP = 26000000;
-				break;
-        }
 	}
 	
 	@Override
 	public long damageRoll() {
-        switch (Dungeon.cycle) {
-            case 1: return Dungeon.NormalLongRange(31, 45);
-            case 2: return Dungeon.NormalLongRange(160, 205);
-            case 3: return Dungeon.NormalLongRange(725, 1000);
-            case 4: return Dungeon.NormalLongRange(10000, 16800);
-			case 5: return Dungeon.NormalLongRange(665000, 1450000);
-        }
-		return Random.NormalIntRange( 2, 8 );
+		return Random.NormalLongRange( Dungeon.getCycleMultiplier(2), Dungeon.getCycleMultiplier(8) );
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
-        switch (Dungeon.cycle){
-            case 1: return 53;
-            case 2: return 240;
-            case 3: return 660;
-            case 4: return 2900;
-			case 5: return 47500;
-        }
-		return 11;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(11);
 	}
 	
 	@Override
 	public long cycledDrRoll() {
-        switch (Dungeon.cycle){
-            case 1: return Dungeon.NormalLongRange(8, 24);
-            case 2: return Dungeon.NormalLongRange(60, 160);
-            case 3: return Dungeon.NormalLongRange(370, 660);
-            case 4: return Dungeon.NormalLongRange(6000, 11000);
-			case 5: return Dungeon.NormalLongRange(120000, 800000);
-        }
-		return Dungeon.NormalLongRange(0, 4);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(4));
 	}
 
 	@Override
@@ -148,14 +99,7 @@ public class DM100 extends Mob implements Callback {
 			Invisibility.dispel(this);
 			if (hit( this, enemy, true )) {
 				long dmg = Random.NormalIntRange(3, 10);
-				dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
-                switch (Dungeon.cycle){
-                    case 1: dmg = Dungeon.NormalLongRange(32, 48); break;
-                    case 2: dmg = Dungeon.NormalLongRange(190, 248); break;
-                    case 3: dmg =  Dungeon.NormalLongRange(600, 850); break;
-                    case 4: dmg =  Dungeon.NormalLongRange(9000, 15000); break;
-					case 5: dmg =  Dungeon.NormalLongRange(110000, 750000); break;
-                }
+				dmg = Math.round(Dungeon.getCycleMultiplier(dmg) * AscensionChallenge.statModifier(this));
 				enemy.damage( dmg, new LightningBolt() );
 
 				if (enemy.sprite.visible) {

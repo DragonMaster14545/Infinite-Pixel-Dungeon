@@ -107,7 +107,7 @@ public class Electricity extends Blob {
 		
 	}
 	
-	private void spreadFromCell( int cell, int power ){
+	private void spreadFromCell( int cell, long power ){
 		if (cur[cell] == 0) {
 			area.union(cell % Dungeon.level.width(), cell / Dungeon.level.width());
 		}

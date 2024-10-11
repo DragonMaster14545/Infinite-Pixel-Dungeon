@@ -50,28 +50,15 @@ import com.watabou.utils.Random;
 
 public class Eye extends Mob {
 
-	public static int experience(){
-		switch (Dungeon.cycle){
-			case 0: default:
-				return 13;
-			case 1:
-				return 93;
-			case 2:
-				return 780;
-			case 3:
-				return 18000;
-			case 4:
-				return 6000000;
-			case 5:
-				return 320000000;
-		}
+	public static long experience(){
+		return Dungeon.getCycleMultiplier(13);
 	}
 
 	{
 		spriteClass = EyeSprite.class;
 		
-		HP = HT = 100;
-		defenseSkill = 20;
+		HP = HT = Dungeon.getCycleMultiplier(100);
+		defenseSkill = Dungeon.getCycleMultiplier(20);
 		viewDistance = Light.DISTANCE;
 		
 		EXP = experience();
@@ -85,64 +72,21 @@ public class Eye extends Mob {
 		lootChance = 1f;
 
 		properties.add(Property.DEMONIC);
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 1093;
-                defenseSkill = 85;
-                break;
-            case 2:
-                HP = HT = 18965;
-                defenseSkill = 280;
-                break;
-            case 3:
-                HP = HT = 750000;
-                defenseSkill = 900;
-                break;
-            case 4:
-                HP = HT = 290000000;
-                defenseSkill = 14000;
-                break;
-			case 5:
-				HP = HT = 6500000000L;
-				defenseSkill = 135000;
-				break;
-        }
 	}
 
 	@Override
 	public long damageRoll() {
-        switch (Dungeon.cycle) {
-            case 1: return Dungeon.NormalLongRange(86, 106);
-            case 2: return Dungeon.NormalLongRange(360, 487);
-            case 3: return Dungeon.NormalLongRange(2600, 3641);
-            case 4: return Dungeon.NormalLongRange(179000, 290000);
-			case 5: return Dungeon.NormalLongRange(5750000, 9000000);
-        }
-		return Dungeon.NormalLongRange(20, 30);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(20), Dungeon.getCycleMultiplier(30));
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
-        switch (Dungeon.cycle){
-            case 1: return 143;
-            case 2: return 450;
-            case 3: return 1100;
-            case 4: return 16000;
-			case 5: return 210000;
-        }
-		return 30;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(30);
 	}
 	
 	@Override
 	public long cycledDrRoll() {
-        switch (Dungeon.cycle){
-            case 1: return Dungeon.NormalLongRange(40, 74);
-            case 2: return Dungeon.NormalLongRange(178, 334);
-            case 3: return Dungeon.NormalLongRange(1750, 2800);
-            case 4: return Dungeon.NormalLongRange(200000, 300000);
-			case 5: return Dungeon.NormalLongRange(6000000, 12500000);
-        }
-		return Dungeon.NormalLongRange(0, 10);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(10));
 	}
 	
 	private Ballistica beam;
@@ -254,13 +198,7 @@ public class Eye extends Mob {
 
 			if (hit( this, ch, true )) {
                 long dmg = Dungeon.NormalLongRange(30, 50);
-                switch (Dungeon.cycle){
-                    case 1: dmg = Dungeon.NormalLongRange(168, 231); break;
-                    case 2: dmg = Dungeon.NormalLongRange(510, 824); break;
-                    case 3: dmg = Dungeon.NormalLongRange(3750, 5200); break;
-                    case 4: dmg = Dungeon.NormalLongRange(200000, 560000); break;
-					case 5: dmg = Dungeon.NormalLongRange(8000000, 12500000); break;
-                }
+				dmg = Dungeon.getCycleMultiplier(dmg);
 				dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
                 ch.damage(dmg, new DeathGaze() );
 

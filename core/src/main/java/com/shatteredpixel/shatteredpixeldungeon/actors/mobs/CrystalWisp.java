@@ -39,43 +39,15 @@ public class CrystalWisp extends Mob{
 	{
 		spriteClass = CrystalWispSprite.class;
 
-		HP = HT = 30;
-		defenseSkill = 16;
+		HP = HT = Dungeon.getCycleMultiplier(30);
+		defenseSkill = Dungeon.getCycleMultiplier(16);
 
-		EXP = 7;
+		EXP = Dungeon.getCycleMultiplier(7);
 		maxLvl = -2;
 
 		flying = true;
 
 		properties.add(Property.INORGANIC);
-
-		switch (Dungeon.cycle){
-			case 1:
-				HP = HT = 320;
-				defenseSkill = 48;
-				EXP = 34;
-				break;
-			case 2:
-				HP = HT = 4600;
-				defenseSkill = 225;
-				EXP = 321;
-				break;
-			case 3:
-				HP = HT = 80000;
-				defenseSkill = 500;
-				EXP = 3000;
-				break;
-			case 4:
-				HP = HT = 7000000;
-				defenseSkill = 3000;
-				EXP = 74000;
-				break;
-			case 5:
-				HP = HT = 1400000000;
-				defenseSkill = 59500;
-				EXP = 36500000;
-				break;
-		}
 	}
 
 	public CrystalWisp(){
@@ -103,38 +75,17 @@ public class CrystalWisp extends Mob{
 
 	@Override
 	public long damageRoll() {
-		switch (Dungeon.cycle) {
-			case 1: return Dungeon.NormalLongRange(50, 55);
-			case 2: return Dungeon.NormalLongRange(240, 275);
-			case 3: return Dungeon.NormalLongRange(800, 900);
-			case 4: return Dungeon.NormalLongRange(14000, 18500);
-			case 5: return Dungeon.NormalLongRange(1100000, 1800000);
-		}
-		return Dungeon.NormalLongRange( 5, 10 );
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(5), Dungeon.getCycleMultiplier(10) );
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
-		switch (Dungeon.cycle){
-			case 1: return 72;
-			case 2: return 275;
-			case 3: return 760;
-			case 4: return 3600;
-			case 5: return 53000;
-		}
-		return 18;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(18);
 	}
 
 	@Override
 	public long cycledDrRoll() {
-		switch (Dungeon.cycle){
-			case 1: return Dungeon.NormalLongRange(13, 28);
-			case 2: return Dungeon.NormalLongRange(70, 170);
-			case 3: return Dungeon.NormalLongRange(500, 700);
-			case 4: return Dungeon.NormalLongRange(8000, 16000);
-			case 5: return Dungeon.NormalLongRange(650000, 1250000);
-		}
-		return Dungeon.NormalLongRange(0, 4);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(4));
 	}
 
 	@Override
@@ -179,13 +130,7 @@ public class CrystalWisp extends Mob{
 		if (hit( this, enemy, true )) {
 
 			long dmg = Random.NormalIntRange( 5, 10 );
-			switch (Dungeon.cycle) {
-				case 1: dmg = Dungeon.NormalLongRange(50, 55); break;
-				case 2: dmg = Dungeon.NormalLongRange(240, 275); break;
-				case 3: dmg = Dungeon.NormalLongRange(800, 900); break;
-				case 4: dmg = Dungeon.NormalLongRange(14000, 18500); break;
-				case 5: dmg = Dungeon.NormalLongRange(1100000, 1800000); break;
-			}
+			dmg = Dungeon.getCycleMultiplier(dmg);
 			enemy.damage( dmg, new LightBeam() );
 
 			if (!enemy.isAlive() && enemy == Dungeon.hero) {

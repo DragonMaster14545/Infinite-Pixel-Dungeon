@@ -38,66 +38,24 @@ public class Snake extends Mob {
 	{
 		spriteClass = SnakeSprite.class;
 		
-		HP = HT = 4;
-		defenseSkill = 25;
+		HP = HT = Dungeon.getCycleMultiplier(4);
+		defenseSkill = Dungeon.getCycleMultiplier(25);
 		
-		EXP = 2;
+		EXP = Dungeon.getCycleMultiplier(2);
 		maxLvl = 7;
 		
 		loot = Generator.Category.SEED;
 		lootChance = 0.25f;
-
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 55;
-                defenseSkill = 82;
-                EXP = 16;
-                break;
-            case 2:
-                HP = HT = 985;
-                defenseSkill = 550;
-                EXP = 136;
-                break;
-            case 3:
-                HP = HT = 9000;
-                defenseSkill = 1200;
-                EXP = 921;
-                break;
-            case 4:
-                HP = HT = 900000;
-                defenseSkill = 9000;
-                EXP = 30000;
-                break;
-            case 5:
-                HP = HT = 300000000;
-                defenseSkill = 56000;
-                EXP = 12500000;
-                break;
-        }
 	}
 	
 	@Override
 	public long damageRoll() {
-        switch (Dungeon.cycle) {
-            case 1: return Random.NormalIntRange(21, 36);
-            case 2: return Random.NormalIntRange(120, 160);
-            case 3: return Random.NormalIntRange(498, 621);
-            case 4: return Random.NormalIntRange(3900, 5780);
-            case 5: return Random.NormalIntRange(370000, 525000);
-        }
-		return Random.NormalIntRange( 1, 4 );
+		return Random.NormalLongRange( Dungeon.getCycleMultiplier(1), Dungeon.getCycleMultiplier(4) );
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
-        switch (Dungeon.cycle){
-            case 1: return 40;
-            case 2: return 180;
-            case 3: return 540;
-            case 4: return 1400;
-            case 5: return 21000;
-        }
-	    return 10;
+	public long attackSkill(Char target ) {
+	    return Dungeon.getCycleMultiplier(10);
 	}
 
 	private static int dodges = 0;

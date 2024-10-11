@@ -53,7 +53,7 @@ import java.util.Collection;
 
 public class Mimic extends Mob {
 	
-	private int level;
+	private long level;
 	
 	{
 		spriteClass = MimicSprite.class;
@@ -248,7 +248,7 @@ public class Mimic extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public long attackSkill(Char target ) {
 		if (target != null && alignment == Alignment.NEUTRAL && target.invisible <= 0){
 			return INFINITE_ACCURACY;
 		} else {
@@ -256,12 +256,12 @@ public class Mimic extends Mob {
 		}
 	}
 
-	public void setLevel( int level ){
+	public void setLevel( long level ){
 		this.level = level;
 		adjustStats(level);
 	}
 	
-	public void adjustStats( int level ) {
+	public void adjustStats( long level ) {
 		HP = HT = (1 + level) * 6;
 		defenseSkill = 2 + level/2;
 		

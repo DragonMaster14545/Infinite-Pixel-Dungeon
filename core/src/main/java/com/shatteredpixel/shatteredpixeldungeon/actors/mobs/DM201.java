@@ -36,50 +36,17 @@ public class DM201 extends DM200 {
 	{
 		spriteClass = DM201Sprite.class;
 
-		HP = HT = 120;
+		HP = HT = Dungeon.getCycleMultiplier(120);
+		EXP = Dungeon.getCycleMultiplier(25)-24;
 
 		properties.add(Property.IMMOVABLE);
 
 		HUNTING = new Hunting();
-
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 900;
-                EXP = 52;
-                break;
-            case 2:
-                HP = HT = 9845;
-                defenseSkill = 190;
-                EXP = 529;
-                break;
-            case 3:
-                HP = HT = 260000;
-                defenseSkill = 590;
-                EXP = 5400;
-                break;
-            case 4:
-                HP = HT = 32000000;
-                defenseSkill = 4800;
-                EXP = 210000;
-                break;
-			case 5:
-				HP = HT = 3200000000L;
-				defenseSkill = 56500;
-				EXP = 51000000;
-				break;
-        }
 	}
 
 	@Override
 	public long damageRoll() {
-        switch (Dungeon.cycle) {
-            case 1: return Dungeon.NormalLongRange(69, 91);
-            case 2: return Dungeon.NormalLongRange(321, 412);
-            case 3: return Dungeon.NormalLongRange(1400, 1794);
-            case 4: return Dungeon.NormalLongRange(40000, 75000);
-			case 5: return Dungeon.NormalLongRange(4000000, 7600000);
-        }
-		return Random.NormalIntRange( 15, 25 );
+		return Random.NormalLongRange( Dungeon.getCycleMultiplier(15), Dungeon.getCycleMultiplier(25) );
 	}
 
 	private boolean threatened = false;

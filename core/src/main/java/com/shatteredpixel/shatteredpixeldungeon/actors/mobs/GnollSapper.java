@@ -41,10 +41,10 @@ public class GnollSapper extends Mob {
 
 		spriteClass = GnollSapperSprite.class;
 
-		HP = HT = 45;
-		defenseSkill = 15;
+		HP = HT = Dungeon.getCycleMultiplier(45);
+		defenseSkill = Dungeon.getCycleMultiplier(15);
 
-		EXP = 10;
+		EXP = Dungeon.getCycleMultiplier(10);
 		maxLvl = -2;
 
 		properties.add(Property.MINIBOSS);
@@ -52,33 +52,6 @@ public class GnollSapper extends Mob {
 		HUNTING = new Hunting();
 		WANDERING = new Wandering();
 		state = SLEEPING;
-		switch (Dungeon.cycle){
-			case 1:
-				HP = HT = 480;
-				defenseSkill = 50;
-				EXP = 55;
-				break;
-			case 2:
-				HP = HT = 6010;
-				defenseSkill = 190;
-				EXP = 425;
-				break;
-			case 3:
-				HP = HT = 125500;
-				defenseSkill = 500;
-				EXP = 4000;
-				break;
-			case 4:
-				HP = HT = 11000000;
-				defenseSkill = 3000;
-				EXP = 115000;
-				break;
-			case 5:
-				HP = HT = 1575000000;
-				defenseSkill = 62500;
-				EXP = 41500000;
-				break;
-		}
 	}
 
 	public int spawnPos;
@@ -123,26 +96,12 @@ public class GnollSapper extends Mob {
 
 	@Override
 	public long damageRoll() {
-		switch (Dungeon.cycle) {
-			case 1: return Dungeon.NormalLongRange(24, 36);
-			case 2: return Dungeon.NormalLongRange(120, 145);
-			case 3: return Dungeon.NormalLongRange(480, 615);
-			case 4: return Dungeon.NormalLongRange(3700, 6000);
-			case 5: return Dungeon.NormalLongRange(400000, 1000000);
-		}
-		return Random.NormalIntRange( 1, 6 );
+		return Random.NormalLongRange( Dungeon.getCycleMultiplier(1), Dungeon.getCycleMultiplier(6) );
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
-		switch (Dungeon.cycle){
-			case 1: return 75;
-			case 2: return 292;
-			case 3: return 720;
-			case 4: return 3865;
-			case 5: return 52750;
-		}
-		return 18;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(18);
 	}
 
 	@Override
@@ -153,14 +112,7 @@ public class GnollSapper extends Mob {
 
 	@Override
 	public long cycledDrRoll() {
-		switch (Dungeon.cycle){
-			case 1: return Dungeon.NormalLongRange(20, 35);
-			case 2: return Dungeon.NormalLongRange(70, 200);
-			case 3: return Dungeon.NormalLongRange(445, 715);
-			case 4: return Dungeon.NormalLongRange(13500, 28000);
-			case 5: return Dungeon.NormalLongRange(1400000, 1750000);
-		}
-		return Dungeon.NormalLongRange(0, 6);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(6));
 	}
 
 	@Override

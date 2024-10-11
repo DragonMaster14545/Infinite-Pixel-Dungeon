@@ -70,73 +70,32 @@ import java.util.ArrayList;
 public abstract class Elemental extends Mob {
 
 	{
-		HP = HT = 60;
-		defenseSkill = 20;
+		HP = HT = Dungeon.getCycleMultiplier(60);
+		defenseSkill = Dungeon.getCycleMultiplier(20);
 		
-		EXP = 10;
+		EXP = Dungeon.getCycleMultiplier(10);
 		maxLvl = 20;
 		
 		flying = true;
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 715;
-                defenseSkill = 69;
-                EXP = 65;
-                break;
-            case 2:
-                HP = HT = 9431;
-                defenseSkill = 278;
-                EXP = 571;
-                break;
-            case 3:
-                HP = HT = 231900;
-                defenseSkill = 624;
-                EXP = 5890;
-                break;
-            case 4:
-                HP = HT = 70000000;
-                defenseSkill = 5600;
-                EXP = 500000;
-                break;
-			case 5:
-				HP = HT = 2400000000L;
-				defenseSkill = 86500;
-				EXP = 110000000;
-				break;
-        }
 	}
 
 	protected boolean summonedALly;
 	@Override
 	public long damageRoll() {
 		if (!summonedALly) {
-			switch (Dungeon.cycle) {
-				case 1: return Dungeon.NormalLongRange(64, 83);
-				case 2: return Dungeon.NormalLongRange(291, 434);
-				case 3: return Dungeon.NormalLongRange(1650, 2100);
-				case 4: return Dungeon.NormalLongRange(30000, 85000);
-				case 5: return Dungeon.NormalLongRange(3000000, 7000000);
-			}
-			return Dungeon.NormalLongRange( 16, 26 );
+			return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(16), Dungeon.getCycleMultiplier(26) );
 		} else {
-			int regionScale = Math.max(2, (1 + Dungeon.scalingDepth()/5));
+			long regionScale = Math.max(2, (1 + Dungeon.scalingDepth()/5));
 			return Dungeon.NormalLongRange(6*regionScale, 15 + 10*regionScale);
 		}
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public long attackSkill(Char target ) {
 		if (!summonedALly) {
-			switch (Dungeon.cycle){
-				case 1: return 102;
-				case 2: return 355;
-				case 3: return 930;
-				case 4: return 6000;
-				case 5: return 100000;
-			}
-			return 25;
+			return Dungeon.getCycleMultiplier(25);
 		} else {
-			int regionScale = Math.max(2, (1 + Dungeon.scalingDepth()/5));
+			long regionScale = Math.max(2, (1 + Dungeon.scalingDepth()/5));
 			return 5 + 10*regionScale;
 		}
 	}
@@ -144,21 +103,14 @@ public abstract class Elemental extends Mob {
 	public void setSummonedALly(){
 		summonedALly = true;
 		//sewers are prison are equivalent, otherwise scales as normal (2/2/3/4/5)
-		int regionScale = Math.max(2, (1 + Dungeon.scalingDepth()/5));
+		long regionScale = Math.max(2, (1 + Dungeon.scalingDepth()/5));
 		defenseSkill = 10*regionScale;
 		HT = 30*regionScale;
 	}
 	
 	@Override
 	public long cycledDrRoll() {
-        switch (Dungeon.cycle){
-            case 1: return Dungeon.NormalLongRange(24, 50);
-            case 2: return Dungeon.NormalLongRange(121, 243);
-            case 3: return Dungeon.NormalLongRange(700, 1321);
-            case 4: return Dungeon.NormalLongRange(22000, 64000);
-			case 5: return Dungeon.NormalLongRange(2200000, 4250000);
-        }
-		return Dungeon.NormalLongRange(0, 5);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(5));
 	}
 	
 	protected int rangedCooldown = Random.NormalIntRange( 3, 5 );
@@ -434,7 +386,7 @@ public abstract class Elemental extends Mob {
 		}
 
 		@Override
-		public int attackSkill(Char target) {
+		public long attackSkill(Char target) {
 			if (!summonedALly) {
 				return 15;
 			} else {

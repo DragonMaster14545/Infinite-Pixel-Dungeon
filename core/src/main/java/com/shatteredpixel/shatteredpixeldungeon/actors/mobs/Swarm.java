@@ -47,44 +47,16 @@ public class Swarm extends Mob {
 	{
 		spriteClass = SwarmSprite.class;
 		
-		HP = HT = 50;
-		defenseSkill = 5;
+		HP = HT = Dungeon.getCycleMultiplier(50);
+		defenseSkill = Dungeon.getCycleMultiplier(5);
 
-		EXP = 3;
+		EXP = Dungeon.getCycleMultiplier(3);
 		maxLvl = 9;
 		
 		flying = true;
 
 		loot = new PotionOfHealing();
 		lootChance = 0.1667f; //by default, see lootChance()
-
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 400;
-                defenseSkill = 30;
-                EXP = 18;
-                break;
-            case 2:
-                HP = HT = 6000;
-                defenseSkill = 140;
-                EXP = 167;
-                break;
-            case 3:
-                HP = HT = 68000;
-                defenseSkill = 380;
-                EXP = 1100;
-                break;
-            case 4:
-                HP = HT = 8000000;
-                defenseSkill = 1680;
-                EXP = 36000;
-                break;
-			case 5:
-				HP = HT = 2000000000;
-				defenseSkill = 36000;
-				EXP = 17000000;
-				break;
-        }
 	}
 	
 	private static final float SPLIT_DELAY	= 1f;
@@ -114,14 +86,7 @@ public class Swarm extends Mob {
 
 	@Override
 	public long damageRoll() {
-        switch (Dungeon.cycle) {
-            case 1: return Dungeon.NormalLongRange(25, 31);
-            case 2: return Dungeon.NormalLongRange(129, 176);
-            case 3: return Dungeon.NormalLongRange(525, 667);
-            case 4: return Dungeon.NormalLongRange(5000, 9000);
-			case 5: return Dungeon.NormalLongRange(475000, 975000);
-        }
-		return Dungeon.NormalLongRange( 1, 4 );
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(1), Dungeon.getCycleMultiplier(4) );
 	}
 	
 	@Override
@@ -160,15 +125,8 @@ public class Swarm extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
-        switch (Dungeon.cycle){
-            case 1: return 42;
-            case 2: return 180;
-            case 3: return 560;
-            case 4: return 1800;
-			case 5: return 29000;
-        }
-		return 10;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(10);
 	}
 	
 	private Swarm split() {

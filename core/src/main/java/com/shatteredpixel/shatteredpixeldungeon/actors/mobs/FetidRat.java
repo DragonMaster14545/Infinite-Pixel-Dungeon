@@ -41,47 +41,26 @@ public class FetidRat extends Rat {
 	{
 		spriteClass = FetidRatSprite.class;
 
-		HP = HT = 20;
-		defenseSkill = 5;
+		HP = HT = Dungeon.getCycleMultiplier(20);
+		defenseSkill = Dungeon.getCycleMultiplier(5);
 
-		EXP = 4;
+		EXP = Dungeon.getCycleMultiplier(4);
 
 		WANDERING = new Wandering();
 		state = WANDERING;
 
 		properties.add(Property.MINIBOSS);
 		properties.add(Property.DEMONIC);
-
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 190;
-                defenseSkill = 27;
-                EXP = 20;
-                break;
-            case 2:
-                HP = HT = 1580;
-                defenseSkill = 129;
-                EXP = 150;
-                break;
-        }
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
-        switch (Dungeon.cycle){
-            case 1: return 46;
-            case 2: return 200;
-        }
-		return 12;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(12);
 	}
 
 	@Override
 	public long cycledDrRoll() {
-        switch (Dungeon.cycle){
-            case 1: return Dungeon.NormalLongRange(8, 20);
-            case 2: return Dungeon.NormalLongRange(60, 125);
-        }
-		return Dungeon.NormalLongRange(0, 2);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(2));
 	}
 
 	@Override

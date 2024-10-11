@@ -39,10 +39,10 @@ public class Blob extends Actor {
 		actPriority = BLOB_PRIO;
 	}
 	
-	public int volume = 0;
+	public long volume = 0;
 	
-	public int[] cur;
-	protected int[] off;
+	public long[] cur;
+	protected long[] off;
 	
 	public BlobEmitter emitter;
 
@@ -80,9 +80,9 @@ public class Blob extends Actor {
 		}
 	}
 	
-	private int[] trim( int start, int end ) {
+	private long[] trim( int start, int end ) {
 		int len = end - start;
-		int[] copy = new int[len];
+		long[] copy = new long[len];
 		System.arraycopy( cur, start, copy, 0, len );
 		return copy;
 	}
@@ -94,8 +94,8 @@ public class Blob extends Actor {
 
 		if (bundle.contains( CUR )) {
 
-			cur = new int[bundle.getInt(LENGTH)];
-			off = new int[cur.length];
+			cur = new long[bundle.getInt(LENGTH)];
+			off = new long[cur.length];
 
 			int[] data = bundle.getIntArray(CUR);
 			int start = bundle.getInt(START);
@@ -120,7 +120,7 @@ public class Blob extends Actor {
 			volume = 0;
 
 			evolve();
-			int[] tmp = off;
+			long[] tmp = off;
 			off = cur;
 			cur = tmp;
 			
@@ -158,7 +158,7 @@ public class Blob extends Actor {
 					if (!blocking[cell]) {
 
 						int count = 1;
-						int sum = cur[cell];
+						long sum = cur[cell];
 
 						if (j > area.left && !blocking[cell-1]) {
 							sum += cur[cell-1];
@@ -177,7 +177,7 @@ public class Blob extends Actor {
 							count++;
 						}
 
-						int value = sum >= count ? (sum / count) - 1 : 0;
+						long value = sum >= count ? (sum / count) - 1 : 0;
 						off[cell] = value;
 
 						if (value > 0){
@@ -200,9 +200,9 @@ public class Blob extends Actor {
 		}
 	}
 
-	public void seed( Level level, int cell, int amount ) {
-		if (cur == null) cur = new int[level.length()];
-		if (off == null) off = new int[cur.length];
+	public void seed( Level level, int cell, long amount ) {
+		if (cur == null) cur = new long[level.length()];
+		if (off == null) off = new long[cur.length];
 
 		cur[cell] += amount;
 		volume += amount;
@@ -219,8 +219,8 @@ public class Blob extends Actor {
 	public void fullyClear(){
 		volume = 0;
 		area.setEmpty();
-		cur = new int[Dungeon.level.length()];
-		off = new int[Dungeon.level.length()];
+		cur = new long[Dungeon.level.length()];
+		off = new long[Dungeon.level.length()];
 	}
 
 	public void onBuildFlagMaps( Level l ){
@@ -237,12 +237,12 @@ public class Blob extends Actor {
 		return null;
 	}
 	
-	public static<T extends Blob> T seed( int cell, int amount, Class<T> type ) {
+	public static<T extends Blob> T seed( int cell, long amount, Class<T> type ) {
 		return seed(cell, amount, type, Dungeon.level);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static<T extends Blob> T seed( int cell, int amount, Class<T> type, Level level ) {
+	public static<T extends Blob> T seed( int cell, long amount, Class<T> type, Level level ) {
 		
 		T gas = (T)level.blobs.get( type );
 		
@@ -262,7 +262,7 @@ public class Blob extends Actor {
 		return gas;
 	}
 
-	public static int volumeAt( int cell, Class<? extends Blob> type){
+	public static long volumeAt( int cell, Class<? extends Blob> type){
 		Blob gas = Dungeon.level.blobs.get( type );
 		if (gas == null || gas.volume == 0) {
 			return 0;

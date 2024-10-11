@@ -71,9 +71,10 @@ public class YogDzewa extends Mob {
 	{
 		spriteClass = YogSprite.class;
 
-		HP = HT = 1000;
+		HP = HT = Dungeon.getCycleMultiplier(1000);
+		defenseSkill = 0;
 
-		EXP = 50;
+		EXP = Dungeon.getCycleMultiplier(50);
 
 		//so that allies can attack it. States are never actually used.
 		state = HUNTING;
@@ -83,33 +84,6 @@ public class YogDzewa extends Mob {
 		properties.add(Property.BOSS);
 		properties.add(Property.IMMOVABLE);
 		properties.add(Property.DEMONIC);
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 13000;
-                defenseSkill = 0;
-                EXP = 1500;
-                break;
-            case 2:
-                HP = HT = 180000;
-                defenseSkill = 0;
-                EXP = 125000;
-                break;
-            case 3:
-                HP = HT = 12000000;
-                defenseSkill = 0;
-                EXP = 2000000;
-                break;
-            case 4:
-                HP = HT = 4000000000L;
-                defenseSkill = 0;
-                EXP = 1500000000;
-                break;
-			case 5:
-				HP = HT = 95000000000L;
-				defenseSkill = 0;
-				EXP = 20000000000L;
-				break;
-        }
 		properties.add(Property.STATIC);
 	}
 
@@ -184,7 +158,7 @@ public class YogDzewa extends Mob {
 	private ArrayList<Integer> targetedCells = new ArrayList<>();
 
 	@Override
-	public int attackSkill(Char target) {
+	public long attackSkill(Char target) {
 		return INFINITE_ACCURACY;
 	}
 
@@ -270,13 +244,7 @@ public class YogDzewa extends Mob {
 
 					if (hit( this, ch, true )) {
 						long dmg = Dungeon.NormalLongRange(20, 30);
-						switch (Dungeon.cycle){
-							case 1: dmg = Dungeon.NormalLongRange(120, 175); break;
-							case 2: dmg = Dungeon.NormalLongRange(370, 502); break;
-							case 3: dmg = Dungeon.NormalLongRange(2650, 4000); break;
-							case 4: dmg = Dungeon.NormalLongRange(179000, 320000); break;
-							case 5: dmg = Dungeon.NormalLongRange(6400000, 10000000); break;
-						}
+						dmg = Dungeon.getCycleMultiplier(dmg);
 						if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)) {
 							ch.damage(dmg*25000L, new Eye.DeathGaze());
 						} else {
@@ -721,76 +689,30 @@ public class YogDzewa extends Mob {
 		{
 			spriteClass = LarvaSprite.class;
 
-			HP = HT = 20;
-			defenseSkill = 12;
+			HP = HT = Dungeon.getCycleMultiplier(20);
+			defenseSkill = Dungeon.getCycleMultiplier(12);
 			viewDistance = Light.DISTANCE;
 
-			EXP = 5;
+			EXP = Dungeon.getCycleMultiplier(5);
 			maxLvl = -2;
 
 			properties.add(Property.DEMONIC);
-            switch (Dungeon.cycle){
-                case 1:
-                    HP = HT = 345;
-                    defenseSkill = 67;
-                    EXP = 34;
-                    break;
-                case 2:
-                    HP = HT = 8000;
-                    defenseSkill = 300;
-                    EXP = 600;
-                    break;
-                case 3:
-                    HP = HT = 100000;
-                    defenseSkill = 840;
-                    EXP = 8000;
-                    break;
-                case 4:
-                    HP = HT = 90000000;
-                    defenseSkill = 17000;
-                    EXP = 1000000;
-                    break;
-				case 5:
-					HP = HT = 1400000000;
-					defenseSkill = 57500;
-					EXP = 30000000;
-					break;
-            }
 			properties.add(Property.BOSS_MINION);
 		}
 
 		@Override
-		public int attackSkill( Char target ) {
-            switch (Dungeon.cycle){
-                case 1: return 160;
-                case 2: return 500;
-                case 3: return 1250;
-                case 4: return 20000;
-				case 5: return 265000;
-            }
-			return 30;
+		public long attackSkill(Char target ) {
+			return Dungeon.getCycleMultiplier(30);
 		}
 
 		@Override
 		public long damageRoll() {
-            switch (Dungeon.cycle) {
-                case 1: return Dungeon.NormalLongRange(70, 91);
-                case 2: return Dungeon.NormalLongRange(325, 440);
-                case 3: return Dungeon.NormalLongRange(2500, 4000);
-                case 4: return Dungeon.NormalLongRange(360000, 460000);
-				case 5: return Dungeon.NormalLongRange(6000000, 9000000);
-            }
-			return Dungeon.NormalLongRange( 15, 25 );
+			return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(15), Dungeon.getCycleMultiplier(25) );
 		}
 
 		@Override
 		public long cycledDrRoll() {
-            switch (Dungeon.cycle){
-                case 1: return Dungeon.NormalLongRange(40, 63);
-                case 2: return Dungeon.NormalLongRange(125, 248);
-                case 3: return Dungeon.NormalLongRange(1600, 2800);
-            }
-			return Dungeon.NormalLongRange(0, 4);
+			return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(4));
 		}
 
 		@Override

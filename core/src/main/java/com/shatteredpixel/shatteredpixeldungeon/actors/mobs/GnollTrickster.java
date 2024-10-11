@@ -47,10 +47,10 @@ public class GnollTrickster extends Gnoll {
 	{
 		spriteClass = GnollTricksterSprite.class;
 
-		HP = HT = 20;
-		defenseSkill = 5;
+		HP = HT = Dungeon.getCycleMultiplier(20);
+		defenseSkill = Dungeon.getCycleMultiplier(5);
 
-		EXP = 5;
+		EXP = Dungeon.getCycleMultiplier(5);
 
 		WANDERING = new Wandering();
 		state = WANDERING;
@@ -60,28 +60,13 @@ public class GnollTrickster extends Gnoll {
 		lootChance = 1f;
 
 		properties.add(Property.MINIBOSS);
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 190;
-                defenseSkill = 27;
-                EXP = 21;
-                break;
-            case 2:
-                HP = HT = 1780;
-                defenseSkill = 138;
-                EXP = 168;
-                break;
-        }
 	}
 
 	private int combo = 0;
 
 	@Override
-	public int attackSkill( Char target ) {
-        switch (Dungeon.cycle){
-            case 1: return 55;
-        }
-		return 16;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(16);
 	}
 
 	@Override

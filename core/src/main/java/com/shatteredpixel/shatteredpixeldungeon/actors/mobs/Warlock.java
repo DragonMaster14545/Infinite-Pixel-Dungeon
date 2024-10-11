@@ -51,79 +51,31 @@ public class Warlock extends Mob implements Callback {
 	{
 		spriteClass = WarlockSprite.class;
 		
-		HP = HT = 70;
-		defenseSkill = 18;
+		HP = HT = Dungeon.getCycleMultiplier(70);
+		defenseSkill = Dungeon.getCycleMultiplier(18);
 		
-		EXP = 11;
+		EXP = Dungeon.getCycleMultiplier(11);
 		maxLvl = 21;
 		
 		loot = Generator.Category.POTION;
 		lootChance = 0.5f;
 
 		properties.add(Property.UNDEAD);
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 840;
-                defenseSkill = 71;
-                EXP = 76;
-                break;
-            case 2:
-                HP = HT = 11212;
-                defenseSkill = 291;
-                EXP = 625;
-                break;
-            case 3:
-                HP = HT = 325000;
-                defenseSkill = 735;
-                EXP = 7100;
-                break;
-            case 4:
-                HP = HT = 89000000;
-                defenseSkill = 6700;
-                EXP = 1200000;
-                break;
-			case 5:
-				HP = HT = 3800000000L;
-				defenseSkill = 80500;
-				EXP = 135000000;
-				break;
-        }
 	}
 	
 	@Override
 	public long damageRoll() {
-        switch (Dungeon.cycle) {
-            case 1: return Dungeon.NormalLongRange(60, 74);
-            case 2: return Dungeon.NormalLongRange(240, 389);
-            case 3: return Dungeon.NormalLongRange(1800, 2300);
-            case 4: return Dungeon.NormalLongRange(40000, 110000);
-			case 5: return Dungeon.NormalLongRange(2400000, 5000000);
-        }
-		return Random.NormalIntRange( 12, 18 );
+		return Random.NormalLongRange( Dungeon.getCycleMultiplier(12), Dungeon.getCycleMultiplier(18) );
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
-        switch (Dungeon.cycle){
-            case 1: return 115;
-            case 2: return 392;
-            case 3: return 960;
-            case 4: return 7600;
-			case 5: return 110000;
-        }
-		return 25;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(25);
 	}
 	
 	@Override
 	public long cycledDrRoll() {
-        switch (Dungeon.cycle){
-            case 1: return Dungeon.NormalLongRange(30, 59);
-            case 2: return Dungeon.NormalLongRange(112, 276);
-            case 3: return Dungeon.NormalLongRange(900, 1600);
-            case 4: return Dungeon.NormalLongRange(40000, 96000);
-			case 5: return Dungeon.NormalLongRange(3400000, 5750000);
-        }
-		return Dungeon.NormalLongRange(0, 8);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(8));
 	}
 	
 	@Override
@@ -167,13 +119,7 @@ public class Warlock extends Mob implements Callback {
 			}
 			
 			long dmg = Random.NormalIntRange( 12, 18 );
-            switch (Dungeon.cycle) {
-                case 1: dmg = Dungeon.NormalLongRange(64, 83); break;
-                case 2: dmg = Dungeon.NormalLongRange(276, 400); break;
-                case 3: dmg = Dungeon.NormalLongRange(1400, 1621); break;
-                case 4: dmg = Dungeon.NormalLongRange(45000, 130000); break;
-				case 5: dmg = Dungeon.NormalLongRange(2500000, 5100000); break;
-            }
+			dmg = Dungeon.getCycleMultiplier(dmg);
 			dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
 			enemy.damage( dmg, new DarkBolt() );
 			

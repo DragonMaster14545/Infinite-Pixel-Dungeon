@@ -81,7 +81,7 @@ public class Bbat extends Mob {
     }
 
     @Override
-    public int attackSkill(Char target) {
+    public long attackSkill(Char target) {
         return 10 + level * 3;
     }
 

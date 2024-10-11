@@ -233,6 +233,7 @@ public class Dungeon {
 	public static ArrayList<Integer> generatedLevels = new ArrayList<>();
 
 	public static long gold;
+	public static final int MAY_CYCLE = Integer.MAX_VALUE - 1;
 	public static int cycle;
 
 	public static ArrayList<Item> oofedItems = new ArrayList<>();
@@ -352,7 +353,7 @@ public class Dungeon {
         for (LimitedDrops a : LimitedDrops.values())
             if (a != LimitedDrops.BBAT && a != LimitedDrops.CHEESY_CHEEST)  a.count = 0;
         Notes.reset();
-        if (cycle < 5) cycle += 1;
+        if (cycle <= MAY_CYCLE) cycle += 1;
 		Dungeon.resetDamage = 1d + (Dungeon.resetDamage - 1d) * 0.5d;
         GameLog.wipe();
 		SpecialRoom.initForRun();
@@ -366,21 +367,26 @@ public class Dungeon {
         Game.switchScene( InterlevelScene.class );
     }
 
-	public static int escalatingDepth(){
+	public static long escalatingDepth(){
 		return escalatingDepth(Dungeon.depth);
 	}
 
+
+	public static long getCycleMultiplier(long baseValue ) {
+		return baseValue*((long)(Math.pow(cycle+1.5,cycle*1.17)));
+	}
+
+	public static int saveParse(long value) {
+		if (value > Integer.MAX_VALUE) {
+			return Integer.MAX_VALUE;
+		} else {
+			return (int) value;
+		}
+	}
+
     //as we don't increase depth when cycling, we will return virtual depth difficulty
-    public static int escalatingDepth(int depth){
-	    switch (cycle){
-            case 0: return depth;
-            case 1: return (int) (depth*2f + 55);
-            case 2: return depth*25+750;
-            case 3: return depth*300+12500;
-            case 4: return depth*3000 + 100000;
-			case 5: return depth*40000 + 410000;
-        }
-        return depth;
+    public static long escalatingDepth(int depth){
+		return getCycleMultiplier(depth) + getCycleMultiplier(depth > 0 ? 20:0);
     }
 
 	public static boolean isChallenged( int mask ) {
@@ -547,7 +553,7 @@ public class Dungeon {
 
 	//value used for scaling of damage values and other effects.
 	//is usually the dungeon depth, but can be set to 26 when ascending
-	public static int scalingDepth(){
+	public static long scalingDepth(){
 		if (Dungeon.hero != null && Dungeon.hero.buff(AscensionChallenge.class) != null){
 			return escalatingDepth(26);
 		} else {

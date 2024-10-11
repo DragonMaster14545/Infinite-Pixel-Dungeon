@@ -49,7 +49,7 @@ public class TormentedSpirit extends Wraith {
 
 	//50% more accuracy (and by extension evasion) scaling than regular wraiths
 	@Override
-	public int attackSkill( Char target ) {
+	public long attackSkill(Char target ) {
 		return 10 + Math.round(1.5f*level);
 	}
 

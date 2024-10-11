@@ -46,10 +46,10 @@ public class CrystalGuardian extends Mob{
 	{
 		spriteClass = CrystalGuardianSprite.class;
 
-		HP = HT = 100;
-		defenseSkill = 14;
+		HP = HT = Dungeon.getCycleMultiplier(100);
+		defenseSkill = Dungeon.getCycleMultiplier(14);
 
-		EXP = 10;
+		EXP = Dungeon.getCycleMultiplier(10);
 		maxLvl = -2;
 
 		SLEEPING = new Sleeping();
@@ -57,34 +57,6 @@ public class CrystalGuardian extends Mob{
 
 		properties.add(Property.INORGANIC);
 		properties.add(Property.MINIBOSS);
-
-		switch (Dungeon.cycle){
-			case 1:
-				HP = HT = 835;
-				defenseSkill = 45;
-				EXP = 52;
-				break;
-			case 2:
-				HP = HT = 8760;
-				defenseSkill = 210;
-				EXP = 515;
-				break;
-			case 3:
-				HP = HT = 195000;
-				defenseSkill = 620;
-				EXP = 5100;
-				break;
-			case 4:
-				HP = HT = 22500000;
-				defenseSkill = 4750;
-				EXP = 195000;
-				break;
-			case 5:
-				HP = HT = 2900000000L;
-				defenseSkill = 59500;
-				EXP = 48000000;
-				break;
-		}
 	}
 
 	private boolean recovering = false;
@@ -113,30 +85,16 @@ public class CrystalGuardian extends Mob{
 
 	@Override
 	public long damageRoll() {
-		switch (Dungeon.cycle) {
-			case 1: return Dungeon.NormalLongRange(60, 70);
-			case 2: return Dungeon.NormalLongRange(280, 350);
-			case 3: return Dungeon.NormalLongRange(1300, 1475);
-			case 4: return Dungeon.NormalLongRange(20000, 45000);
-			case 5: return Dungeon.NormalLongRange(2200000, 3800000);
-		}
-		return Dungeon.NormalLongRange( 10, 16 );
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(10), Dungeon.getCycleMultiplier(16) );
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
-		switch (Dungeon.cycle){
-			case 1: return 85;
-			case 2: return 335;
-			case 3: return 800;
-			case 4: return 4600;
-			case 5: return 65000;
-		}
-		return 20;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(20);
 	}
 
 	@Override
-	public int defenseSkill(Char enemy) {
+	public long defenseSkill(Char enemy) {
 		if (recovering) return 0;
 		else            return super.defenseSkill(enemy);
 	}
@@ -149,14 +107,7 @@ public class CrystalGuardian extends Mob{
 
 	@Override
 	public long cycledDrRoll() {
-		switch (Dungeon.cycle){
-			case 1: return Dungeon.NormalLongRange(30, 60);
-			case 2: return Dungeon.NormalLongRange(100, 270);
-			case 3: return Dungeon.NormalLongRange(570, 1300);
-			case 4: return Dungeon.NormalLongRange(16000, 42000);
-			case 5: return Dungeon.NormalLongRange(2500000, 4000000);
-		}
-		return Dungeon.NormalLongRange(0, 10);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(10));
 	}
 
 	@Override

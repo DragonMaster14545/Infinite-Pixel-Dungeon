@@ -65,7 +65,7 @@ public class Pylon extends Mob {
 	{
 		spriteClass = PylonSprite.class;
 
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 80 : 50;
+		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? Dungeon.getCycleMultiplier(80) : Dungeon.getCycleMultiplier(50);
 
 		maxLvl = -2;
 
@@ -78,23 +78,6 @@ public class Pylon extends Mob {
 
 		state = PASSIVE;
 		alignment = Alignment.NEUTRAL;
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 450;
-                break;
-            case 2:
-                HP = HT = 3456;
-                break;
-            case 3:
-                HP = HT = 50000;
-                break;
-            case 4:
-                HP = HT = 10000000;
-                break;
-			case 5:
-				HP = HT = 2500000000L;
-				break;
-        }
 	}
 
 	private int targetNeighbor = Random.Int(8);
@@ -171,7 +154,7 @@ public class Pylon extends Mob {
 	private void shockChar( Char ch ){
 		if (ch != null && !(ch instanceof DM300)){
 			ch.sprite.flash();
-			ch.damage(Dungeon.NormalLongRange(10, 20) + Dungeon.cycle * 60, new Electricity());
+			ch.damage(Dungeon.NormalLongRange(10, 20) + Dungeon.cycle * 60L, new Electricity());
 
 			if (ch == Dungeon.hero) {
 				Statistics.qualifiedForBossChallengeBadge = false;
@@ -233,9 +216,9 @@ public class Pylon extends Mob {
 
 	@Override
 	public void damage(long dmg, Object src) {
-		if (dmg >= 15 + Dungeon.cycle * 60 && Dungeon.cycle < 2){
+		if (dmg >= 15 + Dungeon.cycle * 60L && Dungeon.cycle < 2){
 			//takes 15/16/17/18/19/20 dmg at 15/17/20/24/29/36 incoming dmg
-			dmg = 14 + Dungeon.cycle * 60 + (int)(Math.sqrt(8*(dmg - 14) + 1) - 1)/2;
+			dmg = 14 + Dungeon.cycle * 60L + (int)(Math.sqrt(8*(dmg - 14) + 1) - 1)/2;
 		}
 
 		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);

@@ -47,14 +47,7 @@ public class Senior extends Monk {
 	
 	@Override
 	public long damageRoll() {
-        switch (Dungeon.cycle) {
-            case 1: return Dungeon.NormalLongRange(71, 83);
-            case 2: return Dungeon.NormalLongRange(313, 431);
-            case 3: return Dungeon.NormalLongRange(1800, 2340);
-            case 4: return Dungeon.NormalLongRange(60000, 100000);
-			case 5: return Dungeon.NormalLongRange(4000000, 7900000);
-        }
-		return Dungeon.NormalLongRange( 16, 25 );
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(16), Dungeon.getCycleMultiplier(25) );
 	}
 	
 }

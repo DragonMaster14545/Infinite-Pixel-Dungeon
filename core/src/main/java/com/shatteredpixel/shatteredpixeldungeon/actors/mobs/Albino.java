@@ -37,38 +37,12 @@ public class Albino extends Rat {
 	{
 		spriteClass = AlbinoSprite.class;
 		
-		HP = HT = 15;
-		EXP = 2;
+		HP = HT = Dungeon.getCycleMultiplier(15);
+		EXP = Dungeon.getCycleMultiplier(2);
+        defenseSkill = Dungeon.getCycleMultiplier(10)-10;
 		
 		loot = new MysteryMeat();
 		lootChance = 1f;
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 128;
-                defenseSkill = 28;
-                EXP = 17;
-                break;
-            case 2:
-                HP = HT = 1480;
-                defenseSkill = 126;
-                EXP = 131;
-                break;
-            case 3:
-                HP = HT = 20000;
-                defenseSkill = 340;
-                EXP = 910;
-                break;
-            case 4:
-                HP = HT = 1200000;
-                defenseSkill = 1300;
-                EXP = 28000;
-                break;
-            case 5:
-                HP = HT = 475000000;
-                defenseSkill = 20000;
-                EXP = 11500000;
-                break;
-        }
 	}
 	
 	@Override

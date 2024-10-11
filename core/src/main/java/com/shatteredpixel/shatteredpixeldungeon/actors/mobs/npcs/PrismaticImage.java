@@ -162,7 +162,7 @@ public class PrismaticImage extends NPC {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public long attackSkill(Char target ) {
 		if (hero != null) {
 			//same base attack skill as hero, benefits from accuracy ring
 			return (int)((9 + hero.lvl) * RingOfAccuracy.accuracyMultiplier(hero));
@@ -172,7 +172,7 @@ public class PrismaticImage extends NPC {
 	}
 	
 	@Override
-	public int defenseSkill(Char enemy) {
+	public long defenseSkill(Char enemy) {
 		if (hero != null) {
 			int baseEvasion = 4 + hero.lvl;
 			int heroEvasion = (int)((4 + hero.lvl) * RingOfEvasion.evasionMultiplier( hero ));

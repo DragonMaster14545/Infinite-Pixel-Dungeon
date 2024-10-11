@@ -612,11 +612,11 @@ public abstract class Char extends Actor {
 		return (acuRoll * accMulti) >= defRoll;
 	}
 
-	public int attackSkill( Char target ) {
+	public long attackSkill(Char target ) {
 		return 0;
 	}
 	
-	public int defenseSkill( Char enemy ) {
+	public long defenseSkill(Char enemy ) {
 		return 0;
 	}
 	

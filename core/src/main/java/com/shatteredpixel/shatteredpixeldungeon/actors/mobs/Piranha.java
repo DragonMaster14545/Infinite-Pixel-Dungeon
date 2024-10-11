@@ -88,7 +88,7 @@ public class Piranha extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public long attackSkill(Char target ) {
 		return 20 + Dungeon.escalatingDepth() * 2;
 	}
 	

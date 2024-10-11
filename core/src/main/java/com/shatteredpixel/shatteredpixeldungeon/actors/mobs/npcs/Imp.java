@@ -84,7 +84,7 @@ public class Imp extends NPC {
 	}
 	
 	@Override
-	public int defenseSkill( Char enemy ) {
+	public long defenseSkill(Char enemy ) {
 		return INFINITE_EVASION;
 	}
 
@@ -255,11 +255,7 @@ public class Imp extends NPC {
 				do {
 					reward = (Ring)Generator.random( Generator.Category.RING );
 				} while (reward.cursed);
-				reward.upgrade( 2 );
-                switch (Dungeon.cycle){
-                    case 1: reward.upgrade(5); break;
-                    case 2: reward.upgrade(29); break;
-                }
+				reward.upgrade( Dungeon.getCycleMultiplier(2) );
 				reward.cursed = true;
 				PsycheChest.questDepth = -1;
 			}

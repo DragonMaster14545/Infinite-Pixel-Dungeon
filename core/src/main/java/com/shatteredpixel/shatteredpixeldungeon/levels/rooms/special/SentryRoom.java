@@ -23,12 +23,9 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Eye;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.NPC;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
@@ -305,12 +302,12 @@ public class SentryRoom extends SpecialRoom {
 		}
 
 		@Override
-		public int attackSkill(Char target) {
+		public long attackSkill(Char target) {
 			return 20 + Dungeon.depth * 2;
 		}
 
 		@Override
-		public int defenseSkill( Char enemy ) {
+		public long defenseSkill(Char enemy ) {
 			return INFINITE_EVASION;
 		}
 

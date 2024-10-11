@@ -93,7 +93,7 @@ public class Earthroot extends Plant {
 			return true;
 		}
 		
-		private static int blocking(){
+		private static long blocking(){
 			return (Dungeon.scalingDepth() + 5)/2;
 		}
 		

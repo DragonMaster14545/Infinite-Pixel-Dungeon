@@ -46,10 +46,10 @@ public class DemonSpawner extends Mob {
 	{
 		spriteClass = SpawnerSprite.class;
 
-		HP = HT = 120;
+		HP = HT = Dungeon.getCycleMultiplier(120);
 		defenseSkill = 0;
 
-		EXP = 15;
+		EXP = Dungeon.getCycleMultiplier(15);
 		maxLvl = 29;
 
 		state = PASSIVE;
@@ -60,46 +60,12 @@ public class DemonSpawner extends Mob {
 		properties.add(Property.IMMOVABLE);
 		properties.add(Property.MINIBOSS);
 		properties.add(Property.DEMONIC);
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 1238;
-                defenseSkill = 0;
-                EXP = 400;
-                break;
-            case 2:
-                HP = HT = 45000;
-                defenseSkill = 0;
-                EXP = 9000;
-                break;
-            case 3:
-                HP = HT = 300000;
-                defenseSkill = 0;
-                EXP = 80000;
-                break;
-            case 4:
-                HP = HT = 2100000000;
-                defenseSkill = 0;
-                EXP = 20000000;
-                break;
-			case 5:
-				HP = HT = 35000000000L;
-				defenseSkill = 0;
-				EXP = 425000000;
-				break;
-        }
 		properties.add(Property.STATIC);
 	}
 
 	@Override
 	public long cycledDrRoll() {
-        switch (Dungeon.cycle){
-            case 1: return Dungeon.NormalLongRange(48, 73);
-            case 2: return Dungeon.NormalLongRange(185, 365);
-            case 3: return Dungeon.NormalLongRange(1800, 3120);
-            case 4: return Dungeon.NormalLongRange(130000, 200000);
-			case 5: return Dungeon.NormalLongRange(8000000, 14500000);
-        }
-		return Dungeon.NormalLongRange(0, 12);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(12));
 	}
 
 	@Override
@@ -168,10 +134,10 @@ public class DemonSpawner extends Mob {
 
 	@Override
 	public void damage(long dmg, Object src) {
-		if (dmg >= 20 + Dungeon.cycle * 300 && Dungeon.cycle < 2){
+		if (dmg >= 20 + Dungeon.cycle * 300L && Dungeon.cycle < 2){
 			//takes 20/21/22/23/24/25/26/27/28/29/30 dmg
 			// at   20/22/25/29/34/40/47/55/64/74/85 incoming dmg
-			dmg = 19 + Dungeon.cycle * 300 + (int)(Math.sqrt(8*(dmg - 19) + 1) - 1)/2;
+			dmg = 19 + Dungeon.cycle * 300L + (int)(Math.sqrt(8*(dmg - 19) + 1) - 1)/2;
 		}
 		spawnCooldown -= dmg;
 		super.damage(dmg, src);

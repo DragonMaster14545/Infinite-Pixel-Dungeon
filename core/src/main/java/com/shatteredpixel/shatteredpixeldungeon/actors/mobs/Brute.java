@@ -43,91 +43,31 @@ public class Brute extends Mob {
 	{
 		spriteClass = BruteSprite.class;
 		
-		HP = HT = 40;
-		defenseSkill = 15;
+		HP = HT = Dungeon.getCycleMultiplier(40);
+		defenseSkill = Dungeon.getCycleMultiplier(15);
 		
-		EXP = 8;
+		EXP = Dungeon.getCycleMultiplier(8);
 		maxLvl = 16;
 		
 		loot = Gold.class;
 		lootChance = 0.5f;
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 420;
-                defenseSkill = 53;
-                EXP = 38;
-                break;
-            case 2:
-                HP = HT = 5645;
-                defenseSkill = 200;
-                EXP = 360;
-                break;
-            case 3:
-                HP = HT = 105000;
-                defenseSkill = 525;
-                EXP = 3600;
-                break;
-            case 4:
-                HP = HT = 9000000;
-                defenseSkill = 3400;
-                EXP = 90000;
-                break;
-			case 5:
-				HP = HT = 1600000000;
-				defenseSkill = 57500;
-				EXP = 36500000;
-				break;
-        }
 	}
 	
 	protected boolean hasRaged = false;
 	
 	@Override
 	public long damageRoll() {
-        switch (Dungeon.cycle) {
-            case 1: return buff(BruteRage.class) != null ?
-                    Dungeon.NormalLongRange( 70, 123 ) :
-                    Dungeon.NormalLongRange( 58, 70 );
-            case 2: return buff(BruteRage.class) != null ?
-                    Dungeon.NormalLongRange( 340, 541 ) :
-                    Dungeon.NormalLongRange( 240, 368 );
-            case 3: return buff(BruteRage.class) != null ?
-                    Dungeon.NormalLongRange( 1200, 1640 ) :
-                    Dungeon.NormalLongRange(900, 1340);
-            case 4: return buff(BruteRage.class) != null ?
-                    Dungeon.NormalLongRange( 30000, 64000 ) :
-                    Dungeon.NormalLongRange(16500, 40000);
-			case 5: return buff(BruteRage.class) != null ?
-					Dungeon.NormalLongRange(2250000, 3500000) :
-					Dungeon.NormalLongRange(1650000, 2500000);
-        }
-		return buff(BruteRage.class) != null ?
-				Dungeon.NormalLongRange( 15, 40 ) :
-				Dungeon.NormalLongRange( 5, 25 );
+		return buff(BruteRage.class) != null ? Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(15),Dungeon.getCycleMultiplier(40)) : Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(5), Dungeon.getCycleMultiplier(25));
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
-        switch (Dungeon.cycle){
-            case 1: return 80;
-            case 2: return 300;
-            case 3: return 740;
-            case 4: return 3600;
-			case 5: return 57500;
-        }
-		return 20;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(20);
 	}
 	
 	@Override
 	public long cycledDrRoll() {
-        switch (Dungeon.cycle){
-            case 1: return Dungeon.NormalLongRange(20, 39);
-            case 2: return Dungeon.NormalLongRange(120, 231);
-            case 3: return Dungeon.NormalLongRange(500, 890);
-            case 4: return Dungeon.NormalLongRange(10000, 22000);
-			case 5: return Dungeon.NormalLongRange(750000, 1450000);
-        }
-		return Dungeon.NormalLongRange(0, 8);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(8));
 	}
 
 	@Override

@@ -174,7 +174,7 @@ public class SacrificialFire extends Blob {
 
 			if (exp > 0) {
 
-				int volumeLeft = cur[firePos] - (int)Math.min(Integer.MAX_VALUE, exp);
+				long volumeLeft = cur[firePos] - (int)Math.min(Integer.MAX_VALUE, exp);
 				if (volumeLeft > 0) {
 					cur[firePos] -= exp;
 					volume -= exp;

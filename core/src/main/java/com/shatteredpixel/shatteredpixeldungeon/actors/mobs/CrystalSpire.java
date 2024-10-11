@@ -59,25 +59,8 @@ public class CrystalSpire extends Mob {
 
 	{
 		//this translates to roughly 33/27/23/20/18/16 pickaxe hits at +0/1/2/3/4/5
-		HP = HT = 500;
+		HP = HT = Dungeon.getCycleMultiplier(500);
 		spriteClass = CrystalSpireSprite.class;
-		switch (Dungeon.cycle){
-			case 1:
-				HP = HT = 1650;
-				break;
-			case 2:
-				HP = HT = 3400;
-				break;
-			case 3:
-				HP = HT = 6600;
-				break;
-			case 4:
-				HP = HT = 11625;
-				break;
-			case 5:
-				HP = HT = 46725;
-				break;
-		}
 
 		EXP = 20;
 
@@ -140,14 +123,7 @@ public class CrystalSpire extends Mob {
 				Char ch = Actor.findChar(i);
 
 				if (ch != null && !(ch instanceof CrystalWisp || ch instanceof CrystalSpire)){
-					long dmg = Dungeon.NormalLongRange(12, 30);
-					switch (Dungeon.cycle) {
-						case 1: dmg = Dungeon.NormalLongRange(96, 124); break;
-						case 2: dmg = Dungeon.NormalLongRange(500, 648); break;
-						case 3: dmg = Dungeon.NormalLongRange(1790, 2400); break;
-						case 4: dmg = Dungeon.NormalLongRange(34000, 52000); break;
-						case 5: dmg = Dungeon.NormalLongRange(4000000, 4900000); break;
-					}
+					long dmg = Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(12), Dungeon.getCycleMultiplier(30));
 
 					//guardians are hit harder by the attack
 					if (ch instanceof CrystalGuardian) {

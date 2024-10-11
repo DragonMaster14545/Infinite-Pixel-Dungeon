@@ -43,67 +43,26 @@ public class Monk extends Mob {
 	{
 		spriteClass = MonkSprite.class;
 		
-		HP = HT = 70;
-		defenseSkill = 30;
+		HP = HT = Dungeon.getCycleMultiplier(70);
+		defenseSkill = Dungeon.getCycleMultiplier(30);
 		
-		EXP = 11;
+		EXP = Dungeon.getCycleMultiplier(11);
 		maxLvl = 21;
 		
 		loot = new Food();
 		lootChance = 0.083f;
 
 		properties.add(Property.UNDEAD);
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 825;
-                defenseSkill = 89;
-                EXP = 71;
-                break;
-            case 2:
-                HP = HT = 12678;
-                defenseSkill = 345;
-                EXP = 600;
-                break;
-            case 3:
-                HP = HT = 275000;
-                defenseSkill = 700;
-                EXP = 6500;
-                break;
-            case 4:
-                HP = HT = 100000000;
-                defenseSkill = 6400;
-                EXP = 800000;
-                break;
-			case 5:
-				HP = HT = 3900000000L;
-				defenseSkill = 100500;
-				EXP = 145000000;
-				break;
-        }
 	}
 	
 	@Override
 	public long damageRoll() {
-        switch (Dungeon.cycle) {
-            case 1: return Dungeon.NormalLongRange(62, 78);
-            case 2: return Dungeon.NormalLongRange(270, 400);
-            case 3: return Dungeon.NormalLongRange(1700, 2240);
-            case 4: return Dungeon.NormalLongRange(40000, 100000);
-			case 5: return Dungeon.NormalLongRange(3100000, 7750000);
-        }
-		return Dungeon.NormalLongRange( 12, 25 );
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(12), Dungeon.getCycleMultiplier(25) );
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
-        switch (Dungeon.cycle){
-            case 1: return 134;
-            case 2: return 440;
-            case 3: return 1000;
-            case 4: return 7000;
-			case 5: return 102500;
-        }
-		return 30;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(30);
 	}
 	
 	@Override
@@ -113,14 +72,7 @@ public class Monk extends Mob {
 	
 	@Override
 	public long cycledDrRoll() {
-        switch (Dungeon.cycle){
-            case 1: return Dungeon.NormalLongRange(20, 30);
-            case 2: return Dungeon.NormalLongRange(60, 193);
-            case 3: return Dungeon.NormalLongRange(700, 1000);
-            case 4: return Dungeon.NormalLongRange(26000, 73000);
-			case 5: return Dungeon.NormalLongRange(2700000, 5150000);
-        }
-		return Dungeon.NormalLongRange(0, 2);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(2));
 	}
 	
 	@Override
@@ -156,7 +108,7 @@ public class Monk extends Mob {
 	}
 	
 	@Override
-	public int defenseSkill( Char enemy ) {
+	public long defenseSkill(Char enemy ) {
 		if (buff(Focus.class) != null && paralysed == 0 && state != SLEEPING){
 			return INFINITE_EVASION;
 		}

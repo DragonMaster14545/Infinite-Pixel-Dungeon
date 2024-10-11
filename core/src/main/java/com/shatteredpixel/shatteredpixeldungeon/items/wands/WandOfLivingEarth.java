@@ -356,7 +356,7 @@ public class WandOfLivingEarth extends DamageWand {
 		}
 
 		@Override
-		public int attackSkill(Char target) {
+		public long attackSkill(Char target) {
 			//same as the hero
 			return 2*defenseSkill + 5;
 		}

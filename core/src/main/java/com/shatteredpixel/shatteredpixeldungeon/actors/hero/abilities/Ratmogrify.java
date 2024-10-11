@@ -266,7 +266,7 @@ public class Ratmogrify extends ArmorAbility {
 			Bestiary.countEncounter(original.getClass());
 		}
 
-		public int attackSkill(Char target) {
+		public long attackSkill(Char target) {
 			return original.attackSkill(target);
 		}
 

@@ -55,7 +55,7 @@ public class BlobEmitter extends Emitter {
 		if (blob.area.isEmpty())
 			blob.setupArea();
 		
-		int[] map = blob.cur;
+		long[] map = blob.cur;
 		float size = DungeonTilemap.SIZE;
 
 		int cell;

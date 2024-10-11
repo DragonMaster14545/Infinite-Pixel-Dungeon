@@ -28,7 +28,6 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HookSprite;
 import com.watabou.noosa.audio.Sample;
@@ -82,7 +81,7 @@ public class Hook extends NPC {
     }
 
     @Override
-    public int defenseSkill( Char enemy ) {
+    public long defenseSkill(Char enemy ) {
         return INFINITE_EVASION;
     }
 

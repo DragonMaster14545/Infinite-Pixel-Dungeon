@@ -45,10 +45,10 @@ public class Golem extends Mob {
 	{
 		spriteClass = GolemSprite.class;
 		
-		HP = HT = 120;
-		defenseSkill = 15;
+		HP = HT = Dungeon.getCycleMultiplier(120);
+		defenseSkill = Dungeon.getCycleMultiplier(15);
 		
-		EXP = 12;
+		EXP = Dungeon.getCycleMultiplier(12);
 		maxLvl = 22;
 
 		loot = Random.oneOf(Generator.Category.WEAPON, Generator.Category.ARMOR);
@@ -59,69 +59,21 @@ public class Golem extends Mob {
 
 		WANDERING = new Wandering();
 		HUNTING = new Hunting();
-        switch (Dungeon.cycle){
-            case 1:
-                HP = HT = 1095;
-                defenseSkill = 67;
-                EXP = 78;
-                break;
-            case 2:
-                HP = HT = 17980;
-                defenseSkill = 240;
-                EXP = 687;
-                break;
-            case 3:
-                HP = HT = 400000;
-                defenseSkill = 780;
-                EXP = 8250;
-                break;
-            case 4:
-                HP = HT = 170000000;
-                defenseSkill = 7000;
-                EXP = 1750000;
-                break;
-			case 5:
-				HP = HT = 3200000000L;
-				defenseSkill = 90500;
-				EXP = 185000000;
-				break;
-        }
 	}
 
 	@Override
 	public long damageRoll() {
-        switch (Dungeon.cycle) {
-            case 1: return Dungeon.NormalLongRange(69, 96);
-            case 2: return Dungeon.NormalLongRange(300, 519);
-            case 3: return Dungeon.NormalLongRange(1900, 2650);
-            case 4: return Dungeon.NormalLongRange(65000, 180000);
-			case 5: return Dungeon.NormalLongRange(6000000, 9000000);
-        }
-		return Dungeon.NormalLongRange( 25, 30 );
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(25), Dungeon.getCycleMultiplier(30) );
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
-        switch (Dungeon.cycle){
-            case 1: return 124;
-            case 2: return 400;
-            case 3: return 1100;
-            case 4: return 8300;
-			case 5: return 120000;
-        }
-		return 28;
+	public long attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(28);
 	}
 	
 	@Override
 	public long cycledDrRoll() {
-        switch (Dungeon.cycle){
-            case 1: return Dungeon.NormalLongRange(40, 68);
-            case 2: return Dungeon.NormalLongRange(160, 333);
-            case 3: return Dungeon.NormalLongRange(1100, 1800);
-            case 4: return Dungeon.NormalLongRange(70000, 125000);
-			case 5: return Dungeon.NormalLongRange(3900000, 7000000);
-        }
-		return Dungeon.NormalLongRange(0, 12);
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(12));
 	}
 
 	@Override

@@ -200,7 +200,7 @@ public class ShadowClone extends ArmorAbility {
 		}
 
 		@Override
-		public int attackSkill(Char target) {
+		public long attackSkill(Char target) {
 			return defenseSkill+5; //equal to base hero attack skill
 		}
 

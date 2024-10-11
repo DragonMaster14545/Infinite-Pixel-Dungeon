@@ -311,7 +311,7 @@ public class WandOfWarding extends Wand {
 		}
 
 		@Override
-		public int defenseSkill(Char enemy) {
+		public long defenseSkill(Char enemy) {
 			if (tier > 3){
 				defenseSkill = 4 + Dungeon.scalingDepth();
 			}

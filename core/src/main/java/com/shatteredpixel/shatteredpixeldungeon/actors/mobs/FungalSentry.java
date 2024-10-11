@@ -87,7 +87,7 @@ public class FungalSentry extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public long attackSkill(Char target ) {
 		return 50;
 	}
 

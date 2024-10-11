@@ -605,7 +605,7 @@ public class DriedRose extends Artifact {
 		public static class NoRoseDamage{}
 
 		@Override
-		public int attackSkill(Char target) {
+		public long attackSkill(Char target) {
 			
 			//same accuracy as the hero.
 			int acc = Dungeon.hero.lvl + 9;
@@ -698,8 +698,8 @@ public class DriedRose extends Artifact {
 		}
 		
 		@Override
-		public int defenseSkill(Char enemy) {
-			int defense = super.defenseSkill(enemy);
+		public long defenseSkill(Char enemy) {
+			long defense = super.defenseSkill(enemy);
 
 			if (defense != 0 && rose != null && rose.armor != null ){
 				defense = Math.round(rose.armor.evasionFactor( this, defense ));

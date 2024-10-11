@@ -65,7 +65,7 @@ public class LaboratoryRoom extends SpecialRoom {
 		}
 		Painter.set( level, pot, Terrain.ALCHEMY );
 		
-		int chapter = 1 + Dungeon.escalatingDepth()/5;
+		long chapter = 1 + Dungeon.escalatingDepth()/5;
 		Blob.seed( pot.x + level.width() * pot.y, 1, Alchemy.class, level );
 
 		int pos;
@@ -106,7 +106,7 @@ public class LaboratoryRoom extends SpecialRoom {
 		if(!missingPages.isEmpty() && chapter >= chapterTarget){
 			
 			//for each chapter ahead of the target chapter, drop 1 additional page
-			int pagesToDrop = Math.min(missingPages.size(), (chapter - chapterTarget) + 1);
+			long pagesToDrop = Math.min(missingPages.size(), (chapter - chapterTarget) + 1);
 			
 			for (int i = 0; i < pagesToDrop; i++) {
 				AlchemyPage p = new AlchemyPage();

@@ -54,7 +54,7 @@ public class Bee extends Mob {
 		intelligentAlly = true;
 	}
 
-	private int level;
+	private long level;
 
 	//-1 refers to a pot that has gone missing.
 	private int potPos;
@@ -90,7 +90,7 @@ public class Bee extends Mob {
 		super.die(cause);
 	}
 
-	public void spawn( int level ) {
+	public void spawn( long level ) {
 		this.level = level;
 		
 		HT = (2 + level) * 4;
@@ -114,7 +114,7 @@ public class Bee extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public long attackSkill(Char target ) {
 		return defenseSkill;
 	}
 	
