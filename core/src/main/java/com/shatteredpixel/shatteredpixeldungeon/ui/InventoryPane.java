@@ -296,9 +296,21 @@ public class InventoryPane extends Component {
 
 		equipped.get(0).item(stuff.weapon == null ? new WndBag.Placeholder( ItemSpriteSheet.WEAPON_HOLDER ) : stuff.weapon);
 		equipped.get(1).item(stuff.armor == null ? new WndBag.Placeholder( ItemSpriteSheet.ARMOR_HOLDER ) : stuff.armor);
-		equipped.get(2).item(stuff.artifact == null ? new WndBag.Placeholder( ItemSpriteSheet.ARTIFACT_HOLDER ) : stuff.artifact);
-		equipped.get(3).item(stuff.misc == null ? new WndBag.Placeholder( ItemSpriteSheet.SOMETHING ) : stuff.misc);
-		equipped.get(4).item(stuff.ring == null ? new WndBag.Placeholder( ItemSpriteSheet.RING_HOLDER ) : stuff.ring);
+		for (int i = 0; i < Dungeon.hero.belongings.artifactSlots(); i++) {
+			if (stuff.artifacts.size() > i) {
+				equipped.get(2+i).item(stuff.artifacts.get(i) == null ? new WndBag.Placeholder( ItemSpriteSheet.ARTIFACT_HOLDER ) : stuff.artifacts.get(i));
+			};
+		}
+		for (int i = 0; i < Dungeon.hero.belongings.miscSlots(); i++) {
+			if (stuff.miscs.size() > i) {
+				equipped.get(2+Dungeon.hero.belongings.artifactSlots()+i).item(stuff.miscs.get(i) == null ? new WndBag.Placeholder( ItemSpriteSheet.SOMETHING ) : stuff.miscs.get(i));
+			}
+		}
+		for (int i = 0; i < Dungeon.hero.belongings.ringSlots(); i++) {
+			if (stuff.rings.size() > i) {
+				equipped.get(2+Dungeon.hero.belongings.artifactSlots()+Dungeon.hero.belongings.miscSlots()+i).item(stuff.rings.get(i) == null ? new WndBag.Placeholder( ItemSpriteSheet.RING_HOLDER ) : stuff.rings.get(i));
+			}
+		}
 
 		ArrayList<Item> items = (ArrayList<Item>) lastBag.items.clone();
 

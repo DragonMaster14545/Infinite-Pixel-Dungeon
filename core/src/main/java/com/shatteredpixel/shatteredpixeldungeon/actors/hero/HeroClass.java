@@ -49,10 +49,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.PsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.Waterskin;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
-import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
-import com.shatteredpixel.shatteredpixeldungeon.items.bags.PotionBandolier;
-import com.shatteredpixel.shatteredpixeldungeon.items.bags.ScrollHolder;
-import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.*;
@@ -93,6 +90,8 @@ public enum HeroClass {
 
 		new VelvetPouch().collect();
 		Dungeon.LimitedDrops.VELVET_POUCH.drop();
+
+		new EquipmentBag().collect();
 
 		Waterskin waterskin = new Waterskin();
 		waterskin.collect();
@@ -189,8 +188,9 @@ public enum HeroClass {
 		(hero.belongings.weapon = new Dagger()).identify();
 
 		CloakOfShadows cloak = new CloakOfShadows();
-		(hero.belongings.artifact = cloak).identify();
-		hero.belongings.artifact.activate( hero );
+		hero.belongings.artifacts.add(cloak);
+		cloak.identify();
+		hero.belongings.artifacts.forEach(artifact -> artifact.activate(hero));
 
 		ThrowingKnife knives = new ThrowingKnife();
 		knives.quantity(3).collect();
@@ -249,8 +249,9 @@ public enum HeroClass {
 		Dungeon.quickslot.setSlot(1, bow);
 
 		CloakOfShadows cloak = new CloakOfShadows();
-		(hero.belongings.artifact = cloak).identify();
-		hero.belongings.artifact.activate( hero );
+		hero.belongings.artifacts.add(cloak);
+		cloak.identify();
+		hero.belongings.artifacts.forEach(artifact -> artifact.activate(hero));
 
 		Dungeon.quickslot.setSlot(2, cloak);
 

@@ -48,6 +48,7 @@ import com.watabou.utils.Point;
 import com.watabou.utils.PointF;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Toolbar extends Component {
 
@@ -415,9 +416,9 @@ public class Toolbar extends Component {
 
 							if (idx == 0){
 								Belongings b = Dungeon.hero.belongings;
-								if (b.ring() != null) items.add(0, b.ring());
-								if (b.misc() != null) items.add(0, b.misc());
-								if (b.artifact() != null) items.add(0, b.artifact());
+								b.rings().forEach(item -> items.add(0, item));
+								b.miscs().forEach(item -> items.add(0, item));
+								b.artifacts().forEach(item -> items.add(0, item));
 								if (b.armor() != null) items.add(0, b.armor());
 								if (b.weapon() != null) items.add(0, b.weapon());
 							}

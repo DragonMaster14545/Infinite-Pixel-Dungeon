@@ -111,13 +111,13 @@ public class Bones {
 					item = hero.belongings.armor;
 					break;
 				case 2:
-					item = hero.belongings.artifact;
+					item = hero.belongings.artifacts.get(Dungeon.Int(hero.belongings.artifacts.size()));
 					break;
 				case 3:
-					item = hero.belongings.misc;
+					item = hero.belongings.miscs.get(Dungeon.Int(hero.belongings.miscs.size()));
 					break;
 				case 4:
-					item = hero.belongings.ring;
+					item = hero.belongings.rings.get(Dungeon.Int(hero.belongings.rings.size()));
 					break;
 				case 5: case 6:
 					item = Dungeon.quickslot.randomNonePlaceholder();

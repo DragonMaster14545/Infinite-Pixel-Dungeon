@@ -504,7 +504,6 @@ public class Bundle {
 	private static final int GZIP_BUFFER = 1024*4; //4 kb
 
 	public static Bundle read( InputStream stream ) throws IOException {
-
 		try {
 			if (!stream.markSupported()){
 				stream = new BufferedInputStream( stream, 2 );

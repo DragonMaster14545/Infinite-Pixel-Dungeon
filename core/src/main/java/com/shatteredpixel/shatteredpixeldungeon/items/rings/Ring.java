@@ -47,6 +47,7 @@ import com.watabou.utils.Bundle;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 
 public class Ring extends KindofMisc {
 	
@@ -399,24 +400,25 @@ public class Ring extends KindofMisc {
 
 	//just used for ring descriptions
 	public long combinedBonus(Hero hero){
-		int bonus = 0;
-		if (hero.belongings.ring() != null && hero.belongings.ring().getClass() == getClass()){
-			bonus += hero.belongings.ring().soloBonus();
+		long bonus = 0;
+		for (Ring ring : (Ring[]) hero.belongings.rings.stream().filter(ring -> ring.getClass() == getClass()).toArray()) {
+			bonus += ring.soloBonus();
 		}
-		if (hero.belongings.misc() != null && hero.belongings.misc().getClass() == getClass()){
-			bonus += ((Ring)hero.belongings.misc()).soloBonus();
+		for (Ring ring : (Ring[]) hero.belongings.miscs.stream().filter(ring -> ring.getClass() == getClass()).toArray()) {
+			bonus += ((Ring) ring).soloBonus();
 		}
 		return bonus;
 	}
 
 	//just used for ring descriptions
 	public long combinedBuffedBonus(Hero hero){
-		int bonus = 0;
-		if (hero.belongings.ring() != null && hero.belongings.ring().getClass() == getClass()){
-			bonus += hero.belongings.ring().soloBuffedBonus();
+		long bonus = 0;
+		for (Ring ring : hero.belongings.rings.stream().filter(ring -> ring.getClass() == getClass()).toArray(Ring[]::new)) {
+			System.out.println(ring);
+			bonus += ring.soloBuffedBonus();
 		}
-		if (hero.belongings.misc() != null && hero.belongings.misc().getClass() == getClass()){
-			bonus += ((Ring)hero.belongings.misc()).soloBuffedBonus();
+		for (Ring ring : hero.belongings.miscs.stream().filter(item -> item instanceof Ring ).filter(ring -> ring.getClass() == getClass()).toArray(Ring[]::new)) {
+			bonus += ring.soloBuffedBonus();
 		}
 		return bonus;
 	}

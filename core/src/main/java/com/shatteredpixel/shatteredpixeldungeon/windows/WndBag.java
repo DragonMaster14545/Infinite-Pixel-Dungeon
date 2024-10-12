@@ -45,6 +45,8 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.utils.PointF;
 
+import java.util.ArrayList;
+
 public class WndBag extends WndTabbed {
 	
 	//only one bag window can appear at a time
@@ -122,7 +124,8 @@ public class WndBag extends WndTabbed {
 		resize( windowWidth, windowHeight );
 
 		int i = 1;
-		for (Bag b : Dungeon.hero.belongings.getBags()) {
+        ArrayList<Bag> bags = new ArrayList<>(Dungeon.hero.belongings.getBags());
+		for (Bag b : bags) {
 			if (b != null) {
 				BagTab tab = new BagTab( b, i++ );
 				add( tab );
@@ -233,14 +236,25 @@ public class WndBag extends WndTabbed {
 		Belongings stuff = Dungeon.hero.belongings;
 		placeItem( stuff.weapon != null ? stuff.weapon : new Placeholder( ItemSpriteSheet.WEAPON_HOLDER ) );
 		placeItem( stuff.armor != null ? stuff.armor : new Placeholder( ItemSpriteSheet.ARMOR_HOLDER ) );
-		placeItem( stuff.artifact != null ? stuff.artifact : new Placeholder( ItemSpriteSheet.ARTIFACT_HOLDER ) );
-		placeItem( stuff.misc != null ? stuff.misc : new Placeholder( ItemSpriteSheet.SOMETHING ) );
-		placeItem( stuff.ring != null ? stuff.ring : new Placeholder( ItemSpriteSheet.RING_HOLDER ) );
 
-		int equipped = 5;
+		//This part if for showing artifacts, rings and misc slots
+		if (container.getClass() == EquipmentBag.class) {
+			for (int i = 0; i < Dungeon.hero.belongings.artifactSlots(); i++) {
+				placeItem(stuff.artifacts.size() > i ? stuff.artifacts.get(i) : new Placeholder( ItemSpriteSheet.ARTIFACT_HOLDER ));
+			}
+			for (int i = 0; i < Dungeon.hero.belongings.miscSlots(); i++) {
+				placeItem(stuff.miscs.size() > i ? stuff.miscs.get(i) : new Placeholder( ItemSpriteSheet.SOMETHING ));
+			}
+			for (int i = 0; i < Dungeon.hero.belongings.ringSlots(); i++) {
+				placeItem(stuff.rings.size() > i ? stuff.rings.get(i) : new Placeholder( ItemSpriteSheet.RING_HOLDER ));
+			}
+		}
+
+
+		int equipped = 2;
 
 		//the container itself if it's not the root backpack
-		if (container != Dungeon.hero.belongings.backpack){
+		if (container != Dungeon.hero.belongings.backpack && container.getClass() != EquipmentBag.class) {
 			placeItem(container);
 			count--; //don't count this one, as it's not actually inside of itself
 		} else if (stuff.secondWep != null) {
@@ -393,7 +407,9 @@ public class WndBag extends WndTabbed {
 	}
 	
 	private Image icon( Bag bag ) {
-		if (bag instanceof VelvetPouch) {
+		if (bag instanceof EquipmentBag) {
+			return Icons.get( Icons.TALENT);
+		} else if (bag instanceof VelvetPouch) {
 			return Icons.get( Icons.SEED_POUCH );
 		} else if (bag instanceof ScrollHolder) {
 			return Icons.get( Icons.SCROLL_HOLDER );

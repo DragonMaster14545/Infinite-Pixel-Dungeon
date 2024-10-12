@@ -36,6 +36,8 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
+import java.util.Arrays;
+
 public class Artifact extends KindofMisc {
 
 	protected Buff passiveBuff;
@@ -62,8 +64,7 @@ public class Artifact extends KindofMisc {
 	@Override
 	public boolean doEquip( final Hero hero ) {
 
-		if ((hero.belongings.artifact != null && hero.belongings.artifact.getClass() == this.getClass())
-				|| (hero.belongings.misc != null && hero.belongings.misc.getClass() == this.getClass())){
+		if (Arrays.stream(hero.belongings.getMiscsArray()).filter(misc -> misc.getClass() == this.getClass()).count() > 1) {
 
 			GLog.w( Messages.get(Artifact.class, "cannot_wear_two") );
 			return false;

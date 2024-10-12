@@ -58,6 +58,10 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Reflection;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.hero;
 
 public class ScrollOfTransmutation extends InventoryScroll {
@@ -284,17 +288,18 @@ public class ScrollOfTransmutation extends InventoryScroll {
 	}
 	
 	private static Artifact changeArtifact( Artifact a ) {
-		Artifact n, m = null;
+		Artifact n = null;
+		List<Class<?>> m = new ArrayList<>();
 		if (a.isEquipped(hero)){
-			if (hero.belongings.artifact() == a && hero.belongings.misc() instanceof Artifact)
-				m = (Artifact) hero.belongings.misc();
-			else if (hero.belongings.misc() == a && hero.belongings.artifact() != null)
-				m = hero.belongings.artifact();
+
+			for(Artifact artifact : (Artifact[]) Arrays.stream(hero.belongings.getMiscsArray()).filter(kindofMisc -> kindofMisc != a && kindofMisc instanceof Artifact).toArray()){
+				m.add(artifact.getClass());
+			}
 		}
 
 		do {
 			n = Generator.randomArtifact();
-		} while ( n != null && ((m != null && n.getClass() == m.getClass()) ||
+		} while ( n != null && ((!m.isEmpty() && m.contains(n.getClass())) ||
 				Challenges.isItemBlocked(n) || n.getClass() == a.getClass()));
 		
 		if (n != null){

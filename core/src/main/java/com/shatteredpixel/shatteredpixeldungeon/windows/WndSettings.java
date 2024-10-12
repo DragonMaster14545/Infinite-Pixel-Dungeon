@@ -430,7 +430,7 @@ public class WndSettings extends WndTabbed {
 						Messages.get(this, "mobile"),
 						Messages.get(this, "full"),
 						0,
-						2
+						1
 				) {
 					@Override
 					protected void onChange() {

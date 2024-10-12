@@ -37,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.LeafParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.KindofMisc;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
@@ -439,11 +440,11 @@ public enum Talent {
 			}
 		}
 		if (talent == THIEFS_INTUITION && hero.pointsInTalent(THIEFS_INTUITION) == 2){
-			if (hero.belongings.ring instanceof Ring && !ShardOfOblivion.passiveIDDisabled()) {
-				hero.belongings.ring.identify();
+			if (!ShardOfOblivion.passiveIDDisabled()) {
+				hero.belongings.rings.forEach(Item::identify);
 			}
-			if (hero.belongings.misc instanceof Ring && !ShardOfOblivion.passiveIDDisabled()) {
-				hero.belongings.misc.identify();
+			if (!ShardOfOblivion.passiveIDDisabled()) {
+				hero.belongings.miscs.forEach(Item::identify);
 			}
 			for (Item item : Dungeon.hero.belongings){
 				if (item instanceof Ring){
@@ -452,8 +453,8 @@ public enum Talent {
 			}
 		}
 		if (talent == THIEFS_INTUITION && hero.pointsInTalent(THIEFS_INTUITION) == 1){
-			if (hero.belongings.ring instanceof Ring) hero.belongings.ring.setKnown();
-			if (hero.belongings.misc instanceof Ring) ((Ring) hero.belongings.misc).setKnown();
+			hero.belongings.rings.forEach(Ring::setKnown);
+			hero.belongings.miscs.stream().filter(item -> item instanceof Ring).forEach(ring -> ((Ring) ring).setKnown());
 		}
 		if (talent == ADVENTURERS_INTUITION && hero.pointsInTalent(ADVENTURERS_INTUITION) == 2){
 			if (hero.belongings.weapon() != null && !ShardOfOblivion.passiveIDDisabled()){
