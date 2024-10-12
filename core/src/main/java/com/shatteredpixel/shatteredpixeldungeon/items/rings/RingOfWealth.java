@@ -320,7 +320,10 @@ public class RingOfWealth extends Ring {
 		}
 		return result;
 	}
-
+	@Override
+	public String name() {
+		return "Ring of Wealth";
+	}
 	public class Wealth extends RingBuff {
 
 		private void triesToDrop( float val ){

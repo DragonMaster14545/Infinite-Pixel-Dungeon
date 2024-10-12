@@ -25,6 +25,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.ui.*;
 import com.watabou.input.PointerEvent;
@@ -191,6 +192,20 @@ public class AboutScene extends PixelScene {
         content.add(bob);
         addLine(bob.top() - 4, content);
 
+		CreditsBlock dragonMaster14545 = new CreditsBlock(false, 0x00FFFF,
+		"Infinite Pixel Dungeon:",
+		null,
+		"DragonMaster14545",
+		"Github",
+				"https://github.com/DragonMaster14545/");
+		if (landscape()){
+			dragonMaster14545.setRect(bob.right(), bob.top(), colWidth, 0);
+		} else {
+			dragonMaster14545.setRect(gdx.left(), bob.bottom() + 8, colWidth, 0);
+		}
+		content.add(dragonMaster14545);
+		addLine(dragonMaster14545.top() - 4, content);
+
 		//*** Transifex Credits ***
 
 		CreditsBlock transifex = new CreditsBlock(true,
@@ -200,7 +215,7 @@ public class AboutScene extends PixelScene {
 				"ShatteredPD is community-translated via _Transifex_! Thank you so much to all of Shattered's volunteer translators!",
 				"transifex.com/shattered-pixel/...",
 				"https://explore.transifex.com/shattered-pixel/shattered-pixel-dungeon/");
-		transifex.setRect((Camera.main.width - colWidth)/2f, bob.bottom() + 12, colWidth, 0);
+		transifex.setRect((Camera.main.width - colWidth)/2f, (landscape() ? bob.bottom() : dragonMaster14545.bottom()) + 12, colWidth, 0);
 		content.add(transifex);
 
 		addLine(transifex.top() - 4, content);

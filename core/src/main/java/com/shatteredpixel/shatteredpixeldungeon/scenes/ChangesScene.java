@@ -130,9 +130,12 @@ if (Messages.lang() != Languages.ENGLISH){
 
 		switch (changesSelected){
 			case 0: default:
-				ExpPDChanges.addAllChanges(changeInfos);
+				InfPDChanges.addAllChanges(changeInfos);
 				break;
 			case 1:
+				ExpPDChanges.addAllChanges(changeInfos);
+				break;
+			case 2:
 				v2_X_Changes.addAllChanges(changeInfos);
 				v1_X_Changes.addAllChanges(changeInfos);
 				v0_9_X_Changes.addAllChanges(changeInfos);
@@ -198,32 +201,46 @@ if (Messages.lang() != Languages.ENGLISH){
 				panel.innerHeight() + 2);
 		list.scrollTo(0, 0);
 
+		RedButton btnInf = new RedButton("InfPD"){
+			@Override
+			protected void onClick() {
+				super.onClick();
+				if (changesSelected != 0) {
+					changesSelected = 0;
+					ShatteredPixelDungeon.seamlessResetScene();
+				}
+			}
+		};
+		if (changesSelected == 0) btnInf.textColor(Window.TITLE_COLOR);
+		btnInf.setRect(list.left()-4f, list.bottom()+5, 46, 14);
+		add(btnInf);
+
         RedButton btnEXP = new RedButton("ExpPD"){
             @Override
             protected void onClick() {
                 super.onClick();
-                if (changesSelected != 0) {
-                    changesSelected = 0;
+                if (changesSelected != 1) {
+                    changesSelected = 1;
                     ShatteredPixelDungeon.seamlessResetScene();
                 }
             }
         };
-        if (changesSelected == 0) btnEXP.textColor(Window.TITLE_COLOR);
-        btnEXP.setRect(list.left()-4f, list.bottom()+5, 70, 14);
+        if (changesSelected == 1) btnEXP.textColor(Window.TITLE_COLOR);
+        btnEXP.setRect(btnInf.right() + 1, list.bottom()+5, 45, 14);
         add(btnEXP);
 
 		RedButton btn0_8 = new RedButton("ShPD"){
 			@Override
 			protected void onClick() {
 				super.onClick();
-				if (changesSelected != 1) {
-					changesSelected = 1;
+				if (changesSelected != 2) {
+					changesSelected = 2;
 					ShatteredPixelDungeon.seamlessResetScene();
 				}
 			}
 		};
-		if (changesSelected == 1) btn0_8.textColor(Window.TITLE_COLOR);
-		btn0_8.setRect(btnEXP.right() + 1, btnEXP.top(), 70, 14);
+		if (changesSelected == 2) btn0_8.textColor(Window.TITLE_COLOR);
+		btn0_8.setRect(btnEXP.right() + 1, btnEXP.top(), 45, 14);
 		add(btn0_8);
 
 		Archs archs = new Archs();

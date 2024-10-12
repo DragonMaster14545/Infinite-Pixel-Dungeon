@@ -32,7 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
 public class EquipmentBag extends Bag {
 	{
-		image = ItemSpriteSheet.RING_HOLDER;
+		image = ItemSpriteSheet.BACKPACK;
 	}
 	public int capacity(){
 		return 0;
@@ -42,4 +42,5 @@ public class EquipmentBag extends Bag {
 	public String name() {
 		return "Equipment";
 	}
+
 }
