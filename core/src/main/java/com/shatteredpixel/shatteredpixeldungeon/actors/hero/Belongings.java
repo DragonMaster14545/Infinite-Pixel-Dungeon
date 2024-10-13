@@ -81,15 +81,15 @@ public class Belongings implements Iterable<Item> {
 	public Armor armor = null;
 	public List<Artifact> artifacts = new ArrayList<>();
 	public int artifactSlots(){
-		return 2;
+		return 5;
 	}
 	public List<KindofMisc> miscs = new ArrayList<>();
 	public int miscSlots() {
-		return 2;
+		return 5;
 	}
 	public List<Ring> rings = new ArrayList<>();
 	public int ringSlots(){
-		return 2;
+		return 5;
 	}
 
 	//used when thrown weapons temporary become the current weapon

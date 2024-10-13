@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
@@ -30,9 +31,9 @@ import com.watabou.utils.Rect;
 public class CircleBasinRoom extends PatchRoom {
 
 	@Override
-	public int minWidth() { return sizeCat.minDim+1; }
+	public int minWidth() { return Math.round((sizeCat.minDim+1)* sizeMultiplier()); }
 	public int minHeight() {
-		return sizeCat.minDim+1;
+		return Math.round((sizeCat.minDim+1)* sizeMultiplier());
 	}
 
 	@Override

@@ -32,6 +32,7 @@ import com.watabou.utils.Point;
 import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public abstract class StandardRoom extends Room {
 	
@@ -90,14 +91,14 @@ public abstract class StandardRoom extends Room {
 			return false;
 		}
 	}
+
+	@Override
+	public int minWidth() { return Math.round(sizeCat.minDim*sizeMultiplier()); }
+	public int maxWidth() { return Math.round(sizeCat.maxDim*sizeMultiplier()) ; }
 	
 	@Override
-	public int minWidth() { return sizeCat.minDim; }
-	public int maxWidth() { return sizeCat.maxDim; }
-	
-	@Override
-	public int minHeight() { return sizeCat.minDim; }
-	public int maxHeight() { return sizeCat.maxDim; }
+	public int minHeight() { return Math.round(sizeCat.minDim*sizeMultiplier()); }
+	public int maxHeight() { return Math.round(sizeCat.maxDim*sizeMultiplier()); }
 
 	//larger standard rooms generally count as multiple rooms for various counting/weighting purposes
 	//but there can be exceptions

@@ -130,10 +130,13 @@ public abstract class SpecialRoom extends Room {
 
 		pitNeededDepth = -1;
 	}
+
+	public static void refillFloorSpecials(){
+		floorSpecials = (ArrayList<Class<?extends Room>>) runSpecials.clone();
+	}
 	
 	public static void initForFloor(){
-		floorSpecials = (ArrayList<Class<?extends Room>>) runSpecials.clone();
-		
+		refillFloorSpecials();
 		//laboratory rooms spawn on floor 3 or 4 each chapter
 		if (Dungeon.labRoomNeeded()){
 			Dungeon.LimitedDrops.LAB_ROOM.count++;
@@ -178,6 +181,7 @@ public abstract class SpecialRoom extends Room {
 
 			//60% chance for front of queue, 30% chance for next, 10% for one after that
 			int index = Random.chances(new float[]{6, 3, 1});
+			if (floorSpecials.isEmpty()) refillFloorSpecials();
 			while (index >= floorSpecials.size()) index--;
 
 			Room r = Reflection.newInstance(floorSpecials.get( index ));

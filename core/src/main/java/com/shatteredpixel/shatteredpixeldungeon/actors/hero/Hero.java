@@ -262,6 +262,31 @@ public class Hero extends Char {
 	// for enemies we know we aren't seeing normally, resulting in better performance
 	public ArrayList<Mob> mindVisionEnemies = new ArrayList<>();
 
+	public float getStandardRoomMultiplier() {
+		return 5f;
+	}
+	public float getSpecialRoomMultiplier() {
+		return getStandardRoomMultiplier()*0.25f;
+	}
+	public float getSecretRoomMultiplier() {
+		return getStandardRoomMultiplier()*0.25f;
+	}
+	public float getRoomMinSizeMultiplier() {
+		return 1f;
+	}
+	public float getRoomMaxAdditionalSizeMultiplier() {
+		return 1f;
+	}
+	public float getMobMultiplier() {
+		return 10f;
+	}
+	public float getTrapMultiplier() {
+		return 8f;
+	}
+	public float getLootMultiplier() {
+		return 25f;
+	}
+
 	public Hero() {
 		super();
 

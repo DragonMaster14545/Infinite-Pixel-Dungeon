@@ -39,6 +39,11 @@ public class EquipmentBag extends Bag {
 	}
 
 	@Override
+	public boolean canHold(Item item) {
+		return false;
+	}
+
+	@Override
 	public String name() {
 		return "Equipment";
 	}

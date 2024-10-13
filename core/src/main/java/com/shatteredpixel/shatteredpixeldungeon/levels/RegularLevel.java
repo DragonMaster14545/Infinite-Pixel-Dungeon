@@ -59,6 +59,7 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.builders.Builder;
 import com.shatteredpixel.shatteredpixeldungeon.levels.builders.FigureEightBuilder;
 import com.shatteredpixel.shatteredpixeldungeon.levels.builders.LoopBuilder;
+import com.shatteredpixel.shatteredpixeldungeon.levels.builders.RegularBuilder;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretRoom;
@@ -95,7 +96,7 @@ public abstract class RegularLevel extends Level {
 	protected boolean build() {
 		
 		builder = builder();
-		
+
 		ArrayList<Room> initRooms = initRooms();
 		Random.shuffle(initRooms);
 		
@@ -116,11 +117,16 @@ public abstract class RegularLevel extends Level {
 		initRooms.add ( roomEntrance = EntranceRoom.createEntrance());
 		initRooms.add( roomExit = ExitRoom.createExit());
 
+		if (builder instanceof RegularBuilder){
+			((RegularBuilder) builder).setExtraConnectionChance(1f);
+		}
+
 		//force max standard rooms and multiple by 1.5x for large levels
 		int standards = standardRooms(feeling == Feeling.LARGE);
 		if (feeling == Feeling.LARGE){
 			standards = (int)Math.ceil(standards * 1.5f);
 		}
+		standards = Math.round(standards * Dungeon.hero.getStandardRoomMultiplier());
 		for (int i = 0; i < standards; i++) {
 			StandardRoom s;
 			do {
@@ -138,6 +144,7 @@ public abstract class RegularLevel extends Level {
 		if (feeling == Feeling.LARGE){
 			specials++;
 		}
+		specials = Math.round(specials * Dungeon.hero.getSpecialRoomMultiplier());
 		SpecialRoom.initForFloor();
 		for (int i = 0; i < specials; i++) {
 			SpecialRoom s = SpecialRoom.createRoom();
@@ -148,6 +155,7 @@ public abstract class RegularLevel extends Level {
 		int secrets = SecretRoom.secretsForFloor(Dungeon.depth);
 		//one additional secret for secret levels
 		if (feeling == Feeling.SECRETS) secrets++;
+		secrets = Math.round(secrets * Dungeon.hero.getSecretRoomMultiplier());
 		for (int i = 0; i < secrets; i++) {
 			initRooms.add(SecretRoom.createRoom());
 		}
@@ -180,7 +188,7 @@ public abstract class RegularLevel extends Level {
 	protected abstract Painter painter();
 	
 	protected int nTraps() {
-		return Random.NormalIntRange( 2, 3 + (Dungeon.depth/5) + Dungeon.cycle * 5 );
+		return Math.round(Random.NormalIntRange( 2, 3 + (Dungeon.depth/5) + Dungeon.cycle * 5 )*Dungeon.hero.getTrapMultiplier());
 	}
 	
 	protected Class<?>[] trapClasses(){
@@ -193,12 +201,8 @@ public abstract class RegularLevel extends Level {
 	
 	@Override
 	public int mobLimit() {
-		if (Dungeon.depth <= 1){
-			if (!Statistics.amuletObtained) return 0;
-			else                            return 10;
-		}
 
-		int mobs = 3 + Dungeon.depth % 5 + Random.Int(3) + Dungeon.getAdditionalMobs();
+		int mobs = Math.round((3 + Dungeon.depth % 5 + Random.Int(3) + Dungeon.getAdditionalMobs())*Dungeon.hero.getMobMultiplier());
 		if (feeling == Feeling.LARGE){
 			mobs = (int)Math.ceil(mobs * 1.33f);
 		}
@@ -208,7 +212,7 @@ public abstract class RegularLevel extends Level {
 	@Override
 	protected void createMobs() {
 		//on floor 1, 8 pre-set mobs are created so the player can get level 2.
-		int mobsToSpawn = Dungeon.depth == 1 ? 8 : mobLimit();
+		int mobsToSpawn = mobLimit();
 
 		ArrayList<Room> stdRooms = new ArrayList<>();
 		for (Room room : rooms) {
@@ -359,6 +363,8 @@ public abstract class RegularLevel extends Level {
 		if (feeling == Feeling.LARGE){
 			nItems += 2;
 		}
+
+		nItems = Math.round(nItems * Dungeon.hero.getLootMultiplier());
 		
 		for (int i=0; i < nItems; i++) {
 
@@ -366,6 +372,7 @@ public abstract class RegularLevel extends Level {
 			if (toDrop == null) continue;
 
 			int cell = randomDropCell();
+			if (cell == -1) continue;
 			if (map[cell] == Terrain.HIGH_GRASS || map[cell] == Terrain.FURROWED_GRASS) {
 				map[cell] = Terrain.GRASS;
 				losBlocking[cell] = false;
@@ -426,6 +433,7 @@ public abstract class RegularLevel extends Level {
 
 		for (Item item : itemsToSpawn) {
 			int cell = randomDropCell();
+			if (cell == -1) continue;
 			if (item instanceof TrinketCatalyst){
 				drop( item, cell ).type = Heap.Type.LOCKED_CHEST;
 				int keyCell = randomDropCell();

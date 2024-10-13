@@ -32,6 +32,8 @@ public class Rect {
 	public int top;
 	public int right;
 	public int bottom;
+
+	public int initialLeft, initialTop, initialRight, initialBottom;
 	
 	public Rect() {
 		this( 0, 0, 0, 0 );
@@ -46,6 +48,10 @@ public class Rect {
 		this.top	= top;
 		this.right	= right;
 		this.bottom	= bottom;
+		this.initialLeft = left;
+		this.initialTop = top;
+		this.initialRight = right;
+		this.initialBottom = bottom;
 	}
 	
 	public int width() {

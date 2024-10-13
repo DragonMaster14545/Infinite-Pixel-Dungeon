@@ -40,15 +40,15 @@ import com.watabou.utils.Random;
 public class PoolRoom extends SpecialRoom {
 
 	private static final int NPIRANHAS	= 3;
-	
+
 	@Override
 	public int minWidth() {
-		return 6;
+		return Math.round(6*sizeMultiplier());
 	}
 	
 	@Override
 	public int minHeight() {
-		return 6;
+		return Math.round(6*sizeMultiplier());
 	}
 	
 	public void paint(Level level ) {
