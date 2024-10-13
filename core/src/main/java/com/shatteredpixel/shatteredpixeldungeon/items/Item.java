@@ -316,6 +316,14 @@ public class Item implements Bundlable {
 		dupe.restoreFromBundle(copy);
 		return dupe;
 	}
+
+	public void remove(long amount){
+		if (amount >= quantity()){
+			detachAll(Dungeon.hero.belongings.backpack);
+		} else {
+			quantity(quantity() - amount);
+		}
+	}
 	
 	public final Item detach( Bag container ) {
 		

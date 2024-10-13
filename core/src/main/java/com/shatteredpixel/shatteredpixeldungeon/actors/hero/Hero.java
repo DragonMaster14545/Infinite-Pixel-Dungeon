@@ -229,6 +229,7 @@ public class Hero extends Char {
 	}
 
 	public ArrayList<Perks.Perk> perks = new ArrayList<>();
+	public Upgrades upgrades = new Upgrades();
 
 	private int attackSkill = 10;
 	private int defenseSkill = 5;
@@ -334,6 +335,7 @@ public class Hero extends Char {
 	private static final String CLASS       = "class";
 	private static final String SUBCLASS    = "subClass";
 	private static final String ABILITY     = "armorAbility";
+	private static final String Upgrades    = "upgrades";
 
 	private static final String ATTACK		= "attackSkill";
 	private static final String DEFENSE		= "defenseSkill";
@@ -355,6 +357,7 @@ public class Hero extends Char {
 		bundle.put( ABILITY, armorAbility );
 		Talent.storeTalentsInBundle( bundle, this );
 		Perks.storeInBundle(bundle, perks);
+		bundle.put(Upgrades,upgrades);
 
 		bundle.put( ATTACK, attackSkill );
 		bundle.put( DEFENSE, defenseSkill );
@@ -387,6 +390,7 @@ public class Hero extends Char {
 		armorAbility = (ArmorAbility)bundle.get( ABILITY );
 		Talent.restoreTalentsFromBundle( bundle, this );
 		Perks.restoreFromBundle(bundle, perks);
+		upgrades = (Upgrades) bundle.get(Upgrades);
 
 		attackSkill = bundle.getInt( ATTACK );
 		defenseSkill = bundle.getInt( DEFENSE );

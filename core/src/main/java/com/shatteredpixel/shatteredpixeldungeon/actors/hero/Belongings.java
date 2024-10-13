@@ -42,10 +42,7 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class Belongings implements Iterable<Item> {
 
@@ -82,15 +79,15 @@ public class Belongings implements Iterable<Item> {
 	public Armor armor = null;
 	public List<Artifact> artifacts = new ArrayList<>();
 	public int artifactSlots(){
-		return 5;
+		return 1+Dungeon.hero.upgrades.artifactSlots();
 	}
 	public List<KindofMisc> miscs = new ArrayList<>();
 	public int miscSlots() {
-		return 5;
+		return 1+Dungeon.hero.upgrades.miscSlots();
 	}
 	public List<Ring> rings = new ArrayList<>();
 	public int ringSlots(){
-		return 5;
+		return 1+Dungeon.hero.upgrades.ringSlots();
 	}
 
 	//used when thrown weapons temporary become the current weapon
@@ -224,7 +221,6 @@ public class Belongings implements Iterable<Item> {
 
 		artifacts = new ArrayList<>((Collection<Artifact>) (Collection<?>) bundle.getCollection(ARTIFACT));
 		if (artifacts() != null) for (Artifact artifact : artifacts) artifact.activate( owner );
-		System.out.println("Artifacts: " + artifacts);
 
 		miscs = new ArrayList<>((Collection<KindofMisc>) (Collection<?>) bundle.getCollection(MISC));
 		if (miscs() != null) for (KindofMisc misc : miscs) misc.activate( owner );
@@ -344,6 +340,68 @@ public class Belongings implements Iterable<Item> {
 		}
 		
 		return result;
+	}
+
+	public long count( Class<? extends Item> itemClass ){
+
+		long result = 0;
+
+		boolean lostInvent = lostInventory();
+
+		for (Item item : this) {
+			if (itemClass.isInstance( item )) {
+				if (!lostInvent || item.keptThroughLostInventory()) {
+					result += item.quantity();
+				}
+			}
+		}
+
+		return result;
+	}
+
+
+	public boolean hasItems(LinkedHashMap<Class<? extends Item>,Long> items) {
+		for (Map.Entry<Class<? extends Item>,Long> entry : items.entrySet()) {
+			if(count(entry.getKey()) < entry.getValue()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public void removeItems(LinkedHashMap<Class<? extends Item>,Long> items) {
+		for (Map.Entry<Class<? extends Item>,Long> entry : items.entrySet()) {
+			removeItem(entry.getKey(),entry.getValue());
+		}
+	}
+
+	public void removeItem(Class<? extends Item> item, long quantity) {
+        for(Item i : this) {
+			if (item == i.getClass()) {
+				if (i.quantity() >= quantity) {
+					i.remove(quantity);
+					return;
+				} else {
+					i.remove(i.quantity());
+				}
+			}
+		}
+	}
+
+	public String formatItems(LinkedHashMap<Class<? extends Item>,Long> items) {
+		StringBuilder result = new StringBuilder();
+		for (Map.Entry<Class<? extends Item>,Long> entry : items.entrySet()) {
+			String itemName = "";
+			try {
+				Item nameItem = entry.getKey().newInstance();
+				itemName = nameItem.name();
+			} catch (InstantiationException | IllegalAccessException ignored) {
+
+			}
+
+			result.append("- ").append(count(entry.getKey())).append("/").append(entry.getValue()).append(" ").append(itemName).append("\n");
+		}
+		return result.toString();
 	}
 
 	//triggers when a run ends, so ignores lost inventory effects

@@ -35,6 +35,7 @@ public class WndTitledMessage extends Window {
 	protected static final int WIDTH_MIN    = 120;
 	protected static final int WIDTH_MAX    = 220;
 	protected static final int GAP	= 2;
+	public RenderedTextBlock text;
 
 	public WndTitledMessage() {
 		super();
@@ -55,7 +56,7 @@ public class WndTitledMessage extends Window {
 		titlebar.setRect( 0, 0, width, 0 );
 		add(titlebar);
 
-		RenderedTextBlock text = PixelScene.renderTextBlock( 6 );
+		text = PixelScene.renderTextBlock( 6 );
 		if (!useHighlighting()) text.setHightlighting(false);
 		text.text( message, width );
 		text.setPos( titlebar.left(), titlebar.bottom() + 2*GAP );

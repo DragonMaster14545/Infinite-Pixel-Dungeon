@@ -149,6 +149,17 @@ public class WndHero extends WndTabbed {
 			};
 			perkInfo.setRect(title.right()-16, 0, 16, 16);
 			add(perkInfo);
+			IconButton upgradesInfo = new IconButton(Icons.get(Icons.PLUS)){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					hide();
+					GameScene.show(new WndUpgrades(hero.upgrades));
+				}
+			};
+			upgradesInfo.setRect(title.right(), 16, 16, 16);
+			add(upgradesInfo);
+
 
 			IconButton infoButton = new IconButton(Icons.get(Icons.INFO)){
 				@Override
