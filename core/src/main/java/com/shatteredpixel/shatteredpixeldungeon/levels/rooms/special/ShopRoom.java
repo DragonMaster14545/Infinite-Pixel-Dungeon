@@ -245,6 +245,7 @@ public class ShopRoom extends SpecialRoom {
 			itemsToSpawn.add( Generator.random(Generator.misTiers[3]).quantity(2).identify(false) );
 			itemsToSpawn.add( new ScaleArmor().identify(false) );
 			itemsToSpawn.add( new AlchemyBag());
+			itemsToSpawn.add( new SackOfHolding());
 			break;
 
 		case 20: case 21:
@@ -254,8 +255,8 @@ public class ShopRoom extends SpecialRoom {
 			itemsToSpawn.add( new Torch() );
 			itemsToSpawn.add( new Torch() );
 			itemsToSpawn.add( new Torch() );
-                itemsToSpawn.add( new AlchemyBag());
-                itemsToSpawn.add( new AlchemyBag());
+			itemsToSpawn.add( new AlchemyBag());
+			itemsToSpawn.add( new AlchemyBag());
 			break;
 		}
 		w.cursed = false;

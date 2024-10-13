@@ -419,6 +419,8 @@ public class WndBag extends WndTabbed {
 			return Icons.get( Icons.POTION_BANDOLIER );
 		} else if (bag instanceof CheeseCheest) {
 			return Icons.get( Icons.CHEESY_CHEEST );
+		} else if (bag instanceof SackOfHolding) {
+			return Icons.get( Icons.BACKPACK );
 		} else {
 			return Icons.get( Icons.BACKPACK );
 		}

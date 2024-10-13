@@ -5,6 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.BlackPsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.PsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.EquipmentBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -20,8 +21,10 @@ public class InfPDChanges {
         changeInfos.add(changes);
         changes.addButton(new ChangeButton(new RingOfWealth(), "Added back ring of wealth"));
         changes.addButton(new ChangeButton(new EquipmentBag(), "Moved the ring, artifact and misc slots into their own bag"));
-        changes.addButton(new ChangeButton(new BlackPsycheChest(), "Changed the cycle system to allow for basicly infinite cycles, also changed hardcoded values to be calculated exponentially"));
-        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Equipment system changes",
-                "Allowed the amount of ring, artifact and misc slots to be variable, for use in later Content"));
+        changes.addButton(new ChangeButton(new SackOfHolding(), "Added the sack of holding, a bag that can hold any item, its sold on the shop at floor 16"));
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "System changes",
+                "Changed the cycle system to allow for basicly infinite cycles, also changed hardcoded values to be calculated exponentially",
+                "Allowed the amount of ring, artifact and misc slots to be variable, for use in later Content",
+                "Added variables for multiplying the amount of rooms, monsters, loot, traps and the size of rooms in a layer"));
     }
 }
