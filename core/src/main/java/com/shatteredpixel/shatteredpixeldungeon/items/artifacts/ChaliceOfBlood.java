@@ -200,7 +200,7 @@ public class ChaliceOfBlood extends Artifact {
 				desc += Messages.get(this, "desc_3");
 		}
 
-		desc += Messages.get(this, "hp", (level() < 10 ? 1f / (10f - (level()*0.9f)) : (float)((3 * Math.pow(level() - 1, 2) / 243)))*getRarityMultiplier());
+		desc += Messages.get(this, "hp", (level() < 10 ? 1f / (10f - (level()*0.9f)) : ((3 * Math.pow(level() - 1, 2) / 243)))*getRarityMultiplier());
 
 		return desc;
 	}

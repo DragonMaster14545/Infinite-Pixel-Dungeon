@@ -236,7 +236,7 @@ public class CloakOfShadows extends Artifact {
 	}
 
 	public void directCharge(int amount){
-		charge = (long) Math.min(charge+amount*getRarityMultiplier(), getChargeCap());
+		charge = Math.min(charge+amount*getRarityMultiplier(), getChargeCap());
 		updateQuickslot();
 	}
 

@@ -61,11 +61,11 @@ public class WandOfBlastWave extends DamageWand {
 	}
 
 	public long min(long lvl){
-		return (long) ((1+lvl)*getRarityMultiplier());
+		return ((1+lvl)*getRarityMultiplier());
 	}
 
 	public long max(long lvl){
-		return (long) ((3+3*lvl)*getRarityMultiplier());
+		return ((3+3*lvl)*getRarityMultiplier());
 	}
 
 	@Override

@@ -603,7 +603,7 @@ public abstract class Wand extends Item {
 	}
 
 	public long getMaxCharges() {
-		return (long) (maxCharges * getRarityMultiplier());
+		return (maxCharges * getRarityMultiplier());
 	}
 
 	public void setMaxCharges(long maxCharges) {

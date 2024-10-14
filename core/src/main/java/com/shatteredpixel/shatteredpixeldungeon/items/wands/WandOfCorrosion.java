@@ -93,7 +93,7 @@ public class WandOfCorrosion extends Wand {
 
 	@Override
 	public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
-		long level = (long) Math.max( 0, buffedLvl()*getRarityMultiplier() );
+		long level = Math.max( 0, buffedLvl()*getRarityMultiplier() );
 
 		// lvl 0 - 33%
 		// lvl 1 - 50%

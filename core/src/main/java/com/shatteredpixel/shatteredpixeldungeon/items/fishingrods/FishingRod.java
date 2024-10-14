@@ -80,7 +80,7 @@ public abstract class FishingRod extends Item {
     }
 
     public int fishingStrength(){
-        return (int) ((baseFishingStr + bonusFishingStr)*getRarityMultiplier());
+        return (baseFishingStr + bonusFishingStr);
     }
 
     @Override

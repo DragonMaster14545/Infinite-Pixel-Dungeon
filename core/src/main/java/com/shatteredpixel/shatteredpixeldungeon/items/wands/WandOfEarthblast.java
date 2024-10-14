@@ -64,11 +64,11 @@ public class WandOfEarthblast extends DamageWand {
 	}
 
 	public long min(long lvl){
-		return (long) ((6+lvl*3) * ((chargesPerCast()))*getRarityMultiplier());
+		return ((6+lvl*3) * ((chargesPerCast()))*getRarityMultiplier());
 	}
 
 	public long max(long lvl){
-		return (long) ((30+6*lvl) * ((chargesPerCast()))*getRarityMultiplier());
+		return ((30+6*lvl) * ((chargesPerCast()))*getRarityMultiplier());
 	}
 
 	ConeAOE cone;

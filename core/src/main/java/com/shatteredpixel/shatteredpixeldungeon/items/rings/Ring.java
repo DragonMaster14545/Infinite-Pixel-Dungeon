@@ -375,26 +375,26 @@ public class Ring extends KindofMisc {
 	//just used for ring descriptions
 	public long soloBonus(){
 		if (cursed){
-			return (long) (Math.min( 0, Ring.this.level()-2 ) * getRarityMultiplier());
+			return (Math.min( 0, Ring.this.level()-2 ) * getRarityMultiplier());
 		} else {
-			return (long) ((Ring.this.level()+1) * getRarityMultiplier());
+			return ((Ring.this.level()+1) * getRarityMultiplier());
 		}
 	}
 
 	//just used for ring descriptions
 	public long soloBuffedBonus(){
 		if (cursed){
-			return (long) (Math.min( 0, Ring.this.buffedLvl()-2 ) * getRarityMultiplier());
+			return (Math.min( 0, Ring.this.buffedLvl()-2 ) * getRarityMultiplier());
 		} else {
-			return (long) ((Ring.this.buffedLvl()+1) * getRarityMultiplier());
+			return ((Ring.this.buffedLvl()+1) * getRarityMultiplier());
 		}
 	}
 
     public long soloVisualBonus(){
         if (cursed){
-            return (long) (Math.min( 0, Ring.this.buffedLvl()-2 ) * getRarityMultiplier());
+            return (Math.min( 0, Ring.this.buffedLvl()-2 ) * getRarityMultiplier());
         } else {
-            return (long) (Ring.this.buffedLvl() * getRarityMultiplier());
+            return (Ring.this.buffedLvl() * getRarityMultiplier());
         }
     }
 

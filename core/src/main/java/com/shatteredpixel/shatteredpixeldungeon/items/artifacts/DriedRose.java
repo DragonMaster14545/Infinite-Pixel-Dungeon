@@ -227,8 +227,8 @@ public class DriedRose extends Artifact {
 		}
 	}
 	
-	public int ghostStrength(){
-		return (int) ((13 + level()/2f)*getRarityMultiplier());
+	public long ghostStrength(){
+		return (long) ((13 + level()/2f)*getRarityMultiplier());
 	}
 
 	@Override

@@ -224,11 +224,11 @@ abstract public class KindOfWeapon extends EquipableItem {
 	}
 
 	public long min(){
-		return (long) (min(buffedLvl())*getRarityMultiplier());
+		return (min(buffedLvl())*getRarityMultiplier());
 	}
 
 	public long max(){
-		return (long) (max(buffedLvl())*getRarityMultiplier());
+		return (max(buffedLvl())*getRarityMultiplier());
 	}
 
 	abstract public long min(long lvl);

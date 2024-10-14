@@ -63,35 +63,113 @@ import java.util.Comparator;
 public class Item implements Bundlable {
 
 	public enum Rarity {
-		OMNIPOTENT(0x9932CC, "O", 0.00000000000000001f, 65536),
-		ETERNAL(0xDC143C, "Et", 0.0000000000000001f, 32768),
-		INFINITE(0x4682B4, "In", 0.000000000000001f, 16384),
-		CELESTIAL(0x98FB98, "Ce", 0.00000000000001f, 8192),
-		GALACTIC(0x20B2AA, "G", 0.0000000000001f, 4096),
-		COSMIC(0xFFD700, "Co", 0.000000000001f, 2048),
-		IMMORTAL(0x4B0082, "I", 0.00000000001f, 1024),
-		TRANSCENDENT(0x8B4513, "T", 0.0000000001f, 512),
-		DIVINE(0x87CEEB, "D", 0.000000001f, 256),
-		ANCIENT(0xFF1493, "A", 0.00000001f, 128),
-		MYTHICAL(0x800080, "M", 0.0000001f, 64),
-		LEGENDARY(0xFF4500, "L", 0.000001f, 32),
-		EPIC(0xFF00FF, "E", 0.00001f, 16),
-		RARE(0x0000FF, "R", 0.0001f, 8),
-		UNCOMMON(0xFFFF00, "U", 0.005f, 4),
-		COMMON(0x00FF00, "C", 0.05f, 2),
-		NONE(0xFFFFFF, " ", 0.0f, 1);
+//		ULTRA_RARE(0x8A2BE2, "UR", Math.pow(0.1,95), Math.pow(2,94)),
+//		SUPREME(0x7FFF00, "S", Math.pow(0.1,94), Math.pow(2,93)),
+//		FABLED(0xFFDAB9, "F", Math.pow(0.1,93), Math.pow(2,92)),
+//		EXOTIC(0xFF8C00, "Ex", Math.pow(0.1,92), Math.pow(2,91)),
+//		UNIQUE(0xFF69B4, "Un", Math.pow(0.1,91), Math.pow(2,90)),
+//		PRESTIGIOUS(0x4682B4, "P", Math.pow(0.1,90), Math.pow(2,89)),
+//		ELITE(0xADFF2F, "El", Math.pow(0.1,89), Math.pow(2,88)),
+//		PHENOMENAL(0xFF6347, "Ph", Math.pow(0.1,88), Math.pow(2,87)),
+//		ASTOUNDING(0xFF4500, "As", Math.pow(0.1,87), Math.pow(2,86)),
+//		UNPARALLELED(0x32CD32, "Up", Math.pow(0.1,86), Math.pow(2,85)),
+//		TRANSCENDENTAL(0xB22222, "Tr", Math.pow(0.1,85), Math.pow(2,84)),
+//		SPECTACULAR(0xFFD700, "Sp", Math.pow(0.1,84), Math.pow(2,83)),
+//		IMPERIAL(0xB8860B, "Im", Math.pow(0.1,83), Math.pow(2,82)),
+//		REVERED(0xCD5C5C, "Re", Math.pow(0.1,82), Math.pow(2,81)),
+//		NOBLE(0xDDA0DD, "N", Math.pow(0.1,81), Math.pow(2,80)),
+//		DIVINITY(0xFFE4E1, "Di", Math.pow(0.1,80), Math.pow(2,79)),
+//		EXTRAORDINARY(0xFF4500, "Ex", Math.pow(0.1,79), Math.pow(2,78)),
+//		RENOWNED(0x7B68EE, "Ren", Math.pow(0.1,78), Math.pow(2,77)),
+//		UNMATCHED(0xB0E0E6, "Um", Math.pow(0.1,77), Math.pow(2,76)),
+//		SUPERIOR(0xFFB6C1, "Su", Math.pow(0.1,76), Math.pow(2,75)),
+//		ILLUMINATED(0xB0C4DE, "Ill", Math.pow(0.1,75), Math.pow(2,74)),
+//		EXCEPTIONAL(0xF08080, "Ex", Math.pow(0.1,74), Math.pow(2,73)),
+//		UNSURPASSED(0xFFA07A, "U", Math.pow(0.1,73), Math.pow(2,72)),
+//		PREEMINENT(0xDDA0DD, "Pre", Math.pow(0.1,72), Math.pow(2,71)),
+//		VENERABLE(0xB22222, "Ve", Math.pow(0.1,71), Math.pow(2,70)),
+//		WONDROUS(0xFFD700, "W", Math.pow(0.1,70), Math.pow(2,69)),
+//		UNBELIEVABLE(0xB0E0E6, "U", Math.pow(0.1,69), Math.pow(2,68)),
+//		BREATHTAKING(0xFF7F50, "Br", Math.pow(0.1,68), Math.pow(2,67)),
+//		ILLUSORY(0xADD8E6, "Ill", Math.pow(0.1,67), Math.pow(2,66)),
+//		SPECTRAL(0xFFDAB9, "Sp", Math.pow(0.1,66), Math.pow(2,65)),
+//		MAGICAL(0xFF1493, "Ma", Math.pow(0.1,65), Math.pow(2,64)),
+//		ASTROLOGICAL(0x800080, "Ast", Math.pow(0.1,64), Math.pow(2,63)),
+//		COVENANTED(0xFF69B4, "Co", Math.pow(0.1,63), Math.pow(2,62)),
+//		CELEBRATED(0x00FA9A, "Ce", Math.pow(0.1,62), Math.pow(2,61)),
+//		TREASURED(0x32CD32, "T", Math.pow(0.1,61), Math.pow(2,60)),
+		RADIANT(0xF0E68C, "R", Math.pow(0.1,60), Math.pow(2,59)),
+		STELLAR(0x87CEFA, "St", Math.pow(0.1,59), Math.pow(2,58)),
+		MAGNIFICENT(0xFFD700, "Mg", Math.pow(0.1,58), Math.pow(2,57)),
+		EXALTED(0xDAA520, "Ex", Math.pow(0.1,57), Math.pow(2,56)),
+		VALIANT(0xB0C4DE, "V", Math.pow(0.1,56), Math.pow(2,55)),
+		ETHEREAL(0x98FB98, "Et", Math.pow(0.1,55), Math.pow(2,54)),
+		BRILLIANT(0xFF8C00, "Br", Math.pow(0.1,54), Math.pow(2,53)),
+		IMPRESSIVE(0xF0E68C, "Im", Math.pow(0.1,53), Math.pow(2,52)),
+		INCREDIBLE(0xFFD700, "In", Math.pow(0.1,52), Math.pow(2,51)),
+		CHERISHED(0xFF1493, "Ch", Math.pow(0.1,51), Math.pow(2,50)),
+		SPLENDID(0x7FFF00, "Sp", Math.pow(0.1,50), Math.pow(2,49)),
+		GLORIOUS(0xFF6347, "G", Math.pow(0.1,49), Math.pow(2,48)),
+		UNFORGETTABLE(0x6A5ACD, "U", Math.pow(0.1,48), Math.pow(2,47)),
+		MAGNANIMOUS(0xD2691E, "M", Math.pow(0.1,47), Math.pow(2,46)),
+		NOBILITY(0xCD5C5C, "N", Math.pow(0.1,46), Math.pow(2,45)),
+		VISIONARY(0xFFB6C1, "V", Math.pow(0.1,45), Math.pow(2,44)),
+		RESPLENDENT(0xFFD700, "Re", Math.pow(0.1,44), Math.pow(2,43)),
+		MAGNETIC(0x8B008B, "M", Math.pow(0.1,43), Math.pow(2,42)),
+		FORTUITOUS(0xFF8C00, "F", Math.pow(0.1,42), Math.pow(2,41)),
+		SUPERNATURAL(0x7B68EE, "S", Math.pow(0.1,41), Math.pow(2,40)),
+		GRANDIOSE(0xFFA07A, "Gr", Math.pow(0.1,40), Math.pow(2,39)),
+		VALOROUS(0xB22222, "V", Math.pow(0.1,39), Math.pow(2,38)),
+		HEROIC(0xB8860B, "H", Math.pow(0.1,38), Math.pow(2,37)),
+		RESILIENT(0x00FA9A, "R", Math.pow(0.1,37), Math.pow(2,36)),
+		ILLUSIVE(0x20B2AA, "I", Math.pow(0.1,36), Math.pow(2,35)),
+		CONQUEROR(0xFF6347, "C", Math.pow(0.1,35), Math.pow(2,34)),
+		ROGUE(0xCD853F, "R", Math.pow(0.1,34), Math.pow(2,33)),
+		SOVEREIGN(0x8A2BE2, "S", Math.pow(0.1,33), Math.pow(2,32)),
+		ASCENDED(0xFFE4E1, "A", Math.pow(0.1,32), Math.pow(2,31)),
+		TRANSLUCENT(0xB0E0E6, "T", Math.pow(0.1,31), Math.pow(2,30)),
+		MAGNIFIC(0xFF4500, "Mg", Math.pow(0.1,30), Math.pow(2,29)),
+		UNSTOPPABLE(0xF08080, "U", Math.pow(0.1,29), Math.pow(2,28)),
+		FORTIFIED(0xE6E6FA, "F", Math.pow(0.1,28), Math.pow(2,27)),
+		HEAVENLY(0xF0E68C, "H", Math.pow(0.1,27), Math.pow(2,26)),
+		LUMINOUS(0xB22222, "L", Math.pow(0.1,26), Math.pow(2,25)),
+		MYSTICAL(0x7FFF00, "My", Math.pow(0.1,25), Math.pow(2,24)),
+		EXQUISITE(0xFFD700, "Ex", Math.pow(0.1,24), Math.pow(2,23)),
+		BLAZING(0xFF4500, "Bl", Math.pow(0.1,23), Math.pow(2,22)),
+		COSMIC(0x8A2BE2, "C", Math.pow(0.1,22), Math.pow(2,21)),
+		TRANQUIL(0x87CEFA, "T", Math.pow(0.1,21), Math.pow(2,20)),
+		PRISTINE(0x98FB98, "Pr", Math.pow(0.1,20), Math.pow(2,19)),
+		ULTIMATE(0xF5FFFA, "U", Math.pow(0.1,19), Math.pow(2,18)),
+		WHIMSICAL(0xFF00FF, "Wh", Math.pow(0.1,18), Math.pow(2,17)),
+		HARMONIOUS(0x8FBC8F, "H", Math.pow(0.1,17), Math.pow(2,16)),
+		OMNIPOTENT(0x9932CC, "O", Math.pow(0.1,16), Math.pow(2,15)),
+		ETERNAL(0xDC143C, "Et", Math.pow(0.1,15), Math.pow(2,14)),
+		INFINITE(0x4682B4, "In", Math.pow(0.1,14), Math.pow(2,13)),
+		CELESTIAL(0x98FB98, "Ce", Math.pow(0.1,13), Math.pow(2,12)),
+		GALACTIC(0x20B2AA, "G", Math.pow(0.1,12), Math.pow(2,11)),
+		IMMORTAL(0x4B0082, "I", Math.pow(0.1,11), Math.pow(2,10)),
+		TRANSCENDENT(0x8B4513, "T", Math.pow(0.1,10), Math.pow(2,9)),
+		DIVINE(0x87CEEB, "D", Math.pow(0.1,9), Math.pow(2,8)),
+		ANCIENT(0xFF1493, "A", Math.pow(0.1,8), Math.pow(2,7)),
+		MYTHICAL(0x800080, "M", Math.pow(0.1,7), Math.pow(2,6)),
+		LEGENDARY(0xFF4500, "L", Math.pow(0.1,6), Math.pow(2,5)),
+		EPIC(0xFF00FF, "E", Math.pow(0.1,5), Math.pow(2,4)),
+		RARE(0x0000FF, "R", Math.pow(0.1,4), Math.pow(2,3)),
+		UNCOMMON(0xFFFF00, "U", Math.pow(0.1,3), Math.pow(2,2)),
+		COMMON(0x00FF00, "C", 0.05f, Math.pow(2,1)),
+		NONE(0xFFFFFF, " ", 0, 1);
 
-		Rarity(int color, String name, float chance, float multiplier) {
+		Rarity(int color, String name, double chance, double multiplier) {
 			this.color = color;
 			this.name = name;
 			this.chance = chance;
-			this.multiplier = multiplier;
+			this.multiplier = (long) multiplier;
 		}
 
 		public final int color;
 		public final String name;
-		public final float chance;
-		public final float multiplier;
+		public final double chance;
+		public final long multiplier;
 	}
 
 	protected static final String TXT_TO_STRING_LVL		= "%s %+d";
@@ -160,7 +238,7 @@ public class Item implements Bundlable {
 		}
 	}
 
-	public float getRarityMultiplier() {
+	public long getRarityMultiplier() {
 		return rarity.multiplier;
 	}
 

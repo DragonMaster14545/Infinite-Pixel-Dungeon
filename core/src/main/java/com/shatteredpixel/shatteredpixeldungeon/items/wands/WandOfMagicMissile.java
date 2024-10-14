@@ -48,11 +48,11 @@ public class WandOfMagicMissile extends DamageWand {
 	}
 
 	public long min(long lvl){
-		return (long) ((2 +lvl)*getRarityMultiplier());
+		return ((2 +lvl)*getRarityMultiplier());
 	}
 
 	public long max(long lvl){
-		return (long) ((8+2*lvl)*getRarityMultiplier());
+		return ((8+2*lvl)*getRarityMultiplier());
 	}
 	
 	@Override

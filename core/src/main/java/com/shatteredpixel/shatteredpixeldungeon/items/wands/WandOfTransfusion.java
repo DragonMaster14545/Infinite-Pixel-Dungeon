@@ -63,12 +63,12 @@ public class WandOfTransfusion extends DamageWand {
 
 	@Override
 	public long min(long level) {
-		return (long) ((3 + level)*getRarityMultiplier());
+		return ((3 + level)*getRarityMultiplier());
 	}
 
 	@Override
 	public long max(long level) {
-		return (long) ((6 + 2*level)*getRarityMultiplier());
+		return ((6 + 2*level)*getRarityMultiplier());
 	}
 
 	private boolean freeCharge = false;

@@ -103,7 +103,7 @@ public class CapeOfThorns extends Artifact {
 			}
 
 			if (cooldown != 0){
-				long deflected = (long) (Dungeon.NormalLongRange(0, damage)*getRarityMultiplier());
+				long deflected = (Dungeon.NormalLongRange(0, damage)*getRarityMultiplier());
 				damage -= Math.min(damage, deflected);
 
 				if (attacker != null && Dungeon.level.adjacent(attacker.pos, defender.pos)) {

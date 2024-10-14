@@ -43,6 +43,7 @@ import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.ui.Component;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -159,6 +160,16 @@ public class WndHero extends WndTabbed {
 			};
 			upgradesInfo.setRect(title.right(), 16, 16, 16);
 			add(upgradesInfo);
+			IconButton raritiesInfo = new IconButton(Icons.get(Icons.NEWS)){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					hide();
+					GameScene.show(new WndRarities());
+				}
+			};
+			raritiesInfo.setRect(title.right()-16, 16, 16, 16);
+			add(raritiesInfo);
 
 
 			IconButton infoButton = new IconButton(Icons.get(Icons.INFO)){

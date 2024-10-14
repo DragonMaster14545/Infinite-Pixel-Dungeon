@@ -54,7 +54,7 @@ public class Artifact extends KindofMisc {
 	protected long charge = 0;
 	//the build towards next charge, usually rolls over at 1.
 	//better to keep charge as an int and use a separate float than casting.
-	protected float partialCharge = 0;
+	protected double partialCharge = 0;
 	//the maximum charge, varies per artifact, not all artifacts use this.
 	private long chargeCap = 0;
 
@@ -224,7 +224,7 @@ public class Artifact extends KindofMisc {
 	}
 
 	public long getChargeCap() {
-		return (long) (chargeCap*getRarityMultiplier());
+		return chargeCap*getRarityMultiplier();
 	}
 
 	public void setChargeCap(long chargeCap) {
