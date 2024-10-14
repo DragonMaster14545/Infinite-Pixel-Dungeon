@@ -64,7 +64,7 @@ public class CloakOfShadows extends Artifact {
 
 		charge = level()+3;
 		partialCharge = 0;
-		chargeCap = level()+3;
+		setChargeCap(level()+3);
 
 		defaultAction = AC_STEALTH;
 
@@ -219,29 +219,30 @@ public class CloakOfShadows extends Artifact {
 	public void charge(Hero target, float amount) {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
 
-		if (charge < chargeCap) {
+		if (charge < getChargeCap()) {
 			if (!isEquipped(target)) amount *= 0.66f;
 			partialCharge += 0.25f*amount;
+			partialCharge *= getRarityMultiplier();
 			while (partialCharge >= 1f) {
 				charge++;
 				partialCharge--;
 			}
-			if (charge >= chargeCap){
+			if (charge >= getChargeCap()){
 				partialCharge = 0;
-				charge = chargeCap;
+				charge = getChargeCap();
 			}
 			updateQuickslot();
 		}
 	}
 
 	public void directCharge(int amount){
-		charge = Math.min(charge+amount, chargeCap);
+		charge = (long) Math.min(charge+amount*getRarityMultiplier(), getChargeCap());
 		updateQuickslot();
 	}
 
 	@Override
 	public Item upgrade() {
-		chargeCap = chargeCap+1;
+		setChargeCap(getChargeCap() +1);
 		return super.upgrade();
 	}
 
@@ -271,9 +272,9 @@ public class CloakOfShadows extends Artifact {
 	public class cloakRecharge extends ArtifactBuff{
 		@Override
 		public boolean act() {
-			if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null) {
+			if (charge < getChargeCap() && !cursed && target.buff(MagicImmune.class) == null) {
 				if (activeBuff == null && Regeneration.regenOn()) {
-					float missing = (chargeCap - charge);
+					float missing = (getChargeCap() - charge);
 					if (level() > 7) missing += 5*(level() - 7)/3f;
 					float turnsToCharge = Math.max(1, 45 - missing);
 					turnsToCharge /= RingOfEnergy.artifactChargeMultiplier(target);
@@ -287,7 +288,7 @@ public class CloakOfShadows extends Artifact {
 				while (partialCharge >= 1) {
 					charge++;
 					partialCharge -= 1;
-					if (charge == chargeCap){
+					if (charge == getChargeCap()){
 						partialCharge = 0;
 					}
 

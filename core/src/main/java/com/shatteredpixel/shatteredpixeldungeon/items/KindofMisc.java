@@ -45,6 +45,10 @@ import java.util.stream.Collectors;
 
 public abstract class KindofMisc extends EquipableItem {
 
+	public KindofMisc() {
+		randomizeRarity();
+	}
+
 	@Override
 	public boolean doEquip(final Hero hero) {
 

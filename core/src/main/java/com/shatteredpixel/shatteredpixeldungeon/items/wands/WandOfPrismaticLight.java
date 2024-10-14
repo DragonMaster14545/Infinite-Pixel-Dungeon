@@ -61,11 +61,11 @@ public class WandOfPrismaticLight extends DamageWand {
 	}
 
 	public long min(long lvl){
-		return 1+lvl;
+		return (long) ((1+lvl)*getRarityMultiplier());
 	}
 
 	public long max(long lvl){
-		return 5+3*lvl;
+		return (long) ((5+3*lvl)*getRarityMultiplier());
 	}
 
 	@Override

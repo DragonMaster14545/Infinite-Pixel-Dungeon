@@ -46,7 +46,7 @@ public class Artifact extends KindofMisc {
 	//level is used internally to track upgrades to artifacts, size/logic varies per artifact.
 	//already inherited from item superclass
 	//exp is used to count progress towards levels for some artifacts
-	protected int exp = 0;
+	protected long exp = 0;
 	//levelCap is the artifact's maximum level
 	protected int levelCap = 0;
 
@@ -56,11 +56,16 @@ public class Artifact extends KindofMisc {
 	//better to keep charge as an int and use a separate float than casting.
 	protected float partialCharge = 0;
 	//the maximum charge, varies per artifact, not all artifacts use this.
-	protected long chargeCap = 0;
+	private long chargeCap = 0;
 
 	//used by some artifacts to keep track of duration of effects or cooldowns to use.
 	protected int cooldown = 0;
 
+
+
+	public Artifact() {
+		super();
+	}
 	@Override
 	public boolean doEquip( final Hero hero ) {
 
@@ -166,12 +171,12 @@ public class Artifact extends KindofMisc {
 			return Messages.format( "%d", cooldown );
 
 		//display as percent
-		if (chargeCap == 100)
+		if (getChargeCap() == 100)
 			return Messages.format( "%d%%", charge );
 
 		//display as #/#
-		if (chargeCap > 0)
-			return Messages.format( "%d/%d", charge, chargeCap );
+		if (getChargeCap() > 0)
+			return Messages.format( "%d/%d", charge, getChargeCap());
 
 		//if there's no cap -
 		//- but there is charge anyway, display that charge
@@ -216,6 +221,14 @@ public class Artifact extends KindofMisc {
 	
 	public void charge(Hero target, float amount){
 		//do nothing by default;
+	}
+
+	public long getChargeCap() {
+		return (long) (chargeCap*getRarityMultiplier());
+	}
+
+	public void setChargeCap(long chargeCap) {
+		this.chargeCap = chargeCap;
 	}
 
 	public class ArtifactBuff extends Buff {

@@ -41,7 +41,7 @@ public class CapeOfThorns extends Artifact {
 		levelCap = 10;
 
 		charge = 0;
-		chargeCap = 100;
+		setChargeCap(100);
 		cooldown = 0;
 
 		defaultAction = "NONE"; //so it can be quickslotted
@@ -58,7 +58,7 @@ public class CapeOfThorns extends Artifact {
 			charge += Math.round(4*amount);
 			updateQuickslot();
 		}
-		if (charge >= chargeCap){
+		if (charge >= getChargeCap()){
 			target.buff(Thorns.class).proc(0, null, null);
 		}
 	}
@@ -95,7 +95,7 @@ public class CapeOfThorns extends Artifact {
 		public long proc(long damage, Char attacker, Char defender){
 			if (cooldown == 0){
 				charge += damage*(0.5+level()*0.05);
-				if (charge >= chargeCap){
+				if (charge >= getChargeCap()){
 					charge = 0;
 					cooldown = (int) (10+level());
 					GLog.p( Messages.get(this, "radiating") );
@@ -103,8 +103,8 @@ public class CapeOfThorns extends Artifact {
 			}
 
 			if (cooldown != 0){
-				long deflected = Dungeon.NormalLongRange(0, damage);
-				damage -= deflected;
+				long deflected = (long) (Dungeon.NormalLongRange(0, damage)*getRarityMultiplier());
+				damage -= Math.min(damage, deflected);
 
 				if (attacker != null && Dungeon.level.adjacent(attacker.pos, defender.pos)) {
 					attacker.damage(deflected, this);

@@ -289,7 +289,7 @@ public class WandOfRegrowth extends Wand {
 
 	@Override
 	public String statsDesc() {
-		String desc = Messages.get(this, "stats_desc", chargesPerCast()) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, maxCharges);
+		String desc = Messages.get(this, "stats_desc", chargesPerCast()) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, getMaxCharges());
 		if (isIdentified()){
 			int chargeLeft = chargeLimit(Dungeon.hero.lvl) - totChrgUsed;
 			if (chargeLeft < 10000) desc += " " + Messages.get(this, "degradation", Math.max(chargeLeft, 0));

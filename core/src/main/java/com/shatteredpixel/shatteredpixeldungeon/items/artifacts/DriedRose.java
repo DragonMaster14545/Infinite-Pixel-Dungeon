@@ -93,7 +93,7 @@ public class DriedRose extends Artifact {
 		levelCap = 10;
 
 		charge = 100;
-		chargeCap = 100;
+		setChargeCap(100);
 
 		defaultAction = AC_SUMMON;
 	}
@@ -114,13 +114,18 @@ public class DriedRose extends Artifact {
 	public static final String AC_OUTFIT = "OUTFIT";
 
 	@Override
+	public long getChargeCap() {
+		return 100;
+	}
+
+	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
 		if (!Ghost.Quest.completed()){
 			return actions;
 		}
 		if (isEquipped( hero )
-				&& charge == chargeCap
+				&& charge == getChargeCap()
 				&& !cursed
 				&& hero.buff(MagicImmune.class) == null
 				&& ghostID == 0) {
@@ -157,7 +162,7 @@ public class DriedRose extends Artifact {
 			if (!Ghost.Quest.completed())   GameScene.show(new WndUseItem(null, this));
 			else if (ghost != null)         GLog.i( Messages.get(this, "spawned") );
 			else if (!isEquipped( hero ))   GLog.i( Messages.get(Artifact.class, "need_to_equip") );
-			else if (charge != chargeCap)   GLog.i( Messages.get(this, "no_charge") );
+			else if (charge != getChargeCap())   GLog.i( Messages.get(this, "no_charge") );
 			else if (cursed)                GLog.i( Messages.get(this, "cursed") );
 			else {
 				ArrayList<Integer> spawnPoints = new ArrayList<>();
@@ -223,7 +228,7 @@ public class DriedRose extends Artifact {
 	}
 	
 	public int ghostStrength(){
-		return (int) (13 + level()/2);
+		return (int) ((13 + level()/2f)*getRarityMultiplier());
 	}
 
 	@Override
@@ -307,14 +312,14 @@ public class DriedRose extends Artifact {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
 
 		if (ghost == null){
-			if (charge < chargeCap) {
+			if (charge < getChargeCap()) {
 				partialCharge += 4*amount;
 				while (partialCharge >= 1f){
 					charge++;
 					partialCharge--;
 				}
-				if (charge >= chargeCap) {
-					charge = chargeCap;
+				if (charge >= getChargeCap()) {
+					charge = getChargeCap();
 					partialCharge = 0;
 					GLog.p(Messages.get(DriedRose.class, "charged"));
 				}
@@ -426,7 +431,7 @@ public class DriedRose extends Artifact {
 				return true;
 			}
 			
-			if (charge < chargeCap
+			if (charge < getChargeCap()
 					&& !cursed
 					&& target.buff(MagicImmune.class) == null
 					&& Regeneration.regenOn()) {
@@ -435,7 +440,7 @@ public class DriedRose extends Artifact {
 				while (partialCharge > 1){
 					charge++;
 					partialCharge--;
-					if (charge == chargeCap){
+					if (charge == getChargeCap()){
 						partialCharge = 0f;
 						GLog.p( Messages.get(DriedRose.class, "charged") );
 					}

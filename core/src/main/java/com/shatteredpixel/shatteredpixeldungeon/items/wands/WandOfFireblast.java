@@ -63,18 +63,18 @@ public class WandOfFireblast extends DamageWand {
 
 	//1/2/3 base damage with 1/2/3 scaling based on charges used
 	public long min(long lvl){
-		return (1+lvl) * chargesPerCast();
+		return (long) ((1+lvl) * chargesPerCast() *getRarityMultiplier());
 	}
 
 	//2/8/18 base damage with 2/4/6 scaling based on charges used
 	public long max(long lvl){
 		switch ((int) chargesPerCast()){
 			case 1: default:
-				return 2 + 2*lvl;
+				return (long) ((2 + 2*lvl)*getRarityMultiplier());
 			case 2:
-				return 2*(4 + 2*lvl);
+				return (long) ((2*(4 + 2*lvl))*getRarityMultiplier());
 			case 3:
-				return 3*(6+2*lvl);
+				return (long) ((3*(6+2*lvl))*getRarityMultiplier());
 		}
 	}
 
@@ -214,7 +214,7 @@ public class WandOfFireblast extends DamageWand {
 	@Override
 	public String statsDesc() {
 		if (levelKnown)
-			return Messages.get(this, "stats_desc", chargesPerCast(), Math.round(min()*Dungeon.fireDamage), Math.round(max()*Dungeon.fireDamage)) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, maxCharges);
+			return Messages.get(this, "stats_desc", chargesPerCast(), Math.round(min()*Dungeon.fireDamage), Math.round(max()*Dungeon.fireDamage)) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, getMaxCharges());
 		else
 			return Messages.get(this, "stats_desc", chargesPerCast(), min(0), max(0));
 	}

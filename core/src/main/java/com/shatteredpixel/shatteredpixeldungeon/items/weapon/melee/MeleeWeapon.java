@@ -69,6 +69,9 @@ public class MeleeWeapon extends Weapon {
 
 	public static String AC_ABILITY = "ABILITY";
 
+	public MeleeWeapon(){
+		randomizeRarity();
+	}
 	@Override
 	public void activate(Char ch) {
 		super.activate(ch);

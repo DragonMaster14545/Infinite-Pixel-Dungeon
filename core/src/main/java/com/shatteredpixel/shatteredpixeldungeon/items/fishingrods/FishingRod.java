@@ -57,6 +57,10 @@ public abstract class FishingRod extends Item {
         unique = false;
     }
 
+    FishingRod() {
+        randomizeRarity();
+    }
+
     @Override
     public ArrayList<String> actions(Hero hero) {
         ArrayList<String> actions = super.actions(hero);
@@ -72,11 +76,11 @@ public abstract class FishingRod extends Item {
     public boolean hook;
 
     public double fishingPower(){
-        return (level()+1)*amplifier;
+        return ((level()+1)*amplifier)*getRarityMultiplier();
     }
 
     public int fishingStrength(){
-        return baseFishingStr + bonusFishingStr;
+        return (int) ((baseFishingStr + bonusFishingStr)*getRarityMultiplier());
     }
 
     @Override

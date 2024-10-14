@@ -141,7 +141,7 @@ public class WandOfCorruption extends Wand {
 				Statistics.qualifiedForBossChallengeBadge = false;
 			}
 
-			double corruptingPower = (3 + buffedLvl()/3d)*(1+ Dungeon.hero.lvl/150f);
+			double corruptingPower = (3 + buffedLvl()/3d)*(1+ Dungeon.hero.lvl/150f)*getRarityMultiplier();
 			
 			//base enemy resistance is usually based on their exp, but in special cases it is based on other criteria
 			double enemyResist;

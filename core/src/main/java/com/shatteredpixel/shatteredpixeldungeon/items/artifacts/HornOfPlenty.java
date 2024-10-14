@@ -57,7 +57,7 @@ public class HornOfPlenty extends Artifact {
 
 		charge = 0;
 		partialCharge = 0;
-		chargeCap = 5 + level()/2;
+		setChargeCap(5 + level()/2);
 
 		defaultAction = AC_SNACK;
 	}
@@ -158,13 +158,14 @@ public class HornOfPlenty extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null){
+		if (charge < getChargeCap() && !cursed && target.buff(MagicImmune.class) == null){
 			partialCharge += 0.25f*amount;
+			partialCharge *= getRarityMultiplier();
 			while (partialCharge >= 1){
 				partialCharge--;
 				charge++;
 				
-				if (charge == chargeCap){
+				if (charge == getChargeCap()){
 					GLog.p( Messages.get(HornOfPlenty.class, "full") );
 					partialCharge = 0;
 				}
@@ -198,13 +199,13 @@ public class HornOfPlenty extends Artifact {
 	@Override
 	public void level(long value) {
 		super.level(value);
-		chargeCap = 5 + level()/2;
+		setChargeCap(5 + level()/2);
 	}
 
 	@Override
 	public Item upgrade() {
 		super.upgrade();
-		chargeCap = 5 + level()/2;
+		setChargeCap(5 + level()/2);
 		return this;
 	}
 	
@@ -264,7 +265,7 @@ public class HornOfPlenty extends Artifact {
 		public void gainCharge(float levelPortion) {
 			if (cursed || target.buff(MagicImmune.class) != null) return;
 			
-			if (charge < chargeCap) {
+			if (charge < getChargeCap()) {
 
 				//generates 0.25x max hunger value every hero level, +0.125x max value per horn level
 				//to a max of 1.5x max hunger value per hero level
@@ -288,7 +289,7 @@ public class HornOfPlenty extends Artifact {
 
 					updateQuickslot();
 
-					if (charge == chargeCap){
+					if (charge == getChargeCap()){
 						GLog.p( Messages.get(HornOfPlenty.class, "full") );
 						partialCharge = 0;
 					}

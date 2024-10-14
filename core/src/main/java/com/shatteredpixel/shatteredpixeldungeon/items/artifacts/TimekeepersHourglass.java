@@ -62,7 +62,7 @@ public class TimekeepersHourglass extends Artifact {
 
 		charge = 5+level();
 		partialCharge = 0;
-		chargeCap = 5+level();
+		setChargeCap(5+level());
 
 		defaultAction = AC_ACTIVATE;
 	}
@@ -162,13 +162,14 @@ public class TimekeepersHourglass extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null){
+		if (charge < getChargeCap() && !cursed && target.buff(MagicImmune.class) == null){
 			partialCharge += 0.25f*amount;
+			partialCharge *= getRarityMultiplier();
 			while (partialCharge >= 1){
 				partialCharge--;
 				charge++;
 			}
-			if (charge >= chargeCap){
+			if (charge >= getChargeCap()){
 				partialCharge = 0;
 			}
 			updateQuickslot();
@@ -177,7 +178,7 @@ public class TimekeepersHourglass extends Artifact {
 
 	@Override
 	public Item upgrade() {
-		chargeCap = 5+level();
+		setChargeCap(5+level());
 
 		//for artifact transmutation.
 		while (level()+1 > sandBags)
@@ -236,12 +237,12 @@ public class TimekeepersHourglass extends Artifact {
 		@Override
 		public boolean act() {
 
-			if (charge < chargeCap
+			if (charge < getChargeCap()
 					&& !cursed
 					&& target.buff(MagicImmune.class) == null
 					&& Regeneration.regenOn()) {
 				//90 turns to charge at full, 60 turns to charge at 0/10
-				float chargeGain = 1 / (90f - (chargeCap - charge)*3f);
+				float chargeGain = 1 / (90f - (getChargeCap() - charge)*3f);
 				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
 				partialCharge += chargeGain;
 
@@ -249,7 +250,7 @@ public class TimekeepersHourglass extends Artifact {
 					partialCharge --;
 					charge ++;
 
-					if (charge == chargeCap){
+					if (charge == getChargeCap()){
 						partialCharge = 0;
 					}
 				}

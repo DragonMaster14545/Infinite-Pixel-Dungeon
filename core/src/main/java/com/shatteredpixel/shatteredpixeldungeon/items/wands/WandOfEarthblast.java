@@ -64,11 +64,11 @@ public class WandOfEarthblast extends DamageWand {
 	}
 
 	public long min(long lvl){
-		return ((6+lvl*3) * ((chargesPerCast())));
+		return (long) ((6+lvl*3) * ((chargesPerCast()))*getRarityMultiplier());
 	}
 
 	public long max(long lvl){
-		return ((30+6*lvl) * ((chargesPerCast())));
+		return (long) ((30+6*lvl) * ((chargesPerCast()))*getRarityMultiplier());
 	}
 
 	ConeAOE cone;
@@ -200,7 +200,7 @@ public class WandOfEarthblast extends DamageWand {
 	@Override
 	public String statsDesc() {
 		if (levelKnown)
-			return Messages.get(this, "stats_desc", chargesPerCast(), Math.round(min()), Math.round(max())) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, maxCharges);
+			return Messages.get(this, "stats_desc", chargesPerCast(), Math.round(min()), Math.round(max())) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, getMaxCharges());
 		else
 			return Messages.get(this, "stats_desc", chargesPerCast(), min(0), max(0));
 	}

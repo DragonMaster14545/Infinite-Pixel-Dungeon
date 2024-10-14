@@ -126,6 +126,7 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 	public Armor( int tier ) {
 		this.tier = tier;
 		this.visibleTier = tier;
+		randomizeRarity();
 	}
 	
 	private static final String USES_LEFT_TO_ID = "uses_left_to_id";
@@ -315,7 +316,7 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 	}
 
 	public final long DRMax(){
-		return Math.round(DRMax(buffedLvl())*(1d + (glyphHardened ? Weapon.hardenBoost(buffedLvl()) : 0d)));
+		return Math.round((DRMax(buffedLvl())*(1d + (glyphHardened ? Weapon.hardenBoost(buffedLvl()) : 0d)))*getRarityMultiplier());
 	}
 
 	public long DRMax(long lvl){
@@ -332,7 +333,7 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 	}
 
 	public final long DRMin(){
-		return Math.round(DRMin(buffedLvl())*(1d + (glyphHardened ? Weapon.hardenBoost(buffedLvl()) : 0d)));
+		return Math.round((DRMin(buffedLvl())*(1d + (glyphHardened ? Weapon.hardenBoost(buffedLvl()) : 0d)))*getRarityMultiplier());
 	}
 
 	public long DRMin(long lvl){

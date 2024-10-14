@@ -282,9 +282,10 @@ public class EtherealChains extends Artifact {
 	@Override
 	public void charge(Hero target, float amount) {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
-		long chargeTarget = 5+(level()*2);
+		long chargeTarget = (long) ((5+(level()*2))*getRarityMultiplier());
 		if (charge < chargeTarget*2){
 			partialCharge += 0.5f*amount;
+			partialCharge *= getRarityMultiplier();
 			if (partialCharge >= 1){
 				long charge = (long)partialCharge;
 				partialCharge -= charge;

@@ -96,7 +96,7 @@ public class MagesStaff extends MeleeWeapon {
 		wand.cursed = false;
 		this.wand = wand;
 		updateWand(false);
-		wand.curCharges = wand.maxCharges;
+		wand.curCharges = wand.getMaxCharges();
 	}
 
 	@Override
@@ -199,7 +199,7 @@ public class MagesStaff extends MeleeWeapon {
 
 		if (wand != null &&
 				attacker instanceof Hero && ((Hero)attacker).isSubclass(HeroSubClass.BATTLEMAGE)) {
-			if (wand.curCharges < wand.maxCharges) wand.partialCharge += 0.5f;
+			if (wand.curCharges < wand.getMaxCharges()) wand.partialCharge += 0.5f;
 			ScrollOfRecharging.charge((Hero)attacker);
 			wand.onHit(this, attacker, defender, damage);
 		}
@@ -272,7 +272,7 @@ public class MagesStaff extends MeleeWeapon {
 		level(targetLevel);
 		this.wand = wand;
 		updateWand(false);
-		wand.curCharges = Math.min(wand.maxCharges, wand.curCharges+oldStaffcharges);
+		wand.curCharges = Math.min(wand.getMaxCharges(), wand.curCharges+oldStaffcharges);
 		if (owner != null){
 			applyWandChargeBuff(owner);
  		} else if (Dungeon.hero.belongings.contains(this)){
@@ -352,8 +352,8 @@ public class MagesStaff extends MeleeWeapon {
 			long curCharges = wand.curCharges;
 			wand.level(level());
 			//gives the wand one additional max charge
-			wand.maxCharges = Math.round(wand.maxCharges * 1.33d);
-			wand.curCharges = Math.min(curCharges + (levelled ? 1 : 0), wand.maxCharges);
+			wand.setMaxCharges(Math.round(wand.getMaxCharges() * 1.33d));
+			wand.curCharges = Math.min(curCharges + (levelled ? 1 : 0), wand.getMaxCharges());
 			updateQuickslot();
 		}
 	}
@@ -407,7 +407,7 @@ public class MagesStaff extends MeleeWeapon {
 		super.restoreFromBundle(bundle);
 		wand = (Wand) bundle.get(WAND);
 		if (wand != null) {
-            wand.maxCharges = Math.round(wand.maxCharges * 1.33f);
+            wand.setMaxCharges(Math.round(wand.getMaxCharges() * 1.33f));
 		}
 	}
 

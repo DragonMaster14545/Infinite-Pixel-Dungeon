@@ -54,11 +54,11 @@ public class WandOfDisintegration extends DamageWand {
 
 
 	public long min(long lvl){
-		return 2+lvl;
+		return (long) ((2+lvl)*getRarityMultiplier());
 	}
 
 	public long max(long lvl){
-		return 8+4*lvl;
+		return (long) ((8+4*lvl)*getRarityMultiplier());
 	}
 	
 	@Override

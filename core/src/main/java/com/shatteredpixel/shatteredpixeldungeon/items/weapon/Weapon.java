@@ -123,6 +123,10 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 		return 0.0002f * upgrades;
 	}
 
+	protected Weapon(){
+		randomizeRarity();
+	}
+
 	@Override
 	public long proc( Char attacker, Char defender, long damage ) {
 		

@@ -24,6 +24,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -40,6 +41,8 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Rect;
+
+import java.util.Objects;
 
 public class ItemSlot extends Button {
 
@@ -62,6 +65,7 @@ public class ItemSlot extends Button {
 	protected BitmapText extra;
 	protected Image      itemIcon;
 	protected BitmapText level;
+	protected BitmapText rarityIcon;
 	
 	private static final String TXT_STRENGTH	= ":%d";
 	private static final String TXT_TYPICAL_STR	= "%d?";
@@ -121,6 +125,9 @@ public class ItemSlot extends Button {
 		
 		level = new BitmapText( PixelScene.pixelFont);
 		add(level);
+
+		rarityIcon = new BitmapText( PixelScene.pixelFont);
+		add(rarityIcon);
 	}
 	
 	@Override
@@ -173,6 +180,16 @@ public class ItemSlot extends Button {
 			PixelScene.align(level);
 		}
 
+		if (rarityIcon != null) {
+			rarityIcon.x = x + margin.left;
+			if (!((extra.text() == null || Objects.equals(extra.text(), "")) && (status.text() == null || Objects.equals(status.text(), "")))) {
+				rarityIcon.y = extra.y + extra.baseLine();
+			} else {
+				rarityIcon.y = y + margin.top;
+			}
+			PixelScene.align(rarityIcon);
+		}
+
 	}
 
 	public void alpha( float value ){
@@ -182,6 +199,7 @@ public class ItemSlot extends Button {
 		if (status != null)     status.alpha(value);
 		if (itemIcon != null)   itemIcon.alpha(value);
 		if (level != null)      level.alpha(value);
+		if (rarityIcon != null) rarityIcon.alpha(value);
 	}
 
 	public void clear(){
@@ -309,6 +327,15 @@ public class ItemSlot extends Button {
 			level.text( null );
 		}
 
+		if (item.rarity != Item.Rarity.NONE && item.isIdentified()){
+			rarityIcon.text(item.rarity.name);
+			rarityIcon.hardlight(item.rarity.color);
+			rarityIcon.scale.set(0.75f);
+		} else {
+			rarityIcon.text(null);
+		}
+
+
 		layout();
 	}
 	
@@ -321,6 +348,7 @@ public class ItemSlot extends Button {
 		status.alpha( alpha );
 		extra.alpha( alpha );
 		level.alpha( alpha );
+		rarityIcon.alpha( alpha );
 		if (itemIcon != null) itemIcon.alpha( alpha );
 	}
 

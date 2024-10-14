@@ -62,6 +62,38 @@ import java.util.Comparator;
 
 public class Item implements Bundlable {
 
+	public enum Rarity {
+		OMNIPOTENT(0x9932CC, "O", 0.00000000000000001f, 65536),
+		ETERNAL(0xDC143C, "Et", 0.0000000000000001f, 32768),
+		INFINITE(0x4682B4, "In", 0.000000000000001f, 16384),
+		CELESTIAL(0x98FB98, "Ce", 0.00000000000001f, 8192),
+		GALACTIC(0x20B2AA, "G", 0.0000000000001f, 4096),
+		COSMIC(0xFFD700, "Co", 0.000000000001f, 2048),
+		IMMORTAL(0x4B0082, "I", 0.00000000001f, 1024),
+		TRANSCENDENT(0x8B4513, "T", 0.0000000001f, 512),
+		DIVINE(0x87CEEB, "D", 0.000000001f, 256),
+		ANCIENT(0xFF1493, "A", 0.00000001f, 128),
+		MYTHICAL(0x800080, "M", 0.0000001f, 64),
+		LEGENDARY(0xFF4500, "L", 0.000001f, 32),
+		EPIC(0xFF00FF, "E", 0.00001f, 16),
+		RARE(0x0000FF, "R", 0.0001f, 8),
+		UNCOMMON(0xFFFF00, "U", 0.005f, 4),
+		COMMON(0x00FF00, "C", 0.05f, 2),
+		NONE(0xFFFFFF, " ", 0.0f, 1);
+
+		Rarity(int color, String name, float chance, float multiplier) {
+			this.color = color;
+			this.name = name;
+			this.chance = chance;
+			this.multiplier = multiplier;
+		}
+
+		public final int color;
+		public final String name;
+		public final float chance;
+		public final float multiplier;
+	}
+
 	protected static final String TXT_TO_STRING_LVL		= "%s %+d";
 	protected static final String TXT_TO_STRING_X		= "%s x%d";
 	
@@ -84,6 +116,7 @@ public class Item implements Bundlable {
 	public boolean dropsDownHeap = false;
 	
 	private long level = 0;
+	public Rarity rarity = Rarity.NONE;
 
 	public boolean levelKnown = false;
 	
@@ -114,6 +147,21 @@ public class Item implements Bundlable {
 		actions.add( AC_DROP );
 		actions.add( AC_THROW );
 		return actions;
+	}
+
+	public void randomizeRarity() {
+		rarity = Rarity.NONE;
+		float random = Dungeon.Float(1, Dungeon.LuckDirection.DOWN);
+		for (Rarity r : Rarity.values()) {
+			if (random <= r.chance) {
+				rarity = r;
+				break;
+			}
+		}
+	}
+
+	public float getRarityMultiplier() {
+		return rarity.multiplier;
 	}
 
 	public String actionName(String action, Hero hero){
@@ -374,7 +422,7 @@ public class Item implements Bundlable {
 	}
 	
 	public boolean isSimilar( Item item ) {
-		return getClass() == item.getClass();
+		return getClass() == item.getClass() && rarity == item.rarity;
 	}
 
 	public void onDetach(){}
@@ -611,6 +659,7 @@ public class Item implements Bundlable {
 	private static final String QUICKSLOT		= "quickslotpos";
 	private static final String KEPT_LOST       = "kept_lost";
 	private static final String WERE_OOFED      = "were_oofed";
+	private static final String RARITY           = "rarity";
 	
 	@Override
 	public void storeInBundle( Bundle bundle ) {
@@ -624,6 +673,7 @@ public class Item implements Bundlable {
 		}
 		bundle.put( KEPT_LOST, keptThoughLostInvent );
 		bundle.put( WERE_OOFED, wereOofed);
+		bundle.put( RARITY, rarity.ordinal() );
 	}
 	
 	@Override
@@ -650,6 +700,7 @@ public class Item implements Bundlable {
 		}
 
 		keptThoughLostInvent = bundle.getBoolean( KEPT_LOST );
+		rarity = Rarity.values()[bundle.getInt(RARITY)];
 	}
 
 	public int targetingPos( Hero user, int dst ){

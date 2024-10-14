@@ -62,12 +62,12 @@ public class WandOfLivingEarth extends DamageWand {
 	
 	@Override
 	public long min(long lvl) {
-		return 4;
+		return (long) (4*getRarityMultiplier());
 	}
 	
 	@Override
 	public long max(long lvl) {
-		return 6 + 2*lvl;
+		return (long) ((6 + 2*lvl)*getRarityMultiplier());
 	}
 	
 	@Override

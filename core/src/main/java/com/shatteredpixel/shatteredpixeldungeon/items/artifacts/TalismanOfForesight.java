@@ -60,7 +60,7 @@ public class TalismanOfForesight extends Artifact {
 
 		charge = 0;
 		partialCharge = 0;
-		chargeCap = 100;
+		setChargeCap(100);
 
 		defaultAction = AC_SCRY;
 	}
@@ -99,14 +99,15 @@ public class TalismanOfForesight extends Artifact {
 	@Override
 	public void charge(Hero target, float amount) {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
-		if (charge < chargeCap){
+		if (charge < getChargeCap()){
 			partialCharge += 2*amount;
+			partialCharge *= getRarityMultiplier();
 			while (partialCharge >= 1f){
 				charge++;
 				partialCharge--;
 			}
-			if (charge >= chargeCap) {
-				charge = chargeCap;
+			if (charge >= getChargeCap()) {
+				charge = getChargeCap();
 				partialCharge = 0;
 				GLog.p( Messages.get(TalismanOfForesight.class, "full_charge") );
 			}
@@ -271,7 +272,7 @@ public class TalismanOfForesight extends Artifact {
 
 			checkAwareness();
 
-			if (charge < chargeCap
+			if (charge < getChargeCap()
 					&& !cursed
 					&& target.buff(MagicImmune.class) == null
 					&& Regeneration.regenOn()) {
@@ -283,7 +284,7 @@ public class TalismanOfForesight extends Artifact {
 				while (partialCharge >= 1){
 					partialCharge--;
 					charge++;
-					if (charge >= chargeCap) {
+					if (charge >= getChargeCap()) {
 						partialCharge = 0;
 						GLog.p(Messages.get(TalismanOfForesight.class, "full_charge"));
 					}
@@ -348,7 +349,7 @@ public class TalismanOfForesight extends Artifact {
 
 		public void charge(int boost){
 			if (!cursed && target.buff(MagicImmune.class) == null) {
-				charge = Math.min((charge + boost), chargeCap);
+				charge = Math.min((charge + boost), getChargeCap());
 				updateQuickslot();
 			}
 		}

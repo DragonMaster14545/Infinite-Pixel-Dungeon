@@ -63,12 +63,12 @@ public class WandOfTransfusion extends DamageWand {
 
 	@Override
 	public long min(long level) {
-		return 3 + level;
+		return (long) ((3 + level)*getRarityMultiplier());
 	}
 
 	@Override
 	public long max(long level) {
-		return 6 + 2*level;
+		return (long) ((6 + 2*level)*getRarityMultiplier());
 	}
 
 	private boolean freeCharge = false;
@@ -194,7 +194,7 @@ curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(5+buffedLvl
 	public String statsDesc() {
 		long selfDMG = Dungeon.hero != null ? Math.round(Dungeon.hero.HT*0.05d): 1;
 		if (levelKnown)
-			return Messages.get(this, "stats_desc", selfDMG, selfDMG + 3*buffedLvl(), 5+buffedLvl(), min(), max()) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, maxCharges);
+			return Messages.get(this, "stats_desc", selfDMG, selfDMG + 3*buffedLvl(), 5+buffedLvl(), min(), max()) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, getMaxCharges());
 		else
 			return Messages.get(this, "stats_desc", selfDMG, selfDMG, 5, min(0), max(0));
 	}

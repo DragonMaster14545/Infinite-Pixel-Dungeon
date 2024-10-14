@@ -70,7 +70,7 @@ public class LloydsBeacon extends Artifact {
 		levelCap = 3;
 
 		charge = 0;
-		chargeCap = 3+level();
+		setChargeCap(3+level());
 
 		defaultAction = AC_ZAP;
 		usesTargeting = true;
@@ -277,16 +277,17 @@ public class LloydsBeacon extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (charge < chargeCap){
+		if (charge < getChargeCap()){
 			partialCharge += 0.25f*amount;
-			while (partialCharge >= 1){
+			partialCharge *= getRarityMultiplier();
+			while (partialCharge >= 1 && charge+1 >= getChargeCap()){
 				partialCharge--;
 				charge++;
 
 			}
-			if (charge >= chargeCap){
+			if (charge >= getChargeCap()){
 				partialCharge = 0;
-				charge = chargeCap;
+				charge = getChargeCap();
 			}
 			updateQuickslot();
 		}
@@ -295,7 +296,7 @@ public class LloydsBeacon extends Artifact {
 	@Override
 	public Item upgrade() {
 		if (level() == levelCap) return this;
-		chargeCap ++;
+		setChargeCap(getChargeCap() + 1);
 		GLog.p( Messages.get(this, "levelup") );
 		return super.upgrade();
 	}
@@ -319,14 +320,14 @@ public class LloydsBeacon extends Artifact {
 	public class beaconRecharge extends ArtifactBuff{
 		@Override
 		public boolean act() {
-			if (charge < chargeCap && !cursed && Regeneration.regenOn()) {
-				partialCharge += 1 / (100f - (chargeCap - charge)*10f);
+			if (charge < getChargeCap() && !cursed && Regeneration.regenOn()) {
+				partialCharge += 1 / (100f - (getChargeCap() - charge)*10f);
 
 				while (partialCharge >= 1) {
 					partialCharge --;
 					charge ++;
 
-					if (charge == chargeCap){
+					if (charge == getChargeCap()){
 						partialCharge = 0;
 					}
 				}

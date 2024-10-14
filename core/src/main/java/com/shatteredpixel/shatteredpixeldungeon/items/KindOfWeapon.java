@@ -224,11 +224,11 @@ abstract public class KindOfWeapon extends EquipableItem {
 	}
 
 	public long min(){
-		return min(buffedLvl());
+		return (long) (min(buffedLvl())*getRarityMultiplier());
 	}
 
 	public long max(){
-		return max(buffedLvl());
+		return (long) (max(buffedLvl())*getRarityMultiplier());
 	}
 
 	abstract public long min(long lvl);
@@ -236,9 +236,9 @@ abstract public class KindOfWeapon extends EquipableItem {
 
 	public long damageRoll( Char owner ) {
 		if (owner instanceof Hero){
-			return Hero.heroDamageIntRange(min(), max());
+			return (Hero.heroDamageIntRange(min(), max()));
 		} else {
-			return Dungeon.NormalLongRange(min(), max());
+			return (Dungeon.NormalLongRange(min(), max()));
 		}
 	}
 	

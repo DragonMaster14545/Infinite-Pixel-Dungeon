@@ -51,11 +51,11 @@ public class WandOfFrost extends DamageWand {
 	}
 
 	public long min(long lvl){
-		return 2+lvl;
+		return (long) ((2+lvl)*getRarityMultiplier());
 	}
 
 	public long max(long lvl){
-		return 8+5*lvl;
+		return (long) ((8+5*lvl)*getRarityMultiplier());
 	}
 
 	@Override

@@ -173,6 +173,7 @@ public class ChaliceOfBlood extends Artifact {
 		if (Random.Double() < heal%1){
 			heal++;
 		}
+		heal *= getRarityMultiplier();
 		if (heal >= 1f && target.HP < target.HT) {
 			target.HP = Math.min(target.HT, target.HP + (long)heal);
 			target.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString((long)heal), FloatingText.HEALING);
@@ -199,7 +200,7 @@ public class ChaliceOfBlood extends Artifact {
 				desc += Messages.get(this, "desc_3");
 		}
 
-		desc += Messages.get(this, "hp", level() < 10 ? 1f / (10f - (level()*0.9f)) : (float)((3 * Math.pow(level() - 1, 2) / 243)));
+		desc += Messages.get(this, "hp", (level() < 10 ? 1f / (10f - (level()*0.9f)) : (float)((3 * Math.pow(level() - 1, 2) / 243)))*getRarityMultiplier());
 
 		return desc;
 	}

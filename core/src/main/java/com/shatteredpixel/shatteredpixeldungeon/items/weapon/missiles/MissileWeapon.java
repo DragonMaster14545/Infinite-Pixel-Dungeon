@@ -405,7 +405,7 @@ abstract public class MissileWeapon extends Weapon {
 
 	@Override
     public boolean isSimilar( Item item ) {
-        return getClass() == item.getClass() && level() == item.level() && tier == ((MissileWeapon) item).tier;
+        return super.isSimilar(item) && level() == item.level() && tier == ((MissileWeapon) item).tier;
     }
 
 	@Override

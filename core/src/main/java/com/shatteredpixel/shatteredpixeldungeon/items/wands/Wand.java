@@ -78,8 +78,8 @@ public abstract class Wand extends Item {
 
 	private static final float TIME_TO_ZAP	= 1f;
 	
-	public long maxCharges = initialCharges();
-	public long curCharges = maxCharges;
+	private long maxCharges = initialCharges();
+	public long curCharges = getMaxCharges();
 	public double partialCharge = 0f;
 	
 	protected Charger charger;
@@ -99,6 +99,11 @@ public abstract class Wand extends Item {
 		defaultAction = AC_ZAP;
 		usesTargeting = true;
 		bones = true;
+	}
+
+	Wand() {
+		randomizeRarity();
+		curCharges = getMaxCharges();
 	}
 	
 	@Override
@@ -184,8 +189,8 @@ public abstract class Wand extends Item {
 	public void gainCharge( double amt, boolean overcharge ){
 		partialCharge += amt;
 		while (partialCharge >= 1) {
-			if (overcharge) curCharges = Math.min(maxCharges+(long)amt, curCharges+1);
-			else curCharges = Math.min(maxCharges, curCharges+1);
+			if (overcharge) curCharges = Math.min(getMaxCharges() +(long)amt, curCharges+1);
+			else curCharges = Math.min(getMaxCharges(), curCharges+1);
 			partialCharge--;
 			updateQuickslot();
 		}
@@ -286,7 +291,7 @@ public abstract class Wand extends Item {
 	}
 
 	public String statsDesc(){
-		return Messages.get(this, "stats_desc") + "\n\n" + Messages.get(Wand.class, "charges", curCharges, maxCharges);
+		return Messages.get(this, "stats_desc") + "\n\n" + Messages.get(Wand.class, "charges", curCharges, getMaxCharges());
 	}
 
 	public String upgradeStat1(long level){
@@ -309,7 +314,7 @@ public abstract class Wand extends Item {
 	@Override
 	public String status() {
 		if (levelKnown) {
-			return (curChargeKnown ? Messages.format( "%d%%",  Math.round(((curCharges * 1f) / (maxCharges * 1f)) * 100f)) : "?");
+			return (curChargeKnown ? Messages.format( "%d%%",  Math.round(((curCharges * 1f) / (getMaxCharges() * 1f)) * 100f)) : "?");
 		} else {
 			return null;
 		}
@@ -341,7 +346,7 @@ public abstract class Wand extends Item {
 		}
 
 		updateLevel();
-		curCharges = Math.min( curCharges + 1, maxCharges );
+		curCharges = Math.min( curCharges + 1, getMaxCharges());
 		updateQuickslot();
 		
 		return this;
@@ -402,8 +407,8 @@ public abstract class Wand extends Item {
 	}
 
 	public void updateLevel() {
-		maxCharges = (level() + initialCharges());
-		curCharges = Math.min( curCharges, maxCharges );
+		setMaxCharges((level() + initialCharges()));
+		curCharges = Math.min( curCharges, getMaxCharges());
 	}
 	
 	public int initialCharges() {
@@ -455,7 +460,7 @@ public abstract class Wand extends Item {
 
 		//inside staff
 		if (charger != null && charger.target == Dungeon.hero && !Dungeon.hero.belongings.contains(this)){
-			if (Dungeon.hero.hasTalent(Talent.EXCESS_CHARGE) && curCharges >= maxCharges){
+			if (Dungeon.hero.hasTalent(Talent.EXCESS_CHARGE) && curCharges >= getMaxCharges()){
 				int shieldToGive = Math.round(buffedLvl()*0.67f*Dungeon.hero.pointsInTalent(Talent.EXCESS_CHARGE));
 				Buff.affect(Dungeon.hero, Barrier.class).setShield(shieldToGive);
 				Dungeon.hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
@@ -595,6 +600,14 @@ public abstract class Wand extends Item {
 	public int collisionProperties(int target){
 		if (cursed)     return Ballistica.MAGIC_BOLT;
 		else            return collisionProperties;
+	}
+
+	public long getMaxCharges() {
+		return (long) (maxCharges * getRarityMultiplier());
+	}
+
+	public void setMaxCharges(long maxCharges) {
+		this.maxCharges = maxCharges;
 	}
 
 	public static class PlaceHolder extends Wand {
@@ -782,16 +795,16 @@ public abstract class Wand extends Item {
 		
 		@Override
 		public boolean act() {
-			if (curCharges < maxCharges && target.buff(MagicImmune.class) == null)
+			if (curCharges < getMaxCharges() && target.buff(MagicImmune.class) == null)
 				recharge();
 			
-			while (partialCharge >= 1 && curCharges < maxCharges) {
+			while (partialCharge >= 1 && curCharges < getMaxCharges()) {
 				partialCharge--;
 				curCharges++;
 				updateQuickslot();
 			}
 			
-			if (curCharges == maxCharges){
+			if (curCharges == getMaxCharges()){
 				partialCharge = 0;
 			}
 			
@@ -801,14 +814,14 @@ public abstract class Wand extends Item {
 		}
 
 		private void recharge(){
-			long missingCharges = maxCharges - curCharges;
+			long missingCharges = getMaxCharges() - curCharges;
 			missingCharges = Math.max(0, missingCharges);
 
 			float turnsToCharge = (float) (BASE_CHARGE_DELAY
 					+ (getScalingChargeAddition() * Math.pow(scalingFactor, missingCharges)));
 
 			if (Regeneration.regenOn())
-				partialCharge += (1f/turnsToCharge) * RingOfEnergy.wandChargeMultiplier(target);
+				partialCharge += (1f/turnsToCharge) * RingOfEnergy.wandChargeMultiplier(target) * getRarityMultiplier();
 
 			for (Recharging bonus : target.buffs(Recharging.class)){
 				if (bonus != null && bonus.remainder() > 0f) {
@@ -822,15 +835,15 @@ public abstract class Wand extends Item {
 		}
 
 		public void gainCharge(float charge){
-			if (curCharges < maxCharges) {
-				partialCharge += charge;
+			if (curCharges < getMaxCharges()) {
+				partialCharge += charge*getRarityMultiplier();
 				while (partialCharge >= 1f) {
 					curCharges++;
 					partialCharge--;
 				}
-				if (curCharges >= maxCharges){
+				if (curCharges >= getMaxCharges()){
 					partialCharge = 0;
-					curCharges = maxCharges;
+					curCharges = getMaxCharges();
 				}
 				updateQuickslot();
 			}

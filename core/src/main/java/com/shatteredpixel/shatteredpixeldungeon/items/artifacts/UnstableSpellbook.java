@@ -67,7 +67,7 @@ public class UnstableSpellbook extends Artifact {
 
 		charge = (int)(level()*0.6f)+2;
 		partialCharge = 0;
-		chargeCap = (int)(level()*0.6f)+2;
+		setChargeCap((int)(level()*0.6f)+2);
 
 		defaultAction = AC_READ;
 	}
@@ -224,13 +224,14 @@ public class UnstableSpellbook extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null){
+		if (charge < getChargeCap() && !cursed && target.buff(MagicImmune.class) == null){
 			partialCharge += 0.1f*amount;
+			partialCharge *= getRarityMultiplier();
 			while (partialCharge >= 1){
 				partialCharge--;
 				charge++;
 			}
-			if (charge >= chargeCap){
+			if (charge >= getChargeCap()){
 				partialCharge = 0;
 			}
 			updateQuickslot();
@@ -239,7 +240,7 @@ public class UnstableSpellbook extends Artifact {
 
 	@Override
 	public Item upgrade() {
-		chargeCap = (int)((level()+1)*0.6f)+2;
+		setChargeCap((int)((level()+1)*0.6f)+2);
 
 		//for artifact transmutation.
 		while (!scrolls.isEmpty() && scrolls.size() > (levelCap-1-level()))
@@ -292,12 +293,12 @@ public class UnstableSpellbook extends Artifact {
 	public class bookRecharge extends ArtifactBuff{
 		@Override
 		public boolean act() {
-			if (charge < chargeCap
+			if (charge < getChargeCap()
 					&& !cursed
 					&& target.buff(MagicImmune.class) == null
 					&& Regeneration.regenOn()) {
 				//120 turns to charge at full, 80 turns to charge at 0/8
-				float chargeGain = 1 / (120f - (chargeCap - charge)*5f);
+				float chargeGain = 1 / (120f - (getChargeCap() - charge)*5f);
 				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
 				partialCharge += chargeGain;
 
@@ -305,7 +306,7 @@ public class UnstableSpellbook extends Artifact {
 					partialCharge --;
 					charge ++;
 
-					if (charge == chargeCap){
+					if (charge == getChargeCap()){
 						partialCharge = 0;
 					}
 				}

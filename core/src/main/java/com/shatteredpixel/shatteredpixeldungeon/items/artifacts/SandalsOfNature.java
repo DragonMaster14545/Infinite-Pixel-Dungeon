@@ -66,7 +66,7 @@ public class SandalsOfNature extends Artifact {
 		levelCap = 3;
 
 		charge = 0;
-		chargeCap = 100;
+		setChargeCap(100);
 
 		defaultAction = AC_ROOT;
 	}
@@ -156,14 +156,15 @@ public class SandalsOfNature extends Artifact {
 	@Override
 	public void charge(Hero target, float amount) {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
-		if (charge < chargeCap) {
+		if (charge < getChargeCap()) {
 			partialCharge += 2*amount;
+			partialCharge *= getRarityMultiplier();
 			while (partialCharge >= 1f){
 				charge++;
 				partialCharge--;
 			}
-			if (charge >= chargeCap) {
-				charge = chargeCap;
+			if (charge >= getChargeCap()) {
+				charge = getChargeCap();
 				partialCharge = 0;
 			}
 			updateQuickslot();
@@ -253,7 +254,7 @@ public class SandalsOfNature extends Artifact {
 	public class Naturalism extends ArtifactBuff{
 		public void charge() {
 			if (cursed || target.buff(MagicImmune.class) != null) return;
-			if (charge < chargeCap){
+			if (charge < getChargeCap()){
 				//0.5 charge per grass at +0, up to 1 at +10
 				float chargeGain = (3f + level())/6f;
 				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
@@ -262,7 +263,7 @@ public class SandalsOfNature extends Artifact {
 					charge++;
 					partialCharge--;
 				}
-				charge = Math.min(charge, chargeCap);
+				charge = Math.min(charge, getChargeCap());
 				updateQuickslot();
 			}
 		}
