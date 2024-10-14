@@ -219,7 +219,7 @@ public abstract class Level implements Bundlable {
 		//TODO maybe just make this part of RegularLevel?
 		if (!Dungeon.bossLevel() && Dungeon.branch == 0) {
 
-			addItemToSpawn(Generator.random(Generator.Category.FOOD));
+			for (int i = 0; i < Dungeon.hero.getStandardRoomMultiplier()*Dungeon.hero.getRoomMaxAdditionalSizeMultiplier(); i++) addItemToSpawn(Generator.random(Generator.Category.FOOD));
 
 			if (Dungeon.posNeeded()) {
 				Dungeon.LimitedDrops.STRENGTH_POTIONS.count++;
@@ -271,7 +271,7 @@ public abstract class Level implements Bundlable {
 						break;
 					case 4:
 						feeling = Feeling.LARGE;
-						addItemToSpawn(Generator.random(Generator.Category.FOOD));
+						for (int i = 0; i < Dungeon.hero.getStandardRoomMultiplier()*Dungeon.hero.getRoomMaxAdditionalSizeMultiplier(); i++) addItemToSpawn(Generator.random(Generator.Category.FOOD));
 						break;
 					case 5:
 						feeling = Feeling.TRAPS;

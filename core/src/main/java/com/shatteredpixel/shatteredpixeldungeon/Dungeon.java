@@ -671,13 +671,13 @@ public class Dungeon {
 
 	public static boolean posNeeded() {
 		//2 POS each floor set
-		int posLeftThisSet = 2 - (LimitedDrops.STRENGTH_POTIONS.count - (depth / 5) * 2);
+		int posLeftThisSet =  - (LimitedDrops.STRENGTH_POTIONS.count - (depth / 5) * 2);
 		if (posLeftThisSet <= 0) return false;
 
 		int floorThisSet = (depth % 5);
 
 		//pos drops every two floors, (numbers 1-2, and 3-4) with a 50% chance for the earlier one each time.
-		int targetPOSLeft = 2 - floorThisSet/2;
+		int targetPOSLeft = Math.round(2*Dungeon.hero.getStandardRoomMultiplier()*Dungeon.hero.getRoomMaxAdditionalSizeMultiplier()) - floorThisSet/2;
 		if (floorThisSet % 2 == 1 && Random.Int(2) == 0) targetPOSLeft --;
 
 		if (targetPOSLeft < posLeftThisSet) return true;
@@ -691,13 +691,13 @@ public class Dungeon {
 		if (isChallenged(Challenges.NO_SCROLLS)){
 			return false;
 		} else {
-			souLeftThisSet = 3 - (LimitedDrops.UPGRADE_SCROLLS.count - (depth / 5) * 3);
+			souLeftThisSet = Math.round(3*Dungeon.hero.getStandardRoomMultiplier()*Dungeon.hero.getRoomMaxAdditionalSizeMultiplier()) - (LimitedDrops.UPGRADE_SCROLLS.count - (depth / 5) * 3);
 		}
 		if (souLeftThisSet <= 0) return false;
 
 		int floorThisSet = (depth % 5);
 		//chance is floors left / scrolls left
-		return Random.Int(5 - floorThisSet) < souLeftThisSet;
+		return Random.Int(Math.round(5*Dungeon.hero.getStandardRoomMultiplier()*Dungeon.hero.getRoomMaxAdditionalSizeMultiplier()) - floorThisSet) < souLeftThisSet;
 	}
 	
 	public static boolean asNeeded() {
