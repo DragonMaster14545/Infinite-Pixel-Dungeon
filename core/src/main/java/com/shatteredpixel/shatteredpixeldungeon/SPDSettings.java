@@ -205,7 +205,7 @@ public class SPDSettings extends GameSettings {
 	}
 
 	public static boolean extraQuickslotRow() {
-		return getBoolean(KEY_EXTRA_QUICKSLOT_ROW,true);
+		return getBoolean(KEY_EXTRA_QUICKSLOT_ROW,false);
 	}
 
 	public static void quickslotWaterskin( boolean value ){

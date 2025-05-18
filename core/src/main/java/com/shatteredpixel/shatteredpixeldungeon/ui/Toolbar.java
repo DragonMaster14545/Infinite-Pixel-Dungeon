@@ -24,6 +24,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.badlogic.gdx.utils.SharedLibraryLoader;
 import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.HoldFast;
@@ -43,12 +44,15 @@ import com.watabou.input.ControllerHandler;
 import com.watabou.input.GameAction;
 import com.watabou.input.KeyBindings;
 import com.watabou.noosa.*;
+import com.watabou.noosa.Image;
 import com.watabou.noosa.ui.Component;
+import com.watabou.utils.PlatformSupport;
 import com.watabou.utils.Point;
 import com.watabou.utils.PointF;
+import jdk.tools.jlink.internal.Platform;
 
+import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Toolbar extends Component {
 
@@ -78,6 +82,8 @@ public class Toolbar extends Component {
 
 		height = btnInventory.height();
 	}
+
+	private final int quickslotsPerRow = 5;
 
 	@Override
 	public synchronized void destroy() {
@@ -475,7 +481,7 @@ public class Toolbar extends Component {
 	}
 
 	public boolean hasExtraQuickslotRow() {
-		return (SPDSettings.extraQuickslotRow() && (Mode.valueOf(SPDSettings.toolbarMode()) == Mode.SPLIT));
+		return (SPDSettings.extraQuickslotRow());
 	}
 	
 	@Override
@@ -502,7 +508,7 @@ public class Toolbar extends Component {
 		}
 		int endingSlot = startingSlot+quickslotsToShow-1;
 
-		if(!(Mode.valueOf(SPDSettings.toolbarMode()) == Mode.SPLIT)){
+		if(SharedLibraryLoader.isLinux || SharedLibraryLoader.isMac || SharedLibraryLoader.isWindows) {
 			for (int i = 0; i < btnQuick.length; i++){
 				btnQuick[i].visible = i >= startingSlot && i <= endingSlot;
 				btnQuick[i].enable(btnQuick[i].visible && lastEnabled);
@@ -561,7 +567,6 @@ public class Toolbar extends Component {
 
 				btnInventory.setPos(right - btnInventory.width(), y);
 
-				int quickslotsPerRow = 5;
 				int numRows = (int) Math.ceil((endingSlot - startingSlot) / (float) quickslotsPerRow);
 
 				for (int i = 0; i < btnQuick.length; i++){
@@ -612,8 +617,10 @@ public class Toolbar extends Component {
 
 			//center = group but.. well.. centered, so all we need to do is pre-emptively set the right side further in.
 			case CENTER:
+                int firstRowEnd = Math.min(startingSlot + quickslotsPerRow - 1, endingSlot);
 				float toolbarWidth = btnWait.width() + btnSearch.width() + btnInventory.width();
-				for(Button slot : btnQuick){
+				for(int i = startingSlot; i <= firstRowEnd; i++) {
+					Button slot = btnQuick[i];
 					if (slot.visible) toolbarWidth += slot.width();
 				}
 				if (btnSwap.visible) toolbarWidth += btnSwap.width()-2;
@@ -624,10 +631,45 @@ public class Toolbar extends Component {
 				btnSearch.setPos(btnWait.left() - btnSearch.width(), y);
 				btnInventory.setPos(btnSearch.left() - btnInventory.width(), y);
 
-				btnQuick[startingSlot].setPos(btnInventory.left() - btnQuick[startingSlot].width(), y + 2);
-				for (int i = startingSlot+1; i <= endingSlot; i++) {
-					btnQuick[i].setPos(btnQuick[i-1].left() - btnQuick[i].width(), y + 2);
-					shift = -btnQuick[i].left();
+				int numRows3 = (int) Math.ceil((endingSlot - startingSlot) / (float) quickslotsPerRow);
+
+				for (int i = 0; i < btnQuick.length; i++){
+					btnQuick[i].visible = i >= startingSlot && i <= endingSlot;
+					btnQuick[i].enable(btnQuick[i].visible && lastEnabled);
+					if (i < startingSlot || i > endingSlot){
+						btnQuick[i].setPos(btnQuick[i].left(), PixelScene.uiCamera.height);
+					}
+				}
+
+				// Small interface size
+				for (int row = 0; row < numRows3; row++) {
+					int rowStart = startingSlot + row * quickslotsPerRow;
+					int rowEnd = Math.min(rowStart + quickslotsPerRow - 1, endingSlot);
+					float rowY = y + 2 - row * (btnQuick[startingSlot].height());
+
+					for (int i = rowStart; i <= rowEnd; i++) {
+
+						// First button in the row
+						if (i == rowStart){
+							btnQuick[i].border(0, 2);
+							btnQuick[i].frame(106, 0, 19, 24);
+						}
+						// Last button in the row
+						else if (i == rowEnd){
+							btnQuick[i].border(2, 1);
+							btnQuick[i].frame(86, 0, 20, 24);
+						}
+						// Middle buttons
+						else {
+							btnQuick[i].border(0, 1);
+							btnQuick[i].frame(88, 0, 18, 24);
+						}
+					}
+
+					btnQuick[rowStart].setPos(x+width()-btnQuick[rowStart].width()- btnInventory.left()+ btnInventory.width()+4, rowY);
+					for (int i = rowStart+1; i <= rowEnd; i++) {
+						btnQuick[i].setPos(btnQuick[i-1].left() - btnQuick[i].width(), rowY);
+					}
 				}
 
 				if (btnSwap.visible){
@@ -656,8 +698,15 @@ public class Toolbar extends Component {
 			btnSearch.setPos( (right - btnSearch.right()), y);
 			btnInventory.setPos( (right - btnInventory.right()), y);
 
-			for(int i = startingSlot; i <= endingSlot; i++) {
-				btnQuick[i].setPos( right - btnQuick[i].right(), y+2);
+			int numRows2 = (int) Math.ceil((endingSlot - startingSlot) / (float) quickslotsPerRow);
+			for(int row = 0; row < numRows2; row++) {
+				int rowStart = startingSlot + row * quickslotsPerRow;
+				int rowEnd = Math.min(rowStart + quickslotsPerRow - 1, endingSlot);
+				float toSubtract = btnQuick[rowStart].left()-(right-btnQuick[rowEnd].left())+btnQuick[rowStart].width();
+
+				for (int i = rowStart; i <= rowEnd; i++) {
+					btnQuick[i].setPos(btnQuick[i].left()-toSubtract,btnQuick[i].top());
+				}
 			}
 
 			if (btnSwap.visible){
