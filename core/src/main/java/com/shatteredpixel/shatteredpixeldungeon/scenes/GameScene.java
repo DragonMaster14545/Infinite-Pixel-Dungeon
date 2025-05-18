@@ -785,7 +785,7 @@ private static float waterOfs = 0;
 		float tagWidth = Tag.SIZE + (tagsOnLeft ? insets.left : insets.right);
 		float tagLeft = tagsOnLeft ? 0 : uiCamera.width - tagWidth;
 
-		float y = SPDSettings.interfaceSize() == 0 ? scene.toolbar.top()-2 : scene.status.top()-2;
+		float y = SPDSettings.interfaceSize() == 0 ? scene.toolbar.top()-2-(scene.toolbar.hasExtraQuickslotRow() ? 24 : 0) : scene.status.top()-2;
 		if (SPDSettings.interfaceSize() == 0){
 			if (tagsOnLeft) {
 				scene.log.setRect(tagWidth, y, uiCamera.width - tagWidth - insets.right, 0);

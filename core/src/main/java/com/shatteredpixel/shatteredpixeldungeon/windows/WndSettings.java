@@ -411,6 +411,7 @@ public class WndSettings extends WndTabbed {
 		ColorBlock sep2;
 		CheckBox chkFont;
 		CheckBox chkVibrate;
+		CheckBox chkExtraQuickslotRow;
 
 		@Override
 		protected void createChildren() {
@@ -583,7 +584,21 @@ public class WndSettings extends WndTabbed {
 									chkFlipTags.setRect(0, chkFlipToolbar.bottom() + GAP, width, BTN_HEIGHT);
 								}
 
-								resize(WIDTH_P, (int)chkFlipTags.bottom());
+								chkExtraQuickslotRow = new CheckBox(Messages.get(WndSettings.UITab.this, "extra_quickslot_row")) {
+									@Override
+									protected void onClick() {
+										super.onClick();
+										SPDSettings.extraQuickslotRow(checked());
+										Toolbar.updateLayout();
+									}
+								};
+
+								chkExtraQuickslotRow.setRect(0, chkFlipTags.bottom() + GAP, width, BTN_HEIGHT);
+
+								chkExtraQuickslotRow.checked(SPDSettings.extraQuickslotRow());
+								add(chkExtraQuickslotRow);
+
+								resize(WIDTH_P, (int)chkExtraQuickslotRow.bottom());
 
 							}
 						});

@@ -473,13 +473,17 @@ public class Toolbar extends Component {
 
 		add(pickedUp = new PickedUpItem());
 	}
+
+	public boolean hasExtraQuickslotRow() {
+		return (SPDSettings.extraQuickslotRow() && (Mode.valueOf(SPDSettings.toolbarMode()) == Mode.SPLIT));
+	}
 	
 	@Override
 	protected void layout() {
 
 		float right = width;
 
-		int quickslotsToShow = 4;
+		int quickslotsToShow = hasExtraQuickslotRow() ? 9 : 4;
 		if (PixelScene.uiCamera.width > 152) quickslotsToShow ++;
 		if (PixelScene.uiCamera.width > 170) quickslotsToShow ++;
 
@@ -498,52 +502,54 @@ public class Toolbar extends Component {
 		}
 		int endingSlot = startingSlot+quickslotsToShow-1;
 
-		for (int i = 0; i < btnQuick.length; i++){
-			btnQuick[i].visible = i >= startingSlot && i <= endingSlot;
-			btnQuick[i].enable(btnQuick[i].visible && lastEnabled);
-			if (i < startingSlot || i > endingSlot){
-				btnQuick[i].setPos(btnQuick[i].left(), PixelScene.uiCamera.height);
+		if(!(Mode.valueOf(SPDSettings.toolbarMode()) == Mode.SPLIT)){
+			for (int i = 0; i < btnQuick.length; i++){
+				btnQuick[i].visible = i >= startingSlot && i <= endingSlot;
+				btnQuick[i].enable(btnQuick[i].visible && lastEnabled);
+				if (i < startingSlot || i > endingSlot){
+					btnQuick[i].setPos(btnQuick[i].left(), PixelScene.uiCamera.height);
+				}
 			}
-		}
 
-		if (SPDSettings.interfaceSize() > 0){
-			btnInventory.setPos(right - btnInventory.width(), y);
-			btnWait.setPos(btnInventory.left() - btnWait.width(), y);
-			btnSearch.setPos(btnWait.left() - btnSearch.width(), y);
+			if (SPDSettings.interfaceSize() > 0){
+				btnInventory.setPos(right - btnInventory.width(), y);
+				btnWait.setPos(btnInventory.left() - btnWait.width(), y);
+				btnSearch.setPos(btnWait.left() - btnSearch.width(), y);
 
-			right = btnSearch.left();
-			for(int i = endingSlot; i >= startingSlot; i--) {
-				if (i == endingSlot){
+				right = btnSearch.left();
+				for(int i = endingSlot; i >= startingSlot; i--) {
+					if (i == endingSlot){
+						btnQuick[i].border(0, 2);
+						btnQuick[i].frame(106, 0, 19, 24);
+					} else if (i == 0){
+						btnQuick[i].border(2, 1);
+						btnQuick[i].frame(86, 0, 20, 24);
+					} else {
+						btnQuick[i].border(0, 1);
+						btnQuick[i].frame(88, 0, 18, 24);
+					}
+					btnQuick[i].setPos(right-btnQuick[i].width(), y+2);
+					right = btnQuick[i].left();
+				}
+
+				//swap button never appears on larger interface sizes
+
+				return;
+			}
+
+			for(int i = startingSlot; i <= endingSlot; i++) {
+				if (i == startingSlot && !SPDSettings.flipToolbar() ||
+						i == endingSlot && SPDSettings.flipToolbar()){
 					btnQuick[i].border(0, 2);
 					btnQuick[i].frame(106, 0, 19, 24);
-				} else if (i == 0){
+				} else if (i == startingSlot && SPDSettings.flipToolbar() ||
+						i == endingSlot && !SPDSettings.flipToolbar()){
 					btnQuick[i].border(2, 1);
 					btnQuick[i].frame(86, 0, 20, 24);
 				} else {
 					btnQuick[i].border(0, 1);
 					btnQuick[i].frame(88, 0, 18, 24);
 				}
-				btnQuick[i].setPos(right-btnQuick[i].width(), y+2);
-				right = btnQuick[i].left();
-			}
-
-			//swap button never appears on larger interface sizes
-
-			return;
-		}
-
-		for(int i = startingSlot; i <= endingSlot; i++) {
-			if (i == startingSlot && !SPDSettings.flipToolbar() ||
-				i == endingSlot && SPDSettings.flipToolbar()){
-				btnQuick[i].border(0, 2);
-				btnQuick[i].frame(106, 0, 19, 24);
-			} else if (i == startingSlot && SPDSettings.flipToolbar() ||
-					i == endingSlot && !SPDSettings.flipToolbar()){
-				btnQuick[i].border(2, 1);
-				btnQuick[i].frame(86, 0, 20, 24);
-			} else {
-				btnQuick[i].border(0, 1);
-				btnQuick[i].frame(88, 0, 18, 24);
 			}
 		}
 
@@ -555,12 +561,46 @@ public class Toolbar extends Component {
 
 				btnInventory.setPos(right - btnInventory.width(), y);
 
-				float left = 0;
+				int quickslotsPerRow = 5;
+				int numRows = (int) Math.ceil((endingSlot - startingSlot) / (float) quickslotsPerRow);
 
-				btnQuick[startingSlot].setPos(btnInventory.left() - btnQuick[startingSlot].width(), y + 2);
-				for (int i = startingSlot+1; i <= endingSlot; i++) {
-					btnQuick[i].setPos(btnQuick[i-1].left() - btnQuick[i].width(), y + 2);
-					shift = btnSearch.right() - btnQuick[i].left();
+				for (int i = 0; i < btnQuick.length; i++){
+					btnQuick[i].visible = i >= startingSlot && i <= endingSlot;
+					btnQuick[i].enable(btnQuick[i].visible && lastEnabled);
+					if (i < startingSlot || i > endingSlot){
+						btnQuick[i].setPos(btnQuick[i].left(), PixelScene.uiCamera.height);
+					}
+				}
+
+				// Small interface size
+				for (int row = 0; row < numRows; row++) {
+					int rowStart = startingSlot + row * quickslotsPerRow;
+					int rowEnd = Math.min(rowStart + quickslotsPerRow - 1, endingSlot);
+					float rowY = y + 2 - row * (btnQuick[startingSlot].height());
+
+					for (int i = rowStart; i <= rowEnd; i++) {
+
+						// First button in the row
+						if (i == rowStart){
+							btnQuick[i].border(0, 2);
+							btnQuick[i].frame(106, 0, 19, 24);
+						}
+						// Last button in the row
+						else if (i == rowEnd){
+							btnQuick[i].border(2, 1);
+							btnQuick[i].frame(86, 0, 20, 24);
+						}
+						// Middle buttons
+						else {
+							btnQuick[i].border(0, 1);
+							btnQuick[i].frame(88, 0, 18, 24);
+						}
+					}
+
+					btnQuick[rowStart].setPos(x+width()-btnQuick[rowStart].width()- btnInventory.width()+1, rowY);
+					for (int i = rowStart+1; i <= rowEnd; i++) {
+						btnQuick[i].setPos(btnQuick[i-1].left() - btnQuick[i].width(), rowY);
+					}
 				}
 
 				if (btnSwap.visible){

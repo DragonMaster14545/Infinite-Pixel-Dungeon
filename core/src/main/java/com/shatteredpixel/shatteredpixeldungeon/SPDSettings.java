@@ -145,6 +145,7 @@ public class SPDSettings extends GameSettings {
 	public static final String KEY_FLIPTOOLBAR	= "flipped_ui";
 	public static final String KEY_FLIPTAGS 	= "flip_tags";
 	public static final String KEY_BARMODE		= "toolbar_mode";
+	public static final String KEY_EXTRA_QUICKSLOT_ROW = "extra_quickslot_row";
 	public static final String KEY_SLOTWATERSKIN= "quickslot_waterskin";
 	public static final String KEY_SYSTEMFONT	= "system_font";
 	public static final String KEY_VIBRATION    = "vibration";
@@ -197,6 +198,14 @@ public class SPDSettings extends GameSettings {
 	
 	public static String toolbarMode() {
 		return getString(KEY_BARMODE, PixelScene.landscape() ? "GROUP" : "SPLIT");
+	}
+
+	public static void extraQuickslotRow( boolean value ){
+		put( KEY_EXTRA_QUICKSLOT_ROW, value);
+	}
+
+	public static boolean extraQuickslotRow() {
+		return getBoolean(KEY_EXTRA_QUICKSLOT_ROW,true);
 	}
 
 	public static void quickslotWaterskin( boolean value ){
