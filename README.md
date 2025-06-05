@@ -3,7 +3,12 @@
 This is a fork of the unfortunately not continued [Experienced Pixel Dungeon](https://github.com/TrashboxBobylev/Experienced-Pixel-Dungeon-Redone)
 Thanks to [TrashboxBobylev](https://github.com/TrashboxBobylev) for the great work on the original
 
-Note that this fork is only for my personal use
+# This fork is being developed by me and jjbali. It currently adds:
+
+- Removal of the cycle limit
+- Rarities
+- Bigger dungeons
+- Another row of quickslots
 
 # Experienced Pixel Dungeon
 

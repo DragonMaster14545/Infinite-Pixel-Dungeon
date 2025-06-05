@@ -3,6 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.ui.changelist;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.BlackPsycheChest;
+import com.shatteredpixel.shatteredpixeldungeon.items.LostBackpack;
 import com.shatteredpixel.shatteredpixeldungeon.items.PsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.EquipmentBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
@@ -26,5 +27,6 @@ public class InfPDChanges {
                 "Changed the cycle system to allow for basicly infinite cycles, also changed hardcoded values to be calculated exponentially",
                 "Allowed the amount of ring, artifact and misc slots to be variable, for use in later Content",
                 "Added variables for multiplying the amount of rooms, monsters, loot, traps and the size of rooms in a layer"));
+        changes.addButton(new ChangeButton(new LostBackpack(), "Added an optional second row of quickslots"));
     }
 }
