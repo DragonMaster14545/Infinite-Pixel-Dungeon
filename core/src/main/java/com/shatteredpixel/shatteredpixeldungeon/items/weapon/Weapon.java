@@ -57,6 +57,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Bloomi
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Chilling;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Corrupting;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Elastic;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Galactic;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Grim;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Kinetic;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Lucky;
@@ -422,6 +423,9 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 	}
 
 	public boolean hasEnchant(Class<?extends Enchantment> type, Char owner) {
+		if (enchantment instanceof Galactic && type != Galactic.class) {
+			return ((Galactic) enchantment).hasEnchant(type, owner);
+		}
 		return enchantment != null && enchantment.getClass() == type && owner.buff(MagicImmune.class) == null;
 	}
 	
@@ -449,7 +453,8 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 				Lucky.class, Projecting.class, Unstable.class};
 
 		public static final Class<?>[] rare = new Class<?>[]{
-				Corrupting.class, Grim.class, Vampiric.class};
+				Corrupting.class, Grim.class, Vampiric.class,
+				Galactic.class};
 
 		public static final float[] typeChances = new float[]{
 				50, //12.5% each

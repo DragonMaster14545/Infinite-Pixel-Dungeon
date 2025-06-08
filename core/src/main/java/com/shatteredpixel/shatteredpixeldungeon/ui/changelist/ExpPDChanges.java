@@ -69,16 +69,7 @@ public class ExpPDChanges {
 
 	public static void addAllChanges( ArrayList<ChangeInfo> changeInfos ){
 
-            ChangeInfo changes = new ChangeInfo("InfPD-1.0.0", true, "");
-            changes.hardlight(0xFF4242);
-            changeInfos.add(changes);
-            changes.addButton( new ChangeButton(Icons.BOBBY_IS_VERY_STRANGE_PERSON_BECAUSE_HE_TRIES_TO_REFERENCE_HIMSELF_IN_NEW_SHATTERED_CREDITS_SCREEN.get(), "Developer Commentary",
-                "_-_ Released August 12th, 2024"));
-            changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
-                "_-_ nerfed all rarities' effects\n"
-            ));
-
-            changes = new ChangeInfo("ExpPD-2.19", true, "");
+            ChangeInfo changes = new ChangeInfo("ExpPD-2.19", true, "");
             changes.hardlight(0xFF4242);
             changeInfos.add(changes);
             changes.addButton( new ChangeButton(Icons.BOBBY_IS_VERY_STRANGE_PERSON_BECAUSE_HE_TRIES_TO_REFERENCE_HIMSELF_IN_NEW_SHATTERED_CREDITS_SCREEN.get(), "Developer Commentary",
