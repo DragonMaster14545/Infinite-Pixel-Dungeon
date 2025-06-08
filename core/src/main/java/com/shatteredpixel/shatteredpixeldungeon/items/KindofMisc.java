@@ -52,9 +52,9 @@ public abstract class KindofMisc extends EquipableItem {
 	@Override
 	public boolean doEquip(final Hero hero) {
 
-		if(Arrays.stream(hero.belongings.getMiscsArray()).anyMatch(misc -> misc.getClass() == this.getClass())) {
-			return false;
-		}
+		//if(Arrays.stream(hero.belongings.getMiscsArray()).anyMatch(misc -> misc.getClass() == this.getClass())) {
+		//	return false;
+		//}
 		boolean equipFull = false;
 		if ( this instanceof Artifact && hero.belongings.artifacts.size() >= hero.belongings.artifactSlots() && hero.belongings.miscs.size() >= hero.belongings.miscSlots()) {
 			//see if we can re-arrange items first
