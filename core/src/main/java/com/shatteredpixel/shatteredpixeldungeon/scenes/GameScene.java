@@ -243,6 +243,8 @@ public class GameScene extends PixelScene {
 		add( heaps );
 		
 		for ( Heap heap : Dungeon.level.heaps.valueList() ) {
+			heap.destroySubicons();
+			heap.initSubicons();
 			addHeapSprite( heap );
 		}
 
@@ -843,19 +845,19 @@ private static float waterOfs = 0;
 	public void addCustomWall( CustomTilemap visual){
 		customWalls.add( visual.create() );
 	}
-	
-	private void addHeapSprite( Heap heap ) {
-		ItemSprite sprite = heap.sprite = (ItemSprite)heaps.recycle( ItemSprite.class );
-		sprite.revive();
-		sprite.link( heap );
-		heaps.add( sprite );
-	}
-	
-	private void addDiscardedSprite( Heap heap ) {
-		heap.sprite = (DiscardedItemSprite)heaps.recycle( DiscardedItemSprite.class );
+
+	private void addHeapSprite(Heap heap) {
+		heap.sprite = (ItemSprite) heaps.recycle(ItemSprite.class);
 		heap.sprite.revive();
-		heap.sprite.link( heap );
-		heaps.add( heap.sprite );
+		heap.linkSprite(heap);
+		heap.addHeapComponents(heaps);
+	}
+
+	private void addDiscardedSprite(Heap heap) {
+		heap.sprite = (DiscardedItemSprite) heaps.recycle(DiscardedItemSprite.class);
+		heap.sprite.revive();
+		heap.linkSprite(heap);
+		heap.addHeapComponents(heaps);
 	}
 	
 	private void addPlantSprite( Plant plant ) {
@@ -973,6 +975,7 @@ private static float waterOfs = 0;
 		if (scene != null) {
 			scene.addDiscardedSprite( heap );
 		}
+		heap.killSubicons();
 	}
 	
 	public static void add( Mob mob ) {

@@ -909,6 +909,10 @@ if (buff(RoundShield.GuardTracker.class) != null){
 		BuffIndicator.refreshHero();
 		BuffIndicator.refreshBoss();
 
+		for ( Heap heap : Dungeon.level.heaps.valueList() ) {
+			if (heap.seen && heap.sprite != null) heap.updateSubicon();
+		}
+
 		if (paralysed > 0) {
 			
 			curAction = null;

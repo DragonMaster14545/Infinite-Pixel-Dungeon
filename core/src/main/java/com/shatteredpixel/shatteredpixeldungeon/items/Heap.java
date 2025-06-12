@@ -26,6 +26,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.Utility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
@@ -34,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.ChargrilledMeat;
@@ -43,18 +45,26 @@ import com.shatteredpixel.shatteredpixeldungeon.items.journal.DocumentPage;
 import com.shatteredpixel.shatteredpixeldungeon.items.journal.Guidebook;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.TenguBomb;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.BiggerGambleBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.BurntBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.GambleBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.Dart;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.TippedDart;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.ui.ItemSlot;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.noosa.BitmapText;
+import com.watabou.noosa.Group;
+import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
@@ -65,7 +75,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 
-public class Heap implements Bundlable {
+public class
+Heap implements Bundlable {
 	
 	public enum Type {
 		HEAP,
@@ -126,7 +137,6 @@ public class Heap implements Bundlable {
 		}
 		sprite.link();
 		sprite.drop();
-
 	}
 	
 	public Heap setHauntedIfCursed(){
@@ -160,7 +170,8 @@ public class Heap implements Bundlable {
 		} else if (sprite != null) {
 			sprite.view(this).place( pos );
 		}
-		
+
+		updateSubicon();
 		return item;
 	}
 
@@ -389,6 +400,7 @@ public class Heap implements Bundlable {
 		if (sprite != null) {
 			sprite.kill();
 		}
+		killSubicons();
 		items.clear();
 	}
 
@@ -441,6 +453,191 @@ public class Heap implements Bundlable {
 			default:
 				return peek().info();
 		}
+	}
+
+	public Image subicon;
+	public BitmapText quantityDisplay, heapSize, itemLvl, keyLevel, rarity;
+
+	{
+		initSubicons();
+	}
+
+	public void initSubicons() {
+		subicon = new Image();
+		quantityDisplay = new BitmapText(PixelScene.pixelFont);
+		heapSize = new BitmapText(PixelScene.pixelFont);
+		itemLvl = new BitmapText(PixelScene.pixelFont);
+		keyLevel = new BitmapText(PixelScene.pixelFont);
+		rarity = new BitmapText(PixelScene.pixelFont);
+	}
+
+	public void killSubicons() {
+		subicon.kill();
+		quantityDisplay.kill();
+		heapSize.kill();
+		itemLvl.kill();
+		keyLevel.kill();
+		rarity.kill();
+	}
+
+	public void destroySubicons() {
+		subicon.destroy();
+		quantityDisplay.destroy();
+		heapSize.destroy();
+		itemLvl.destroy();
+		keyLevel.destroy();
+		rarity.destroy();
+	}
+
+	public void addHeapComponents(Group addTo) {
+		addTo.add(sprite);
+		addTo.add(subicon);
+		addTo.add(quantityDisplay);
+		addTo.add(heapSize);
+		addTo.add(itemLvl);
+		addTo.add(keyLevel);
+		addTo.add(rarity);
+	}
+
+	public void linkSprite(Heap heap) {
+		sprite.link(heap);
+		updateSubicon();
+	}
+
+	public void updateSubicon() {
+		Item i = items.peek();
+
+		if (i != null) {
+			Image copy = Utility.createSubIcon(i);
+			if (copy != null && !isContainerType()) {
+				subicon.copy(copy);
+				subicon.scale.set(0.8f);
+				subicon.visible = i.isIdentified();
+
+				subicon.point(sprite.point());
+
+				if (i instanceof Potion) {
+					subicon.x += sprite.width() / 2 + subicon.width() / 4;
+					subicon.y -= subicon.height() / 6;
+				} else if (i instanceof Ring) {
+					subicon.x += sprite.width() - subicon.width() * 7 / 12f;
+					subicon.y -= subicon.height() / 5 * 2;
+				} else {
+					subicon.x += sprite.width() - subicon.width();
+					subicon.y -= subicon.height() / 6;
+				}
+
+				PixelScene.align(subicon);
+
+			} else subicon.visible = false;
+
+			if (i.quantity() > 1 && !isContainerType()) {
+
+				quantityDisplay.visible = true;
+				quantityDisplay.scale.set(0.45f);
+
+
+				if (i.quantity > 10) {
+					quantityDisplay.text("x100+");
+				} else {
+					quantityDisplay.text("x" + i.quantity());
+				}
+				quantityDisplay.measure();
+
+				quantityDisplay.point(sprite.point());
+
+				PixelScene.align(quantityDisplay);
+
+
+			} else {
+				quantityDisplay.text(null);
+				quantityDisplay.visible = false;
+			}
+
+			if (items.size() > 1) {
+				heapSize.visible = true;
+				heapSize.scale.set(0.45f);
+
+				heapSize.text((items.size() - 1) + "+");
+				heapSize.measure();
+
+				heapSize.point(sprite.point());
+
+				heapSize.y += sprite.height() - heapSize.height() * 0.5f;
+
+				PixelScene.align(heapSize);
+
+			} else {
+				heapSize.text(null);
+				heapSize.visible = false;
+			}
+
+			//Code from ItemSlot
+			long trueLvl = i.trueLevel();
+			long buffedLvl = i.buffedLvl();
+			if ((trueLvl != 0 || buffedLvl != 0) && !isContainerType()) {
+
+				itemLvl.visible = i.isIdentified();
+				itemLvl.scale.set(0.45f);
+
+				if (trueLvl < 11 || buffedLvl < 11) {
+					itemLvl.text(Messages.format(ItemSlot.TXT_LEVEL, buffedLvl));
+				} else {
+					itemLvl.text(">+10");
+				}
+				itemLvl.measure();
+				if (trueLvl == buffedLvl || buffedLvl <= 0) {
+					if (buffedLvl > 0) {
+						if ((i instanceof Weapon && ((Weapon) i).curseInfusionBonus)
+								|| (i instanceof Armor && ((Armor) i).curseInfusionBonus)
+								|| (i instanceof Wand && ((Wand) i).curseInfusionBonus)) {
+							itemLvl.hardlight(ItemSlot.CURSE_INFUSED);
+						} else {
+							itemLvl.hardlight(ItemSlot.UPGRADED);
+						}
+					} else {
+						itemLvl.hardlight(ItemSlot.DEGRADED);
+					}
+				} else {
+					itemLvl.hardlight(buffedLvl > trueLvl ? ItemSlot.ENHANCED : ItemSlot.WARNING);
+				}
+
+				itemLvl.point(sprite.point());
+
+				itemLvl.x += sprite.width() - itemLvl.width() * 0.9f;
+				itemLvl.y += sprite.height() * 0.77f;
+
+				PixelScene.align(itemLvl);
+
+			} else {
+				itemLvl.text(null);
+				itemLvl.visible = false;
+			}
+
+			if (i.rarity != Item.Rarity.NONE) {
+
+				rarity.visible = true;
+				rarity.scale.set(0.4f);
+
+				rarity.point(sprite.point());
+
+				rarity.text(String.valueOf(i.rarity.name));
+				rarity.color(i.rarity.color);
+
+				rarity.x += (sprite.width() - rarity.width()) * 0.03f;
+				rarity.y += sprite.height() * 0.77f;
+
+				PixelScene.align(rarity);
+
+			} else rarity.visible = false;
+
+		} else {
+			subicon.visible = quantityDisplay.visible = heapSize.visible = itemLvl.visible = rarity.visible = false;
+		}
+	}
+
+	private boolean isContainerType() {
+		return !(type == Type.HEAP || type == Type.FOR_SALE || type == Type.FOR_ARENA_SALE);
 	}
 
 	private static final String POS		= "pos";

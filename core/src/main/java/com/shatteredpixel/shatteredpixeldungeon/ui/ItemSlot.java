@@ -70,7 +70,7 @@ public class ItemSlot extends Button {
 	private static final String TXT_STRENGTH	= ":%d";
 	private static final String TXT_TYPICAL_STR	= "%d?";
 
-	private static final String TXT_LEVEL	= "%+d";
+	public static final String TXT_LEVEL	= "%+d";
 
 	// Special "virtual items"
 	public static final Item CHEST = new Item() {
