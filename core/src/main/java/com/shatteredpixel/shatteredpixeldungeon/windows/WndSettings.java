@@ -341,6 +341,7 @@ public class WndSettings extends WndTabbed {
 
 		}
 
+
 		@Override
 		protected void layout() {
 
@@ -412,6 +413,15 @@ public class WndSettings extends WndTabbed {
 		CheckBox chkFont;
 		CheckBox chkVibrate;
 		CheckBox chkExtraQuickslotRow;
+
+		public static boolean isAndroid() {
+			try {
+				Class.forName("android.os.Build");
+				return true;
+			} catch (ClassNotFoundException e) {
+				return false;
+			}
+		}
 
 		@Override
 		protected void createChildren() {
@@ -595,10 +605,11 @@ public class WndSettings extends WndTabbed {
 
 								chkExtraQuickslotRow.setRect(0, chkFlipTags.bottom() + GAP, width, BTN_HEIGHT);
 
-								chkExtraQuickslotRow.checked(SPDSettings.extraQuickslotRow());
-								add(chkExtraQuickslotRow);
+								if(isAndroid()) {
+									add(chkExtraQuickslotRow);
+								}
 
-								resize(WIDTH_P, (int)chkExtraQuickslotRow.bottom());
+								resize(WIDTH_P, (int)(isAndroid() ? chkExtraQuickslotRow.bottom() : chkFlipTags.bottom()));
 
 							}
 						});
