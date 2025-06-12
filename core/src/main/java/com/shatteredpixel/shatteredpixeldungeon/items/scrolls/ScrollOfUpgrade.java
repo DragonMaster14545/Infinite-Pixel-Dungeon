@@ -122,8 +122,8 @@ public class ScrollOfUpgrade extends InventoryScroll {
 		ArrayList<String> actions = super.actions( hero );
 		if (isIdentified() && !anonymous) {
 			actions.add(AC_UPGRADE);
-			if (quantity() > 1)
-				actions.add(AC_UPGRADE_AMOUNT);
+			//if (quantity() > 1)
+			//	actions.add(AC_UPGRADE_AMOUNT);
 		}
 		return actions;
 	}
