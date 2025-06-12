@@ -32,6 +32,7 @@ public class InfPDChanges {
                 "_-_ Nerfed all rarities' effects\n"
         ));
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ Added _Galactic_ enchanment\n"));
+                "_-_ Added _Galactic_ enchanment\n" +
+                        "_-_ Added _Raritize_ spell"));
     }
 }

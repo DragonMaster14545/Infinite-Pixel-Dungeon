@@ -54,6 +54,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.CurseInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.FireBooster;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.PhaseShift;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.Raritize;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ReclaimTrap;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Recycle;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.RespawnBooster;
@@ -222,7 +223,8 @@ public abstract class Recipe {
 		new RespawnBooster.Recipe(),
 		new Vampirism.Recipe(),
 		new IdentificationBomb.Recipe(),
-		new CheeseChunk.oneMeat()
+		new CheeseChunk.oneMeat(),
+			new Raritize.Recipe()
 	};
 	
 	private static Recipe[] threeIngredientRecipes = new Recipe[]{
