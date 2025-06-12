@@ -511,7 +511,7 @@ Heap implements Bundlable {
 			Image copy = Utility.createSubIcon(i);
 			if (copy != null && !isContainerType()) {
 				subicon.copy(copy);
-				subicon.scale.set(0.8f);
+				subicon.scale.set(0.9f);
 				subicon.visible = i.isIdentified();
 
 				subicon.point(sprite.point());
@@ -616,13 +616,13 @@ Heap implements Bundlable {
 
 			if (i.rarity != Item.Rarity.NONE) {
 
-				rarity.visible = true;
-				rarity.scale.set(0.4f);
+				rarity.visible = i.isIdentified();
+				rarity.scale.set(0.45f);
 
 				rarity.point(sprite.point());
 
 				rarity.text(String.valueOf(i.rarity.name));
-				rarity.color(i.rarity.color);
+				rarity.hardlight(i.rarity.color);
 
 				rarity.x += (sprite.width() - rarity.width()) * 0.03f;
 				rarity.y += sprite.height() * 0.77f;
