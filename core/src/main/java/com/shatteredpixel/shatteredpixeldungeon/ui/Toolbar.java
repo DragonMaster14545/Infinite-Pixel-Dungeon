@@ -83,7 +83,7 @@ public class Toolbar extends Component {
 		height = btnInventory.height();
 	}
 
-	private final int quickslotsPerRow = 5;
+	private final int quickslotsPerRow = 6;
 
 	@Override
 	public synchronized void destroy() {
