@@ -373,7 +373,7 @@ public class Dungeon {
 
 
 	public static long getCycleMultiplier(long baseValue ) {
-		return baseValue*((long)(Math.pow(cycle+1.5,cycle*1.17)));
+		return baseValue*((long)(Math.pow(cycle+1.3,cycle*1.25)));
 	}
 
 	public static int saveParse(long value) {
@@ -386,7 +386,7 @@ public class Dungeon {
 
     //as we don't increase depth when cycling, we will return virtual depth difficulty
     public static long escalatingDepth(int depth){
-		return getCycleMultiplier(depth) + getCycleMultiplier(depth > 0 ? 20:0);
+		return getCycleMultiplier(depth);
     }
 
 	public static boolean isChallenged( int mask ) {
