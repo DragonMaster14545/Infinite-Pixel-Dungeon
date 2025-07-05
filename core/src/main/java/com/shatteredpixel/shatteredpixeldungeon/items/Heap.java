@@ -537,7 +537,7 @@ Heap implements Bundlable {
 				quantityDisplay.scale.set(0.45f);
 
 
-				if (i.quantity > 10) {
+				if (i.quantity > 100) {
 					quantityDisplay.text("x100+");
 				} else {
 					quantityDisplay.text("x" + i.quantity());
