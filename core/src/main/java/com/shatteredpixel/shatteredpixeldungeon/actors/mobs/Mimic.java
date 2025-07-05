@@ -262,8 +262,8 @@ public class Mimic extends Mob {
 	}
 	
 	public void adjustStats( long level ) {
-		HP = HT = (1 + level) * 2;
-		defenseSkill = 2 + level/4;
+		HP = HT = (1 + level) * 5;
+		defenseSkill = 2 + level/2;
 		
 		enemySeen = true;
 	}
