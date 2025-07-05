@@ -29,7 +29,8 @@ public class InfPDChanges {
                 "Added variables for multiplying the amount of rooms, monsters, loot, traps and the size of rooms in a layer"));
         changes.addButton(new ChangeButton(new LostBackpack(), "Added an optional second row of quickslots"));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
-                "_-_ Nerfed all rarities' effects\n"
+                "_-_ Nerfed all rarities' effects\n" +
+                        "_-_ Rebalanced chances and multipliers of rarities\n"
         ));
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Added _Galactic_ enchanment\n" +
