@@ -273,10 +273,10 @@ public class Hero extends Char {
 		return getStandardRoomMultiplier()*0.25f;
 	}
 	public float getRoomMinSizeMultiplier() {
-		return 1f;
+		return 0.65f;
 	}
 	public float getRoomMaxAdditionalSizeMultiplier() {
-		return 1f;
+		return 0.65f;
 	}
 	public float getMobMultiplier() {
 		return 4f;
