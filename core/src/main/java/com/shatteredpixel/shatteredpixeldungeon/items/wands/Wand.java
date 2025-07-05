@@ -102,7 +102,7 @@ public abstract class Wand extends Item {
 	}
 
 	Wand() {
-		randomizeRarity();
+		//randomizeRarity();
 		curCharges = getMaxCharges();
 	}
 	

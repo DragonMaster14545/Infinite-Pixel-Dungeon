@@ -125,7 +125,7 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 	}
 
 	protected Weapon(){
-		randomizeRarity();
+		//randomizeRarity();
 	}
 
 	@Override

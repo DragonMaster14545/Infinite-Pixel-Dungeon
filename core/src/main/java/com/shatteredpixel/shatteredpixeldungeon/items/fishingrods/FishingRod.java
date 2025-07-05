@@ -58,7 +58,7 @@ public abstract class FishingRod extends Item {
     }
 
     FishingRod() {
-        randomizeRarity();
+        //randomizeRarity();
     }
 
     @Override

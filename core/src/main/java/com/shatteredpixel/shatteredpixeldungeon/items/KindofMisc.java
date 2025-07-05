@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
 public abstract class KindofMisc extends EquipableItem {
 
 	public KindofMisc() {
-		randomizeRarity();
+		//randomizeRarity();
 	}
 
 	@Override

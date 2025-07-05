@@ -126,7 +126,7 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 	public Armor( int tier ) {
 		this.tier = tier;
 		this.visibleTier = tier;
-		randomizeRarity();
+		//randomizeRarity();
 	}
 	
 	private static final String USES_LEFT_TO_ID = "uses_left_to_id";
