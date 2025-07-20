@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.FishingHook;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HookSprite;
 import com.watabou.noosa.audio.Sample;
@@ -115,6 +116,15 @@ public class Hook extends NPC {
             items.clear();
             new Flare(6, 20).color(0xFF0000, true).show(sprite, 3f);
             Sample.INSTANCE.play( Assets.Sounds.DEGRADE );
+        }
+
+        ArrayList<Item> bonus = FishingHook.tryForBonusDrop(tries);
+        if (!bonus.isEmpty()) {
+            items.addAll(bonus);
+            FishingHook.showFlareForBonusDrop(sprite);
+            Sample.INSTANCE.play( Assets.Sounds.CHARGEUP );
+            sprite.showStatus( CharSprite.POSITIVE, "!!!");
+            spend(1f);
         }
         return super.act();
     }
