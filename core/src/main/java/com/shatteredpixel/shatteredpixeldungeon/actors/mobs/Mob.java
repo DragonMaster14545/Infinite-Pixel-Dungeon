@@ -68,6 +68,8 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArmband;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
@@ -79,6 +81,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScrol
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAggression;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ExoticCrystals;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ShardOfOblivion;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Lucky;
@@ -962,6 +965,34 @@ public abstract class Mob extends Char {
                 Dungeon.level.drop(Generator.random(), pos).sprite.drop();
             }
         }
+
+		if (Dungeon.hero.grinding && Dungeon.hero.perks.contains(Perks.Perk.RARITIZE_MAGIC)){
+			// seanky code from somewhere?
+			Weapon w = Generator.randomWeapon();
+			Ring r = (Ring) Generator.random(Generator.Category.RING);
+			Artifact a = (Artifact) Generator.random(Generator.Category.ARTIFACT);
+			Wand wa = (Wand) Generator.random(Generator.Category.WAND);
+			Armor ar = (Armor) Generator.random(Generator.Category.ARMOR);
+			w.randomizeCommonRarity();
+			r.randomizeCommonRarity();
+			a.randomizeCommonRarity();
+			wa.randomizeCommonRarity();
+			ar.randomizeCommonRarity();
+			if (Random.Float() <= 0.07) {
+				int chance = Random.Int(1, 5);
+                if (chance == 0) {
+                    Dungeon.level.drop(w, pos).sprite.drop();
+                } else if (chance == 1) {
+					Dungeon.level.drop(r, pos).sprite.drop();
+				} else if (chance == 2) {
+					Dungeon.level.drop(a, pos).sprite.drop();
+				} else if (chance == 3) {
+					Dungeon.level.drop(ar, pos).sprite.drop();
+				} else if (chance == 4) {
+					Dungeon.level.drop(wa, pos).sprite.drop();
+				}
+			}
+		}
 
 		if (Dungeon.hero.grinding && Dungeon.hero.heroClass == HeroClass.MAGE && Random.Float() < 0.33f){
 			Dungeon.level.drop(Generator.random(Generator.Category.SCROLL), pos).sprite.drop();
