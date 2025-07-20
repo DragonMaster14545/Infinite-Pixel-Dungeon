@@ -90,7 +90,7 @@ public class BlackMimic extends Mob {
 
 		int powerLevel = Dungeon.hero != null ? Dungeon.hero.lvl : 0;
 
-		HP = HT = 900 + Math.round(powerLevel*32*Math.pow(7, Dungeon.cycle));
+		HP = HT = (long) ((bossMaxHPMulti + 1) * (900 + Math.round(powerLevel*32*Math.pow(7, Dungeon.cycle))));
 		EXP = Dungeon.getCycleMultiplier(2000);
 		defenseSkill = 20 + powerLevel / 3 * 2;
 

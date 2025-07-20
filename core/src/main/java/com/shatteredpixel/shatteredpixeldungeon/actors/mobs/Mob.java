@@ -141,6 +141,7 @@ public abstract class Mob extends Char {
 	
 	public long EXP = 1;
 	public int maxLvl = Integer.MAX_VALUE;
+	public double bossMaxHPMulti = Dungeon.escalatingDepth() * 0.025d;
 	
 	protected Char enemy;
 	protected int enemyID = -1; //used for save/restore

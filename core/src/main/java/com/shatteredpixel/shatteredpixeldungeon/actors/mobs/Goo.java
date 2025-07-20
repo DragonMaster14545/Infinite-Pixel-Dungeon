@@ -55,7 +55,7 @@ import com.watabou.utils.Random;
 public class Goo extends Mob {
 
 	{
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? Dungeon.getCycleMultiplier(120) : Dungeon.getCycleMultiplier(100);
+		HP = HT = (long) ((bossMaxHPMulti + 1) * (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? Dungeon.getCycleMultiplier(120) : Dungeon.getCycleMultiplier(100)));
 		EXP = Dungeon.getCycleMultiplier(10);
 		defenseSkill = Dungeon.getCycleMultiplier(8);
 		spriteClass = GooSprite.class;

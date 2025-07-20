@@ -65,7 +65,7 @@ import com.watabou.utils.Random;
 public abstract class YogFist extends Mob {
 
 	{
-		HP = HT = Dungeon.getCycleMultiplier(300);
+		HP = HT = (long) ((bossMaxHPMulti + 1) * (Dungeon.getCycleMultiplier(300)));
 		defenseSkill = Dungeon.getCycleMultiplier(20);
 
 		viewDistance = Light.DISTANCE;

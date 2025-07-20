@@ -90,7 +90,7 @@ public class Tengu extends Mob {
 	{
 		spriteClass = TenguSprite.class;
 		
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? Dungeon.getCycleMultiplier(250) : Dungeon.getCycleMultiplier(200);
+		HP = HT = (long) ((bossMaxHPMulti + 1) * (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? Dungeon.getCycleMultiplier(250) : Dungeon.getCycleMultiplier(200)));
 		EXP = Dungeon.getCycleMultiplier(20);
 		defenseSkill = Dungeon.getCycleMultiplier(15);
 		

@@ -90,7 +90,7 @@ public class DwarfKing extends Mob {
 	}
 
 	private int theSubjectConstant(){
-		return Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 18 : 12;
+		return (int) ((bossMaxHPMulti + 1) * (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 18 : 12));
 	}
 
 	@Override

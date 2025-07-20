@@ -32,7 +32,8 @@ public class InfPDChanges {
                 "_-_ Nerfed all rarities' effects\n" +
                         "_-_ Rebalanced chances and multipliers of rarities\n" +
                         "_-_ Buffed Mimic and Cycle Multiplier\n" +
-                        "_-_ The chances of getting luck potion is decreased\n"
+                        "_-_ The chances of getting luck potion is decreased\n" +
+                        "_-_ Bosses now gains 2.5% HP bonus per escalating depth\n"
         ));
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Added _Galactic_ enchanment\n" +
