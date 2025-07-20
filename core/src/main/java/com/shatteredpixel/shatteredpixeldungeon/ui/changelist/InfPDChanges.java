@@ -36,7 +36,8 @@ public class InfPDChanges {
         ));
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Added _Galactic_ enchanment\n" +
-                        "_-_ Added _Raritize_ spell"));
+                        "_-_ Added _Raritize_ spell\n" +
+                        "_-_ Extended other bags from 36 to 57"));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed fishing rods not working\n"));
     }

@@ -52,14 +52,14 @@ public class WndBag extends WndTabbed {
 	//only one bag window can appear at a time
 	public static Window INSTANCE;
 
-	protected static final int COLS_P   = 6;
-	protected static final int COLS_L   = 7;
-	
-	protected static int SLOT_WIDTH_P   = 17;
-	protected static int SLOT_WIDTH_L   = 16;
+	protected static final int COLS_P   = 7; //6 //7
+	protected static final int COLS_L   = 10; //7 //10
 
-	protected static int SLOT_HEIGHT_P	= 16;
-	protected static int SLOT_HEIGHT_L	= 17;
+	protected static int SLOT_WIDTH_P   = 17; //17
+	protected static int SLOT_WIDTH_L   = 16; //16
+
+	protected static int SLOT_HEIGHT_P	= 18; //16
+	protected static int SLOT_HEIGHT_L	= 17; //17
 
 	protected static final int SLOT_MARGIN	= 1;
 	
@@ -99,7 +99,7 @@ public class WndBag extends WndTabbed {
 		slotWidth = PixelScene.landscape() ? SLOT_WIDTH_L : SLOT_WIDTH_P;
 		slotHeight = PixelScene.landscape() ? SLOT_HEIGHT_L : SLOT_HEIGHT_P;
 
-		nCols = PixelScene.landscape() ? COLS_L*2 : COLS_P;
+		nCols = PixelScene.landscape() ? COLS_L : COLS_P;
 		nRows = (int)Math.ceil(60/(float)nCols); //we expect to lay out 25 slots in all cases
 
 		int windowWidth = slotWidth * nCols + SLOT_MARGIN * (nCols - 1);
