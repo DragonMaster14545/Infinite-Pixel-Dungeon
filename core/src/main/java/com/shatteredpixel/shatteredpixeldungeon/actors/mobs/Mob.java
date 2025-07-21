@@ -1103,6 +1103,10 @@ public abstract class Mob extends Char {
 			desc += "\n\n_" + Messages.titleCase(b.name()) + "_\n" + b.desc();
 		}
 
+		desc += "\n\nHealth: " + this.HP + "/" + this.HT;
+		desc += "\nDefense Skill: " + this.defenseSkill;
+		desc += "\nEXP: " + this.EXP;
+
 		return desc;
 	}
 
