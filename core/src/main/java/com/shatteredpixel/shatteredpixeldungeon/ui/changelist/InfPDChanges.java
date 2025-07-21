@@ -28,7 +28,8 @@ public class InfPDChanges {
                         "_-_ Added _Extractor_ spell\n"
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
-                "_-_ Drastically nerfed gold drops\n"
+                "_-_ Drastically nerfed gold drops\n" +
+                        "_-_ Fire Booster now multiplies the fire damage by 1.15x\n"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.0", true, "");
