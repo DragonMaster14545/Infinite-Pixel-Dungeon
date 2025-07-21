@@ -106,6 +106,10 @@ public abstract class ChampionEnemy extends Buff {
 			Buff.affect(m, buffCls);
 			m.state = m.WANDERING;
 		}
+
+		if (Dungeon.branch == Dungeon.BRANCH_ARENA) {
+			Buff.affect(m, buffCls);
+		}
 	}
 
 	public static class Blazing extends ChampionEnemy {

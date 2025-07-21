@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.CounterBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Overload;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RageShield;
@@ -361,6 +362,12 @@ public class ArenaLevel extends Level {
 						}
 						if (power >= 20){
 							Buff.affect(mob, RageShield.class).set(power*4);
+						}
+						if (power >= 25){
+							mob.HP = mob.HT *= 2;
+						}
+						if (power >= 30) {
+							ChampionEnemy.rollForChampion(mob);
 						}
 					}
 				}
