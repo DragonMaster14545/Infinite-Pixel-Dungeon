@@ -32,7 +32,8 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Drastically nerfed gold drops\n" +
                         "_-_ Fire Booster now multiplies the fire damage by 1.15x\n" +
-                        "_-_ Recharging buffs now gives you 35 turns of duration\n"
+                        "_-_ Recharging buffs now gives you 35 turns of duration\n" +
+                        "_-_ Stone of Clairvoyance now scans within 23 cells radius\n"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.0", true, "");

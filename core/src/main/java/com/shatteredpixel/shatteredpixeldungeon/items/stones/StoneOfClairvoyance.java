@@ -36,7 +36,7 @@ import com.watabou.utils.Point;
 
 public class StoneOfClairvoyance extends Runestone {
 	
-	private static final int DIST = 20;
+	private static final int DIST = 23;
 	
 	{
 		image = ItemSpriteSheet.STONE_CLAIRVOYANCE;
