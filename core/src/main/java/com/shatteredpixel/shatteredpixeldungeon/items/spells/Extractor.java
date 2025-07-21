@@ -50,7 +50,7 @@ public class Extractor extends InventorySpell {
 
 	@Override
 	protected boolean usableOnItem(Item item) {
-		return item.isUpgradable();
+		return item.isUpgradable() && !(item.level() <= 0);
 	}
 
 	@Override
