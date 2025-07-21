@@ -643,7 +643,7 @@ public class Notes {
 	}
 
 	public static int customRecordLimit(){
-		return 5;
+		return 30;
 	}
 
 	private static final Comparator<Record> comparator = new Comparator<Record>() {
