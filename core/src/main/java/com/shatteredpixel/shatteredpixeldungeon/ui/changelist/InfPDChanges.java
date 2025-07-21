@@ -26,7 +26,8 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Added a sprite for Raritize spell\n" +
                         "_-_ Added _Extractor_ spell\n" +
-                        "_-_ Increased custom note size to 30\n"
+                        "_-_ Increased custom note size to 30\n" +
+                        "_-_ Added new spells on the Catalog"
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Drastically nerfed gold drops\n" +
