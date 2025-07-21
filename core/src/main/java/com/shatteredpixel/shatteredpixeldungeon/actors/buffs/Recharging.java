@@ -29,7 +29,7 @@ import com.watabou.noosa.Image;
 
 public class Recharging extends FlavourBuff {
 
-	public static final float DURATION = 30f;
+	public static final float DURATION = 35f;
 
 	{
 		type = buffType.POSITIVE;
