@@ -56,17 +56,10 @@ import com.watabou.utils.Reflection;
 public class Raritize extends InventorySpell {
 	
 	{
-		image = ItemSpriteSheet.RECYCLE;
+		image = ItemSpriteSheet.RARITIZE;
 
 		talentFactor = 2;
 		talentChance = 1/(float) Recipe.OUT_QUANTITY;
-	}
-
-	private static ItemSprite.Glowing COLOR = new ItemSprite.Glowing( 0x00FF00 );
-
-	@Override
-	public ItemSprite.Glowing glowing() {
-		return COLOR;
 	}
 
 	@Override

@@ -712,6 +712,7 @@ public class ItemSpriteSheet {
 	public static final int RETURN_BEACON   = SPELLS+11;
 	public static final int SUMMON_ELE      = SPELLS+12;
 	public static final int VAMPIRISM 		= SPELLS+13;
+	public static final int RARITIZE 		= SPELLS+15;
 
 	static{
 		assignItemRect(PHASE_SHIFT,     12, 11);
@@ -732,6 +733,7 @@ public class ItemSpriteSheet {
 		assignItemRect(RECLAIM_TRAP,     8, 16);
 		assignItemRect(RETURN_BEACON,    8, 16);
 		assignItemRect(VAMPIRISM,    	 8, 16);
+		assignItemRect(RARITIZE,    	 8, 16);
 
 	}
 	
