@@ -17,7 +17,15 @@ import java.util.ArrayList;
 
 public class InfPDChanges {
     public static void addAllChanges( ArrayList<ChangeInfo> changeInfos ) {
-        ChangeInfo changes = new ChangeInfo("InfPD-0.1.0", true, "");
+        ChangeInfo changes = new ChangeInfo("InfPD-0.1.1", true, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
+                "_-_ Fixed Potion of Strength not being droppped on the dungeon\n"
+        ));
+
+
+        changes = new ChangeInfo("InfPD-0.1.0", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
         changes.addButton(new ChangeButton(new RingOfWealth(), "Added back ring of wealth"));
