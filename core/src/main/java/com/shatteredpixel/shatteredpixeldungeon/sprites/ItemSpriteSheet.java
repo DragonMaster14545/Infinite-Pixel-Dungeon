@@ -894,6 +894,12 @@ public class ItemSpriteSheet {
 		assignItemRect(HALLS_PAGE,  10, 11);
 	}
 
+	private static final int SPELLS_NEW_ROW =								xy(1, 33);
+	public static final int EXTRACTOR  = SPELLS_NEW_ROW+0;
+	static {
+		assignItemRect(EXTRACTOR,     10, 15);
+	}
+
 	//for smaller 8x8 icons that often accompany an item sprite
 	public static class Icons {
 

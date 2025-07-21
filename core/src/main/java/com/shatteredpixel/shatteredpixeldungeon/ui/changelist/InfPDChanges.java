@@ -24,7 +24,8 @@ public class InfPDChanges {
                 "_-_ Fixed Potion of Strength not being droppped on the dungeon\n"
         ));
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ Added a sprite for Raritize spell\n"
+                "_-_ Added a sprite for Raritize spell\n" +
+                        "_-_ Added _Extractor_ spell\n"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.0", true, "");
