@@ -17,7 +17,22 @@ import java.util.ArrayList;
 
 public class InfPDChanges {
     public static void addAllChanges( ArrayList<ChangeInfo> changeInfos ) {
-        ChangeInfo changes = new ChangeInfo("InfPD-0.1.1", true, "");
+        ChangeInfo changes = new ChangeInfo("Future Updates Announcement", true, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Tentative Changes",
+                "This is a tentative changes that maybe added/changed in the future updates: \n\n" +
+                        "_-_ Renaming (this is anything)\n" +
+                        "_-_ Aiming (for wands and throwable)\n" +
+                        "_-_ Buffs and Nerfs (as always)\n" +
+                        "_-_ New Challenges (harder than the previous mods)\n" +
+                        "_-_ Raritized Mobs (like some sort of champions)\n" +
+                        "_-_ New Spells\n" +
+                        "_-_ New Scrolls and Potions?\n\n" +
+                        "So these things are maybe added in the future updates and are subject to change, maybe if the devs were not lazy, I guess?"
+        ));
+
+        changes = new ChangeInfo("InfPD-0.1.1", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
