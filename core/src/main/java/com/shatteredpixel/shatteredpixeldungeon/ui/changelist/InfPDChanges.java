@@ -27,6 +27,9 @@ public class InfPDChanges {
                 "_-_ Added a sprite for Raritize spell\n" +
                         "_-_ Added _Extractor_ spell\n"
         ));
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Drastically nerfed gold drops\n"
+        ));
 
         changes = new ChangeInfo("InfPD-0.1.0", true, "");
         changes.hardlight(0x00FFFF);
