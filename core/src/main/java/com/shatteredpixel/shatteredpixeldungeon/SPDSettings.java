@@ -34,6 +34,7 @@ import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.GameSettings;
 import com.watabou.utils.Point;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class SPDSettings extends GameSettings {
@@ -258,12 +259,19 @@ public static final String KEY_VICTORY_NAGGED= "victory_nagged";
 		return getInt( KEY_LAST_CLASS, 0, 0, 3 );
 	}
 	
-	public static void challenges( int value ) {
+	public static void challenges( boolean[] value ) {
 		put( KEY_CHALLENGES, value );
 	}
 	
-	public static int challenges() {
-		return getInt( KEY_CHALLENGES, 0, 0, Challenges.MAX_VALUE );
+	public static boolean[] challenges() {
+		boolean[] output = getBooleanArray( KEY_CHALLENGES );
+		if (output.length < Challenges.values().length) {
+			//if the array is too short, fill it with false
+			boolean[] newOutput = new boolean[Challenges.values().length];
+			System.arraycopy(output, 0, newOutput, 0, output.length);
+			output = newOutput;
+		}
+		return output;
 	}
 
 	public static void customSeed( String value ){

@@ -25,17 +25,24 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.*;
+import com.watabou.noosa.ui.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class WndChallenges extends Window {
 
 	private static final int WIDTH		= 120;
+	private static final int HEIGHT		= 120;
 	private static final int TTL_HEIGHT = 16;
 	private static final int BTN_HEIGHT = 16;
 	private static final int GAP        = 1;
@@ -43,11 +50,12 @@ public class WndChallenges extends Window {
 	private boolean editable;
 	private ArrayList<CheckBox> boxes;
 
-	public WndChallenges( int checked, boolean editable ) {
+	public WndChallenges( boolean[] checked, boolean editable ) {
 
 		super();
 
 		this.editable = editable;
+		resize( WIDTH, HEIGHT );
 
 		RenderedTextBlock title = PixelScene.renderTextBlock( Messages.get(this, "title"), 12 );
 		title.hardlight( TITLE_COLOR );
@@ -60,13 +68,18 @@ public class WndChallenges extends Window {
 
 		boxes = new ArrayList<>();
 
-		float pos = TTL_HEIGHT;
-		for (int i=0; i < Challenges.NAME_IDS.length; i++) {
+		float pos = 2;
 
-			final String challenge = Challenges.NAME_IDS[i];
+		ScrollPane scrollPane = new ScrollPane(new Component());
+		add(scrollPane);
+		scrollPane.setRect(0, title.bottom() + 2, WIDTH, HEIGHT - title.bottom() - 2);
+		Component content = scrollPane.content();
+		for (int i=0; i < Challenges.values().length; i++) {
+
+			final String challenge = Challenges.values()[i].nameId;
 			
 			CheckBox cb = new CheckBox( Messages.titleCase(Messages.get(Challenges.class, challenge)) );
-			cb.checked( (checked & Challenges.MASKS[i]) != 0 );
+			cb.checked(checked[i]);
 			cb.active = editable;
 
 			if (i > 0) {
@@ -74,7 +87,7 @@ public class WndChallenges extends Window {
 			}
 			cb.setRect( 0, pos, WIDTH-16, BTN_HEIGHT );
 
-			add( cb );
+			content.add( cb );
 			boxes.add( cb );
 			
 			IconButton info = new IconButton(Icons.get(Icons.INFO)){
@@ -87,23 +100,20 @@ public class WndChallenges extends Window {
 				}
 			};
 			info.setRect(cb.right(), pos, 16, BTN_HEIGHT);
-			add(info);
+			content.add(info);
 			
 			pos = cb.bottom();
 		}
-
-		resize( WIDTH, (int)pos );
+		content.setSize( WIDTH, pos );
 	}
 
 	@Override
 	public void onBackPressed() {
 
 		if (editable) {
-			int value = 0;
+			boolean[] value = new boolean[Challenges.values().length];
 			for (int i=0; i < boxes.size(); i++) {
-				if (boxes.get( i ).checked()) {
-					value |= Challenges.MASKS[i];
-				}
+				value[i] = boxes.get(i).checked();
 			}
 			SPDSettings.challenges( value );
 		}

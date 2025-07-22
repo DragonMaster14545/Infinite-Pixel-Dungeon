@@ -36,6 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.watabou.noosa.Game;
 
 import java.io.IOException;
+import java.util.stream.IntStream;
 
 public class WndGame extends Window {
 
@@ -61,7 +62,7 @@ public class WndGame extends Window {
 		curBtn.icon(Icons.get(Icons.PREFS));
 
 		// Challenges window
-		if (Dungeon.challenges > 0) {
+		if (IntStream.range(0, Dungeon.challenges.length).anyMatch(i -> Dungeon.challenges[i])) {
 			addButton( curBtn = new RedButton( Messages.get(this, "challenges") ) {
 				@Override
 				protected void onClick() {

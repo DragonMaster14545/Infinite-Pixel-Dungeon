@@ -96,6 +96,7 @@ import com.watabou.utils.FileUtils;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.SparseArray;
+import sun.jvm.hotspot.oops.ArrayKlass;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -207,7 +208,7 @@ public class Dungeon {
 
 	}
 
-	public static int challenges;
+	public static boolean[] challenges;
 	public static int mobsToChampion;
 
 	public static Hero hero;
@@ -389,9 +390,12 @@ public class Dungeon {
 		return getCycleMultiplier(depth);
     }
 
-	public static boolean isChallenged( int mask ) {
-		return (challenges & mask) != 0;
+	public static boolean isChallenged(Challenges challenge) {
+		int index = challenge.ordinal();
+		if (index >= challenges.length) return false;
+		return challenges[index];
 	}
+
 
 	public static boolean levelHasBeenGenerated(int depth, int branch){
 		return generatedLevels.contains(depth + 1000*branch);
@@ -912,7 +916,13 @@ public class Dungeon {
 		QuickSlotButton.reset();
 		Toolbar.swappedQuickslots = false;
 
-		Dungeon.challenges = bundle.getInt( CHALLENGES );
+		Dungeon.challenges = bundle.getBooleanArray( CHALLENGES );
+		if (Dungeon.challenges.length < Challenges.values().length) {
+			//if the array is too short, fill it with false
+			boolean[] newChallenges = new boolean[Challenges.values().length];
+			System.arraycopy(Dungeon.challenges, 0, newChallenges, 0, Dungeon.challenges.length);
+			Dungeon.challenges = newChallenges;
+		}
 		Dungeon.mobsToChampion = bundle.getInt( MOBS_TO_CHAMPION );
 
 		Dungeon.level = null;
@@ -1056,7 +1066,13 @@ public class Dungeon {
 	public static void preview( GamesInProgress.Info info, Bundle bundle ) {
 		info.depth = bundle.getInt( DEPTH );
 		info.version = bundle.getInt( VERSION );
-		info.challenges = bundle.getInt( CHALLENGES );
+		info.challenges = bundle.getBooleanArray( CHALLENGES );
+		if (info.challenges.length < Challenges.values().length) {
+			//if the array is too short, fill it with false
+			boolean[] newChallenges = new boolean[Challenges.values().length];
+			System.arraycopy(info.challenges, 0, newChallenges, 0, info.challenges.length);
+			info.challenges = newChallenges;
+		}
 		info.cycle = bundle.getInt( CYCLE );
 		info.seed = bundle.getLong( SEED );
 		info.customSeed = bundle.getString( CUSTOM_SEED );

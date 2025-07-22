@@ -172,7 +172,7 @@ public class GamesInProgress {
 		
 		public int depth;
 		public int version;
-		public int challenges;
+		public boolean[] challenges;
 		public int cycle;
 
 		public long seed;

@@ -43,6 +43,7 @@ import com.watabou.utils.DeviceCompat;
 
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.stream.IntStream;
 
 public class WndRanking extends WndTabbed {
 	
@@ -94,7 +95,7 @@ public class WndRanking extends WndTabbed {
 			Group[] pages =
 					{new StatsTab(), new ItemsTab(), new BadgesTab(), null};
 
-			if (Dungeon.challenges != 0) pages[3] = new ChallengesTab();
+			if (IntStream.range(0, Dungeon.challenges.length).anyMatch(i -> Dungeon.challenges[i])) pages[3] = new ChallengesTab();
 
 			for (int i = 0; i < pages.length; i++) {
 
@@ -383,12 +384,12 @@ public class WndRanking extends WndTabbed {
 
 			float pos = 0;
 
-			for (int i=0; i < Challenges.NAME_IDS.length; i++) {
+			for (int i=0; i < Challenges.values().length; i++) {
 
-				final String challenge = Challenges.NAME_IDS[i];
+				final String challenge = Challenges.values()[i].nameId;
 
 				CheckBox cb = new CheckBox( Messages.titleCase(Messages.get(Challenges.class, challenge)) );
-				cb.checked( (Dungeon.challenges & Challenges.MASKS[i]) != 0 );
+				cb.checked( Dungeon.challenges[i]);
 				cb.active = false;
 
 				if (i > 0) {

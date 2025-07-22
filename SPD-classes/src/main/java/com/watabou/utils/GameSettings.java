@@ -120,7 +120,18 @@ public class GameSettings {
 			return defValue;
 		}
 	}
-	
+
+	public static boolean[] getBooleanArray(String key) {
+		Preferences prefs = get();
+		String data = prefs.getString(key, "");
+		boolean[] array = new boolean[data.length()];
+		for (int i = 0; i < data.length(); i++) {
+			array[i] = data.charAt(i) == '1';
+		}
+		return array;
+	}
+
+
 	public static void put( String key, int value ) {
 		get().putInteger(key, value);
 		get().flush();
@@ -140,5 +151,16 @@ public class GameSettings {
 		get().putString(key, value);
 		get().flush();
 	}
+
+	public static void put(String key, boolean[] value) {
+		Preferences prefs = get();
+		StringBuilder sb = new StringBuilder();
+		for (boolean b : value) {
+			sb.append(b ? '1' : '0');
+		}
+		prefs.putString(key, sb.toString());
+		prefs.flush(); // don’t forget this!
+	}
+
 	
 }

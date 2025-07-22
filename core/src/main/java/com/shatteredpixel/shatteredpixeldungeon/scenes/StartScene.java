@@ -24,10 +24,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
-import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Chrome;
-import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -43,6 +40,7 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.NinePatch;
 
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 public class StartScene extends PixelScene {
 	
@@ -212,7 +210,7 @@ public class StartScene extends PixelScene {
 					cycle.measure();
 				}
 
-				if (info.challenges > 0){
+				if (IntStream.range(0, info.challenges.length).anyMatch(i -> info.challenges[i])){
 					name.hardlight(Window.TITLE_COLOR);
 					depth.hardlight(Window.TITLE_COLOR);
 					level.hardlight(Window.TITLE_COLOR);

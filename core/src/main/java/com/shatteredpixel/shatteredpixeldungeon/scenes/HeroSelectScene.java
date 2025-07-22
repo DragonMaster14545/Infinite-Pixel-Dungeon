@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.stream.IntStream;
 
 public class HeroSelectScene extends PixelScene {
 
@@ -195,8 +196,8 @@ public class HeroSelectScene extends PixelScene {
 		}
 
 		if (!Badges.isUnlocked(Badges.Badge.VICTORY) && !DeviceCompat.isDebug()){
-			Dungeon.challenges = 0;
-			SPDSettings.challenges(0);
+			Dungeon.challenges = new boolean[Challenges.values().length];
+			SPDSettings.challenges(Dungeon.challenges);
 			SPDSettings.customSeed("");
 		}
 
@@ -354,7 +355,7 @@ public class HeroSelectScene extends PixelScene {
 	private void updateOptionsColor(){
 		if (!SPDSettings.customSeed().isEmpty()){
 			btnOptions.icon().hardlight(1f, 1.5f, 0.67f);
-		} else if (SPDSettings.challenges() != 0){
+		} else if (IntStream.range(0, SPDSettings.challenges().length).anyMatch(i -> SPDSettings.challenges()[i])){
 			btnOptions.icon().hardlight(2f, 1.33f, 0.5f);
 		} else {
 			btnOptions.icon().resetColor();
@@ -740,14 +741,14 @@ public class HeroSelectScene extends PixelScene {
 					ShatteredPixelDungeon.scene().addToFront(new WndChallenges(SPDSettings.challenges(), true) {
 						public void onBackPressed() {
 							super.onBackPressed();
-							icon(Icons.get(SPDSettings.challenges() > 0 ? Icons.CHALLENGE_COLOR : Icons.CHALLENGE_GREY));
+							icon(Icons.get(IntStream.range(0, SPDSettings.challenges().length).anyMatch(i -> SPDSettings.challenges()[i]) ? Icons.CHALLENGE_COLOR : Icons.CHALLENGE_GREY));
 							updateOptionsColor();
 						}
 					} );
 				}
 			};
 			challengeButton.leftJustify = true;
-			challengeButton.icon(Icons.get(SPDSettings.challenges() > 0 ? Icons.CHALLENGE_COLOR : Icons.CHALLENGE_GREY));
+			challengeButton.icon(Icons.get(IntStream.range(0, SPDSettings.challenges().length).anyMatch(i -> SPDSettings.challenges()[i]) ? Icons.CHALLENGE_COLOR : Icons.CHALLENGE_GREY));
 			add(challengeButton);
 			buttons.add(challengeButton);
 

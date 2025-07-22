@@ -39,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.DungeonSeed;
 import com.watabou.noosa.Game;
 
 import java.util.Locale;
+import java.util.stream.IntStream;
 
 public class WndGameInProgress extends Window {
 	
@@ -66,11 +67,11 @@ public class WndGameInProgress extends Window {
 		title.setRect( 0, 0, WIDTH, 0 );
 		add(title);
 		
-		if (info.challenges > 0) GAP -= 2;
+		if (IntStream.range(0, info.challenges.length).anyMatch(i -> info.challenges[i])) GAP -= 2;
 		
 		pos = title.bottom() + GAP;
 		
-		if (info.challenges > 0) {
+		if (IntStream.range(0, info.challenges.length).anyMatch(i -> info.challenges[i])) {
 			RedButton btnChallenges = new RedButton( Messages.get(this, "challenges") ) {
 				@Override
 				protected void onClick() {

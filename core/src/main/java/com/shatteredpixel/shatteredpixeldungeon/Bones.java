@@ -40,7 +40,9 @@ import com.watabou.utils.Reflection;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.stream.IntStream;
 
 public class Bones {
 
@@ -206,7 +208,7 @@ public class Bones {
 				depth = 0;
 
 				//challenged or seeded runs don't get items from prior runs
-				if (Dungeon.challenges != 0 || !Dungeon.customSeedText.isEmpty()){
+				if (IntStream.range(0, Dungeon.challenges.length).anyMatch(i -> Dungeon.challenges[i]) || !Dungeon.customSeedText.isEmpty()){
 					item = null;
 				}
 
