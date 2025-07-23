@@ -39,6 +39,10 @@ public class InfPDChanges {
                 "_-_ Added item renaming\n" +
                         "_-_ Made challenge window scrollable\n"
         ));
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
+                "_-_ Fixed crashes on the perk Raritizing Magic\n"
+        ));
+
 
         changes = new ChangeInfo("InfPD-0.1.1", true, "");
         changes.hardlight(0x00FFFF);

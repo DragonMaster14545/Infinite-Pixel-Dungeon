@@ -967,12 +967,12 @@ public abstract class Mob extends Char {
         }
 
 		if (Dungeon.hero.grinding && Dungeon.hero.perks.contains(Perks.Perk.RARITIZE_MAGIC)){
-			// seanky code from somewhere?
-			Weapon w = Generator.randomWeapon();
-			Ring r = (Ring) Generator.random(Generator.Category.RING);
-			Artifact a = (Artifact) Generator.random(Generator.Category.ARTIFACT);
-			Wand wa = (Wand) Generator.random(Generator.Category.WAND);
-			Armor ar = (Armor) Generator.random(Generator.Category.ARMOR);
+			// sneaky code from somewhere?
+			Item w = Generator.randomWeapon();
+			Item r = Generator.random(Generator.Category.RING);
+			Item a = Generator.random(Generator.Category.ARTIFACT);
+			Item wa = Generator.random(Generator.Category.WAND);
+			Item ar = Generator.random(Generator.Category.ARMOR);
 			w.randomizeCommonRarity();
 			r.randomizeCommonRarity();
 			a.randomizeCommonRarity();
