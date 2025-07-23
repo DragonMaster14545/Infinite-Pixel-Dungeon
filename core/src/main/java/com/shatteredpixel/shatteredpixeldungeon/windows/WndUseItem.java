@@ -37,11 +37,12 @@ public class WndUseItem extends WndInfoItem {
 	private static final float BUTTON_HEIGHT	= 16;
 	
 	private static final float GAP	= 2;
-	
+	public final Window owner;
+
 	public WndUseItem( final Window owner, final Item item ) {
 		
 		super(item);
-
+		this.owner = owner;
 		float y = height;
 		
 		if (Dungeon.hero.isAlive() && Dungeon.hero.belongings.contains(item)) {
@@ -76,6 +77,11 @@ public class WndUseItem extends WndInfoItem {
 		}
 		
 		resize( width, (int)(y) );
+	}
+
+	@Override
+	protected IconTitle getIconTitle(Item item) {
+		return new ItemIconTitle(item, this);
 	}
 
 	private static float layoutButtons(ArrayList<RedButton> buttons, float width, float y){

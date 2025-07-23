@@ -36,6 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.Dart;
@@ -49,6 +50,8 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndTextInput;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Bundlable;
@@ -59,6 +62,7 @@ import com.watabou.utils.Reflection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 public class Item implements Bundlable {
 
@@ -181,9 +185,12 @@ public class Item implements Bundlable {
 	
 	public static final String AC_DROP		= "DROP";
 	public static final String AC_THROW		= "THROW";
+	public static final String AC_RENAME = "RENAME";
+	public static final String AC_AIM		= "AIM_MI";
 	
 	public String defaultAction;
 	public boolean usesTargeting;
+	public String customName = "";
 
 	//TODO should these be private and accessed through methods?
 	public int image = 0;
@@ -305,7 +312,10 @@ public class Item implements Bundlable {
 	public void doThrow( Hero hero ) {
 		GameScene.selectCell(thrower);
 	}
-	
+
+	public void doAim( Hero hero ) {
+		GameScene.selectCell(aimer);
+	}
 	public void execute( Hero hero, String action ) {
 
 		GameScene.cancel();
@@ -324,7 +334,33 @@ public class Item implements Bundlable {
 				doThrow(hero);
 			}
 			
+		} else if (action.equals( AC_RENAME )) {
+			if (hero.belongings.backpack.contains(this) || isEquipped(hero)) {
+				rename(curItem);
+			}
+		} else if (action.equals( AC_AIM )) {
+			if (hero.belongings.backpack.contains(this) || isEquipped(hero)) {
+				doAim(hero);
+			}
 		}
+	}
+
+	private void rename(Item item) {
+		GameScene.show( new WndTextInput( "Rename","", item.customName, 100, false, "Rename", "Revert" ) {
+			@Override
+			public void onSelect( boolean positive, String text ) {
+				if (text != null && positive && !text.equals(item.name())) {
+					curItem.customName = text;
+				} else {
+					curItem.customName = "";
+				}
+			}
+
+			@Override
+			public void onBackPressed() {
+				GLog.w("You didn't set a name for this.");
+			}
+		} );
 	}
 
 	//can be overridden if default action is variable
@@ -450,6 +486,26 @@ public class Item implements Bundlable {
 			return split;
 		}
 	}
+
+	private static final CellSelector.Listener aimer = new CellSelector.Listener() {
+		@Override
+		public void onSelect(Integer cell) {
+			if (cell != null) {
+				List<Integer> cells = curItem.aimTiles(cell);
+				if (cells.isEmpty()) {
+					GLog.w(Messages.get(curItem, "no_aim"));
+				}
+				for (int i : cells) {
+					Dungeon.hero.sprite.parent.add(new TargetedCell(i, 0xFF0000));
+				}
+			}
+		}
+
+		@Override
+		public String prompt() {
+			return Messages.get(Item.class, "aim_prompt");
+		}
+	};
 
 	public Item duplicate(){
 		Item dupe = Reflection.newInstance(getClass());
@@ -645,7 +701,17 @@ public class Item implements Bundlable {
 	public void onHeroGainExp( float levelPercent, Hero hero ){
 		//do nothing by default
 	}
-	
+
+	public boolean needsAim() {
+		return false;
+	}
+
+	//A list of all tiles the aim button highlights.
+	public List<Integer> aimTiles(int target) {
+		Ballistica b = new Ballistica(Dungeon.hero.pos, target, Ballistica.WONT_STOP);
+		return b.subPath(1, b.dist);
+	}
+
 	public static void evoke( Hero hero ) {
 		hero.sprite.emitter().burst( Speck.factory( Speck.EVOKE ), 5 );
 	}
@@ -665,7 +731,10 @@ public class Item implements Bundlable {
 	}
 	
 	public String name() {
-		return trueName();
+		if (this.customName.isEmpty()) {
+			return trueName();
+		}
+		return this.customName;
 	}
 	
 	public final String trueName() {
@@ -771,6 +840,10 @@ public class Item implements Bundlable {
 		bundle.put( KEPT_LOST, keptThoughLostInvent );
 		bundle.put( WERE_OOFED, wereOofed);
 		bundle.put( RARITY, rarity.ordinal() );
+
+		if (!this.customName.equals("")) {
+			bundle.put("customName", this.customName);
+		}
 	}
 	
 	@Override
@@ -794,6 +867,10 @@ public class Item implements Bundlable {
 			if (bundle.contains(QUICKSLOT)) {
 				Dungeon.quickslot.setSlot(bundle.getInt(QUICKSLOT), this);
 			}
+		}
+
+		if (bundle.contains("customName")) {
+			this.customName = bundle.getString("customName");
 		}
 
 		keptThoughLostInvent = bundle.getBoolean( KEPT_LOST );

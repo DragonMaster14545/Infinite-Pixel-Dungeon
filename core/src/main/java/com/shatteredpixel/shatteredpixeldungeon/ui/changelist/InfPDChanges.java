@@ -32,6 +32,14 @@ public class InfPDChanges {
                         "So these things are maybe added in the future updates and are subject to change, maybe if the devs were not lazy, I guess?"
         ));
 
+        changes = new ChangeInfo("InfPD-0.1.2", true, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ Added item renaming\n" +
+                        "_-_ Made challenge window scrollable\n"
+        ));
+
         changes = new ChangeInfo("InfPD-0.1.1", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
