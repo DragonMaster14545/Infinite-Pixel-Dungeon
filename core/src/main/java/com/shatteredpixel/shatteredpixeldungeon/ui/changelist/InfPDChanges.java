@@ -28,7 +28,8 @@ public class InfPDChanges {
                         "_-_ New Challenges (harder than the previous mods)\n" +
                         "_-_ Raritized Mobs (like some sort of champions)\n" +
                         "_-_ New Spells\n" +
-                        "_-_ New Scrolls and Potions?\n\n" +
+                        "_-_ New Scrolls and Potions?\n" +
+                        "_-_ New Lores (infinity, and beyond)\n\n" +
                         "So these things are maybe added in the future updates and are subject to change, maybe if the devs were not lazy, I guess?"
         ));
 

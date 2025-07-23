@@ -576,6 +576,7 @@ public abstract class RegularLevel extends Level {
 				int region = 1+(Dungeon.depth-1)/5;
 
 				Document regionDoc;
+				//TODO add a new lore, about the cycles and hints.
 				switch( region ){
 					default: regionDoc = null; break;
 					case 1: regionDoc = Document.SEWERS_GUARD; break;
@@ -584,6 +585,22 @@ public abstract class RegularLevel extends Level {
 					case 4: regionDoc = Document.CITY_WARLOCK; break;
 					case 5: regionDoc = Document.HALLS_KING; break;
 				}
+				/*
+				if (Dungeon.cycle <1) {
+					switch( region ){
+						default: regionDoc = null; break;
+						case 1: regionDoc = Document.SEWERS_GUARD; break;
+						case 2: regionDoc = Document.PRISON_WARDEN; break;
+						case 3: regionDoc = Document.CAVES_EXPLORER; break;
+						case 4: regionDoc = Document.CITY_WARLOCK; break;
+						case 5: regionDoc = Document.HALLS_KING; break;
+					}
+				} else {
+					switch( region ){
+						default: regionDoc = null; break;
+					}
+				}
+				 */
 
 				if (regionDoc != null && !regionDoc.allPagesFound()) {
 
@@ -668,6 +685,7 @@ public abstract class RegularLevel extends Level {
 		limitedDocs.put(Document.CAVES_EXPLORER, Dungeon.LimitedDrops.LORE_CAVES);
 		limitedDocs.put(Document.CITY_WARLOCK, Dungeon.LimitedDrops.LORE_CITY);
 		limitedDocs.put(Document.HALLS_KING, Dungeon.LimitedDrops.LORE_HALLS);
+		limitedDocs.put(Document.INFINITY, Dungeon.LimitedDrops.LORE_INFINITY);
 	}
 	
 	public ArrayList<Room> rooms() {

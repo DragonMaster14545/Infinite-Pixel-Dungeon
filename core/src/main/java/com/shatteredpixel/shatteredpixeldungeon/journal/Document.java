@@ -47,8 +47,8 @@ public enum Document {
 	PRISON_WARDEN(ItemSpriteSheet.PRISON_PAGE, true),
 	CAVES_EXPLORER(ItemSpriteSheet.CAVES_PAGE, true),
 	CITY_WARLOCK(ItemSpriteSheet.CITY_PAGE, true),
-	HALLS_KING(ItemSpriteSheet.HALLS_PAGE, true);
-	
+	HALLS_KING(ItemSpriteSheet.HALLS_PAGE, true),
+	INFINITY(ItemSpriteSheet.SOMETHING, true);
 	Document( int sprite, boolean lore ){
 		pageIcon = null;
 		pageSprite = sprite;
