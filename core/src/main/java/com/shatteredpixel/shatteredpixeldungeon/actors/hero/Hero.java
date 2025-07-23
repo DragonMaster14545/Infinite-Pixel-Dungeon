@@ -285,7 +285,7 @@ public class Hero extends Char {
 		return 4f;
 	}
 	public float getLootMultiplier() {
-		return 10f;
+		return 6f;
 	}
 
 	public Hero() {

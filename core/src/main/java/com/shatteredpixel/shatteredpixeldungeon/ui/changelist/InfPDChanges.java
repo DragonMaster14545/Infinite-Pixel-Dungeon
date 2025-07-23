@@ -44,7 +44,8 @@ public class InfPDChanges {
                 "_-_ Fixed crashes on the perk Raritizing Magic\n"
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
-                "_-_ Nerfed hero max exp\n"
+                "_-_ Nerfed hero max exp\n" +
+                        "_-_ Reduced the entire loot multiplier\n"
         ));
 
 
