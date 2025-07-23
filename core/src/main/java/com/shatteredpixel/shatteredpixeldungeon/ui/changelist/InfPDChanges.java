@@ -18,12 +18,12 @@ import java.util.ArrayList;
 public class InfPDChanges {
     public static void addAllChanges( ArrayList<ChangeInfo> changeInfos ) {
         ChangeInfo changes = new ChangeInfo("Future Updates Announcement", true, "");
-        changes.hardlight(0x00FFFF);
+        changes.hardlight(0xFF2400);
         changeInfos.add(changes);
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Tentative Changes",
                 "This is a tentative changes that maybe added/changed in the future updates: \n\n" +
-                        "_-_ Renaming (this is anything)\n" +
-                        "_-_ Aiming (for wands and throwable)\n" +
+                        "_-_ (done) Renaming (this is anything)\n" +
+                        "_-_ (done, prototype) Aiming (for wands and throwable)\n" +
                         "_-_ Buffs and Nerfs (as always)\n" +
                         "_-_ New Challenges (harder than the previous mods)\n" +
                         "_-_ Raritized Mobs (like some sort of champions)\n" +
