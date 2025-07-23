@@ -137,7 +137,10 @@ public enum Icons {
 	KRISTJAN,
 	CUBE_CODE,
 	PURIGRO,
-	ARCNOR;
+	ARCNOR,
+
+	//Challenge window
+	CHALLENGE_ON;
 
 	public Image get() {
 		return get( this );
@@ -443,6 +446,10 @@ public enum Icons {
 			case CUBE_CODE:
 				icon.frame( icon.texture.uvRectBySize( 160, 96, 27, 30 ) );
 				icon.scale.set(PixelScene.align(0.49f));
+				break;
+
+			case CHALLENGE_ON:
+				icon.frame( icon.texture.uvRectBySize( 51, 0, 16, 16 ) );
 				break;
 
 		}
