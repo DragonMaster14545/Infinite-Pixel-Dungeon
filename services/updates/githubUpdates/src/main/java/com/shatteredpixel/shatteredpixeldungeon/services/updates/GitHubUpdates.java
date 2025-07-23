@@ -62,7 +62,7 @@ public class GitHubUpdates extends UpdateService {
 		}
 
 		Net.HttpRequest httpGet = new Net.HttpRequest(Net.HttpMethods.GET);
-		httpGet.setUrl("https://api.github.com/repos/TrashboxBobylev/Experienced-Pixel-Dungeon-Redone/releases");
+		httpGet.setUrl("https://api.github.com/repos/DragonMaster14545/Infinite-Pixel-Dungeon/releases");
 		httpGet.setHeader("Accept", "application/vnd.github.v3+json");
 
 		Gdx.net.sendHttpRequest(httpGet, new Net.HttpResponseListener() {

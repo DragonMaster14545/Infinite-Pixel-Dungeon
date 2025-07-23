@@ -37,7 +37,8 @@ public class InfPDChanges {
         changeInfos.add(changes);
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Added item renaming\n" +
-                        "_-_ Made challenge window scrollable\n"
+                        "_-_ Made challenge window scrollable\n" +
+                        "_-_ Aligned the update link to github (you can now get updates in-game)\n"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed crashes on the perk Raritizing Magic\n"
