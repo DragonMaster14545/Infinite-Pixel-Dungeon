@@ -264,7 +264,10 @@ public static final String KEY_VICTORY_NAGGED= "victory_nagged";
 	}
 	
 	public static boolean[] challenges() {
-		boolean[] output = getBooleanArray( KEY_CHALLENGES );
+		boolean[] output = new boolean[0];
+		try {
+			output = getBooleanArray( KEY_CHALLENGES );
+		} catch (ClassCastException ignored) {}
 		if (output.length < Challenges.values().length) {
 			//if the array is too short, fill it with false
 			boolean[] newOutput = new boolean[Challenges.values().length];
