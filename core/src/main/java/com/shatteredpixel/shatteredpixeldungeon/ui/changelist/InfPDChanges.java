@@ -42,6 +42,9 @@ public class InfPDChanges {
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed crashes on the perk Raritizing Magic\n"
         ));
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Nerfed hero max exp\n"
+        ));
 
 
         changes = new ChangeInfo("InfPD-0.1.1", true, "");
