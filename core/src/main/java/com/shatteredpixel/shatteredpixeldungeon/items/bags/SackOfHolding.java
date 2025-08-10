@@ -25,6 +25,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.bags;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -36,7 +37,8 @@ public class SackOfHolding extends Bag {
 
 	@Override
 	public boolean canHold( Item item ) {
-		return true;
+		return !(item instanceof MagicalHolster || item instanceof ScrollHolder || item instanceof SackOfHolding
+				|| item instanceof VelvetPouch || item instanceof Belongings.Backpack || item instanceof PotionBandolier);
 	}
 
 	@Override
