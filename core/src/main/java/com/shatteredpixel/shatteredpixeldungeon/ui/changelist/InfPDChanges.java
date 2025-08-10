@@ -43,7 +43,8 @@ public class InfPDChanges {
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed sack of holding TAKES ALL YOUR ITEMS AT ONCE.\n" +
-                        "_-_ Fixed stone of clairvoyance crashing the game\n"
+                        "_-_ Fixed stone of clairvoyance crashing the game\n" +
+                        "_-_ Adjusted clayball sprite\n"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.2", true, "");

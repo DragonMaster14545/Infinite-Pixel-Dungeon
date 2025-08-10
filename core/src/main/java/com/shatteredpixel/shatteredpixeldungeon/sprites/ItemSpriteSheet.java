@@ -246,6 +246,7 @@ public class ItemSpriteSheet {
 	public static final int RAPIER          = WEP_TIER1+6;
 	static{
 		assignItemRect(WORN_SHORTSWORD, 13, 13);
+		assignItemRect(CUDGEL,  12, 10);
 		assignItemRect(CREATIVE_GLOVES, 12, 16);
 		assignItemRect(GLOVES,          12, 16);
 		assignItemRect(RAPIER,          13, 14);
