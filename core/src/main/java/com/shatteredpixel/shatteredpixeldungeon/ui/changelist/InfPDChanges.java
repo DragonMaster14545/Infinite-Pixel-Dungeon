@@ -43,7 +43,8 @@ public class InfPDChanges {
                         "_-_ Removed additional descriptions for Galactic Enchanment\n"
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
-                "_-_ Nerfed Ring of Haste at its finest\n"
+                "_-_ Nerfed Ring of Haste at its finest\n" +
+                        "_-_ Treasure Bags' price were increased by 10 gold\n"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed sack of holding TAKES ALL YOUR ITEMS AT ONCE.\n" +

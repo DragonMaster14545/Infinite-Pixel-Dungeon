@@ -65,6 +65,6 @@ public class AlchemyBag extends TreasureBag {
 
     @Override
     public long value() {
-        return 55 * quantity;
+        return 65 * quantity;
     }
 }
