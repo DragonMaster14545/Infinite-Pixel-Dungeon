@@ -30,6 +30,9 @@ public class InfPDChanges {
                         "_-_ New Lores (infinity, and beyond)\n\n" +
                         "So these things are maybe added in the future updates and are subject to change, maybe if the devs were not lazy, I guess?"
         ));
+        changes.addButton( new ChangeButton(Icons.get(Icons.CHALLENGE_COLOR), "Challenge Onboard",
+                "I'd like to make new challenges, but I want to make it harder than the current challenges in this game. Stay tuned!"
+        ));
 
         changes = new ChangeInfo("InfPD-0.1.3", true, "");
         changes.hardlight(0x00FFFF);
