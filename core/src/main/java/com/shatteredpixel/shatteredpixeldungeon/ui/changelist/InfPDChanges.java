@@ -27,7 +27,8 @@ public class InfPDChanges {
                         "_-_ Raritized Mobs (like some sort of champions)\n" +
                         "_-_ New Spells\n" +
                         "_-_ New Scrolls and Potions?\n" +
-                        "_-_ New Lores (infinity, and beyond)\n\n" +
+                        "_-_ New Lores (infinity, and beyond)\n" +
+                        "_-_ Lastly, an unexpected nerfs and buffs out of nowhere.\n\n" +
                         "So these things are maybe added in the future updates and are subject to change, maybe if the devs were not lazy, I guess?"
         ));
         changes.addButton( new ChangeButton(Icons.get(Icons.CHALLENGE_COLOR), "Challenge Onboard",
