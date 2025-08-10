@@ -41,7 +41,8 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Added true names for Rarities\n" +
                         "_-_ Reverted back Ring of Haste\n" +
-                        "_-_ Removed additional descriptions for Galactic Enchanment\n"
+                        "_-_ Removed additional descriptions for Galactic Enchanment\n" +
+                        "_-_ Increased standard rooms by ~50%\n"
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Nerfed Ring of Haste at its finest\n" +
