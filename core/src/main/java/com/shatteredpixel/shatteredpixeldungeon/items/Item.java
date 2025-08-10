@@ -102,82 +102,85 @@ public class Item implements Bundlable {
 //		COVENANTED(0xFF69B4, "Co", chance(63), multi(62)),
 //		CELEBRATED(0x00FA9A, "Ce", chance(62), multi(61)),
 //		TREASURED(0x32CD32, "T", chance(61), multi(60)),
-		RADIANT(0xF0E68C, "R", chance(116), multi(59)),
-		STELLAR(0x87CEFA, "St", chance(114), multi(58)),
-		MAGNIFICENT(0xFFD700, "Mg", chance(112), multi(57)),
-		EXALTED(0xDAA520, "Ex", chance(110), multi(56)),
-		VALIANT(0xB0C4DE, "V", chance(108), multi(55)),
-		ETHEREAL(0x98FB98, "Et", chance(106), multi(54)),
-		BRILLIANT(0xFF8C00, "Br", chance(104), multi(53)),
-		IMPRESSIVE(0xF0E68C, "Im", chance(102), multi(52)),
-		INCREDIBLE(0xFFD700, "In", chance(100), multi(51)),
-		CHERISHED(0xFF1493, "Ch", chance(98), multi(50)),
-		SPLENDID(0x7FFF00, "Sp", chance(96), multi(49)),
-		GLORIOUS(0xFF6347, "G", chance(94), multi(48)),
-		UNFORGETTABLE(0x6A5ACD, "U", chance(92), multi(47)),
-		MAGNANIMOUS(0xD2691E, "M", chance(90), multi(46)),
-		NOBILITY(0xCD5C5C, "N", chance(88), multi(45)),
-		VISIONARY(0xFFB6C1, "V", chance(86), multi(44)),
-		RESPLENDENT(0xFFD700, "Re", chance(84), multi(43)),
-		MAGNETIC(0x8B008B, "M", chance(82), multi(42)),
-		FORTUITOUS(0xFF8C00, "F", chance(80), multi(41)),
-		SUPERNATURAL(0x7B68EE, "S", chance(78), multi(40)),
-		GRANDIOSE(0xFFA07A, "Gr", chance(76), multi(39)),
-		VALOROUS(0xB22222, "V", chance(74), multi(38)),
-		HEROIC(0xB8860B, "H", chance(72), multi(37)),
-		RESILIENT(0x00FA9A, "R", chance(70), multi(36)),
-		ILLUSIVE(0x20B2AA, "I", chance(68), multi(35)),
-		CONQUEROR(0xFF6347, "C", chance(66), multi(34)),
-		ROGUE(0xCD853F, "R", chance(64), multi(33)),
-		SOVEREIGN(0x8A2BE2, "S", chance(62), multi(32)),
-		ASCENDED(0xFFE4E1, "A", chance(60), multi(31)),
-		TRANSLUCENT(0xB0E0E6, "T", chance(58), multi(30)),
-		MAGNIFIC(0xFF4500, "Mg", chance(56), multi(29)),
-		UNSTOPPABLE(0xF08080, "U", chance(54), multi(28)),
-		FORTIFIED(0xE6E6FA, "F", chance(52), multi(27)),
-		HEAVENLY(0xF0E68C, "H", chance(50), multi(26)),
-		LUMINOUS(0xB22222, "L", chance(48), multi(25)),
-		MYSTICAL(0x7FFF00, "My", chance(46), multi(24)),
-		EXQUISITE(0xFFD700, "Ex", chance(44), multi(23)),
-		BLAZING(0xFF4500, "Bl", chance(42), multi(22)),
-		COSMIC(0x8A2BE2, "C", chance(40), multi(21)),
-		TRANQUIL(0x87CEFA, "T", chance(38), multi(20)),
-		PRISTINE(0x98FB98, "Pr", chance(36), multi(19)),
-		ULTIMATE(0xF5FFFA, "U", chance(34), multi(18)),
-		WHIMSICAL(0xFF00FF, "Wh", chance(32), multi(17)),
-		HARMONIOUS(0x8FBC8F, "H", chance(30), multi(16)),
-		OMNIPOTENT(0x9932CC, "O", chance(28), multi(15)),
-		ETERNAL(0xDC143C, "Et", chance(26), multi(14)),
-		INFINITE(0x4682B4, "In", chance(24), multi(13)),
-		CELESTIAL(0x98FB98, "Ce", chance(22), multi(12)),
-		GALACTIC(0x20B2AA, "G", chance(20), multi(11)),
-		IMMORTAL(0x4B0082, "I", chance(18), multi(10)),
-		TRANSCENDENT(0x8B4513, "T", chance(16), multi(9)),
-		DIVINE(0x87CEEB, "D", chance(14), multi(8)),
-		ANCIENT(0xFF1493, "A", chance(12), multi(7)),
-		MYTHICAL(0x800080, "M", chance(10), multi(6)),
-		LEGENDARY(0xFF4500, "L", chance(8), multi(5)),
-		EPIC(0xFF00FF, "E", chance(6), multi(4)),
-		RARE(0x0000FF, "R", chance(4), multi(3)),
-		UNCOMMON(0xFFFF00, "U", chance(2), multi(2)),
-		COMMON(0x00FF00, "C", chance(0), multi(1)),
-		NONE(0xFFFFFF, " ", 0, 1);
+		RADIANT(0xF0E68C, "R", chance(116), multi(59), "RADIANT"),
+		STELLAR(0x87CEFA, "St", chance(114), multi(58), "STELLAR"),
+		MAGNIFICENT(0xFFD700, "Mg", chance(112), multi(57), "MAGNIFICENT"),
+		EXALTED(0xDAA520, "Ex", chance(110), multi(56), "EXALTED"),
+		VALIANT(0xB0C4DE, "V", chance(108), multi(55), "VALIANT"),
+		ETHEREAL(0x98FB98, "Et", chance(106), multi(54), "ETHEREAL"),
+		BRILLIANT(0xFF8C00, "Br", chance(104), multi(53), "BRILLIANT"),
+		IMPRESSIVE(0xF0E68C, "Im", chance(102), multi(52), "IMPRESSIVE"),
+		INCREDIBLE(0xFFD700, "In", chance(100), multi(51), "INCREDIBLE"),
+		CHERISHED(0xFF1493, "Ch", chance(98), multi(50), "CHERISHED"),
+		SPLENDID(0x7FFF00, "Sp", chance(96), multi(49), "SPLENDID"),
+		GLORIOUS(0xFF6347, "G", chance(94), multi(48), "GLORIOUS"),
+		UNFORGETTABLE(0x6A5ACD, "U", chance(92), multi(47), "UNFORGETTABLE"),
+		MAGNANIMOUS(0xD2691E, "M", chance(90), multi(46), "MAGNANIMOUS"),
+		NOBILITY(0xCD5C5C, "N", chance(88), multi(45), "NOBILITY"),
+		VISIONARY(0xFFB6C1, "V", chance(86), multi(44), "VISIONARY"),
+		RESPLENDENT(0xFFD700, "Re", chance(84), multi(43), "RESPLENDENT"),
+		MAGNETIC(0x8B008B, "M", chance(82), multi(42), "MAGNETIC"),
+		FORTUITOUS(0xFF8C00, "F", chance(80), multi(41), "FORTUITOUS"),
+		SUPERNATURAL(0x7B68EE, "S", chance(78), multi(40), "SUPERNATURAL"),
+		GRANDIOSE(0xFFA07A, "Gr", chance(76), multi(39), "GRANDIOSE"),
+		VALOROUS(0xB22222, "V", chance(74), multi(38), "VALOROUS"),
+		HEROIC(0xB8860B, "H", chance(72), multi(37), "HEROIC"),
+		RESILIENT(0x00FA9A, "R", chance(70), multi(36), "RESILIENT"),
+		ILLUSIVE(0x20B2AA, "I", chance(68), multi(35), "ILLUSIVE"),
+		CONQUEROR(0xFF6347, "C", chance(66), multi(34), "CONQUEROR"),
+		ROGUE(0xCD853F, "R", chance(64), multi(33), "ROGUE"),
+		SOVEREIGN(0x8A2BE2, "S", chance(62), multi(32), "SOVEREIGN"),
+		ASCENDED(0xFFE4E1, "A", chance(60), multi(31), "ASCENDED"),
+		TRANSLUCENT(0xB0E0E6, "T", chance(58), multi(30), "TRANSLUCENT"),
+		MAGNIFIC(0xFF4500, "Mg", chance(56), multi(29), "MAGNIFIC"),
+		UNSTOPPABLE(0xF08080, "U", chance(54), multi(28), "UNSTOPPABLE"),
+		FORTIFIED(0xE6E6FA, "F", chance(52), multi(27), "FORTIFIED"),
+		HEAVENLY(0xF0E68C, "H", chance(50), multi(26), "HEAVENLY"),
+		LUMINOUS(0xB22222, "L", chance(48), multi(25), "LUMINOUS"),
+		MYSTICAL(0x7FFF00, "My", chance(46), multi(24), "MYSTICAL"),
+		EXQUISITE(0xFFD700, "Ex", chance(44), multi(23), "EXQUISITE"),
+		BLAZING(0xFF4500, "Bl", chance(42), multi(22), "BLAZING"),
+		COSMIC(0x8A2BE2, "C", chance(40), multi(21), "COSMIC"),
+		TRANQUIL(0x87CEFA, "T", chance(38), multi(20), "TRANQUIL"),
+		PRISTINE(0x98FB98, "Pr", chance(36), multi(19), "PRISTINE"),
+		ULTIMATE(0xF5FFFA, "U", chance(34), multi(18), "ULTIMATE"),
+		WHIMSICAL(0xFF00FF, "Wh", chance(32), multi(17), "WHIMSICAL"),
+		HARMONIOUS(0x8FBC8F, "H", chance(30), multi(16), "HARMONIOUS"),
+		OMNIPOTENT(0x9932CC, "O", chance(28), multi(15), "OMNIPOTENT"),
+		ETERNAL(0xDC143C, "Et", chance(26), multi(14), "ETERNAL"),
+		INFINITE(0x4682B4, "In", chance(24), multi(13), "INFINITE"),
+		CELESTIAL(0x98FB98, "Ce", chance(22), multi(12), "CELESTIAL"),
+		GALACTIC(0x20B2AA, "G", chance(20), multi(11), "GALACTIC"),
+		IMMORTAL(0x4B0082, "I", chance(18), multi(10), "IMMORTAL"),
+		TRANSCENDENT(0x8B4513, "T", chance(16), multi(9), "TRANSCENDENT"),
+		DIVINE(0x87CEEB, "D", chance(14), multi(8), "DIVINE"),
+		ANCIENT(0xFF1493, "A", chance(12), multi(7), "ANCIENT"),
+		MYTHICAL(0x800080, "M", chance(10), multi(6), "MYTHICAL"),
+		LEGENDARY(0xFF4500, "L", chance(8), multi(5), "LEGENDARY"),
+		EPIC(0xFF00FF, "E", chance(6), multi(4), "EPIC"),
+		RARE(0x0000FF, "R", chance(4), multi(3), "RARE"),
+		UNCOMMON(0xFFFF00, "U", chance(2), multi(2), "UNCOMMON"),
+		COMMON(0x00FF00, "C", chance(0), multi(1), "COMMON"),
+		NONE(0xFFFFFF, " ", 0, 1, "");
 
-		Rarity(int color, String name, double chance, double multiplier) {
+		Rarity(int color, String name, double chance, double multiplier, String trueName) {
 			this.color = color;
 			this.name = name;
 			this.chance = chance;
 			this.multiplier = (long) multiplier;
+			this.trueName = Messages.titleCase(trueName);
 		}
 
 		public final int color;
 		public final String name;
 		public final double chance;
 		public final long multiplier;
+		public final String trueName;
 	}
 
 	protected static final String TXT_TO_STRING_LVL		= "%s %+d";
 	protected static final String TXT_TO_STRING_X		= "%s x%d";
+	protected static final String TXT_TO_STRING_RARITY		= "[%s] %s";
 	
 	protected static final float TIME_TO_THROW		= 1.0f;
 	protected static final float TIME_TO_PICK_UP	= 1.0f;
@@ -725,6 +728,9 @@ public class Item implements Bundlable {
 
 		if (quantity > 1)
 			name = Messages.format( TXT_TO_STRING_X, name, quantity );
+
+		if (rarity != Rarity.NONE)
+			name = Messages.format( TXT_TO_STRING_RARITY, rarity.name, name);
 
 		return name;
 

@@ -78,8 +78,8 @@ public class WndRarities extends Window {
                         List<Item.Rarity> rarities = Arrays.asList(Item.Rarity.values());
                         Collections.reverse(rarities);
                         Item.Rarity rarity = rarities.get(i+1);
-                        String message = "Chance: " + rarity.chance+"\n Multiplier: " + rarity.multiplier;
-                        String title = Messages.titleCase(rarity.name);
+                        String message = "Chance: " + rarity.chance * 100 + "%" + "\nMultiplier: " + rarity.multiplier;
+                        String title = Messages.titleCase(rarity.name) + ": " + Messages.titleCase(rarity.trueName);
                         ShatteredPixelDungeon.scene().add(
                                 new WndTitledMessage(
                                         Icons.get(Icons.INFO),
@@ -102,7 +102,7 @@ public class WndRarities extends Window {
 
             if(i == Item.Rarity.NONE )continue;
 
-            ConduitBox cb = new ConduitBox(i.name);
+            ConduitBox cb = new ConduitBox(i.name + ": " + i.trueName);
             cb.textColor(i.color);
             cb.active = true;
 

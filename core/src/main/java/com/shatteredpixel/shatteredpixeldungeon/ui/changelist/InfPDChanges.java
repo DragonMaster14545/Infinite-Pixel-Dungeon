@@ -22,8 +22,6 @@ public class InfPDChanges {
         changeInfos.add(changes);
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Tentative Changes",
                 "This is a tentative changes that maybe added/changed in the future updates: \n\n" +
-                        "_-_ (done) Renaming (this is anything)\n" +
-                        "_-_ (done, prototype) Aiming (for wands and throwable)\n" +
                         "_-_ Buffs and Nerfs (as always)\n" +
                         "_-_ New Challenges (harder than the previous mods)\n" +
                         "_-_ Raritized Mobs (like some sort of champions)\n" +
@@ -31,6 +29,13 @@ public class InfPDChanges {
                         "_-_ New Scrolls and Potions?\n" +
                         "_-_ New Lores (infinity, and beyond)\n\n" +
                         "So these things are maybe added in the future updates and are subject to change, maybe if the devs were not lazy, I guess?"
+        ));
+
+        changes = new ChangeInfo("InfPD-0.1.3", true, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ Added true names for Rarities\n"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.2", true, "");
