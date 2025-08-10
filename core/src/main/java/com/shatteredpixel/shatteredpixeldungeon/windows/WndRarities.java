@@ -56,7 +56,7 @@ public class WndRarities extends Window {
 
         resize(WIDTH, HEIGHT);
 
-        RenderedTextBlock title = PixelScene.renderTextBlock( "Upgrades", 12 );
+        RenderedTextBlock title = PixelScene.renderTextBlock( "Rarities", 12 );
         title.hardlight( TITLE_COLOR );
         title.setPos(
                 (WIDTH - title.width()) / 2,
