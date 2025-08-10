@@ -34,9 +34,9 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Point;
 
-public class StoneOfClairvoyance extends Runestone {
+public class 	StoneOfClairvoyance extends Runestone {
 	
-	private static final int DIST = 23;
+	private static final int DIST = 20;
 	
 	{
 		image = ItemSpriteSheet.STONE_CLAIRVOYANCE;
