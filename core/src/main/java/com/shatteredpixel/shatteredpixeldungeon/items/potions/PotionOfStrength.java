@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.utils.Random;
 
 public class PotionOfStrength extends Potion {
 
@@ -48,6 +49,11 @@ public class PotionOfStrength extends Potion {
 
 		hero.STR++;
 		hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, "1", FloatingText.STRENGTH);
+		if (Random.Int(Integer.MAX_VALUE) == 1) {
+			hero.STR++;
+			hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, "1", FloatingText.STRENGTH);
+			GLog.p("You were blessed again, gaining additional strength!");
+		}
 
 		GLog.p( Messages.get(this, "msg", hero.STR()) );
 		

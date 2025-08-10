@@ -47,7 +47,9 @@ public class InfPDChanges {
                 "_-_ Nerfed Ring of Haste at its finest\n" +
                         "_-_ Treasure Bags' price were increased by 10 gold\n" +
                         "_-_ Scroll of Mirror Image now summons 3 images from 2\n" +
-                        "_-_ Scroll of Teleportation now paralyzes you for 3 turns\n"
+                        "_-_ Scroll of Teleportation now paralyzes you for 3 turns\n" +
+                        "_-_ Potion of Liquid Flame now lasts 50% longer\n" +
+                        "_-_ Potion of Strength now gives additional strength in 1/2147483647\n"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed sack of holding TAKES ALL YOUR ITEMS AT ONCE.\n" +
