@@ -42,7 +42,8 @@ public class InfPDChanges {
                 "_-_ Added true names for Rarities\n" +
                         "_-_ Reverted back Ring of Haste\n" +
                         "_-_ Removed additional descriptions for Galactic Enchanment\n" +
-                        "_-_ Increased standard rooms by ~50%\n"
+                        "_-_ Increased standard rooms by ~50%\n" +
+                        "_-_ Challenges, Daily Runs, and Custom Seeds are now unlocked by default"
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Nerfed Ring of Haste at its finest\n" +
@@ -50,12 +51,12 @@ public class InfPDChanges {
                         "_-_ Scroll of Mirror Image now summons 3 images from 2\n" +
                         "_-_ Scroll of Teleportation now paralyzes you for 3 turns\n" +
                         "_-_ Potion of Liquid Flame now lasts 50% longer\n" +
-                        "_-_ Potion of Strength now gives additional strength in 1/2147483647\n"
+                        "_-_ Potion of Strength now gives additional strength in 1/2147483647"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed sack of holding TAKES ALL YOUR ITEMS AT ONCE.\n" +
                         "_-_ Fixed stone of clairvoyance crashing the game\n" +
-                        "_-_ Adjusted clayball sprite\n"
+                        "_-_ Adjusted clayball sprite"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.2", true, "");
