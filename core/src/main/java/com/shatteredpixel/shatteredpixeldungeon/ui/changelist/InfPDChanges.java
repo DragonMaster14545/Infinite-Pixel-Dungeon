@@ -41,6 +41,9 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Added 2 new ring sprites\n"
         ));
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Ghost's reward upgrade level has been reduced to 2, from 5\n"
+        ));
 
         changes = new ChangeInfo("InfPD-0.1.3", true, "");
         changes.hardlight(0x00FFFF);

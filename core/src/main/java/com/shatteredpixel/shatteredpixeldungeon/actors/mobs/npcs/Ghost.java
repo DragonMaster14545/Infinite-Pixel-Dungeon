@@ -349,7 +349,7 @@ public class Ghost extends NPC {
 				} else {
 					itemLevel = 3;
 				}
-                itemLevel += Dungeon.getCycleMultiplier(5);
+                itemLevel += Dungeon.getCycleMultiplier(2);
 				weapon.upgrade(itemLevel);
 				armor.upgrade(itemLevel);
                 ((MeleeWeapon)weapon).tier += Dungeon.cycle * 5;
