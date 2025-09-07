@@ -39,7 +39,8 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ Added 2 new ring sprites\n"
+                "_-_ Added 2 new ring sprites\n" +
+                        "_-_ Scak of Holding no longer holds: rings, scrolls and wands"
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Ghost's reward upgrade level has been reduced to 2, from 5\n" +
