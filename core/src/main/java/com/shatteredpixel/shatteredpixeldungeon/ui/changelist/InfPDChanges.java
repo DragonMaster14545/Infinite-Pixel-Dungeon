@@ -46,7 +46,8 @@ public class InfPDChanges {
                         "_-_ Ring of Tenacity is now capped at 90% damage resistance, and reduced per-upgrade effect\n"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
-                "_-_ Fixed crash related to RoW with Exotic Crystals\n"
+                "_-_ Fixed crash related to RoW with Exotic Crystals\n" +
+                        "_-_ Fixed crash on journal's catalog\n"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.3", true, "");
