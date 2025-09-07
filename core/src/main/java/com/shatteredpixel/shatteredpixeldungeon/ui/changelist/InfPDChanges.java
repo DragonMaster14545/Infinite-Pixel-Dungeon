@@ -47,7 +47,8 @@ public class InfPDChanges {
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed crash related to RoW with Exotic Crystals\n" +
-                        "_-_ Fixed crash on journal's catalog\n"
+                        "_-_ Fixed crash on journal's catalog\n" +
+                        "_-_ Fixed a small bug when the rarity name was shown even unidentified\n"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.3", true, "");

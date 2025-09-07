@@ -729,7 +729,7 @@ public class Item implements Bundlable {
 		if (quantity > 1)
 			name = Messages.format( TXT_TO_STRING_X, name, quantity );
 
-		if (rarity != Rarity.NONE)
+		if (rarity != Rarity.NONE && curItem.isIdentified())
 			name = Messages.format( TXT_TO_STRING_RARITY, rarity.name, name);
 
 		return name;
