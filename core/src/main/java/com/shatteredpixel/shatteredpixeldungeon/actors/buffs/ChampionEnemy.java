@@ -77,7 +77,15 @@ public abstract class ChampionEnemy extends Buff {
 		return 1f;
 	}
 
+	public float healthIncreaseFactor() {
+		return 1f;
+	}
+
 	public float evasionAndAccuracyFactor(){
+		return 1f;
+	}
+
+	public float speedFactor() {
 		return 1f;
 	}
 
@@ -286,4 +294,44 @@ public abstract class ChampionEnemy extends Buff {
 		}
 	}
 
+	public static class Tanky extends ChampionEnemy {
+
+		//TODO include hero for future applications
+		{
+			color = 0x348718;
+		}
+
+		@Override
+		public float healthIncreaseFactor() {
+			return 10f;
+		}
+
+		@Override
+		public float meleeDamageFactor() {
+			return 0.75f;
+		}
+
+		@Override
+		public float speedFactor() {
+			return 0.75f;
+		}
+	}
+
+	public static class Speedy extends ChampionEnemy {
+
+		//TODO include hero for future applications
+		{
+			color = 0xb1eb34;
+		}
+
+		@Override
+		public float speedFactor() {
+			return 4f;
+		}
+
+		@Override
+		public float evasionAndAccuracyFactor() {
+			return 1.5f;
+		}
+	}
 }
