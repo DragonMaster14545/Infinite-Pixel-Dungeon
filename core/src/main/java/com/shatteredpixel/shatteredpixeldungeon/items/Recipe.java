@@ -53,6 +53,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.BeaconOfReturning;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.CurseInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Extractor;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.FireBooster;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.Gambler;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.PhaseShift;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Raritize;
@@ -226,7 +227,8 @@ public abstract class Recipe {
 		new IdentificationBomb.Recipe(),
 		new CheeseChunk.oneMeat(),
 			new Raritize.Recipe(),
-			new Extractor.Recipe()
+			new Extractor.Recipe(),
+			new Gambler.Recipe()
 	};
 	
 	private static Recipe[] threeIngredientRecipes = new Recipe[]{

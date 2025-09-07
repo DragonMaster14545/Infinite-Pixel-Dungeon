@@ -899,8 +899,10 @@ public class ItemSpriteSheet {
 
 	private static final int SPELLS_NEW_ROW =								xy(1, 33);
 	public static final int EXTRACTOR  = SPELLS_NEW_ROW+0;
+	public static final int GAMBLER  = SPELLS_NEW_ROW+1;
 	static {
 		assignItemRect(EXTRACTOR,     10, 15);
+		assignItemRect(GAMBLER,     10, 15);
 	}
 
 	//for smaller 8x8 icons that often accompany an item sprite
