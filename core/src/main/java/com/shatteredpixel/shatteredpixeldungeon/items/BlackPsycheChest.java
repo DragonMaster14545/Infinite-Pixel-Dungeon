@@ -65,7 +65,7 @@ public class BlackPsycheChest extends Item {
     public ArrayList<String> actions(Hero hero ) {
         ArrayList<String> actions = super.actions(hero);
         actions.add(AC_ACCESS);
-        actions.add(AC_RESET);
+        if (PsycheChest.neededLevel() >= Dungeon.hero.lvl) actions.add(AC_RESET);
         return actions;
     }
 
@@ -78,7 +78,7 @@ public class BlackPsycheChest extends Item {
             InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
             Game.switchScene( InterlevelScene.class );
         }
-        if (action.equals(AC_RESET)){
+        if (action.equals(AC_RESET) && PsycheChest.neededLevel() >= Dungeon.hero.lvl){
             Dungeon.goForNewCycle();
         }
 

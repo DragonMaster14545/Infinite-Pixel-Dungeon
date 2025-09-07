@@ -40,13 +40,15 @@ public class InfPDChanges {
         changeInfos.add(changes);
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Added 2 new ring sprites\n" +
-                        "_-_ Scak of Holding no longer holds: rings, scrolls and wands\n"
+                        "_-_ Scak of Holding no longer holds: rings, scrolls and wands\n" +
+                        "_-_ Increasing cycles now requires levels...\n"
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Ghost's reward upgrade level has been reduced to 2, from 5\n" +
                         "_-_ Ring of Tenacity is now capped at 90% damage resistance, and reduced per-upgrade effect\n" +
                         "_-_ Ring of Elements' per=upgrade percentages is massively reduced\n" +
-                        "_-_ Nerfed spirit bow's min and max damage\n"
+                        "_-_ Nerfed spirit bow's min and max damage\n" +
+                        "_-_ EXP required for getting SoU is now scaled with cycles\n"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed crash related to RoW with Exotic Crystals\n" +
