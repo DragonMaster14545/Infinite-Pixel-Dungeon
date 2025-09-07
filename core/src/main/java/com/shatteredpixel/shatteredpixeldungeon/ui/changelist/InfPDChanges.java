@@ -45,6 +45,9 @@ public class InfPDChanges {
                 "_-_ Ghost's reward upgrade level has been reduced to 2, from 5\n" +
                         "_-_ Ring of Tenacity is now capped at 90% damage resistance, and reduced per-upgrade effect\n"
         ));
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
+                "_-_ Fixed crash related to RoW with Exotic Crystals\n"
+        ));
 
         changes = new ChangeInfo("InfPD-0.1.3", true, "");
         changes.hardlight(0x00FFFF);
