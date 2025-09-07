@@ -39,7 +39,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.AntiMagic;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
-import java.text.DecimalFormat;
 import java.util.HashSet;
 
 public class RingOfElements extends Ring {
@@ -51,22 +50,22 @@ public class RingOfElements extends Ring {
 	public String statsInfo() {
 		if (isIdentified()){
 			String info = Messages.get(this, "stats",
-					new DecimalFormat("#.###").format(100f * (1f - (0.02f))));
+					Messages.decimalFormat("#.##", 100f * (1f - Math.max(Math.pow(0.955f, soloBuffedBonus()), 0.05f) )));
 			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
-						Messages.decimalFormat("#.##", 100f * (1f - (0.02f))));
+						Messages.decimalFormat("#.##", 100f * (1f - Math.max(Math.pow(0.955f, combinedBuffedBonus(Dungeon.hero)), 0.05f) )));
 			}
 			return info;
 		} else {
-			return Messages.get(this, "typical_stats", new DecimalFormat("#.###").format(98f));
+			return Messages.get(this, "typical_stats", Messages.decimalFormat("#.##", 4.5f));
 		}
 	}
 
-	public String upgradeStat1(long level){
+	public String upgradeStat1(int level){
 		if (cursed && cursedKnown) level = Math.min(-1, level-3);
-		return Messages.decimalFormat("#.##", 100f * (1f - (0.02f))) + "%";
+		return Messages.decimalFormat("#.##", 100f * (1f - Math.max(Math.pow(0.955f, level+1), 0.05f) )) + "%";
 	}
-	
+
 	@Override
 	protected RingBuff buff( ) {
 		return new Resistance();
@@ -87,31 +86,20 @@ public class RingOfElements extends Ring {
 
 		RESISTS.addAll( AntiMagic.RESISTS );
 	}
-	
+
 	public static float resist( Char target, Class effect ){
-		
+		if (getBuffedBonus(target, Resistance.class) == 0) return 1f;
+
 		for (Class c : RESISTS){
 			if (c.isAssignableFrom(effect)){
-                float multiplier = 1f;
-                if (getBonus(target, Resistance.class) > 0) multiplier = 0.02f;
-                return multiplier;
+				return (float)Math.max(Math.pow(0.955f, getBuffedBonus(target, Resistance.class)), 0.05f);
 			}
 		}
-		
+
 		return 1f;
 	}
 
-	@Override
-	public boolean isUpgradable() {
-		return false;
-	}
-
-	@Override
-	public boolean isIdentified() {
-		return true;
-	}
-
 	public class Resistance extends RingBuff {
-	
+
 	}
 }
