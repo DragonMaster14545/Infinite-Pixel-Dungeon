@@ -324,7 +324,7 @@ private static boolean evaluatingTwinUpgrades = false;
 
 			}
 		}
-		if (Dungeon.hero.buff(Kunai.WeaponCharge.class) != null){
+		if (Dungeon.hero.buff(Kunai.WeaponCharge.class) != null && Dungeon.hero != null){
 			return super.buffedLvl() + Dungeon.hero.buff(Kunai.WeaponCharge.class).stack;
 		}
 		return super.buffedLvl();
