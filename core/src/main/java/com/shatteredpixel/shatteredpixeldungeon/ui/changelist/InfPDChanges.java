@@ -35,6 +35,13 @@ public class InfPDChanges {
                 "I'd like to make new challenges, but I want to make it harder than the current challenges in this game. Stay tuned!"
         ));
 
+        changes = new ChangeInfo("InfPD-0.1.4", true, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ Added 2 new ring sprites\n"
+        ));
+
         changes = new ChangeInfo("InfPD-0.1.3", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
