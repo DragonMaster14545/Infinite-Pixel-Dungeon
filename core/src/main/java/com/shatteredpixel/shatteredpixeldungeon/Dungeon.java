@@ -316,7 +316,7 @@ public class Dungeon {
 		gold = 0L;
 		cycle = 0;
 		Bbat.level = 1;
-		respawn_timer = 50;
+		respawn_timer = 75;
 		additionalMobs = 0;
 		fireDamage = 1d;
 		luck = 1;
