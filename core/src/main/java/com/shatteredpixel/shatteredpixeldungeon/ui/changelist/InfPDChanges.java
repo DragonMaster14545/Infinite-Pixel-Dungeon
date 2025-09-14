@@ -38,18 +38,21 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ Added 2 new ring sprites\n" +
                         "_-_ Changed trait of Tanky champions, now takes only 5% damage\n" +
                         "_-_ Changed rarity display to its true name\n" +
                         "_-_ You can now see what rarity was replaced in the item\n" +
                         "_-_ Changed description of Scroll of Magic Mapping\n" +
                         "_-_ Changed description of Galactic enchantment\n"
         ));
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Nerfed Ring of Haste's base speed\n"
+        ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed crash on journal related to Kunai when discovered\n" +
                         "_-_ Fixed conditions on Black Fate Lock for ascension\n" +
                         "_-_ Fixed missing description on Round Shield\n" +
-                        "_-_ Fixed a minor crash related to identifying item with a rarity\n"
+                        "_-_ Fixed a minor crash related to identifying item with a rarity\n" +
+                        "_-_ Fixed Ring of Haste where the hero is slower at start\n"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.4", true, "");

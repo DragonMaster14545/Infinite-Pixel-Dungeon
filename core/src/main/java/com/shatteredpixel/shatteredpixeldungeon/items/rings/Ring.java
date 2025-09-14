@@ -367,7 +367,7 @@ public class Ring extends KindofMisc {
 
 	public static long getBuffedBonus(Char target, Class<?extends RingBuff> type){
 		if (target.buff(MagicImmune.class) != null) return 0;
-		long bonus = -1;
+		long bonus = 0;
 		for (RingBuff buff : target.buffs(type)) {
 			bonus += buff.buffedLvl();
 		}

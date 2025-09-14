@@ -43,17 +43,17 @@ public class RingOfHaste extends Ring {
 					Messages.decimalFormat("#.##", 100f * (Math.pow(1.105f, soloBuffedBonus()) - 1f)));
 			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
-						Messages.decimalFormat("#.##", 100f * (Math.pow(1.105f, combinedBuffedBonus(Dungeon.hero)) - 1f)));
+						Messages.decimalFormat("#.##", 100f * (Math.pow(1.015, combinedBuffedBonus(Dungeon.hero)) - 1f)));
 			}
 			return info;
 		} else {
-			return Messages.get(this, "typical_stats", Messages.decimalFormat("#.##", 10.5f));
+			return Messages.get(this, "typical_stats", Messages.decimalFormat("#.##", 1.5f));
 		}
 	}
 
 	public String upgradeStat1(long level){
 		if (cursed && cursedKnown) level = Math.min(-1, level-3);
-		return Messages.decimalFormat("#.##", 100f * (Math.pow(1.105f, level+1)-1f)) + "%";
+		return Messages.decimalFormat("#.##", 100f * (Math.pow(1.015, level+1)-1f)) + "%";
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class RingOfHaste extends Ring {
 	}
 	
 	public static float speedMultiplier( Char target ){
-		return (float)Math.pow(1.105, getBuffedBonus(target, Haste.class));
+		return (float)Math.pow(1.015, getBuffedBonus(target, Haste.class));
 	}
 	
 	public class Haste extends RingBuff {
