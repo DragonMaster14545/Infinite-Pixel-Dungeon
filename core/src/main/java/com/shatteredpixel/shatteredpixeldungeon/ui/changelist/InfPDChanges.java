@@ -43,7 +43,8 @@ public class InfPDChanges {
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed crash on journal related to Kunai when discovered\n" +
                         "_-_ Fixed conditions on Black Fate Lock for ascension\n" +
-                        "_-_ Fixed missing description on Round Shield\n"
+                        "_-_ Fixed missing description on Round Shield\n" +
+                        "_-_ Fixed a minor crash related to identifying item with a rarity\n"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.4", true, "");
