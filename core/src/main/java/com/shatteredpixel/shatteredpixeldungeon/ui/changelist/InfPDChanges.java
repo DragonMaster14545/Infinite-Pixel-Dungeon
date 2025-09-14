@@ -34,6 +34,17 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.get(Icons.CHALLENGE_COLOR), "Challenge Onboard",
                 "I'd like to make new challenges, but I want to make it harder than the current challenges in this game. Stay tuned!"
         ));
+        changes = new ChangeInfo("InfPD-0.1.5", true, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ Added 2 new ring sprites\n"
+        ));
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
+                "_-_ Fixed crash on journal related to Kunai when discovered\n" +
+                        "_-_ Fixed conditions on Black Fate Lock for ascension\n" +
+                        "_-_ Fixed missing description on Round Shield\n"
+        ));
 
         changes = new ChangeInfo("InfPD-0.1.4", true, "");
         changes.hardlight(0x00FFFF);
