@@ -41,7 +41,8 @@ public class InfPDChanges {
                 "_-_ Added 2 new ring sprites\n" +
                         "_-_ Changed trait of Tanky champions, now takes only 5% damage\n" +
                         "_-_ Changed rarity display to its true name\n" +
-                        "_-_ You can now see what rarity was replaced in the item\n"
+                        "_-_ You can now see what rarity was replaced in the item\n" +
+                        "_-_ Changed description of Scroll of Magic Mapping\n"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed crash on journal related to Kunai when discovered\n" +
