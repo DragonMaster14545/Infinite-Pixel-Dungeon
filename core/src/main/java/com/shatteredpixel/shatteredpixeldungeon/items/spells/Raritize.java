@@ -73,7 +73,7 @@ public class Raritize extends InventorySpell {
 
 		item.randomizeRarity();
 
-		GLog.p(Messages.get(this, "raritized"));
+		GLog.p(Messages.get(this, "raritized", item.rarity.trueName));
 		curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
 	}
 	
