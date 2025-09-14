@@ -304,8 +304,8 @@ public abstract class ChampionEnemy extends Buff {
 		}
 
 		@Override
-		public float healthIncreaseFactor() {
-			return 10f;
+		public float damageTakenFactor() {
+			return 0.05f;
 		}
 
 		@Override

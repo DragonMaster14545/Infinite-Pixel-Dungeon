@@ -160,11 +160,6 @@ public abstract class Mob extends Char {
 			double percent = HP / (double) HT;
 			HT = Math.round(HT * AscensionChallenge.statModifier(this));
 			HP = Math.round(HT * percent);
-
-			ChampionEnemy.Tanky tanky = buff(ChampionEnemy.Tanky.class);
-			if (tanky != null) {
-				HP = HT *= (long) buff(ChampionEnemy.Tanky.class).healthIncreaseFactor();
-			}
 			firstAdded = false;
 		}
 	}

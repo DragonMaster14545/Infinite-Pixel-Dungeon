@@ -38,7 +38,8 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ Added 2 new ring sprites\n"
+                "_-_ Added 2 new ring sprites\n" +
+                        "_-_ Changed trait of Tanky champions, now takes only 5% damage\n"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed crash on journal related to Kunai when discovered\n" +
