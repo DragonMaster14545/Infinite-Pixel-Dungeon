@@ -96,7 +96,6 @@ import com.watabou.utils.FileUtils;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.SparseArray;
-import sun.jvm.hotspot.oops.ArrayKlass;
 
 import java.io.IOException;
 import java.text.DateFormat;

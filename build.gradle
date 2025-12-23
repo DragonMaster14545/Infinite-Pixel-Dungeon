@@ -10,8 +10,8 @@ buildscript {
     dependencies {
         //gradle version packaged with AGP 8.5 causes crashes on Android 4.4-
         //this won't be needed once the bundled version is 8.7.2+
-        classpath 'com.android.tools:r8:8.7.4-dev'
-        classpath 'com.android.tools.build:gradle:8.5.1'
+        classpath 'com.android.tools:r8:8.13.17'
+        classpath 'com.android.tools.build:gradle:8.13.2'
     }
 }
 
@@ -24,15 +24,15 @@ allprojects {
         appVersionCode = 671
         appVersionName = 'InfPD-0.1.5'
 
-        appJavaCompatibility = JavaVersion.VERSION_1_8
+        appJavaCompatibility = JavaVersion.VERSION_11
 
-        appAndroidCompileSDK = 33
-        appAndroidMinSDK = 15
-        appAndroidTargetSDK = 34
+        appAndroidCompileSDK = 35   //Android 15
+        appAndroidMinSDK = 21       //Android 5.0
+        appAndroidTargetSDK = 35    //Android 15
 
-        gdxVersion = '1.12.1'
-        gdxControllersVersion = '2.2.4-SNAPSHOT'
-        robovmVersion = '2.3.21'
+        gdxVersion = '1.14.0'
+        gdxControllersVersion = '2.2.4'
+        robovmVersion = '2.3.24'
     }
     version = appVersionName
 

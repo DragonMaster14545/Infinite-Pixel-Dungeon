@@ -46,10 +46,8 @@ import com.watabou.input.KeyBindings;
 import com.watabou.noosa.*;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.ui.Component;
-import com.watabou.utils.PlatformSupport;
 import com.watabou.utils.Point;
 import com.watabou.utils.PointF;
-import jdk.tools.jlink.internal.Platform;
 
 import java.awt.*;
 import java.util.ArrayList;
