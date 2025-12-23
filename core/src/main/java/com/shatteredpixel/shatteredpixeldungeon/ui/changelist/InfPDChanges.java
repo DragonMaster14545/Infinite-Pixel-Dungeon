@@ -34,6 +34,16 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.get(Icons.CHALLENGE_COLOR), "Challenge Onboard",
                 "I'd like to make new challenges, but I want to make it harder than the current challenges in this game. Stay tuned!"
         ));
+        changes = new ChangeInfo("InfPD-0.1.6", true, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ In progress....\n"
+        ));
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Nerfed gold drops by -50% min, and -25% max\n"
+        ));
+
         changes = new ChangeInfo("InfPD-0.1.5", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
