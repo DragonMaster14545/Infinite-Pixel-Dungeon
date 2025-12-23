@@ -66,7 +66,8 @@ public class RingOfAccuracy extends Ring {
         float multiplier = 1f;
         if (getBuffedBonus(target, Accuracy.class) > 0) multiplier = 1.2f;
         if (getBuffedBonus(target, Accuracy.class) > 1) multiplier += getBuffedBonus(target, Accuracy.class)*0.02;
-		return multiplier;
+
+		return Math.min(multiplier, 10f * (1 + Dungeon.cycle));
 	}
 	
 	public class Accuracy extends RingBuff {

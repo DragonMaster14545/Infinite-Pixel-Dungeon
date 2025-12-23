@@ -7,9 +7,11 @@ import com.shatteredpixel.shatteredpixeldungeon.items.LostBackpack;
 import com.shatteredpixel.shatteredpixeldungeon.items.PsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.EquipmentBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.watabou.noosa.Image;
 
@@ -37,11 +39,13 @@ public class InfPDChanges {
         changes = new ChangeInfo("InfPD-0.1.6", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ In progress....\n"
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
-                "_-_ Nerfed gold drops by -50% min, and -25% max\n"
+                "_-_ Nerfed gold drops by -50% min, and -25% max\n" +
+                        "_-_ Nerfed all of the rings."
         ));
 
         changes = new ChangeInfo("InfPD-0.1.5", true, "");
