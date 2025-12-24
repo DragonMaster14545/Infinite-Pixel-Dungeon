@@ -69,8 +69,8 @@ public class FishingHook extends Ring {
 
 		//reset (if needed), decrement, and store counts
 		if (triesToDrop == Float.MIN_VALUE) {
-			triesToDrop = Dungeon.NormalIntRange(4, 12);
-			dropsToRare = Dungeon.NormalIntRange(4, 8);
+			triesToDrop = Dungeon.NormalIntRange(7, 18);
+			dropsToRare = Dungeon.NormalIntRange(5, 9);
 		}
 
 		//now handle reward logic
@@ -149,7 +149,7 @@ public class FishingHook extends Ring {
 		switch (Random.Int(4)){
 			case 0: default:
 				Item i = new Gold().random();
-				return i.quantity(i.quantity()/2);
+				return i.quantity(i.quantity());
 			case 1:
 				return Generator.random(Generator.Category.STONE);
 			case 2:
