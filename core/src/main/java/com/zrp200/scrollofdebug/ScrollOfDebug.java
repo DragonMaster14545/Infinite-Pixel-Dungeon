@@ -8,7 +8,8 @@ import static java.util.Arrays.copyOfRange;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 
-import com.shatteredpixel.StringBuilder;
+//import com.shatteredpixel.StringBuilder;
+import com.badlogic.gdx.utils.CharArray;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 // Commands
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -233,7 +234,7 @@ public class ScrollOfDebug extends Scroll {
                         if (input.length > 1)
                             GLog.w("warning: remaining arguments were discarded");
                         // list them all
-                        StringBuilder s = new StringBuilder();
+                        CharArray s = new CharArray();
                         for (Map.Entry<String, Variable> e : Variable.assigned.entrySet())
                             if (e.getValue().isActive()) {
                                 s.append("\n_").append(e.getKey()).append("_ - ").append(e.getValue());
@@ -298,7 +299,7 @@ public class ScrollOfDebug extends Scroll {
                 for (int i = 0; i < input.length; i++) {
                     if (placeholders[i] > -2) continue; // already processed
                     int cur = i;
-                    StringBuilder loop = new StringBuilder();
+                    CharArray loop = new CharArray();
                     do {
                         if (!loop.isEmpty()) loop.append("->");
                         loop.append(cur);
@@ -370,7 +371,7 @@ public class ScrollOfDebug extends Scroll {
                         else all = input[1].equalsIgnoreCase("all");
                     }
                     if (output == null) {
-                        StringBuilder builder = new StringBuilder();
+                        CharArray builder = new CharArray();
                         for (Command cmd : Command.values()) {
                             if (all) {
                                 // extensive. help is omitted because we are using help.
@@ -391,7 +392,7 @@ public class ScrollOfDebug extends Scroll {
                 else if (command == Command.MACRO) {
                     getMacros();
                     if (input.length == 1) {
-                        StringBuilder msg = new StringBuilder();
+                        CharArray msg = new CharArray();
                         msg.append(command.documentation());
                         if(!macros.isEmpty()) {
                             msg.append("\n_Defined macros:_");
@@ -476,7 +477,7 @@ public class ScrollOfDebug extends Scroll {
                         }
                         if(cls != null) {
                             boolean isGameClass = cls.getName().contains(ROOT); // dirty hack to allow seeing methods for out of package stuff
-                            StringBuilder message = new StringBuilder();
+                            CharArray message = new CharArray();
                             for(Map.Entry<Class,Set<Method>> entry : hierarchy(cls).entrySet()) {
                                 Class inspecting = entry.getKey();
                                 String className = inspecting.getName();
@@ -527,7 +528,7 @@ public class ScrollOfDebug extends Scroll {
                                     Class[] types = m.getParameterTypes();
                                     int left = types.length;
                                     for(Class c : m.getParameterTypes()) {
-                                        StringBuilder param = new StringBuilder("<");
+                                        CharArray param = new CharArray("<");
                                         param.append(c.getSimpleName().toLowerCase());
                                         // varargs handling. Not supported, but...maybe someday?
                                         if(--left == 0 && m.isVarArgs()) param.append("..");
@@ -535,7 +536,8 @@ public class ScrollOfDebug extends Scroll {
                                         // optional handling, currently only hero is handled.
                                         // todo have similar methods be merged, with the offending parameters marked as optional.
                                         if(c == Hero.class || c != Object.class && c.isInstance(Dungeon.level)) {
-                                            param.insert(0,'[').append(']');
+                                            param.insert(0,'[');
+                                            param.append(']');
                                         }
                                         message.append(' ').append(param);
                                     }
@@ -854,7 +856,7 @@ public class ScrollOfDebug extends Scroll {
         return "Scroll of Debug";
     }
     @Override public String desc() {
-        StringBuilder builder = new StringBuilder();
+        CharArray builder = new CharArray();
         builder.appendLine("A scroll that gives you great power, letting you create virtually any item or mob in the game.")
                 .appendLine("\nSupported Commands:");
         for(Command cmd : Command.values()) builder.appendLine(
@@ -1114,7 +1116,7 @@ public class ScrollOfDebug extends Scroll {
         for(Class cls : trie.getAllClasses()) {
             if(parent.isAssignableFrom(cls)) names.put(cls.getSimpleName(), cls);
         }
-        StringBuilder result = new StringBuilder();
+        CharArray result = new CharArray();
         if(!names.isEmpty()) {
             for(String name : names.getNames()) if(canInstantiate(names.get(name))) result.append("\n_-_ ").append(name);
         }
