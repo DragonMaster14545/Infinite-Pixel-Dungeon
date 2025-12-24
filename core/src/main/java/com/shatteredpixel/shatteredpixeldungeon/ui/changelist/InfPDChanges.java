@@ -41,7 +41,7 @@ public class InfPDChanges {
         changeInfos.add(changes);
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ In progress....\n"
+                "_-_ OOFThiefs can no longer steals bags\n"
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Nerfed gold drops by -50% min, and -25% max\n" +
