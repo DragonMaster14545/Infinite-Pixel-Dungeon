@@ -40,6 +40,9 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.CRYSTAL_WISP, 144, 0, 16, 16), "Emblems",
+                "Yes, a brand new item, the _Emblem_!\n\nThis is somewhat like the Raritizing spell but the rarity of the emblem is 100% guaranteed! You can only use emblems on items thrice."
+        ));
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ OOFThiefs can no longer steals bags\n"
         ));
