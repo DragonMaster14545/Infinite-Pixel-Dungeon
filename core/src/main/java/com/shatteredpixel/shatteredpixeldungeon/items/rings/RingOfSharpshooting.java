@@ -67,11 +67,13 @@ public class RingOfSharpshooting extends Ring {
 	}
 	
 	public static long levelDamageBonus( Char target ){
-		return getBuffedBonus(target, RingOfSharpshooting.Aim.class) + 1;
+        return Math.min(getBuffedBonus(target, RingOfSharpshooting.Aim.class) + 1, 10L * (1 + Dungeon.cycle));
+		//return getBuffedBonus(target, RingOfSharpshooting.Aim.class) + 1;
 	}
 	
 	public static float durabilityMultiplier( Char target ){
-		return (float)(Math.pow(1.2, getBonus(target, Aim.class)));
+        return Math.min((float)(Math.pow(1.2, getBonus(target, Aim.class))), 10f * (1 + Dungeon.cycle));
+		//return (float)(Math.pow(1.2, getBonus(target, Aim.class)));
 	}
 
 	public class Aim extends RingBuff {

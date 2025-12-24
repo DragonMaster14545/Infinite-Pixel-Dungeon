@@ -65,7 +65,7 @@ public class RingOfArcana extends Ring {
 		float multiplier = 1f;
 		if (getBuffedBonus(target, Arcana.class) > 0) multiplier = 1.2f;
 		if (getBuffedBonus(target, Arcana.class) > 1) multiplier += getBuffedBonus(target, Arcana.class)*0.015;
-		return multiplier;
+		return Math.min(multiplier, 10f * (1 + Dungeon.cycle));
 	}
 
 	public class Arcana extends RingBuff {

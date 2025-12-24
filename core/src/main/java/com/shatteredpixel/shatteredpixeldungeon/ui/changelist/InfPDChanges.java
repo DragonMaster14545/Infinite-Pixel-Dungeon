@@ -45,7 +45,7 @@ public class InfPDChanges {
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Nerfed gold drops by -50% min, and -25% max\n" +
-                        "_-_ Nerfed all of the rings."
+                        "_-_ Nerfed all of the rings, their effects now caps at x10 multiplier per cycle (starting x10 on cycle 0)."
         ));
 
         changes = new ChangeInfo("InfPD-0.1.5", true, "");

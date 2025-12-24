@@ -110,14 +110,14 @@ public class RingOfMight extends Ring {
 	
 	public static int strengthBonus( Char target ){
 		int boost = (int)Math.min(2000000000L, getBuffedBonus(target, Might.class));
-		return (boost >= 1) ? boost : 0;
+		return (boost >= 1) ? Math.min(boost, 10 * (1 + Dungeon.cycle)) : 0;
     }
 	
 	public static int HTMultiplier( Char target ){
 		int multiplier = 0;
 		if (getBuffedBonus(target, Might.class) == 1) multiplier = 2;
 		if (getBuffedBonus(target, Might.class) > 1) multiplier += getBuffedBonus(target, Might.class)*2;
-		return multiplier;
+		return Math.min(multiplier, 10 * (1 + Dungeon.cycle));
 	}
 
 	public class Might extends RingBuff {
