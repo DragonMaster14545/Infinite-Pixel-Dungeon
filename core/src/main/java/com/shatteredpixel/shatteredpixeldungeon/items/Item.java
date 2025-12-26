@@ -38,6 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.EmblemSystem;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.Dart;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.TippedDart;
@@ -775,6 +776,10 @@ public class Item implements Bundlable {
 				//we swap underscore(0x5F) with low macron(0x2CD) here to avoid highlighting in the item window
 				return Messages.get(this, "custom_note", note.title().replace('_', 'ˍ')) + "\n\n" + desc();
 			}
+
+            if (emblemUse > 0) {
+                return Messages.get(EmblemSystem.class, "emblem_use", 3 - emblemUse);
+            }
 		}
 
 		return desc();
