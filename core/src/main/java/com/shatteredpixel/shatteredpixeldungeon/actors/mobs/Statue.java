@@ -75,6 +75,10 @@ public class Statue extends Mob {
 		HP = HT = 15 + Dungeon.escalatingDepth() * 5;
 		defenseSkill = 4 + Dungeon.escalatingDepth();
 	}
+
+    public Weapon weapon(){
+        return weapon;
+    }
 	
 	private static final String WEAPON	= "weapon";
 	

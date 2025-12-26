@@ -190,10 +190,10 @@ abstract public class MissileWeapon extends Weapon {
 	@Override
 	public float accuracyFactor(Char owner, Char target) {
 		float accFactor = super.accuracyFactor(owner, target);
-		if (owner instanceof Hero && owner.buff(Momentum.class) != null && owner.buff(Momentum.class).freerunning()){
-			if (((Hero) owner).subClass == HeroSubClass.FREERUNNER)
-				accFactor *= 2f;
-		}
+		//if (owner instanceof Hero && owner.buff(Momentum.class) != null && owner.buff(Momentum.class).freerunning()){
+		//	if (((Hero) owner).subClass == HeroSubClass.FREERUNNER)
+		//		accFactor *= 2f;
+		//}
 
 		accFactor *= adjacentAccFactor(owner, target);
 

@@ -102,6 +102,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.AntiMagic;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Brimstone;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Stone;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Viscosity;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.AlchemistsToolkit;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CapeOfThorns;
@@ -550,7 +551,20 @@ public class Hero extends Char {
 
 		return hit;
 	}
-	
+
+    @Override
+    public boolean attack(Char enemy, float dmgMulti, float dmgBonus, float accMulti) {
+        boolean result = super.attack(enemy, dmgMulti, dmgBonus, accMulti);
+        if (!(belongings.attackingWeapon() instanceof MissileWeapon)){
+            if (buff(Talent.PreciseAssaultTracker.class) != null){
+                buff(Talent.PreciseAssaultTracker.class).detach();
+            } else if (buff(Talent.LiquidAgilACCTracker.class) != null
+                    && buff(Talent.LiquidAgilACCTracker.class).uses <= 0){
+                buff(Talent.LiquidAgilACCTracker.class).detach();
+            }
+        }
+        return result;
+    }
 	@Override
 	public long attackSkill(Char target ) {
 		KindOfWeapon wep = belongings.attackingWeapon();
@@ -590,17 +604,17 @@ public class Hero extends Char {
 						case 3:
 							accuracy *= Float.POSITIVE_INFINITY; break;
 					}
-					buff(Talent.PreciseAssaultTracker.class).detach();
 				} else if (buff(Talent.LiquidAgilACCTracker.class) != null){
 					// 3x/inf. ACC, depending on talent level
 					accuracy *= pointsInTalent(Talent.LIQUID_AGILITY) == 2 ? Float.POSITIVE_INFINITY : 3f;
 					Talent.LiquidAgilACCTracker buff = buff(Talent.LiquidAgilACCTracker.class);
 					buff.uses--;
-					if (buff.uses <= 0) {
-						buff.detach();
-					}
 				}
-			}
+			} else {
+                if (buff(Momentum.class) != null && buff(Momentum.class).freerunning()){
+                    accuracy *= 1f + pointsInTalent(Talent.PROJECTILE_MOMENTUM)/3f;
+                }
+            }
 		}
 
 		if (buff(Scimitar.SwordDance.class) != null){
@@ -608,9 +622,9 @@ public class Hero extends Char {
 		}
 
 		if (!RingOfForce.fightingUnarmed(this)) {
-			return (int)(attackSkill * accuracy * wep.accuracyFactor( this, target ));
+			return  Math.max(1, Math.round(attackSkill * accuracy * wep.accuracyFactor( this, target )));
 		} else {
-			return (int)(attackSkill * accuracy);
+			return Math.max(1, Math.round(attackSkill * accuracy));
 		}
 	}
 	
@@ -649,13 +663,18 @@ if (buff(RoundShield.GuardTracker.class) != null){
 
 		if (belongings.armor() != null) {
 			evasion = belongings.armor().evasionFactor(this, evasion);
+
+            //stone specifically overrides to 0 always, guaranteed hit
+            if (belongings.armor().hasGlyph(Stone.class, this) && !Stone.testingEvasion()){
+                return 0;
+            }
 		}
 		if (perks.contains(Perks.Perk.PROTEIN_INFUSION)){
 			int hunger = buff(Hunger.class).hunger();
 			evasion *= 1f + 0.5f*((Hunger.STARVING - hunger)/Hunger.STARVING);
 		}
 
-		return Math.round(evasion);
+        return Math.max(1, Math.round(evasion));
 	}
 
 	@Override

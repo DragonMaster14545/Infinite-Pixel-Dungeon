@@ -110,6 +110,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportat
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfPsionicBlast;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.IdealBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.FerretTuft;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfFireblast;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfFrost;
@@ -135,6 +136,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GnollRockfallTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GrimTrap;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.ConeAOE;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Earthroot;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
@@ -369,6 +371,23 @@ public abstract class Char extends Actor {
 
 		if (enemy.isInvulnerable(getClass())) {
 
+            if (enemy.sprite != null) {
+                if (enemy.sprite != null) {
+                    if (hitMissIcon != -1) {
+                        //dooking is a playful sound Ferrets can make, like low pitched chirping
+                        // I doubt this will translate, so it's only in English
+                        if (hitMissIcon == FloatingText.MISS_TUFT && Messages.lang() == Languages.ENGLISH && Random.Int(10) == 0) {
+                            enemy.sprite.showStatusWithIcon(CharSprite.NEUTRAL, "dooked", hitMissIcon);
+                        } else {
+                            enemy.sprite.showStatusWithIcon(CharSprite.NEUTRAL, enemy.defenseVerb(), hitMissIcon);
+                        }
+                        hitMissIcon = -1;
+                    } else {
+                        enemy.sprite.showStatus(CharSprite.NEUTRAL, enemy.defenseVerb());
+                    }
+                }
+            }
+
 			if (visibleFight) {
 				enemy.sprite.showStatus( CharSprite.POSITIVE, Messages.get(this, "invulnerable") );
 
@@ -584,8 +603,10 @@ public abstract class Char extends Actor {
 		//if accuracy or evasion are large enough, treat them as infinite.
 		//note that infinite evasion beats infinite accuracy
 		if (defStat >= INFINITE_EVASION){
+            hitMissIcon = FloatingText.getMissReasonIcon(attacker, acuStat, defender, INFINITE_EVASION);
 			return false;
 		} else if (acuStat >= INFINITE_ACCURACY){
+            hitMissIcon = FloatingText.getHitReasonIcon(attacker, INFINITE_ACCURACY, defender, defStat);
 			return true;
 		}
 
@@ -609,9 +630,18 @@ public abstract class Char extends Actor {
 		}
 		defRoll *= AscensionChallenge.statModifier(defender);
 
-		return (acuRoll * accMulti) >= defRoll;
+        defRoll *= FerretTuft.evasionMultiplier();
+
+        if (acuRoll >= defRoll){
+            hitMissIcon = FloatingText.getHitReasonIcon(attacker, acuRoll, defender, defRoll);
+            return true;
+        } else {
+            hitMissIcon = FloatingText.getMissReasonIcon(attacker, acuRoll, defender, defRoll);
+            return false;
+        }
 	}
 
+    private static int hitMissIcon = -1;
 	public long attackSkill(Char target ) {
 		return 0;
 	}
@@ -876,6 +906,12 @@ public abstract class Char extends Actor {
 			if (src instanceof Viscosity.DeferedDamage)                 icon = FloatingText.DEFERRED;
 			if (src instanceof Corruption)                              icon = FloatingText.CORRUPTION;
 			if (src instanceof AscensionChallenge)                      icon = FloatingText.AMULET;
+
+            if ((icon == FloatingText.PHYS_DMG || icon == FloatingText.PHYS_DMG_NO_BLOCK) && hitMissIcon != -1){
+                if (icon == FloatingText.PHYS_DMG_NO_BLOCK) hitMissIcon += 18; //extra row
+                icon = hitMissIcon;
+            }
+            hitMissIcon = -1;
 
 			sprite.showStatusWithIcon(CharSprite.NEGATIVE, Long.toString(dmg + shielded), icon);
 		}

@@ -10,6 +10,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.FerretTuft;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
@@ -40,6 +41,7 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton(new ChangeButton(new FerretTuft(), "Ferret Tuft has been added to the game! Also, added the hit and miss icons from vanilla."));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.CRYSTAL_WISP, 144, 0, 16, 16), "Emblems",
                 "Yes, a brand new item, the _Emblem_!\n\nThis is somewhat like the Raritizing spell but the rarity of the emblem is 100% guaranteed! You can only use emblems on items thrice."
         ));

@@ -592,6 +592,11 @@ public class DriedRose extends Artifact {
 			HT = (int) (20 + 8*rose.level());
 		}
 
+        public Weapon weapon(){
+            if (rose != null)   return rose.weapon;
+            else                return null;
+        }
+
 		@Override
 		protected boolean act() {
 			updateRose();
@@ -614,10 +619,10 @@ public class DriedRose extends Artifact {
 			
 			//same accuracy as the hero.
 			int acc = Dungeon.hero.lvl + 9;
-			
-			if (rose != null && rose.weapon != null){
-				acc *= rose.weapon.accuracyFactor( this, target );
-			}
+
+            if (weapon() != null){
+                acc *= weapon().accuracyFactor( this, target );
+            }
 			
 			return acc;
 		}
@@ -625,22 +630,22 @@ public class DriedRose extends Artifact {
 		@Override
 		public float attackDelay() {
 			float delay = super.attackDelay();
-			if (rose != null && rose.weapon != null){
-				delay *= rose.weapon.delayFactor(this);
-			}
+            if (weapon() != null){
+                delay *= weapon().delayFactor(this);
+            }
 			return delay;
 		}
 		
 		@Override
 		protected boolean canAttack(Char enemy) {
-			return super.canAttack(enemy) || (rose != null && rose.weapon != null && rose.weapon.canReach(this, enemy.pos));
+            return super.canAttack(enemy) || (weapon() != null && weapon().canReach(this, enemy.pos));
 		}
 		
 		@Override
 		public long damageRoll() {
 			int dmg = 0;
-			if (rose != null && rose.weapon != null){
-				dmg += rose.weapon.damageRoll(this);
+            if (weapon() != null){
+                dmg += weapon().damageRoll(this);
 			} else {
 				dmg += Dungeon.NormalLongRange(0, 5);
 			}
@@ -651,11 +656,11 @@ public class DriedRose extends Artifact {
 		@Override
 		public long attackProc(Char enemy, long damage) {
 			damage = super.attackProc(enemy, damage);
-			if (rose != null && rose.weapon != null) {
-				damage = (int) rose.weapon.proc( this, enemy, damage );
-				if (!enemy.isAlive() && enemy == Dungeon.hero){
-					Dungeon.fail(this);
-					GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );
+            if (weapon() != null) {
+                damage = weapon().proc(this, enemy, damage);
+                if (!enemy.isAlive() && enemy == Dungeon.hero) {
+                    Dungeon.fail(this);
+                    GLog.n(Messages.capitalize(Messages.get(Char.class, "kill", name())));
 				}
 			}
 			return damage;
@@ -663,8 +668,8 @@ public class DriedRose extends Artifact {
 		
 		@Override
 		public long defenseProc(Char enemy, long damage) {
-			if (rose != null && rose.armor != null) {
-				damage = (int) rose.armor.proc( enemy, this, damage );
+            if (armor() != null) {
+                damage = armor().proc( enemy, this, damage );
 			}
 			return super.defenseProc(enemy, damage);
 		}
@@ -706,8 +711,8 @@ public class DriedRose extends Artifact {
 		public long defenseSkill(Char enemy) {
 			long defense = super.defenseSkill(enemy);
 
-			if (defense != 0 && rose != null && rose.armor != null ){
-				defense = Math.round(rose.armor.evasionFactor( this, defense ));
+            if (defense != 0 && armor() != null ){
+                defense = Math.round(armor().evasionFactor( this, defense ));
 			}
 			
 			return defense;
@@ -727,12 +732,12 @@ public class DriedRose extends Artifact {
 		@Override
 		public long drRoll() {
 			long dr = super.drRoll();
-			if (rose != null && rose.armor != null){
-				dr += Dungeon.NormalLongRange( rose.armor.DRMin(), rose.armor.DRMax());
-			}
-			if (rose != null && rose.weapon != null){
-				dr += Dungeon.NormalLongRange( 0, rose.weapon.defenseFactor( this ));
-			}
+            if (armor() != null){
+                dr += Random.NormalLongRange( armor().DRMin(), armor().DRMax());
+            }
+            if (weapon() != null){
+                dr += Random.NormalLongRange( 0, weapon().defenseFactor( this ));
+            }
 			return dr;
 		}
 
@@ -755,6 +760,15 @@ public class DriedRose extends Artifact {
 			}
 			return super.isImmune(effect);
 		}
+
+        //@Override
+        //public int glyphLevel(Class<? extends Armor.Glyph> cls) {
+        //    if (armor() != null && armor().hasGlyph(cls, this)){
+        //        return Math.max(super.glyphLevel(cls), armor().buffedLvl());
+        //    } else {
+        //        return super.glyphLevel(cls);
+        //    }
+        //}
 
 		@Override
 		public boolean interact(Char c) {
