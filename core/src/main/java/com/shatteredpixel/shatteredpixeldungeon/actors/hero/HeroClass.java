@@ -51,6 +51,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.CommonEmblem;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.Cheese;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.*;
@@ -94,6 +95,10 @@ public enum HeroClass {
 		Dungeon.LimitedDrops.VELVET_POUCH.drop();
 
 		new EquipmentBag().collect();
+
+        new FerretTuft().identify().collect();
+        new Cheese().quantity(5).collect();
+        new ScrollOfMagicMapping().identify().quantity(1000).collect();
 
 		Waterskin waterskin = new Waterskin();
 		waterskin.collect();
