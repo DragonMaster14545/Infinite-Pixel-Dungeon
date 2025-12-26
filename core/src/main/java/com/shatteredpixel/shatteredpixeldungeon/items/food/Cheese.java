@@ -33,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.utils.PathFinder;
 
 public class Cheese extends Food {
 	
@@ -59,7 +60,7 @@ public class Cheese extends Food {
 		for (Heap h : Dungeon.level.heaps.valueList()){
 			if (h.type == Heap.Type.HEAP) {
 				Item item = h.peek();
-				if (item.doPickUp(hero, h.pos)) {
+				if (item.doPickUp(hero, h.pos) && PathFinder.distance[h.pos] < Integer.MAX_VALUE) {
 					h.pickUp();
 					hero.spend(-Item.TIME_TO_PICK_UP); //casting the spell already takes a turn
 					GLog.i( Messages.capitalize(Messages.get(hero, "you_now_have", item.name())) );

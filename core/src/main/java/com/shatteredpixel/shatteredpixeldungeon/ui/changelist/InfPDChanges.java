@@ -46,7 +46,8 @@ public class InfPDChanges {
                 "Yes, a brand new item, the _Emblem_!\n\nThis is somewhat like the Raritizing spell but the rarity of the emblem is 100% guaranteed! You can only use emblems on items thrice."
         ));
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ OOFThiefs can no longer steals bags\n"
+                "_-_ OOFThiefs can no longer steals bags\n" +
+                        "_-_ Cheese and Magnetic Meal perk no longer collects item out of range\n"
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Nerfed gold drops by -50% min, and -25% max\n" +
