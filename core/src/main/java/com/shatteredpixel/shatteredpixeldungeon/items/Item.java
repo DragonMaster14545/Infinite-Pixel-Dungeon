@@ -833,6 +833,7 @@ public class Item implements Bundlable {
 	private static final String KEPT_LOST       = "kept_lost";
 	private static final String WERE_OOFED      = "were_oofed";
 	private static final String RARITY           = "rarity";
+    private static final String EMBLEM_USE           = "emblem_use";
 	
 	@Override
 	public void storeInBundle( Bundle bundle ) {
@@ -846,6 +847,7 @@ public class Item implements Bundlable {
 		}
 		bundle.put( KEPT_LOST, keptThoughLostInvent );
 		bundle.put( WERE_OOFED, wereOofed);
+        bundle.put( EMBLEM_USE, emblemUse);
 		bundle.put( RARITY, rarity.ordinal() );
 
 		if (!this.customName.equals("")) {
@@ -859,6 +861,7 @@ public class Item implements Bundlable {
 		levelKnown	= bundle.getBoolean( LEVEL_KNOWN );
 		cursedKnown	= bundle.getBoolean( CURSED_KNOWN );
 		wereOofed = bundle.getBoolean(WERE_OOFED);
+        emblemUse = bundle.getInt(EMBLEM_USE);
 		
 		long level = bundle.getLong( LEVEL );
 		if (level > 0) {
