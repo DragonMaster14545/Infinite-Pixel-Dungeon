@@ -181,6 +181,7 @@ public class Item implements Bundlable {
 	protected static final String TXT_TO_STRING_LVL		= "%s %+d";
 	protected static final String TXT_TO_STRING_X		= "%s x%d";
 	protected static final String TXT_TO_STRING_RARITY		= "[%s] %s";
+    protected static final String TXT_TO_STRING_EMBLEM		= "%s (%s)";
 	
 	protected static final float TIME_TO_THROW		= 1.0f;
 	protected static final float TIME_TO_PICK_UP	= 1.0f;
@@ -732,6 +733,9 @@ public class Item implements Bundlable {
 
 		if (rarity != Rarity.NONE && isIdentified())
 			name = Messages.format( TXT_TO_STRING_RARITY, rarity.trueName, name);
+
+        if (emblemUse > 0)
+            name = Messages.format( TXT_TO_STRING_EMBLEM, name, emblemUse);
 
 		return name;
 

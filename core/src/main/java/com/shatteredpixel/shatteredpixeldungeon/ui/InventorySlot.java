@@ -104,6 +104,12 @@ public class InventorySlot extends ItemSlot {
 					&& !item.keptThroughLostInventory()){
 				enable(false);
 			}
+
+            if (item.emblemUse > 0) {
+                bg.ra = 0.99f;
+                bg.ga = 0.85f;
+                bg.ba = 0.20f;
+            }
 		} else {
 			bg.texture( TextureCache.createSolid( NORMAL ) );
 			bg.resetColor();

@@ -3,13 +3,12 @@ package com.shatteredpixel.shatteredpixeldungeon.items.emblem;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
-public class CommonEmblem extends EmblemSystem {
+public class UncommonEmblem extends EmblemSystem {
 
-    public Rarity randomizeE_CommonRarity() {
-        //rarity = Rarity.COMMON;
-        double random = Dungeon.Double(Rarity.COMMON.chance, Dungeon.LuckDirection.DOWN);
+    public Rarity randomizeE_UncommonRarity() {
+        //rarity = Rarity.UNCOMMON;
+        double random = Dungeon.Double(Rarity.UNCOMMON.chance, Dungeon.LuckDirection.DOWN);
         for (Rarity r : Rarity.values()) {
             if (random <= r.chance) {
                 rarity = r;
@@ -22,12 +21,12 @@ public class CommonEmblem extends EmblemSystem {
     @Override
     protected void onItemSelected(Item item) {
         //TODO make this an unobtainable item (which you cant get naturally)
-        item.rarity = randomizeE_CommonRarity();
+        item.rarity = randomizeE_UncommonRarity();
     }
 
     @Override
     public ItemSprite.Glowing glowing() {
-        return new ItemSprite.Glowing( Rarity.COMMON.color );
+        return new ItemSprite.Glowing( Rarity.UNCOMMON.color );
     }
 
     @Override
