@@ -6,10 +6,6 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
 public class CommonEmblem extends EmblemSystem {
 
-    {
-        image = ItemSpriteSheet.RARITIZE;
-    }
-
     public Rarity randomizeE_CommonRarity() {
         //rarity = Rarity.COMMON;
         double random = Dungeon.Double(Rarity.COMMON.chance, Dungeon.LuckDirection.DOWN);
