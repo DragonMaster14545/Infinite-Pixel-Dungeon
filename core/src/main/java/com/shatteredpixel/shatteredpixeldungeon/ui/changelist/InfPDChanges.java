@@ -63,7 +63,8 @@ public class InfPDChanges {
                         "_-_ Slightly buffed Fishing Rods\n" +
                         "_-_ Increased the chance of getting unique items in Refined Bags (from 4.5% to 5%)\n" +
                         "_-_ Artifact, Ring and Mics slots' SoU cost reduced to _20_ from _25_.\n" +
-                        "_-_ Increased fire boost damage in fire booster spell by 10%"
+                        "_-_ Increased fire boost damage in fire booster spell by 10%\n" +
+                        "_-_ Added a slight damage boost in _Creative Gloves_ but increased their attack delay by 50%"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.5", true, "");

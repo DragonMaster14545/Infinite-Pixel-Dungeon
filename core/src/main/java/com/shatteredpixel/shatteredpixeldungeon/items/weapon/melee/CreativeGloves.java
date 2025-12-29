@@ -47,19 +47,19 @@ public class CreativeGloves extends MeleeWeapon {
 		hitSoundPitch = 1.3f;
 
 		internalTier = tier = 1;
-		DLY = 0.5f; //actually 0, see Char.attack
+		DLY = 0.75f; //actually 0, see Char.attack
 		
 		bones = true;
 	}
 
 	@Override
 	public long min(long lvl) {
-		return 1;
+		return 1 + Math.round(Math.pow(1.0125d, level()/2d));
 	}
 
 	@Override
 	public long max(long lvl) {
-		return 5;
+		return 5 + Math.round(Math.pow(1.025d, level()/2d));
 	}
 
 	@Override
