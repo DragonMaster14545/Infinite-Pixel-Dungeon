@@ -546,8 +546,9 @@ public class Generator {
 					RingOfMight.class,
 					RingOfSharpshooting.class,
 					RingOfTenacity.class,
-					RingOfWealth.class};
-			RING.probs = new float[]{ 3, 3, 0, 3, 3, 3, 1, 3, 3, 3, 3,1 };
+					RingOfWealth.class,
+                    RingOfExperience.class};
+			RING.probs = new float[]{ 3, 3, 0, 3, 3, 3, 1, 3, 3, 3, 3, 1, 1 };
 			
 			ARTIFACT.classes = new Class<?>[]{
 					AlchemistsToolkit.class,
