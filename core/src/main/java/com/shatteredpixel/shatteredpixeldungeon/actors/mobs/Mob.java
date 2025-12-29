@@ -76,6 +76,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.fishingrods.FishingRod;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAggression;
@@ -886,6 +887,10 @@ public abstract class Mob extends Char {
 		if (this.buff(Overload.class) != null) {
 			Dungeon.level.spawnMob(6);
 		}
+
+        if (Ring.getBuffedBonus(Dungeon.hero, RingOfExperience.Experience.class) > 0) {
+            EXP *= (long) RingOfExperience.experienceMultiplier(Dungeon.hero);
+        }
 
 		if (alignment == Alignment.ENEMY){
 			rollToDropLoot();
