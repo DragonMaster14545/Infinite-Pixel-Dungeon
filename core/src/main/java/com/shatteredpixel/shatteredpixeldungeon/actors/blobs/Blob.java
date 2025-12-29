@@ -33,7 +33,7 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Rect;
 import com.watabou.utils.Reflection;
 
-public class Blob extends Actor {
+public abstract class Blob extends Actor {
 
 	{
 		actPriority = BLOB_PRIO;
@@ -209,8 +209,10 @@ public class Blob extends Actor {
 
 		area.union(cell%level.width(), cell/level.width());
 	}
-	
-	public void clear( int cell ) {
+
+    public abstract void seed(Level level, int cell, int amount);
+
+    public void clear(int cell ) {
 		if (volume == 0) return;
 		volume -= cur[cell];
 		cur[cell] = 0;

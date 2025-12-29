@@ -141,7 +141,7 @@ public class DungeonTileSheet {
 			Terrain.TRAP, Terrain.INACTIVE_TRAP, Terrain.EMPTY_DECO,
 			Terrain.CUSTOM_DECO, Terrain.WELL, Terrain.STATUE, Terrain.ALCHEMY,
 			Terrain.CUSTOM_DECO_EMPTY, Terrain.MINE_CRYSTAL, Terrain.MINE_BOULDER,
-			Terrain.DOOR, Terrain.OPEN_DOOR, Terrain.LOCKED_DOOR, Terrain.CRYSTAL_DOOR
+			Terrain.DOOR, Terrain.OPEN_DOOR, Terrain.LOCKED_DOOR, Terrain.HERO_LKD_DR, Terrain.CRYSTAL_DOOR
 	));
 
 	//+1 for ground above, +2 for ground right, +4 for ground below, +8 for ground left.
@@ -261,12 +261,13 @@ public class DungeonTileSheet {
 		else if (tile == Terrain.DOOR)          return DungeonTileSheet.RAISED_DOOR;
 		else if (tile == Terrain.OPEN_DOOR)     return DungeonTileSheet.RAISED_DOOR_OPEN;
 		else if (tile == Terrain.LOCKED_DOOR)   return DungeonTileSheet.RAISED_DOOR_LOCKED;
-		else if (tile == Terrain.CRYSTAL_DOOR)   return DungeonTileSheet.RAISED_DOOR_CRYSTAL;
+        else if (tile == Terrain.HERO_LKD_DR)   return DungeonTileSheet.RAISED_DOOR_LOCKED;
+        else if (tile == Terrain.CRYSTAL_DOOR)  return DungeonTileSheet.RAISED_DOOR_CRYSTAL;
 		else return -1;
 	}
 
 	private static int[] doorTiles = new int[]{
-			Terrain.DOOR, Terrain.LOCKED_DOOR, Terrain.CRYSTAL_DOOR, Terrain.OPEN_DOOR
+			Terrain.DOOR, Terrain.LOCKED_DOOR, Terrain.HERO_LKD_DR, Terrain.CRYSTAL_DOOR, Terrain.OPEN_DOOR
 	};
 
 	public static boolean doorTile(int tile){
@@ -337,6 +338,7 @@ public class DungeonTileSheet {
 		if (tile == Terrain.OPEN_DOOR)                              visual = DOOR_SIDEWAYS_OVERHANG;
 		else if (tile == Terrain.DOOR)                              visual = DOOR_SIDEWAYS_OVERHANG_CLOSED;
 		else if (tile == Terrain.LOCKED_DOOR)                       visual = DOOR_SIDEWAYS_OVERHANG_LOCKED;
+        else if (tile == Terrain.HERO_LKD_DR)                       visual = DOOR_SIDEWAYS_OVERHANG_LOCKED;
 		else if (tile == Terrain.CRYSTAL_DOOR)                      visual = DOOR_SIDEWAYS_OVERHANG_CRYSTAL;
 		//TODO currently this line on triggers on mining floors, do we want to make it universal?
 		else if (Dungeon.branch == 1 && below == Terrain.WALL_DECO) visual = WALL_OVERHANG_DECO;
@@ -421,6 +423,7 @@ public class DungeonTileSheet {
 		directFlatVisuals.put(Terrain.DOOR,             FLAT_DOOR);
 		directFlatVisuals.put(Terrain.OPEN_DOOR,        FLAT_DOOR_OPEN);
 		directFlatVisuals.put(Terrain.LOCKED_DOOR,      FLAT_DOOR_LOCKED);
+        directFlatVisuals.put(Terrain.HERO_LKD_DR,      FLAT_DOOR_LOCKED);
 		directFlatVisuals.put(Terrain.CRYSTAL_DOOR,     FLAT_DOOR_CRYSTAL);
 		directFlatVisuals.put(Terrain.WALL_DECO,        FLAT_WALL_DECO);
 		directFlatVisuals.put(Terrain.BOOKSHELF,        FLAT_BOOKSHELF);

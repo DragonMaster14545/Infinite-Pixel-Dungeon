@@ -111,6 +111,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.EtherealChains;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HornOfPlenty;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArmband;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SkeletonKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
@@ -120,7 +121,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.keys.CrystalKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.GoldenKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.IronKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.Key;
-import com.shatteredpixel.shatteredpixeldungeon.items.keys.SkeletonKey;
+import com.shatteredpixel.shatteredpixeldungeon.items.keys.WornKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
@@ -1304,13 +1305,24 @@ if (buff(RoundShield.GuardTracker.class) != null){
 				
 				hasKey = true;
 
+            } else if (door == Terrain.HERO_LKD_DR){
+
+                if (belongings.getItem(SkeletonKey.class) != null
+                        && !belongings.getItem(SkeletonKey.class).cursed){
+                    GLog.i(Messages.get(SkeletonKey.class, "locked_with_key"));
+                    ready();
+                    return false;
+                } else {
+                    hasKey = true;
+                }
+
 			} else if (door == Terrain.CRYSTAL_DOOR
 					&& Notes.keyCount(new CrystalKey(Dungeon.depth)) > 0) {
 
 				hasKey = true;
 
 			} else if (door == Terrain.LOCKED_EXIT
-					&& Notes.keyCount(new SkeletonKey(Dungeon.depth)) > 0) {
+					&& Notes.keyCount(new WornKey(Dungeon.depth)) > 0) {
 
 				hasKey = true;
 				
@@ -2033,7 +2045,10 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 				curAction = new HeroAction.OpenChest( cell );
 			}
 			
-		} else if (Dungeon.level.map[cell] == Terrain.LOCKED_DOOR || Dungeon.level.map[cell] == Terrain.CRYSTAL_DOOR || Dungeon.level.map[cell] == Terrain.LOCKED_EXIT) {
+		} else if (Dungeon.level.map[cell] == Terrain.LOCKED_DOOR
+                || Dungeon.level.map[cell] == Terrain.CRYSTAL_DOOR
+                || Dungeon.level.map[cell] == Terrain.LOCKED_EXIT
+                || Dungeon.level.map[cell] == Terrain.HERO_LKD_DR) {
 			
 			curAction = new HeroAction.Unlock( cell );
 			
@@ -2447,22 +2462,43 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 
 			int doorCell = ((HeroAction.Unlock)curAction).dst;
 			int door = Dungeon.level.map[doorCell];
-			
-			if (Dungeon.level.distance(pos, doorCell) <= 1) {
+
+            SkeletonKey.keyRecharge skele = buff(SkeletonKey.keyRecharge.class);
+            SkeletonKey.KeyReplacementTracker keyUseTrack = buff(SkeletonKey.KeyReplacementTracker.class);
+
+            if (skele != null && skele.isCursed() && Random.Int(6) != 0){
+                GLog.n(Messages.get(this, "key_distracted"));
+                spendAndNext(2*Key.TIME_TO_UNLOCK);
+                Buff.affect(this, Hunger.class).affectHunger(-4);
+            } else if (Dungeon.level.distance(pos, doorCell) <= 1) {
 				boolean hasKey = true;
 				if (door == Terrain.LOCKED_DOOR) {
 					hasKey = Notes.remove(new IronKey(Dungeon.depth));
-					if (hasKey) Level.set(doorCell, Terrain.DOOR);
+                    if (hasKey) {
+                        if (keyUseTrack != null){
+                            keyUseTrack.processIronLockOpened();
+                        }
+                        Level.set(doorCell, Terrain.DOOR);
+                    }
+                } else if (door == Terrain.HERO_LKD_DR) {
+                    hasKey = true;
+                    Level.set(doorCell, Terrain.DOOR);
+                    GLog.i( Messages.get(SkeletonKey.class, "force_lock"));
 				} else if (door == Terrain.CRYSTAL_DOOR) {
 					hasKey = Notes.remove(new CrystalKey(Dungeon.depth));
 					if (hasKey) {
+                        if (keyUseTrack != null){
+                            keyUseTrack.processCrystalLockOpened();
+                        }
 						Level.set(doorCell, Terrain.EMPTY);
 						Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 						CellEmitter.get( doorCell ).start( Speck.factory( Speck.DISCOVER ), 0.025f, 20 );
 					}
 				} else {
-					hasKey = Notes.remove(new SkeletonKey(Dungeon.depth));
-					if (hasKey) Level.set(doorCell, Terrain.UNLOCKED_EXIT);
+					hasKey = Notes.remove(new WornKey(Dungeon.depth));
+                    if (hasKey) {
+                        Level.set(doorCell, Terrain.UNLOCKED_EXIT);
+                    }
 				}
 				
 				if (hasKey) {
@@ -2475,14 +2511,29 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 		} else if (curAction instanceof HeroAction.OpenChest) {
 			
 			Heap heap = Dungeon.level.heaps.get( ((HeroAction.OpenChest)curAction).dst );
-			
-			if (Dungeon.level.distance(pos, heap.pos) <= 1){
+
+            SkeletonKey.keyRecharge skele = buff(SkeletonKey.keyRecharge.class);
+            SkeletonKey.KeyReplacementTracker keyUseTrack = buff(SkeletonKey.KeyReplacementTracker.class);
+
+            if (skele != null && skele.isCursed()
+                    && (heap.type == Type.LOCKED_CHEST || heap.type == Type.CRYSTAL_CHEST)
+                    && Random.Int(6) != 0){
+                GLog.n(Messages.get(this, "key_distracted"));
+                spend(2*Key.TIME_TO_UNLOCK);
+                Buff.affect(this, Hunger.class).affectHunger(-4);
+            } else if (Dungeon.level.distance(pos, heap.pos) <= 1){
 				boolean hasKey = true;
 				if (heap.type == Type.SKELETON || heap.type == Type.REMAINS) {
 					Sample.INSTANCE.play( Assets.Sounds.BONES );
 				} else if (heap.type == Type.LOCKED_CHEST){
+                    if (hasKey && keyUseTrack != null){
+                        keyUseTrack.processGoldLockOpened();
+                    }
 					hasKey = Notes.remove(new GoldenKey(Dungeon.depth));
 				} else if (heap.type == Type.CRYSTAL_CHEST){
+                    if (hasKey && keyUseTrack != null){
+                        keyUseTrack.processCrystalLockOpened();
+                    }
 					hasKey = Notes.remove(new CrystalKey(Dungeon.depth));
 				}
 				

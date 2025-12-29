@@ -56,7 +56,7 @@ public class KeyDisplay extends Visual {
 	//and the order they will be truncated if there is no space (higher first, larger counts first)
 	private static final LinkedHashMap<Class<? extends Key>, Integer> keyMap = new LinkedHashMap<>();
 	static {
-		keyMap.put(SkeletonKey.class, 1);
+		keyMap.put(WornKey.class, 1);
 		keyMap.put(CrystalKey.class, 2);
 		keyMap.put(GoldenKey.class, 3);
 		keyMap.put(IronKey.class, 4);

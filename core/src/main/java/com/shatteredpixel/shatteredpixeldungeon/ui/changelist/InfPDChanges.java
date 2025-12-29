@@ -5,6 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.BlackPsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.LostBackpack;
 import com.shatteredpixel.shatteredpixeldungeon.items.PsycheChest;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SkeletonKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.EquipmentBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
@@ -45,6 +46,7 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.RING_LIMESTONE), "New Rings",
                 "Another rings that was actually made for chaos, do they help you?"
         ));
+        changes.addButton(new ChangeButton(new SkeletonKey(), "Skeleton Key has been added to the game! Have fun to this stuff.... I guess?"));
         changes.addButton(new ChangeButton(new FerretTuft(), "Ferret Tuft has been added to the game! Also, added the hit and miss icons from vanilla."));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.CRYSTAL_WISP, 144, 0, 16, 16), "Emblems",
                 "Yes, a brand new item, the _Emblem_!\n\nThis is somewhat like the Raritizing spell but the rarity of the emblem is 100% guaranteed! You can only use emblems on items thrice."
