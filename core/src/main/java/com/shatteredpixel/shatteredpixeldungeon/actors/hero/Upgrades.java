@@ -2,6 +2,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
@@ -73,6 +74,21 @@ public class Upgrades implements Bundlable {
                 cost.put(ScrollOfUpgrade.class, (long) Math.pow(25,level));
                 return cost;
             }
+        },
+
+        MORE_LOOTS(Integer.MAX_VALUE,"More Loots","Adds extra loots per level") {
+            @Override
+            public int extraLoots() {
+                return 1;
+            }
+
+            @Override
+            public LinkedHashMap<Class<? extends Item>, Long> cost(int level) {
+                LinkedHashMap<Class<? extends Item>, Long> cost = new LinkedHashMap<>();
+                cost.put(ScrollOfUpgrade.class, (long) Math.pow(2,level));
+                cost.put(ScrollOfMagicMapping.class, (long) Math.pow(3,level));
+                return cost;
+            }
         },;
 
         public final int maxLevel;
@@ -94,6 +110,9 @@ public class Upgrades implements Bundlable {
             return 0;
         }
         public int artifactSlots() {
+            return 0;
+        }
+        public int extraLoots() {
             return 0;
         }
     }
@@ -126,6 +145,14 @@ public class Upgrades implements Bundlable {
             slots += upgrade.data.artifactSlots()*upgrade.level;
         }
         return slots;
+    }
+
+    public int extraLoots() {
+        int loots = 0;
+        for (Upgrade upgrade : upgrades) {
+            loots += upgrade.data.extraLoots()*upgrade.level;
+        }
+        return loots;
     }
 
     public class Upgrade {
