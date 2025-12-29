@@ -183,7 +183,7 @@ public class FiringSnapper extends BlacksmithWeapon {
 
     public static class DemonAlly extends AllyBuff {}
 
-    public static class FireKeeper extends Blob {
+    public static abstract class FireKeeper extends Blob {
 
         {
             actPriority = HERO_PRIO;
