@@ -11,6 +11,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemQuantifier;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.FerretTuft;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -46,6 +47,7 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.RING_LIMESTONE), "New Rings",
                 "Another rings that was actually made for chaos, do they help you?"
         ));
+        changes.addButton(new ChangeButton(new ItemQuantifier(), "Another gamble item, which adds two or remove one quantity of an item."));
         changes.addButton(new ChangeButton(new SkeletonKey(), "Skeleton Key has been added to the game! Have fun to this stuff.... I guess?"));
         changes.addButton(new ChangeButton(new FerretTuft(), "Ferret Tuft has been added to the game! Also, added the hit and miss icons from vanilla."));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.CRYSTAL_WISP, 144, 0, 16, 16), "Emblems",

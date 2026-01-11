@@ -55,6 +55,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.Extractor;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.FireBooster;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Gambler;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemQuantifier;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.PhaseShift;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Raritize;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ReclaimTrap;
@@ -228,7 +229,8 @@ public abstract class Recipe {
 		new CheeseChunk.oneMeat(),
 			new Raritize.Recipe(),
 			new Extractor.Recipe(),
-			new Gambler.Recipe()
+			new Gambler.Recipe(),
+            new ItemQuantifier.Recipe()
 	};
 	
 	private static Recipe[] threeIngredientRecipes = new Recipe[]{

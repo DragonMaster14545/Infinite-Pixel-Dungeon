@@ -905,10 +905,12 @@ public class ItemSpriteSheet {
 	public static final int EXTRACTOR  = SPELLS_NEW_ROW+0;
 	public static final int GAMBLER  = SPELLS_NEW_ROW+1;
     public static final int EMBLEM  = SPELLS_NEW_ROW+2;
+    public static final int ITEM_QUANTIFIER  = SPELLS_NEW_ROW+3;
 	static {
 		assignItemRect(EXTRACTOR,     10, 15);
 		assignItemRect(GAMBLER,     10, 15);
         assignItemRect(EMBLEM,     12, 11);
+        assignItemRect(ITEM_QUANTIFIER,     10, 15);
 	}
 
 	//for smaller 8x8 icons that often accompany an item sprite

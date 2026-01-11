@@ -64,6 +64,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.Extractor;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.FireBooster;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Gambler;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemQuantifier;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.PhaseShift;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Raritize;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ReclaimTrap;
@@ -408,6 +409,7 @@ public class QuickRecipe extends Component {
 				result.add(new QuickRecipe(new Vampirism.Recipe()));
 				result.add(new QuickRecipe(new Raritize.Recipe()));
 				result.add(new QuickRecipe(new Gambler.Recipe()));
+                result.add(new QuickRecipe(new ItemQuantifier.Recipe()));
 				return result;
 		}
 	}
