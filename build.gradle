@@ -1,16 +1,16 @@
 buildscript {
     repositories {
-        //maven { url 'https://jitpack.io'}
+        maven { url 'https://jitpack.io'}
         google()
         mavenCentral()
-        //maven {
-        //    url = uri("https://storage.googleapis.com/r8-releases/raw")
-        //}
+        maven {
+            url = uri("https://storage.googleapis.com/r8-releases/raw")
+        }
     }
     dependencies {
         //gradle version packaged with AGP 8.5 causes crashes on Android 4.4-
         //this won't be needed once the bundled version is 8.7.2+
-        //classpath 'com.android.tools:r8:8.13.17'
+        classpath 'com.android.tools:r8:8.13.17'
         classpath 'com.android.tools.build:gradle:8.13.2'
     }
 }
