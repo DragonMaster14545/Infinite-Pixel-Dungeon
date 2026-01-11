@@ -57,7 +57,9 @@ public class InfPDChanges {
                 "_-_ OOFThiefs can no longer steals bags\n" +
                         "_-_ Cheese and Magnetic Meal perk no longer collects item out of range\n" +
                         "_-_ Added \"More Loots\" upgrade\n" +
-                        "_-_ Fixed wrong indicator in Gambler spell\n"
+                        "_-_ Fixed wrong indicator in Gambler spell\n" +
+                        "_-_ Added emblems in shops appearing within 15% chance\n" +
+                        "_-_ Added price on emblems (base 400)"
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Nerfed gold drops by -50% min, and -25% max\n" +

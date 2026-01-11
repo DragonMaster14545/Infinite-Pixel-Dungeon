@@ -38,6 +38,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.ScaleArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.CommonEmblem;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.EpicEmblem;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.RareEmblem;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.UncommonEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.fishingrods.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.SmallRation;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
@@ -274,6 +278,23 @@ public class ShopRoom extends SpecialRoom {
 		if (Dungeon.depth > 6) itemsToSpawn.add(new QualityBag());
 		if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_5)) itemsToSpawn.add(new Clayball());
 		itemsToSpawn.add( new Alchemize().quantity(Random.IntRange(2, 3)));
+
+        if (Random.Float() < 0.15f) {
+            switch (Dungeon.depth) {
+                case 6:
+                    itemsToSpawn.add(new CommonEmblem().quantity(Random.IntRange(2, 4)));
+                    break;
+                case 11:
+                    itemsToSpawn.add(new UncommonEmblem().quantity(Random.IntRange(2, 4)));
+                    break;
+                case 16:
+                    itemsToSpawn.add(new RareEmblem().quantity(Random.IntRange(2, 4)));
+                    break;
+                case 20: case 21:
+                    itemsToSpawn.add(new EpicEmblem().quantity(Random.IntRange(2, 4)));
+                    break;
+            }
+        }
 
 
 		if (Dungeon.cycle == 0) itemsToSpawn.add(ChooseBag(Dungeon.hero.belongings));

@@ -19,6 +19,12 @@ public class UncommonEmblem extends EmblemSystem {
     }
 
     @Override
+    public long value() {
+        long price = 400;
+        return price * Rarity.UNCOMMON.multiplier;
+    }
+
+    @Override
     protected void onItemSelected(Item item) {
         //TODO make this an unobtainable item (which you cant get naturally)
         item.rarity = randomizeE_UncommonRarity();

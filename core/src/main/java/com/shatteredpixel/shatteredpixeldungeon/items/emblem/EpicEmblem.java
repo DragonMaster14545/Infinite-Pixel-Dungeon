@@ -3,13 +3,12 @@ package com.shatteredpixel.shatteredpixeldungeon.items.emblem;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
-public class CommonEmblem extends EmblemSystem {
+public class EpicEmblem extends EmblemSystem {
 
-    public Rarity randomizeE_CommonRarity() {
-        //rarity = Rarity.COMMON;
-        double random = Dungeon.Double(Rarity.COMMON.chance, Dungeon.LuckDirection.DOWN);
+    public Rarity randomizeE_EpicRarity() {
+        //rarity = Rarity.Epic;
+        double random = Dungeon.Double(Rarity.EPIC.chance, Dungeon.LuckDirection.DOWN);
         for (Rarity r : Rarity.values()) {
             if (random <= r.chance) {
                 rarity = r;
@@ -22,18 +21,18 @@ public class CommonEmblem extends EmblemSystem {
     @Override
     public long value() {
         long price = 400;
-        return price * Rarity.COMMON.multiplier;
+        return price * Rarity.EPIC.multiplier;
     }
 
     @Override
     protected void onItemSelected(Item item) {
         //TODO make this an unobtainable item (which you cant get naturally)
-        item.rarity = randomizeE_CommonRarity();
+        item.rarity = randomizeE_EpicRarity();
     }
 
     @Override
     public ItemSprite.Glowing glowing() {
-        return new ItemSprite.Glowing( Rarity.COMMON.color );
+        return new ItemSprite.Glowing( Rarity.EPIC.color );
     }
 
     @Override
