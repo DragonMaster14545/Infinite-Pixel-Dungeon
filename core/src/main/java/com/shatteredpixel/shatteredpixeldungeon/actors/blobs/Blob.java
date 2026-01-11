@@ -210,8 +210,6 @@ public abstract class Blob extends Actor {
 		area.union(cell%level.width(), cell/level.width());
 	}
 
-    public abstract void seed(Level level, int cell, int amount);
-
     public void clear(int cell ) {
 		if (volume == 0) return;
 		volume -= cur[cell];
