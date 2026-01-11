@@ -44,6 +44,15 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.CHALLENGE_COLOR), "Trinket Changes",
+                "Certain trinkets has now increased max levels\n\n" +
+                        "_-_ Dimensional Sundial: 3 -> 10\n" +
+                        "_-_ Exotic Crystals: 3 -> 5\n" +
+                        "_-_ Mimic Tooth: 3 -> 5\n" +
+                        "_-_ Rat Skull: 3 -> 15\n" +
+                        "_-_ Shard of Oblivion: 3 -> 10\n\n" +
+                        "This ensures the chaos and the unpredictability of the trinkets."
+        ));
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.RING_LIMESTONE), "New Rings",
                 "Another rings that was actually made for chaos, do they help you?"
         ));

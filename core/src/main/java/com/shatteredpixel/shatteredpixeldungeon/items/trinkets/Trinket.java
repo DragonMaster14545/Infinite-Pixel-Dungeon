@@ -71,6 +71,9 @@ public abstract class Trinket extends Item {
 	public long energyVal() {
 		return 5;
 	}
+    public long maxUpgrade() {
+        return 3;
+    }
 
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
@@ -110,7 +113,7 @@ public abstract class Trinket extends Item {
 
 		@Override
 		public boolean testIngredients(ArrayList<Item> ingredients) {
-			return ingredients.size() == 1 && ingredients.get(0) instanceof Trinket && ingredients.get(0).level() < 3;
+			return ingredients.size() == 1 && ingredients.get(0) instanceof Trinket && ingredients.get(0).level() < ((Trinket) ingredients.get(0)).maxUpgrade();
 		}
 
 		@Override

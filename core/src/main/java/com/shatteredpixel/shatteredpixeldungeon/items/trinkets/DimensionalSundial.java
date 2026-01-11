@@ -40,7 +40,12 @@ public class DimensionalSundial extends Trinket {
 		return 6+2*level();
 	}
 
-	@Override
+    @Override
+    public long maxUpgrade() {
+        return 10;
+    }
+
+    @Override
 	public String statsDesc() {
 		if (isIdentified()){
 			return Messages.get(this,

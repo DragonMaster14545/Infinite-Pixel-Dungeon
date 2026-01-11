@@ -36,6 +36,11 @@ public class ExoticCrystals extends Trinket {
 		return 6+2*level();
 	}
 
+    @Override
+    public long maxUpgrade() {
+        return 5;
+    }
+
 	@Override
 	public String statsDesc() {
 		if (isIdentified()){

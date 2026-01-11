@@ -36,6 +36,11 @@ public class RatSkull extends Trinket {
 		return 6+2*level();
 	}
 
+    @Override
+    public long maxUpgrade() {
+        return 15;
+    }
+
 	@Override
 	public String statsDesc() {
 		if (isIdentified()){
