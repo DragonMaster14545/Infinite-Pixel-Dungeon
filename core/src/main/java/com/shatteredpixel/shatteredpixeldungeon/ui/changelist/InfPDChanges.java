@@ -11,6 +11,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.CommonEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.GalacticInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemQuantifier;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.FerretTuft;
@@ -48,6 +49,7 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton(new ChangeButton(new GalacticInfusion(), "Another spell which guarantee Galactic enchantment on your weapon. How nice..."));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed NPE caused by level reset and resurrect + skeleton key\n" +
                         "_-_ Fixed visual bug in Emblems on changelog\n" +
