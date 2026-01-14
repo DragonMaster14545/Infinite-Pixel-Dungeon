@@ -73,6 +73,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.ListUtils;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
@@ -466,7 +467,14 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 				Annoying.class, Displacing.class, Dazzling.class, Explosive.class,
 				Sacrificial.class, Wayward.class, Polarized.class, Friendly.class
 		};
-		
+
+        public static Class<?>[] allEnchants(){
+            return ListUtils.combine( common, uncommon, rare );
+        }
+
+        public static Class<?>[] getCurses(){
+            return curses;
+        }
 			
 		public abstract long proc( Weapon weapon, Char attacker, Char defender, long damage );
 
