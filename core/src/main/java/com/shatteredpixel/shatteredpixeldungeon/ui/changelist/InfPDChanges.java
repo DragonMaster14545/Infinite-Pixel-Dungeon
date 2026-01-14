@@ -44,6 +44,7 @@ public class InfPDChanges {
         ));
         changes = new ChangeInfo("InfPD-0.1.6", true, "");
         changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
 
         changes = new ChangeInfo("B", false, "");
         changes.hardlight(0x00FFFF);
