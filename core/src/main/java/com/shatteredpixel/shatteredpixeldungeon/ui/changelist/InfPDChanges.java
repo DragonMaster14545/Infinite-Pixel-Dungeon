@@ -53,6 +53,11 @@ public class InfPDChanges {
                         "_-_ Fixed visual bug in Emblems on changelog"
         ));
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ Added Potion of Debug\n" +
+                        "_-_ Added RoExperience in generation"
+        ));
+
         changes = new ChangeInfo("A", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
