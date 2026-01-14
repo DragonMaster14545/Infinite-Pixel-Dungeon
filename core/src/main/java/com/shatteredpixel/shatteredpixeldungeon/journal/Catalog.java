@@ -59,6 +59,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bombs.RegrowthBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.ShockBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.ShrapnelBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.WoollyBomb;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.CommonEmblem;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.EpicEmblem;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.RareEmblem;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.UncommonEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.fishingrods.AvaritiaFishingRod;
 import com.shatteredpixel.shatteredpixeldungeon.items.fishingrods.BasicFishingRod;
 import com.shatteredpixel.shatteredpixeldungeon.items.fishingrods.ChaosFishingRod;
@@ -194,7 +198,8 @@ public enum Catalog {
 	BREWS_ELIXIRS,
 	SPELLS,
 	LOOT_BAGS,
-	MISC_CONSUMABLES;
+	MISC_CONSUMABLES,
+    EMBLEMS;
 
 	//tracks whether an item has been collected while identified
 	private final LinkedHashMap<Class<?>, Boolean> seen = new LinkedHashMap<>();
@@ -322,6 +327,9 @@ public enum Catalog {
 				SealShard.class, BrokenStaff.class, CloakScrap.class, BowFragment.class, BrokenHilt.class,
 				CreativeGloves.class, Clayball.class, KeyToTruth.class);
 
+        EMBLEMS.addItems(
+                CommonEmblem.class, UncommonEmblem.class, RareEmblem.class, EpicEmblem.class
+        );
 	}
 
 	//old badges for pre-2.5
@@ -366,6 +374,7 @@ public enum Catalog {
 		consumableCatalogs.add(SPELLS);
 		consumableCatalogs.add(LOOT_BAGS);
 		consumableCatalogs.add(MISC_CONSUMABLES);
+        consumableCatalogs.add(EMBLEMS);
 	}
 
 	public static boolean isSeen(Class<?> cls){

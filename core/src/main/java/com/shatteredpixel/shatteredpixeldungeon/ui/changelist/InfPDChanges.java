@@ -59,7 +59,8 @@ public class InfPDChanges {
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Added Potion of Debug\n" +
-                        "_-_ Added RoExperience in generation"
+                        "_-_ Added RoExperience in generation\n" +
+                        "_-_ Added Emblems into the catalog"
         ));
 
         changes = new ChangeInfo("A", false, "");
