@@ -42,6 +42,17 @@ public class InfPDChanges {
         ));
         changes = new ChangeInfo("InfPD-0.1.6", true, "");
         changes.hardlight(0x00FFFF);
+
+        changes = new ChangeInfo("B", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
+                "_-_ Fixed NPE caused by level reset and resurrect + skeleton key\n"
+        ));
+
+        changes = new ChangeInfo("A", false, "");
+        changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
         changes.addButton( new ChangeButton(Icons.get(Icons.CHALLENGE_COLOR), "Trinket Changes",
