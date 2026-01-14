@@ -51,7 +51,8 @@ public class InfPDChanges {
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed NPE caused by level reset and resurrect + skeleton key\n" +
                         "_-_ Fixed visual bug in Emblems on changelog\n" +
-                        "_-_ Fixed a NTR (AGAIN) when using skeleton key on door with no charge"
+                        "_-_ Fixed a NTR (AGAIN) when using skeleton key on door with no charge\n" +
+                        "_-_ Fixed NTF on skeleton key's keywall"
         ));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
