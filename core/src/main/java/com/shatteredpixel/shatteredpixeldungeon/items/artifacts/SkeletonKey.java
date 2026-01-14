@@ -61,7 +61,7 @@ import com.watabou.utils.Random;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class SkeletonKey extends Artifact {
+public class    SkeletonKey extends Artifact {
 
     {
         image = ItemSpriteSheet.ARTIFACT_KEY;
@@ -591,6 +591,13 @@ public class SkeletonKey extends Artifact {
                     crystalKeysNeeded[Dungeon.depth]++;
                 }
             }
+        }
+
+        //used if a level was reset, e.g. via unblessed ankh vs. boss
+        public void clearDepth(){
+            ironKeysNeeded[Dungeon.depth] = -1;
+            goldenKeysNeeded[Dungeon.depth] = -1;
+            crystalKeysNeeded[Dungeon.depth] = -1;
         }
 
         public void processIronLockOpened(){
