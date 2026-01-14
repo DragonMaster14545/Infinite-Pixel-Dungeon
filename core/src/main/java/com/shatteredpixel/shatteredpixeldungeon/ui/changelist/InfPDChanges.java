@@ -55,7 +55,8 @@ public class InfPDChanges {
                         "_-_ Fixed visual bug in Emblems on changelog\n" +
                         "_-_ Fixed a NTR (AGAIN) when using skeleton key on door with no charge\n" +
                         "_-_ Fixed NTF on skeleton key's keywall\n" +
-                        "_-_ Fixed crash on opening a journal"
+                        "_-_ Fixed crash on opening a journal\n" +
+                        "_-_ Fixed skeleton key not recharging within higher level and high rarity"
         ));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
