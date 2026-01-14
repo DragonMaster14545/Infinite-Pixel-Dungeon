@@ -8,6 +8,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.PsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SkeletonKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.EquipmentBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.CommonEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
@@ -48,7 +49,8 @@ public class InfPDChanges {
         changeInfos.add(changes);
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
-                "_-_ Fixed NPE caused by level reset and resurrect + skeleton key\n"
+                "_-_ Fixed NPE caused by level reset and resurrect + skeleton key\n" +
+                        "_-_ Fixed visual bug in Emblems on changelog"
         ));
 
         changes = new ChangeInfo("A", false, "");
@@ -70,7 +72,7 @@ public class InfPDChanges {
         changes.addButton(new ChangeButton(new ItemQuantifier(), "Another gamble item, which adds two or remove one quantity of an item."));
         changes.addButton(new ChangeButton(new SkeletonKey(), "Skeleton Key has been added to the game! Have fun to this stuff.... I guess?"));
         changes.addButton(new ChangeButton(new FerretTuft(), "Ferret Tuft has been added to the game! Also, added the hit and miss icons from vanilla."));
-        changes.addButton(new ChangeButton(new Image(Assets.Sprites.CRYSTAL_WISP, 144, 0, 16, 16), "Emblems",
+        changes.addButton(new ChangeButton(new CommonEmblem(),
                 "Yes, a brand new item, the _Emblem_!\n\nThis is somewhat like the Raritizing spell but the rarity of the emblem is 100% guaranteed! You can only use emblems on items thrice.\n\nThey can also include some enchants or something powerful..."
         ));
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
