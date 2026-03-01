@@ -82,6 +82,9 @@ regToExo.put(ScrollOfIdentify.class, ScrollOfDivination.class);
 		
 		regToExo.put(ScrollOfTransmutation.class, ScrollOfMidas.class);
 		exoToReg.put(ScrollOfMidas.class, ScrollOfTransmutation.class);
+
+        regToExo.put(ScrollOfPower.class, ScrollOfInsurgence.class);
+        exoToReg.put(ScrollOfInsurgence.class, ScrollOfPower.class);
 	}
 	
 	@Override

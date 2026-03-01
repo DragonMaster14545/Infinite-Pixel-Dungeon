@@ -11,6 +11,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.CommonEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfPower;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.GalacticInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemQuantifier;
@@ -45,6 +46,17 @@ public class InfPDChanges {
         changes = new ChangeInfo("InfPD-0.1.6", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes = new ChangeInfo("C", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.SCROLL_ZYCHRON), "New Scrolls",
+                "Another scrolls that will help you in the early game, can you get it in the beginning?"
+        ));
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
+                "_-_ Fixed NPE caused by level reset and resurrect + skeleton key\n"
+        ));
 
         changes = new ChangeInfo("B", false, "");
         changes.hardlight(0x00FFFF);
