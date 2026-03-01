@@ -66,21 +66,21 @@ public class RingOfEnergy extends Ring {
         float multiplier = 1f;
         if (getBuffedBonus(target, Energy.class) > 0) multiplier = 1.1f;
         if (getBuffedBonus(target, Energy.class) > 1) multiplier += getBuffedBonus(target, Energy.class)*0.0125;
-        return Math.min(multiplier, 10f * (1 + Dungeon.cycle));
+        return Math.min(multiplier, 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
 	}
 
 	public static float artifactChargeMultiplier( Char target ){
         float multiplier = 1f;
         if (getBuffedBonus(target, Energy.class) > 0) multiplier = 1.1f;
         if (getBuffedBonus(target, Energy.class) > 1) multiplier += getBuffedBonus(target, Energy.class)*0.0125;
-        return Math.min(multiplier, 10f * (1 + Dungeon.cycle));
+        return Math.min(multiplier, 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
 	}
 
 	public static float armorChargeMultiplier( Char target ){
 		float multiplier = 1f;
 		if (getBuffedBonus(target, Energy.class) > 0) multiplier = 1.1f;
 		if (getBuffedBonus(target, Energy.class) > 1) multiplier += getBuffedBonus(target, Energy.class)*0.0125;
-		return Math.min(multiplier, 10f * (1 + Dungeon.cycle));
+		return Math.min(multiplier, 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
 	}
 
 	public class Energy extends RingBuff {

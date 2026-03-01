@@ -3,6 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
@@ -89,6 +90,21 @@ public class Upgrades implements Bundlable {
                 cost.put(ScrollOfMagicMapping.class, (long) Math.pow(3,level));
                 return cost;
             }
+        },
+
+        RING_CAPACITY(Integer.MAX_VALUE,"Ring Capacity","Extends the effect of the rings per level") {
+            @Override
+            public int extraLoots() {
+                return 1;
+            }
+
+            @Override
+            public LinkedHashMap<Class<? extends Item>, Long> cost(int level) {
+                LinkedHashMap<Class<? extends Item>, Long> cost = new LinkedHashMap<>();
+                cost.put(ScrollOfUpgrade.class, (long) Math.pow(2,level));
+                cost.put(ScrollOfRecharging.class, (long) Math.pow(3,level));
+                return cost;
+            }
         },;
 
         public final int maxLevel;
@@ -113,6 +129,9 @@ public class Upgrades implements Bundlable {
             return 0;
         }
         public int extraLoots() {
+            return 0;
+        }
+        public int ringExpansion() {
             return 0;
         }
     }
@@ -153,6 +172,14 @@ public class Upgrades implements Bundlable {
             loots += upgrade.data.extraLoots()*upgrade.level;
         }
         return loots;
+    }
+
+    public int ringExpansion() {
+        int expense = 0;
+        for (Upgrade upgrade : upgrades) {
+            expense += upgrade.data.ringExpansion()*upgrade.level;
+        }
+        return expense;
     }
 
     public class Upgrade {

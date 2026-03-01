@@ -63,7 +63,7 @@ public class RingOfFuror extends Ring {
         float multiplier = 1f;
         if (getBuffedBonus(target, Furor.class) > 0) multiplier = 1.1f;
         if (getBuffedBonus(target, Furor.class) > 1) multiplier += getBuffedBonus(target, Furor.class)*0.00225;
-        return Math.min(multiplier, 10f * (1 + Dungeon.cycle));
+        return Math.min(multiplier, 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
 	}
 
 	public class Furor extends RingBuff {

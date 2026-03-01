@@ -54,6 +54,9 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.SCROLL_ZYCHRON), "New Scrolls",
                 "Another scrolls that will help you in the early game, can you get it in the beginning?"
         ));
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ The max capacity of rings can now be upgraded\n"
+        ));
         changes.addButton(new ChangeButton(new SackOfHolding(),
                 "Sack of Holding's behavior has been changed:\n" +
                         "_-_ You must click _enable_ and drop the item you selected to put it into sack of holding"

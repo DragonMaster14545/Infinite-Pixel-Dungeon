@@ -67,7 +67,7 @@ public class RingOfAccuracy extends Ring {
         if (getBuffedBonus(target, Accuracy.class) > 0) multiplier = 1.2f;
         if (getBuffedBonus(target, Accuracy.class) > 1) multiplier += getBuffedBonus(target, Accuracy.class)*0.02;
 
-		return Math.min(multiplier, 10f * (1 + Dungeon.cycle));
+		return Math.min(multiplier, 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
 	}
 	
 	public class Accuracy extends RingBuff {
