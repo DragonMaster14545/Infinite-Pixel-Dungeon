@@ -96,11 +96,11 @@ public class Shopkeeper extends NPC {
 	
 	@Override
 	public void damage( long dmg, Object src ) {
-		flee();
-		if (src instanceof Viscosity.DeferedDamage || src instanceof Clayball){
-			Dungeon.level.drop(new KeyToTruth(), pos).sprite.drop();
-			Badges.validateKey();
-		}
+        if (src instanceof Viscosity.DeferedDamage || src instanceof Clayball){
+            Dungeon.level.drop(new KeyToTruth(), pos).sprite.drop();
+            Badges.validateKey();
+        }
+        flee();
 	}
 	
 	@Override
@@ -171,6 +171,9 @@ public class Shopkeeper extends NPC {
 	}
 	
 	public void flee() {
+        //expects to drop another key if the first one succeeds.
+        Dungeon.level.drop(new KeyToTruth(), pos).sprite.drop();
+        Badges.validateKey();
 		destroy();
 
 		Notes.remove( landmark() );
