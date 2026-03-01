@@ -38,6 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.EmblemSystem;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.Dart;
@@ -192,6 +193,8 @@ public class Item implements Bundlable {
 	public static final String AC_THROW		= "THROW";
 	public static final String AC_RENAME = "RENAME";
 	public static final String AC_AIM		= "AIM_MI";
+    public static final String AC_HOLD_WITH_SOH		= "HOLD_WITH_SOH";
+    public static final String AC_DHOLD_WITH_SOH		= "DHOLD_WITH_SOH";
 	
 	public String defaultAction;
 	public boolean usesTargeting;
@@ -225,6 +228,7 @@ public class Item implements Bundlable {
 	public boolean bones = false;
 
 	public boolean wereOofed = false;
+    public boolean canCollectWithSOH = false;
 	
 	public static final Comparator<Item> itemComparator = new Comparator<Item>() {
 		@Override
@@ -237,6 +241,10 @@ public class Item implements Bundlable {
 		ArrayList<String> actions = new ArrayList<>();
 		actions.add( AC_DROP );
 		actions.add( AC_THROW );
+        if (Dungeon.hero.belongings.contains(new SackOfHolding()) && !(this instanceof Bag) && !isEquipped(hero)) {
+            if (!canCollectWithSOH) actions.add( AC_HOLD_WITH_SOH );
+            else actions.add( AC_DHOLD_WITH_SOH );
+        }
 		return actions;
 	}
 
@@ -348,7 +356,17 @@ public class Item implements Bundlable {
 			if (hero.belongings.backpack.contains(this) || isEquipped(hero)) {
 				doAim(hero);
 			}
-		}
+		} else if (action.equals( AC_HOLD_WITH_SOH )) {
+            if (hero.belongings.backpack.contains(this) && !isEquipped(hero)) {
+                this.canCollectWithSOH = true;
+                doDrop(hero);
+            }
+        } else if (action.equals( AC_DHOLD_WITH_SOH )) {
+            if (hero.belongings.backpack.contains(this) && !isEquipped(hero)) {
+                this.canCollectWithSOH = false;
+                doDrop(hero);
+            }
+        }
 	}
 
 	private void rename(Item item) {
@@ -843,6 +861,7 @@ public class Item implements Bundlable {
 	private static final String WERE_OOFED      = "were_oofed";
 	private static final String RARITY           = "rarity";
     private static final String EMBLEM_USE           = "emblem_use";
+    private static final String CAN_CWSOF           = "can_cwsof";
 	
 	@Override
 	public void storeInBundle( Bundle bundle ) {
@@ -856,6 +875,7 @@ public class Item implements Bundlable {
 		}
 		bundle.put( KEPT_LOST, keptThoughLostInvent );
 		bundle.put( WERE_OOFED, wereOofed);
+        bundle.put( CAN_CWSOF, canCollectWithSOH);
         bundle.put( EMBLEM_USE, emblemUse);
 		bundle.put( RARITY, rarity.ordinal() );
 
@@ -871,6 +891,7 @@ public class Item implements Bundlable {
 		cursedKnown	= bundle.getBoolean( CURSED_KNOWN );
 		wereOofed = bundle.getBoolean(WERE_OOFED);
         emblemUse = bundle.getInt(EMBLEM_USE);
+        canCollectWithSOH = bundle.getBoolean(CAN_CWSOF);
 		
 		long level = bundle.getLong( LEVEL );
 		if (level > 0) {

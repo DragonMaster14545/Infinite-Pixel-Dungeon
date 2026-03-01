@@ -40,9 +40,7 @@ public class SackOfHolding extends Bag {
 
 	@Override
 	public boolean canHold( Item item ) {
-		return !(item instanceof MagicalHolster || item instanceof ScrollHolder || item instanceof SackOfHolding
-				|| item instanceof VelvetPouch || item instanceof Belongings.Backpack || item instanceof PotionBandolier
-				|| item instanceof Scroll || item instanceof Ring || item instanceof Wand);
+		return item.canCollectWithSOH;
 	}
 
 	@Override
