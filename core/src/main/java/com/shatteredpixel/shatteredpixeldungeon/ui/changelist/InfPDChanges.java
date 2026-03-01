@@ -60,7 +60,8 @@ public class InfPDChanges {
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed shopkeeper key doesn't drop\n" +
-                        "_-_ Fixed fireboost spell description\n"
+                        "_-_ Fixed fireboost spell description\n" +
+                        "_-_ Fixed NTF in galactic infusion\n"
         ));
 
         changes = new ChangeInfo("B", false, "");
