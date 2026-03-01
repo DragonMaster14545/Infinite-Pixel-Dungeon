@@ -59,7 +59,8 @@ public class InfPDChanges {
                         "_-_ You must click _enable_ and drop the item you selected to put it into sack of holding"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
-                "_-_ Fixed shopkeeper key doesn't drop.\n"
+                "_-_ Fixed shopkeeper key doesn't drop\n" +
+                        "_-_ Fixed fireboost spell description\n"
         ));
 
         changes = new ChangeInfo("B", false, "");
