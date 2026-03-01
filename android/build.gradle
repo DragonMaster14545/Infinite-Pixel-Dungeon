@@ -59,6 +59,7 @@ configurations { natives }
 dependencies {
     implementation project(':core')
 
+    implementation 'com.github.RohitSurwase.UCE-Handler:uce_handler:1.4'
     implementation "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
