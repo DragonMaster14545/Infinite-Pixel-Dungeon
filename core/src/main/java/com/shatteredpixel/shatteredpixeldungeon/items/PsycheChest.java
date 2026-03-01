@@ -34,6 +34,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SkeletonKey;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
+import com.shatteredpixel.shatteredpixeldungeon.levels.RegularLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.SpecialRoom;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -161,6 +163,7 @@ public class PsycheChest extends Item {
             //Dungeon.resetDamage *= 1.045d;
             Game.switchScene(InterlevelScene.class);
             Catalog.countUse(getClass());
+            SpecialRoom.initForFloor();
 
             //need to reset key replacement tracking as well
             if (Dungeon.hero.buff(SkeletonKey.KeyReplacementTracker.class) != null){
