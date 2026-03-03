@@ -353,20 +353,20 @@ public class ArenaLevel extends Level {
 							Buff.affect(mob, Stamina.class, power * 3);
 							mob.aggro(Dungeon.hero);
 						}
-						if (power >= 10){
+						if (power >= 50){
 							Buff.affect(mob, ElixirOfAquaticRejuvenation.AquaHealing.class)
 									.set(power*5);
 						}
-						if (power >= 13){
+						if (power >= 100){
 							Buff.affect(mob, Overload.class, 25f);
 						}
-						if (power >= 20){
+						if (power >= 150){
 							Buff.affect(mob, RageShield.class).set(power*4);
 						}
-						if (power >= 25){
+						if (power >= 200){
 							mob.HP = mob.HT *= 2;
 						}
-						if (power >= 30) {
+						if (power >= 250) {
 							ChampionEnemy.rollForChampion(mob);
 						}
 					}

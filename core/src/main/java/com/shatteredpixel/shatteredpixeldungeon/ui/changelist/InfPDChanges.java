@@ -52,7 +52,8 @@ public class InfPDChanges {
         changeInfos.add(changes);
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
-                "_-_ Massively decreased overload duration buff in arena\n"
+                "_-_ Massively decreased overload duration buff in arena\n" +
+                        "_-_ Delayed some overpowered stat mobs in arena\n"
         ));
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Shopkeeper key no longer drops if the previous badge isn't unlocked.\n" +
