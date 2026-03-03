@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
+import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.ShadowCaster;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -130,7 +131,7 @@ public class RageShield extends Buff {
                     left -= drain;
                     Buff.prolong(ch, Amok.class, 2f);
                     target.HP = Math.min(target.HP + Math.round(drain), target.HT);
-                    target.sprite.showStatus( CharSprite.POSITIVE, Integer.toString(Math.round(drain)) );
+                    target.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(Math.round(drain)), FloatingText.HEALING);
                     if (left <= 0){
                         detach();
                         break;
