@@ -112,6 +112,10 @@ public class Clayball extends MissileWeapon {
 			}
      if (target instanceof Shopkeeper) {
       Shopkeeper.flee(); //the shopkeeper automatically flees when clayball is thrown on them
+//expects to drop another key if the first one succeeds.
+        Dungeon.level.drop(new KeyToTruth(), pos).sprite.drop();
+        Badges.validateKey();
+
      }
 		}
 
