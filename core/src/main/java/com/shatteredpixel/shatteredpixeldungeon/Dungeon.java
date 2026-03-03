@@ -391,6 +391,9 @@ public class Dungeon {
     }
 
 	public static boolean isChallenged(Challenges challenge) {
+        if (challenges == null) {
+            return false;
+        }
 		int index = challenge.ordinal();
 		if (index >= challenges.length) return false;
 		return challenges[index];

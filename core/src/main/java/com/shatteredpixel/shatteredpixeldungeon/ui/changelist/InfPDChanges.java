@@ -62,7 +62,8 @@ public class InfPDChanges {
                         "_-_ Increased the chance of having an emblem in shoprooms\n"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
-                "_-_ Fixed shopkeeper key drops in an incorrect condition.\n"
+                "_-_ Fixed shopkeeper key drops in an incorrect condition.\n" +
+                        "_-_ Added a temporary fix for the bestiary crashes due to null challenges\n"
         ));
 
         changes = new ChangeInfo("C", false, "");
