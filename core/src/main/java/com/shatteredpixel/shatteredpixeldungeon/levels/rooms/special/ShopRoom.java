@@ -279,7 +279,7 @@ public class ShopRoom extends SpecialRoom {
 		if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_5)) itemsToSpawn.add(new Clayball());
 		itemsToSpawn.add( new Alchemize().quantity(Random.IntRange(2, 3)));
 
-        if (Random.Float() < 0.15f) {
+        if (Random.Float() < 0.25f) {
             switch (Dungeon.depth) {
                 case 6:
                     itemsToSpawn.add(new CommonEmblem().quantity(Random.IntRange(2, 4)));

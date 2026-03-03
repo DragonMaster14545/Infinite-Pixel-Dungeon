@@ -58,7 +58,8 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Shopkeeper key no longer drops if the previous badge isn't unlocked.\n" +
                         "_-_ Improved Rage Shield's floating text.\n" +
-                        "_-_ All bags' capacity is increased to 61\n"
+                        "_-_ All bags' capacity is increased to 61\n" +
+                        "_-_ Increased the chance of having an emblem in shoprooms\n"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed shopkeeper key drops in an incorrect condition.\n"
