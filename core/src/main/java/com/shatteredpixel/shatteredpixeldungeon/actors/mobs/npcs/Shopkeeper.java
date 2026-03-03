@@ -171,11 +171,6 @@ public class Shopkeeper extends NPC {
 	}
 	
 	public void flee() {
-        //expects to drop another key if the first one succeeds.
-        Dungeon.level.drop(new KeyToTruth(), pos).sprite.drop();
-        Badges.validateKey();
-		destroy();
-
 		Notes.remove( landmark() );
 		GLog.newLine();
 		GLog.n(Messages.get(this, "flee"));
