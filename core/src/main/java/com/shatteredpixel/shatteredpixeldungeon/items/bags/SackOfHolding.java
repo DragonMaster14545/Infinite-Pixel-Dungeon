@@ -49,7 +49,7 @@ public class SackOfHolding extends Bag {
 	}
 
 	public int capacity(){
-		return 57;
+		return 61;
 	}
 
 	@Override
