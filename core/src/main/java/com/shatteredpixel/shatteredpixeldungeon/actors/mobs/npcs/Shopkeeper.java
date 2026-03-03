@@ -105,6 +105,16 @@ public class Shopkeeper extends NPC {
 	
 	@Override
 	public boolean add( Buff buff ) {
+        if (buff instanceof Viscosity.DeferedDamage){
+            if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_4)) {
+                Dungeon.level.drop(new KeyToTruth(), pos).sprite.drop();
+                Badges.validateKey();
+                GLog.w("You are now freed, here's the key of truth.");
+            } else {
+                GLog.w("You are not worth it to take this key right now. Try again.");
+            }
+            flee();
+        }
 		if (buff.type == Buff.buffType.NEGATIVE){
 			processHarm();
 		}
@@ -171,7 +181,7 @@ public class Shopkeeper extends NPC {
 	}
 	
 	public void flee() {
-destroy();
+        destroy();
 		Notes.remove( landmark() );
 		GLog.newLine();
 		GLog.n(Messages.get(this, "flee"));

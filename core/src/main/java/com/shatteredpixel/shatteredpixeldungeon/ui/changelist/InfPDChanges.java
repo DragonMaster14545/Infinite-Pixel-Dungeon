@@ -47,6 +47,17 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes = new ChangeInfo("D", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ Shopkeeper key no longer drops if the previous badge isn't unlocked.\n"
+        ));
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
+                "_-_ Fixed shopkeeper key drops in an incorrect condition.\n"
+        ));
+
         changes = new ChangeInfo("C", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
