@@ -110,6 +110,9 @@ public class Clayball extends MissileWeapon {
 				Dungeon.fail(getClass());
 				GLog.n(Messages.get(this, "ondeath"));
 			}
+     if (target instanceof Shopkeeper) {
+      Shopkeeper.flee(); //the shopkeeper automatically flees when clayball is thrown on them
+     }
 		}
 
 		rangedHit( null, cell );
