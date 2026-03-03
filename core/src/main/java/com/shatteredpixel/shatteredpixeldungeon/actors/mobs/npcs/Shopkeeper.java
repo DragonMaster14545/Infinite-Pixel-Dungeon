@@ -171,6 +171,7 @@ public class Shopkeeper extends NPC {
 	}
 	
 	public void flee() {
+destroy();
 		Notes.remove( landmark() );
 		GLog.newLine();
 		GLog.n(Messages.get(this, "flee"));
