@@ -51,6 +51,9 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Massively decreased overload duration buff in arena\n"
+        ));
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Shopkeeper key no longer drops if the previous badge isn't unlocked.\n" +
                         "_-_ Improved Rage Shield's floating text.\n" +

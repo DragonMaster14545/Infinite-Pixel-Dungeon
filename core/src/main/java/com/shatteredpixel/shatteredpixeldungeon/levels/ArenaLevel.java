@@ -358,7 +358,7 @@ public class ArenaLevel extends Level {
 									.set(power*5);
 						}
 						if (power >= 13){
-							Buff.affect(mob, Overload.class, 200f);
+							Buff.affect(mob, Overload.class, 25f);
 						}
 						if (power >= 20){
 							Buff.affect(mob, RageShield.class).set(power*4);
