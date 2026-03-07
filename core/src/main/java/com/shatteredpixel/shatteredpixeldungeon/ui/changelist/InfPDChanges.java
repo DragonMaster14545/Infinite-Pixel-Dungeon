@@ -46,6 +46,13 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Upcoming: v0.1.7",
                 "In the next update, we will add some legacy items in previous mod and make it balanced soon... (including some fixes and other changes)\n"
         ));
+        changes = new ChangeInfo("InfPD-0.1.7", true, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ Implemented tubes, balanced form and will now appear in the dungeon\n"
+        ));
+
         changes = new ChangeInfo("InfPD-0.1.6", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);

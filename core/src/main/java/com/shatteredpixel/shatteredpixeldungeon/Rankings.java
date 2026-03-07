@@ -36,6 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.CorpseDust;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.test_tubes.Tubes;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -293,6 +294,7 @@ public enum Rankings {
 		if (belongings.miscs != null)        belongings.backpack.items.addAll(belongings.miscs);
 		if (belongings.rings != null)        belongings.backpack.items.addAll(belongings.rings);
 		Ring.saveSelectively(handler, belongings.backpack.items);
+        Tubes.saveSelectively(handler, belongings.backpack.items);
 		rec.gameData.put( HANDLERS, handler);
 
 		//restore items now that we're done saving

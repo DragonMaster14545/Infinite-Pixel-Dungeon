@@ -65,6 +65,7 @@ public class ItemSpriteSheet {
 	public static final int SPELL_HOLDER    = PLACEHOLDERS+15;
 	public static final int MOB_HOLDER      = PLACEHOLDERS+16;
 	public static final int DOCUMENT_HOLDER = PLACEHOLDERS+17;
+    public static final int TEST_TUBE_HOLDER = PLACEHOLDERS+20;
 	static{
 		assignItemRect(SOMETHING,       8,  13);
 		assignItemRect(WEAPON_HOLDER,   14, 14);
@@ -84,6 +85,7 @@ public class ItemSpriteSheet {
 		assignItemRect(SPELL_HOLDER,    8,  16);
 		assignItemRect(MOB_HOLDER,      15, 14);
 		assignItemRect(DOCUMENT_HOLDER, 10, 11);
+        assignItemRect(TEST_TUBE_HOLDER, 4, 13);
 	}
 
 	private static final int UNCOLLECTIBLE  =                               xy(3, 2);   //14 slots
@@ -916,6 +918,20 @@ public class ItemSpriteSheet {
         assignItemRect(ITEM_QUANTIFIER,     10, 15);
         assignItemRect(GALACTIC_INFUSION,    	 8, 16);
 	}
+
+    private static final int TEST_TUBES =								xy(1, 34);
+    public static final int RED_TEST_TUBE		= TEST_TUBES+0;
+    public static final int ORANGE_TEST_TUBE	= TEST_TUBES+1;
+    public static final int YELLOW_TEST_TUBE	= TEST_TUBES+2;
+    public static final int GREEN_TEST_TUBE	= TEST_TUBES+3;
+    public static final int CYAN_TEST_TUBE	= TEST_TUBES+4;
+    public static final int BLUE_TEST_TUBE	= TEST_TUBES+5;
+    public static final int VIOLET_TEST_TUBE	= TEST_TUBES+6;
+    public static final int PINK_TEST_TUBE	= TEST_TUBES+7;
+    static{
+        for (int i = TEST_TUBES; i < TEST_TUBES+16; i++)
+            assignItemRect(i, 6, 15);
+    }
 
 	//for smaller 8x8 icons that often accompany an item sprite
 	public static class Icons {

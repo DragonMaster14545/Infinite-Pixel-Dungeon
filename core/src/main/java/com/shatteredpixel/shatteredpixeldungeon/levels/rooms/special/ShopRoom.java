@@ -276,6 +276,7 @@ public class ShopRoom extends SpecialRoom {
 		itemsToSpawn.add(new GambleBag());
         itemsToSpawn.add(new BiggerGambleBag());
 		if (Dungeon.depth > 6) itemsToSpawn.add(new QualityBag());
+        if (Random.Int(5) == 0) itemsToSpawn.add(Generator.random(Generator.Category.TUBES).quantity(Random.IntRange(2, 5)));
 		if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_5)) itemsToSpawn.add(new Clayball());
 		itemsToSpawn.add( new Alchemize().quantity(Random.IntRange(2, 3)));
 

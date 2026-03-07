@@ -57,6 +57,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.BeaconOfReturning;
+import com.shatteredpixel.shatteredpixeldungeon.items.test_tubes.Tubes;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfRegrowth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfWarding;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
@@ -292,6 +293,7 @@ public class Dungeon {
 			Scroll.initLabels();
 			Potion.initColors();
 			Ring.initGems();
+            Tubes.initColors();
 
 			SpecialRoom.initForRun();
 			SecretRoom.initForRun();
@@ -853,6 +855,7 @@ public class Dungeon {
 			Scroll.save( bundle );
 			Potion.save( bundle );
 			Ring.save( bundle );
+            Tubes.save( bundle );
 
             //RingOfWealth.store(bundle);
 
@@ -934,6 +937,7 @@ public class Dungeon {
 		Scroll.restore( bundle );
 		Potion.restore( bundle );
 		Ring.restore( bundle );
+        Tubes.restore( bundle );
 
 		RingOfWealth.restore(bundle);
 

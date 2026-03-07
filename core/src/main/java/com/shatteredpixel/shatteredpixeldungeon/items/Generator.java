@@ -102,6 +102,14 @@ import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfFear;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfFlock;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfIntuition;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfShock;
+import com.shatteredpixel.shatteredpixeldungeon.items.test_tubes.TubeOfExperience;
+import com.shatteredpixel.shatteredpixeldungeon.items.test_tubes.TubeOfGodspeed;
+import com.shatteredpixel.shatteredpixeldungeon.items.test_tubes.TubeOfPrismaticSensation;
+import com.shatteredpixel.shatteredpixeldungeon.items.test_tubes.TubeOfPureImmunity;
+import com.shatteredpixel.shatteredpixeldungeon.items.test_tubes.TubeOfStrength;
+import com.shatteredpixel.shatteredpixeldungeon.items.test_tubes.TubeOfTranscendingTime;
+import com.shatteredpixel.shatteredpixeldungeon.items.test_tubes.TubeOfUltimatePower;
+import com.shatteredpixel.shatteredpixeldungeon.items.test_tubes.Tubes;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ChaoticCenser;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.DimensionalSundial;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ExoticCrystals;
@@ -236,6 +244,7 @@ public class Generator {
 		FOOD	( 5, 0, Food.class ),
 		
 		POTION	( 8, 8, Potion.class ),
+        TUBES (1, 0, Tubes.class),
 		SEED	( 1, 1, Plant.Seed.class ),
 		
 		SCROLL	( 8, 8, Scroll.class ),
@@ -386,6 +395,18 @@ public class Generator {
 			};
 			STONE.defaultProbs = new float[]{ 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0 };
 			STONE.probs = STONE.defaultProbs.clone();
+
+            TUBES.classes = new Class<?>[] {
+                    TubeOfExperience.class,
+                    TubeOfPureImmunity.class,
+                    TubeOfStrength.class,
+                    TubeOfUltimatePower.class,
+                    TubeOfPrismaticSensation.class,
+                    TubeOfTranscendingTime.class,
+                    TubeOfGodspeed.class
+            };
+            TUBES.defaultProbs = new float[]{ 1, 1, 1, 1, 1, 1, 1};
+            TUBES.probs = TUBES.defaultProbs.clone();
 
 			WAND.classes = new Class<?>[]{
 					WandOfMagicMissile.class,
