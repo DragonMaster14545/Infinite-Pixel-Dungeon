@@ -16,6 +16,11 @@ public class SummonerEmblem extends EmblemSystem {
     }
 
     @Override
+    protected boolean usableOnItem(Item item) {
+        return item instanceof Weapon && item.emblemUse < 3;
+    }
+
+    @Override
     protected void onItemSelected(Item item) {
         if (item instanceof Weapon) {
             ((Weapon) item).enchant(new Summoner());
