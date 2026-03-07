@@ -78,7 +78,6 @@ public abstract class EmblemSystem extends Item {
         if (action.equals( AC_APPLY )) {
 
             onCast( hero );
-            Catalog.countUse(getClass());
 
         }
     }
