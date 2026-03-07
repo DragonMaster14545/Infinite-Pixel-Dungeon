@@ -50,7 +50,8 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ Implemented tubes, balanced form and will now appear in the dungeon\n"
+                "_-_ Implemented tubes, balanced form and will now appear in the dungeon\n" +
+                        "_-_ Added new three emblems with emblem-exclusive enchants\n"
         ));
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.WEAPON_HOLDER), "Enchantments",
                 "Added new three emblem-exclusive enchantments, all of them was got in some special weapon abilities"

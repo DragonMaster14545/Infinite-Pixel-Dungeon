@@ -40,7 +40,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.CommonEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.EpicEmblem;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.LaserisedEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.RareEmblem;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.SummonerEmblem;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.TrihitEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.UncommonEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.fishingrods.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.SmallRation;
@@ -293,6 +296,20 @@ public class ShopRoom extends SpecialRoom {
                     break;
                 case 20: case 21:
                     itemsToSpawn.add(new EpicEmblem().quantity(Random.IntRange(2, 4)));
+                    break;
+            }
+        }
+
+        if (Random.Float() < 0.15f) {
+            switch (Random.Int(3)){
+                case 0:
+                    itemsToSpawn.add( new LaserisedEmblem() );
+                    break;
+                case 1:
+                    itemsToSpawn.add( new SummonerEmblem() );
+                    break;
+                case 2:
+                    itemsToSpawn.add( new TrihitEmblem() );
                     break;
             }
         }

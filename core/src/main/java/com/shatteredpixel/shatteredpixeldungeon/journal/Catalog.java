@@ -61,7 +61,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bombs.ShrapnelBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.WoollyBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.CommonEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.EpicEmblem;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.LaserisedEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.RareEmblem;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.SummonerEmblem;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.TrihitEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.UncommonEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.fishingrods.AvaritiaFishingRod;
 import com.shatteredpixel.shatteredpixeldungeon.items.fishingrods.BasicFishingRod;
@@ -329,7 +332,8 @@ public enum Catalog {
 				CreativeGloves.class, Clayball.class, KeyToTruth.class);
 
         EMBLEMS.addItems(
-                CommonEmblem.class, UncommonEmblem.class, RareEmblem.class, EpicEmblem.class
+                CommonEmblem.class, UncommonEmblem.class, RareEmblem.class, EpicEmblem.class,
+                LaserisedEmblem.class, SummonerEmblem.class, TrihitEmblem.class
         );
 	}
 
