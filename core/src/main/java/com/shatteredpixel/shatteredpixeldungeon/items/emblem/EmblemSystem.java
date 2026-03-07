@@ -151,7 +151,7 @@ public abstract class EmblemSystem extends Item {
                     Sample.INSTANCE.play(Assets.Sounds.READ);
 
                     Catalog.countUse(curItem.getClass());
-                    GLog.p( Messages.get(EmblemSystem.class,"raritize", 3 - item.emblemUse) );
+                    GLog.p( Messages.get(EmblemSystem.class,"used", 3 - item.emblemUse) );
                 }
 
             }
