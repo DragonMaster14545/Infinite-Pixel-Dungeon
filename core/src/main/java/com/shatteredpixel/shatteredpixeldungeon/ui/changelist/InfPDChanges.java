@@ -16,6 +16,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.GalacticInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemQuantifier;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.FerretTuft;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -53,6 +54,10 @@ public class InfPDChanges {
                 "_-_ Implemented tubes, balanced form and will now appear in the dungeon\n" +
                         "_-_ Added new three emblems with emblem-exclusive enchants\n" +
                         "_-_ Reduced bag size to 60, from 61 (overlaps)"
+        ));
+        changes.addButton( new ChangeButton(new WandOfTeleportation(),
+                "Teleportation makes you......? Crazy! Right?\n\n" +
+                        "Wand of teleportation has been added to the game!"
         ));
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.WEAPON_HOLDER), "Enchantments",
                 "Added new three emblem-exclusive enchantments, all of them was got in some special weapon abilities"
