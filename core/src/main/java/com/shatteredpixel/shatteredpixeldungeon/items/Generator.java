@@ -97,6 +97,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfBlink;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfClairvoyance;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfDeepSleep;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfDisarming;
+import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfEmpowerment;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfEnchantment;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfFear;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfFlock;
@@ -391,9 +392,10 @@ public class Generator {
 					StoneOfAggression.class,
 					StoneOfBlast.class,
 					StoneOfFear.class,
-					StoneOfAugmentation.class  //1 is sold in each shop
+					StoneOfAugmentation.class, //1 is sold in each shop
+                    StoneOfEmpowerment.class   //too op if common
 			};
-			STONE.defaultProbs = new float[]{ 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0 };
+			STONE.defaultProbs = new float[]{ 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 1 };
 			STONE.probs = STONE.defaultProbs.clone();
 
             TUBES.classes = new Class<?>[] {

@@ -57,6 +57,9 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.WEAPON_HOLDER), "Enchantments",
                 "Added new three emblem-exclusive enchantments, all of them was got in some special weapon abilities"
         ));
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.STONE_EMPOWER), "Stone of Empowerment",
+                "Another runestone that helps you in the early game, I guess? It's rare to appear in the game."
+        ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed emblems doubling the count use in bestiary.\n"
         ));
