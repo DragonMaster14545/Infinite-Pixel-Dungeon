@@ -255,6 +255,7 @@ public enum Catalog {
 		ENCHANTMENTS.addItems(Weapon.Enchantment.common);
 		ENCHANTMENTS.addItems(Weapon.Enchantment.uncommon);
 		ENCHANTMENTS.addItems(Weapon.Enchantment.rare);
+        ENCHANTMENTS.addItems(Weapon.Enchantment.emblem_exclusive);
 		ENCHANTMENTS.addItems(Weapon.Enchantment.curses);
 
 		GLYPHS.addItems(Armor.Glyph.common);

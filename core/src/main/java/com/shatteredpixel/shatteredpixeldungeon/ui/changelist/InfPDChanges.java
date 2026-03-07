@@ -52,6 +52,9 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Implemented tubes, balanced form and will now appear in the dungeon\n"
         ));
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.WEAPON_HOLDER), "Enchantments",
+                "Added new three emblem-exclusive enchantments, all of them was got in some special weapon abilities"
+        ));
 
         changes = new ChangeInfo("InfPD-0.1.6", true, "");
         changes.hardlight(0x00FFFF);

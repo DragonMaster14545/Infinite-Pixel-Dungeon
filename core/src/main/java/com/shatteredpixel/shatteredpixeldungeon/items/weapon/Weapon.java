@@ -60,9 +60,12 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Elasti
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Galactic;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Grim;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Kinetic;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Laserised;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Lucky;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Projecting;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Shocking;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Summoner;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Trihit;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Unstable;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Vampiric;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.RunicBlade;
@@ -457,10 +460,14 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 				Corrupting.class, Grim.class, Vampiric.class,
 				Galactic.class};
 
+        public static final Class<?>[] emblem_exclusive = new Class<?>[]{
+                Trihit.class, Summoner.class, Laserised.class};
+
 		public static final float[] typeChances = new float[]{
 				50, //12.5% each
 				40, //6.67% each
-				10  //3.33% each
+				10, //3.33% each
+                0
 		};
 
 		public static final Class<?>[] curses = new Class<?>[]{
