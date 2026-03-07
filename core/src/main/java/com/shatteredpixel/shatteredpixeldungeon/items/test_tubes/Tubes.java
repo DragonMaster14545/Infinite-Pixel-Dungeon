@@ -137,6 +137,10 @@ public class Tubes extends Item {
 		handler = new ItemStatusHandler<>( (Class<? extends Tubes>[])Generator.Category.TUBES.classes, colors );
 	}
 
+    public static void clearColors() {
+        handler = null;
+    }
+
 	public static void save( Bundle bundle ) {
 		handler.save( bundle );
 	}

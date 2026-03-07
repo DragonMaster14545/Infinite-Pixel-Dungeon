@@ -190,6 +190,7 @@ public enum Catalog {
 
 	//CONSUMABLES
 	POTIONS,
+    TUBES,
 	SEEDS,
 	SCROLLS,
 	STONES,
@@ -284,6 +285,8 @@ public enum Catalog {
 
 
 		POTIONS.addItems(Generator.Category.POTION.classes);
+
+        TUBES.addItems(Generator.Category.TUBES.classes);
 
 		SCROLLS.addItems(Generator.Category.SCROLL.classes);
 
@@ -380,6 +383,7 @@ public enum Catalog {
 		consumableCatalogs.add(LOOT_BAGS);
 		consumableCatalogs.add(MISC_CONSUMABLES);
         consumableCatalogs.add(EMBLEMS);
+        consumableCatalogs.add(TUBES);
 	}
 
 	public static boolean isSeen(Class<?> cls){
