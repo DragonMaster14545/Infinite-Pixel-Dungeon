@@ -102,7 +102,7 @@ public class Summoner extends Weapon.Enchantment {
 
         @Override
         public String description() {
-            return Messages.get(this, weapon.trueName());
+            return Messages.get(this, "desc", weapon.trueName());
         }
 
         @Override
