@@ -94,7 +94,7 @@ public class Upgrades implements Bundlable {
 
         RING_CAPACITY(Integer.MAX_VALUE,"Ring Capacity","Extends the effect of the rings per level") {
             @Override
-            public int extraLoots() {
+            public int ringExpansion() {
                 return 1;
             }
 
