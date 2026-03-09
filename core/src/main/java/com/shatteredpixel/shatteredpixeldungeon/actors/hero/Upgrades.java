@@ -46,7 +46,7 @@ public class Upgrades implements Bundlable {
             @Override
             public LinkedHashMap<Class<? extends Item>, Long> cost(int level) {
                 LinkedHashMap<Class<? extends Item>, Long> cost = new LinkedHashMap<>();
-                cost.put(ScrollOfUpgrade.class, (long) Math.pow(20,level));
+                cost.put(ScrollOfUpgrade.class, (long) Math.pow(10,level));
                 return cost;
             }
         },
@@ -59,7 +59,7 @@ public class Upgrades implements Bundlable {
             @Override
             public LinkedHashMap<Class<? extends Item>, Long> cost(int level) {
                 LinkedHashMap<Class<? extends Item>, Long> cost = new LinkedHashMap<>();
-                cost.put(ScrollOfUpgrade.class, (long) Math.pow(20,level));
+                cost.put(ScrollOfUpgrade.class, (long) Math.pow(10,level));
                 return cost;
             }
         },
@@ -72,7 +72,7 @@ public class Upgrades implements Bundlable {
             @Override
             public LinkedHashMap<Class<? extends Item>, Long> cost(int level) {
                 LinkedHashMap<Class<? extends Item>, Long> cost = new LinkedHashMap<>();
-                cost.put(ScrollOfUpgrade.class, (long) Math.pow(20,level));
+                cost.put(ScrollOfUpgrade.class, (long) Math.pow(10,level));
                 return cost;
             }
         },
