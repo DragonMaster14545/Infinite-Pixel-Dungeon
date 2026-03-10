@@ -49,6 +49,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotio
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Alchemize;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.Barricade;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.BeaconOfReturning;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.CurseInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Extractor;
@@ -232,7 +233,8 @@ public abstract class Recipe {
 			new Extractor.Recipe(),
 			new Gambler.Recipe(),
             new ItemQuantifier.Recipe(),
-            new GalacticInfusion.Recipe()
+            new GalacticInfusion.Recipe(),
+            new Barricade.Recipe()
 	};
 	
 	private static Recipe[] threeIngredientRecipes = new Recipe[]{

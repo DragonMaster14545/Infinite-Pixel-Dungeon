@@ -913,12 +913,14 @@ public class ItemSpriteSheet {
     public static final int EMBLEM  = SPELLS_NEW_ROW+2;
     public static final int ITEM_QUANTIFIER  = SPELLS_NEW_ROW+3;
     public static final int GALACTIC_INFUSION  = SPELLS_NEW_ROW+4;
+    public static final int BARRICADE  = SPELLS_NEW_ROW+5;
 	static {
 		assignItemRect(EXTRACTOR,     10, 15);
 		assignItemRect(GAMBLER,     10, 15);
         assignItemRect(EMBLEM,     12, 11);
         assignItemRect(ITEM_QUANTIFIER,     10, 15);
         assignItemRect(GALACTIC_INFUSION,    	 8, 16);
+        assignItemRect(BARRICADE,    	 8, 16);
 	}
 
     private static final int TEST_TUBES =								xy(1, 34);

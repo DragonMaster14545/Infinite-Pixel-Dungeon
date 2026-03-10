@@ -58,6 +58,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotio
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Alchemize;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.Barricade;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.BeaconOfReturning;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.CurseInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Extractor;
@@ -412,6 +413,7 @@ public class QuickRecipe extends Component {
 				result.add(new QuickRecipe(new Raritize.Recipe()));
 				result.add(new QuickRecipe(new Gambler.Recipe()));
                 result.add(new QuickRecipe(new ItemQuantifier.Recipe()));
+                result.add(new QuickRecipe(new Barricade.Recipe()));
 				return result;
 		}
 	}
