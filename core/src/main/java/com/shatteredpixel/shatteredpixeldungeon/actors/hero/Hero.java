@@ -266,13 +266,13 @@ public class Hero extends Char {
 	public ArrayList<Mob> mindVisionEnemies = new ArrayList<>();
 
 	public float getStandardRoomMultiplier() {
-		return 3f;
+		return 2f;
 	}
 	public float getSpecialRoomMultiplier() {
-		return getStandardRoomMultiplier()*0.25f;
+		return getStandardRoomMultiplier()*0.5f;
 	}
 	public float getSecretRoomMultiplier() {
-		return getStandardRoomMultiplier()*0.25f;
+		return getStandardRoomMultiplier()*0.5f;
 	}
 	public float getRoomMinSizeMultiplier() {
 		return 0.65f;

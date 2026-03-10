@@ -59,7 +59,8 @@ public class InfPDChanges {
                 "_-_ Fixed inconsistencies in tubes' descriptions\n" +
                         "_-_ Made Elixir of Might rarer\n" +
                         "_-_ Emblems can now be held by Velvet Pouch\n" +
-                        "_-_ Tubes can now be held by Potion Bandolier"
+                        "_-_ Tubes can now be held by Potion Bandolier\n" +
+                        "_-_ Reduced rooms by ~33%"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed Ring Capacity upgrade doesn't work.\n" +
