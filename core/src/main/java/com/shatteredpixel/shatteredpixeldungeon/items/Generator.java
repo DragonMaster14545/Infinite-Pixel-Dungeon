@@ -715,7 +715,7 @@ public class Generator {
 	}
 
 	public static Item random( Category cat ) {
-		if (Random.Int(310) == 0 &&
+		if (Random.Int(520) == 0 &&
 			cat != Category.WAND &&
 			cat != Category.WEAPON &&
 			cat != Category.TRINKET &&

@@ -56,7 +56,8 @@ public class InfPDChanges {
         changeInfos.add(changes);
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ Fixed inconsistencies in tubes' descriptions\n"
+                "_-_ Fixed inconsistencies in tubes' descriptions\n" +
+                        "_-_ Made Elixir of Might rarer"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed Ring Capacity upgrade doesn't work.\n" +
