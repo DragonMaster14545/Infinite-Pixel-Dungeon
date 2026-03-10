@@ -47,7 +47,7 @@ import com.watabou.utils.PathFinder;
 public class Barricade extends TargetedSpell {
 
 	{
-		image = ItemSpriteSheet.TELE_GRAB;
+		image = ItemSpriteSheet.BARRICADE;
 
 		talentChance = 1/(float) Recipe.OUT_QUANTITY;
 	}
