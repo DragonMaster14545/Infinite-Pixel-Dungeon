@@ -45,6 +45,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfMid
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.UnstableSpell;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfEnchantment;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.AlchemyBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.IdealBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ExoticCrystals;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -124,6 +125,9 @@ public class FishingHook extends Ring {
 			case 4:
 				new Flare(6, 32).color(0xFFAA00, true).show(vis, 4f);
 				break;
+            case 5:
+                new Flare(6, 32).color(0xFFFFFF, true).show(vis, 5f);
+                break;
 		}
 		latestDropTier = 0;
 	}
@@ -139,10 +143,13 @@ public class FishingHook extends Ring {
 			latestDropTier = 2;
 			return genMidValueConsumable();
 			//10% chance + 2% per level. Starting from +15: 40%+2%*(lvl-15)
-		} else {
+		} else if (roll > 0.9f && roll < 0.9999f) {
 			latestDropTier = 3;
 			return genHighValueConsumable();
-		}
+		} else {
+            latestDropTier = 4;
+            return genVeryHighValueConsumable();
+        }
 	}
 
 	private static Item genLowValueConsumable(){
@@ -206,6 +213,20 @@ public class FishingHook extends Ring {
 				return new AlchemyBag();
 		}
 	}
+
+    private static Item genVeryHighValueConsumable(){
+        switch (Random.Int(5)){
+            case 0: default:
+                Item i = genHighValueConsumable();
+                if (i instanceof Bomb){
+                    return new Bomb.DoubleBomb();
+                } else {
+                    return i.quantity(i.quantity()*2);
+                }
+            case 1:
+                return new IdealBag();
+        }
+    }
 
 	private static Item genEquipmentDrop(long level ){
 		Item result;
