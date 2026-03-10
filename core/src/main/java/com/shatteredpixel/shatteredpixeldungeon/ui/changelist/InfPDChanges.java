@@ -50,6 +50,19 @@ public class InfPDChanges {
         changes = new ChangeInfo("InfPD-0.1.7", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes = new ChangeInfo("B", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ Fixed inconsistencies in tubes' descriptions\n"
+        ));
+
+        changes = new ChangeInfo("A", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Implemented tubes, balanced form and will now appear in the dungeon\n" +
                         "_-_ Added new three emblems with emblem-exclusive enchants\n" +
