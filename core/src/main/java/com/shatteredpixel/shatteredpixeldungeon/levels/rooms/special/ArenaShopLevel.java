@@ -24,8 +24,13 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.TicketToArena;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.LaserisedEmblem;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.SummonerEmblem;
+import com.shatteredpixel.shatteredpixeldungeon.items.emblem.TrihitEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.BiggerGambleBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.GambleBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.QualityBag;
@@ -65,9 +70,13 @@ public class ArenaShopLevel extends ShopRoom{
 
         if (itemsToSpawn == null){
             itemsToSpawn = new ArrayList<>();
-            for (int i = 0; i < 6; i++) itemsToSpawn.add(new GambleBag());
-            for (int i = 0; i < 6; i++) itemsToSpawn.add(new BiggerGambleBag());
-            for (int i = 0; i < 6; i++) itemsToSpawn.add(new QualityBag());
+            for (int i = 0; i < 3; i++) itemsToSpawn.add(new GambleBag());
+            for (int i = 0; i < 3; i++) itemsToSpawn.add(new BiggerGambleBag());
+            for (int i = 0; i < 3; i++) itemsToSpawn.add(new QualityBag());
+            itemsToSpawn.add(new Ankh());
+            itemsToSpawn.add(new LaserisedEmblem());
+            itemsToSpawn.add(new SummonerEmblem());
+            itemsToSpawn.add(new TrihitEmblem());
         }
 
         Point itemPlacement = new Point(entrance());
