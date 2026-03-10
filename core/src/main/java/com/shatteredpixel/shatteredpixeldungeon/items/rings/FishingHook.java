@@ -71,7 +71,7 @@ public class FishingHook extends Ring {
 		//reset (if needed), decrement, and store counts
 		if (triesToDrop == Float.MIN_VALUE) {
 			triesToDrop = Dungeon.NormalIntRange(7, 18);
-			dropsToRare = Dungeon.NormalIntRange(5, 9);
+			dropsToRare = Dungeon.NormalIntRange(40, 100);
 		}
 
 		//now handle reward logic
@@ -87,7 +87,7 @@ public class FishingHook extends Ring {
 					i = genEquipmentDrop(level - 1);
 				} while (Challenges.isItemBlocked(i));
 				drops.add(i);
-				dropsToRare = Random.NormalIntRange(3, 8);
+                dropsToRare = Dungeon.NormalIntRange(40, 100);
 			} else {
 				Item i;
 				do {

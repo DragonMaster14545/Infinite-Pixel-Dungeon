@@ -74,7 +74,8 @@ public class InfPDChanges {
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Pharmacophobia will give you ~25% turns of your health, from ~40%\n" +
-                        "_-_ Fishing Hooks now drop Refined Bags at very low chance"
+                        "_-_ Fishing Hooks now drop Refined Bags at very low chance\n" +
+                        "_-_ Fishing Hooks rare drops has been decreased"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed Ring Capacity upgrade doesn't work.\n" +
