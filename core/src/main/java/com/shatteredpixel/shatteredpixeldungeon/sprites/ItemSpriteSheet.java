@@ -914,6 +914,7 @@ public class ItemSpriteSheet {
     public static final int ITEM_QUANTIFIER  = SPELLS_NEW_ROW+3;
     public static final int GALACTIC_INFUSION  = SPELLS_NEW_ROW+4;
     public static final int BARRICADE  = SPELLS_NEW_ROW+5;
+    public static final int DETERMINANT  = SPELLS_NEW_ROW+6;
 	static {
 		assignItemRect(EXTRACTOR,     10, 15);
 		assignItemRect(GAMBLER,     10, 15);
@@ -921,6 +922,7 @@ public class ItemSpriteSheet {
         assignItemRect(ITEM_QUANTIFIER,     10, 15);
         assignItemRect(GALACTIC_INFUSION,    	 8, 16);
         assignItemRect(BARRICADE,    	 8, 16);
+        assignItemRect(DETERMINANT,    	 12, 11);
 	}
 
     private static final int TEST_TUBES =								xy(1, 34);

@@ -13,6 +13,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfPower;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Barricade;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.DeterminantInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.GalacticInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemQuantifier;
@@ -58,6 +59,9 @@ public class InfPDChanges {
 
         changes.addButton( new ChangeButton(new Barricade(),
                 "A spell that changes your terrain, casting will a build barricade for you."
+        ));
+        changes.addButton( new ChangeButton(new DeterminantInfusion(),
+                "A spell that gives you life stealing shield, perhaps, used to something.."
         ));
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Fixed inconsistencies in tubes' descriptions\n" +

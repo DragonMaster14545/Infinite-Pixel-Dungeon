@@ -61,6 +61,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.Alchemize;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Barricade;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.BeaconOfReturning;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.CurseInfusion;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.DeterminantInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Extractor;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.FireBooster;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.GalacticInfusion;
@@ -404,6 +405,7 @@ public class QuickRecipe extends Component {
 				result.add(new QuickRecipe(new Recycle.Recipe()));
 				result.add(new QuickRecipe(new FireBooster.Recipe()));
                 result.add(new QuickRecipe(new GalacticInfusion.Recipe()));
+                result.add(new QuickRecipe(new DeterminantInfusion.Recipe()));
 				if (!PixelScene.landscape()) result.add(null);
 				result.add(null);
 				result.add(new QuickRecipe(new ReclaimTrap.Recipe()));

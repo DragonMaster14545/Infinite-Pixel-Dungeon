@@ -52,6 +52,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.Alchemize;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Barricade;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.BeaconOfReturning;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.CurseInfusion;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.DeterminantInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Extractor;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.FireBooster;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.GalacticInfusion;
@@ -234,7 +235,8 @@ public abstract class Recipe {
 			new Gambler.Recipe(),
             new ItemQuantifier.Recipe(),
             new GalacticInfusion.Recipe(),
-            new Barricade.Recipe()
+            new Barricade.Recipe(),
+            new DeterminantInfusion.Recipe()
 	};
 	
 	private static Recipe[] threeIngredientRecipes = new Recipe[]{
