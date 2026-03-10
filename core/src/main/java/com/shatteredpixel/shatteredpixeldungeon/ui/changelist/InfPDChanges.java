@@ -64,7 +64,8 @@ public class InfPDChanges {
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed Ring Capacity upgrade doesn't work.\n" +
-                        "_-_ Fixed crash when resetting floor 26 in some cases\n"
+                        "_-_ Fixed crash when resetting floor 26 in some cases\n" +
+                        "_-_ Fixed long negative actor spend time when opening treasurebags\n"
         ));
 
         changes = new ChangeInfo("A", false, "");
