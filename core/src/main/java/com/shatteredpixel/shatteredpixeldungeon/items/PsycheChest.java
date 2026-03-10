@@ -163,7 +163,6 @@ public class PsycheChest extends Item {
             //Dungeon.resetDamage *= 1.045d;
             Game.switchScene(InterlevelScene.class);
             Catalog.countUse(getClass());
-            SpecialRoom.initForFloor();
 
             if (Dungeon.depth != 26) {
                 //need to reset key replacement tracking as well
