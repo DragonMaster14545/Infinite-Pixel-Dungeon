@@ -138,6 +138,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfTenacity;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.BiggerGambleBag;
@@ -254,6 +255,7 @@ public class Hero extends Char {
 	public int lvl = 1;
 	public long exp = 0;
 	public long totalExp = 0;
+    public long totalExp_Transmutation = 0;
 
 	public boolean grinding = false;
 
@@ -345,6 +347,7 @@ public class Hero extends Char {
 	private static final String LEVEL		= "lvl";
 	private static final String EXPERIENCE	= "exp";
     private static final String TOTAL_EXPERIENCE	= "totalExp";
+    private static final String TOTAL_EXPERIENCE_TRANSMUTATION	= "totalExpT";
 	private static final String HTBOOST     = "htboost";
 	private static final String GRINDING = "grinding";
 	private static final String PERKS = "perks";
@@ -369,6 +372,7 @@ public class Hero extends Char {
 		bundle.put( LEVEL, lvl );
 		bundle.put( EXPERIENCE, exp );
 		bundle.put(TOTAL_EXPERIENCE, totalExp);
+        bundle.put(TOTAL_EXPERIENCE_TRANSMUTATION, totalExp_Transmutation);
 
 		bundle.put( HTBOOST, HTBoost );
 
@@ -400,6 +404,7 @@ public class Hero extends Char {
 		STR = bundle.getInt( STRENGTH );
 
 		totalExp = bundle.getLong(TOTAL_EXPERIENCE);
+        totalExp_Transmutation = bundle.getLong(TOTAL_EXPERIENCE_TRANSMUTATION);
 		grinding = bundle.getBoolean(GRINDING);
 
 
@@ -2132,6 +2137,27 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 				GLog.p( Messages.get(this, "you_now_have", sou.name()) );
 				new Flare(6, 28).color(0x38FF48, true).show(sprite, 3.67f);
 			}
+        }
+
+        long neededExpTransmutation = PsycheChest.neededExpTransmutation();
+
+        if (totalExp_Transmutation >= neededExpTransmutation && grinding){
+            int souCount = 0;
+
+            while (totalExp_Transmutation >= neededExpTransmutation ) {
+                totalExp_Transmutation -= neededExpTransmutation;
+                souCount++;
+            }
+
+            ScrollOfTransmutation sou = new ScrollOfTransmutation();
+            sou.quantity(souCount);
+
+            if (!sou.collect()){
+                Dungeon.level.drop(sou, pos);
+            } else {
+                GLog.p( Messages.get(this, "you_now_have", sou.name()) );
+                new Flare(6, 28).color(0xbd34eb, true).show(sprite, 3.67f);
+            }
         }
 
 		boolean levelUp = false;

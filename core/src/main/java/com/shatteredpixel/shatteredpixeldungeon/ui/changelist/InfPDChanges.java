@@ -69,7 +69,8 @@ public class InfPDChanges {
                         "_-_ Emblems can now be held by Velvet Pouch\n" +
                         "_-_ Tubes can now be held by Potion Bandolier\n" +
                         "_-_ Reduced rooms by ~33%\n" +
-                        "_-_ Arena now sells Ankhs and some emblems\n"
+                        "_-_ Arena now sells Ankhs and some emblems\n" +
+                        "_-_ Fate Lock will now give scroll of transmutation when reached very high experience"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed Ring Capacity upgrade doesn't work.\n" +

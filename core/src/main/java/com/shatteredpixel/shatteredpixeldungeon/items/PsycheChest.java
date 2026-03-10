@@ -84,11 +84,20 @@ public class PsycheChest extends Item {
     @Override
     public String desc() {
         return Messages.get(this, "desc", neededExp()) +
-                Messages.get(this, "desc2", neededLevel());
+                Messages.get(this, "desc2", neededLevel()) +
+                Messages.get(this, "desc3", neededExpTransmutation());
     }
 
     public static long neededExp(){
         long neededExp = 100 + ((150L ^ (Dungeon.cycle + 1)) * Dungeon.cycle);
+        if (Dungeon.isChallenged(Challenges.NO_SCROLLS)){
+            neededExp *= 2.5f;
+        }
+        return neededExp;
+    }
+
+    public static long neededExpTransmutation(){
+        long neededExp = 350 + ((350L ^ (Dungeon.cycle + 1)) * Dungeon.cycle);
         if (Dungeon.isChallenged(Challenges.NO_SCROLLS)){
             neededExp *= 2.5f;
         }
