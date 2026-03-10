@@ -72,6 +72,9 @@ public class InfPDChanges {
                         "_-_ Arena now sells Ankhs and some emblems\n" +
                         "_-_ Fate Lock will now give scroll of transmutation when reached very high experience"
         ));
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Pharmacophobia will give you ~25% turns of your health, from ~40%\n"
+        ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed Ring Capacity upgrade doesn't work.\n" +
                         "_-_ Fixed crash when resetting floor 26 in some cases\n" +
