@@ -466,8 +466,8 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 		public static final float[] typeChances = new float[]{
 				50, //12.5% each
 				40, //6.67% each
-				10, //3.33% each
-                0
+				9, //3.33% each
+                1
 		};
 
 		public static final Class<?>[] curses = new Class<?>[]{
