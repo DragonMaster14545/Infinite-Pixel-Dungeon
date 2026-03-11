@@ -46,12 +46,26 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.get(Icons.CHALLENGE_COLOR), "Challenge Onboard",
                 "I'd like to make new challenges, but I want to make it harder than the current challenges in this game. Stay tuned!"
         ));
+
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Upcoming: v0.1.7",
                 "In the next update, we will add some legacy items in previous mod and make it balanced soon... (including some fixes and other changes)\n"
         ));
         changes = new ChangeInfo("InfPD-0.1.7", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes = new ChangeInfo("C", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ Emblem exclusive enchantments will now occur with a very low chance\n" +
+                        "_-_ Aleph Knights no longer inherits enchantment on weapons\n" +
+                        "_-_ shop in arena now actually sells ankhs and some emblems"
+        ));
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
+                "_-_ \n"
+        ));
 
         changes = new ChangeInfo("B", false, "");
         changes.hardlight(0x00FFFF);
