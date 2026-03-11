@@ -79,6 +79,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfInsurgence;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAggression;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ExoticCrystals;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ShardOfOblivion;
@@ -880,6 +881,10 @@ public abstract class Mob extends Char {
 			EXP /= 2;
 		}
 
+        if (Dungeon.hero.buff(ScrollOfInsurgence.ChallengeInsurgence.class) != null){
+            EXP *= 2.5d;
+        }
+
 		if (buff(Longsword.HolyExpEffect.class) != null){
 			EXP = Math.round(EXP * Math.pow(1.25f, buff(Longsword.HolyExpEffect.class).stacks));
 		}
@@ -1018,6 +1023,13 @@ public abstract class Mob extends Char {
 
             Dungeon.level.drop(Generator.random(), pos).sprite.drop();
             Dungeon.level.drop(RingOfWealth.genConsumableDrop(-5), pos).sprite.drop();
+        }
+
+        if (buff(ScrollOfInsurgence.ChallengeInsurgence.class) != null && Random.Float() < 0.33f) {
+            Dungeon.level.drop(Generator.random(), pos).sprite.drop();
+            if (Random.Float() < 0.33f) {
+                Dungeon.level.drop(Generator.random(), pos).sprite.drop();
+            }
         }
 
 		//ring of wealth logic
