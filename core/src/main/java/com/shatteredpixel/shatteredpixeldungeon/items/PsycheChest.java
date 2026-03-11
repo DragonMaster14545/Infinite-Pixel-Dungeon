@@ -125,7 +125,7 @@ public class PsycheChest extends Item {
             hero.grinding = false;
             GLog.w( Messages.get(this, "deactivated") );
         }
-        if (action.contains(AC_RESET) && (hero.HP > hero.HT * 0.55d)){
+        if (action.contains(AC_RESET) && (hero.HP > hero.HT * 0.45d)){
             switch (Dungeon.depth){
                 case 2: case 3: case 4:
                     for (Mob m: Dungeon.level.mobs){
@@ -168,7 +168,7 @@ public class PsycheChest extends Item {
                 }
             }
             InterlevelScene.mode = InterlevelScene.Mode.RESET;
-            if (hero.HP > hero.HT * 0.55d) hero.HP -= Math.round(hero.HT * 0.55d);
+            if (hero.HP > hero.HT * 0.45d) hero.HP -= Math.round(hero.HT * 0.45d);
             //Dungeon.resetDamage *= 1.045d;
             Game.switchScene(InterlevelScene.class);
             Catalog.countUse(getClass());
@@ -179,7 +179,7 @@ public class PsycheChest extends Item {
                     Dungeon.hero.buff(SkeletonKey.KeyReplacementTracker.class).clearDepth();
                 }
             }
-        } else if (action.contains(AC_RESET) && (hero.HP < Math.round(hero.HT * 0.55d))){
+        } else if (action.contains(AC_RESET) && (hero.HP < Math.round(hero.HT * 0.45d))){
             GLog.w( Messages.get(this, "no_reset") );
         }
     }

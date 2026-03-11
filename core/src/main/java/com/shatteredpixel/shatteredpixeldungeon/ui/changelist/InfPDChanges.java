@@ -70,7 +70,7 @@ public class InfPDChanges {
                         "_-_ Added the new spells into the catalog"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
-                "_-_ \n"
+                "_-_ Fixed false 45% health penalty in the Fate Lock\n"
         ));
 
         changes = new ChangeInfo("B", false, "");
