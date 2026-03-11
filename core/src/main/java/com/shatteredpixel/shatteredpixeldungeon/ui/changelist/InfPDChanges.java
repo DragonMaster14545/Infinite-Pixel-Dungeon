@@ -70,7 +70,8 @@ public class InfPDChanges {
                 "_-_ Emblem exclusive enchantments will now occur with a very low chance\n" +
                         "_-_ Aleph Knights no longer inherits enchantment on weapons\n" +
                         "_-_ shop in arena now actually sells ankhs and some emblems\n" +
-                        "_-_ Added the new spells into the catalog"
+                        "_-_ Added the new spells into the catalog\n" +
+                        "_-_ Fishing Rod rare drops will now scale to fishing rod's level\n"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed false 45% health penalty in the Fate Lock\n"

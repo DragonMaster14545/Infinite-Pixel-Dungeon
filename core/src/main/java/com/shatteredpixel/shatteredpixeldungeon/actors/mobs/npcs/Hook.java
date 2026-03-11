@@ -42,6 +42,7 @@ public class Hook extends NPC {
     public ArrayList<Item> items = new ArrayList<>();
     public int tier = 1;
     public long power = 0;
+    public long level = 0;
 
     {
         spriteClass = HookSprite.class;
@@ -118,6 +119,7 @@ public class Hook extends NPC {
             Sample.INSTANCE.play( Assets.Sounds.DEGRADE );
         }
 
+        FishingHook.level = this.level;
         ArrayList<Item> bonus = FishingHook.tryForBonusDrop(tries);
         if (!bonus.isEmpty()) {
             items.addAll(bonus);

@@ -139,6 +139,7 @@ public abstract class FishingRod extends Item {
                     public void call() {
                         Hook hook = new Hook();
                         hook.tier = tier;
+                        hook.level = level();
                         hook.tries = fishingStrength();
                         hook.power = (long) fishingPower();
                         GameScene.add(hook);
