@@ -61,7 +61,9 @@ public class InfPDChanges {
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Wand of Disintegration now stops until the targeted cell\n" +
-                        "_-_ Emblem use is now increased to 5, from 3 uses.\n"
+                        "_-_ Emblem use is now increased to 5, from 3 uses.\n"  +
+                        "_-_ Fishing Rod rare drops will now scale to fishing rod's level\n" +
+                        "_-_ Increased treasure bags' amount by 100%\n"
         ));
         changes.addButton( new ChangeButton(new ScrollOfInsurgence(),
                 "Changed the effect of this scroll:\n" +
@@ -70,10 +72,9 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Emblem exclusive enchantments will now occur with a very low chance\n" +
                         "_-_ Aleph Knights no longer inherits enchantment on weapons\n" +
-                        "_-_ shop in arena now actually sells ankhs and some emblems\n" +
-                        "_-_ Added the new spells into the catalog\n" +
-                        "_-_ Fishing Rod rare drops will now scale to fishing rod's level\n" +
-                        "_-_ Made custom notes' limit infinite\n"
+                        "_-_ Shop in arena now actually sells ankhs and some emblems\n" +
+                        "_-_ Made custom notes' limit infinite\n" +
+                        "_-_ Added the new spells into the catalog\n"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed false 45% health penalty in the Fate Lock\n"

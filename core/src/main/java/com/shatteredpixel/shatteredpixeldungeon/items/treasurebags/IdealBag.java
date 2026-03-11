@@ -56,7 +56,7 @@ public class IdealBag extends TreasureBag {
     @Override
     protected ArrayList<Item> items() {
         ArrayList<Item> items = new ArrayList<>();
-        int amount = Random.Int(0, 15)*10;
+        int amount = Random.Int(0, 30)*10;
         if (Dungeon.hero.perks.contains(Perks.Perk.MORE_BAG)) amount *= 1.5f;
         for(int i = 0; i < amount; i++) {
             if (Dungeon.Float(1) <= 0.05f){
