@@ -1025,7 +1025,7 @@ public abstract class Mob extends Char {
             Dungeon.level.drop(RingOfWealth.genConsumableDrop(-5), pos).sprite.drop();
         }
 
-        if (buff(ScrollOfInsurgence.ChallengeInsurgence.class) != null && Random.Float() < 0.33f) {
+        if (Dungeon.hero.buff(ScrollOfInsurgence.ChallengeInsurgence.class) != null && Random.Float() < 0.33f) {
             Dungeon.level.drop(Generator.random(), pos).sprite.drop();
             if (Random.Float() < 0.33f) {
                 Dungeon.level.drop(Generator.random(), pos).sprite.drop();
