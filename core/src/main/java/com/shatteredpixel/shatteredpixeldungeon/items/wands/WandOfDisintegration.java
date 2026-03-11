@@ -49,7 +49,7 @@ public class WandOfDisintegration extends DamageWand {
 	{
 		image = ItemSpriteSheet.WAND_DISINTEGRATION;
 
-		collisionProperties = Ballistica.WONT_STOP;
+		collisionProperties = Ballistica.STOP_TARGET;
 	}
 
 

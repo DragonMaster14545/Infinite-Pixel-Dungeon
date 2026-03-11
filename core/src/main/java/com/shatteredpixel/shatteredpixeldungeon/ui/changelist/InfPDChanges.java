@@ -59,6 +59,9 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Wand of Disintegration now stops until the targeted cell\n"
+        ));
         changes.addButton( new ChangeButton(new ScrollOfInsurgence(),
                 "Changed the effect of this scroll:\n" +
                         "_-_ It will now create an arena that gives an additional 150% EXP, and additional items in some cases."
