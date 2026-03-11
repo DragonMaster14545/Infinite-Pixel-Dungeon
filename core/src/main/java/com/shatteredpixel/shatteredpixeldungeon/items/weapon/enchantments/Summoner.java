@@ -64,7 +64,6 @@ public class Summoner extends Weapon.Enchantment {
                     AlephKnight guardianKnight = new AlephKnight();
                     Weapon copy = weapon;
                     copy.level(weapon.level());
-                    copy.enchant();
                     copy.augment = weapon.augment;
                     guardianKnight.weapon = copy;
                     guardianKnight.pos = attacker.pos + i;
