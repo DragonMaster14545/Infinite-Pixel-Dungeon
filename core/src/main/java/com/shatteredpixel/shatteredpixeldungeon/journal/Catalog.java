@@ -126,8 +126,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.remains.CloakScrap;
 import com.shatteredpixel.shatteredpixeldungeon.items.remains.SealShard;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Alchemize;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.Barricade;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.BeaconOfReturning;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.CurseInfusion;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.DeterminantInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Extractor;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.FireBooster;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.GalacticInfusion;
@@ -317,7 +319,7 @@ public enum Catalog {
 				Alchemize.class, CurseInfusion.class, /*MagicalInfusion.class,*/ Recycle.class,
 				ReclaimTrap.class, SummonElemental.class, BeaconOfReturning.class, FireBooster.class,
 				Vampirism.class, RespawnBooster.class, Raritize.class, Extractor.class, Gambler.class,
-                GalacticInfusion.class);
+                GalacticInfusion.class, Barricade.class, DeterminantInfusion.class);
 
 		LOOT_BAGS.addItems(GambleBag.class, BiggerGambleBag.class, QualityBag.class, AlchemyBag.class,
 				GooTreasureBag.class, RatSkull.class, TenguTreasureBag.class, TenguShuriken.class, TenguBomb.class,

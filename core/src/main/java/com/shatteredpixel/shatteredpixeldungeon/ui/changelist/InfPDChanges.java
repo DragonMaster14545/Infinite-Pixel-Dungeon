@@ -66,7 +66,8 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Emblem exclusive enchantments will now occur with a very low chance\n" +
                         "_-_ Aleph Knights no longer inherits enchantment on weapons\n" +
-                        "_-_ shop in arena now actually sells ankhs and some emblems"
+                        "_-_ shop in arena now actually sells ankhs and some emblems\n" +
+                        "_-_ Added the new spells into the catalog"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ \n"
