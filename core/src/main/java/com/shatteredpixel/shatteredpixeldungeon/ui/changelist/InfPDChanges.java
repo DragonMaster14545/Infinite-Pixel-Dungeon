@@ -71,7 +71,8 @@ public class InfPDChanges {
                         "_-_ Aleph Knights no longer inherits enchantment on weapons\n" +
                         "_-_ shop in arena now actually sells ankhs and some emblems\n" +
                         "_-_ Added the new spells into the catalog\n" +
-                        "_-_ Fishing Rod rare drops will now scale to fishing rod's level\n"
+                        "_-_ Fishing Rod rare drops will now scale to fishing rod's level\n" +
+                        "_-_ Made custom notes' limit infinite\n"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed false 45% health penalty in the Fate Lock\n"

@@ -489,7 +489,7 @@ public class WndJournal extends WndTabbed {
 			ArrayList<Notes.CustomRecord> customRecs = Notes.getRecords(Notes.CustomRecord.class);
 
 			if (!customRecs.isEmpty()){
-				grid.addHeader("_" + Messages.get(this, "custom_notes") + "_ (" + customRecs.size() + "/" + Notes.customRecordLimit() + ")");
+				grid.addHeader("_" + Messages.get(this, "custom_notes") + "_ (" + customRecs.size() + ")");
 
 				for (Notes.CustomRecord rec : customRecs){
 					ScrollingGridPane.GridItem gridItem = new ScrollingGridPane.GridItem(rec.icon()){
