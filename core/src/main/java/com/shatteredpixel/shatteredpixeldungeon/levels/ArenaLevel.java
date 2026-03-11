@@ -158,9 +158,13 @@ public class ArenaLevel extends Level {
 
 		{
 			itemsToSpawn = new ArrayList<>();
-			for (int i = 0; i < 6; i++) itemsToSpawn.add(new GambleBag());
-			for (int i = 0; i < 6; i++) itemsToSpawn.add(new BiggerGambleBag());
-			for (int i = 0; i < 6; i++) itemsToSpawn.add(new QualityBag());
+			        for (int i = 0; i < 3; i++) itemsToSpawn.add(new GambleBag());
+            for (int i = 0; i < 3; i++) itemsToSpawn.add(new BiggerGambleBag());
+            for (int i = 0; i < 3; i++) itemsToSpawn.add(new QualityBag());
+            itemsToSpawn.add(new Ankh());
+            itemsToSpawn.add(new LaserisedEmblem());
+            itemsToSpawn.add(new SummonerEmblem());
+            itemsToSpawn.add(new TrihitEmblem());
 
 			Point itemPlacement = new Point(cellToPoint(arenaDoor));
 			if (itemPlacement.y == ROOM_TOP-1){
