@@ -60,7 +60,8 @@ public class InfPDChanges {
         changeInfos.add(changes);
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
-                "_-_ Wand of Disintegration now stops until the targeted cell\n"
+                "_-_ Wand of Disintegration now stops until the targeted cell\n" +
+                        "_-_ Emblem use is now increased to 5, from 3 uses.\n"
         ));
         changes.addButton( new ChangeButton(new ScrollOfInsurgence(),
                 "Changed the effect of this scroll:\n" +

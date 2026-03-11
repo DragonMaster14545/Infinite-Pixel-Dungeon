@@ -796,7 +796,7 @@ public class Item implements Bundlable {
 			}
 
             if (emblemUse > 0) {
-                return Messages.get(EmblemSystem.class, "emblem_use", 3 - emblemUse);
+                return Messages.get(EmblemSystem.class, "emblem_use", 5 - emblemUse);
             }
 		}
 

@@ -135,7 +135,7 @@ public abstract class EmblemSystem extends Item {
                 return;
             }
 
-            if (item != null && item.emblemUse < 3) {
+            if (item != null && item.emblemUse < 5) {
 
                 //Infusion opens a separate window that can be cancelled
                 //so we don't do a lot of logic here
@@ -151,7 +151,7 @@ public abstract class EmblemSystem extends Item {
                     Sample.INSTANCE.play(Assets.Sounds.READ);
 
                     Catalog.countUse(curItem.getClass());
-                    GLog.p( Messages.get(EmblemSystem.class,"used", 3 - item.emblemUse) );
+                    GLog.p( Messages.get(EmblemSystem.class,"used", 5 - item.emblemUse) );
                 }
 
             }
