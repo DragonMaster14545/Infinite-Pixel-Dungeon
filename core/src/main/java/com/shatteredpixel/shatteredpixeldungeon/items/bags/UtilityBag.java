@@ -33,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.KingsCrown;
 import com.shatteredpixel.shatteredpixeldungeon.items.PsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
 import com.shatteredpixel.shatteredpixeldungeon.items.TicketToArena;
+import com.shatteredpixel.shatteredpixeldungeon.items.TicketToPortableShop;
 import com.shatteredpixel.shatteredpixeldungeon.items.Torch;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.fishingrods.FishingRod;
@@ -64,7 +65,7 @@ public class UtilityBag extends Bag {
             item instanceof RemainsItem || item instanceof IdealBag.Plutonium || item instanceof TicketToArena ||
             item instanceof DwarfToken || item instanceof Embers || item instanceof CorpseDust || item instanceof CeremonialCandle ||
             item instanceof DarkGold || item instanceof TengusMask || item instanceof KingsCrown || item instanceof FishingRod ||
-            item instanceof PsycheChest || item instanceof KeyToTruth ) {
+            item instanceof PsycheChest || item instanceof KeyToTruth || item instanceof TicketToPortableShop) {
 			return super.canHold(item);
 		} else {
 			return false;
