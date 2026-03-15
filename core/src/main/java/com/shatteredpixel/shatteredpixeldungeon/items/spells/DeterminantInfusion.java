@@ -52,7 +52,7 @@ public class DeterminantInfusion extends Spell {
 
     @Override
     protected void onCast(Hero hero) {
-        Buff.affect(hero, RageShield.class).set(hero.HT/2);
+        Buff.affect(hero, RageShield.class).set(hero.HT*1.5f);
         curUser.sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
 
         for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
