@@ -75,7 +75,7 @@ public class Extractor extends InventorySpell {
 	
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
 
-		private static final int OUT_QUANTITY = 2;
+		private static final int OUT_QUANTITY = 3;
 
 		{
 			inputs =  new Class[]{ScrollOfUpgrade.class, Recycle.class};

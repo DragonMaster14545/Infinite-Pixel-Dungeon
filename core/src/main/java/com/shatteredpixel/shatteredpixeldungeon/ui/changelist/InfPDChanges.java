@@ -65,7 +65,8 @@ public class InfPDChanges {
                 "A new peaceful branch where you can buy things and return again if you're done. It can only be crafted at the alchemy."
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
-                "_-_ Blocking enchantment has now an initial 4 shielding, from 2\n"
+                "_-_ Blocking enchantment has now an initial 4 shielding, from 2\n" +
+                        "_-_ Extractor output quantity is increased to 3, from 2"
         ));
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Actually added Utility Bag in shops\n"
