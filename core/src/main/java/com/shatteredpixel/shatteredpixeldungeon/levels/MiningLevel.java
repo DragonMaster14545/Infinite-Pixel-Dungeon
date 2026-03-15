@@ -136,7 +136,7 @@ public class MiningLevel extends CavesLevel {
 	@Override
 	protected Painter painter() {
 		return new MiningLevelPainter()
-				.setGold(Random.NormalIntRange(42, 46))
+				.setGold(Random.NormalIntRange(60, 100))
 				.setWater(Blacksmith.Quest.Type() == Blacksmith.Quest.FUNGI ? 0.1f : 0.35f, 6)
 				.setGrass(Blacksmith.Quest.Type() == Blacksmith.Quest.FUNGI ? 0.65f : 0.10f, 3);
 	}

@@ -8,6 +8,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.PsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SkeletonKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.EquipmentBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.UtilityBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.CommonEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
@@ -54,6 +55,29 @@ public class InfPDChanges {
         changes = new ChangeInfo("InfPD-0.1.7", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes = new ChangeInfo("D", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton( new ChangeButton(new UtilityBag(),
+                "The new bag that is useful but expensive... Shopkeeper was so greedy :P"
+        ));
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Bosses' max HP will now base on hero's level\n" +
+                        "_-_ Hunger and Starvation now takes 150 more turns"
+        ));
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ Energy bottle can now be held by potion bandolier\n" +
+                        "_-_ Max blacksmith favor cap has been increased by 7k, total of 10k\n" +
+                        "_-_ Added small rations into the arena shop\n" +
+                        "_-_ Fate Lock cna onw be used in quickslots\n" +
+                        "_-_ Gold in mining levels increased to 60-100"
+        ));
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
+                "_-_ Fixed emblem use still limits to 3, and to enchant emblems\n" +
+                        "_-_ Fixed Scroll of Transmutation doesn't drop at required EXP"
+        ));
 
         changes = new ChangeInfo("C", false, "");
         changes.hardlight(0x00FFFF);

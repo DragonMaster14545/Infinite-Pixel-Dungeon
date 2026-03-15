@@ -49,6 +49,7 @@ public class PsycheChest extends Item {
     {
         image = ItemSpriteSheet.PSYCHE_CHEST;
         unique = true;
+        defaultAction = AC_RESET;
         identify();
     }
 

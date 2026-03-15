@@ -43,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.LaserisedEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.SummonerEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.TrihitEmblem;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.SmallRation;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfAquaticRejuvenation;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.BiggerGambleBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.GambleBag;
@@ -169,6 +170,7 @@ public class ArenaLevel extends Level {
             itemsToSpawn.add(new LaserisedEmblem());
             itemsToSpawn.add(new SummonerEmblem());
             itemsToSpawn.add(new TrihitEmblem());
+            itemsToSpawn.add(new SmallRation().quantity(Random.IntRange(3, 6)));
 
 			Point itemPlacement = new Point(cellToPoint(arenaDoor));
 			if (itemPlacement.y == ROOM_TOP-1){

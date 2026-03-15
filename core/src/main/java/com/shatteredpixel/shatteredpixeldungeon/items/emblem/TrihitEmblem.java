@@ -22,7 +22,7 @@ public class TrihitEmblem extends EmblemSystem {
 
     @Override
     protected boolean usableOnItem(Item item) {
-        return item instanceof Weapon && item.emblemUse < 3;
+        return item instanceof Weapon && item.emblemUse < 5;
     }
 
     @Override

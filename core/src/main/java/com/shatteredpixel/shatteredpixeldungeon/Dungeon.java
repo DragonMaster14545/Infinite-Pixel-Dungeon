@@ -164,7 +164,8 @@ public class Dungeon {
 		LORE_CITY,
 		LORE_HALLS,
 		LORE_INFINITY,
-		CHEESY_CHEEST;
+		CHEESY_CHEEST,
+        UTILITY_BAG;
 
 		public int count = 0;
 

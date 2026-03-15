@@ -2081,6 +2081,7 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 
 		this.exp += exp;
 		this.totalExp += exp;
+        this.totalExp_Transmutation += exp;
 		float percent = exp/(float)maxExp();
 
 		EtherealChains.chainsRecharge chains = buff(EtherealChains.chainsRecharge.class);

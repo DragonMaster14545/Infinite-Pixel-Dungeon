@@ -146,7 +146,7 @@ public abstract class Mob extends Char {
 	
 	public long EXP = 1;
 	public int maxLvl = Integer.MAX_VALUE;
-	public double bossMaxHPMulti = Dungeon.escalatingDepth() * 0.025d;
+	public double bossMaxHPMulti = (Dungeon.escalatingDepth() * 0.025d) + bossMulti();
 	
 	protected Char enemy;
 	protected int enemyID = -1; //used for save/restore
@@ -1098,6 +1098,14 @@ public abstract class Mob extends Char {
 	public boolean reset() {
 		return false;
 	}
+
+    public long bossMulti() {
+        long multi = 0;
+        if (Dungeon.hero != null) {
+            multi += Dungeon.hero.lvl;
+        }
+        return multi;
+    }
 	
 	public void beckon( int cell ) {
 		

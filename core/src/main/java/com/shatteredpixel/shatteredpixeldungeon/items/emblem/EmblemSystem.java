@@ -104,7 +104,7 @@ public abstract class EmblemSystem extends Item {
 
     protected boolean usableOnItem(Item item) {
         return (item instanceof Weapon || item instanceof Armor || item instanceof Ring || item instanceof Artifact
-                || item instanceof Wand || item instanceof FishingRod) && item.emblemUse < 3;
+                || item instanceof Wand || item instanceof FishingRod) && item.emblemUse < 5;
     }
 
     protected abstract void onItemSelected( Item item );
