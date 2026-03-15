@@ -498,6 +498,7 @@ public enum Icons {
 			case Dungeon.BRANCH_NORMAL: default:
 				return get(Dungeon.level.feeling);
 			case Dungeon.BRANCH_ARENA:
+            case Dungeon.BRANCH_PORTABLE:
 				return get(COIN_SML);
 			case Dungeon.BRANCH_BLACK:
 				return get(FINAL_MIMIC);

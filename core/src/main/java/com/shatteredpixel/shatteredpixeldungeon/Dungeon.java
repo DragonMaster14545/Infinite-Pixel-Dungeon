@@ -81,6 +81,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.SewerLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.SpecialRoom;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.PortableShopLevel;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
@@ -227,6 +228,7 @@ public class Dungeon {
 	public static final int BRANCH_QUESTS = 1;
 	public static final int BRANCH_ARENA  = 2;
 	public static final int BRANCH_BLACK  = 3;
+    public static final int BRANCH_PORTABLE  = 4;
 
 	public static boolean isAscensionPossible(){
 		return branch != BRANCH_ARENA;
@@ -488,7 +490,13 @@ public class Dungeon {
 			} else {
 				level = new DeadEndLevel();
 			}
-		}
+		} else if (branch == BRANCH_PORTABLE){
+            if (depth == 28) {
+                level = new PortableShopLevel();
+            } else {
+                level = new DeadEndLevel();
+            }
+        }
 		else {
 			level = new DeadEndLevel();
 		}
@@ -572,7 +580,7 @@ public class Dungeon {
 	}
 
 	public static boolean interfloorTeleportAllowed(){
-		if (Dungeon.branch == BRANCH_ARENA || Dungeon.branch == BRANCH_BLACK)
+		if (Dungeon.branch == BRANCH_ARENA || Dungeon.branch == BRANCH_BLACK || Dungeon.branch == BRANCH_PORTABLE)
 			//no
 			return false;
 		if (Dungeon.level.locked

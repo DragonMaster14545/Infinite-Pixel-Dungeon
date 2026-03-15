@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.LiquidMetal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Recipe;
+import com.shatteredpixel.shatteredpixeldungeon.items.TicketToPortableShop;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Blandfruit;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Cheese;
@@ -416,6 +417,9 @@ public class QuickRecipe extends Component {
 				result.add(new QuickRecipe(new Gambler.Recipe()));
                 result.add(new QuickRecipe(new ItemQuantifier.Recipe()));
                 result.add(new QuickRecipe(new Barricade.Recipe()));
+                if (!PixelScene.landscape()) result.add(null);
+                result.add(null);
+                result.add(new QuickRecipe(new TicketToPortableShop.Recipe()));
 				return result;
 		}
 	}

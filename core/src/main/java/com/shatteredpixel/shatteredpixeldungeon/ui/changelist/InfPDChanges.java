@@ -5,6 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.BlackPsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.LostBackpack;
 import com.shatteredpixel.shatteredpixeldungeon.items.PsycheChest;
+import com.shatteredpixel.shatteredpixeldungeon.items.TicketToPortableShop;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SkeletonKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.EquipmentBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
@@ -60,6 +61,9 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(new TicketToPortableShop(),
+                "A new peaceful branch where you can buy things and return again if you're done. It can only be crafted at the alchemy."
+        ));
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Actually added Utility Bag in shops\n"
         ));
