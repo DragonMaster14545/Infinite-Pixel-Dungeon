@@ -56,6 +56,14 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes = new ChangeInfo("E", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ Actually added Utility Bag in shops\n"
+        ));
+
         changes = new ChangeInfo("D", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);

@@ -271,6 +271,7 @@ public class ShopRoom extends SpecialRoom {
 		itemsToSpawn.add(w);
 		itemsToSpawn.add(new PotionOfExperience());
 		if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_1) && !Dungeon.LimitedDrops.CHEESY_CHEEST.dropped()) itemsToSpawn.add(new CheeseCheest());
+        if (!Dungeon.LimitedDrops.UTILITY_BAG.dropped()) itemsToSpawn.add(new UtilityBag());
 
 		itemsToSpawn.add( TippedDart.randomTipped(2) );
 
