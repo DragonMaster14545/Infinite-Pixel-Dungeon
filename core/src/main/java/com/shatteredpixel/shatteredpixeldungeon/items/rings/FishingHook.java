@@ -147,7 +147,7 @@ public class FishingHook extends Ring {
 			latestDropTier = 3;
 			return genHighValueConsumable();
 		} else {
-            latestDropTier = 4;
+            latestDropTier = 5;
             return genVeryHighValueConsumable();
         }
 	}

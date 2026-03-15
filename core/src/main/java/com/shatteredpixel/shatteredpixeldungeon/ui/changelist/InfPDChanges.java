@@ -71,7 +71,8 @@ public class InfPDChanges {
                         "_-_ Increased chance of item quantifier by 25%, total of 50%"
         ));
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ Actually added Utility Bag in shops\n"
+                "_-_ Actually added Utility Bag in shops\n" +
+                        "_-_ Added very high drop flare for fishing hook"
         ));
 
         changes = new ChangeInfo("D", false, "");
