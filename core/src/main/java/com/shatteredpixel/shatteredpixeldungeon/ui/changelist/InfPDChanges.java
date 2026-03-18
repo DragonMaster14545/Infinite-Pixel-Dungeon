@@ -67,7 +67,8 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Changed the behavior of fire ability in Firing snapper\n" +
                         "_-_ Portable Shops now stocks exotic variants of scrolls and potions\n" +
-                        "_-_ Added Supply Rations perk"
+                        "_-_ Added Cached Ration perk\n" +
+                        "_-_ Added Nature's Bounty perk"
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Gleaming Staff can now materialize Refined Bags with very low chance\n" +
