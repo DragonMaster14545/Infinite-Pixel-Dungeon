@@ -1,7 +1,7 @@
 
 plugins {
     //TODO currently breaks on Gradle 9+, but is being worked on. Update when I can
-    id 'org.beryx.runtime' version '1.13.1'
+    id 'org.beryx.runtime' version '2.0.1'
 }
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
