@@ -134,11 +134,12 @@ public class FiringSnapper extends BlacksmithWeapon {
         for (int i = 0; i < PathFinder.distance.length; i++) {
             if (PathFinder.distance[i] < Integer.MAX_VALUE) {
                 this.hitSound(0.85f);
-                GameScene.add(Blob.seed(i, 1, Fire.class));
-                if (Dungeon.level.pit[i])
-                    GameScene.add(Blob.seed(i, 1, FireKeeper.class));
-                else
-                    GameScene.add(Blob.seed(i, 4, FireKeeper.class));
+                GameScene.add(Blob.seed(i, 15, Fire.class));
+                //if (Dungeon.level.pit[i]) {
+                //    GameScene.add(Blob.seed(i, 1, FireKeeper.class));
+                //} else {
+                //    GameScene.add(Blob.seed(i, 4, FireKeeper.class));
+                //}
                 CellEmitter.get(i).burst(FlameParticle.FACTORY, 20);
                 if (Random.Int(15) == 0 && Actor.findChar(i) == null){
                     RipperDemon rat = new RipperDemon();

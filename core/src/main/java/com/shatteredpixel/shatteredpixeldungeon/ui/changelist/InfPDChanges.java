@@ -57,6 +57,14 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes = new ChangeInfo("F", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ Changed the behavior of fire ability in Firing snapper\n"
+        ));
+
         changes = new ChangeInfo("E", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
