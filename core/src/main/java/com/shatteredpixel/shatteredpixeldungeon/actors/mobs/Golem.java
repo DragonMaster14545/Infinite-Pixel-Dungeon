@@ -33,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses.Warmaster;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.GolemSprite;
 import com.watabou.utils.BArray;
@@ -159,7 +160,7 @@ public class Golem extends Mob {
 			}
 		}
 
-		if (enemy.buff(MagicImmune.class) != null){
+		if (enemy.buff(MagicImmune.class) != null || enemy.buff(Warmaster.WarmasterBuff.class) != null){
 			bestPos = enemy.pos;
 		}
 

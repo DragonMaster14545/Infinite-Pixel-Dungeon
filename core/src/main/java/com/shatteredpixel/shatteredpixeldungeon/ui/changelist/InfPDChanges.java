@@ -61,6 +61,9 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.PLUS.get(), "New Curse",
+                "The Warmaster curse, which set-ups an arena instantly and calling all mobs in the dungeon. Leaving in arena will result to poisoning ~30% of your health."
+        ));
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Changed the behavior of fire ability in Firing snapper\n" +
                         "_-_ Portable Shops now stocks exotic variants of scrolls and potions\n"

@@ -34,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Effects;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses.Warmaster;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -70,7 +71,8 @@ public class Guard extends Mob {
 	}
 
 	private boolean chain(int target){
-		if (chainsUsed || enemy.properties().contains(Property.IMMOVABLE))
+		if (chainsUsed || enemy.properties().contains(Property.IMMOVABLE)
+				|| enemy.buff(Warmaster.WarmasterBuff.class) != null)
 			return false;
 
 		Ballistica chain = new Ballistica(pos, target, Ballistica.PROJECTILE);

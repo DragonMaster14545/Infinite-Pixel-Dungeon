@@ -86,6 +86,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrapMechanism;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrinketCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfRegrowth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfWarding;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses.Warmaster;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.HeavyBoomerang;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Door;
@@ -592,6 +593,8 @@ if (bundle.contains( "respawner" )){
 		if (arena != null) arena.detach();
         ScrollOfInsurgence.ChallengeInsurgence insurgence = Dungeon.hero.buff(ScrollOfInsurgence.ChallengeInsurgence.class);
         if (insurgence != null) insurgence.detach();
+		Warmaster.WarmasterBuff warmaster = Dungeon.hero.buff(Warmaster.WarmasterBuff.class);
+		if (warmaster != null) warmaster.detach();
 
 		//spend the hero's partial turns,  so the hero cannot take partial turns between floors
 		Dungeon.hero.spendToWhole();
