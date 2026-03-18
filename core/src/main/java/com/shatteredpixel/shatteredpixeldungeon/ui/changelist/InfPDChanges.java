@@ -62,7 +62,8 @@ public class InfPDChanges {
         changeInfos.add(changes);
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ Changed the behavior of fire ability in Firing snapper\n"
+                "_-_ Changed the behavior of fire ability in Firing snapper\n" +
+                        "_-_ Portable Shops now stocks exotic variants of scrolls and potions\n"
         ));
 
         changes = new ChangeInfo("E", false, "");

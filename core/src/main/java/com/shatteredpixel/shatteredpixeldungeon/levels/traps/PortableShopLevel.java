@@ -43,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.Torch;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.CommonEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.EpicEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.LaserisedEmblem;
@@ -52,6 +53,22 @@ import com.shatteredpixel.shatteredpixeldungeon.items.emblem.TrihitEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.UncommonEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.SmallRation;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfAquaticRejuvenation;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMirrorImage;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfPower;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRetribution;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTerror;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.BiggerGambleBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.GambleBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.QualityBag;
@@ -72,6 +89,7 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 import com.watabou.utils.Rect;
+import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
 
@@ -177,23 +195,59 @@ public class PortableShopLevel extends Level {
             for (int i = 0; i < 2; i++) itemsToSpawn.add(new GambleBag());
             for (int i = 0; i < 2; i++) itemsToSpawn.add(new BiggerGambleBag());
             for (int i = 0; i < 2; i++) itemsToSpawn.add(new QualityBag());
+			for (int i = 0; i < 2; i++) itemsToSpawn.add(new Ankh());
+			for (int i = 0; i < 2; i++) itemsToSpawn.add(new Torch().quantity(Random.IntRange(2, 5)));
             itemsToSpawn.add(new CommonEmblem().quantity(Random.IntRange(2, 4)));
             itemsToSpawn.add(new UncommonEmblem().quantity(Random.IntRange(2, 4)));
             itemsToSpawn.add(new RareEmblem().quantity(Random.IntRange(2, 4)));
             itemsToSpawn.add(new EpicEmblem().quantity(Random.IntRange(2, 4)));
-            for (int i = 0; i < 275; i++) {
-                Item c = Generator.random();
-                if (!(c instanceof Gold)) {
-                    if (c.stackable) {
-                        itemsToSpawn.add(c.quantity(Random.Int(3, 10)));
-                    } else if (c.isUpgradable()) {
-                        c.level(Random.Int(3, 10));
-                        itemsToSpawn.add(c);
-                    } else {
-                        itemsToSpawn.add(c);
-                    }
-                }
-            }
+
+			// TODO make this an optimized code.
+			for (int i = 0; i < 48; i++) {
+				if (Random.Int(2) == 0) {
+					itemsToSpawn.add( Generator.random(Generator.Category.SCROLL).quantity(Random.IntRange(2, 10)) );
+				} else {
+					itemsToSpawn.add( Reflection.newInstance(ExoticScroll.regToExo.get(Generator.random(Generator.Category.SCROLL).getClass())).quantity(Random.IntRange(2, 10)) );
+				}
+			}
+
+			for (int i = 0; i < 48; i++) {
+				if (Random.Int(2) == 0) {
+					itemsToSpawn.add( Generator.random(Generator.Category.POTION).quantity(Random.IntRange(2, 10)) );
+				} else {
+					itemsToSpawn.add( Reflection.newInstance(ExoticPotion.regToExo.get(Generator.random(Generator.Category.POTION).getClass())).quantity(Random.IntRange(2, 10)) );
+				}
+			}
+
+			for (int i = 0; i < 24; i++) {
+				Item item = Generator.randomWeapon();
+				itemsToSpawn.add( item.upgrade(Random.IntRange(2, 10)) );
+			}
+
+			for (int i = 0; i < 14; i++) {
+				Item item = Generator.random(Generator.Category.TUBES);
+				itemsToSpawn.add( item.quantity(Random.IntRange(2, 10)) );
+			}
+
+			for (int i = 0; i < 5; i++) {
+				Item item = Generator.random(Generator.Category.FOOD);
+				itemsToSpawn.add( item.quantity(Random.IntRange(2, 5)) );
+			}
+
+			for (int i = 0; i < 26; i++) {
+				Item item = Generator.random(Generator.Category.STONE);
+				itemsToSpawn.add( item.quantity(Random.IntRange(2, 5)) );
+			}
+
+			for (int i = 0; i < 28; i++) {
+				Item item = Generator.random(Generator.Category.WAND);
+				itemsToSpawn.add( item.upgrade(Random.IntRange(2, 10)) );
+			}
+
+			for (int i = 0; i < 26; i++) {
+				Item item = Generator.random(Generator.Category.RING);
+				itemsToSpawn.add( item.upgrade(Random.IntRange(2, 10)) );
+			}
 
 			Point itemPlacement = new Point(cellToPoint(arenaDoor));
 			if (itemPlacement.y == ROOM_TOP-1){
