@@ -69,7 +69,8 @@ public class InfPDChanges {
                         "_-_ Portable Shops now stocks exotic variants of scrolls and potions\n"
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
-                "_-_ Gleaming Staff can now materialize Refined Bags with very low chance\n"
+                "_-_ Gleaming Staff can now materialize Refined Bags with very low chance\n" +
+                        "_-_ Changed and capped Ring of Tenacity to ~99.99% HP reduction "
         ));
 
         changes = new ChangeInfo("E", false, "");

@@ -40,20 +40,20 @@ public class RingOfTenacity extends Ring {
 	public String statsInfo() {
 		if (isIdentified()){
 			String info = Messages.get(this, "stats",
-					new DecimalFormat("#.###").format(100f * (1f - (0.85f - Math.min(soloVisualBonus()*0.0007, 0.75f)))));
+					Messages.decimalFormat("#.##", 100f * (1f - Math.pow(0.99f, soloBuffedBonus()))));
 			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
-						Messages.decimalFormat("#.##", 100f * (1f - (0.85f - Math.min(combinedBuffedBonus(Dungeon.hero)*0.0007, 0.75f)))));
+						Messages.decimalFormat("#.##", 100f * (1f - Math.pow(0.99f, combinedBuffedBonus(Dungeon.hero)))));
 			}
 			return info;
 		} else {
-			return Messages.get(this, "typical_stats", new DecimalFormat("#.###").format(7f));
+			return Messages.get(this, "typical_stats", Messages.decimalFormat("#.##", 15f));
 		}
 	}
 
-	public String upgradeStat1(long level){
+	public String upgradeStat1(int level){
 		if (cursed && cursedKnown) level = Math.min(-1, level-3);
-		return Messages.decimalFormat("#.##", 100f * (1f - (0.85f - Math.min(level*0.0007, 0.75f)))) + "%";
+		return Messages.decimalFormat("#.##", 100f * (1f - Math.pow(0.99f, level+1))) + "%";
 	}
 
 	@Override
@@ -61,11 +61,8 @@ public class RingOfTenacity extends Ring {
 		return new Tenacity();
 	}
 	
-	public static float damageMultiplier( Char t ){
-        float multiplier = 0.85f;
-		if (getBuffedBonus(t, Tenacity.class) > 0) multiplier = 1.1f;
-		if (getBuffedBonus(t, Tenacity.class) > 1) multiplier -= Math.min(0.0007f*getBuffedBonus(t, Tenacity.class), 0.75f)*((float)(t.HT - t.HP)/t.HT);
-        return multiplier;
+	public static double damageMultiplier( Char t ){
+		return Math.max(Math.pow(0.99d, getBuffedBonus( t, Tenacity.class)*((double) (t.HT - t.HP) /t.HT)), 0.001d);
 	}
 
 	public class Tenacity extends RingBuff {
