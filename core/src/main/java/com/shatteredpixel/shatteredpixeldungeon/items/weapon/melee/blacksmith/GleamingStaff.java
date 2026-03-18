@@ -33,12 +33,15 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.GambleBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.IdealBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.TreasureBag;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.Random;
 
 public class GleamingStaff extends BlacksmithWeapon {
 
@@ -84,9 +87,12 @@ public class GleamingStaff extends BlacksmithWeapon {
             counter = 0;
             defender.sprite.showStatus(0xF3F600, "!!!");
             Sample.INSTANCE.play( Assets.Sounds.BADGE );
-            GambleBag lootbag = new GambleBag();
             defender.sprite.centerEmitter().start( Speck.factory( Speck.STAR ), 0.025f, 20);
-            Dungeon.level.drop(lootbag, defender.pos).sprite.drop();
+            if (Random.Int(1000) == 0) {
+                Dungeon.level.drop(new IdealBag(), defender.pos).sprite.drop();
+            } else {
+                Dungeon.level.drop(new GambleBag(), defender.pos).sprite.drop();
+            }
         } else {
             defender.sprite.showStatusWithIcon(0xF3F600, Integer.toString(COMBO_COUNT - counter), FloatingText.GOLD);
         }

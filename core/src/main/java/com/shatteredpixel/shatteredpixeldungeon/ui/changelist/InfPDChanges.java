@@ -65,6 +65,9 @@ public class InfPDChanges {
                 "_-_ Changed the behavior of fire ability in Firing snapper\n" +
                         "_-_ Portable Shops now stocks exotic variants of scrolls and potions\n"
         ));
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Gleaming Staff can now materialize Refined Bags with very low chance\n"
+        ));
 
         changes = new ChangeInfo("E", false, "");
         changes.hardlight(0x00FFFF);
