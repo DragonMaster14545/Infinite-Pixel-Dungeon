@@ -33,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.InsurgenceParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.WarmasterParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.ShadowCaster;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -82,7 +83,7 @@ public class Warmaster extends Weapon.Enchantment {
 		private ArrayList<Integer> warmasterPositions = new ArrayList<>();
 		private ArrayList<Emitter> warmasterEmitters = new ArrayList<>();
 
-		private static final float DURATION = 100;
+		private static final float DURATION = 50;
 		int left = 0;
 
 		{
@@ -134,11 +135,11 @@ public class Warmaster extends Weapon.Enchantment {
 				}
 
 				if (count < 30){
-					dist = 2;
-				} else if (count >= 100) {
-					dist = 4;
-				} else {
 					dist = 3;
+				} else if (count >= 100) {
+					dist = 5;
+				} else {
+					dist = 4;
 				}
 			}
 
@@ -163,7 +164,7 @@ public class Warmaster extends Weapon.Enchantment {
 			if (!warmasterPositions.contains(target.pos)){
 				detach();
 				if (target instanceof Hero) {
-					Buff.affect( target, Poison.class).set((double) ((Hero) target).lvl / 3);
+					target.damage((long) (target.HT * 0.3d), this );
 				}
 			}
 
@@ -182,7 +183,7 @@ public class Warmaster extends Weapon.Enchantment {
 			if (on){
 				for (int i : warmasterPositions){
 					Emitter e = CellEmitter.get(i);
-					e.pour(InsurgenceParticle.FACTORY, 0.05f);
+					e.pour(WarmasterParticle.FACTORY, 0.05f);
 					warmasterEmitters.add(e);
 				}
 			} else {
