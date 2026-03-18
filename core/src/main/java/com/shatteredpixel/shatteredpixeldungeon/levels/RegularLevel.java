@@ -33,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SacrificialFire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Perks;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.EbonyMimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GoldenMimic;
@@ -516,11 +517,11 @@ public abstract class RegularLevel extends Level {
 		//cached rations try to drop in a special room on floors 2/4/7, to a max of 2/3
 		//we incremented dropped by 2 for compatibility with pre-v2.4 saves (when the talent dropped 4/6 items)
 		Random.pushGenerator( Random.Long() );
-			if (Dungeon.hero.hasTalent(Talent.CACHED_RATIONS)){
+			if (Dungeon.hero.hasTalent(Talent.CACHED_RATIONS) || Dungeon.hero.perks.contains(Perks.Perk.SUPPLY_RATIONS)){
 				Talent.CachedRationsDropped dropped = Buff.affect(Dungeon.hero, Talent.CachedRationsDropped.class);
 				int targetFloor = (int)(2 + dropped.count());
 				if (dropped.count() > 4) targetFloor++;
-				if (Dungeon.depth >= targetFloor && dropped.count() < 2 + 2*Dungeon.hero.pointsInTalent(Talent.CACHED_RATIONS)){
+				if (Dungeon.depth >= targetFloor && dropped.count() < 6){
 					int cell;
 					int tries = 100;
 					boolean valid;

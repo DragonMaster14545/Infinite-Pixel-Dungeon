@@ -65,7 +65,8 @@ public class Perks {
         RAT_SUMMONS,
         GRASS_HEALING,
         FRIENDLY_BEES,
-        RARITIZE_MAGIC;
+        RARITIZE_MAGIC,
+        SUPPLY_RATIONS;
 
         public String desc() {
             return Messages.get(Perks.class, name() + ".desc");
