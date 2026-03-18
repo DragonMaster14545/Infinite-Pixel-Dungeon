@@ -174,7 +174,7 @@ public class PsycheChest extends Item {
             Game.switchScene(InterlevelScene.class);
             Catalog.countUse(getClass());
 
-            if (Dungeon.depth != 26) {
+            if (Dungeon.depth != 26 || Dungeon.depth != 28) {
                 //need to reset key replacement tracking as well
                 if (Dungeon.hero.buff(SkeletonKey.KeyReplacementTracker.class) != null){
                     Dungeon.hero.buff(SkeletonKey.KeyReplacementTracker.class).clearDepth();
