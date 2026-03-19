@@ -352,10 +352,10 @@ public class WndJournal extends WndTabbed {
 					pageButtons[i].setRect(this.x + x, this.y + y, buttonWidth, ITEM_HEIGHT);
 					PixelScene.align(pageButtons[i]);
 					x += buttonWidth;
-					if (i == 4){
+					if (i == 5){
 						y += ITEM_HEIGHT;
 						x = 0;
-						buttonWidth = width()/4;
+						buttonWidth = width()/5;
 					}
 				}
 			}
