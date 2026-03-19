@@ -68,11 +68,15 @@ public class InfPDChanges {
                 "_-_ Changed the behavior of fire ability in Firing snapper\n" +
                         "_-_ Portable Shops now stocks exotic variants of scrolls and potions\n" +
                         "_-_ Added Cached Ration perk\n" +
-                        "_-_ Added Nature's Bounty perk"
+                        "_-_ Added Nature's Bounty perk\n" +
+                        "_-_ Added Utility Bag in the catalog"
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Gleaming Staff can now materialize Refined Bags with very low chance\n" +
                         "_-_ Changed and capped Ring of Tenacity to ~99.99% HP reduction "
+        ));
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
+                "_-_ Fixed crash on depth 26+ when skeleton key is equipped\n"
         ));
 
         changes = new ChangeInfo("E", false, "");
@@ -92,9 +96,6 @@ public class InfPDChanges {
                 "_-_ Actually added Utility Bag in shops\n" +
                         "_-_ Added very high drop flare for fishing hook\n" +
                         "_-_ Added Cheese Chunk on quick recipe\n"
-        ));
-        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
-                "_-_ Fixed crash on depth 26+ when skeleton key is equipped\n"
         ));
 
         changes = new ChangeInfo("D", false, "");
