@@ -423,6 +423,8 @@ public class QuickRecipe extends Component {
                 result.add(null);
                 result.add(new QuickRecipe(new TicketToPortableShop.Recipe()));
 				return result;
+            case 9:
+                return result;
 		}
 	}
 	
