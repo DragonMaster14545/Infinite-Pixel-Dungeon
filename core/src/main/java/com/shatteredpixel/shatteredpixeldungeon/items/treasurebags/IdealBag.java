@@ -38,6 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfElements;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Spell;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Blocking;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ShurikenOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
@@ -61,7 +62,7 @@ public class IdealBag extends TreasureBag {
         for(int i = 0; i < amount; i++) {
             if (Dungeon.Float(1) <= 0.05f){
                 Item gift = null;
-                switch (Random.Int(9)){
+                switch (Random.Int(11)){
                     case 0: case 1:
                         gift = new Plutonium(); break;
                     case 2: case 3:
@@ -72,6 +73,8 @@ public class IdealBag extends TreasureBag {
                         gift = new EnergyBottle(); break;
                     case 9:
                         gift = new RingOfElements(); break;
+                    case 10:
+                        gift = new ShurikenOfShadows(); break;
                 }
                 items.add(gift);
             } else {

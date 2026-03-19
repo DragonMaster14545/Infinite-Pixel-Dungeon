@@ -108,6 +108,7 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 		ANGULAR_SPEEDS.put(Bolas.class,         1440);
 		
 		ANGULAR_SPEEDS.put(Shuriken.class,                  2160);
+        ANGULAR_SPEEDS.put(ShurikenOfShadows.class,         2160);
 		ANGULAR_SPEEDS.put(TenguSprite.TenguShuriken.class, 2160);
 
 		ANGULAR_SPEEDS.put(SuperPickaxe.class, 2880);

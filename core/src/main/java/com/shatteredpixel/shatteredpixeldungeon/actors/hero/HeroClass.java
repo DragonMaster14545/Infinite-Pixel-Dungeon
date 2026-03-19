@@ -61,6 +61,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.FerretTuft;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.*;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ShurikenOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingKnife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingSpike;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingStone;
@@ -102,6 +103,8 @@ public enum HeroClass {
 		Dungeon.LimitedDrops.VELVET_POUCH.drop();
 
 		new EquipmentBag().collect();
+
+        new ShurikenOfShadows()          .collect();
 
 		Waterskin waterskin = new Waterskin();
 		waterskin.collect();

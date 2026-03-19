@@ -48,6 +48,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.AlchemyBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.IdealBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ExoticCrystals;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ShurikenOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.Visual;
 import com.watabou.utils.Bundle;
@@ -195,7 +196,7 @@ public class FishingHook extends Ring {
 	}
 
 	private static Item genHighValueConsumable(){
-		switch (Random.Int(5)){
+		switch (Random.Int(6)){
 			case 0: default:
 				Item i = genMidValueConsumable();
 				if (i instanceof Bomb){
@@ -211,6 +212,8 @@ public class FishingHook extends Ring {
 				return Random.Float() < ExoticCrystals.consumableExoticChance() ? new ScrollOfMidas() : new ScrollOfTransmutation();
 			case 4:
 				return new AlchemyBag();
+            case 5:
+                return new ShurikenOfShadows();
 		}
 	}
 

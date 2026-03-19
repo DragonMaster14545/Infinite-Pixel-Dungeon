@@ -22,6 +22,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemQuantifier;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.FerretTuft;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ShurikenOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -61,6 +62,9 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(new ShurikenOfShadows(),
+                "The thrown weapon designed to destroy terrains... and also damaging enemies around it. This can only be obtained on special items."
+        ));
         changes.addButton( new ChangeButton(Icons.PLUS.get(), "New Curse",
                 "The Warmaster curse, which set-ups an arena instantly and calling all mobs in the dungeon. Leaving in arena will result to poisoning ~30% of your health."
         ));

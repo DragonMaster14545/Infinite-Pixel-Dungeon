@@ -433,7 +433,12 @@ public class ItemSpriteSheet {
 		assignItemRect(ARMOR_DUELIST,   12, 13);
 	}
 
-	                                                                                    //16 free slots
+
+    private static final int NEW_THROWABLE          =                               xy(1, 13);  //16 slots
+    public static final int SHURIKEN_SHADOW  = NEW_THROWABLE+0;
+    static {
+        assignItemRect(SHURIKEN_SHADOW,        12, 12);
+    }
 
 	private static final int WANDS              =                           xy(1, 14);  //16 slots
 	public static final int WAND_MAGIC_MISSILE  = WANDS+0;
