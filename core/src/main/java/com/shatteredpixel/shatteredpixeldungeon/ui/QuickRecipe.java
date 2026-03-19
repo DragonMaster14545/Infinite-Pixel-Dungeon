@@ -36,6 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.TicketToPortableShop;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Blandfruit;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Cheese;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.CheeseChunk;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MeatPie;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
@@ -326,6 +327,7 @@ public class QuickRecipe extends Component {
 								return "";
 							}
 						}));
+                result.add(new QuickRecipe( new CheeseChunk.oneMeat() ));
 				return result;
 			case 3:
 				r = new ExoticPotion.PotionToExotic();

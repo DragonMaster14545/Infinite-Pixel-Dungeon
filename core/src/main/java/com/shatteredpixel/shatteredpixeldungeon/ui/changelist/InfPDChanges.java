@@ -90,7 +90,8 @@ public class InfPDChanges {
         ));
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Actually added Utility Bag in shops\n" +
-                        "_-_ Added very high drop flare for fishing hook"
+                        "_-_ Added very high drop flare for fishing hook\n" +
+                        "_-_ Added Cheese Chunk on quick recipe\n"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed crash on depth 26+ when skeleton key is equipped\n"
