@@ -92,6 +92,9 @@ public class InfPDChanges {
                 "_-_ Actually added Utility Bag in shops\n" +
                         "_-_ Added very high drop flare for fishing hook"
         ));
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
+                "_-_ Fixed crash on depth 26+ when skeleton key is equipped\n"
+        ));
 
         changes = new ChangeInfo("D", false, "");
         changes.hardlight(0x00FFFF);
