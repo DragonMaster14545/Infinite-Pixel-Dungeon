@@ -2204,7 +2204,7 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 	
 	public static long maxExp( int lvl ){
 		HeroClass heroClass = Dungeon.hero == null ? GamesInProgress.selectedClass: Dungeon.hero.heroClass;
-		return 10 + lvl * 10L;
+		return 20 + lvl * 20L;
 	}
 	
 	public boolean isStarving() {
