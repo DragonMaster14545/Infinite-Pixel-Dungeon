@@ -58,7 +58,11 @@ public class Warmaster extends Weapon.Enchantment {
 		float procChance = 1/8f * procChanceMultiplier(attacker);
 
 		if (attacker.buff(WarmasterBuff.class) != null){
-			Buff.affect(attacker, WarmasterBuff.class).extend(1);
+			if (Random.Int(3) == 0) {
+                Buff.affect(attacker, WarmasterBuff.class).extend(-10);
+            } else {
+                Buff.affect(attacker, WarmasterBuff.class).extend(1);
+            }
 		} else if (Random.Float() < procChance){
 			for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])) {
 				mob.beckon(attacker.pos);
@@ -83,7 +87,7 @@ public class Warmaster extends Weapon.Enchantment {
 		private ArrayList<Integer> warmasterPositions = new ArrayList<>();
 		private ArrayList<Emitter> warmasterEmitters = new ArrayList<>();
 
-		private static final float DURATION = 50;
+		private static final float DURATION = 100;
 		int left = 0;
 
 		{
