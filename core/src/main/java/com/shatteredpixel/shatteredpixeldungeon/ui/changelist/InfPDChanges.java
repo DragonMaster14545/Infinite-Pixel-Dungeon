@@ -74,7 +74,8 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Gleaming Staff can now materialize Refined Bags with very low chance\n" +
                         "_-_ Changed and capped Ring of Tenacity to ~99.99% HP reduction\n" +
-                        "_-_ Doubled the max exp required to level up"
+                        "_-_ Doubled the max exp required to level up\n" +
+                        "_-_ The max durability of missiles to be considered as infinite is increased to 10k"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed crash on depth 26+ when skeleton key is equipped\n"
