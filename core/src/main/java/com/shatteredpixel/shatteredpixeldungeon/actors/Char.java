@@ -805,7 +805,7 @@ public abstract class Char extends Actor {
 		if (this instanceof Hero && Dungeon.isChallenged(Challenges.NO_ARMOR)){
 			LolEffect lol = Buff.affect(this, LolEffect.class);
 			lol.stacks++;
-			dmg = (long) Math.ceil(dmg * Math.pow(lol.stacks, 1.005));
+			dmg = (long) Math.ceil(dmg * Math.pow(1.005, lol.stacks));
 		}
 
 		Class<?> srcClass = src.getClass();

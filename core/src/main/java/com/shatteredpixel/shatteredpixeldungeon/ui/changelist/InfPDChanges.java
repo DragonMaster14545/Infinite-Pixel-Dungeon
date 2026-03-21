@@ -80,7 +80,8 @@ public class InfPDChanges {
                         "_-_ Changed and capped Ring of Tenacity to ~99.99% HP reduction\n" +
                         "_-_ Doubled the max exp required to level up\n" +
                         "_-_ The max durability of missiles to be considered as infinite is increased to 10k\n" +
-                        "_-_ Increased the health of quest mobs by 100% in Ghost quest"
+                        "_-_ Increased the health of quest mobs by 100% in Ghost quest\n" +
+                        "_-_ Each taken damage while Faith in my Armor chal. activated now literally increases damage taken by x1.005"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed crash on depth 26+ when skeleton key is equipped\n"
