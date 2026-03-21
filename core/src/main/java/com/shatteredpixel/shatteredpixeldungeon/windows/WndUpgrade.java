@@ -457,7 +457,7 @@ public class WndUpgrade extends Window {
 			@Override
 			protected void onClick() {
 				super.onClick();
-				hide();
+                hide();
 				if (upgrader instanceof ScrollOfUpgrade) {
 					((ScrollOfUpgrade) upgrader).reShowSelector(force, amount > 1);
 				} else if (upgrader instanceof MagicalInfusion){
