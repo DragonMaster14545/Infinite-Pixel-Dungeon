@@ -25,8 +25,10 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blizzard;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Freezing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -101,7 +103,7 @@ public abstract class ChampionEnemy extends Buff {
 		//we roll for a champion enemy even if we aren't spawning one to ensure that
 		//mobsToChampion does not affect levelgen RNG (number of calls to Random.Int() is constant)
 		Class<?extends ChampionEnemy> buffCls;
-		switch (Random.Int(8)){
+		switch (Random.Int(10)){
 			case 0: default:    buffCls = Blazing.class;      break;
 			case 1:             buffCls = Projecting.class;   break;
 			case 2:             buffCls = AntiMagic.class;    break;
@@ -110,6 +112,8 @@ public abstract class ChampionEnemy extends Buff {
 			case 5:             buffCls = Growing.class;      break;
 			case 6:             buffCls = Tanky.class;      break;
 			case 7:             buffCls = Speedy.class;      break;
+            case 8:             buffCls = Blunt.class;      break;
+            case 9:             buffCls = Frozen.class;      break;
 		}
 
 		if (Dungeon.mobsToChampion <= 0 && Dungeon.isChallenged(Challenges.CHAMPION_ENEMIES)) {
@@ -336,4 +340,71 @@ public abstract class ChampionEnemy extends Buff {
 			return 1.5f;
 		}
 	}
+
+    public static class Frozen extends ChampionEnemy {
+
+        {
+            color = 0x00ffff;
+        }
+
+        @Override
+        public float speedFactor() {
+            return 0.80f;
+        }
+
+        @Override
+        public void onAttackProc(Char enemy) {
+            if (Random.Int(6) == 0) {
+                Buff.affect(enemy, Frost.class, 5f);
+            } else {
+                Buff.affect(enemy, Chill.class, 2f);
+            }
+        }
+
+        @Override
+        public void detach() {
+            //don't trigger when killed by being knocked into a pit
+            if (target.flying || !Dungeon.level.pit[target.pos]) {
+                for (int i : PathFinder.NEIGHBOURS9) {
+                    if (!Dungeon.level.solid[target.pos + i]) {
+                        GameScene.add(Blob.seed(target.pos + i, 2, Blizzard.class));
+                    }
+                }
+            }
+            super.detach();
+        }
+
+        @Override
+        public float meleeDamageFactor() {
+            return 1.25f;
+        }
+
+        {
+            immunities.add(Freezing.class);
+            immunities.add(Blizzard.class);
+            immunities.add(Chill.class);
+            immunities.add(Frost.class);
+        }
+    }
+
+    public static class Blunt extends ChampionEnemy {
+
+        {
+            color = 0xb5b5b5;
+        }
+
+        @Override
+        public void onAttackProc(Char enemy) {
+            if (Random.Int(6) == 0) {
+                Buff.affect(enemy, Paralysis.class, 2f);
+            } else {
+                Buff.affect(enemy, Vertigo.class, 4f);
+            }
+        }
+
+        @Override
+        public float meleeDamageFactor() {
+            return 1.75f;
+        }
+    }
 }

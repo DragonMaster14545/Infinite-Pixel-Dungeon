@@ -62,6 +62,11 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.CHALLENGE_COLOR), "New Champion Enemies",
+                "New Champions has been added in the game!\n\n" +
+                        "Blunt Champions - they are expert for using their hands or something they use as a blunt weapons, they deal 75% more damage as well as inflicts vertigo when they attack and paralyzes you in rare cases.\n" +
+                        "Frozen Champions - deal 25% more melee damage but they have -20% speed, chills enemies they attack and sometimes freezes them, are immune to cold gases or effects, and spread blizzard around them as they die."
+        ));
         changes.addButton( new ChangeButton(new ShurikenOfShadows(),
                 "The thrown weapon designed to destroy terrains... and also damaging enemies around it. This can only be obtained on special items."
         ));
