@@ -71,7 +71,7 @@ public class InfPDChanges {
                 "The thrown weapon designed to destroy terrains... and also damaging enemies around it. This can only be obtained on special items."
         ));
         changes.addButton( new ChangeButton(Icons.PLUS.get(), "New Curse",
-                "The Warmaster curse, which set-ups an arena instantly and calling all mobs in the dungeon. Leaving in arena will result to poisoning ~30% of your health."
+                "The Warmaster curse, which set-ups an arena instantly and calling all mobs in the dungeon. Leaving in arena will result to taking ~30% of your health."
         ));
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Changed the behavior of fire ability in Firing snapper\n" +
