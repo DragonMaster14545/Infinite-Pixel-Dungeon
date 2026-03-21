@@ -43,7 +43,7 @@ public class GreatCrab extends Crab {
 	{
 		spriteClass = GreatCrabSprite.class;
 
-		HP = HT = Dungeon.getCycleMultiplier(25);
+		HP = HT = Dungeon.getCycleMultiplier(50);
 		defenseSkill = Dungeon.getCycleMultiplier(0); //see damage()
 		baseSpeed = 1f;
 

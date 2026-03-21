@@ -47,7 +47,7 @@ public class GnollTrickster extends Gnoll {
 	{
 		spriteClass = GnollTricksterSprite.class;
 
-		HP = HT = Dungeon.getCycleMultiplier(20);
+		HP = HT = Dungeon.getCycleMultiplier(40);
 		defenseSkill = Dungeon.getCycleMultiplier(5);
 
 		EXP = Dungeon.getCycleMultiplier(5);

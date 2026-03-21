@@ -79,7 +79,8 @@ public class InfPDChanges {
                 "_-_ Gleaming Staff can now materialize Refined Bags with very low chance\n" +
                         "_-_ Changed and capped Ring of Tenacity to ~99.99% HP reduction\n" +
                         "_-_ Doubled the max exp required to level up\n" +
-                        "_-_ The max durability of missiles to be considered as infinite is increased to 10k"
+                        "_-_ The max durability of missiles to be considered as infinite is increased to 10k\n" +
+                        "_-_ Increased the health of quest mobs by 100% in Ghost quest"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed crash on depth 26+ when skeleton key is equipped\n"
