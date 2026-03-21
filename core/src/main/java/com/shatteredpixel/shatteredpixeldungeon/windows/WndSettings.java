@@ -605,11 +605,16 @@ public class WndSettings extends WndTabbed {
 
 								chkExtraQuickslotRow.setRect(0, chkFlipTags.bottom() + GAP, width, BTN_HEIGHT);
 
-								if(isAndroid()) {
-									add(chkExtraQuickslotRow);
-								}
+                                chkExtraQuickslotRow.checked(SPDSettings.extraQuickslotRow());
+                                add(chkExtraQuickslotRow);
 
-								resize(WIDTH_P, (int)(isAndroid() ? chkExtraQuickslotRow.bottom() : chkFlipTags.bottom()));
+                                resize(WIDTH_P, (int)chkExtraQuickslotRow.bottom());
+
+//								if(isAndroid()) {
+//									add(chkExtraQuickslotRow);
+//								}
+//
+//								resize(WIDTH_P, (int)(isAndroid() ? chkExtraQuickslotRow.bottom() : chkFlipTags.bottom()));
 
 							}
 						});
