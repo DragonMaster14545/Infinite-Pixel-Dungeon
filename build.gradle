@@ -21,8 +21,8 @@ allprojects {
         appName = 'Infinite Pixel Dungeon'
         appPackageName = 'com.dragonmaster14545.infinitepixeldungeon.com'
 
-        appVersionCode = 680
-        appVersionName = 'InfPD-0.1.7e'
+        appVersionCode = 681
+        appVersionName = 'InfPD-0.1.7f'
 
         appJavaCompatibility = JavaVersion.VERSION_11
 
@@ -30,7 +30,7 @@ allprojects {
         appAndroidMinSDK = 21       //Android 5.0
         appAndroidTargetSDK = 35    //Android 15
 
-        gdxVersion = '1.14.0'
+        gdxVersion = '1.12.1'
         gdxControllersVersion = '2.2.4'
         robovmVersion = '2.3.24'
     }
