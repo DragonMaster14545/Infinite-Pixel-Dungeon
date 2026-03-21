@@ -80,7 +80,7 @@ public class InfPDChanges {
                         "_-_ Added Nature's Bounty perk\n" +
                         "_-_ Added Utility Bag in the catalog\n" +
                         "_-_ Chalice of Blood should now regen properly with rarity\n" +
-                        "_-_ Resized the bag window\n"
+                        "_-_ Resized the bag window"
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Gleaming Staff can now materialize Refined Bags with very low chance\n" +
@@ -91,7 +91,8 @@ public class InfPDChanges {
                         "_-_ Each taken damage while Faith in my Armor chal. activated now literally increases damage taken by x1.005"
         ));
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
-                "_-_ Fixed crash on depth 26+ when skeleton key is equipped\n"
+                "_-_ Fixed crash on depth 26+ when skeleton key is equipped\n" +
+                        "_-_ Fixed SoU's upgrade amount button using only 1 scroll after upgrading"
         ));
 
         changes = new ChangeInfo("E", false, "");
