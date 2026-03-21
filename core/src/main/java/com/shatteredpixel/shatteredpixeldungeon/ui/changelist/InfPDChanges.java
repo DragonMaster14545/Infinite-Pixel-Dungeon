@@ -79,7 +79,8 @@ public class InfPDChanges {
                         "_-_ Added Cached Ration perk\n" +
                         "_-_ Added Nature's Bounty perk\n" +
                         "_-_ Added Utility Bag in the catalog\n" +
-                        "_-_ Chalice of Blood should now regen properly with rarity"
+                        "_-_ Chalice of Blood should now regen properly with rarity\n" +
+                        "_-_ Resized the bag window\n"
         ));
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Gleaming Staff can now materialize Refined Bags with very low chance\n" +

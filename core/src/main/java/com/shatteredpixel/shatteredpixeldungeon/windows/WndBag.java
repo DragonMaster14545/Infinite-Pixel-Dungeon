@@ -53,7 +53,7 @@ public class WndBag extends WndTabbed {
 	public static Window INSTANCE;
 
 	protected static final int COLS_P   = 7; //6 //7
-	protected static final int COLS_L   = 10; //7 //10
+	protected static final int COLS_L   = 11; //7 //10
 
 	protected static int SLOT_WIDTH_P   = 17; //17
 	protected static int SLOT_WIDTH_L   = 16; //16
