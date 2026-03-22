@@ -425,14 +425,14 @@ public class WndUpgrade extends Window {
 
 				ScrollOfUpgrade.upgrade(Dungeon.hero);
 
-				Item upgraded = toUpgrade;
+				//Item upgraded = toUpgrade;
 				if (upgrader instanceof ScrollOfUpgrade){
 					((ScrollOfUpgrade) upgrader).readAnimation();
-					upgraded = ((ScrollOfUpgrade) upgrader).upgradeItem(toUpgrade, amount);
+					((ScrollOfUpgrade) upgrader).upgradeItem(toUpgrade, amount);
 					Sample.INSTANCE.play( Assets.Sounds.READ );
 				} else if (upgrader instanceof MagicalInfusion){
 					((MagicalInfusion) upgrader).useAnimation();
-					upgraded = ((MagicalInfusion) upgrader).upgradeItem(toUpgrade);
+					((MagicalInfusion) upgrader).upgradeItem(toUpgrade);
 				}
 
 				if (!force) {
@@ -441,13 +441,13 @@ public class WndUpgrade extends Window {
 					else
 						upgrader.quantity(upgrader.quantity()-amount);
 				}
-				Item moreUpgradeItem = Dungeon.hero.belongings.getItem(upgrader.getClass());
+				//Item moreUpgradeItem = Dungeon.hero.belongings.getItem(upgrader.getClass());
 
 				hide();
 
-				if (moreUpgradeItem != null && toUpgrade.isUpgradable()){
-					GameScene.show(new WndUpgrade(moreUpgradeItem, upgraded, false, Math.min(moreUpgradeItem.quantity(), amount)));
-				}
+				//if (moreUpgradeItem != null && toUpgrade.isUpgradable()){
+				//	GameScene.show(new WndUpgrade(moreUpgradeItem, upgraded, false, Math.min(moreUpgradeItem.quantity(), amount)));
+				//}
 			}
 		};
 		btnUpgrade.setRect(0, bottom+2*GAP, WIDTH/2f, 16);

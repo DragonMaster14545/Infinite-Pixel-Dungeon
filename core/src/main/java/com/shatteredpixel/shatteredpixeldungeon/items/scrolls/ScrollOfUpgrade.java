@@ -94,7 +94,7 @@ public class ScrollOfUpgrade extends InventoryScroll {
 							"Accept", "Cancel") {
 						@Override public void onSelect(boolean positive, String text) {
 							if(!positive) return;
-							long number = 0;
+							long number;
 							try {
 								number = Long.parseLong(text);
 							} catch (NumberFormatException e){
@@ -231,7 +231,7 @@ public class ScrollOfUpgrade extends InventoryScroll {
 		return isKnown() ? 10 * quantity : super.energyVal();
 	}
 
-	protected WndBag.ItemSelector itemSelector2 = new WndBag.ItemSelector() {
+	public WndBag.ItemSelector itemSelector2 = new WndBag.ItemSelector() {
 
 		@Override
 		public String textPrompt() {
