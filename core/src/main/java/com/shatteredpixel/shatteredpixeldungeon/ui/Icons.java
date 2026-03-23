@@ -119,6 +119,14 @@ public enum Icons {
 	DEPTH_LARGE,
 	DEPTH_TRAPS,
 	DEPTH_SECRETS,
+    WEEKLY_DEPTH,      //weekly depth icons
+    WEEKLY_DEPTH_CHASM,
+    WEEKLY_DEPTH_WATER,
+    WEEKLY_DEPTH_GRASS,
+    WEEKLY_DEPTH_DARK,
+    WEEKLY_DEPTH_LARGE,
+    WEEKLY_DEPTH_TRAPS,
+    WEEKLY_DEPTH_SECRETS,
 	CHAL_COUNT,
 	CYCLE_COUNT,
 	COIN_SML,
@@ -425,6 +433,32 @@ public enum Icons {
 			case WATA:
 				icon.frame( icon.texture.uvRectBySize( 0, 112, 17, 12 ) );
 				break;
+
+
+            case WEEKLY_DEPTH:
+                icon.frame( icon.texture.uvRectBySize( 128, 48, 6, 7 ) );
+                break;
+            case WEEKLY_DEPTH_CHASM:
+                icon.frame( icon.texture.uvRectBySize( 136, 48, 7, 7 ) );
+                break;
+            case WEEKLY_DEPTH_WATER:
+                icon.frame( icon.texture.uvRectBySize( 144, 48, 7, 7 ) );
+                break;
+            case WEEKLY_DEPTH_GRASS:
+                icon.frame( icon.texture.uvRectBySize( 152, 48, 7, 7 ) );
+                break;
+            case WEEKLY_DEPTH_DARK:
+                icon.frame( icon.texture.uvRectBySize( 160, 48, 7, 7 ) );
+                break;
+            case WEEKLY_DEPTH_LARGE:
+                icon.frame( icon.texture.uvRectBySize( 168, 48, 7, 7 ) );
+                break;
+            case WEEKLY_DEPTH_TRAPS:
+                icon.frame( icon.texture.uvRectBySize( 176, 48, 7, 7 ) );
+                break;
+            case WEEKLY_DEPTH_SECRETS:
+                icon.frame( icon.texture.uvRectBySize( 184, 48, 7, 7 ) );
+                break;
 
 			//large icons are scaled down to match game's size
 			case CELESTI:

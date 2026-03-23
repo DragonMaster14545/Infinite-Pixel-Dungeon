@@ -238,6 +238,7 @@ public static void systemFont(boolean value){
 	public static final String KEY_CHALLENGES	= "challenges";
 	public static final String KEY_CUSTOM_SEED	= "custom_seed";
 	public static final String KEY_LAST_DAILY	= "last_daily";
+    public static final String KEY_LAST_WEEKLY	= "last_weekly";
 	public static final String KEY_INTRO		= "intro";
 
 	public static final String KEY_SUPPORT_NAGGED= "support_nagged";
@@ -292,6 +293,14 @@ public static final String KEY_VICTORY_NAGGED= "victory_nagged";
 	public static long lastDaily() {
 		return getLong( KEY_LAST_DAILY, 0);
 	}
+
+    public static void lastWeekly( long value ){
+        put( KEY_LAST_WEEKLY, value );
+    }
+
+    public static long lastWeekly() {
+        return getLong( KEY_LAST_WEEKLY, 0);
+    }
 
 	public static void supportNagged( boolean value ) {
 		put( KEY_SUPPORT_NAGGED, value );

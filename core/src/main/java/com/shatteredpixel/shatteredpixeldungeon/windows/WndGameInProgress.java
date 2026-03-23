@@ -103,7 +103,9 @@ public class WndGameInProgress extends Window {
 		} else {
 			statSlot(Messages.get(this, "depth"), info.maxDepth);
 		}
-		if (info.daily) {
+		if (info.weekly) {
+            statSlot("_Weekly For_", "_" + info.customSeed + "_");
+        } else if (info.daily) {
 			if (info.dailyReplay) {
 				statSlot(Messages.get(this, "replay_for"), "_" + info.customSeed + "_");
 			} else {

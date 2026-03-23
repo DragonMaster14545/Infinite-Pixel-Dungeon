@@ -40,6 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndDailies;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndRanking;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndVictoryCongrats;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndWeeklies;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Image;
@@ -162,6 +163,24 @@ public class RankingsScene extends PixelScene {
 			add(btnDailies);
 		}
 
+        if (Rankings.INSTANCE.latestWeekly != null) {
+            IconButton btnWeeklies = new IconButton(Icons.CALENDAR.get()) {
+                @Override
+                protected void onClick() {
+                    ShatteredPixelDungeon.scene().addToFront(new WndWeeklies());
+                }
+
+                @Override
+                protected void onPointerUp() {
+                    icon.hardlight(1f, 1f, 0f);
+                }
+            };
+            btnWeeklies.icon().hardlight(1f, 1f, 0f);
+            btnWeeklies.setRect( left, 0, 16, 20 );
+            left += 16;
+            add(btnWeeklies);
+        }
+
 		if (Dungeon.daily){
 			addToFront(new WndDailies());
 		} else if (Badges.isUnlocked(Badges.Badge.VICTORY) && !SPDSettings.victoryNagged()) {
@@ -177,6 +196,7 @@ public class RankingsScene extends PixelScene {
 		super.destroy();
 		//so that opening daily records does not trigger WndDailies opening on future visits
 		Dungeon.daily = Dungeon.dailyReplay = false;
+        Dungeon.weekly = Dungeon.weeklyReplay = false;
 	}
 
 	@Override

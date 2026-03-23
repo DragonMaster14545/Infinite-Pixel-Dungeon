@@ -118,6 +118,7 @@ public class HeroSelectScene extends PixelScene {
 
 				Dungeon.hero = null;
 				Dungeon.daily = Dungeon.dailyReplay = false;
+                Dungeon.weekly = Dungeon.weeklyReplay = false;
 				Dungeon.initSeed();
 				ActionIndicator.action = null;
 				InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
@@ -706,6 +707,104 @@ public class HeroSelectScene extends PixelScene {
 			dailyButton.icon(Icons.get(Icons.CALENDAR));
 			add(dailyButton);
 			buttons.add(dailyButton);
+
+            StyledButton weeklyButton = new StyledButton(Chrome.Type.BLANK, Messages.get(HeroSelectScene.class, "weekly"), 6){
+
+                private static final long SECOND = 1000;
+                private static final long MINUTE = 60 * SECOND;
+                private static final long HOUR = 60 * MINUTE;
+                private static final long DAY = 24 * HOUR;
+                private static final long WEEK = 7 * DAY;
+
+                @Override
+                protected void onClick() {
+                    super.onClick();
+
+                    long diff = (SPDSettings.lastWeekly() + WEEK) - Game.realTime;
+                    if (diff > 7 * DAY){
+                        ShatteredPixelDungeon.scene().addToFront(new WndMessage(Messages.get(HeroSelectScene.class, "weekly_unavailable_long", (diff / WEEK)+7)));
+                        return;
+                    }
+
+                    for (GamesInProgress.Info game : GamesInProgress.checkAll()){
+                        if (game.weekly){
+                            ShatteredPixelDungeon.scene().addToFront(new WndMessage(Messages.get(HeroSelectScene.class, "weekly_existing")));
+                            return;
+                        }
+                    }
+
+                    Image icon = Icons.get(Icons.CALENDAR);
+                    if (diff <= 0)  icon.hardlight(1f, 1f, 0f);
+                    else            icon.hardlight(1f, 0.5f, 2f);
+                    ShatteredPixelDungeon.scene().addToFront(new WndOptions(
+                            icon,
+                            Messages.get(HeroSelectScene.class, "weekly"),
+                            diff > 0 ?
+                                    Messages.get(HeroSelectScene.class, "weekly_repeat") :
+                                    Messages.get(HeroSelectScene.class, "weekly_desc"),
+                            Messages.get(HeroSelectScene.class, "weekly_yes"),
+                            Messages.get(HeroSelectScene.class, "weekly_no")){
+                        @Override
+                        protected void onSelect(int index) {
+                            if (index == 0){
+                                if (diff <= 0) {
+                                    long time = Game.realTime - (Game.realTime % WEEK);
+
+                                    //earliest possible daily for v2.3.2 is Jan 30 2024
+                                    //which is 19,752 days after Jan 1 1970
+                                    time = Math.max(time, 2821 * WEEK);
+
+                                    SPDSettings.lastWeekly(time);
+                                    Dungeon.weeklyReplay = false;
+                                } else {
+                                    Dungeon.weeklyReplay = true;
+                                }
+
+                                Dungeon.hero = null;
+                                Dungeon.weekly = true;
+                                Dungeon.initSeed();
+                                ActionIndicator.action = null;
+                                InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
+
+                                Game.switchScene( InterlevelScene.class );
+                            }
+                        }
+                    });
+                }
+
+                private long timeToUpdate = 0;
+
+                private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM/w", Locale.ROOT);
+                {
+                    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                }
+
+                @Override
+                public void update() {
+                    super.update();
+
+                    if (Game.realTime > timeToUpdate && visible){
+                        long diff = (SPDSettings.lastWeekly() + WEEK) - Game.realTime;
+
+                        if (diff > 0){
+                            if (diff > 7*WEEK){
+                                text("7 WEEKS+");
+                            } else {
+                                text(dateFormat.format(new Date(diff)));
+                            }
+                            timeToUpdate = Game.realTime + SECOND;
+                        } else {
+                            text(Messages.get(HeroSelectScene.class, "weekly"));
+                            timeToUpdate = Long.MAX_VALUE;
+                        }
+                    }
+
+                }
+            };
+            weeklyButton.leftJustify = true;
+            weeklyButton.icon(Icons.get(Icons.CALENDAR));
+            add(weeklyButton);
+            buttons.add(weeklyButton);
 
 			StyledButton challengeButton = new StyledButton(Chrome.Type.BLANK, Messages.get(WndChallenges.class, "title"), 6){
 				@Override

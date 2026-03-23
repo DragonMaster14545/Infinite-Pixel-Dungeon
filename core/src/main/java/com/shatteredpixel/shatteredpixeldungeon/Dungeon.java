@@ -259,8 +259,10 @@ public class Dungeon {
 	public static int initialVersion;
 	public static int version;
 
-	public static boolean daily;
-	public static boolean dailyReplay;
+	public static boolean weekly;
+    public static boolean daily;
+    public static boolean dailyReplay;
+    public static boolean weeklyReplay;
 	public static String customSeedText = "";
 	public static long seed;
 
@@ -272,7 +274,13 @@ public class Dungeon {
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT);
 			format.setTimeZone(TimeZone.getTimeZone("UTC"));
 			customSeedText = format.format(new Date(SPDSettings.lastDaily()));
-		} else if (!SPDSettings.customSeed().isEmpty()){
+		} else if (weekly) {
+            //Ensures that daily seeds are not in the range of user-enterable seeds
+            seed = SPDSettings.lastWeekly() + DungeonSeed.TOTAL_SEEDS;
+            DateFormat format = new SimpleDateFormat("yyyy-MM/w", Locale.ROOT);
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+            customSeedText = format.format(new Date(SPDSettings.lastWeekly()));
+        } else if (!SPDSettings.customSeed().isEmpty()){
 			customSeedText = SPDSettings.customSeed();
 			seed = DungeonSeed.convertFromText(customSeedText);
 		} else {
@@ -772,7 +780,9 @@ public class Dungeon {
 	private static final String SEED		= "seed";
 	private static final String CUSTOM_SEED	= "custom_seed";
 	private static final String DAILY	    = "daily";
+    private static final String WEEKLY	    = "weekly";
 	private static final String DAILY_REPLAY= "daily_replay";
+    private static final String WEEKLY_REPLAY= "weekly_replay";
 	private static final String CHALLENGES	= "challenges";
 	private static final String MOBS_TO_CHAMPION	= "mobs_to_champion";
 	private static final String HERO		= "hero";
@@ -805,7 +815,9 @@ public class Dungeon {
 			bundle.put( SEED, seed );
 			bundle.put( CUSTOM_SEED, customSeedText );
 			bundle.put( DAILY, daily );
+            bundle.put( WEEKLY, weekly );
 			bundle.put( DAILY_REPLAY, dailyReplay );
+            bundle.put( WEEKLY_REPLAY, weeklyReplay );
 			bundle.put( CHALLENGES, challenges );
 			bundle.put( MOBS_TO_CHAMPION, mobsToChampion );
 			bundle.put( HERO, hero );
@@ -922,7 +934,9 @@ public class Dungeon {
 		seed = bundle.contains( SEED ) ? bundle.getLong( SEED ) : DungeonSeed.randomSeed();
 		customSeedText = bundle.getString( CUSTOM_SEED );
 		daily = bundle.getBoolean( DAILY );
+        weekly = bundle.getBoolean( WEEKLY );
 		dailyReplay = bundle.getBoolean( DAILY_REPLAY );
+        weeklyReplay = bundle.getBoolean( WEEKLY_REPLAY );
 
 		Actor.clear();
 		Actor.restoreNextID( bundle );
@@ -1092,6 +1106,8 @@ public class Dungeon {
 		info.cycle = bundle.getInt( CYCLE );
 		info.seed = bundle.getLong( SEED );
 		info.customSeed = bundle.getString( CUSTOM_SEED );
+        info.weekly = bundle.getBoolean( WEEKLY );
+        info.weeklyReplay = bundle.getBoolean( WEEKLY_REPLAY );
 		info.daily = bundle.getBoolean( DAILY );
 		info.dailyReplay = bundle.getBoolean( DAILY_REPLAY );
 

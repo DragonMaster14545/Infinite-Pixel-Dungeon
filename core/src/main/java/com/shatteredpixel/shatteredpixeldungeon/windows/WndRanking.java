@@ -220,7 +220,9 @@ public class WndRanking extends WndTabbed {
 					pos = statSlot(this, Messages.get(this, "ascent"), num.format(Statistics.highestAscent), pos);
 				}
 				if (Dungeon.seed != -1) {
-					if (Dungeon.daily) {
+					if (Dungeon.weekly) {
+                        pos = statSlot(this, "_Weekly For_", "_" + Dungeon.customSeedText + "_", pos);
+                    } else if (Dungeon.daily) {
 						if (Dungeon.dailyReplay) {
 							pos = statSlot(this, Messages.get(this, "replay_for"), "_" + Dungeon.customSeedText + "_", pos);
 						} else {
