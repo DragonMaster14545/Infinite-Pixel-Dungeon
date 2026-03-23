@@ -774,7 +774,7 @@ public class HeroSelectScene extends PixelScene {
 
                 private long timeToUpdate = 0;
 
-                private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM/w", Locale.ROOT);
+                private final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss", Locale.ROOT);
                 {
                     dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
                 }
@@ -790,7 +790,9 @@ public class HeroSelectScene extends PixelScene {
                             if (diff > 7*WEEK){
                                 text("7 WEEKS+");
                             } else {
-                                text(dateFormat.format(new Date(diff)));
+                                long days = diff / DAY;
+                                String timeStr = dateFormat.format(new Date(diff % DAY));
+                                text(days > 0 ? days + "d " + timeStr : timeStr);
                             }
                             timeToUpdate = Game.realTime + SECOND;
                         } else {
