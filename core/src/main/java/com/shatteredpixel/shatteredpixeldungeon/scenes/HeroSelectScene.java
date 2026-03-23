@@ -752,7 +752,7 @@ public class HeroSelectScene extends PixelScene {
 
                                     //earliest possible daily for v2.3.2 is Jan 30 2024
                                     //which is 19,752 days after Jan 1 1970
-                                    time = Math.max(time, 2821 * WEEK);
+                                    time = Math.max(time, 2_821 * WEEK);
 
                                     SPDSettings.lastWeekly(time);
                                     Dungeon.weeklyReplay = false;
