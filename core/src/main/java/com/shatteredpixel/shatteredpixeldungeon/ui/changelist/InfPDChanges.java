@@ -72,7 +72,8 @@ public class InfPDChanges {
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
-                "_-_ Fixed Nature's Bounty perk not working\n"
+                "_-_ Fixed Nature's Bounty perk not working\n" +
+                        "_-_ Fixed some logics on missile's max durability\n"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.7", true, "");

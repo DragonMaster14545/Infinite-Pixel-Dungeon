@@ -270,8 +270,8 @@ public class WndUpgrade extends Window {
 			int uses1 = (int)Math.ceil(100f/((MissileWeapon) toUpgrade).durabilityPerUse());
 			int uses2 = (int)Math.ceil(300f/((MissileWeapon) toUpgrade).durabilityPerUse());
 			bottom = fillFields(Messages.get(this, "durability"),
-					uses1 >= 100 ? "∞" : Integer.toString(uses1),
-					uses2 >= 100 ? "∞" : Integer.toString(uses2),
+					uses1 >= 10000 ? "∞" : Integer.toString(uses1),
+					uses2 >= 10000 ? "∞" : Integer.toString(uses2),
 					bottom);
 		}
 
