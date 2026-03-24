@@ -98,6 +98,16 @@ public class WelcomeScene extends PixelScene {
 						Game.reportException( new RuntimeException("Rankings Updating Failed!",e));
 					}
 				}
+                if (Rankings.INSTANCE.latestWeekly != null){
+                    try {
+                        Rankings.INSTANCE.loadGameData(Rankings.INSTANCE.latestWeekly);
+                        Rankings.INSTANCE.saveGameData(Rankings.INSTANCE.latestWeekly);
+                    } catch (Exception e) {
+                        //if we encounter a fatal per-record error, then clear that record's data
+                        Rankings.INSTANCE.latestWeekly.gameData = null;
+                        Game.reportException( new RuntimeException("Rankings Updating Failed!",e));
+                    }
+                }
 				Collections.sort(Rankings.INSTANCE.records, Rankings.scoreComparator);
 				Rankings.INSTANCE.save();
 			} catch (Exception e) {

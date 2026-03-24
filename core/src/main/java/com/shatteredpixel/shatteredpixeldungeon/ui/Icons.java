@@ -491,12 +491,13 @@ public enum Icons {
 	}
 
 	private static int runTypeOfsX(){
-		return Dungeon.daily ? 64 : 0;
+		return (Dungeon.daily || Dungeon.weekly) ? 64 : 0;
 	}
 
 	private static int runTypeOfsY(){
 		if ((Dungeon.daily && Dungeon.dailyReplay)
-				|| (!Dungeon.daily && !Dungeon.customSeedText.isEmpty())){
+				|| (!Dungeon.weekly && !Dungeon.daily && !Dungeon.customSeedText.isEmpty())
+                || (Dungeon.weeklyReplay && Dungeon.weekly)){
 			return 8;
 		} else {
 			return 0;
@@ -540,24 +541,45 @@ public enum Icons {
 	}
 
 	public static Image get(Level.Feeling feeling){
-		switch (feeling){
-			case NONE: default:
-				return get(DEPTH);
-			case CHASM:
-				return get(DEPTH_CHASM);
-			case WATER:
-				return get(DEPTH_WATER);
-			case GRASS:
-				return get(DEPTH_GRASS);
-			case DARK:
-				return get(DEPTH_DARK);
-			case LARGE:
-				return get(DEPTH_LARGE);
-			case TRAPS:
-				return get(DEPTH_TRAPS);
-			case SECRETS:
-				return get(DEPTH_SECRETS);
-		}
+		if (Dungeon.weekly && !Dungeon.weeklyReplay) {
+            switch (feeling){
+                case NONE: default:
+                    return get(WEEKLY_DEPTH);
+                case CHASM:
+                    return get(WEEKLY_DEPTH_CHASM);
+                case WATER:
+                    return get(WEEKLY_DEPTH_WATER);
+                case GRASS:
+                    return get(WEEKLY_DEPTH_GRASS);
+                case DARK:
+                    return get(WEEKLY_DEPTH_DARK);
+                case LARGE:
+                    return get(WEEKLY_DEPTH_LARGE);
+                case TRAPS:
+                    return get(WEEKLY_DEPTH_TRAPS);
+                case SECRETS:
+                    return get(WEEKLY_DEPTH_SECRETS);
+            }
+        } else {
+            switch (feeling){
+                case NONE: default:
+                    return get(DEPTH);
+                case CHASM:
+                    return get(DEPTH_CHASM);
+                case WATER:
+                    return get(DEPTH_WATER);
+                case GRASS:
+                    return get(DEPTH_GRASS);
+                case DARK:
+                    return get(DEPTH_DARK);
+                case LARGE:
+                    return get(DEPTH_LARGE);
+                case TRAPS:
+                    return get(DEPTH_TRAPS);
+                case SECRETS:
+                    return get(DEPTH_SECRETS);
+            }
+        }
 	}
 
 	public static Image getLarge(Level.Feeling feeling){

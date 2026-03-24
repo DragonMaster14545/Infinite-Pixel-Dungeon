@@ -207,7 +207,11 @@ public class WndHero extends WndTabbed {
 			statSlot( Messages.get(this, "gold"), Statistics.goldCollected );
 			statSlot( Messages.get(this, "depth"), Statistics.deepestFloor );
 			if (Dungeon.weekly) {
-                statSlot("_Weekly For_", "_" + Dungeon.customSeedText + "_");
+                if (!Dungeon.weeklyReplay) {
+                    statSlot("_Weekly For_", "_" + Dungeon.customSeedText + "_");
+                } else {
+                    statSlot("_Weekly Replay For_", "_" + Dungeon.customSeedText + "_");
+                }
             } else if (Dungeon.daily){
 				if (!Dungeon.dailyReplay) {
 					statSlot(Messages.get(this, "daily_for"), "_" + Dungeon.customSeedText + "_");

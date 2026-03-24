@@ -734,7 +734,7 @@ public class HeroSelectScene extends PixelScene {
                     }
 
                     Image icon = Icons.get(Icons.CALENDAR);
-                    if (diff <= 0)  icon.hardlight(1f, 1f, 0f);
+                    if (diff <= 0)  icon.hardlight(1.5f, 1.5f, 0f);
                     else            icon.hardlight(1f, 0.5f, 2f);
                     ShatteredPixelDungeon.scene().addToFront(new WndOptions(
                             icon,
@@ -788,7 +788,7 @@ public class HeroSelectScene extends PixelScene {
 
                         if (diff > 0){
                             if (diff > 7*WEEK){
-                                text("7 WEEKS+");
+                                text("7d 00:00:00+");
                             } else {
                                 long days = diff / DAY;
                                 String timeStr = dateFormat.format(new Date(diff % DAY));

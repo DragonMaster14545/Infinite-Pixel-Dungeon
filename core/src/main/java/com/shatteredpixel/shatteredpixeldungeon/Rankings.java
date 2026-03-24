@@ -262,6 +262,7 @@ public enum Rankings {
 	public static final String DAILY	    = "daily";
     public static final String WEEKLY	    = "weekly";
 	public static final String DAILY_REPLAY	= "daily_replay";
+    public static final String WEEKLY_REPLAY	= "weekly_replay";
 
 	public void saveGameData(Record rec){
 		if (Dungeon.hero == null){
@@ -331,6 +332,7 @@ public enum Rankings {
 		rec.gameData.put( DAILY, Dungeon.daily );
 		rec.gameData.put( DAILY_REPLAY, Dungeon.dailyReplay );
         rec.gameData.put( WEEKLY, Dungeon.weekly );
+        rec.gameData.put( WEEKLY_REPLAY, Dungeon.weeklyReplay );
 	}
 
 	public void loadGameData(Record rec){
@@ -374,11 +376,12 @@ public enum Rankings {
 			Dungeon.daily = rec.gameData.getBoolean(DAILY);
 			Dungeon.dailyReplay = rec.gameData.getBoolean(DAILY_REPLAY);
             Dungeon.weekly = rec.gameData.getBoolean(WEEKLY);
+            Dungeon.weeklyReplay = rec.gameData.getBoolean(WEEKLY_REPLAY);
 		} else {
 			Dungeon.seed = -1;
 			Dungeon.customSeedText = "";
 			Dungeon.daily = Dungeon.dailyReplay = false;
-            Dungeon.weekly = false;
+            Dungeon.weekly = Dungeon.weeklyReplay = false;
 		}
 	}
 	
@@ -487,7 +490,7 @@ public enum Rankings {
                 long[] scores = bundle.getLongArray(WEEKLY_HISTORY_SCORES);
                 int j = 0;
                 long latestDate = 0;
-                for (long date : bundle.getLongArray(WEEKLY_HISTORY_SCORES)){
+                for (long date : bundle.getLongArray(WEEKLY_HISTORY_DATES)){
                     weeklyScoreHistory.put(date, scores[j]);
                     if (date > latestDate) latestDate = date;
                     j++;

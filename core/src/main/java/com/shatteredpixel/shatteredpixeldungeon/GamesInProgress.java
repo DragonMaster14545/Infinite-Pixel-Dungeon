@@ -142,6 +142,7 @@ public class GamesInProgress {
 		info.daily = Dungeon.daily;
         info.weekly = Dungeon.weekly;
 		info.dailyReplay = Dungeon.dailyReplay;
+        info.weeklyReplay = Dungeon.weeklyReplay;
 		
 		info.level = Dungeon.hero.lvl;
 		info.str = Dungeon.hero.STR;

@@ -58,7 +58,7 @@ public class WndWeeklies extends Window {
 		Component content = pane.content();
 
 		IconTitle title = new IconTitle(Icons.CALENDAR.get(), Messages.get(this, "title"));
-		title.imIcon.hardlight(0.5f, 1f, 2f);
+		title.imIcon.hardlight(1.5f, 1.5f, 0);
 		title.setRect(0, 0, WIDTH, 0);
 		title.setPos(0, 0);
 		content.add(title);

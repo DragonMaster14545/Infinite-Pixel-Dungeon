@@ -172,16 +172,18 @@ public class RankingsScene extends PixelScene {
 
                 @Override
                 protected void onPointerUp() {
-                    icon.hardlight(1f, 1f, 0f);
+                    icon.hardlight(1.5f, 1.5f, 0f);
                 }
             };
-            btnWeeklies.icon().hardlight(1f, 1f, 0f);
+            btnWeeklies.icon().hardlight(1.5f, 1.5f, 0f);
             btnWeeklies.setRect( left, 0, 16, 20 );
             left += 16;
             add(btnWeeklies);
         }
 
-		if (Dungeon.daily){
+        if (Dungeon.weekly) {
+            addToFront(new WndWeeklies());
+        } else if (Dungeon.daily){
 			addToFront(new WndDailies());
 		} else if (Badges.isUnlocked(Badges.Badge.VICTORY) && !SPDSettings.victoryNagged()) {
 			SPDSettings.victoryNagged(true);
