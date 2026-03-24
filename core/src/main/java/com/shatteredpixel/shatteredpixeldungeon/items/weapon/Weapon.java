@@ -124,6 +124,7 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 	public boolean enchantHardened = false;
 	public boolean curseInfusionBonus = false;
 	public boolean masteryPotionBonus = false;
+    public int internalHits = 0;
 
 	public static float hardenBoost(long upgrades){
 		return 0.0002f * upgrades;
@@ -146,6 +147,8 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
                     damage = new Unstable().proc(this,attacker,defender,damage);
                 }
             }
+
+            internalHits++;
         }
 
 		if (!levelKnown && attacker == Dungeon.hero) {
@@ -184,6 +187,7 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 	private static final String CURSE_INFUSION_BONUS = "curse_infusion_bonus";
 	private static final String MASTERY_POTION_BONUS = "mastery_potion_bonus";
 	private static final String AUGMENT	        = "augment";
+    private static final String HITS	        = "weapon_hits";
 
 	@Override
 	public void storeInBundle( Bundle bundle ) {
@@ -195,6 +199,7 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 		bundle.put( CURSE_INFUSION_BONUS, curseInfusionBonus );
 		bundle.put( MASTERY_POTION_BONUS, masteryPotionBonus );
 		bundle.put( AUGMENT, augment );
+        bundle.put( HITS, internalHits );
 	}
 	
 	@Override
@@ -208,6 +213,7 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 		masteryPotionBonus = bundle.getBoolean( MASTERY_POTION_BONUS );
 
 		augment = bundle.getEnum(AUGMENT, Augment.class);
+        internalHits = bundle.getInt( HITS );
 	}
 	
 	@Override
@@ -445,7 +451,19 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 
 	@Override
 	public ItemSprite.Glowing glowing() {
-		return enchantment != null && (cursedKnown || !enchantment.curse()) ? enchantment.glowing() : null;
+		if (internalHits > 0) {
+            if (internalHits >= 60 && internalHits < 120) {
+                return new ItemSprite.Glowing( 0x00FF00 );
+            } else if (internalHits >= 120 && internalHits < 250) {
+                return new ItemSprite.Glowing( 0xFFFF00 );
+            } else if (internalHits >= 250) {
+                return new ItemSprite.Glowing( 0xFF0000 );
+            } else {
+                return null;
+            }
+        } else {
+            return enchantment != null && (cursedKnown || !enchantment.curse()) ? enchantment.glowing() : null;
+        }
 	}
 
 	public static abstract class Enchantment implements Bundlable {
