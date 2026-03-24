@@ -166,6 +166,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.blacksmith.Gl
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.blacksmith.RegrowingSlasher;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.blacksmith.StarlightSmasher;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.Clayball;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ShurikenOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.TippedDart;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.watabou.utils.Bundle;
@@ -258,6 +259,7 @@ public enum Catalog {
 		THROWN_WEAPONS.addItems(Generator.Category.MIS_T3.classes);
 		THROWN_WEAPONS.addItems(Generator.Category.MIS_T4.classes);
 		THROWN_WEAPONS.addItems(Generator.Category.MIS_T5.classes);
+        THROWN_WEAPONS.addItems(ShurikenOfShadows.class);
 
 		ENCHANTMENTS.addItems(Weapon.Enchantment.common);
 		ENCHANTMENTS.addItems(Weapon.Enchantment.uncommon);
