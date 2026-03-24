@@ -54,6 +54,19 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Upcoming: v0.1.8",
                 "In the next update, we will now add new content and some patches along with v0.1.7\n"
         ));
+
+        changes = new ChangeInfo("InfPD-0.1.8", true, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        Image ic = Icons.get(Icons.CALENDAR);
+        ic.hardlight(1.5f, 1.5f, 0f);
+        changes.addButton( new ChangeButton(ic, "Weekly Runs!",
+                "_Every week there is a specific seeded run that's available to all players!_\n\n" +
+                        "The weekly run makes it easy to compete again friends or other folks on the internet, without having to coordinate and share a specific seed.\n\n" +
+                        "The game does keep track of your previous weekly scores, and there is a separate leaderboard for them.\n\n" +
+                        "To avoid confusion in reading the weekly run seed, their format is Year-Month/Week"));
+
         changes = new ChangeInfo("InfPD-0.1.7", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
