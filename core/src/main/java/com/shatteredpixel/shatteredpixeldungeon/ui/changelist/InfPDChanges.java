@@ -67,6 +67,10 @@ public class InfPDChanges {
                         "The game does keep track of your previous weekly scores, and there is a separate leaderboard for them.\n\n" +
                         "To avoid confusion in reading the weekly run seed, their format is Year-Month/Week"));
 
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
+                "_-_ Fixed Nature's Bounty perk not working\n"
+        ));
+
         changes = new ChangeInfo("InfPD-0.1.7", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);

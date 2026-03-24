@@ -92,7 +92,7 @@ public class HighGrass {
 				}
 
 				//berries try to drop on floors 2/3/4/6/7/8, to a max of 4/6
-				if (ch instanceof Hero && ((Hero) ch).perks.contains(Perks.Perk.SUPPLY_RATIONS)){
+				if (ch instanceof Hero && ((Hero) ch).perks.contains(Perks.Perk.DUNGEON_BERRY)){
 					int berriesAvailable = 6;
 
 					Talent.NatureBerriesDropped dropped = Buff.affect(ch, Talent.NatureBerriesDropped.class);
