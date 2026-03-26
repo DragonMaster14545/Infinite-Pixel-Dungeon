@@ -257,7 +257,7 @@ public class StartScene extends PixelScene {
 
                 long diff = Game.realTime - info.lastPlayed;
                 if (diff > 99L * 30 * 24 * 60 * 60_000){
-                    lastPlayed.text(" "); //show no text for >99 months ago
+                    lastPlayed.text(Messages.get(StartScene.class, "long_time_ago"));
                 } else if (diff < 60_000){
                     lastPlayed.text(Messages.get(StartScene.class, "one_minute_ago"));
                 } else if (diff < 2 * 60 * 60_000){
