@@ -265,6 +265,7 @@ public class Dungeon {
     public static boolean weeklyReplay;
 	public static String customSeedText = "";
 	public static long seed;
+    public static long lastPlayed;
 
 	//we initialize the seed separately so that things like interlevelscene can access it early
 	public static void initSeed(){
@@ -783,6 +784,7 @@ public class Dungeon {
     private static final String WEEKLY	    = "weekly";
 	private static final String DAILY_REPLAY= "daily_replay";
     private static final String WEEKLY_REPLAY= "weekly_replay";
+    private static final String LAST_PLAYED = "last_played";
 	private static final String CHALLENGES	= "challenges";
 	private static final String MOBS_TO_CHAMPION	= "mobs_to_champion";
 	private static final String HERO		= "hero";
@@ -818,6 +820,7 @@ public class Dungeon {
             bundle.put( WEEKLY, weekly );
 			bundle.put( DAILY_REPLAY, dailyReplay );
             bundle.put( WEEKLY_REPLAY, weeklyReplay );
+            bundle.put( LAST_PLAYED, lastPlayed = Game.realTime);
 			bundle.put( CHALLENGES, challenges );
 			bundle.put( MOBS_TO_CHAMPION, mobsToChampion );
 			bundle.put( HERO, hero );
@@ -1110,6 +1113,7 @@ public class Dungeon {
         info.weeklyReplay = bundle.getBoolean( WEEKLY_REPLAY );
 		info.daily = bundle.getBoolean( DAILY );
 		info.dailyReplay = bundle.getBoolean( DAILY_REPLAY );
+        info.lastPlayed = bundle.getLong( LAST_PLAYED );
 
 		Hero.preview( info, bundle.getBundle( HERO ) );
 		Statistics.preview( info, bundle );

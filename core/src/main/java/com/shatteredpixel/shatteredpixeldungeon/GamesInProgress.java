@@ -38,7 +38,7 @@ import java.util.HashMap;
 
 public class GamesInProgress {
 	
-	public static final int MAX_SLOTS = HeroClass.values().length;
+	public static final int MAX_SLOTS = 10000;
 	
 	//null means we have loaded info and it is empty, no entry means unknown.
 	private static HashMap<Integer, Info> slotStates = new HashMap<>();
@@ -85,7 +85,16 @@ public class GamesInProgress {
 			Info curr = check(i);
 			if (curr != null) result.add(curr);
 		}
-		Collections.sort(result, scoreComparator);
+
+        switch (SPDSettings.gamesInProgressSort()){
+            case "level": default:
+                Collections.sort(result, levelComparator);
+                break;
+            case "last_played":
+                Collections.sort(result, lastPlayedComparator);
+                break;
+        }
+
 		return result;
 	}
 	
@@ -132,6 +141,7 @@ public class GamesInProgress {
 	public static void set(int slot) {
 		Info info = new Info();
 		info.slot = slot;
+        info.lastPlayed = Dungeon.lastPlayed;
 		
 		info.depth = Dungeon.depth;
 		info.challenges = Dungeon.challenges;
@@ -171,7 +181,7 @@ public class GamesInProgress {
 	
 	public static class Info {
 		public int slot;
-		
+        public long lastPlayed;
 		public int depth;
 		public int version;
 		public boolean[] challenges;
@@ -198,13 +208,22 @@ public class GamesInProgress {
 		public long goldCollected;
 		public int maxDepth;
 	}
-	
-	public static final Comparator<GamesInProgress.Info> scoreComparator = new Comparator<GamesInProgress.Info>() {
+
+    public static final Comparator<GamesInProgress.Info> levelComparator = new Comparator<GamesInProgress.Info>() {
+        @Override
+        public int compare(GamesInProgress.Info lhs, GamesInProgress.Info rhs ) {
+            if (rhs.level != lhs.level){
+                return (int)Math.signum( rhs.level - lhs.level );
+            } else {
+                return lastPlayedComparator.compare(lhs, rhs);
+            }
+        }
+    };
+
+    public static final Comparator<GamesInProgress.Info> lastPlayedComparator = new Comparator<GamesInProgress.Info>() {
 		@Override
 		public int compare(GamesInProgress.Info lhs, GamesInProgress.Info rhs ) {
-			long lScore = (lhs.level * lhs.maxDepth * 100) + lhs.goldCollected;
-			long rScore = (rhs.level * rhs.maxDepth * 100) + rhs.goldCollected;
-			return (int)Math.signum( rScore - lScore );
+            return (int)Math.signum( rhs.lastPlayed - lhs.lastPlayed );
 		}
 	};
 }

@@ -36,8 +36,10 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndGameInProgress;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Camera;
+import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.NinePatch;
+import com.watabou.noosa.ui.Component;
 
 import java.util.ArrayList;
 import java.util.stream.IntStream;
@@ -62,10 +64,17 @@ public class StartScene extends PixelScene {
 		Archs archs = new Archs();
 		archs.setSize( w, h );
 		add( archs );
+
+        ScrollPane scrollpane = new ScrollPane( new Component() );
+        add(scrollpane);
+
+        Component game_slots = scrollpane.content();
+        game_slots.clear();
 		
 		ExitButton btnExit = new ExitButton();
 		btnExit.setPos( w - btnExit.width(), 0 );
 		add( btnExit );
+        game_slots.add( btnExit );
 		
 		IconTitle title = new IconTitle( Icons.ENTER.get(), Messages.get(this, "title"));
 		title.setSize(200, 0);
@@ -75,41 +84,84 @@ public class StartScene extends PixelScene {
 		);
 		align(title);
 		add(title);
+        game_slots.add( title );
 		
 		ArrayList<GamesInProgress.Info> games = GamesInProgress.checkAll();
 		
 		int slotCount = Math.min(GamesInProgress.MAX_SLOTS, games.size()+1);
-		int slotGap = 10 - slotCount;
+		int slotGap = 4;
 		int slotsHeight = slotCount*SLOT_HEIGHT + (slotCount-1)* slotGap;
+        slotsHeight += 14;
 
-		while (slotsHeight > (h-title.bottom()-2)){
-			slotGap--;
-			slotsHeight -= slotCount-1;
-		}
-		
-		float yPos = (h - slotsHeight + title.bottom() + 2)/2f;
+		//while (slotGap >= 2 && slotsHeight > (h-title.bottom()-2)){
+		//	slotGap--;
+		//	slotsHeight -= slotCount-1;
+		//}
+
+        float yPos = (h - slotsHeight + title.bottom() + 2)/2f - 4;
+        yPos = Math.max(yPos, title.bottom()+2);
+        float slotLeft = (w - SLOT_WIDTH) / 2f;
 		
 		for (GamesInProgress.Info game : games) {
 			SaveSlotButton existingGame = new SaveSlotButton();
 			existingGame.set(game.slot);
-			existingGame.setRect((w - SLOT_WIDTH) / 2f, yPos, SLOT_WIDTH, SLOT_HEIGHT);
+			existingGame.setRect(slotLeft, yPos, SLOT_WIDTH, SLOT_HEIGHT);
 			yPos += SLOT_HEIGHT + slotGap;
 			align(existingGame);
 			add(existingGame);
-			
+			game_slots.add(existingGame);
 		}
 		
 		if (games.size() < GamesInProgress.MAX_SLOTS){
 			SaveSlotButton newGame = new SaveSlotButton();
 			newGame.set(GamesInProgress.firstEmpty());
-			newGame.setRect((w - SLOT_WIDTH) / 2f, yPos, SLOT_WIDTH, SLOT_HEIGHT);
+			newGame.setRect(slotLeft, yPos, SLOT_WIDTH, SLOT_HEIGHT);
 			yPos += SLOT_HEIGHT + slotGap;
 			align(newGame);
 			add(newGame);
+            game_slots.add(newGame);
 		}
 		
 		GamesInProgress.curSlot = 0;
-		
+
+        String sortText = "";
+        switch (SPDSettings.gamesInProgressSort()){
+            case "level":
+                sortText = Messages.get(this, "sort_level");
+                break;
+            case "last_played":
+                sortText = Messages.get(this, "sort_recent");
+                break;
+        }
+
+        StyledButton btnSort = new StyledButton(Chrome.Type.TOAST_TR, sortText, 6){
+            @Override
+            protected void onClick() {
+                super.onClick();
+
+                if (SPDSettings.gamesInProgressSort().equals("level")){
+                    SPDSettings.gamesInProgressSort("last_played");
+                } else {
+                    SPDSettings.gamesInProgressSort("level");
+                }
+
+                ShatteredPixelDungeon.seamlessResetScene();
+            }
+        };
+        btnSort.textColor(0xCCCCCC);
+
+        if (yPos + 10 > Camera.main.height) {
+            btnSort.setRect(slotLeft - btnSort.reqWidth() - 6, Camera.main.height - 14, btnSort.reqWidth() + 4, 12);
+        } else {
+            btnSort.setRect(slotLeft, yPos, btnSort.reqWidth() + 4, 12);
+        }
+        if (games.size() >= 2) add(btnSort);
+        if (games.size() > 6 + SPDSettings.interfaceSize()) {
+            game_slots.setSize(w, btnSort.height() + yPos);
+        }
+
+        scrollpane.setRect(0, 0, w, h);
+        scrollpane.scrollTo(0, 0);
 		fadeIn();
 		
 	}
@@ -125,7 +177,8 @@ public class StartScene extends PixelScene {
 		
 		private Image hero;
 		private RenderedTextBlock name;
-		
+        private RenderedTextBlock lastPlayed;
+
 		private Image steps;
 		private BitmapText depth;
 		private Image classIcon;
@@ -140,11 +193,14 @@ public class StartScene extends PixelScene {
 		protected void createChildren() {
 			super.createChildren();
 			
-			bg = Chrome.get(Chrome.Type.GEM);
+			bg = Chrome.get(Chrome.Type.TOAST_TR_HEAVY);
 			add( bg);
 			
 			name = PixelScene.renderTextBlock(9);
 			add(name);
+
+            lastPlayed = PixelScene.renderTextBlock(6);
+            add(lastPlayed);
 		}
 		
 		public void set( int slot ){
@@ -198,6 +254,21 @@ public class StartScene extends PixelScene {
 					
 					classIcon.copy(Icons.get(info.heroClass));
 				}
+
+                long diff = Game.realTime - info.lastPlayed;
+                if (diff > 99L * 30 * 24 * 60 * 60_000){
+                    lastPlayed.text(" "); //show no text for >99 months ago
+                } else if (diff < 60_000){
+                    lastPlayed.text(Messages.get(StartScene.class, "one_minute_ago"));
+                } else if (diff < 2 * 60 * 60_000){
+                    lastPlayed.text(Messages.get(StartScene.class, "minutes_ago", diff / 60_000));
+                } else if (diff < 2 * 24 * 60 * 60_000){
+                    lastPlayed.text(Messages.get(StartScene.class, "hours_ago", diff / (60 * 60_000)));
+                } else if (diff < 2L * 30 * 24 * 60 * 60_000){
+                    lastPlayed.text(Messages.get(StartScene.class, "days_ago", diff / (24 * 60 * 60_000)));
+                } else {
+                    lastPlayed.text(Messages.get(StartScene.class, "months_ago", diff / (30L * 24 * 60 * 60_000)));
+                }
 				
 				depth.text(Integer.toString(info.depth));
 				depth.measure();
@@ -212,6 +283,7 @@ public class StartScene extends PixelScene {
 
 				if (IntStream.range(0, info.challenges.length).anyMatch(i -> info.challenges[i])){
 					name.hardlight(Window.TITLE_COLOR);
+                    lastPlayed.hardlight(Window.TITLE_COLOR);
 					depth.hardlight(Window.TITLE_COLOR);
 					level.hardlight(Window.TITLE_COLOR);
 					if (info.cycle != 0){
@@ -219,6 +291,7 @@ public class StartScene extends PixelScene {
 					}
 				} else {
 					name.resetColor();
+                    lastPlayed.resetColor();
 					depth.resetColor();
 					level.resetColor();
 					if (info.cycle != 0){
@@ -262,9 +335,14 @@ public class StartScene extends PixelScene {
 				
 				name.setPos(
 						hero.x + hero.width() + 6,
-						y + (height - name.height())/2f
+						y + (height - name.height() - lastPlayed.height() - 2)/2f
 				);
 				align(name);
+
+                lastPlayed.setPos(
+                        hero.x + hero.width() + 6,
+                        name.bottom()+2
+                );
 				
 				classIcon.x = x + width - 24 + (16 - classIcon.width())/2f;
 				classIcon.y = y + (height - classIcon.height())/2f;

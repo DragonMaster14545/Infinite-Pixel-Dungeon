@@ -68,7 +68,9 @@ public class InfPDChanges {
                         "To avoid confusion in reading the weekly run seed, their format is Year-Month/Week"));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ Added shuriken of shadows into the catalog\n"
+                "_-_ Added shuriken of shadows into the catalog\n" +
+                        "_-_ Changed save limit to 10k, allowing you to save more run at once\n" +
+                        "_-_ Improved the save select scene"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
