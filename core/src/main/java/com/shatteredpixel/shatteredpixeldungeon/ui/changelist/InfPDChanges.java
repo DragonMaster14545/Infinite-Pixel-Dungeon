@@ -71,7 +71,8 @@ public class InfPDChanges {
                 "_-_ Added shuriken of shadows into the catalog\n" +
                         "_-_ Changed save limit to 10k, allowing you to save more run at once\n" +
                         "_-_ Improved the save select scene\n" +
-                        "_-_ Missile's max durability is returned to 100"
+                        "_-_ Missile's max durability is returned to 100\n" +
+                        "_-_ Capped ring, misc, and ring slot upgrade to 18"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
