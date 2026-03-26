@@ -61,6 +61,12 @@ public class InfPDChanges {
 
         Image ic = Icons.get(Icons.CALENDAR);
         ic.hardlight(1.5f, 1.5f, 0f);
+        changes.addButton( new ChangeButton(new WandOfTeleportation(),
+                "Due to its nature of being an overpowered wand, we have to make a nerf for them:\n\n" +
+                        "_-_ No longer appears in the dungeon, it is now a _craftable item_ with 5000 energy.\n" +
+                        "_-_ Charge per cast increased to _2 * rarity_, from 1 (capped at 50 charge)\n" +
+                        "_-_ No longer upgradable, instead it will depend on its rarity\n"
+        ));
         changes.addButton( new ChangeButton(ic, "Weekly Runs!",
                 "_Every week there is a specific seeded run that's available to all players!_\n\n" +
                         "The weekly run makes it easy to compete again friends or other folks on the internet, without having to coordinate and share a specific seed.\n\n" +
@@ -72,7 +78,7 @@ public class InfPDChanges {
                         "_-_ Changed save limit to 10k, allowing you to save more run at once\n" +
                         "_-_ Improved the save select scene\n" +
                         "_-_ Missile's max durability is returned to 100\n" +
-                        "_-_ Capped ring, misc, and ring slot upgrade to 18"
+                        "_-_ Capped ring, misc, and ring slot upgrade to 18\n"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",

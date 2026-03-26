@@ -36,7 +36,11 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Effects;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.CurseInfusion;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.Vampirism;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Elastic;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -94,7 +98,17 @@ public class WandOfTeleportation extends DamageWand {
         }
 	}
 
-	@Override
+    @Override
+    protected long chargesPerCast() {
+        return Math.min(2 * rarity.multiplier, 50);
+    }
+
+    @Override
+    public boolean isUpgradable() {
+        return false;
+    }
+
+    @Override
 	public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
         defender.damage(damage, staff);
 	}
@@ -112,5 +126,21 @@ public class WandOfTeleportation extends DamageWand {
 		particle.setSize( 1f, 2f);
 		particle.radiateXY(1.5f);
 	}
+
+    public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
+
+        private static final int OUT_QUANTITY = 1;
+
+        {
+            inputs =  new Class[]{ScrollOfTeleportation.class, WandOfMagicMissile.class, ScrollOfTransmutation.class};
+            inQuantity = new int[]{1, 1, 1};
+
+            cost = 5000;
+
+            output = WandOfTeleportation.class;
+            outQuantity = OUT_QUANTITY;
+        }
+
+    }
 
 }
