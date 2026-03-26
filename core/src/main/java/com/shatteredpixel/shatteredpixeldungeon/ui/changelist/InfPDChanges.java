@@ -70,12 +70,12 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Added shuriken of shadows into the catalog\n" +
                         "_-_ Changed save limit to 10k, allowing you to save more run at once\n" +
-                        "_-_ Improved the save select scene"
+                        "_-_ Improved the save select scene\n" +
+                        "_-_ Missile's max durability is returned to 100"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
-                "_-_ Fixed Nature's Bounty perk not working\n" +
-                        "_-_ Fixed some logics on missile's max durability\n"
+                "_-_ Fixed Nature's Bounty perk not working\n"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.7", true, "");

@@ -62,7 +62,7 @@ abstract public class MissileWeapon extends Weapon {
 	
 	protected boolean sticky = true;
 	
-	public static final float MAX_DURABILITY = 10000;
+	public static final float MAX_DURABILITY = 100;
 	protected float durability = MAX_DURABILITY;
 	protected float baseUses = 10;
 	
@@ -341,7 +341,7 @@ abstract public class MissileWeapon extends Weapon {
 		if (Dungeon.hero != null) usages *= RingOfSharpshooting.durabilityMultiplier( Dungeon.hero );
 
 		//at 100 uses, items just last forever.
-		if (usages >= 10000f) return 0;
+		if (usages >= 100f) return 0;
 
 		if (rounded){usages = Math.round(usages);
 
@@ -359,7 +359,7 @@ abstract public class MissileWeapon extends Weapon {
 			if (parent.durability <= parent.durabilityPerUse()){
 				durability = 0;
 				parent.durability = MAX_DURABILITY;
-				if (parent.durabilityPerUse() < 10000f) {
+				if (parent.durabilityPerUse() < 100f) {
 					GLog.n(Messages.get(this, "has_broken"));
 				}
 			} else {
@@ -373,7 +373,7 @@ abstract public class MissileWeapon extends Weapon {
 			durability -= durabilityPerUse();
 			if (durability > 0 && durability <= durabilityPerUse()){
 				GLog.w(Messages.get(this, "about_to_break"));
-			} else if (durabilityPerUse() < 10000f && durability <= 0){
+			} else if (durabilityPerUse() < 100f && durability <= 0){
 				GLog.n(Messages.get(this, "has_broken"));
 			}
 		}
