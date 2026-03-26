@@ -148,7 +148,7 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
                 }
             }
 
-            internalHits++;
+            //internalHits++;
         }
 
 		if (!levelKnown && attacker == Dungeon.hero) {
