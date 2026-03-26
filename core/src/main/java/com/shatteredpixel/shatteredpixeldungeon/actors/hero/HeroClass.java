@@ -110,6 +110,23 @@ public enum HeroClass {
 
 		new ScrollOfIdentify().identify();
 
+       if (Dungeon.challenges != null) {
+           int itemQ = 0;
+           for (int j = 0; j < Challenges.activeChallenges(); j++) {
+               itemQ++;
+           }
+
+           i = new PotionOfHealing();
+           i.identify();
+           i.quantity(itemQ);
+           i.collect();
+
+           i = new ScrollOfUpgrade();
+           i.identify();
+           i.quantity(itemQ);
+           i.collect();
+       }
+
 		switch (this) {
 			case WARRIOR:
 				initWarrior( hero );
