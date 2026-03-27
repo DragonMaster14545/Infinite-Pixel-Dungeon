@@ -210,7 +210,15 @@ public class Badges {
 		GAMES_PLAYED_5              ( 122, BadgeType.GLOBAL ),
 		HIGH_SCORE_5                ( 123 ),
 		CHAMPION_2                  ( 124 ),
-		CHAMPION_3                  ( 125 );
+		CHAMPION_3                  ( 125 ),
+
+        //cycles
+        CYCLE_1                  ( 128 ),
+        CYCLE_2                  ( 129 ),
+        CYCLE_3                  ( 130 ),
+        CYCLE_4                  ( 131 ),
+        CYCLE_5                  ( 132 ),
+        CYCLE_FINAL                  ( 133, BadgeType.GLOBAL );
 
 		public boolean meta;
 
@@ -383,6 +391,48 @@ public class Badges {
 
 		displayBadge( badge );
 	}
+
+    public static void validateCycleReached() {
+        Badge badge = null;
+
+        if (!local.contains( Badge.CYCLE_1 ) && Dungeon.cycle == 1) {
+            badge = Badge.CYCLE_1;
+            local.add( badge );
+        }
+        if (!local.contains( Badge.CYCLE_2 ) && Dungeon.cycle == 2) {
+            badge = Badge.CYCLE_2;
+            local.add( badge );
+        }
+        if (!local.contains( Badge.CYCLE_3 ) && Dungeon.cycle == 3) {
+            badge = Badge.CYCLE_3;
+            local.add( badge );
+        }
+        if (!local.contains( Badge.CYCLE_4 ) && Dungeon.cycle == 4) {
+            badge = Badge.CYCLE_4;
+            local.add( badge );
+        }
+        if (!local.contains( Badge.CYCLE_5 ) && Dungeon.cycle == 5) {
+            badge = Badge.CYCLE_5;
+            local.add( badge );
+        }
+
+        displayBadge( badge );
+        validateCycleBadgesGetAll();
+    }
+
+    private static void validateCycleBadgesGetAll() {
+        if (isUnlocked( Badge.CYCLE_1 ) &&
+                isUnlocked( Badge.CYCLE_2 ) &&
+                isUnlocked( Badge.CYCLE_3 ) &&
+                isUnlocked( Badge.CYCLE_4) &&
+                isUnlocked( Badge.CYCLE_5)) {
+
+            Badge badge = Badge.CYCLE_FINAL;
+            if (!isUnlocked( badge )) {
+                displayBadge( badge );
+            }
+        }
+    }
 	
 	public static void validateGoldCollected() {
 		Badge badge = null;
@@ -1232,7 +1282,8 @@ public class Badges {
 			{Badge.HIGH_SCORE_1, Badge.HIGH_SCORE_2, Badge.HIGH_SCORE_3, Badge.HIGH_SCORE_4, Badge.HIGH_SCORE_5},
 			{Badge.GAMES_PLAYED_1, Badge.GAMES_PLAYED_2, Badge.GAMES_PLAYED_3, Badge.GAMES_PLAYED_4, Badge.GAMES_PLAYED_5},
 			{Badge.CHAMPION_1, Badge.CHAMPION_2, Badge.CHAMPION_3},
-			{Badge.WAND_QUEST_1, Badge.WAND_QUEST_2, Badge.WAND_QUEST_3, Badge.WAND_QUEST_4, Badge.WAND_QUEST_5, Badge.WAND_QUEST_6}
+			{Badge.WAND_QUEST_1, Badge.WAND_QUEST_2, Badge.WAND_QUEST_3, Badge.WAND_QUEST_4, Badge.WAND_QUEST_5, Badge.WAND_QUEST_6},
+            {Badge.CYCLE_1, Badge.CYCLE_2, Badge.CYCLE_3, Badge.CYCLE_4, Badge.CYCLE_5},
 	};
 
 	//don't show the later badge if the earlier one isn't unlocked
@@ -1262,7 +1313,13 @@ public class Badges {
 			{Badge.ALL_RINGS_IDENTIFIED, Badge.ALL_ITEMS_IDENTIFIED},
 			{Badge.ALL_ARTIFACTS_IDENTIFIED, Badge.ALL_ITEMS_IDENTIFIED},
 			{Badge.ALL_POTIONS_IDENTIFIED, Badge.ALL_ITEMS_IDENTIFIED},
-			{Badge.ALL_SCROLLS_IDENTIFIED, Badge.ALL_ITEMS_IDENTIFIED}
+			{Badge.ALL_SCROLLS_IDENTIFIED, Badge.ALL_ITEMS_IDENTIFIED},
+
+            {Badge.CYCLE_1, Badge.CYCLE_FINAL},
+            {Badge.CYCLE_2, Badge.CYCLE_FINAL},
+            {Badge.CYCLE_3, Badge.CYCLE_FINAL},
+            {Badge.CYCLE_4, Badge.CYCLE_FINAL},
+            {Badge.CYCLE_5, Badge.CYCLE_FINAL},
 	};
 
 	public static List<Badge> filterReplacedBadges( List<Badge> badges ) {

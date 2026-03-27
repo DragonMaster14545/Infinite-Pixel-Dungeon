@@ -380,6 +380,7 @@ public class Dungeon {
 		InterlevelScene.curTransition = new LevelTransition(Dungeon.level, -1, LevelTransition.Type.REGULAR_EXIT, 1, Dungeon.branch, null);
 		InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
         Game.switchScene( InterlevelScene.class );
+        Badges.validateCycleReached();
     }
 
 	public static long escalatingDepth(){
