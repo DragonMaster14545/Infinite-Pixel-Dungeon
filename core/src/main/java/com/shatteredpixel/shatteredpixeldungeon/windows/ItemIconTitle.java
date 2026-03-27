@@ -4,6 +4,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfUnstable;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -26,7 +27,7 @@ public class ItemIconTitle extends IconTitle {
         super(item);
 
         if (Dungeon.hero.isAlive() && Dungeon.hero.belongings.contains(item)) {
-            if (!(item instanceof WandOfUnstable)) {
+            if (!(item instanceof WandOfUnstable || item instanceof MagesStaff)) {
                 renameButton = new IconButton(Icons.get( item.customName.equals("") ? Icons.SCROLL_GREY : Icons.SCROLL_COLOR)) {
                     @Override
                     protected void onClick() {
