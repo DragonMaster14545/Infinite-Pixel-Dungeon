@@ -1,7 +1,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.ui.changelist;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.effects.BadgeBanner;
 import com.shatteredpixel.shatteredpixeldungeon.items.BlackPsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.LostBackpack;
 import com.shatteredpixel.shatteredpixeldungeon.items.PsycheChest;
@@ -58,6 +60,9 @@ public class InfPDChanges {
         changes = new ChangeInfo("InfPD-0.1.8", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes.addButton( new ChangeButton(BadgeBanner.image( Badges.Badge.CYCLE_5.image ), "New Cycle Badges!",
+                "These new badges that you'll obtain will be the proof for yourself for hours of grinding and slaining enemies, appreciating your hard work through this game :)"));
 
         Image ic = Icons.get(Icons.CALENDAR);
         ic.hardlight(1.5f, 1.5f, 0f);
