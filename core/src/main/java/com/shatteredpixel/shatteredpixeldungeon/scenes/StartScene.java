@@ -47,7 +47,7 @@ import java.util.stream.IntStream;
 public class StartScene extends PixelScene {
 	
 	private static final int SLOT_WIDTH = 138;
-	private static final int SLOT_HEIGHT = 30;
+	private static final int SLOT_HEIGHT = 22;
 	
 	@Override
 	public void create() {
@@ -101,7 +101,17 @@ public class StartScene extends PixelScene {
         float yPos = (h - slotsHeight + title.bottom() + 2)/2f - 4;
         yPos = Math.max(yPos, title.bottom()+2);
         float slotLeft = (w - SLOT_WIDTH) / 2f;
-		
+
+        if (games.size() < GamesInProgress.MAX_SLOTS){
+            SaveSlotButton newGame = new SaveSlotButton();
+            newGame.set(GamesInProgress.firstEmpty());
+            newGame.setRect(slotLeft, yPos, SLOT_WIDTH, SLOT_HEIGHT);
+            yPos += SLOT_HEIGHT + slotGap;
+            align(newGame);
+            add(newGame);
+            game_slots.add(newGame);
+        }
+
 		for (GamesInProgress.Info game : games) {
 			SaveSlotButton existingGame = new SaveSlotButton();
 			existingGame.set(game.slot);
@@ -110,16 +120,6 @@ public class StartScene extends PixelScene {
 			align(existingGame);
 			add(existingGame);
 			game_slots.add(existingGame);
-		}
-		
-		if (games.size() < GamesInProgress.MAX_SLOTS){
-			SaveSlotButton newGame = new SaveSlotButton();
-			newGame.set(GamesInProgress.firstEmpty());
-			newGame.setRect(slotLeft, yPos, SLOT_WIDTH, SLOT_HEIGHT);
-			yPos += SLOT_HEIGHT + slotGap;
-			align(newGame);
-			add(newGame);
-            game_slots.add(newGame);
 		}
 		
 		GamesInProgress.curSlot = 0;
