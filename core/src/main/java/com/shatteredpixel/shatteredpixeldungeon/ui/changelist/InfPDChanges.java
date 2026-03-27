@@ -90,7 +90,8 @@ public class InfPDChanges {
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
-                "_-_ Fixed Nature's Bounty perk not working\n"
+                "_-_ Fixed Nature's Bounty perk not working\n" +
+                        "_-_ Fixed Ring of Wealth's name identified when picked up"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.7", true, "");
