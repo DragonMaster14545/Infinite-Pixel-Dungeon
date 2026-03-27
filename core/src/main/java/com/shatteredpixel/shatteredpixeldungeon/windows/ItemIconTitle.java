@@ -45,7 +45,7 @@ public class ItemIconTitle extends IconTitle {
             }
 
             if (item.needsAim()) {
-                aimButton = new IconButton(new BuffIcon(BuffIndicator.MARK, true)) {
+                aimButton = new IconButton(Icons.get(Icons.TARGET)) {
                     @Override
                     protected void onClick() {
                         window.hide();

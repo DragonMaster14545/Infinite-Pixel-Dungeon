@@ -54,6 +54,8 @@ import com.watabou.utils.ColorMath;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class WandOfEarthblast extends DamageWand {
 
@@ -160,6 +162,19 @@ public class WandOfEarthblast extends DamageWand {
 			return damage;
 		}
 	}
+
+    @Override
+    public List<Integer> aimTiles(int target) {
+        if (cursed && cursedKnown) {
+            return super.aimTiles(target);
+        }
+        Ballistica b = new Ballistica(Dungeon.hero.pos, target, Ballistica.WONT_STOP);
+        ConeAOE tempCone = new ConeAOE( b,
+                Math.min(b.dist, 3 + (chargesPerCast()-1)),
+                90,
+                collisionProperties);
+        return Arrays.asList(tempCone.cells.toArray(new Integer[0]));
+    }
 
 	@Override
 	public void fx(Ballistica bolt, Callback callback) {

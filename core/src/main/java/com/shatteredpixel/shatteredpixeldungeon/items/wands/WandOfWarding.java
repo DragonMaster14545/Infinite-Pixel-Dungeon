@@ -53,6 +53,8 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
+import java.util.List;
+
 public class WandOfWarding extends Wand {
 
 	{
@@ -67,7 +69,16 @@ public class WandOfWarding extends Wand {
 	}
 
 	private boolean wardAvailable = true;
-	
+
+    @Override
+    public List<Integer> aimTiles(int target) {
+        int params = Ballistica.STOP_TARGET;
+        if (cursed && cursedKnown || !Dungeon.level.heroFOV[target]) {
+            params = Ballistica.PROJECTILE;
+        }
+        Ballistica b = new Ballistica(Dungeon.hero.pos, target, params);
+        return b.subPath(1, b.dist);
+    }
 	@Override
 	public boolean tryToZap(Hero owner, int target) {
 		

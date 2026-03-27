@@ -71,7 +71,12 @@ abstract public class MissileWeapon extends Weapon {
 	//used to reduce durability from the source weapon stack, rather than the one being thrown.
 	protected MissileWeapon parent;
 
-	@Override
+    @Override
+    public boolean needsAim() {
+        return true;
+    }
+
+    @Override
 	public long min() {
 		if (Dungeon.hero != null){
 			return Math.max(0, min(buffedLvl() + RingOfSharpshooting.levelDamageBonus(Dungeon.hero)));

@@ -464,8 +464,13 @@ public class SpiritBow extends Weapon {
 			}
 		}
 	}
-	
-	private CellSelector.Listener shooter = new CellSelector.Listener() {
+
+    @Override
+    public boolean needsAim() {
+        return true;
+    }
+
+    private CellSelector.Listener shooter = new CellSelector.Listener() {
 		@Override
 		public void onSelect( Integer target ) {
 			if (target != null) {

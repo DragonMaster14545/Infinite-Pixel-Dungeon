@@ -71,6 +71,7 @@ import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Wand extends Item {
 
@@ -609,6 +610,21 @@ public abstract class Wand extends Item {
 	public void setMaxCharges(long maxCharges) {
 		this.maxCharges = maxCharges;
 	}
+
+    @Override
+    public boolean needsAim() {
+        return true;
+    }
+
+    @Override
+    public List<Integer> aimTiles(int target) {
+        int params = collisionProperties;
+        if (cursed && cursedKnown) {
+            params = Ballistica.MAGIC_BOLT;
+        }
+        Ballistica b = new Ballistica(Dungeon.hero.pos, target, params);
+        return b.subPath(1, b.dist);
+    }
 
 	public static class PlaceHolder extends Wand {
 

@@ -43,6 +43,7 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class WandOfDisintegration extends DamageWand {
 
@@ -60,7 +61,17 @@ public class WandOfDisintegration extends DamageWand {
 	public long max(long lvl){
 		return ((8+4*lvl)*getRarityMultiplier());
 	}
-	
+
+    @Override
+    public List<Integer> aimTiles(int target) {
+        if (cursed && cursedKnown) {
+            return super.aimTiles(target);
+        }
+        Ballistica b = new Ballistica(Dungeon.hero.pos, target, Ballistica.STOP_TARGET);
+        int maxDistance = Math.min(levelKnown ? distance() : 6, b.dist);
+        return b.subPath(1, maxDistance);
+    }
+
 	@Override
 	public int targetingPos(Hero user, int dst) {
 		if (!cursed || !cursedKnown) {
