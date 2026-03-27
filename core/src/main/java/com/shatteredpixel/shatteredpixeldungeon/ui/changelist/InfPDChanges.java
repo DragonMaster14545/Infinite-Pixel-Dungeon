@@ -85,7 +85,8 @@ public class InfPDChanges {
                         "_-_ Missile's max durability is returned to 100\n" +
                         "_-_ Capped ring, misc, and ring slot upgrade to 18\n" +
                         "_-_ You can now get SoU and PoH per challenges active\n" +
-                        "_-_ Implemented aiming in missiles and wands"
+                        "_-_ Implemented aiming in missiles and wands\n" +
+                        "_-_ Generalized applying emblem message"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
