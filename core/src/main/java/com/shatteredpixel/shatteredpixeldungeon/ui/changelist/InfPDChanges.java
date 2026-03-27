@@ -42,7 +42,7 @@ public class InfPDChanges {
                 "This is a tentative changes that maybe added/changed in the future updates: \n\n" +
                         "_-_ Buffs and Nerfs (as always)\n" +
                         "_-_ New Challenges (harder than the previous mods)\n" +
-                        "_-_ Raritized Mobs (like some sort of champions)\n" +
+                        "_-_ Event-based runs, just like the daily and weekly runs!\n" +
                         "_-_ New Spells\n" +
                         "_-_ New Scrolls and Potions?\n" +
                         "_-_ New Lores (infinity, and beyond)\n" +
