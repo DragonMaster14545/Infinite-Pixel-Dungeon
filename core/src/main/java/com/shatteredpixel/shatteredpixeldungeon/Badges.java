@@ -24,6 +24,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -33,8 +34,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.PotionBandolier;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.ScrollHolder;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
+import com.shatteredpixel.shatteredpixeldungeon.items.quest.Pickaxe;
 import com.shatteredpixel.shatteredpixeldungeon.items.remains.RemainsItem;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses.Explosive;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
@@ -213,12 +216,17 @@ public class Badges {
 		CHAMPION_3                  ( 125 ),
 
         //cycles
-        CYCLE_1                  ( 128 ),
-        CYCLE_2                  ( 129 ),
-        CYCLE_3                  ( 130 ),
-        CYCLE_4                  ( 131 ),
-        CYCLE_5                  ( 132 ),
-        CYCLE_FINAL                  ( 133, BadgeType.GLOBAL );
+        CYCLE_1                     ( 128 ),
+        CYCLE_2                     ( 129 ),
+        CYCLE_3                     ( 130 ),
+        CYCLE_4                     ( 131 ),
+        CYCLE_5                     ( 132 ),
+        CYCLE_FINAL                 ( 133, BadgeType.GLOBAL ),
+
+        //ShPD new Badges
+        MANY_BUFFS                  ( 136 ),
+        PACIFIST_ASCENT             ( 137 ),
+        TAKING_THE_MICK             ( 138 );
 
 		public boolean meta;
 
@@ -1157,6 +1165,11 @@ public class Badges {
 			local.add( Badge.HAPPY_END_REMAINS );
 			displayBadge( Badge.HAPPY_END_REMAINS );
 		}
+
+        if (AscensionChallenge.qualifiedForPacifist()) {
+            local.add( Badge.PACIFIST_ASCENT );
+            displayBadge( Badge.PACIFIST_ASCENT );
+        }
 	}
 
 	public static void validateChampion( int challenges ) {
@@ -1201,6 +1214,22 @@ public class Badges {
 		displayBadge( Badge.WAND_QUEST_6);
 	}
 
+    public static void validateTakingTheMick(Object cause){
+        if ((cause == Dungeon.hero || cause instanceof Explosive.ExplosiveCurseBomb)
+                && Dungeon.hero.belongings.attackingWeapon() instanceof Pickaxe
+                && Dungeon.hero.belongings.attackingWeapon().level() >= 50){
+            local.add( Badge.TAKING_THE_MICK );
+            displayBadge(Badge.TAKING_THE_MICK);
+        }
+    }
+
+    public static void validateManyBuffs(){
+        if (!local.contains( Badge.MANY_BUFFS )) {
+            Badge badge = Badge.MANY_BUFFS;
+            local.add( badge );
+            displayBadge( badge );
+        }
+    }
 	private static void displayBadge( Badge badge ) {
 
 		if (badge == null || (badge.type != BadgeType.JOURNAL && !Dungeon.customSeedText.isEmpty())) {
@@ -1293,6 +1322,8 @@ public class Badges {
 			{Badge.BOSS_SLAIN_3, Badge.BOSS_CHALLENGE_3},
 			{Badge.BOSS_SLAIN_4, Badge.BOSS_CHALLENGE_4},
 			{Badge.VICTORY,      Badge.BOSS_CHALLENGE_5},
+            {Badge.HAPPY_END,    Badge.PACIFIST_ASCENT},
+            {Badge.VICTORY,      Badge.TAKING_THE_MICK}
 	};
 
 	//If the summary badge is unlocked, don't show the component badges

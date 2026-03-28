@@ -65,6 +65,13 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(BadgeBanner.image( Badges.Badge.MANY_BUFFS.image ), "Added Badges from ShPD!",
+                "These new badges are implemented and from ShPD, and these are:\n\n" +
+                        "_-_ Taking the Mick\n" +
+                        "_-_ So Many Colors\n" +
+                        "_-_ Pacifist Ascent"
+                ));
+
         changes.addButton( new ChangeButton(BadgeBanner.image( Badges.Badge.CYCLE_5.image ), "New Cycle Badges!",
                 "These new badges that you'll obtain will be the proof for yourself for hours of grinding and slaining enemies, appreciating your hard work through this game :)"));
 
