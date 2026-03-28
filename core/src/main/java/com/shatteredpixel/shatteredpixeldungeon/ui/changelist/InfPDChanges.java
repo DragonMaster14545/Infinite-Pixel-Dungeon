@@ -97,12 +97,15 @@ public class InfPDChanges {
                         "_-_ Capped ring, misc, and ring slot upgrade to 18\n" +
                         "_-_ You can now get SoU and PoH per challenges active\n" +
                         "_-_ Implemented aiming in missiles and wands\n" +
-                        "_-_ Generalized applying emblem message"
+                        "_-_ Generalized applying emblem message\n" +
+                        "_-_ Added a true elemental strike for Galactic, Laserised, Summonner, and Trihit enchantment"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
                 "_-_ Fixed Nature's Bounty perk not working\n" +
-                        "_-_ Fixed Ring of Wealth's name identified when picked up"
+                        "_-_ Fixed Ring of Wealth's name identified when picked up\n" +
+                        "_-_ Fixed crash on Elemental Strike when using it with enchantments with no missile effects\n" +
+                        "_-_ Fixed Summoner enchantment's knight spawn chance is not true 25%"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.7", true, "");

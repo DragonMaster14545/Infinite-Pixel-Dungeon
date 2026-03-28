@@ -42,9 +42,11 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfDisintegration;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.*;
@@ -61,6 +63,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
+import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -86,6 +89,11 @@ public class ElementalStrike extends ArmorAbility {
 		effectTypes.put(Corrupting.class,   MagicMissile.SHADOW_CONE);
 		effectTypes.put(Grim.class,         MagicMissile.SHADOW_CONE);
 		effectTypes.put(Vampiric.class,     MagicMissile.BLOOD_CONE);
+        effectTypes.put(Galactic.class,     MagicMissile.MAGIC_MISS_CONE);
+
+        effectTypes.put(Laserised.class,    MagicMissile.MAGIC_MISS_CONE);
+        effectTypes.put(Summoner.class,     MagicMissile.MAGIC_MISS_CONE);
+        effectTypes.put(Trihit.class,       MagicMissile.MAGIC_MISS_CONE);
 
 		effectTypes.put(Annoying.class,     MagicMissile.SHADOW_CONE);
 		effectTypes.put(Displacing.class,   MagicMissile.SHADOW_CONE);
@@ -96,7 +104,7 @@ public class ElementalStrike extends ArmorAbility {
 		effectTypes.put(Polarized.class,    MagicMissile.SHADOW_CONE);
 		effectTypes.put(Friendly.class,     MagicMissile.SHADOW_CONE);
 
-		effectTypes.put(null,               MagicMissile.MAGIC_MISS_CONE);
+		effectTypes.put(null,            MagicMissile.MAGIC_MISS_CONE);
 	}
 
 	{
@@ -238,7 +246,11 @@ public class ElementalStrike extends ArmorAbility {
 		//*** Sacrificial ***
 		} else if (ench instanceof Sacrificial){
 			Buff.affect(hero, Bleeding.class).set(10 * powerMulti);
-		}
+
+        //*** Summoner ***
+		} else if (ench instanceof Summoner){
+            Buff.affect(hero, Bless.class, Bless.DURATION / 2);
+        }
 
 	}
 
@@ -319,7 +331,9 @@ public class ElementalStrike extends ArmorAbility {
 			}
 			Dungeon.observe();
 		}
-	}
+
+    }
+
 
 	private int oldEnemyPos;
 
@@ -518,7 +532,57 @@ public class ElementalStrike extends ArmorAbility {
 					Buff.affect(ch, Charm.class, 6f).object = hero.id();
 				}
 			}
-		}
+
+        //*** Laserised ***
+		} else if (ench instanceof Laserised){
+            for (Char ch : affected) {
+                WandOfDisintegration wand = ((WandOfDisintegration) (new WandOfDisintegration().upgrade(Math.round(hero.belongings.weapon.level()))));
+                wand.fx(
+                        new Ballistica( hero.pos, ch.pos, Ballistica.STOP_SOLID),
+                        new Callback() {
+                            public void call() {
+                                wand.onZap(new Ballistica(hero.pos, ch.pos, Ballistica.STOP_SOLID));
+                                wand.wandUsed();
+                            }
+                        }
+                );
+            }
+
+        //*** Trihit ***
+        }  else if (ench instanceof Trihit) {
+            for (int cell : cone.cells) {
+                Trihit.TrihitWound.hit(cell, 45, 0x03fcec);
+                if (Actor.findChar(cell) != null){
+                    Char ch = Actor.findChar(cell);
+                    assert ch != null;
+                    if (ch.alignment != hero.alignment){
+                        Sample.INSTANCE.play(Assets.Sounds.HIT_STAB, 1f, 0.75f);
+                        ch.damage(Hero.heroDamageIntRange(24, 36), ElementalStrike.this);
+                    }
+                }
+            }
+
+        //*** Summoner ***
+        } else if (ench instanceof Summoner){
+            for (int cell : cone.cells){
+                if (!Dungeon.level.solid[cell]
+                        && !Dungeon.level.pit[cell]
+                        && Actor.findChar(cell) == null
+                        && Random.Float() <= 0.15f) {
+
+                    Summoner.AlephKnight guardianKnight = new Summoner.AlephKnight();
+                    Weapon copy = (Weapon) hero.belongings.weapon;
+                    copy.level(hero.belongings.weapon.level());
+                    copy.augment = ((Weapon) hero.belongings.weapon).augment;
+                    guardianKnight.weapon = copy;
+                    guardianKnight.pos = cell;
+                    GameScene.add(guardianKnight);
+                    Dungeon.level.occupyCell(guardianKnight);
+
+                    CellEmitter.get(guardianKnight.pos).burst(Speck.factory(Speck.EVOKE), 4);
+                }
+            }
+        }
 
 	}
 

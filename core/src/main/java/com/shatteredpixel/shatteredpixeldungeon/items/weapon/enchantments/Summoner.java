@@ -53,7 +53,7 @@ public class Summoner extends Weapon.Enchantment {
 
 	@Override
 	public long proc( Weapon weapon, Char attacker, Char defender, long damage ) {
-        if (Random.Float() >= 0.25f) {
+        if (Random.Float() <= 0.25f) {
             for (int i : PathFinder.NEIGHBOURS9) {
 
                 if (!Dungeon.level.solid[attacker.pos + i]
