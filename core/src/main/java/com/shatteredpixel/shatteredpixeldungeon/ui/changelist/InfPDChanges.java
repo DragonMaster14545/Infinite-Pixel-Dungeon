@@ -106,11 +106,12 @@ public class InfPDChanges {
                         "_-_ Added a true elemental strike for Galactic, Laserised, Summonner, and Trihit enchantment"
         ));
 
-        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Bug Fixes",
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
                 "_-_ Fixed Nature's Bounty perk not working\n" +
                         "_-_ Fixed Ring of Wealth's name identified when picked up\n" +
                         "_-_ Fixed crash on Elemental Strike when using it with enchantments with no missile effects\n" +
-                        "_-_ Fixed Summoner enchantment's knight spawn chance is not true 25%"
+                        "_-_ Fixed Summoner enchantment's knight spawn chance is not true 25%\n" +
+                        "_-_ Fixed incorrect description display on Ring of Haste"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.7", true, "");
