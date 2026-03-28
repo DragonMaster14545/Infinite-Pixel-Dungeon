@@ -946,6 +946,17 @@ public class ItemSpriteSheet {
             assignItemRect(i, 6, 15);
     }
 
+    private static final int RARITY_TREASUREBAG =								xy(1, 35);
+    public static final int COMMON_BAG	= RARITY_TREASUREBAG+0;
+    public static final int UNCOMMON_BAG	= RARITY_TREASUREBAG+1;
+    public static final int RARE_BAG	= RARITY_TREASUREBAG+2;
+    public static final int EPIC_BAG	= RARITY_TREASUREBAG+3;
+    public static final int LEGENDARY_BAG	= RARITY_TREASUREBAG+4;
+    static{
+        for (int i = RARITY_TREASUREBAG; i < RARITY_TREASUREBAG+16; i++)
+            assignItemRect(i, 14, 15);
+    }
+
 	//for smaller 8x8 icons that often accompany an item sprite
 	public static class Icons {
 

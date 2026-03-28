@@ -22,6 +22,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.DeterminantInfusion
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.GalacticInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemQuantifier;
+import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.LegendaryTreasureBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.FerretTuft;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ShurikenOfShadows;
@@ -65,6 +66,10 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.LEGENDARY_BAG), "New Treasure Bags!",
+                "These bags can only be found on fishing hooks, and a pity system to get the Legendary Treasure Bag!\n\n" +
+                        "_The higher the rarity, the higher the quality of the loots!_"
+        ));
         changes.addButton( new ChangeButton(BadgeBanner.image( Badges.Badge.MANY_BUFFS.image ), "Added Badges from ShPD!",
                 "These new badges are implemented and from ShPD, and these are:\n\n" +
                         "_-_ Taking the Mick\n" +

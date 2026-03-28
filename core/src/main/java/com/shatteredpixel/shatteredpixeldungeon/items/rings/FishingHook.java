@@ -45,11 +45,18 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfMid
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.UnstableSpell;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfEnchantment;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.AlchemyBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.CommonTreasureBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.EpicTreasureBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.IdealBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.LegendaryTreasureBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.RareTreasureBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.UncommonTreasureBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ExoticCrystals;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ShurikenOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.ui.GameLog;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Visual;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
@@ -65,6 +72,8 @@ public class FishingHook extends Ring {
 
 	public static float triesToDrop = Float.MIN_VALUE;
 	public static int dropsToRare = Integer.MIN_VALUE;
+    public static int dropsToBag = Integer.MIN_VALUE;
+    public static int pitycounter = 0;
 	public static long level = 0;
 
 	public static ArrayList<Item> tryForBonusDrop(int tries){
@@ -73,6 +82,7 @@ public class FishingHook extends Ring {
 		if (triesToDrop == Float.MIN_VALUE) {
 			triesToDrop = Dungeon.NormalIntRange(7, 18);
 			dropsToRare = Dungeon.NormalIntRange(40, 100);
+            dropsToBag = Dungeon.NormalIntRange(40, 50);
 		}
 
 		//now handle reward logic
@@ -80,9 +90,14 @@ public class FishingHook extends Ring {
 
 		triesToDrop -= tries;
 		while ( triesToDrop <= 0 ){
-			if (dropsToRare <= 0){
-				int equipBonus = 0;
-
+            if ( dropsToBag <= 0) {
+                Item i;
+                do {
+                    i = genBagDrop();
+                } while (Challenges.isItemBlocked(i));
+                drops.add(i);
+                dropsToBag = Dungeon.NormalIntRange(40, 50);
+            } else if ( dropsToRare <= 0 ){
 				Item i;
 				do {
 					i = genEquipmentDrop(level - 1);
@@ -98,6 +113,7 @@ public class FishingHook extends Ring {
 				if (Dungeon.hero.perks.contains(Perks.Perk.FISHING_PRO) && Random.Int(4) == 0) i.quantity(i.quantity()*2);
 				drops.add(i);
 				dropsToRare--;
+                dropsToBag--;
 			}
 			triesToDrop += Random.NormalIntRange(0, 15);
 		}
@@ -133,6 +149,27 @@ public class FishingHook extends Ring {
 		latestDropTier = 0;
 	}
 
+    public static Item genBagDrop() {
+        float rate = Random.Float();
+        //this function is fixed, regardless of level
+        if (rate >= 0.5f) {
+            latestDropTier = 1;
+            return genCommonBag();
+        } else if (rate < 0.5f && rate >= 0.25f) {
+            latestDropTier = 2;
+            return genUncommonBag();
+        } else if (rate < 0.25f && rate >= 0.06f) {
+            latestDropTier = 3;
+            return genRareBag();
+        } else if (rate < 0.06f && rate >= 0.01f) {
+            latestDropTier = 4;
+            return genEpicBag();
+        } else {
+            latestDropTier = 5;
+            return genLegendaryBag();
+        }
+    }
+    
 	public static Item genConsumableDrop(long level) {
 		float roll = Dungeon.Float();
 		//60% chance - 4% per level. Starting from +15: 0%
@@ -231,6 +268,61 @@ public class FishingHook extends Ring {
         }
     }
 
+    private static Item genCommonBag(){
+        switch (Random.Int(2)){
+            case 0: default:
+                return new CommonTreasureBag();
+            case 1:
+                return Generator.random(Generator.Category.POTION);
+        }
+    }
+
+    private static Item genUncommonBag(){
+        switch (Random.Int(3)){
+            case 0: default:
+                Item i = genCommonBag();
+                return i.quantity(i.quantity()*2);
+            case 1:
+                return new UncommonTreasureBag();
+        }
+    }
+
+    private static Item genRareBag(){
+        switch (Random.Int(3)){
+            case 0: default:
+                Item i = genUncommonBag();
+                return i.quantity(i.quantity()*2);
+            case 1:
+                return new RareTreasureBag();
+        }
+    }
+
+    private static Item genEpicBag(){
+        switch (Random.Int(4)){
+            case 0: default:
+                Item i = genRareBag();
+                return i.quantity(i.quantity()*2);
+            case 1:
+                return new EpicTreasureBag();
+        }
+    }
+
+    private static Item genLegendaryBag(){
+        pitycounter++;
+        if (pitycounter >= 30) {
+            pitycounter = 0;
+            return new LegendaryTreasureBag();
+        } else {
+            switch (Random.Int(5)){
+                case 0: default:
+                    Item i = genEpicBag();
+                    return i.quantity(i.quantity()*2);
+                case 1:
+                    return new LegendaryTreasureBag();
+            }
+        }
+    }
+
 	private static Item genEquipmentDrop(long level ){
 		Item result;
 		int floorset = (Dungeon.depth)/5;
@@ -272,18 +364,21 @@ public class FishingHook extends Ring {
 
 	public static final String TRIES_TO_DROP = "tries_to_drop";
 	public static final String DROPS_TO_RARE = "drops_to_rare";
+    public static final String DROPS_TO_BAG = "drops_to_bag";
 	public static final String LEVEL = "level";
 
 
 	public static void store(Bundle bundle) {
 		bundle.put(TRIES_TO_DROP, triesToDrop);
 		bundle.put(DROPS_TO_RARE, dropsToRare);
+        bundle.put(DROPS_TO_BAG, dropsToBag);
 		bundle.put(LEVEL, level);
 	}
 
 	public static void restore(Bundle bundle) {
 		triesToDrop = bundle.getFloat(TRIES_TO_DROP);
 		dropsToRare = bundle.getInt(DROPS_TO_RARE);
+        dropsToBag = bundle.getInt(DROPS_TO_BAG);
 		level = bundle.getInt(LEVEL);
 	}
 
