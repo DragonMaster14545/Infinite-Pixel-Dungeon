@@ -509,6 +509,11 @@ if (bundle.contains( "respawner" )){
 		if (Dungeon.cycle > 0 && Random.Int(222222) == 0)
 			m = Reflection.newInstance(OOFThief.class);
 		ChampionEnemy.rollForChampion(m);
+        if (Dungeon.isChallenged(Challenges.CONQUEST)) {
+            for (int i = 0; i < 2; i++) {
+                ChampionEnemy.rollForChampion(m);
+            }
+        }
 		return m;
 	}
 

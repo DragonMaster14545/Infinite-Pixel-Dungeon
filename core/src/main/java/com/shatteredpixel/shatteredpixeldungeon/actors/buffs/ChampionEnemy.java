@@ -124,6 +124,10 @@ public abstract class ChampionEnemy extends Buff {
 		if (Dungeon.branch == Dungeon.BRANCH_ARENA) {
 			Buff.affect(m, buffCls);
 		}
+
+        if (Dungeon.isChallenged(Challenges.CONQUEST)) {
+            Buff.affect(m, buffCls);
+        }
 	}
 
 	public static class Blazing extends ChampionEnemy {

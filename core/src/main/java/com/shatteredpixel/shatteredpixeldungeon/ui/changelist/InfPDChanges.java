@@ -68,7 +68,8 @@ public class InfPDChanges {
 
         changes.addButton( new ChangeButton(Icons.get(Icons.CHALLENGE_COLOR), "New Challenges",
                 "In this update, we added a new challenge(s)!\n\n" +
-                        "_-_ For the Worthy"
+                        "_-_ For the Worthy\n" +
+                        "_-_ Conquest"
         ));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
