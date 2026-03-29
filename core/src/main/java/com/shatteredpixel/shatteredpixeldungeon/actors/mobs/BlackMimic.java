@@ -224,8 +224,8 @@ public class BlackMimic extends Mob {
 
 						lastAbility = Random.oneOf(GAS, SUMMON);
 						turnsSinceLastAbility = 0;
-						if (!Dungeon.isChallenged(Challenges.STRONGER_BOSSES))
-							spend(TICK);
+						//if (!Dungeon.isChallenged(Challenges.STRONGER_BOSSES))
+						//	spend(TICK);
 
 						if (!isCopy)
 							GLog.w(Messages.get(this, "vent"));
