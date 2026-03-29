@@ -150,7 +150,7 @@ public class StartScene extends PixelScene {
         };
         btnSort.textColor(0xCCCCCC);
 
-        if (yPos + 10 > Camera.main.height) {
+        if (yPos + 10 > Camera.main.height && Boolean.TRUE.equals(SPDSettings.landscape())) {
             btnSort.setRect(slotLeft - btnSort.reqWidth() - 6, Camera.main.height - 14, btnSort.reqWidth() + 4, 12);
         } else {
             btnSort.setRect(slotLeft, yPos, btnSort.reqWidth() + 4, 12);
