@@ -78,6 +78,11 @@ public class InfPDChanges {
                         "_-_ Conquest"
         ));
 
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Warrior healing after healing increased to _~14.29% max HP_, from 12.5% max HP\n" +
+                        "_-_ Warrior blind duration when throwing that isn't a missile to enemy is increased to _5 turns_, from 3 turns"
+        ));
+
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Added the new treasure bags into the catalog\n" +
                         "_-_ Sort button no longer sticks to the left side when you are in portrait mode\n" +

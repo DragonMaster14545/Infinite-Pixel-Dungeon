@@ -500,7 +500,7 @@ public enum Talent {
 			if (hero.cooldown() > 0) {
 				Buff.affect(hero, WarriorFoodImmunity.class, hero.cooldown());
 			}
-			long healing = Dungeon.hero.HT / 8;
+			long healing = Dungeon.hero.HT / 7;
 			hero.HP = Math.min(hero.HP + healing, hero.HT);
 			hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(healing), FloatingText.HEALING);
 		}
