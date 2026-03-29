@@ -80,7 +80,9 @@ public class InfPDChanges {
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Warrior healing after healing increased to _~14.29% max HP_, from 12.5% max HP\n" +
-                        "_-_ Warrior blind duration when throwing that isn't a missile to enemy is increased to _5 turns_, from 3 turns"
+                        "_-_ Warrior blind duration when throwing that isn't a missile to enemy is increased to _5 turns_, from 3 turns\n" +
+                        "_-_ Mage will now get _12 turns_ of recharging when eating up from 9 turns\n" +
+                        "_-_ Mage's shield when they targeted the wand on themself will now gain _10.5% shielding per charge_ from max HP, up from 6.5%"
         ));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",

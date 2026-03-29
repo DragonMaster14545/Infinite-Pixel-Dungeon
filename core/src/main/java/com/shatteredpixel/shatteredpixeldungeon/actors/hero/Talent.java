@@ -506,7 +506,7 @@ public enum Talent {
 		}
 		if (hero.heroClass == HeroClass.MAGE){
 			//5/8 turns of recharging
-			Buff.prolong( hero, Recharging.class, 9);
+			Buff.prolong( hero, Recharging.class, 12);
 			ScrollOfRecharging.charge( hero );
 			SpellSprite.show(hero, SpellSprite.CHARGE);
 		}
