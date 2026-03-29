@@ -81,7 +81,8 @@ public class InfoPage extends Item {
                 Messages.get(this, "food_eaten", Statistics.foodEaten) +
                 Messages.get(this, "items_crafted", Statistics.itemsCrafted) +
                 Messages.get(this, "fire_damage", Dungeon.fireDamage) +
-                Messages.get(this, "ankhs_used", Statistics.ankhsUsed);
+                Messages.get(this, "ankhs_used", Statistics.ankhsUsed) +
+                Messages.get(this, "ring_cap", 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion())) ;
     }
 
     @Override
