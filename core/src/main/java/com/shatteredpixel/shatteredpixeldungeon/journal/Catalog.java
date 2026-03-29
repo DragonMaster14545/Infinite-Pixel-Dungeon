@@ -149,13 +149,18 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.WildEnergy;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.AlchemyBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.BiggerGambleBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.BurntBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.CommonTreasureBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.DKTreasureBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.DM300TreasureBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.EpicTreasureBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.GambleBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.GooTreasureBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.IdealBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.LegendaryTreasureBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.QualityBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.RareTreasureBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.TenguTreasureBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.UncommonTreasureBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrinketCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -328,7 +333,8 @@ public enum Catalog {
 				GooTreasureBag.class, RatSkull.class, TenguTreasureBag.class, TenguShuriken.class, TenguBomb.class,
 				DM300TreasureBag.class, RustyShield.class, SuperPickaxe.class, DKTreasureBag.class, KingBlade.class, OverloadBeacon.class,
 				BurntBag.class, IdealBag.class, IdealBag.Plutonium.class, IdealBag.BrokenEnderiumBlade.class,
-				IdealBag.EnergyBottle.class, IdealBag.OsmiridiumPlate.class);
+				IdealBag.EnergyBottle.class, IdealBag.OsmiridiumPlate.class, CommonTreasureBag.class, UncommonTreasureBag.class,
+                RareTreasureBag.class, EpicTreasureBag.class, LegendaryTreasureBag.class);
 
 		MISC_CONSUMABLES.addItems( Gold.class, EnergyCrystal.class, Dewdrop.class,
 				IronKey.class, GoldenKey.class, CrystalKey.class, WornKey.class,
