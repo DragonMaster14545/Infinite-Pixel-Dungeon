@@ -88,7 +88,8 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Added the new treasure bags into the catalog\n" +
                         "_-_ Sort button no longer sticks to the left side when you are in portrait mode\n" +
-                        "_-_ Made challenge tab scrollable in ranking window"
+                        "_-_ Made challenge tab scrollable in ranking window\n" +
+                        "_-_ Made some tubes more common: Pure Immunity, Ultimate Power and Godspeed"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",

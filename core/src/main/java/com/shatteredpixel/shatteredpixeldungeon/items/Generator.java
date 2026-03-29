@@ -408,7 +408,7 @@ public class Generator {
                     TubeOfTranscendingTime.class,
                     TubeOfGodspeed.class
             };
-            TUBES.defaultProbs = new float[]{ 1, 1, 1, 1, 1, 1, 1};
+            TUBES.defaultProbs = new float[]{ 1, 3, 1, 2, 1, 1, 2};
             TUBES.probs = TUBES.defaultProbs.clone();
 
 			WAND.classes = new Class<?>[]{
