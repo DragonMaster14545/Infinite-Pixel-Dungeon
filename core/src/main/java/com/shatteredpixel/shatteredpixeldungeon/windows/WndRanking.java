@@ -389,6 +389,12 @@ public class WndRanking extends WndTabbed {
 
 			float pos = 0;
 
+            ScrollPane scrollpane = new ScrollPane( new Component() );
+            add(scrollpane);
+
+            Component challenges = scrollpane.content();
+            challenges.clear();
+
 			for (int i=0; i < Challenges.values().length; i++) {
 
 				final String challenge = Challenges.values()[i].nameId;
@@ -403,6 +409,7 @@ public class WndRanking extends WndTabbed {
 				cb.setRect( 0, pos, WIDTH-16, 15 );
 
 				add( cb );
+                challenges.add( cb );
 
 				IconButton info = new IconButton(Icons.get(Icons.INFO)){
 					@Override
@@ -415,9 +422,14 @@ public class WndRanking extends WndTabbed {
 				};
 				info.setRect(cb.right(), pos, 16, 15);
 				add(info);
+                challenges.add( info );
 
 				pos = cb.bottom();
 			}
+
+            challenges.setSize(WIDTH-16, pos);
+            scrollpane.setRect(0, 0, WIDTH, HEIGHT);
+            scrollpane.scrollTo(0, 0);
 		}
 
 	}
