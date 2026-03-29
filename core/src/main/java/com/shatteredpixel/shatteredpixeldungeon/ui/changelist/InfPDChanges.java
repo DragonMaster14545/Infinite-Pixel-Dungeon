@@ -14,6 +14,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.UtilityBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.CommonEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfArcana;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfValor;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfPower;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfInsurgence;
@@ -65,6 +67,10 @@ public class InfPDChanges {
         changes = new ChangeInfo("B", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.RING_OBSIDIAN), new RingOfValor().trueName(),
+                "_A new ring has been added that enhances hero's damage!_\n\n" +
+                        "The Ring of Valor lets the player directly enhances their weapons' damage, instead of only being able to enhance the damage up by only upgrading the item itself."));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.CHALLENGE_COLOR), "New Challenges",
                 "In this update, we added a new challenge(s)!\n\n" +
