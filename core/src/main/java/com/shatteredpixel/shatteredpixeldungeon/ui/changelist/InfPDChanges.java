@@ -66,6 +66,11 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.CHALLENGE_COLOR), "New Challenges",
+                "In this update, we added a new challenge(s)!\n\n" +
+                        "_-_ For the Worthy"
+        ));
+
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Added the new treasure bags into the catalog\n" +
                         "_-_ Sort button no longer sticks to the left side when you are in portrait mode\n" +

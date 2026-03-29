@@ -26,6 +26,7 @@ package com.shatteredpixel.shatteredpixeldungeon;
 
 import com.shatteredpixel.shatteredpixeldungeon.items.Dewdrop;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
 
 public enum Challenges {
 	NO_FOOD("no_food"),
@@ -36,7 +37,8 @@ public enum Challenges {
 	DARKNESS("darkness"),
 	NO_SCROLLS("no_scrolls"),
 	CHAMPION_ENEMIES("champion_enemies"),
-	STRONGER_BOSSES("stronger_bosses");
+	STRONGER_BOSSES("stronger_bosses"),
+    FOR_THE_WORTHY("for_the_worthy");
 
 	public final String nameId;
 
@@ -58,6 +60,10 @@ public enum Challenges {
 		if (Dungeon.isChallenged(NO_HERBALISM) && item instanceof Dewdrop){
 			return true;
 		}
+
+        if (Dungeon.isChallenged(FOR_THE_WORTHY) && item instanceof ScrollOfIdentify){
+            return true;
+        }
 
 		return false;
 

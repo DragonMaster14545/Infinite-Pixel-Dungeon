@@ -27,6 +27,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
@@ -2204,7 +2205,11 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 	
 	public static long maxExp( int lvl ){
 		HeroClass heroClass = Dungeon.hero == null ? GamesInProgress.selectedClass: Dungeon.hero.heroClass;
-		return 20 + lvl * 20L;
+		if (Dungeon.isChallenged(Challenges.FOR_THE_WORTHY)) {
+            return (20 + lvl * 20L) * 2L;
+        } else {
+            return 20 + lvl * 20L;
+        }
 	}
 	
 	public boolean isStarving() {

@@ -369,6 +369,9 @@ public abstract class RegularLevel extends Level {
         nItems += Dungeon.hero.upgrades.extraLoots();
 
 		nItems = Math.round(nItems * Dungeon.hero.getLootMultiplier());
+        if (Dungeon.isChallenged(Challenges.FOR_THE_WORTHY)) {
+            nItems /= 2;
+        }
 		
 		for (int i=0; i < nItems; i++) {
 

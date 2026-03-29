@@ -25,10 +25,12 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.test_tubes;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfMight;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -47,11 +49,15 @@ public class TubeOfStrength extends Tubes {
 		identify();
 
         hero.STR += 3;
-        Dungeon.luck += 3;
+        hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, "3", FloatingText.STRENGTH);
 
-		hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, "3", FloatingText.STRENGTH);
-		hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, "3", FloatingText.LUCK);
-		GLog.p( "I felt something lucky...." );
+        if (!Dungeon.isChallenged(Challenges.FOR_THE_WORTHY)) {
+            Dungeon.luck += 3;
+            hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, "3", FloatingText.LUCK);
+            GLog.p( "I felt something lucky...." );
+        } else {
+            GLog.p( Messages.get(ElixirOfMight.class, "for_the_worthy") );
+        }
 		
 		Badges.validateStrengthAttained();
 		Badges.validateDuelistUnlock();

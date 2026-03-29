@@ -25,6 +25,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -52,11 +53,15 @@ public class ElixirOfMight extends Elixir {
 	public void apply( Hero hero ) {
 		identify();
 		
-		Dungeon.luck++;
-		hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, "1", FloatingText.LUCK);
-		
-		hero.updateHT( true );
-		GLog.p( Messages.get(this, "msg") );
+		if (Dungeon.isChallenged(Challenges.FOR_THE_WORTHY)) {
+            GLog.w( Messages.get(this, "for_the_worthy") );
+        } else {
+            Dungeon.luck++;
+            hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, "1", FloatingText.LUCK);
+
+            hero.updateHT( true );
+            GLog.p( Messages.get(this, "msg") );
+        }
 
 		Badges.validateStrengthAttained();
 		Badges.validateDuelistUnlock();
