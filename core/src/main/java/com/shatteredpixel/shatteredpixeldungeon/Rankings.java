@@ -362,6 +362,12 @@ public enum Rankings {
 		Statistics.restoreFromBundle(data.getBundle(STATS));
 		
 		Dungeon.challenges = data.getBooleanArray(CHALLENGES);
+        if (Dungeon.challenges.length < Challenges.values().length) {
+            //if the array is too short, fill it with false
+            boolean[] newChallenges = new boolean[Challenges.values().length];
+            System.arraycopy(Dungeon.challenges, 0, newChallenges, 0, Dungeon.challenges.length);
+            Dungeon.challenges = newChallenges;
+        }
 
 		Dungeon.initialVersion = data.getInt(GAME_VERSION);
 

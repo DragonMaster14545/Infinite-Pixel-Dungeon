@@ -73,7 +73,8 @@ public class InfPDChanges {
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
-                "_-_ Fixed Black Mimic infinite loop on venting gas when Badder Bosses enabled\n"
+                "_-_ Fixed Black Mimic infinite loop on venting gas when Badder Bosses enabled\n" +
+                        "_-_ Fixed rankings window doesn't load after adding a new challenge\n"
         ));
 
         changes = new ChangeInfo("A", false, "");

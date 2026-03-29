@@ -951,10 +951,10 @@ public class Dungeon {
 
 		Dungeon.challenges = bundle.getBooleanArray( CHALLENGES );
 		if (Dungeon.challenges.length < Challenges.values().length) {
-			//if the array is too short, fill it with false
-			boolean[] newChallenges = new boolean[Challenges.values().length];
-			System.arraycopy(Dungeon.challenges, 0, newChallenges, 0, Dungeon.challenges.length);
-			Dungeon.challenges = newChallenges;
+            //if the array is too short, fill it with false
+            boolean[] newChallenges = new boolean[Challenges.values().length];
+            System.arraycopy(Dungeon.challenges, 0, newChallenges, 0, Dungeon.challenges.length);
+            Dungeon.challenges = newChallenges;
 		}
 		Dungeon.mobsToChampion = bundle.getInt( MOBS_TO_CHAMPION );
 
