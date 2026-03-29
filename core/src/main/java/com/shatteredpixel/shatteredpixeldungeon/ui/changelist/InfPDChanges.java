@@ -5,6 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BadgeBanner;
 import com.shatteredpixel.shatteredpixeldungeon.items.BlackPsycheChest;
+import com.shatteredpixel.shatteredpixeldungeon.items.InfoPage;
 import com.shatteredpixel.shatteredpixeldungeon.items.LostBackpack;
 import com.shatteredpixel.shatteredpixeldungeon.items.PsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.TicketToPortableShop;
@@ -67,6 +68,9 @@ public class InfPDChanges {
         changes = new ChangeInfo("B", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.INFO_PAGE), new InfoPage().trueName(),
+                "_This is your statistic companion, do whatever you want."));
 
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.RING_OBSIDIAN), new RingOfValor().trueName(),
                 "_A new ring has been added that enhances hero's damage!_\n\n" +
