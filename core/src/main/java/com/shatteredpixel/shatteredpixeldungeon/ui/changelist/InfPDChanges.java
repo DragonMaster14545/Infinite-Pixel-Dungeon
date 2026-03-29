@@ -13,6 +13,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SkeletonKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.EquipmentBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.UtilityBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.bombs.ExperienceBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.CommonEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfArcana;
@@ -69,8 +70,11 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.EXP_BOMB), new ExperienceBomb().trueName(),
+                "A new bomb that gives a bonus experience when an enemy is affected."));
+
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.INFO_PAGE), new InfoPage().trueName(),
-                "_This is your statistic companion, do whatever you want."));
+                "This is your statistic companion, do whatever you want."));
 
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.RING_OBSIDIAN), new RingOfValor().trueName(),
                 "_A new ring has been added that enhances hero's damage!_\n\n" +
