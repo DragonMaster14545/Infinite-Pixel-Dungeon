@@ -61,6 +61,11 @@ public class ExperienceBomb extends Bomb {
 			}
 		}
 	}
+
+    @Override
+    public boolean explodesDestructively() {
+        return false;
+    }
 	
 	@Override
 	public long value() {
