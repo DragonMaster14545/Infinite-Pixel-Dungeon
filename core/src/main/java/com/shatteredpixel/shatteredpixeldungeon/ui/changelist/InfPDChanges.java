@@ -90,7 +90,9 @@ public class InfPDChanges {
                 "_-_ Warrior healing after healing increased to _~14.29% max HP_, from 12.5% max HP\n" +
                         "_-_ Warrior blind duration when throwing that isn't a missile to enemy is increased to _5 turns_, from 3 turns\n" +
                         "_-_ Mage will now get _12 turns_ of recharging when eating up from 9 turns\n" +
-                        "_-_ Mage's shield when they targeted the wand on themself will now gain _10.5% shielding per charge_ from max HP, up from 6.5%"
+                        "_-_ Mage's shield when they targeted the wand on themself will now gain _10.5% shielding per charge_ from max HP, up from 6.5%\n" +
+                        "_-_ Nature's Bounty berry count is no longer in fixed value, made berries drop within _1/(15 + (5 * berries found))_ chance\n" +
+                        "_-_ Cached Ration's supply ration count is no longer in fixed value, made rations drop within _1/(25 + (5 * rations found))_ chance\n"
         ));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",

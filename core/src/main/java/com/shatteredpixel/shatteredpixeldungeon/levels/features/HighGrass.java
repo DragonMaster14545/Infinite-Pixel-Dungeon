@@ -93,26 +93,29 @@ public class HighGrass {
 
 				//berries try to drop on floors 2/3/4/6/7/8, to a max of 4/6
 				if (ch instanceof Hero && ((Hero) ch).perks.contains(Perks.Perk.DUNGEON_BERRY)){
-					int berriesAvailable = 6;
+					//int berriesAvailable = 6;
 
 					Talent.NatureBerriesDropped dropped = Buff.affect(ch, Talent.NatureBerriesDropped.class);
-					berriesAvailable -= dropped.count();
+					//berriesAvailable -= dropped.count();
 
-					if (berriesAvailable > 0) {
-						int targetFloor = 6;
-						targetFloor -= berriesAvailable;
-						targetFloor += (targetFloor >= 5) ? 3 : 2;
+					//if (berriesAvailable > 0) {
+                    if (Random.Int((int) (15 + (dropped.count() * 5))) == 0) {
+						//int targetFloor = 6;
+						//targetFloor -= berriesAvailable;
+						//targetFloor += (targetFloor >= 5) ? 3 : 2;
 
 						//If we're behind: 1/10, if we're on page: 1/30, if we're ahead: 1/90
 						boolean droppingBerry = false;
-						if (Dungeon.depth > targetFloor) droppingBerry = Random.Int(10) == 0;
-						else if (Dungeon.depth == targetFloor) droppingBerry = Random.Int(30) == 0;
-						else if (Dungeon.depth < targetFloor) droppingBerry = Random.Int(90) == 0;
+						//if (Dungeon.depth > targetFloor) droppingBerry = Random.Int(10) == 0;
+						//else if (Dungeon.depth == targetFloor) droppingBerry = Random.Int(30) == 0;
+						//else if (Dungeon.depth < targetFloor) droppingBerry = Random.Int(90) == 0;
 
-						if (droppingBerry) {
-							dropped.countUp(1);
-							level.drop(new Berry(), pos).sprite.drop();
-						}
+						//if (droppingBerry) {
+						//	dropped.countUp(1);
+						//	level.drop(new Berry(), pos).sprite.drop();
+						//}
+                        dropped.countUp(1);
+                        level.drop(new Berry(), pos).sprite.drop();
 					}
 
 				}

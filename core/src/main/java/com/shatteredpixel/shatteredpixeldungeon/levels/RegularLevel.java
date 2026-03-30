@@ -522,9 +522,10 @@ public abstract class RegularLevel extends Level {
 		Random.pushGenerator( Random.Long() );
 			if (Dungeon.hero.hasTalent(Talent.CACHED_RATIONS) || Dungeon.hero.perks.contains(Perks.Perk.SUPPLY_RATIONS)){
 				Talent.CachedRationsDropped dropped = Buff.affect(Dungeon.hero, Talent.CachedRationsDropped.class);
-				int targetFloor = (int)(2 + dropped.count());
-				if (dropped.count() > 4) targetFloor++;
-				if (Dungeon.depth >= targetFloor && dropped.count() < 6){
+				//int targetFloor = (int)(2 + dropped.count());
+				//if (dropped.count() > 4) targetFloor++;
+				//if (Dungeon.depth >= targetFloor && dropped.count() < 6){
+                if (Random.Int((int) (25 + (dropped.count() * 5))) == 0){
 					int cell;
 					int tries = 100;
 					boolean valid;
@@ -542,7 +543,7 @@ public abstract class RegularLevel extends Level {
 							losBlocking[cell] = false;
 						}
 						drop(new SupplyRation(), cell).type = Heap.Type.CHEST;
-						dropped.countUp(2);
+						dropped.countUp(1);
 					}
 				}
 			}
