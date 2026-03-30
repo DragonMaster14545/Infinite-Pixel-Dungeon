@@ -70,6 +70,11 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton( new Image(Assets.Environment.TERRAIN_FEATURES, 112, 16, 16, 16), "New Trap!",
+                "We added a new trap, the Multi Trap!\n\n" +
+                        "Multi trap consists of 5 combined traps, they commonly appear as you descend to new regions, and I don't think grim traps can appear here...."
+        ));
+
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.EXP_BOMB), new ExperienceBomb().trueName(),
                 "A new bomb that gives a bonus experience when an enemy is affected."));
 
