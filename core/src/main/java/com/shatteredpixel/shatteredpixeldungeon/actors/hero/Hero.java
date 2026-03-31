@@ -355,6 +355,7 @@ public class Hero extends Char {
 	private static final String HTBOOST     = "htboost";
 	private static final String GRINDING = "grinding";
 	private static final String PERKS = "perks";
+    private static final String CUSTOM_NAME = "customHeroName";
 
 	@Override
 	public void storeInBundle( Bundle bundle ) {
@@ -384,7 +385,7 @@ public class Hero extends Char {
 
 		belongings.storeInBundle( bundle );
         if (!customHeroName.equals("")) {
-            bundle.put("customHeroName", customHeroName);
+            bundle.put(CUSTOM_NAME, customHeroName);
         }
 	}
 	
@@ -416,8 +417,8 @@ public class Hero extends Char {
 
 
 		belongings.restoreFromBundle( bundle );
-        if (bundle.contains("customHeroName")) {
-            customHeroName = bundle.getString("customHeroName");
+        if (bundle.contains(CUSTOM_NAME)) {
+            customHeroName = bundle.getString(CUSTOM_NAME);
         }
 	}
 	
@@ -430,7 +431,7 @@ public class Hero extends Char {
 		info.shld = bundle.getLong( Char.TAG_SHLD );
 		info.heroClass = bundle.getEnum( CLASS, HeroClass.class );
 		info.subClass = bundle.getEnum( SUBCLASS, HeroSubClass.class );
-        info.customHeroName = bundle.getString("customHeroName");
+        info.customHeroName = bundle.getString(CUSTOM_NAME);
 		Belongings.preview( info, bundle );
 	}
 
