@@ -45,6 +45,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.test_tubes.Tubes;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfWarding;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
@@ -754,7 +755,9 @@ public class WndJournal extends WndTabbed {
 						((Potion) item).anonymize();
 					} else if (item instanceof Scroll) {
 						((Scroll) item).anonymize();
-					}
+					} else if (item instanceof Tubes) {
+                        ((Tubes) item).anonymize();
+                    }
 				}
 
 				sprite = new ItemSprite(item.image, seen ? item.glowing() : null);

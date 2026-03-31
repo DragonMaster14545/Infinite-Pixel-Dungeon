@@ -74,7 +74,8 @@ public class InfPDChanges {
                 "You can now name your heroes as you wish!\n\n_This is purely cosmetic and doesn't affect gameplay._"));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
-                "_-_ Fixed NTF in obsidian ring\n"
+                "_-_ Fixed NTF in obsidian ring\n" +
+                        "_-_ Fixed Tubes' color pre-identified on start\n"
         ));
 
         changes = new ChangeInfo("B", false, "");
