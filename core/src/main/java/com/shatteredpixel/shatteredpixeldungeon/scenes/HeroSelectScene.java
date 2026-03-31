@@ -570,13 +570,15 @@ public class HeroSelectScene extends PixelScene {
             StyledButton btnRenameHero = new StyledButton(Chrome.Type.BLANK, "Rename", 6){
                 @Override
                 protected void onClick() {
-                    ShatteredPixelDungeon.scene().addToFront(new WndTextInput("Rename Hero", Messages.get(HeroSelectScene.class, "rename_hero_desc"), Hero.customHeroName, 50, false, "Done", "Revert") {
+                    ShatteredPixelDungeon.scene().addToFront(new WndTextInput("Rename Hero", Messages.get(HeroSelectScene.class, "rename_hero_desc"), SPDSettings.customName(), 50, false, "Done", "Revert") {
                         @Override
                         public void onSelect( boolean positive, String text ) {
                             if (positive) {
                                 Hero.customHeroName = text;
+                                SPDSettings.customName(text);
                             } else {
                                 Hero.customHeroName = "";
+                                SPDSettings.customName("");
                             }
                             icon(Icons.get(Hero.customHeroName.isEmpty() ? Icons.SCROLL_GREY : Icons.SCROLL_COLOR));
                         }
@@ -587,7 +589,7 @@ public class HeroSelectScene extends PixelScene {
                     });
                 }
             };
-            btnRenameHero.icon(Icons.get(Hero.customHeroName.isEmpty() ? Icons.SCROLL_GREY : Icons.SCROLL_COLOR));
+            btnRenameHero.icon(Icons.get(SPDSettings.customName().isEmpty() ? Icons.SCROLL_GREY : Icons.SCROLL_COLOR));
             add(btnRenameHero);
             buttons.add(btnRenameHero);
 

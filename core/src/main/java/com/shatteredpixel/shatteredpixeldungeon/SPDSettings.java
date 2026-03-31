@@ -480,7 +480,7 @@ public static void playMusicInBackground( boolean value ){
 	public static final String KEY_WINDOW_WIDTH     = "window_width";
 	public static final String KEY_WINDOW_HEIGHT    = "window_height";
 	public static final String KEY_WINDOW_MAXIMIZED = "window_maximized";
-public static final String KEY_FULLSCREEN_MONITOR = "fullscreen_monitor";
+    public static final String KEY_FULLSCREEN_MONITOR = "fullscreen_monitor";
 	public static void windowResolution( Point p ){
 		put(KEY_WINDOW_WIDTH, p.x);
 		put(KEY_WINDOW_HEIGHT, p.y);
@@ -508,4 +508,15 @@ public static final String KEY_FULLSCREEN_MONITOR = "fullscreen_monitor";
 	public static int fulLScreenMonitor(){
 		return getInt( KEY_FULLSCREEN_MONITOR, 0 );
 	}
+
+    //naming
+    public static final String KEY_CUSTOM_HERO_NAME = "custom_hero_name";
+
+    public static String customName() {
+        return getString( KEY_CUSTOM_HERO_NAME, "" );
+    }
+
+    public static void customName( String value ){
+        put( KEY_CUSTOM_HERO_NAME, value );
+    }
 }
