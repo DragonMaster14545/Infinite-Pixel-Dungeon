@@ -112,7 +112,7 @@ public enum HeroClass {
 
 		new ScrollOfIdentify().identify();
 
-       if (Dungeon.challenges != null) {
+       if (Challenges.activeChallenges() > 0) {
            int itemQ = 0;
            for (int j = 0; j < Challenges.activeChallenges(); j++) {
                itemQ++;

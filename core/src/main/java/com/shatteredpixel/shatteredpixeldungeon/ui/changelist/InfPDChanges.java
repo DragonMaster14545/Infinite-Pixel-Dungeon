@@ -75,7 +75,8 @@ public class InfPDChanges {
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
                 "_-_ Fixed NTF in obsidian ring\n" +
-                        "_-_ Fixed Tubes' color pre-identified on start\n"
+                        "_-_ Fixed Tubes' color pre-identified on start\n" +
+                        "_-_ Fixed unintended pre-identification of PoH and SoU at the start of the game"
         ));
 
         changes = new ChangeInfo("B", false, "");
