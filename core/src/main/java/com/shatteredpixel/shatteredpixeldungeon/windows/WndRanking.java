@@ -172,7 +172,12 @@ public class WndRanking extends WndTabbed {
 			version.setPos(WIDTH-version.width(), pos);
 			add(version);
 
-			pos = date.bottom()+5;
+            RenderedTextBlock id = PixelScene.renderTextBlock(record.gameID, 4);
+            id.hardlight(0xCCCCCC);
+            id.setPos(0, 8 + pos); // ahh yes this is hardcoded
+            add(id);
+
+			pos = id.bottom()+5;
 
 			NumberFormat num = NumberFormat.getInstance(Locale.US);
 
