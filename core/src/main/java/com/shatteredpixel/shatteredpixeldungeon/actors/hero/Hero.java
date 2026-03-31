@@ -2221,7 +2221,7 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 	public static long maxExp( int lvl ){
 		HeroClass heroClass = Dungeon.hero == null ? GamesInProgress.selectedClass: Dungeon.hero.heroClass;
 		if (Dungeon.isChallenged(Challenges.FOR_THE_WORTHY)) {
-            return (20 + lvl * 20L) * 2L;
+            return (long) ((20 + lvl * 20L) * 1.5d);
         } else {
             return 20 + lvl * 20L;
         }

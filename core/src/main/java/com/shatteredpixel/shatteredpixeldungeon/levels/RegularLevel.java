@@ -469,6 +469,7 @@ public abstract class RegularLevel extends Level {
 					losBlocking[cell] = false;
 				}
 				drop( new Torch(), cell );
+                drop( new Torch(), cell );
 				//add a second torch to help with the larger floor
 				if (feeling == Feeling.LARGE){
 					cell = randomDropCell();
@@ -477,6 +478,7 @@ public abstract class RegularLevel extends Level {
 						losBlocking[cell] = false;
 					}
 					drop( new Torch(), cell );
+                    drop( new Torch(), cell );
 				}
 			}
 		Random.popGenerator();

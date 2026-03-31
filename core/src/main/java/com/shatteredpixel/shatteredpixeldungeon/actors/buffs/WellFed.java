@@ -72,7 +72,7 @@ public class WellFed extends Buff {
 		left = (int)Hunger.STARVING;
 		if (Dungeon.isChallenged(Challenges.NO_FOOD)){
 			//45 turns if on diet is enabled
-			left /= 10;
+			left /= 7;
 		}
 	}
 	

@@ -92,7 +92,7 @@ public class PsycheChest extends Item {
     public static long neededExp(){
         long neededExp = 100 + ((150L ^ (Dungeon.cycle + 1)) * Dungeon.cycle);
         if (Dungeon.isChallenged(Challenges.NO_SCROLLS)){
-            neededExp *= 2.5f;
+            neededExp *= 1.7f;
         }
         return neededExp;
     }

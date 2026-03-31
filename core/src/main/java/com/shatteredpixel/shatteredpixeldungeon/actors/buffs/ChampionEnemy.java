@@ -96,7 +96,7 @@ public abstract class ChampionEnemy extends Buff {
 	}
 
 	public static void rollForChampion(Mob m){
-		if (Dungeon.mobsToChampion <= 0) Dungeon.mobsToChampion = 8;
+		if (Dungeon.mobsToChampion <= 0) Dungeon.mobsToChampion = 10;
 
 		Dungeon.mobsToChampion--;
 

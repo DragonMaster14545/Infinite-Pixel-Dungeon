@@ -70,6 +70,16 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.CHALLENGE_COLOR), "Challenge Balances",
+                "The following challenges are balanced due to difficulty spiking high when other challenges was combined:\n\n" +
+                        "_On Diet_: Increased effectivity of satisfying hunger from _1/10_ to _1/7_\n" +
+                        "_Pharmacophobia_: Reduced poison duration from _lvl/4_ to _lvl/6_\n" +
+                        "_Into Darkness_: Increased torch count per floor _by 2_, _total of 4_ if the floor is large\n" +
+                        "_Forbidden Runes_: Lowered requirements of getting SoU by _80%_ (from +150%, to +70%), reset and SoTrans are still affected\n" +
+                        "_Hostile Champions_: Reduced enemies with titles spawn rate by _25%_ (from 1/8, to 1/10)\n" +
+                        "_For the Worthy_: Reduced max exp required by _50%_, total of _150% exp_ (from +100%, to +50%)\n"
+        ));
+
         changes.addButton( new ChangeButton(Icons.get(Icons.SCROLL_COLOR), "Nameable Heroes!",
                 "You can now name your heroes as you wish!\n\n_This is purely cosmetic and doesn't affect gameplay._"));
 
