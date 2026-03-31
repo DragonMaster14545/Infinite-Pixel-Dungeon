@@ -66,6 +66,13 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes = new ChangeInfo("C", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton( new ChangeButton(Icons.get(Icons.SCROLL_COLOR), "Nameable Heroes!",
+                "You can now name your heroes as you wish!\n\n_This is purely cosmetic and doesn't affect gameplay._"));
+
         changes = new ChangeInfo("B", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);

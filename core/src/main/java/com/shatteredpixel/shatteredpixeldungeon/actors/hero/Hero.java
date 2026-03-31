@@ -269,6 +269,8 @@ public class Hero extends Char {
 	// for enemies we know we aren't seeing normally, resulting in better performance
 	public ArrayList<Mob> mindVisionEnemies = new ArrayList<>();
 
+    public static String customHeroName = "";
+
 	public float getStandardRoomMultiplier() {
 		return 2f;
 	}
@@ -381,6 +383,9 @@ public class Hero extends Char {
 		bundle.put(GRINDING, grinding);
 
 		belongings.storeInBundle( bundle );
+        if (!customHeroName.equals("")) {
+            bundle.put("customHeroName", customHeroName);
+        }
 	}
 	
 	@Override
@@ -411,6 +416,9 @@ public class Hero extends Char {
 
 
 		belongings.restoreFromBundle( bundle );
+        if (bundle.contains("customHeroName")) {
+            customHeroName = bundle.getString("customHeroName");
+        }
 	}
 	
 	public static void preview( GamesInProgress.Info info, Bundle bundle ) {
@@ -422,6 +430,7 @@ public class Hero extends Char {
 		info.shld = bundle.getLong( Char.TAG_SHLD );
 		info.heroClass = bundle.getEnum( CLASS, HeroClass.class );
 		info.subClass = bundle.getEnum( SUBCLASS, HeroSubClass.class );
+        info.customHeroName = bundle.getString("customHeroName");
 		Belongings.preview( info, bundle );
 	}
 
@@ -491,9 +500,11 @@ public class Hero extends Char {
 	public String name(){
 		if (buff(HeroDisguise.class) != null) {
 			return buff(HeroDisguise.class).getDisguise().title();
-		} else {
+		} else if (customHeroName.isEmpty()) {
 			return className();
-		}
+		} else {
+            return customHeroName;
+        }
 	}
 
 	@Override

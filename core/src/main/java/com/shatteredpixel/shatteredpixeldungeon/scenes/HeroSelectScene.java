@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
 import com.shatteredpixel.shatteredpixeldungeon.*;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -566,6 +567,30 @@ public class HeroSelectScene extends PixelScene {
 
 			buttons = new ArrayList<>();
 			spacers = new ArrayList<>();
+            StyledButton btnRenameHero = new StyledButton(Chrome.Type.BLANK, "Rename", 6){
+                @Override
+                protected void onClick() {
+                    ShatteredPixelDungeon.scene().addToFront(new WndTextInput("Rename Hero", "", Hero.customHeroName, 50, false, "Done", "Revert") {
+                        @Override
+                        public void onSelect( boolean positive, String text ) {
+                            if (positive) {
+                                Hero.customHeroName = text;
+                            } else {
+                                Hero.customHeroName = "";
+                            }
+                            icon(Icons.get(Hero.customHeroName.isEmpty() ? Icons.SCROLL_GREY : Icons.SCROLL_COLOR));
+                        }
+                        public void onBackPressed() {
+                            icon(Icons.get(Hero.customHeroName.isEmpty() ? Icons.SCROLL_GREY : Icons.SCROLL_COLOR));
+                            super.onBackPressed();
+                        }
+                    });
+                }
+            };
+            btnRenameHero.icon(Icons.get(Hero.customHeroName.isEmpty() ? Icons.SCROLL_GREY : Icons.SCROLL_COLOR));
+            add(btnRenameHero);
+            buttons.add(btnRenameHero);
+
 			StyledButton seedButton = new StyledButton(Chrome.Type.BLANK, Messages.get(HeroSelectScene.class, "custom_seed"), 6){
 				@Override
 				protected void onClick() {

@@ -53,12 +53,16 @@ public class WndGameInProgress extends Window {
 		
 		final GamesInProgress.Info info = GamesInProgress.check(slot);
 		
-		String className = null;
+		String className;
 		if (info.subClass != HeroSubClass.NONE){
 			className = info.subClass.title();
 		} else {
 			className = info.heroClass.title();
 		}
+
+        if (!info.customHeroName.isEmpty()) {
+            className = info.customHeroName;
+        }
 		
 		IconTitle title = new IconTitle();
 		title.icon( HeroSprite.avatar(info.heroClass, info.armorTier) );
