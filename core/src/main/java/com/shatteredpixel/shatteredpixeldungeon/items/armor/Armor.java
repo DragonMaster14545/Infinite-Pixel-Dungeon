@@ -320,13 +320,14 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 	}
 
 	public long DRMax(long lvl){
-		if (Dungeon.isChallenged(Challenges.NO_ARMOR)){
-			return 1 + tier() + lvl + augment.defenseFactor(lvl);
-		}
-        if (Dungeon.isChallenged(Challenges.FOR_THE_WORTHY)) {
+   if (Dungeon.isChallenged(Challenges.FOR_THE_WORTHY)) {
             return 0;
         }
 
+		if (Dungeon.isChallenged(Challenges.NO_ARMOR)){
+			return 1 + tier() + lvl + augment.defenseFactor(lvl);
+		}
+        
 		long max = tier() * (2 + lvl) + augment.defenseFactor(lvl);
 		if (lvl > max){
 			return ((lvl - max)+1)/2;
