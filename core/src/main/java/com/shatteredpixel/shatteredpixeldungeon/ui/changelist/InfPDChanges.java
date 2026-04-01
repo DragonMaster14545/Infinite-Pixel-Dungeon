@@ -84,7 +84,8 @@ public class InfPDChanges {
                 "You can now name your heroes as you wish!\n\n_This is purely cosmetic and doesn't affect gameplay._"));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ Added GameID in rankings\n"
+                "_-_ Added GameID in rankings\n" +
+                        "_-_ Moved recipe of WoA to custom recipes and added recipe of Elixir of Might"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",

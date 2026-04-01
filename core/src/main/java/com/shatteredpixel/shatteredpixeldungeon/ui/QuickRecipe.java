@@ -55,6 +55,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfDr
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfFeatherFall;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfHoneyedHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfIcyTouch;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfMight;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfToxicEssence;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
@@ -384,6 +385,7 @@ public class QuickRecipe extends Component {
 				result.add(new QuickRecipe(new ShockingBrew.Recipe()));
 				result.add(new QuickRecipe(new InfernalBrew.Recipe()));
 				result.add(new QuickRecipe(new AquaBrew.Recipe()));
+                result.add(new QuickRecipe(new ElixirOfMight.Recipe()));
 				result.add(null);
 				result.add(null);
 				result.add(new QuickRecipe(new ElixirOfHoneyedHealing.Recipe()));
@@ -393,7 +395,6 @@ public class QuickRecipe extends Component {
 				result.add(new QuickRecipe(new ElixirOfToxicEssence.Recipe()));
 				result.add(new QuickRecipe(new ElixirOfDragonsBlood.Recipe()));
 				result.add(new QuickRecipe(new ElixirOfFeatherFall.Recipe()));
-                if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_6)) result.add(new QuickRecipe(new WandOfEarthblast.Recipe(), new ArrayList<>(Arrays.asList(new WandOfFireblast(), new WandOfLivingEarth(), new Cheese())), new WandOfEarthblast()));
                 return result;
 			case 8:
 				result.add(new QuickRecipe(new UnstableSpell.Recipe(), new ArrayList<>(Arrays.asList(new Scroll.PlaceHolder(), new  Runestone.PlaceHolder())), new UnstableSpell()));
@@ -425,6 +426,7 @@ public class QuickRecipe extends Component {
                 result.add(new QuickRecipe(new TicketToPortableShop.Recipe()));
 				return result;
             case 9:
+                if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_6)) result.add(new QuickRecipe(new WandOfEarthblast.Recipe(), new ArrayList<>(Arrays.asList(new WandOfFireblast(), new WandOfLivingEarth(), new Cheese())), new WandOfEarthblast()));
                 result.add(new QuickRecipe(new WandOfTeleportation.Recipe()));
                 return result;
 		}
