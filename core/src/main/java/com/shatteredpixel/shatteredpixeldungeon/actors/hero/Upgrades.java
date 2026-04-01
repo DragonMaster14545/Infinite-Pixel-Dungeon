@@ -37,7 +37,7 @@ public class Upgrades implements Bundlable {
     }
 
     public enum UpgradeData {
-        RING_SLOTS(18,"Ring slots","Adds one extra ring slot per level") {
+        RING_SLOTS(18,"Ring Slots","Adds one extra ring slot per level") {
             @Override
             public int ringSlots() {
                 return 1;
@@ -50,7 +50,7 @@ public class Upgrades implements Bundlable {
                 return cost;
             }
         },
-        MISC_SLOTS(18,"Misc slots","Adds one extra misc slot per level") {
+        MISC_SLOTS(18,"Misc Slots","Adds one extra misc slot per level") {
             @Override
             public int miscSlots() {
                 return 1;
@@ -63,7 +63,7 @@ public class Upgrades implements Bundlable {
                 return cost;
             }
         },
-        ARTIFACT_SLOTS(18,"Artifact slots","Adds one extra artifact slot per level") {
+        ARTIFACT_SLOTS(18,"Artifact Slots","Adds one extra artifact slot per level") {
             @Override
             public int artifactSlots() {
                 return 1;
