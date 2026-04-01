@@ -70,6 +70,10 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.INFO_PAGE), "Mystery Cake?",
+                "New lores are waiting for you.. You can get some of those after reaching cycle 1 :P"
+        ));
+
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.MYSTERY_CAKE), "Mystery Cake?",
                 "A special cake exclusive on the month of October. Please be patient to find it out."
         ));

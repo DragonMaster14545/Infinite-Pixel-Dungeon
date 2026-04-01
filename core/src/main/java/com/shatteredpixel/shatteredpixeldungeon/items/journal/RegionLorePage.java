@@ -33,6 +33,7 @@ public class RegionLorePage {
 			case CAVES_EXPLORER:            return new RegionLorePage.Caves();
 			case CITY_WARLOCK:              return new RegionLorePage.City();
 			case HALLS_KING:                return new RegionLorePage.Halls();
+            case INFINITY:                  return new RegionLorePage.Infinity();
 		}
 	}
 
@@ -90,5 +91,16 @@ public class RegionLorePage {
 			return Document.HALLS_KING;
 		}
 	}
+
+    public static class Infinity extends DocumentPage {
+        {
+            image = ItemSpriteSheet.INFO_PAGE;
+        }
+
+        @Override
+        public Document document() {
+            return Document.INFINITY;
+        }
+    }
 
 }

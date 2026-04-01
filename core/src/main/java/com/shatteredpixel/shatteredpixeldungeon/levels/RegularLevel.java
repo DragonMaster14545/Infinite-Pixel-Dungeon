@@ -587,16 +587,15 @@ public abstract class RegularLevel extends Level {
 
 				Document regionDoc;
 				//TODO add a new lore, about the cycles and hints.
-				switch( region ){
-					default: regionDoc = null; break;
-					case 1: regionDoc = Document.SEWERS_GUARD; break;
-					case 2: regionDoc = Document.PRISON_WARDEN; break;
-					case 3: regionDoc = Document.CAVES_EXPLORER; break;
-					case 4: regionDoc = Document.CITY_WARLOCK; break;
-					case 5: regionDoc = Document.HALLS_KING; break;
-				}
-				/*
-				if (Dungeon.cycle <1) {
+//				switch( region ){
+//					default: regionDoc = null; break;
+//					case 1: regionDoc = Document.SEWERS_GUARD; break;
+//					case 2: regionDoc = Document.PRISON_WARDEN; break;
+//					case 3: regionDoc = Document.CAVES_EXPLORER; break;
+//					case 4: regionDoc = Document.CITY_WARLOCK; break;
+//					case 5: regionDoc = Document.HALLS_KING; break;
+//				}
+				if (Dungeon.cycle < 1) {
 					switch( region ){
 						default: regionDoc = null; break;
 						case 1: regionDoc = Document.SEWERS_GUARD; break;
@@ -607,10 +606,9 @@ public abstract class RegularLevel extends Level {
 					}
 				} else {
 					switch( region ){
-						default: regionDoc = null; break;
+						default: regionDoc = Document.INFINITY; break;
 					}
 				}
-				 */
 
 				if (regionDoc != null && !regionDoc.allPagesFound()) {
 
