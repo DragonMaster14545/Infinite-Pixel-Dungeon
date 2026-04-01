@@ -40,7 +40,8 @@ public enum Holiday {
 	//Nothing in Nov
 	PD_BIRTHDAY,            //Dec 1st to Dec 7th                                    (7 days)
 	WINTER_HOLIDAYS,        //Dec 15th to Dec 26th                                  (12 days)
-	NEW_YEARS;              //Dec 27th to Jan 2nd                                   (7 days)
+	NEW_YEARS,              //Dec 27th to Jan 2nd                                   (7 days)
+    MYSTERY_CAKE;           //Oct 10th to Oct 17th                                  (7 days)
 
 	//total of 61-62 festive days each year, mainly concentrated in Late Oct to Early Feb
 
@@ -116,6 +117,13 @@ public enum Holiday {
 				|| (cal.get(Calendar.MONTH) == Calendar.JANUARY && cal.get(Calendar.DAY_OF_MONTH) <= 2)){
 			return NEW_YEARS;
 		}
+
+        //Mystery Event
+        if (cal.get(Calendar.MONTH) == Calendar.OCTOBER
+                && cal.get(Calendar.DAY_OF_MONTH) >= 10
+                && cal.get(Calendar.DAY_OF_MONTH) <= 17){
+            return MYSTERY_CAKE;
+        }
 
 		return NONE;
 	}

@@ -40,6 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.TargetHealthIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Holiday;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.utils.Random;
 
 public class Pasty extends Food {
 
@@ -85,6 +86,9 @@ public class Pasty extends Food {
 			case NEW_YEARS:
 				image = ItemSpriteSheet.SPARKLING_POTION;
 				break;
+            case MYSTERY_CAKE:
+                image = ItemSpriteSheet.MYSTERY_CAKE;
+                break;
 		}
 	}
 
@@ -167,8 +171,41 @@ public class Pasty extends Food {
 				Buff.affect(hero, Barrier.class).setShield(toShield);
 				hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString(toShield), FloatingText.SHIELDING );
 				break;
+            case MYSTERY_CAKE:
+                //ahh yes, random buff
+                switch (Random.Int(5)) {
+                    case 0:
+                        //shields for 10% of max hp, min of 5
+                        long mys_toShield = Math.max(5, hero.HT/10);
+                        Buff.affect(hero, Barrier.class).setShield(mys_toShield);
+                        hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString(mys_toShield), FloatingText.SHIELDING );
+                        break;
+                    case 1:
+                        //charges
+                        hero.belongings.charge(0.5f); //2 turns worth
+                        ScrollOfRecharging.charge( hero );
+                        break;
+                    case 2:
+                        //heals for 5% max hp, min of 3
+                        long mys_toHeal = Math.max(3, hero.HT/20);
+                        hero.HP = Math.min(hero.HP + mys_toHeal, hero.HT);
+                        hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString(mys_toHeal), FloatingText.HEALING );
+                    case 3:
+                        //gives 10% of level in exp, min of 2
+                        long mys_expToGive = Math.max(2, hero.maxExp()/10);
+                        hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(mys_expToGive), FloatingText.EXPERIENCE);
+                        hero.earnExp(mys_expToGive, PotionOfExperience.class);
+                        break;
+                    case 4:
+                        ArtifactRecharge.chargeArtifacts(hero, 2f);
+                        ScrollOfRecharging.charge( hero );
+                        break;
+                }
+                break;
 		}
 	}
+
+
 
 	@Override
 	public String name() {
@@ -193,6 +230,8 @@ public class Pasty extends Food {
 				return Messages.get(this, "cane_name");
 			case NEW_YEARS:
 				return Messages.get(this, "sparkling_name");
+            case MYSTERY_CAKE:
+                return Messages.get(this, "mystery_name");
 		}
 	}
 
@@ -219,6 +258,8 @@ public class Pasty extends Food {
 				return Messages.get(this, "cane_desc");
 			case NEW_YEARS:
 				return Messages.get(this, "sparkling_desc");
+            case MYSTERY_CAKE:
+                return Messages.get(this, "mystery_desc");
 		}
 	}
 	

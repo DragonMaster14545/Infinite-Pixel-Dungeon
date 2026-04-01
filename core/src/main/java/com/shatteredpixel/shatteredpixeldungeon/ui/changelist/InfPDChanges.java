@@ -70,6 +70,10 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.MYSTERY_CAKE), "Mystery Cake?",
+                "A special cake exclusive on the month of October. Please be patient to find it out."
+        ));
+
         changes.addButton( new ChangeButton(Icons.get(Icons.CHALLENGE_COLOR), "Challenge Balances",
                 "The following challenges are balanced due to difficulty spiking high when other challenges was combined:\n\n" +
                         "_On Diet_: Increased effectivity of satisfying hunger from _1/10_ to _1/7_\n" +
