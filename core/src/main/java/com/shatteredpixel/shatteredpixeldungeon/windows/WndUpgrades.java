@@ -96,7 +96,7 @@ public class WndUpgrades extends Window {
         float pos = 2;
         for (Upgrades.Upgrade i : upgrades.upgrades) {
 
-            ConduitBox cb = new ConduitBox(i.data.name + " | Level: " + i.level);
+            ConduitBox cb = new ConduitBox(i.data.name);
             cb.active = true;
             cb.conduct = i;
 
@@ -161,13 +161,6 @@ public class WndUpgrades extends Window {
                     if (!conduct.canUpgrade()) {
                         upgradeButton.destroy();
                     }
-                    update();
-                }
-
-                @Override
-                public void onBackPressed() {
-                    update();
-                    super.onBackPressed();
                 }
             }
             super.onClick();
