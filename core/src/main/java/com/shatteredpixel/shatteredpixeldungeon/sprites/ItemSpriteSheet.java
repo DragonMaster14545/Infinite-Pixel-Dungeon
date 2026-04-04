@@ -964,6 +964,12 @@ public class ItemSpriteSheet {
             assignItemRect(i, 14, 15);
     }
 
+    private static final int NEW_WAND_ROW =								xy(1, 36);
+    public static final int LIFESTEAL_WAND	= NEW_WAND_ROW+0;
+    static{
+        assignItemRect(LIFESTEAL_WAND, 14, 14);
+    }
+
 	//for smaller 8x8 icons that often accompany an item sprite
 	public static class Icons {
 

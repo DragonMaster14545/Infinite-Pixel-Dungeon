@@ -73,6 +73,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrinketCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfEarthblast;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLifesteal;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.watabou.utils.Reflection;
@@ -246,7 +247,8 @@ public abstract class Recipe {
 		new MeatPie.Recipe(),
 		new WandOfEarthblast.Recipe(),
             new TicketToPortableShop.Recipe(),
-            new WandOfTeleportation.Recipe()
+            new WandOfTeleportation.Recipe(),
+            new WandOfLifesteal.Recipe()
 	};
 	
 	public static ArrayList<Recipe> findRecipes(ArrayList<Item> ingredients){

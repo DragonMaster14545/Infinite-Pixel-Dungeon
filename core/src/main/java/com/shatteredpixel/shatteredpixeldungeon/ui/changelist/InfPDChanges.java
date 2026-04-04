@@ -70,6 +70,10 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.LIFESTEAL_WAND), "New Wand: Wand of Lifesteal",
+                "A brand new wand that steals health from each enemy affected. It doesn't work if you have already full health and consumes wand charge anyway."
+        ));
+
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.INFO_PAGE), "New Lore: Beyond Reality",
                 "New lores are waiting for you.. You can get some of those after reaching cycle 1 :P"
         ));
