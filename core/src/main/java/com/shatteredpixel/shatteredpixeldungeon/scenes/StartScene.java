@@ -47,7 +47,7 @@ import java.util.stream.IntStream;
 public class StartScene extends PixelScene {
 	
 	private static final int SLOT_WIDTH = 138;
-	private static final int SLOT_HEIGHT = 22;
+	private static final int SLOT_HEIGHT = 28;
 	
 	@Override
 	public void create() {
@@ -92,11 +92,6 @@ public class StartScene extends PixelScene {
 		int slotGap = 4;
 		int slotsHeight = slotCount*SLOT_HEIGHT + (slotCount-1)* slotGap;
         slotsHeight += 14;
-
-		//while (slotGap >= 2 && slotsHeight > (h-title.bottom()-2)){
-		//	slotGap--;
-		//	slotsHeight -= slotCount-1;
-		//}
 
         float yPos = (h - slotsHeight + title.bottom() + 2)/2f - 4;
         yPos = Math.max(yPos, title.bottom()+2);
@@ -150,12 +145,15 @@ public class StartScene extends PixelScene {
         };
         btnSort.textColor(0xCCCCCC);
 
-        if (yPos + 10 > Camera.main.height && Boolean.TRUE.equals(SPDSettings.landscape())) {
-            btnSort.setRect(slotLeft - btnSort.reqWidth() - 6, Camera.main.height - 14, btnSort.reqWidth() + 4, 12);
-        } else {
-            btnSort.setRect(slotLeft, yPos, btnSort.reqWidth() + 4, 12);
+        //if (yPos + 10 > Camera.main.height) {
+        //    btnSort.setRect(slotLeft - btnSort.reqWidth() - 6, Camera.main.height - 14, btnSort.reqWidth() + 4, 12);
+        //} else {
+        btnSort.setRect(slotLeft, yPos, btnSort.reqWidth() + 4, 12);
+        //}
+        if (games.size() >= 2)  {
+            add(btnSort);
+            game_slots.add(btnSort);
         }
-        if (games.size() >= 2) add(btnSort);
         if (games.size() > 6 + SPDSettings.interfaceSize()) {
             game_slots.setSize(w, btnSort.height() + yPos);
         }
@@ -177,6 +175,7 @@ public class StartScene extends PixelScene {
 		
 		private Image hero;
 		private RenderedTextBlock name;
+        private RenderedTextBlock heroName;
         private RenderedTextBlock lastPlayed;
 
 		private Image steps;
@@ -194,7 +193,7 @@ public class StartScene extends PixelScene {
 			super.createChildren();
 			
 			bg = Chrome.get(Chrome.Type.TOAST_TR_HEAVY);
-			add( bg);
+			add( bg );
 			
 			name = PixelScene.renderTextBlock(9);
 			add(name);
@@ -225,14 +224,20 @@ public class StartScene extends PixelScene {
 			} else {
 				
 				if (info.subClass != HeroSubClass.NONE){
-					name.text(info.customHeroName.isEmpty() ? Messages.titleCase(info.subClass.title()) : info.customHeroName);
+					name.text(Messages.titleCase(info.subClass.title()));
 				} else {
-					name.text(info.customHeroName.isEmpty() ? Messages.titleCase(info.heroClass.title()) : info.customHeroName);
+					name.text(Messages.titleCase(info.heroClass.title()));
 				}
 				
 				if (hero == null){
 					hero = HeroSprite.avatar(info.heroClass,info.armorTier);
 					add(hero);
+
+                    if (info.customHeroName != null) {
+                        heroName = PixelScene.renderTextBlock(6);
+                        heroName.text(Messages.titleCase(info.customHeroName));
+                        add( heroName );
+                    }
 					
 					steps = new Image(Icons.get(Icons.STAIRS));
 					add(steps);
@@ -286,6 +291,9 @@ public class StartScene extends PixelScene {
                     lastPlayed.hardlight(Window.TITLE_COLOR);
 					depth.hardlight(Window.TITLE_COLOR);
 					level.hardlight(Window.TITLE_COLOR);
+                    if (info.customHeroName != null) {
+                        heroName.hardlight(Window.TITLE_COLOR);
+                    }
 					if (info.cycle != 0){
 						cycle.hardlight(Window.TITLE_COLOR);
 					}
@@ -294,6 +302,9 @@ public class StartScene extends PixelScene {
                     lastPlayed.resetColor();
 					depth.resetColor();
 					level.resetColor();
+                    if (info.customHeroName != null) {
+                        heroName.resetColor();
+                    }
 					if (info.cycle != 0){
 						cycle.resetColor();
 					}
@@ -335,7 +346,7 @@ public class StartScene extends PixelScene {
 				
 				name.setPos(
 						hero.x + hero.width() + 6,
-						y + (height - name.height() - lastPlayed.height() - 2)/2f
+						y + (height - name.height() - lastPlayed.height() - heroName.height() - 4)/2f
 				);
 				align(name);
 
@@ -343,6 +354,13 @@ public class StartScene extends PixelScene {
                         hero.x + hero.width() + 6,
                         name.bottom()+2
                 );
+
+                if (heroName.active) {
+                    heroName.setPos(
+                            hero.x + hero.width() + 6,
+                            lastPlayed.bottom()+2
+                    );
+                }
 				
 				classIcon.x = x + width - 24 + (16 - classIcon.width())/2f;
 				classIcon.y = y + (height - classIcon.height())/2f;

@@ -386,6 +386,8 @@ public class Hero extends Char {
 		belongings.storeInBundle( bundle );
         if (!customHeroName.equals("")) {
             bundle.put(CUSTOM_NAME, customHeroName);
+        } else if (!SPDSettings.customName().isEmpty()) {
+            bundle.put(CUSTOM_NAME, SPDSettings.customName());
         }
 	}
 	
