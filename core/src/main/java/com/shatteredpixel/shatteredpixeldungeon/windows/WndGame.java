@@ -33,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.*;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
 
 import java.io.IOException;
@@ -110,7 +111,22 @@ public class WndGame extends Window {
 			}
 		});
 		curBtn.icon(Icons.get(Icons.DISPLAY));
-		if (SPDSettings.intro()) curBtn.enable(false);
+        if (SPDSettings.intro()) curBtn.enable(false);
+
+        // Main menu
+        addButton(curBtn = new RedButton(Messages.get(this, "save")) {
+            @Override
+            protected void onClick() {
+                try {
+                    Dungeon.saveAll();
+                } catch (IOException e) {
+                    ShatteredPixelDungeon.reportException(e);
+                }
+                hide();
+                GLog.p(Messages.get(WndGame.class, "game_saved"));
+            }
+        });
+        curBtn.icon(Icons.get(Icons.CATALOG));
 
 		resize( WIDTH, pos );
 	}

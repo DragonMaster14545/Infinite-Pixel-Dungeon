@@ -93,7 +93,8 @@ public class InfPDChanges {
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Added GameID in rankings\n" +
-                        "_-_ Moved recipe of WoA to custom recipes and added recipe of Elixir of Might"
+                        "_-_ Moved recipe of WoA to custom recipes and added recipe of Elixir of Might\n" +
+                        "_-_ Added a Save Game Button"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
