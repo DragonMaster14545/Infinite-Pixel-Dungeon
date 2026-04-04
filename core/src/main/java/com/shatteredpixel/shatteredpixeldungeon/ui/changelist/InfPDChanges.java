@@ -102,6 +102,10 @@ public class InfPDChanges {
                         "_-_ Emblem exclusive enchantments can now be actually obtain from Enchantment Scrolls/Stone"
         ));
 
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Drastically increased the energy required for Elixir of Might to be crafted"
+        ));
+
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
                 "_-_ Fixed NTF in obsidian ring\n" +
                         "_-_ Fixed Tubes' color pre-identified on start\n" +
