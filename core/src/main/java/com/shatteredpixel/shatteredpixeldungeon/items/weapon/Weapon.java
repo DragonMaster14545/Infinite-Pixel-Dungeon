@@ -496,7 +496,7 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 		};
 
         public static Class<?>[] allEnchants(){
-            return ListUtils.combine( common, uncommon, rare );
+            return ListUtils.combine( common, uncommon, rare, emblem_exclusive );
         }
 
         public static Class<?>[] getCurses(){
@@ -579,6 +579,8 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 					return randomUncommon( toIgnore );
 				case 2:
 					return randomRare( toIgnore );
+                case 3:
+                    return randomExclusive( toIgnore );
 			}
 		}
 		
@@ -614,6 +616,17 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 				return (Enchantment) Reflection.newInstance(Random.element(enchants));
 			}
 		}
+
+        @SuppressWarnings("unchecked")
+        public static Enchantment randomExclusive( Class<? extends Enchantment> ... toIgnore ) {
+            ArrayList<Class<?>> enchants = new ArrayList<>(Arrays.asList(emblem_exclusive));
+            enchants.removeAll(Arrays.asList(toIgnore));
+            if (enchants.isEmpty()) {
+                return random();
+            } else {
+                return (Enchantment) Reflection.newInstance(Random.element(enchants));
+            }
+        }
 
 		@SuppressWarnings("unchecked")
 		public static Enchantment randomCurse( Class<? extends Enchantment> ... toIgnore ){

@@ -98,7 +98,8 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Added GameID in rankings\n" +
                         "_-_ Moved recipe of WoA to custom recipes and added recipe of Elixir of Might\n" +
-                        "_-_ Added a Save Game Button"
+                        "_-_ Added a Save Game Button\n" +
+                        "_-_ Emblem exclusive enchantments can now be actually obtain from Enchantment Scrolls/Stone"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
