@@ -79,6 +79,10 @@ public class InfPDChanges {
                         "_-_ Made all Blacksmith weapons' tier to 5"
         ));
 
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Buffed Gambler spell slightly, it will now take 30% of your gold when failed, instead of 50%."
+        ));
+
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
                 "_-_ Fixed crash when transmuting artifacts when equipped\n" +
                         "_-_ Actually fixed NTF on obsidian rings\n"

@@ -60,8 +60,8 @@ public class Gambler extends Spell {
         } else if (chances == 1) {
             hero.sprite.showStatusWithIcon(CharSprite.NEUTRAL, "1x", FloatingText.GOLD);
         } else {
-            hero.sprite.showStatusWithIcon(CharSprite.NEGATIVE, "-0.5x", FloatingText.GOLD);
-            Dungeon.gold -= (long) (Dungeon.gold * 0.5d);
+            hero.sprite.showStatusWithIcon(CharSprite.NEGATIVE, "-0.3x", FloatingText.GOLD);
+            Dungeon.gold -= (long) (Dungeon.gold * 0.3d);
         }
 
         if (Random.Float() <= 0.00002f) {
