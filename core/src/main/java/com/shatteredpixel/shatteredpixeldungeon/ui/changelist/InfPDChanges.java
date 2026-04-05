@@ -75,7 +75,8 @@ public class InfPDChanges {
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
-                "_-_ Fixed crash when transmuting artifacts when equipped\n"
+                "_-_ Fixed crash when transmuting artifacts when equipped\n" +
+                        "_-_ Actually fixed NTF on obsidian rings\n"
         ));
 
         changes = new ChangeInfo("C", false, "");
