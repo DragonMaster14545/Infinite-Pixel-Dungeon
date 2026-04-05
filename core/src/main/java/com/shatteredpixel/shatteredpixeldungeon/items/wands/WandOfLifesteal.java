@@ -117,11 +117,11 @@ public class WandOfLifesteal extends DamageWand {
 	}
 
     private void affectTarget(Char ch){
+        float drain = damageRoll();
+        ch.damage(Math.round(drain), this);
 
         if ( ch.alignment != curUser.alignment && curUser.HP < curUser.HT ) {
             curUser.sprite.parent.add(new Beam.HealthRay(curUser.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(ch.pos)));
-            float drain = damageRoll();
-            ch.damage(Math.round(drain), this);
             curUser.HP = Math.min(curUser.HP + Math.round(drain), curUser.HT);
             curUser.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(Math.round(drain)), FloatingText.HEALING);
         }

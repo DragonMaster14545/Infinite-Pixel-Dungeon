@@ -76,7 +76,8 @@ public class InfPDChanges {
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Scroll of Transmutation can now produce the same artifact when transmuting, and can now transfer rarities on transmuted items\n" +
-                        "_-_ Made all Blacksmith weapons' tier to 5"
+                        "_-_ Made all Blacksmith weapons' tier to 5\n" +
+                        "_-_ Wand of Lifesteal can now damage enemies even if you are in full health"
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
