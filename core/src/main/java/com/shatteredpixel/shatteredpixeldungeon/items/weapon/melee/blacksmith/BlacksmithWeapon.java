@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 
 public abstract class BlacksmithWeapon extends MeleeWeapon {
     {
-        internalTier = tier = 3;
+        internalTier = tier = 5;
     }
 
     @Override

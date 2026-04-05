@@ -75,7 +75,8 @@ public class InfPDChanges {
                 "A new spell to help you craft things in the early game."));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ Scroll of Transmutation can now produce the same artifact when transmuting, and can now transfer rarities on transmuted items\n"
+                "_-_ Scroll of Transmutation can now produce the same artifact when transmuting, and can now transfer rarities on transmuted items\n" +
+                        "_-_ Made all Blacksmith weapons' tier to 5"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
