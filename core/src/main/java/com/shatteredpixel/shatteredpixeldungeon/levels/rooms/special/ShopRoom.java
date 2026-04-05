@@ -53,6 +53,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Alchemize;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.PocketAlchemy;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAugmentation;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.AlchemyBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.BiggerGambleBag;
@@ -270,8 +271,10 @@ public class ShopRoom extends SpecialRoom {
 		w.identify(false);
 		itemsToSpawn.add(w);
 		itemsToSpawn.add(new PotionOfExperience());
-		if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_1) && !Dungeon.LimitedDrops.CHEESY_CHEEST.dropped()) itemsToSpawn.add(new CheeseCheest());
-        if (!Dungeon.LimitedDrops.UTILITY_BAG.dropped()) itemsToSpawn.add(new UtilityBag());
+		if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_1) && !Dungeon.LimitedDrops.CHEESY_CHEEST.dropped())
+            itemsToSpawn.add(new CheeseCheest());
+        if (!Dungeon.LimitedDrops.UTILITY_BAG.dropped())
+            itemsToSpawn.add(new UtilityBag());
 
 		itemsToSpawn.add( TippedDart.randomTipped(2) );
 
@@ -281,6 +284,7 @@ public class ShopRoom extends SpecialRoom {
         itemsToSpawn.add(new BiggerGambleBag());
 		if (Dungeon.depth > 6) itemsToSpawn.add(new QualityBag());
         if (Random.Int(5) == 0) itemsToSpawn.add(Generator.random(Generator.Category.TUBES).quantity(Random.IntRange(2, 5)));
+        if (Random.Int(25) == 0) itemsToSpawn.add(new PocketAlchemy());
 		if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_5)) itemsToSpawn.add(new Clayball());
 		itemsToSpawn.add( new Alchemize().quantity(Random.IntRange(2, 3)));
 

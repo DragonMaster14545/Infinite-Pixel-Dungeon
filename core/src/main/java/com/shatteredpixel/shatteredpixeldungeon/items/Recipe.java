@@ -60,6 +60,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.Gambler;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemQuantifier;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.PhaseShift;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.PocketAlchemy;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Raritize;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ReclaimTrap;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Recycle;
@@ -238,7 +239,8 @@ public abstract class Recipe {
             new ItemQuantifier.Recipe(),
             new GalacticInfusion.Recipe(),
             new Barricade.Recipe(),
-            new DeterminantInfusion.Recipe()
+            new DeterminantInfusion.Recipe(),
+            new PocketAlchemy.Recipe()
 	};
 	
 	private static Recipe[] threeIngredientRecipes = new Recipe[]{

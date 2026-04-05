@@ -928,6 +928,7 @@ public class ItemSpriteSheet {
     public static final int BARRICADE  = SPELLS_NEW_ROW+5;
     public static final int DETERMINANT  = SPELLS_NEW_ROW+6;
     public static final int PORTABLE_SHOP  = SPELLS_NEW_ROW+7;
+    public static final int PORTABLE_ALCHEMY  = SPELLS_NEW_ROW+8;
 	static {
 		assignItemRect(EXTRACTOR,     10, 15);
 		assignItemRect(GAMBLER,     10, 15);
@@ -937,6 +938,7 @@ public class ItemSpriteSheet {
         assignItemRect(BARRICADE,    	 8, 16);
         assignItemRect(DETERMINANT,    	 12, 11);
         assignItemRect(PORTABLE_SHOP,    	 12, 12);
+        assignItemRect(PORTABLE_ALCHEMY,    	 11, 11);
 	}
 
     private static final int TEST_TUBES =								xy(1, 34);

@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.DeterminantInfusion
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.GalacticInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemQuantifier;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.PocketAlchemy;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.LegendaryTreasureBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.FerretTuft;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfTeleportation;
@@ -69,6 +70,9 @@ public class InfPDChanges {
         changes = new ChangeInfo("D", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.PORTABLE_ALCHEMY), new PocketAlchemy().trueName(),
+                "A new spell to help you craft things in the early game."));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Scroll of Transmutation can now produce the same artifact when transmuting, and can now transfer rarities on transmuted items\n"
