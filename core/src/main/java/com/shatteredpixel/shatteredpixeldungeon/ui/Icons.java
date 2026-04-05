@@ -148,7 +148,8 @@ public enum Icons {
 	ARCNOR,
 
 	//Challenge window
-	CHALLENGE_ON;
+	CHALLENGE_ON,
+    SAVE_ICON;
 
 	public Image get() {
 		return get( this );
@@ -485,6 +486,9 @@ public enum Icons {
 			case CHALLENGE_ON:
 				icon.frame( icon.texture.uvRectBySize( 51, 0, 16, 16 ) );
 				break;
+            case SAVE_ICON:
+                icon.frame( icon.texture.uvRectBySize( 0, 128, 16, 16 ) );
+                break;
 
 		}
 		return icon;

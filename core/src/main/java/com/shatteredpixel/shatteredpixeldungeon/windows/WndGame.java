@@ -126,7 +126,7 @@ public class WndGame extends Window {
                 GLog.p(Messages.get(WndGame.class, "game_saved"));
             }
         });
-        curBtn.icon(Icons.get(Icons.CATALOG));
+        curBtn.icon(Icons.get(Icons.SAVE_ICON));
 
 		resize( WIDTH, pos );
 	}
