@@ -242,11 +242,12 @@ public enum Rankings {
 		Statistics.chalMultiplier = Math.round(Statistics.chalMultiplier*20f)/20f;
 		Statistics.cycleMultiplier = Math.max(1, 2 * (float)Math.pow(10, Dungeon.cycle-1));
 		Statistics.cycleMultiplier = Math.round(Statistics.cycleMultiplier*20f)/20f;
+        Statistics.weeklyMultiplier = Dungeon.weekly ? 2.5f : 1f;
 
 		Statistics.totalScore = Statistics.progressScore + Statistics.treasureScore + Statistics.exploreScore
 					+ Statistics.totalBossScore + Statistics.totalQuestScore;
 
-		Statistics.totalScore *= Statistics.winMultiplier * Statistics.chalMultiplier * Statistics.cycleMultiplier;
+		Statistics.totalScore *= (long) (Statistics.winMultiplier * Statistics.chalMultiplier * Statistics.cycleMultiplier * Statistics.weeklyMultiplier);
 
 		return Statistics.totalScore;
 	}

@@ -77,7 +77,7 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Scroll of Transmutation can now produce the same artifact when transmuting, and can now transfer rarities on transmuted items\n" +
                         "_-_ Made all Blacksmith weapons' tier to 5\n" +
-                        "_-_ Wand of Lifesteal can now damage enemies even if you are in full health"
+                        "_-_ Wand of Lifesteal can now damage enemies even if you are in full health\n"
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
@@ -93,6 +93,11 @@ public class InfPDChanges {
         changes = new ChangeInfo("C", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        Image ic = Icons.get(Icons.CALENDAR);
+        ic.hardlight(1.5f, 1.5f, 0f);
+        changes.addButton( new ChangeButton(ic, "Weekly Runs Changes",
+                "Enemies in weekly runs now have their health doubled, and gives you a 2.5x score multiplier regardless if you win or not. It's your choice."));
 
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.LIFESTEAL_WAND), "New Wand: Wand of Lifesteal",
                 "A brand new wand that steals health from each enemy affected. It doesn't work if you have already full health and consumes wand charge anyway."
@@ -200,14 +205,15 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(BadgeBanner.image( Badges.Badge.CYCLE_5.image ), "New Cycle Badges!",
                 "These new badges that you'll obtain will be the proof for yourself for hours of grinding and slaining enemies, appreciating your hard work through this game :)"));
 
-        Image ic = Icons.get(Icons.CALENDAR);
-        ic.hardlight(1.5f, 1.5f, 0f);
         changes.addButton( new ChangeButton(new WandOfTeleportation(),
                 "Due to its nature of being an overpowered wand, we have to make a nerf for them:\n\n" +
                         "_-_ No longer appears in the dungeon, it is now a _craftable item_ with 5000 energy.\n" +
                         "_-_ Charge per cast increased to _2 * rarity_, from 1 (capped at 50 charge)\n" +
                         "_-_ No longer upgradable, instead it will depend on its rarity\n"
         ));
+
+        ic = Icons.get(Icons.CALENDAR);
+        ic.hardlight(1.5f, 1.5f, 0f);
         changes.addButton( new ChangeButton(ic, "Weekly Runs!",
                 "_Every week there is a specific seeded run that's available to all players!_\n\n" +
                         "The weekly run makes it easy to compete again friends or other folks on the internet, without having to coordinate and share a specific seed.\n\n" +

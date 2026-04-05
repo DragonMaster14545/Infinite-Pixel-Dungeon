@@ -514,6 +514,9 @@ if (bundle.contains( "respawner" )){
                 ChampionEnemy.rollForChampion(m);
             }
         }
+        if (Dungeon.weekly) {
+            m.HP = m.HT *= 2;
+        }
 		return m;
 	}
 
