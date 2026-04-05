@@ -80,7 +80,8 @@ public class InfPDChanges {
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
-                "_-_ Buffed Gambler spell slightly, it will now take 30% of your gold when failed, instead of 50%."
+                "_-_ Buffed Gambler spell slightly, it will now take 30% of your gold when failed, instead of 50%\n" +
+                        "_-_ Buffed Item Quantifier spell, now has 75% chance to add 3 of the selected item's quantity"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
