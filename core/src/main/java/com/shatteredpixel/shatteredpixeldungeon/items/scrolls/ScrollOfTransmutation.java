@@ -258,6 +258,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 		n.cursed = w.cursed;
 		n.augment = w.augment;
 		n.enchantHardened = w.enchantHardened;
+        n.rarity = w.rarity;
 
 		n.quantity(w.quantity());
 
@@ -283,8 +284,9 @@ public class ScrollOfTransmutation extends InventoryScroll {
 		n.levelKnown = r.levelKnown;
 		n.cursedKnown = r.cursedKnown;
 		n.cursed = r.cursed;
-		
-		return n;
+        n.rarity = r.rarity;
+
+        return n;
 	}
 	
 	private static Artifact changeArtifact( Artifact a ) {
@@ -292,15 +294,22 @@ public class ScrollOfTransmutation extends InventoryScroll {
 		List<Class<?>> m = new ArrayList<>();
 		if (a.isEquipped(hero)){
 
-			for(Artifact artifact : (Artifact[]) Arrays.stream(hero.belongings.getMiscsArray()).filter(kindofMisc -> kindofMisc != a && kindofMisc instanceof Artifact).toArray()){
-				m.add(artifact.getClass());
-			}
+			//for(Artifact artifact : (Artifact[]) Arrays.stream(hero.belongings.getMiscsArray()).filter(kindofMisc -> kindofMisc != a && kindofMisc instanceof Artifact).toArray()){
+			//	m.add(artifact.getClass());
+			//}
+
+            for(Artifact artifact : Arrays.stream(hero.belongings.getMiscsArray())
+                    .filter(kindofMisc -> kindofMisc != a && kindofMisc instanceof Artifact)
+                    .map(misc -> (Artifact) misc)
+                    .toArray(Artifact[]::new)){
+                m.add(artifact.getClass());
+            }
+
 		}
 
 		do {
 			n = Generator.randomArtifact();
-		} while ( n != null && ((!m.isEmpty() && m.contains(n.getClass())) ||
-				Challenges.isItemBlocked(n) || n.getClass() == a.getClass()));
+		} while ( n != null && (Challenges.isItemBlocked(n) || n.getClass() == a.getClass()) );
 		
 		if (n != null){
 
@@ -316,7 +325,8 @@ public class ScrollOfTransmutation extends InventoryScroll {
 			n.cursedKnown = a.cursedKnown;
 			n.cursed = a.cursed;
 			n.levelKnown = a.levelKnown;
-			n.upgrade(a.level());
+            n.rarity = a.rarity;
+            n.upgrade(a.level());
 			return n;
 		}
 		
@@ -333,8 +343,9 @@ public class ScrollOfTransmutation extends InventoryScroll {
 		n.levelKnown = t.levelKnown;
 		n.cursedKnown = t.cursedKnown;
 		n.cursed = t.cursed;
+        n.rarity = t.rarity;
 
-		return n;
+        return n;
 	}
 
 	private static Wand changeWand( Wand w ) {
@@ -353,8 +364,9 @@ public class ScrollOfTransmutation extends InventoryScroll {
 		n.cursed = w.cursed;
 		n.curseInfusionBonus = w.curseInfusionBonus;
 		n.resinBonus = w.resinBonus;
+        n.rarity = w.rarity;
 
-		n.curCharges =  w.curCharges;
+        n.curCharges =  w.curCharges;
 		n.updateLevel();
 		
 		return n;

@@ -66,6 +66,18 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes = new ChangeInfo("D", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ Scroll of Transmutation can now produce the same artifact when transmuting, and can now transfer rarities on transmuted items\n"
+        ));
+
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
+                "_-_ Fixed crash when transmuting artifacts when equipped\n"
+        ));
+
         changes = new ChangeInfo("C", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
