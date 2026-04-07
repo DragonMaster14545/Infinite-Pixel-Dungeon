@@ -244,7 +244,7 @@ public class Generator {
 		RING	( 1, 0, Ring.class ),
 		ARTIFACT( 0, 1, Artifact.class),
 		
-		FOOD	( 5, 0, Food.class ),
+		FOOD	( 4, 0, Food.class ),
 		
 		POTION	( 8, 8, Potion.class ),
         TUBES (1, 0, Tubes.class),
