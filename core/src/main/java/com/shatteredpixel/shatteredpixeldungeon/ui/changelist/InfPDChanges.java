@@ -87,7 +87,8 @@ public class InfPDChanges {
                 "_-_ Buffed Gambler spell slightly, it will now take 30% of your gold when failed, instead of 50%\n" +
                         "_-_ Buffed Item Quantifier spell, now has 75% chance to add 3 of the selected item's quantity\n" +
                         "_-_ Increased Ring of Valor's per upgrade value to 3.5% up from 1.5%\n" +
-                        "_-_ Reduced Ring of Sharpshooting's durability multiplier to 15% compounded per level, down from 20% compounded"
+                        "_-_ Reduced Ring of Sharpshooting's durability multiplier to 15% compounded per level, down from 20% compounded\n" +
+                        "_-_ Wand of Teleportation now consumes 5 charges times rarity multi"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",

@@ -100,7 +100,7 @@ public class WandOfTeleportation extends DamageWand {
 
     @Override
     protected long chargesPerCast() {
-        return Math.min(2 * rarity.multiplier, 50);
+        return 5 * rarity.multiplier;
     }
 
     @Override
