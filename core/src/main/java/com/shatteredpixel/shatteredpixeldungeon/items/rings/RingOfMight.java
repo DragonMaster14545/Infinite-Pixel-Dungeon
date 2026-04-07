@@ -117,7 +117,7 @@ public class RingOfMight extends Ring {
 		int multiplier = 0;
 		if (getBuffedBonus(target, Might.class) == 1) multiplier = 2;
 		if (getBuffedBonus(target, Might.class) > 1) multiplier += getBuffedBonus(target, Might.class)*2;
-		return Math.min(multiplier, 10 * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
+		return Math.min(multiplier, 20 * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
 	}
 
 	public class Might extends RingBuff {

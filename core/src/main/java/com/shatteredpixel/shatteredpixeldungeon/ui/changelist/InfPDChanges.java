@@ -78,7 +78,8 @@ public class InfPDChanges {
                 "_-_ Scroll of Transmutation can now produce the same artifact when transmuting, and can now transfer rarities on transmuted items\n" +
                         "_-_ Made all Blacksmith weapons' tier to 5\n" +
                         "_-_ Wand of Lifesteal can now damage enemies even if you are in full health\n" +
-                        "_-_ Slightly reduced the probability of dropping foods on enemies"
+                        "_-_ Slightly reduced the probability of dropping foods on enemies\n" +
+                        "_-_ Changed Ring of Might's HP cap to 20, instead of 10 (2 * 10 = 20)"
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
