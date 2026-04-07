@@ -15,6 +15,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.UtilityBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.ExperienceBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.CommonEmblem;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfDivineInspiration;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfArcana;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfValor;
@@ -70,6 +71,9 @@ public class InfPDChanges {
         changes = new ChangeInfo("D", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.ELIXIR_DI), new ElixirOfDivineInspiration().trueName(),
+                "A substitute for Potion of same name, its effect is permanent, and gives you bonus EXP."));
 
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.PORTABLE_ALCHEMY), new PocketAlchemy().trueName(),
                 "A new spell to help you craft things in the early game."));

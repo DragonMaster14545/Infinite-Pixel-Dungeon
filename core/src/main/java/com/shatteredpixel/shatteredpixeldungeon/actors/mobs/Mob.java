@@ -74,6 +74,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArm
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.fishingrods.FishingRod;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfDivineInspiration;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfExperience;
@@ -895,6 +896,10 @@ public abstract class Mob extends Char {
 
         if (Ring.getBuffedBonus(Dungeon.hero, RingOfExperience.Experience.class) > 0) {
             EXP *= (long) RingOfExperience.experienceMultiplier(Dungeon.hero);
+        }
+
+        if (Dungeon.hero.buff(ElixirOfDivineInspiration.DivineInspiration.class) != null) {
+            EXP = Math.round(EXP * Math.pow(1.07f, buff(ElixirOfDivineInspiration.DivineInspiration.class).stacks));
         }
 
 		if (alignment == Alignment.ENEMY){

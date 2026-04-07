@@ -39,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.ShockingBrew
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.UnstableBrew;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfAquaticRejuvenation;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfArcaneArmor;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfDivineInspiration;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfDragonsBlood;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfFeatherFall;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfHoneyedHealing;
@@ -240,7 +241,8 @@ public abstract class Recipe {
             new GalacticInfusion.Recipe(),
             new Barricade.Recipe(),
             new DeterminantInfusion.Recipe(),
-            new PocketAlchemy.Recipe()
+            new PocketAlchemy.Recipe(),
+            new ElixirOfDivineInspiration.Recipe()
 	};
 	
 	private static Recipe[] threeIngredientRecipes = new Recipe[]{
