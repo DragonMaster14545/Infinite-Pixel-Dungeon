@@ -40,10 +40,10 @@ public class RingOfValor extends Ring {
 	public String statsInfo() {
 		if (isIdentified()){
 			String info = Messages.get(this, "stats",
-					new DecimalFormat("#.###").format(100f * (1.02f + soloVisualBonus()*0.015 - 1f)));
+					new DecimalFormat("#.###").format(100f * (1.02f + soloVisualBonus()*0.035 - 1f)));
 			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
-						Messages.decimalFormat("#.##", 100f * (1.02f + combinedBuffedBonus(Dungeon.hero)*0.015 - 1f)));
+						Messages.decimalFormat("#.##", 100f * (1.02f + combinedBuffedBonus(Dungeon.hero)*0.035 - 1f)));
 			}
 			return info;
 		} else {
@@ -54,7 +54,7 @@ public class RingOfValor extends Ring {
 	public String upgradeStat1(long level){
 		if (cursed && cursedKnown) level = Math.min(-1, level-3);
 
-		return Messages.decimalFormat("#.##", 100f * (1.02f + level*0.015 - 1f)) + "%";
+		return Messages.decimalFormat("#.##", 100f * (1.02f + level*0.035 - 1f)) + "%";
 	}
 	
 	@Override
@@ -65,7 +65,7 @@ public class RingOfValor extends Ring {
 	public static double damageMultiplier( Char target ){
         double multiplier = 1d;
         if (getBuffedBonus(target, Valor.class) > 0) multiplier = 1.02d;
-        if (getBuffedBonus(target, Valor.class) > 1) multiplier += getBuffedBonus(target, Valor.class)*0.015d;
+        if (getBuffedBonus(target, Valor.class) > 1) multiplier += getBuffedBonus(target, Valor.class)*0.035d;
 
 		return Math.min(multiplier, 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
 	}
