@@ -139,6 +139,7 @@ abstract public class ClassArmor extends Armor {
 		if (armor.seal != null) {
 			classArmor.seal = armor.seal;
 		}
+        classArmor.rarity = armor.rarity;
 		classArmor.glyphHardened = armor.glyphHardened;
 		classArmor.cursed = armor.cursed;
 		classArmor.curseInfusionBonus = armor.curseInfusionBonus;

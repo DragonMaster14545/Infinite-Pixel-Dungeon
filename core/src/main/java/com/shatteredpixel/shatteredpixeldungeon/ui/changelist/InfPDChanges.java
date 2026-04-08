@@ -72,6 +72,10 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ King's Crown no longer erases old armor's rarity\n"
+        ));
+
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Buffed Wand of Teleportation's charge per cast, is now fixed to 2 charges\n"
         ));
