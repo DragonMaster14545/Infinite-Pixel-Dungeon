@@ -104,8 +104,13 @@ public class WndJournal extends WndTabbed {
 	private CatalogTab catalogTab;
 	private BadgesTab badgesTab;
 	public static int last_index = 0;
-	
+    private static WndJournal INSTANCE = null;
+
 	public WndJournal(){
+
+        if (INSTANCE != null){
+            INSTANCE.hide();
+        }
 		
 		int width = PixelScene.landscape() ? WIDTH_L : WIDTH_P;
 		int height = PixelScene.landscape() ? HEIGHT_L : HEIGHT_P;
@@ -205,6 +210,8 @@ public class WndJournal extends WndTabbed {
 		layoutTabs();
 		
 		select(last_index);
+
+        INSTANCE = this;
 	}
 
 	@Override

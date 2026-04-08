@@ -77,7 +77,8 @@ public class InfPDChanges {
                 "This new spell enhances your weapon's tier."));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ King's Crown no longer erases old armor's rarity\n"
+                "_-_ King's Crown no longer erases old armor's rarity\n" +
+                        "_-_ Removed scene resetting from custom note entry (ShPD)"
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
