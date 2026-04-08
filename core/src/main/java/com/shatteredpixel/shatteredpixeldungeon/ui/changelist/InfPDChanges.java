@@ -73,7 +73,8 @@ public class InfPDChanges {
         changeInfos.add(changes);
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
-                "_-_ Fixed crash related to Elixir of Divine Inspiration\n"
+                "_-_ Fixed crash related to Elixir of Divine Inspiration\n" +
+                        "_-_ Fixed conflicts with additional description of emblem use and custom notes on items"
         ));
 
         changes = new ChangeInfo("D", false, "");

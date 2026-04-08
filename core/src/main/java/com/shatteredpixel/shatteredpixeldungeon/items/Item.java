@@ -785,6 +785,7 @@ public class Item implements Bundlable {
 
 		if (Dungeon.hero != null) {
 			Notes.CustomRecord note;
+            String joint = "";
 			if (this instanceof EquipableItem) {
 				note = Notes.findCustomRecord(((EquipableItem) this).customNoteID);
 			} else {
@@ -792,12 +793,13 @@ public class Item implements Bundlable {
 			}
 			if (note != null){
 				//we swap underscore(0x5F) with low macron(0x2CD) here to avoid highlighting in the item window
-				return Messages.get(this, "custom_note", note.title().replace('_', 'ˍ')) + "\n\n" + desc();
+				joint += Messages.get(this, "custom_note", note.title().replace('_', 'ˍ')) + "\n\n";
 			}
 
             if (emblemUse > 0) {
-                return Messages.get(EmblemSystem.class, "emblem_use", 5 - emblemUse);
+                joint += Messages.get(EmblemSystem.class, "emblem_use", 5 - emblemUse) + "\n\n";
             }
+            return joint + desc();
 		}
 
 		return desc();
