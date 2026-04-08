@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.GalacticInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemQuantifier;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.PocketAlchemy;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.TierUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.LegendaryTreasureBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.FerretTuft;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfTeleportation;
@@ -71,6 +72,9 @@ public class InfPDChanges {
         changes = new ChangeInfo("E", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.TIER_UPGRADE), new TierUpgrade().trueName(),
+                "This new spell enhances your weapon's tier."));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ King's Crown no longer erases old armor's rarity\n"

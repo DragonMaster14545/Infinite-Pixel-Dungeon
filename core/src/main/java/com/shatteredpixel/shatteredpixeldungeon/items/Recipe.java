@@ -68,6 +68,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.Recycle;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.RespawnBooster;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.SummonElemental;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.TelekineticGrab;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.TierUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.UnstableSpell;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Vampirism;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.WildEnergy;
@@ -252,7 +253,8 @@ public abstract class Recipe {
 		new WandOfEarthblast.Recipe(),
             new TicketToPortableShop.Recipe(),
             new WandOfTeleportation.Recipe(),
-            new WandOfLifesteal.Recipe()
+            new WandOfLifesteal.Recipe(),
+            new TierUpgrade.Recipe()
 	};
 	
 	public static ArrayList<Recipe> findRecipes(ArrayList<Item> ingredients){

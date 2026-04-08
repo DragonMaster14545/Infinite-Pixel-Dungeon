@@ -146,6 +146,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.Recycle;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.RespawnBooster;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.SummonElemental;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.TelekineticGrab;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.TierUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.UnstableSpell;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Vampirism;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.WildEnergy;
@@ -332,7 +333,8 @@ public enum Catalog {
 				Alchemize.class, CurseInfusion.class, /*MagicalInfusion.class,*/ Recycle.class,
 				ReclaimTrap.class, SummonElemental.class, BeaconOfReturning.class, FireBooster.class,
 				Vampirism.class, RespawnBooster.class, Raritize.class, Extractor.class, Gambler.class,
-                GalacticInfusion.class, Barricade.class, DeterminantInfusion.class, PocketAlchemy.class);
+                GalacticInfusion.class, Barricade.class, DeterminantInfusion.class, PocketAlchemy.class,
+                TierUpgrade.class);
 
 		LOOT_BAGS.addItems(GambleBag.class, BiggerGambleBag.class, QualityBag.class, AlchemyBag.class,
 				GooTreasureBag.class, RatSkull.class, TenguTreasureBag.class, TenguShuriken.class, TenguBomb.class,
