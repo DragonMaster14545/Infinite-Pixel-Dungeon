@@ -61,8 +61,8 @@ public class InfPDChanges {
                 "I'd like to make new challenges, but I want to make it harder than the current challenges in this game. Stay tuned!"
         ));
 
-        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Upcoming: v0.1.8",
-                "In the next update, we will now add new content and some patches along with v0.1.7\n"
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Upcoming: v0.1.9",
+                "In the next update, we will try to add new items, and possibly adding new mechanics to the game!\n"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.8", true, "");
