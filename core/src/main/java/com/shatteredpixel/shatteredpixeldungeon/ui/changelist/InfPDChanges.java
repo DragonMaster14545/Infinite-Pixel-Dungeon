@@ -82,7 +82,8 @@ public class InfPDChanges {
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
-                "_-_ Buffed Wand of Teleportation's charge per cast, is now fixed to 2 charges\n"
+                "_-_ Buffed Wand of Teleportation's charge per cast, is now fixed to 2 charges\n" +
+                        "_-_ Rat King now drops cheese after 35 trades, from 30"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",

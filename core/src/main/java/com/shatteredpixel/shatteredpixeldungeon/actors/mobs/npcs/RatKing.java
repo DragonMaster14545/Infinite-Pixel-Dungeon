@@ -153,7 +153,7 @@ public class RatKing extends NPC {
 				do {
 					item = Generator.random();
 				} while (item instanceof Gold);
-				if (++counter >= 30*level) {
+				if (++counter >= 35*level) {
 					counter = 0;
 					level = Math.min(level+1, 15);
 					item = new Cheese();
