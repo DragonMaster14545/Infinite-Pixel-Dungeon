@@ -83,7 +83,8 @@ public class InfPDChanges {
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
-                "_-_ Increased wand of transfusion's self-shielding to 7, from 5\n"
+                "_-_ Increased wand of transfusion's self-shielding to 7, from 5\n" +
+                        "_-_ Crafting Telekinetic Grab now requires 5 more liquid metals"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
