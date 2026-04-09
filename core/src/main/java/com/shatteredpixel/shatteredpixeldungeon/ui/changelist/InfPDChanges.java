@@ -85,7 +85,8 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Increased wand of transfusion's self-shielding to 7, from 5\n" +
                         "_-_ Crafting Telekinetic Grab now requires 5 more liquid metals\n" +
-                        "_-_ Reclaim Trap's crafting cost has been increased to 12"
+                        "_-_ Reclaim Trap's crafting cost has been increased to 12, from 8\n" +
+                        "_-_ Barricade's crafting cost has been increased to 75, from 45"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",

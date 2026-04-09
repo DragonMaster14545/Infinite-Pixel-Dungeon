@@ -96,7 +96,7 @@ public class Barricade extends TargetedSpell {
 			inputs =  new Class[]{ScrollOfMagicMapping.class};
 			inQuantity = new int[]{2};
 
-			cost = 45;
+			cost = 75;
 
 			output = Barricade.class;
 			outQuantity = OUT_QUANTITY;
