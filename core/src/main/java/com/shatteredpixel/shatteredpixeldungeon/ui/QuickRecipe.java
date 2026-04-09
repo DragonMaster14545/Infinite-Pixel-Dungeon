@@ -62,6 +62,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotio
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Alchemize;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.ArmorTierUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Barricade;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.BeaconOfReturning;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.CurseInfusion;
@@ -431,6 +432,7 @@ public class QuickRecipe extends Component {
                 result.add(new QuickRecipe(new TicketToPortableShop.Recipe()));
                 result.add(new QuickRecipe(new PocketAlchemy.Recipe()));
                 result.add(new QuickRecipe(new TierUpgrade.Recipe()));
+                result.add(new QuickRecipe(new ArmorTierUpgrade.Recipe()));
 				return result;
             case 9:
                 if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_6)) result.add(new QuickRecipe(new WandOfEarthblast.Recipe(), new ArrayList<>(Arrays.asList(new WandOfFireblast(), new WandOfLivingEarth(), new Cheese())), new WandOfEarthblast()));

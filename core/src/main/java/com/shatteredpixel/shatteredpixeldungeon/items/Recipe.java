@@ -50,6 +50,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotio
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Alchemize;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.ArmorTierUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Barricade;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.BeaconOfReturning;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.CurseInfusion;
@@ -254,7 +255,8 @@ public abstract class Recipe {
             new TicketToPortableShop.Recipe(),
             new WandOfTeleportation.Recipe(),
             new WandOfLifesteal.Recipe(),
-            new TierUpgrade.Recipe()
+            new TierUpgrade.Recipe(),
+            new ArmorTierUpgrade.Recipe()
 	};
 	
 	public static ArrayList<Recipe> findRecipes(ArrayList<Item> ingredients){

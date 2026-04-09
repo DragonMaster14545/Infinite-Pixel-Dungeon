@@ -22,6 +22,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfValor;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfPower;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfInsurgence;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.ArmorTierUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Barricade;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.DeterminantInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.GalacticInfusion;
@@ -69,6 +70,9 @@ public class InfPDChanges {
         changes = new ChangeInfo("InfPD-0.1.9", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.A_TIER_UPGRADE), new ArmorTierUpgrade().trueName(),
+                "The new spell that enhances your armor's tier."));
 
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.STAIRCASE_TOTEM), new StaircaseTotem().trueName(),
                 "The new trinket that increases rooms and enemies as you descend to next floors."));
