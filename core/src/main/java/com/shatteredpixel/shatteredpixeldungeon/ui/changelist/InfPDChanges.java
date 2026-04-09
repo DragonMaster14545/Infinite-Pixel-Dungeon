@@ -65,6 +65,14 @@ public class InfPDChanges {
                 "In the next update, we will try to add new items, and possibly adding new mechanics to the game!\n"
         ));
 
+        changes = new ChangeInfo("InfPD-0.1.9", true, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
+                "_-_ Fixed incorrect description on Elixir of Divine Inspiration\n"
+        ));
+
         changes = new ChangeInfo("InfPD-0.1.8", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
