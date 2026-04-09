@@ -125,8 +125,8 @@ public class WandOfTransfusion extends DamageWand {
 			} else if (ch.alignment == Char.Alignment.ENEMY || ch instanceof Mimic) {
 
 				//grant a self-shield, and...
-				Buff.affect(curUser, Barrier.class).setShield((5 + buffedLvl()));
-curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(5+buffedLvl()), FloatingText.SHIELDING);
+				Buff.affect(curUser, Barrier.class).setShield((7 + buffedLvl()));
+curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(7+buffedLvl()), FloatingText.SHIELDING);
 
 				//charms living enemies
 				if (!ch.properties().contains(Char.Property.UNDEAD)) {
@@ -165,7 +165,7 @@ curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(5+buffedLvl
 		if (defender.buff(Charm.class) != null && defender.buff(Charm.class).object == attacker.id()){
 			//grants a free use of the staff and shields self
 			freeCharge = true;
-			int shieldToGive = Math.round((2*(5 + buffedLvl()))*procChanceMultiplier(attacker));
+			int shieldToGive = Math.round((2*(7 + buffedLvl()))*procChanceMultiplier(attacker));
 			Buff.affect(attacker, Barrier.class).setShield(shieldToGive);
 			attacker.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
 			GLog.p( Messages.get(this, "charged") );
@@ -207,7 +207,7 @@ curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(5+buffedLvl
 
 	@Override
 	public String upgradeStat2(long level) {
-		return Long.toString(5 + level);
+		return Long.toString(7 + level);
 	}
 
 	@Override

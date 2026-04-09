@@ -82,6 +82,10 @@ public class InfPDChanges {
                         "_-_ Changed the app icon for android"
         ));
 
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Increased wand of transfusion's self-shielding to 7, from 5\n"
+        ));
+
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
                 "_-_ Fixed incorrect description on Elixir of Divine Inspiration\n"
         ));
