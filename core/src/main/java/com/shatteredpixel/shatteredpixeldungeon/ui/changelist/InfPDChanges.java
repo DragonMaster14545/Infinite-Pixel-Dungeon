@@ -78,7 +78,8 @@ public class InfPDChanges {
                 "The new trinket that increases rooms and enemies as you descend to next floors."));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ Scroll of Transmutation now caps the new trinket's level to its max upgrade\n"
+                "_-_ Scroll of Transmutation now caps the new trinket's level to its max upgrade\n" +
+                        "_-_ Changed the app icon for android"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
