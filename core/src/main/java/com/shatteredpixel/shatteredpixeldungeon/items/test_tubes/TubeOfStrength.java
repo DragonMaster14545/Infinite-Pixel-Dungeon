@@ -52,8 +52,8 @@ public class TubeOfStrength extends Tubes {
         hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, "3", FloatingText.STRENGTH);
 
         if (!Dungeon.isChallenged(Challenges.FOR_THE_WORTHY)) {
-            Dungeon.luck += 3;
-            hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, "3", FloatingText.LUCK);
+            Dungeon.luck += 2;
+            hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, "2", FloatingText.LUCK);
             GLog.p( "I felt something lucky...." );
         } else {
             GLog.p( Messages.get(ElixirOfMight.class, "for_the_worthy") );
