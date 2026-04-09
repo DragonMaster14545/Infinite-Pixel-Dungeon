@@ -339,7 +339,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 			n = (Trinket)Generator.random(Generator.Category.TRINKET);
 		} while ( Challenges.isItemBlocked(n) || n.getClass() == t.getClass());
 
-		n.level(t.trueLevel());
+		n.level((t.trueLevel() > n.maxUpgrade()) ? Math.min(n.maxUpgrade(), t.trueLevel()) : t.trueLevel());
 		n.levelKnown = t.levelKnown;
 		n.cursedKnown = t.cursedKnown;
 		n.cursed = t.cursed;
