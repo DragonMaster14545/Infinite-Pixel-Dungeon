@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.PocketAlchemy;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.TierUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.LegendaryTreasureBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.FerretTuft;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.StaircaseTotem;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ShurikenOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -68,6 +69,9 @@ public class InfPDChanges {
         changes = new ChangeInfo("InfPD-0.1.9", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.STAIRCASE_TOTEM), new StaircaseTotem().trueName(),
+                "The new trinket that increases rooms and enemies as you descend to next floors."));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Scroll of Transmutation now caps the new trinket's level to its max upgrade\n"

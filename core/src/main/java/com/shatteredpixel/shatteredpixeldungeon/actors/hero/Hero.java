@@ -144,6 +144,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutat
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.BiggerGambleBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.StaircaseTotem;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ThirteenLeafClover;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
@@ -272,7 +273,7 @@ public class Hero extends Char {
     public static String customHeroName = "";
 
 	public float getStandardRoomMultiplier() {
-		return 2f;
+		return 2f * StaircaseTotem.additionalRoomMulti();
 	}
 	public float getSpecialRoomMultiplier() {
 		return getStandardRoomMultiplier()*0.5f;
@@ -287,7 +288,7 @@ public class Hero extends Char {
 		return 0.65f;
 	}
 	public float getMobMultiplier() {
-		return 4f;
+		return 4f * StaircaseTotem.additionalMobMulti();
 	}
 	public float getTrapMultiplier() {
 		return 4f;
