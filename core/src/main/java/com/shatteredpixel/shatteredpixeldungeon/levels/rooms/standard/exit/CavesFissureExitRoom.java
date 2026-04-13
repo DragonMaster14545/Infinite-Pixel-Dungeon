@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.CavesFissureRoom;
 import com.watabou.utils.PathFinder;
+import com.watabou.utils.Point;
 
 public class CavesFissureExitRoom extends CavesFissureRoom {
 
@@ -63,5 +64,10 @@ public class CavesFissureExitRoom extends CavesFissureRoom {
 		level.transitions.add(new LevelTransition(level, exit, LevelTransition.Type.REGULAR_EXIT));
 
 	}
+
+    @Override
+    public boolean canPlaceCharacter(Point p, Level l) {
+        return super.canPlaceCharacter(p, l) && l.pointToCell(p) != l.exit();
+    }
 
 }

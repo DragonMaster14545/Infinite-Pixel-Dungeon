@@ -71,6 +71,16 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.STAIRS.get(), "New Rooms and Terrain Types",
+                "This update includes an _expansion to the dungeon's standard rooms!_ (from the ShPD, of course!)\n" +
+                        "\n" +
+                        "_- New decorative terrain_ has been added to each region, largely inspired by details from the region splash arts. \n" +
+                        "_- 5 new standard rooms_ have been added that use these new terrain objects, one per region.\n" +
+                        "_- 8 existing standard rooms_ have been modified to use the new terrain objects.\n" +
+                        "_- 10 new entrance/exit variants_ of standard rooms have been added as well. two per region.\n" +
+                        "_- Boss Arenas_ also use these new terrain types in a few places\n" +
+                        "_- Plain empty rooms_ no longer spawn normally."));
+
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.A_TIER_UPGRADE), new ArmorTierUpgrade().trueName(),
                 "The new spell that enhances your armor's tier."));
 

@@ -50,10 +50,4 @@ public class CircleBasinEntranceRoom extends CircleBasinRoom {
 		level.transitions.add(new LevelTransition(level, entrance, LevelTransition.Type.REGULAR_ENTRANCE));
 	}
 
-	@Override
-	public boolean connect(Room room) {
-		//cannot connect to exit, otherwise works normally
-		if (room.isExit())  return false;
-		else                return super.connect(room);
-	}
 }

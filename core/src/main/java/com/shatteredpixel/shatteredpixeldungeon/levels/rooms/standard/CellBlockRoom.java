@@ -65,6 +65,11 @@ public class CellBlockRoom extends StandardRoom {
 			topBottomDoors = null;
 		}
 
+        int openRooms = rows*cols;
+        if (openRooms == 9) openRooms--;
+        //if we're an entrance or exit, one room must be open
+        boolean guaranteeOpenRoom = isEntrance() || isExit();
+
 		for (int x = 0; x < rows; x++){
 			for (int y = 0; y < cols; y++){
 				//no center room
@@ -73,7 +78,12 @@ public class CellBlockRoom extends StandardRoom {
 				int left = internal.left + 1 + (x * (w + Wspacing));
 				int top = internal.top + 1 + (y * (h + Hspacing));
 
-				Painter.fill(level, left, top, w, h, Terrain.EMPTY_SP);
+                if (Random.Int(w*h) == 0 && (!guaranteeOpenRoom || openRooms > 1)){
+                    Painter.fill(level, left, top, w, h, Terrain.REGION_DECO);
+                    openRooms--;
+                } else {
+                    Painter.fill(level, left, top, w, h, Terrain.EMPTY_SP);
+                }
 
 				if (topBottomDoors == null) {
 					switch (Random.Int(4)){

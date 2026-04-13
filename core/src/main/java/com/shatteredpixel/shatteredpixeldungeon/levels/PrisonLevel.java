@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.WindParticle;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.PrisonPainter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
@@ -169,6 +170,9 @@ public class PrisonLevel extends RegularLevel {
 		switch (tile) {
 			case Terrain.WATER:
 				return Messages.get(PrisonLevel.class, "water_name");
+            case Terrain.REGION_DECO:
+            case Terrain.REGION_DECO_ALT:
+                return Messages.get(PrisonLevel.class, "region_deco_name");
 			default:
 				return super.tileName( tile );
 		}
@@ -181,6 +185,9 @@ public class PrisonLevel extends RegularLevel {
 				return Messages.get(PrisonLevel.class, "empty_deco_desc");
 			case Terrain.BOOKSHELF:
 				return Messages.get(PrisonLevel.class, "bookshelf_desc");
+            case Terrain.REGION_DECO:
+            case Terrain.REGION_DECO_ALT:
+                return Messages.get(PrisonLevel.class, "region_deco_desc");
 			default:
 				return super.tileDesc( tile );
 		}
@@ -198,6 +205,10 @@ public class PrisonLevel extends RegularLevel {
 			if (level.map[i] == Terrain.WALL_DECO) {
 				group.add( new Torch( i ) );
 			}
+            //alt deco is a chasm visual in the prison
+            if (level.map[i] == Terrain.REGION_DECO_ALT) {
+                group.add( new WindParticle.Wind( i ) );
+            }
 		}
 	}
 	

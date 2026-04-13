@@ -41,7 +41,8 @@ public class HallwayExitRoom extends HallwayRoom {
 
 		int exit = -1;
 		for ( Point p : getPoints()){
-			if (level.map[level.pointToCell(p)] == Terrain.STATUE_SP){
+            if (level.map[level.pointToCell(p)] == Terrain.STATUE_SP
+                    || level.map[level.pointToCell(p)] == Terrain.REGION_DECO_ALT){
 				exit = level.pointToCell(p);
 				break;
 			}
@@ -50,5 +51,10 @@ public class HallwayExitRoom extends HallwayRoom {
 		level.transitions.add(new LevelTransition(level, exit, LevelTransition.Type.REGULAR_EXIT));
 
 	}
+
+    @Override
+    public boolean canPlaceCharacter(Point p, Level l) {
+        return super.canPlaceCharacter(p, l) && l.pointToCell(p) != l.exit();
+    }
 
 }

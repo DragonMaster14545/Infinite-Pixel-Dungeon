@@ -96,6 +96,11 @@ public class EntranceRoom extends StandardRoom {
 		} else {
 			level.transitions.add(new LevelTransition(level, entrance, LevelTransition.Type.REGULAR_ENTRANCE));
 		}
+        placeEarlyGuidePages(level, this);
+
+    }
+
+    public static void placeEarlyGuidePages(Level level, Room r){
 
 		//use a separate generator here so meta progression doesn't affect levelgen
 		Random.pushGenerator();
@@ -106,9 +111,9 @@ public class EntranceRoom extends StandardRoom {
 			int pos;
 			do {
 				//can't be on bottom row of tiles
-				pos = level.pointToCell(new Point( Random.IntRange( left + 1, right - 1 ),
-						Random.IntRange( top + 1, bottom - 2 )));
-			} while (pos == level.entrance() || level.findMob(level.entrance()) != null);
+                pos = level.pointToCell(new Point( Random.IntRange( r.left + 1, r.right - 1 ),
+                        Random.IntRange( r.top + 1, r.bottom - 2 )));
+            } while (pos == level.entrance() || level.map[pos] == Terrain.REGION_DECO);
 			level.drop( new Guidebook(), pos );
 			Document.ADVENTURERS_GUIDE.deletePage(Document.GUIDE_INTRO);
 		}
@@ -118,57 +123,64 @@ public class EntranceRoom extends StandardRoom {
 			int pos;
 			do {
 				//can't be on bottom row of tiles
-				pos = level.pointToCell(new Point( Random.IntRange( left + 1, right - 1 ),
-						Random.IntRange( top + 1, bottom - 2 )));
-			} while (pos == level.entrance() || level.findMob(level.entrance()) != null);
+                pos = level.pointToCell(new Point( Random.IntRange( r.left + 1, r.right - 1 ),
+                        Random.IntRange( r.top + 1, r.bottom - 2 )));
+            } while (pos == level.entrance() || level.map[pos] == Terrain.REGION_DECO);
 			GuidePage p = new GuidePage();
 			p.page(Document.GUIDE_SEARCHING);
 			level.drop( p, pos );
 		}
 
 		Random.popGenerator();
-
 	}
 
 	private static ArrayList<Class<?extends StandardRoom>> rooms = new ArrayList<>();
 	static {
-		rooms.add(EntranceRoom.class);
+        rooms.add(WaterBridgeEntranceRoom.class);
+        rooms.add(RegionDecoPatchEntranceRoom.class);
+        rooms.add(RingEntranceRoom.class);
+        rooms.add(CircleBasinEntranceRoom.class);
 
+        rooms.add(RegionDecoLineEntranceRoom.class);
+        rooms.add(ChasmBridgeEntranceRoom.class);
+        rooms.add(PillarsEntranceRoom.class);
+        rooms.add(CellBlockEntranceRoom.class);
 
-		rooms.add(WaterBridgeEntranceRoom.class);
-		rooms.add(CircleBasinEntranceRoom.class);
+        rooms.add(CaveEntranceRoom.class);
+        rooms.add(RegionDecoBridgeEntranceRoom.class);
+        rooms.add(CavesFissureEntranceRoom.class);
+        rooms.add(CircleWallEntranceRoom.class);
 
-		rooms.add(ChasmBridgeEntranceRoom.class);
-		rooms.add(PillarsEntranceRoom.class);
+        rooms.add(HallwayEntranceRoom.class);
+        rooms.add(StatuesEntranceRoom.class);
+        rooms.add(LibraryHallEntranceRoom.class);
+        rooms.add(LibraryRingEntranceRoom.class);
 
-		rooms.add(CaveEntranceRoom.class);
-		rooms.add(CavesFissureEntranceRoom.class);
-
-		rooms.add(HallwayEntranceRoom.class);
-		rooms.add(StatuesEntranceRoom.class);
-
-		rooms.add(ChasmEntranceRoom.class);
-		rooms.add(RitualEntranceRoom.class);
+        rooms.add(RegionDecoPatchEntranceRoom.class);
+        rooms.add(RuinsEntranceRoom.class);
+        rooms.add(ChasmEntranceRoom.class);
+        rooms.add(RitualEntranceRoom.class);
 	}
 
 	private static float[][] chances = new float[27][];
 	static {
-		chances[1] =  new float[]{1,  0,0, 0,0, 0,0, 0,0, 0,0};
-		chances[2] =  chances[1];
-		chances[3] =  new float[]{3,  6,1, 0,0, 0,0, 0,0, 0,0};
-		chances[5] =  chances[4] = chances[3];
+        //first 2 floors only use empty room.
+        chances[1] =  new float[]{4,3,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0};
+        chances[2] =  chances[1];
+        chances[3] =  new float[]{4,3,2,1, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0};
+        chances[5] =  chances[4] = chances[3];
 
-		chances[6] =  new float[]{2,  0,0, 4,4, 0,0, 0,0, 0,0};
-		chances[10] = chances[9] = chances[8] = chances[7] = chances[6];
+        chances[6] = new float[]{0,0,0,0,  4,3,2,1, 0,0,0,0, 0,0,0,0, 0,0,0,0};
+        chances[10] = chances[9] = chances[8] = chances[7] = chances[6];
 
-		chances[11] = new float[]{2,  0,0, 0,0, 4,4, 0,0, 0,0};
-		chances[15] = chances[14] = chances[13] = chances[12] = chances[11];
+        chances[11] = new float[]{0,0,0,0, 0,0,0,0, 4,3,2,1, 0,0,0,0, 0,0,0,0};
+        chances[15] = chances[14] = chances[13] = chances[12] = chances[11];
 
-		chances[16] = new float[]{2,  0,0, 0,0, 0,0, 4,4, 0,0};
-		chances[20] = chances[19] = chances[18] = chances[17] = chances[16];
+        chances[16] = new float[]{0,0,0,0, 0,0,0,0, 0,0,0,0, 4,3,2,1, 0,0,0,0};
+        chances[20] = chances[19] = chances[18] = chances[17] = chances[16];
 
-		chances[21] = new float[]{3,  0,0, 0,0, 0,0, 0,0, 6,1};
-		chances[26] = chances[25] = chances[24] = chances[23] = chances[22] = chances[21];
+        chances[21] = new float[]{0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 4,3,2,1};
+        chances[26] = chances[25] = chances[24] = chances[23] = chances[22] = chances[21];
 	}
 
 	public static StandardRoom createEntrance(){
