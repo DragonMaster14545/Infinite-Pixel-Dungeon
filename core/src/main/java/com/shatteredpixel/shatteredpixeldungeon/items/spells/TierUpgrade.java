@@ -77,7 +77,7 @@ public class TierUpgrade extends InventorySpell {
 		private static final int OUT_QUANTITY = 2;
 
 		{
-			inputs =  new Class[]{ScrollOfUpgrade.class, PotionOfMastery.class, ScrollOfTransmutation.class};
+			inputs =  new Class[]{ScrollOfUpgrade.class, Alchemize.class, ScrollOfTransmutation.class};
 			inQuantity = new int[]{1, 1, 1};
 			
 			cost = 100;
