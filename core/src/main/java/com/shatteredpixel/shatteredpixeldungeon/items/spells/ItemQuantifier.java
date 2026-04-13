@@ -57,15 +57,28 @@ public class ItemQuantifier extends InventorySpell {
 	@Override
 	protected void onItemSelected(Item item) {
 
-		if (Random.Float() < 0.75f) {
-            item.quantity(item.quantity() + 3);
-            GLog.p(Messages.get(this, "quantified", item.quantity()));
-            curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
+		if (item.unique) {
+            if (Random.Float() < 0.25f) {
+                item.quantity(item.quantity() + 2);
+                GLog.p(Messages.get(this, "quantified_unique", item.quantity()));
+                curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
+            } else {
+                item.quantity(item.quantity() - 1);
+                GLog.p(Messages.get(this, "false_quantify_unique", item.quantity()));
+                curUser.sprite.emitter().start(Speck.factory(Speck.CONFUSION), 0.2f, 10);
+            }
         } else {
-            item.quantity(item.quantity() - 1);
-            GLog.p(Messages.get(this, "false_quantify", item.quantity()));
-            curUser.sprite.emitter().start(Speck.factory(Speck.CONFUSION), 0.2f, 10);
+            if (Random.Float() < 0.75f) {
+                item.quantity(item.quantity() + 3);
+                GLog.p(Messages.get(this, "quantified", item.quantity()));
+                curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
+            } else {
+                item.quantity(item.quantity() - 1);
+                GLog.p(Messages.get(this, "false_quantify", item.quantity()));
+                curUser.sprite.emitter().start(Speck.factory(Speck.CONFUSION), 0.2f, 10);
+            }
         }
+
 	}
 	
 	@Override
