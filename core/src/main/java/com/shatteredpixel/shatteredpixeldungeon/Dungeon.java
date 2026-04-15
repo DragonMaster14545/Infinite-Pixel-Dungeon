@@ -51,6 +51,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.OverloadBeacon;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.ExaminationParchment;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
@@ -266,6 +267,7 @@ public class Dungeon {
 	public static String customSeedText = "";
 	public static long seed;
     public static long lastPlayed;
+    public static ExaminationParchment parchment;
 
 	//we initialize the seed separately so that things like interlevelscene can access it early
 	public static void initSeed(){
