@@ -572,7 +572,7 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 		
 		@SuppressWarnings("unchecked")
 		public static Enchantment random( Class<? extends Enchantment> ... toIgnore ) {
-			switch(Dungeon.chances(typeChances)){
+			switch(Random.chances(typeChances)){
 				case 0: default:
 					return randomCommon( toIgnore );
 				case 1:

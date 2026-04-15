@@ -755,7 +755,7 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 
 		@SuppressWarnings("unchecked")
 		public static Glyph random( Class<? extends Glyph> ... toIgnore ) {
-			switch(Dungeon.chances(typeChances)){
+			switch(Random.chances(typeChances)){
 				case 0: default:
 					return randomCommon( toIgnore );
 				case 1:
