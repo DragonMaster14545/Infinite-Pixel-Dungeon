@@ -89,7 +89,8 @@ public class InfPDChanges {
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Scroll of Transmutation now caps the new trinket's level to its max upgrade\n" +
-                        "_-_ Changed the app icon for android"
+                        "_-_ Changed the app icon for android\n" +
+                        "_-_ Reworked Laserised enchantment's code to avoid future crashes"
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",

@@ -28,14 +28,25 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Web;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
+import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.PurpleParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfDisintegration;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Longsword;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
+import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
+import com.watabou.utils.Random;
+
+import java.util.ArrayList;
 
 public class Laserised extends Weapon.Enchantment {
 
@@ -43,19 +54,18 @@ public class Laserised extends Weapon.Enchantment {
 
 	@Override
 	public long proc( Weapon weapon, Char attacker, Char defender, long damage ) {
-        if (attacker == Dungeon.hero && defender != null) {
-            WandOfDisintegration wand = ((WandOfDisintegration)(new WandOfDisintegration().upgrade(Math.round(weapon.level()))));
-            wand.fx(
-                    new Ballistica(attacker.pos, defender.pos, Ballistica.STOP_SOLID),
-                    new Callback() {
-                        public void call() {
-                            wand.onZap(new Ballistica(attacker.pos, defender.pos, Ballistica.STOP_SOLID));
-                            wand.wandUsed();
-                        }
-                    }
 
-            );
-        }
+        fx(
+
+                new Ballistica(attacker.pos, defender.pos, Ballistica.STOP_SOLID),
+                new Callback() {
+                    public void call() {
+                        onZap(new Ballistica(attacker.pos, defender.pos, Ballistica.STOP_SOLID), weapon, damage);
+                    }
+                },
+                attacker
+
+        );
 		
 		return damage;
 	}
@@ -64,4 +74,70 @@ public class Laserised extends Weapon.Enchantment {
 	public ItemSprite.Glowing glowing() {
 		return COLOR;
 	}
+
+    public void onZap(Ballistica beam, Weapon weapon, long damage) {
+
+        boolean terrainAffected = false;
+
+        long level = weapon.buffedLvl();
+
+        int maxDistance = Math.min(15, beam.dist);
+
+        ArrayList<Char> chars = new ArrayList<>();
+
+        Blob web = Dungeon.level.blobs.get(Web.class);
+
+        int terrainPassed = 2, terrainBonus = 0;
+        for (int c : beam.subPath(1, maxDistance)) {
+
+            Char ch;
+            if ((ch = Actor.findChar( c )) != null) {
+
+                //we don't want to count passed terrain after the last enemy hit. That would be a lot of bonus levels.
+                //terrainPassed starts at 2, equivalent of rounding up when /3 for integer arithmetic.
+                terrainBonus += terrainPassed/3;
+                terrainPassed = terrainPassed%3;
+
+                if (ch instanceof Mob && ((Mob) ch).state == ((Mob) ch).PASSIVE
+                        && !(Dungeon.level.mapped[c] || Dungeon.level.visited[c])){
+                    //avoid harming undiscovered passive chars
+                } else {
+                    chars.add(ch);
+                }
+            }
+
+            if (Dungeon.level.solid[c]) {
+                terrainPassed++;
+            }
+
+            if (Dungeon.level.flamable[c]) {
+
+                Dungeon.level.destroy( c );
+                GameScene.updateMap( c );
+                terrainAffected = true;
+
+            }
+
+            CellEmitter.center( c ).burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
+        }
+
+        if (terrainAffected) {
+            Dungeon.observe();
+        }
+
+        for (Char ch : chars) {
+            ch.damage( damage, this );
+            ch.sprite.centerEmitter().burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
+            ch.sprite.flash();
+        }
+    }
+
+    public void fx(Ballistica beam, Callback callback, Char user) {
+
+        int cell = beam.path.get(Math.min(beam.dist, 15));
+        user.sprite.parent.add(new Beam.DeathRay(user.sprite.center(), DungeonTilemap.raisedTileCenterToWorld( cell )));
+        callback.call();
+
+    }
+
 }

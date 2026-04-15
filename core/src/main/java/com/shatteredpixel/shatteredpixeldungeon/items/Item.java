@@ -1033,8 +1033,8 @@ public class Item implements Bundlable {
 	public float castDelay( Char user, int dst ){
 		return TIME_TO_THROW;
 	}
-	
-	protected static Hero curUser = null;
+
+    protected static Hero curUser = null;
 	protected static Item curItem = null;
 	protected static CellSelector.Listener thrower = new CellSelector.Listener() {
 		@Override
