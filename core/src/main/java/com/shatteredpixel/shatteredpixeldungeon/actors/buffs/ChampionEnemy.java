@@ -126,7 +126,9 @@ public abstract class ChampionEnemy extends Buff {
 		}
 
         if (Dungeon.isChallenged(Challenges.CONQUEST)) {
-            Buff.affect(m, buffCls);
+            if (Random.Float() >= 0.75) {
+                Buff.affect(m, buffCls);
+            }
         }
 	}
 
