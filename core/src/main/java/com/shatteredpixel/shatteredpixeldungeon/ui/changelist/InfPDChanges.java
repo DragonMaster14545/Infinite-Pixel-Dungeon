@@ -103,11 +103,13 @@ public class InfPDChanges {
                         "_-_ Item Quantifier now quantifies unique items with 25% chance\n" +
                         "_-_ Tier Upgrade spells' recipe no longer requires Potion of Mastery, changed with Alchemize instead\n" +
                         "_-_ Buffed cycle scaling, now increases slightly within the hero level\n" +
-                        "_-_ Conquest challenge now spawns enemies with titles within 25% chance three times"
+                        "_-_ Conquest challenge now spawns enemies with titles within 25% chance three times\n" +
+                        "_-_ Limits of Galactic enchantment is now luck based"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
-                "_-_ Fixed incorrect description on Elixir of Divine Inspiration\n"
+                "_-_ Fixed incorrect description on Elixir of Divine Inspiration\n" +
+                        "_-_ Fixed cases where Galatic enchantment only gives few enchantment in high luck levels"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.8", true, "");

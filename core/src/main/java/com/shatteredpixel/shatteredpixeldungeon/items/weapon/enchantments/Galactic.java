@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -37,8 +38,8 @@ public class Galactic extends Weapon.Enchantment {
         additional.clear();
         int limit = 5;
         //Increases chance of adding new enchantment.
-        for (int l = 0; l < Random.Int(1, 20) + 1; l++) {
-            if (Random.Float() < 0.10f) {
+        for (int l = 0; l < Dungeon.Int(1, 20) + 1; l++) {
+            if (Dungeon.Float() >= 0.90f) {
                 limit++;
             }
         }
