@@ -26,22 +26,23 @@ package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.AlchemyScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndTextInput;
-import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
@@ -52,10 +53,10 @@ import java.util.ArrayList;
 public class ExaminationParchment extends Artifact {
 
     {
-        image = ItemSpriteSheet.SOMETHING;
+        image = ItemSpriteSheet.EXAM_PARCHMENT;
         defaultAction = AC_ANSWER;
 
-        levelCap = 10;
+        levelCap = Integer.MAX_VALUE;
 
         charge = 0;
         partialCharge = 0;
@@ -64,9 +65,12 @@ public class ExaminationParchment extends Artifact {
     public static final String AC_ANSWER = "ANSWER";
     public static final String AC_ENERGIZE = "ENERGIZE";
 
-    private int parameter = Random.Int(100);
-    private int parameter2 = Random.Int(100);
-    private String ANSWER = String.valueOf(parameter + parameter2);
+    private int parameter = 0;
+    private int parameter2 = 0;
+    private String ANSWER = "";
+    private int operation = 0;
+    private String body = "";
+    private int reward = 0;
     public static int totalAnswers = 0;
 
     private float warmUpDelay;
@@ -95,6 +99,51 @@ public class ExaminationParchment extends Artifact {
             else if (cursed)                    GLog.w( Messages.get(this, "cursed") );
             else if (warmUpDelay > 0)           GLog.w( Messages.get(this, "not_ready") );
             else {
+                operation = Random.Int(4);
+                if (charge < 11) {
+                    parameter = Random.Int(99);
+                    parameter2 = Random.Int(99);
+                } else if (charge < 101) {
+                    parameter = Random.Int(999);
+                    parameter2 = Random.Int(999);
+                } else if (charge < 501) {
+                    parameter = Random.Int(9999);
+                    parameter2 = Random.Int(9999);
+                } else if (charge < 1001) {
+                    parameter = Random.Int(99999);
+                    parameter2 = Random.Int(9999);
+                } else if (charge < 5001) {
+                    parameter = Random.Int(99999);
+                    parameter2 = Random.Int(99999);
+                } else if (charge > 10001) {
+                    parameter = Random.Int(999999);
+                    parameter2 = Random.Int(999999);
+                } else {
+                    parameter = Random.Int(99);
+                    parameter2 = Random.Int(99);
+                }
+                switch (operation) {
+                    case 0: default:
+                        body = parameter + "+" + parameter2;
+                        ANSWER = String.valueOf(parameter + parameter2);
+                        reward = Random.Int(5) + 1;
+                        break;
+                    case 1:
+                        body = parameter + "-" + parameter2;
+                        ANSWER = String.valueOf(parameter - parameter2);
+                        reward = Random.Int(5) + 1;
+                        break;
+                    case 2:
+                        body = parameter + "*" + parameter2;
+                        ANSWER = String.valueOf(parameter * parameter2);
+                        reward = Random.Int(10) + 1;
+                        break;
+                    case 3:
+                        body = parameter + "/" + parameter2 + "\n_Always round down the answer!_";
+                        ANSWER = String.valueOf(parameter / parameter2);
+                        reward = Random.Int(7) + 1;
+                        break;
+                }
                 askparameter();
             }
 
@@ -156,45 +205,15 @@ public class ExaminationParchment extends Artifact {
     }
 
     private void askparameter() {
-        GameScene.show(new WndTextInput( "Input Answer","Add the following: " + parameter + " + " + parameter2, "", 10, false, "Done", "Cancel" ) {
+        GameScene.show(new WndTextInput( "Input Answer","Evaluate the following: " + body, "", 10, false, "Done", "Cancel" ) {
             @Override
             public void onSelect( boolean positive, String text ) {
                 if (text.equals(ANSWER)) {
                     GLog.h("You answered the question correctly!");
                     curUser.sprite.emitter().start( Speck.factory( Speck.UP ), 0.2f, 5 );
 
-                    if (charge < 11) {
-                        parameter = Random.Int(100);
-                        parameter2 = Random.Int(100);
-                        ANSWER = String.valueOf(parameter + parameter2);
-                    } else if (charge < 21) {
-                        parameter = Random.Int(1000);
-                        parameter2 = Random.Int(100);
-                        ANSWER = String.valueOf(parameter + parameter2);
-                    } else if (charge < 31) {
-                        parameter = Random.Int(1000);
-                        parameter2 = Random.Int(1000);
-                        ANSWER = String.valueOf(parameter + parameter2);
-                    } else if (charge < 41) {
-                        parameter = Random.Int(10000);
-                        parameter2 = Random.Int(1000);
-                        ANSWER = String.valueOf(parameter + parameter2);
-                    } else if (charge < 51) {
-                        parameter = Random.Int(10000);
-                        parameter2 = Random.Int(10000);
-                        ANSWER = String.valueOf(parameter + parameter2);
-                    } else if (charge > 51) {
-                        parameter = Random.Int(100000);
-                        parameter2 = Random.Int(100000);
-                        ANSWER = String.valueOf(parameter + parameter2);
-                    } else {
-                        parameter = Random.Int(100);
-                        parameter2 = Random.Int(100);
-                        ANSWER = String.valueOf(parameter + parameter2);
-                    }
-
                     totalAnswers += 1;
-                    charge += 1;
+                    charge += reward;
 
                     updateQuickslot();
                     Catalog.countUse(ExaminationParchment.class);
@@ -328,7 +347,7 @@ public class ExaminationParchment extends Artifact {
             chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
             chargeGain *= getRarityMultiplier();
             chargeGain = Math.min(20, chargeGain);
-            partialCharge += chargeGain * 0.003d;
+            partialCharge += chargeGain * 0.1d;
 
             //charge is in increments of 1 energy.
             while (partialCharge >= 1) {
@@ -337,6 +356,69 @@ public class ExaminationParchment extends Artifact {
 
                 updateQuickslot();
             }
+        }
+
+        public void obtainItem(Item item) {
+            int chargesUsed = chargesToUse(item);
+            charge -= chargesUsed;
+            exp += 4L * chargesUsed;
+            GLog.i(Messages.get(ExaminationParchment.class, "obtain_item", item.name()));
+
+            Talent.onArtifactUsed(Dungeon.hero);
+            while (exp >= (10 + Math.round(3.33f * level())) && level() < levelCap) {
+                exp -= 10 + Math.round(3.33f * level());
+                Catalog.countUse(ExaminationParchment.class);
+                GLog.p(Messages.get(ExaminationParchment.class, "level_up"));
+                upgrade();
+            }
+            updateQuickslot();
+        }
+
+        public int chargesToUse(Item item){
+            long value = item.value();
+            float valUsing = 1;
+            int chargesUsed = 0;
+            while (valUsing < value){
+                valUsing += 2 + item.level()/2f + item.quantity();
+                chargesUsed++;
+            }
+            return chargesUsed;
+        }
+
+        public void removeBuff(Buff buff) {
+            int chargesUsed = chargesToUseInbuff(buff);
+            buff.detach();
+            charge -= chargesUsed;
+            exp += 4L * chargesUsed;
+            GLog.i(Messages.get(ExaminationParchment.class, "remove_buff", buff.name()));
+
+            Talent.onArtifactUsed(Dungeon.hero);
+            while (exp >= (10 + Math.round(3.33f * level())) && level() < levelCap) {
+                exp -= 10 + Math.round(3.33f * level());
+                Catalog.countUse(ExaminationParchment.class);
+                GLog.p(Messages.get(ExaminationParchment.class, "level_up"));
+                upgrade();
+            }
+            updateQuickslot();
+        }
+
+        public int chargesToUseInbuff(Buff buff){
+            int chargesUsed;
+            if (buff.type == buffType.NEGATIVE) {
+                chargesUsed = 50;
+            } else if (buff.type == buffType.POSITIVE) {
+                chargesUsed = 20;
+            } else {
+                chargesUsed = 5;
+            }
+            if (buff instanceof Hunger) {
+                chargesUsed = 1500;
+            }
+            return chargesUsed;
+        }
+
+        public long availableEnergy(){
+            return charge;
         }
 
     }

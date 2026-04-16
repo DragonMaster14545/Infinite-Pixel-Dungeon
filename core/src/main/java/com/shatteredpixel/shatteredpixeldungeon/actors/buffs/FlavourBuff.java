@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 
 //buff whose only internal logic is to wait and detach after a time.
 public class FlavourBuff extends Buff {
-	
+
 	@Override
 	public boolean act() {
 		detach();

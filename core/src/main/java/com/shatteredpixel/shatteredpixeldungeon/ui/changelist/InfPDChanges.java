@@ -9,6 +9,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.InfoPage;
 import com.shatteredpixel.shatteredpixeldungeon.items.LostBackpack;
 import com.shatteredpixel.shatteredpixeldungeon.items.PsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.TicketToPortableShop;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.ExaminationParchment;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SkeletonKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.EquipmentBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
@@ -80,6 +81,10 @@ public class InfPDChanges {
                         "_- 10 new entrance/exit variants_ of standard rooms have been added as well. two per region.\n" +
                         "_- Boss Arenas_ also use these new terrain types in a few places\n" +
                         "_- Plain empty rooms_ no longer spawn normally."));
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.EXAM_PARCHMENT), new ExaminationParchment().trueName(),
+                "A brand new artifact that gives you a freedom to get an item without getting caught by the shopkeeper (this is not a bait), " +
+                        "and it gives you an opportunity to remove buffs at will!"));
 
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.A_TIER_UPGRADE), new ArmorTierUpgrade().trueName(),
                 "The new spell that enhances your armor's tier."));

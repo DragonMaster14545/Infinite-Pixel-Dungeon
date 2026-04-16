@@ -980,6 +980,12 @@ public class ItemSpriteSheet {
         assignItemRect(LIFESTEAL_WAND, 14, 14);
     }
 
+    private static final int NEW_ARTIFACT_ROW =								xy(1, 37);
+    public static final int EXAM_PARCHMENT	= NEW_ARTIFACT_ROW+0;
+    static{
+        assignItemRect(EXAM_PARCHMENT, 15, 14);
+    }
+
 	//for smaller 8x8 icons that often accompany an item sprite
 	public static class Icons {
 

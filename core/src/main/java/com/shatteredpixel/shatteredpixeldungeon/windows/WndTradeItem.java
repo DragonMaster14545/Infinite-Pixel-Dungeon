@@ -34,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.ExaminationParchment;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArmband;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.IdealBag;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
@@ -42,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 
 public class WndTradeItem extends WndInfoItem {
 
@@ -206,6 +208,35 @@ public class WndTradeItem extends WndInfoItem {
 			pos = btnSteal.bottom();
 
 		}
+
+        final ExaminationParchment.questionnaireEnergy questionnaireEnergy = Dungeon.hero.buff(ExaminationParchment.questionnaireEnergy.class);
+        if (questionnaireEnergy != null && !questionnaireEnergy.isCursed() && questionnaireEnergy.chargesToUse(item) > 0) {
+            final int chargesToUse = questionnaireEnergy.chargesToUse(item);
+            RedButton btnBuyquest = new RedButton(Messages.get(this, "quest_buy", chargesToUse, questionnaireEnergy.availableEnergy()), 6) {
+                @Override
+                protected void onClick() {
+                    if (chargesToUse <= questionnaireEnergy.availableEnergy()){
+                        questionnaireEnergy.obtainItem(item);
+                        Hero hero = Dungeon.hero;
+                        Item item = heap.pickUp();
+                        item.wereOofed = false;
+                        hide();
+
+                        if (!item.doPickUp(hero)) {
+                            Dungeon.level.drop(item, heap.pos).sprite.drop();
+                        }
+                    } else {
+                        GLog.w(Messages.get(WndTradeItem.class, "no_charge_quest", chargesToUse));
+                    }
+                }
+            };
+            btnBuyquest.setRect(0, pos + 1, width, BTN_HEIGHT);
+            btnBuyquest.icon(new ItemSprite(ItemSpriteSheet.EXAM_PARCHMENT));
+            add(btnBuyquest);
+
+            pos = btnBuyquest.bottom();
+
+        }
 
 		resize(width, (int) pos);
 	}

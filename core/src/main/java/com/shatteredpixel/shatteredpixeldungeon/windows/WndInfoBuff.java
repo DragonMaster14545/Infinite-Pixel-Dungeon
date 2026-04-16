@@ -24,10 +24,18 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.ExaminationParchment;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.*;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Image;
 
 public class WndInfoBuff extends Window {
@@ -67,6 +75,26 @@ public class WndInfoBuff extends Window {
 			bottom = button.bottom()+2;
 			add(button);
 		}
+
+        final ExaminationParchment.questionnaireEnergy questionnaireEnergy = Dungeon.hero.buff(ExaminationParchment.questionnaireEnergy.class);
+        if (questionnaireEnergy != null && !questionnaireEnergy.isCursed() && questionnaireEnergy.chargesToUseInbuff(buff) > 0) {
+            final int chargesToUse = questionnaireEnergy.chargesToUseInbuff(buff);
+            RedButton btnRemoveBuffquest = new RedButton(Messages.get(this, "quest_remove_buff", chargesToUse, questionnaireEnergy.availableEnergy()), 6) {
+                @Override
+                protected void onClick() {
+                    if (chargesToUse <= questionnaireEnergy.availableEnergy()){
+                        questionnaireEnergy.removeBuff(buff);
+                        hide();
+                    } else {
+                        GLog.w(Messages.get(WndInfoBuff.class, "no_charge_quest", chargesToUse));
+                    }
+                }
+            };
+            btnRemoveBuffquest.setRect(0, bottom + 2, WIDTH, 16);
+            bottom = btnRemoveBuffquest.bottom()+2;
+            btnRemoveBuffquest.icon(new ItemSprite(ItemSpriteSheet.EXAM_PARCHMENT));
+            add(btnRemoveBuffquest);
+        }
 
 		resize( WIDTH, (int)bottom );
 	}
