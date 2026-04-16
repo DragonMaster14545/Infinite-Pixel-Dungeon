@@ -393,7 +393,10 @@ public class Dungeon {
 
 
 	public static long getCycleMultiplier( long baseValue ) {
-        long modifier = Math.min((long) Math.pow(1.0045, hero.lvl), 30);
+        long modifier = 0;
+        if (Dungeon.hero != null) {
+            modifier = Math.min((long) Math.pow(1.0045, hero.lvl), 30);
+        }
 		return baseValue*((long)(Math.pow(cycle+modifier+1.3,cycle*1.25)));
 	}
 
