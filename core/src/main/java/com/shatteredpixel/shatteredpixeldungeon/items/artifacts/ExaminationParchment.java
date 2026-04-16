@@ -205,7 +205,7 @@ public class ExaminationParchment extends Artifact {
     }
 
     private void askparameter() {
-        GameScene.show(new WndTextInput( "Input Answer","Evaluate the following: " + body, "", 10, false, "Done", "Cancel" ) {
+        GameScene.show(new WndTextInput( "Input Answer","Evaluate the following: " + body, "", 5000, false, "Done", "Cancel" ) {
             @Override
             public void onSelect( boolean positive, String text ) {
                 if (text.equals(ANSWER)) {
