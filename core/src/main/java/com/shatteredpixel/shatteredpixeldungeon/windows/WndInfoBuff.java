@@ -27,6 +27,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.ExaminationParchment;
@@ -77,7 +78,7 @@ public class WndInfoBuff extends Window {
 		}
 
         final ExaminationParchment.questionnaireEnergy questionnaireEnergy = Dungeon.hero.buff(ExaminationParchment.questionnaireEnergy.class);
-        if (questionnaireEnergy != null && !questionnaireEnergy.isCursed() && questionnaireEnergy.chargesToUseInbuff(buff) > 0) {
+        if (questionnaireEnergy != null && !questionnaireEnergy.isCursed() && questionnaireEnergy.chargesToUseInbuff(buff) > 0 && !(buff instanceof Hunger)) {
             final int chargesToUse = questionnaireEnergy.chargesToUseInbuff(buff);
             RedButton btnRemoveBuffquest = new RedButton(Messages.get(this, "quest_remove_buff", chargesToUse, questionnaireEnergy.availableEnergy()), 6) {
                 @Override
