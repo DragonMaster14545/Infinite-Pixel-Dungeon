@@ -172,13 +172,15 @@ public abstract class Scroll extends Item {
 				GLog.w( Messages.get(this, "no_magic") );
 			} else if (hero.buff( Blindness.class ) != null) {
 				GLog.w( Messages.get(this, "blinded") );
-			} else if ((hero.buff(UnstableSpellbook.bookRecharge.class) != null
+			} else if (hero.buff(UnstableSpellbook.bookRecharge.class) != null
 					&& hero.buff(UnstableSpellbook.bookRecharge.class).isCursed()
-					&& !(this instanceof ScrollOfRemoveCurse || this instanceof ScrollOfAntiMagic))
-                    || (hero.buff(ExaminationParchment.questionnaireEnergy.class).isCursed()
-                    && !(this instanceof ScrollOfRemoveCurse || this instanceof ScrollOfAntiMagic))){
-				GLog.n( Messages.get(this, "cursed") );
-			} else {
+					&& !(this instanceof ScrollOfRemoveCurse || this instanceof ScrollOfAntiMagic)) {
+                GLog.n(Messages.get(this, "cursed"));
+            } else if (hero.buff(ExaminationParchment.questionnaireEnergy.class) != null &&
+                    hero.buff(ExaminationParchment.questionnaireEnergy.class).isCursed()
+                    && !(this instanceof ScrollOfRemoveCurse || this instanceof ScrollOfAntiMagic)) {
+                GLog.n(Messages.get(this, "exam_cursed"));
+            } else {
 				doRead();
 			}
 			
