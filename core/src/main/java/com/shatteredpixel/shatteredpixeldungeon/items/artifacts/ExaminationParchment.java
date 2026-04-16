@@ -100,7 +100,7 @@ public class ExaminationParchment extends Artifact {
             else if (warmUpDelay > 0)           GLog.w( Messages.get(this, "not_ready") );
             else {
                 operation = Random.Int(4);
-                if (charge < 11) {
+                if (charge < 51) {
                     parameter = Random.Int(99);
                     parameter2 = Random.Int(99);
                 } else if (charge < 101) {
