@@ -346,8 +346,8 @@ public class ExaminationParchment extends Artifact {
             double chargeGain = (1 + level()) * levelPortion;
             chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
             chargeGain *= getRarityMultiplier();
-            chargeGain = Math.min(20, chargeGain);
-            partialCharge += chargeGain * 0.1d;
+            chargeGain = Math.min(50, chargeGain);
+            partialCharge += chargeGain;
 
             //charge is in increments of 1 energy.
             while (partialCharge >= 1) {

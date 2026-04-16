@@ -2114,7 +2114,7 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 		if (kit != null) kit.gainCharge(percent);
 
         ExaminationParchment.questionnaireEnergy quest = buff(ExaminationParchment.questionnaireEnergy.class);
-        if (kit != null) quest.gainCharge(percent);
+        if (quest != null) quest.gainCharge(percent);
 
 		MasterThievesArmband.Thievery armband = buff(MasterThievesArmband.Thievery.class);
 		if (armband != null) armband.gainCharge(percent);
