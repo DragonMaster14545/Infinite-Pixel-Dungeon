@@ -72,6 +72,10 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes = new ChangeInfo("A", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
         changes.addButton( new ChangeButton(Icons.STAIRS.get(), "New Rooms and Terrain Types",
                 "This update includes an _expansion to the dungeon's standard rooms!_ (from the ShPD, of course!)\n" +
                         "\n" +
