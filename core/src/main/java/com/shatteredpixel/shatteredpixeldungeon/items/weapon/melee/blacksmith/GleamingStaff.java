@@ -67,17 +67,17 @@ public class GleamingStaff extends BlacksmithWeapon {
 
     @Override
     public long defenseFactor( Char owner ) {
-        long defense = tier + Dungeon.cycle * 5 + (buffedLvl() * (1 + Dungeon.cycle));
+        long defense = tier + Dungeon.cycle * 7 + (buffedLvl() * (1 + Dungeon.cycle));
         if (owner.buff(GuardTracker.class) != null)
             return defense * 2;
         return defense;	//2 extra defence
     }
 
     public String statsInfo(){
-        return Messages.get(this, "stats_desc", tier+Dungeon.cycle*5 + (buffedLvl()*(1+Dungeon.cycle)), COMBO_COUNT-1);
+        return Messages.get(this, "stats_desc", tier+Dungeon.cycle*7 + (buffedLvl()*(1+Dungeon.cycle)), COMBO_COUNT-1);
     }
 
-    private static final int COMBO_COUNT = 21;
+    private static final int COMBO_COUNT = 16;
 
     @Override
     public long proc(Char attacker, Char defender, long damage) {

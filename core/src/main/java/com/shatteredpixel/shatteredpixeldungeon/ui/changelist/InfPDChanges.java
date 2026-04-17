@@ -76,6 +76,14 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.STARHAMMER), "Small Blacksmith Weapon Rework!",
+                "Due to blacksmith weapons being weak in the mid-game, in this update, their damage is increased by roughly 20%, and their traits: \n\n" +
+                        "_- Fanstasmal Stabber:_ increased its charging ability by 50%, and deals 75% toward max to max on surprise\n" +
+                        "_- Firing Snapper:_ damage dealt on those not at the center of the blast is now 75% and increased max damage by 50%\n" +
+                        "_- Gleaming Staff:_ slightly increased defense factor and decreased combo needed to 15, from 20\n" +
+                        "_- Regrowing Slasher:_ now heals 0.8% of max hp in each strike and max defense factor is doubled\n" +
+                        "_- Starlight Smasher:_ accuracy boost increased to 45%, from 30% and slightly reduced paralysis effect to attackers"));
+
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ The items tab in ranking window is now scrollable\n" +
                         "_-_ Examination Parchment no longer detach action indicator based buffs\n" +

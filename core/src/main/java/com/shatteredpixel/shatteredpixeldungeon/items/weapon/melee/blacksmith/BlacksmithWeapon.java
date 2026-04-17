@@ -36,13 +36,13 @@ public abstract class BlacksmithWeapon extends MeleeWeapon {
 
     @Override
     public long min(long lvl) {
-        return  (tier()+Dungeon.cycle*5L)*2 +  //base
+        return  (tier()+Dungeon.cycle*7L)*2 +  //base
                 lvl*2;    //level scaling
     }
 
     @Override
     public long max(long lvl) {
-        return  5*(tier()+1+Dungeon.cycle*5L) +    //base
+        return  7*(tier()+1+Dungeon.cycle*5L) +    //base
                 lvl*(tier()+1+Dungeon.cycle*5L);   //level scaling
     }
 

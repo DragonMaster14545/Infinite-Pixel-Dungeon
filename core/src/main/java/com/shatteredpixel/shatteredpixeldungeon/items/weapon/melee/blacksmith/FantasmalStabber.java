@@ -64,11 +64,11 @@ public class FantasmalStabber extends BlacksmithWeapon implements PreparationAll
             for (Buff b : attacker.buffs()) {
                 if (b instanceof Artifact.ArtifactBuff) {
                     if (!((Artifact.ArtifactBuff) b).isCursed()) {
-                        ((Artifact.ArtifactBuff) b).charge((Hero) attacker, 0.3f);
+                        ((Artifact.ArtifactBuff) b).charge((Hero) attacker, 0.6f);
                     }
                 }
                 for (Wand.Charger c : attacker.buffs(Wand.Charger.class)){
-                    c.gainCharge(0.15f);
+                    c.gainCharge(0.3f);
                 }
             }
         }
@@ -81,10 +81,10 @@ public class FantasmalStabber extends BlacksmithWeapon implements PreparationAll
             Hero hero = (Hero)owner;
             Char enemy = hero.enemy();
             if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
-                //deals 50% toward max to max on surprise, instead of min to max.
+                //deals 75% toward max to max on surprise, instead of min to max.
                 long diff = max() - min();
                 long damage = augment.damageFactor(Dungeon.NormalLongRange(
-                        min() + Math.round(diff*0.50f),
+                        min() + Math.round(diff*0.750f),
                         max()));
                 int exStr = hero.STR() - STRReq();
                 if (exStr > 0) {

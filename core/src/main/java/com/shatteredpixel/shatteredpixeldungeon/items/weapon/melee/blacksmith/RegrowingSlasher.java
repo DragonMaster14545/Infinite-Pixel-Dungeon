@@ -59,7 +59,7 @@ public class RegrowingSlasher extends BlacksmithWeapon {
 
     @Override
     public long proc(Char attacker, Char defender, long damage) {
-        long heal = Math.max(1, attacker.HT / 150);
+        long heal = Math.max(1, attacker.HT / 125);
         ArrayList<Char> affected = new ArrayList<>();
         for (Char ch: Actor.chars()){
             if (ch.alignment == attacker.alignment){
@@ -102,7 +102,7 @@ public class RegrowingSlasher extends BlacksmithWeapon {
 
     @Override
     public long defenseFactor( Char owner ) {
-        return 4;	//4 extra defence
+        return 8;	//4 extra defence
     }
 
     @Override

@@ -73,7 +73,7 @@ public class FiringSnapper extends BlacksmithWeapon {
 
     @Override
     public long max(long lvl) {
-        return super.max(lvl)/2;
+        return (long) (super.max(lvl)/1.5d);
     }
 
     @Override
@@ -114,7 +114,7 @@ public class FiringSnapper extends BlacksmithWeapon {
 
                     //those not at the center of the blast take less damage
                     if (ch.pos != cell){
-                        dmg = Math.round(dmg*0.5f);
+                        dmg = Math.round(dmg*0.75f);
                     }
 
                     if (dmg > 0) {
