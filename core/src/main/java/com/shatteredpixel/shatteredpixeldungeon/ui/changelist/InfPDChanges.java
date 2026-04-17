@@ -87,7 +87,7 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ The items tab in ranking window is now scrollable\n" +
                         "_-_ Examination Parchment no longer detach action indicator based buffs\n" +
-                        "_-_ Added an option for strength and luck potions to be gulped all at once\n" +
+                        "_-_ Added an option for strength and luck potions and elixir of divine inspiration to be gulped all at once\n" +
                         "_-_ Stone of Empowerment now damages the target instead of corroding it"
         ));
 

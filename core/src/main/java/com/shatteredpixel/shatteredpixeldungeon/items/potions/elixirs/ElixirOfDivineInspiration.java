@@ -53,6 +53,11 @@ public class ElixirOfDivineInspiration extends Elixir {
 	{
 		image = ItemSpriteSheet.ELIXIR_DI;
 	}
+
+    @Override
+    public boolean isRepeatable() {
+        return true;
+    }
 	
 	@Override
 	public void apply(Hero hero) {
