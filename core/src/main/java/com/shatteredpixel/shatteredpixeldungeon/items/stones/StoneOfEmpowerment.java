@@ -43,6 +43,9 @@ public class StoneOfEmpowerment extends Runestone {
 	{
 		image = ItemSpriteSheet.STONE_EMPOWER;
 	}
+
+    protected String hitSound = Assets.Sounds.HIT;
+    protected float hitSoundPitch = 1f;
 	
 	@Override
 	protected void activate(int cell) {
@@ -53,7 +56,8 @@ public class StoneOfEmpowerment extends Runestone {
 			if (Random.Int(3) == 0) {
                 Buff.affect( ch, Longsword.HolyExpEffect.class ).stacks++;
             } else {
-                Buff.affect( ch, Corrosion.class).set(2f, 2);
+                ch.damage( curUser.damageRoll(), this);
+                Sample.INSTANCE.play(hitSound, 1, hitSoundPitch);
             }
 		}
 
@@ -61,5 +65,7 @@ public class StoneOfEmpowerment extends Runestone {
 		Sample.INSTANCE.play( Assets.Sounds.READ );
 		
 	}
+
+
 	
 }
