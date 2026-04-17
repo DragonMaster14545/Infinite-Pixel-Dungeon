@@ -56,7 +56,7 @@ public class ExaminationParchment extends Artifact {
         image = ItemSpriteSheet.EXAM_PARCHMENT;
         defaultAction = AC_ANSWER;
 
-        levelCap = 50000;
+        levelCap = 10;
 
         charge = 0;
         partialCharge = 0;
@@ -150,7 +150,7 @@ public class ExaminationParchment extends Artifact {
         } else if (action.equals(AC_ENERGIZE)) {
             if (!isEquipped(hero))              GLog.i( Messages.get(this, "need_to_equip") );
             else if (cursed)                    GLog.w( Messages.get(this, "cursed") );
-            else if (Dungeon.energy < 6)        GLog.w( Messages.get(this, "need_energy") );
+            else if (Dungeon.energy < 10)        GLog.w( Messages.get(this, "need_energy") );
             else {
 
                 final int maxLevels = (int) Math.min(levelCap - level(), Dungeon.energy/10);
@@ -258,7 +258,7 @@ public class ExaminationParchment extends Artifact {
     @Override
     public void charge(Hero target, float amount) {
         if (target.buff(MagicImmune.class) != null) return;
-        partialCharge += 0.01f*amount;
+        partialCharge += 0.25f*amount;
         if (partialCharge >= 1){
             long charge = (long)partialCharge;
             partialCharge -= charge;
