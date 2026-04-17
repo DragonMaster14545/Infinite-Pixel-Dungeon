@@ -48,8 +48,13 @@ public class ElixirOfMight extends Elixir {
 
 		talentFactor = 2f;
 	}
-	
-	@Override
+
+    @Override
+    public boolean isRepeatable() {
+        return true;
+    }
+
+    @Override
 	public void apply( Hero hero ) {
 		identify();
 		

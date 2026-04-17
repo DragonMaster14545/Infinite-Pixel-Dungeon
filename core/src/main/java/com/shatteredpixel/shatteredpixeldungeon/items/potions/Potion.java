@@ -69,6 +69,7 @@ import java.util.LinkedHashMap;
 public class Potion extends Item {
 
 	public static final String AC_DRINK = "DRINK";
+    public static final String AC_DRINK_ALL = "DRINK_ALL";
 	
 	//used internally for potions that can be drunk or thrown
 	public static final String AC_CHOOSE = "CHOOSE";
@@ -209,6 +210,7 @@ public class Potion extends Item {
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
 		actions.add( AC_DRINK );
+        if (quantity() > 1 && isIdentified() && isRepeatable()) actions.add( AC_DRINK_ALL );
 		return actions;
 	}
 	
@@ -243,7 +245,29 @@ public class Potion extends Item {
 					drink( hero );
 				}
 			
-		}
+		} else if (action.equals( AC_DRINK_ALL )) {
+
+            if (isKnown() && mustThrowPots.contains(getClass())) {
+
+                GameScene.show(
+                        new WndOptions(new ItemSprite(this),
+                                Messages.get(Potion.class, "harmful"),
+                                Messages.get(Potion.class, "sure_drink"),
+                                Messages.get(Potion.class, "yes"), Messages.get(Potion.class, "no") ) {
+                            @Override
+                            protected void onSelect(int index) {
+                                if (index == 0) {
+                                    drinkAll(hero, quantity());
+                                }
+                            }
+                        }
+                );
+
+            } else {
+                drinkAll(hero, quantity());
+            }
+
+        }
 	}
 	
 	@Override
@@ -322,6 +346,58 @@ public class Potion extends Item {
 			}
 		}
 	}
+    protected void drinkAll( Hero hero, long quantity ) {
+
+        detachAll( hero.belongings.backpack );
+
+        hero.spend( TIME_TO_DRINK );
+        hero.busy();
+        for (int i = 0; i < quantity; i++) {
+            apply( hero );
+        }
+
+        Sample.INSTANCE.play( Assets.Sounds.DRINK );
+
+        hero.sprite.operate( hero.pos );
+
+        if (!anonymous)
+            Catalog.countUses(getClass(), quantity);
+
+        if (!anonymous && Random.Float() < talentChance){
+            Talent.onPotionUsed(curUser, curUser.pos, talentFactor);
+            if (this instanceof PotionOfHealing && hero.perks.contains(Perks.Perk.GRASS_HEALING)){
+                int radius = 2;
+                Rect update = new Rect(
+                        (hero.pos % Dungeon.level.width()) - radius,
+                        (hero.pos / Dungeon.level.width()) - radius,
+                        (hero.pos % Dungeon.level.width()) - radius + 2*radius,
+                        (hero.pos / Dungeon.level.width()) - radius + 2*radius);
+                for (Point lol: update.getPoints()){
+                    int cell = Dungeon.level.pointToCell(lol);
+                    if (cell >= 0 && cell <= Dungeon.level.width()) {
+                        Char ch = Actor.findChar(cell);
+                        if (ch != null && ch.alignment == Char.Alignment.ENEMY) {
+                            Buff.affect(ch, Roots.class, 3f);
+                        }
+                        if (Dungeon.level.map[cell] == Terrain.EMPTY ||
+                                Dungeon.level.map[cell] == Terrain.EMBERS ||
+                                Dungeon.level.map[cell] == Terrain.EMPTY_DECO) {
+                            Level.set(cell, Terrain.GRASS);
+                            GameScene.updateMap(cell);
+                        }
+                        CellEmitter.get(cell).burst(LeafParticle.LEVEL_SPECIFIC, 4);
+                        int t = Dungeon.level.map[cell];
+                        if ((t == Terrain.EMPTY || t == Terrain.EMPTY_DECO || t == Terrain.EMBERS
+                                || t == Terrain.GRASS || t == Terrain.FURROWED_GRASS)
+                                && Dungeon.level.plants.get(cell) == null) {
+                            Level.set(cell, Terrain.HIGH_GRASS);
+                            GameScene.updateMap(cell);
+                        }
+                    }
+                }
+            }
+        }
+    }
 	
 	@Override
 	protected void onThrow( int cell ) {
@@ -346,7 +422,13 @@ public class Potion extends Item {
 			
 		}
 	}
-	
+
+
+    //false by default... do you think you can gulp PoH in one run just to receive a single gulp effect?
+    public boolean isRepeatable() {
+        return false;
+    }
+
 	public void apply( Hero hero ) {
 		shatter( hero.pos );
 	}

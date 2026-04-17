@@ -78,7 +78,8 @@ public class InfPDChanges {
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ The items tab in ranking window is now scrollable\n" +
-                        "_-_ Examination Parchment no longer detach action indicator based buffs"
+                        "_-_ Examination Parchment no longer detach action indicator based buffs\n" +
+                        "_-_ Added an option for strength and luck potions to be gulped all at once"
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",

@@ -42,8 +42,13 @@ public class PotionOfStrength extends Potion {
 
 		talentFactor = 2f;
 	}
-	
-	@Override
+
+    @Override
+    public boolean isRepeatable() {
+        return true;
+    }
+
+    @Override
 	public void apply( Hero hero ) {
 		identify();
 
