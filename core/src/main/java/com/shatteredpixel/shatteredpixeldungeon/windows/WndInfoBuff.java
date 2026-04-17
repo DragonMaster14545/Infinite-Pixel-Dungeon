@@ -78,7 +78,8 @@ public class WndInfoBuff extends Window {
 		}
 
         final ExaminationParchment.questionnaireEnergy questionnaireEnergy = Dungeon.hero.buff(ExaminationParchment.questionnaireEnergy.class);
-        if (questionnaireEnergy != null && !questionnaireEnergy.isCursed() && questionnaireEnergy.chargesToUseInbuff(buff) > 0 && !(buff instanceof Hunger)) {
+        if (questionnaireEnergy != null && !questionnaireEnergy.isCursed() && questionnaireEnergy.chargesToUseInbuff(buff) > 0
+                && !(buff instanceof Hunger || buff instanceof ActionIndicator.Action)) {
             final int chargesToUse = questionnaireEnergy.chargesToUseInbuff(buff);
             RedButton btnRemoveBuffquest = new RedButton(Messages.get(this, "quest_remove_buff", chargesToUse, questionnaireEnergy.availableEnergy()), 6) {
                 @Override

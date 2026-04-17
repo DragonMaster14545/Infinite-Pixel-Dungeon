@@ -77,7 +77,12 @@ public class InfPDChanges {
         changeInfos.add(changes);
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ The items tab in ranking window is now scrollable\n"
+                "_-_ The items tab in ranking window is now scrollable\n" +
+                        "_-_ Examination Parchment no longer detach action indicator based buffs"
+        ));
+
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Nerfed level-up mechanics of Examination Parchment\n"
         ));
 
         changes = new ChangeInfo("A", false, "");

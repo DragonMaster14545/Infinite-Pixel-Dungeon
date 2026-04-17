@@ -56,7 +56,7 @@ public class ExaminationParchment extends Artifact {
         image = ItemSpriteSheet.EXAM_PARCHMENT;
         defaultAction = AC_ANSWER;
 
-        levelCap = Integer.MAX_VALUE;
+        levelCap = 50000;
 
         charge = 0;
         partialCharge = 0;
@@ -361,12 +361,12 @@ public class ExaminationParchment extends Artifact {
         public void obtainItem(Item item) {
             int chargesUsed = chargesToUse(item);
             charge -= chargesUsed;
-            exp += 4L * chargesUsed;
+            exp += chargesUsed;
             GLog.i(Messages.get(ExaminationParchment.class, "obtain_item", item.name()));
 
             Talent.onArtifactUsed(Dungeon.hero);
-            while (exp >= (10 + Math.round(3.33f * level())) && level() < levelCap) {
-                exp -= 10 + Math.round(3.33f * level());
+            while (exp >= (300L * Math.round(1.33f * level())) && level() < levelCap) {
+                exp -= 300L * Math.round(1.33f * level());
                 Catalog.countUse(ExaminationParchment.class);
                 GLog.p(Messages.get(ExaminationParchment.class, "level_up"));
                 upgrade();
@@ -389,12 +389,12 @@ public class ExaminationParchment extends Artifact {
             int chargesUsed = chargesToUseInbuff(buff);
             buff.detach();
             charge -= chargesUsed;
-            exp += 4L * chargesUsed;
+            exp += chargesUsed;
             GLog.i(Messages.get(ExaminationParchment.class, "remove_buff", buff.name()));
 
             Talent.onArtifactUsed(Dungeon.hero);
-            while (exp >= (10 + Math.round(3.33f * level())) && level() < levelCap) {
-                exp -= 10 + Math.round(3.33f * level());
+            while (exp >= (300L * Math.round(1.33f * level())) && level() < levelCap) {
+                exp -= 300L * Math.round(1.33f * level());
                 Catalog.countUse(ExaminationParchment.class);
                 GLog.p(Messages.get(ExaminationParchment.class, "level_up"));
                 upgrade();
