@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Berserk;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.KillEvolution;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
@@ -147,8 +148,6 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
                     damage = new Unstable().proc(this,attacker,defender,damage);
                 }
             }
-
-            //internalHits++;
         }
 
 		if (!levelKnown && attacker == Dungeon.hero) {
