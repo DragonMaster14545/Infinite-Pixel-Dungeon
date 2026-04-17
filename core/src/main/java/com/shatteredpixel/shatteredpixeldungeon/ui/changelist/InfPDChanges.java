@@ -72,6 +72,14 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes = new ChangeInfo("B", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ The items tab in ranking window is now scrollable\n"
+        ));
+
         changes = new ChangeInfo("A", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);

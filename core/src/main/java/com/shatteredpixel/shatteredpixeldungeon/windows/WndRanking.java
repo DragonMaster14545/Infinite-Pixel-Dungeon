@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.*;
 import com.shatteredpixel.shatteredpixeldungeon.utils.DungeonSeed;
 import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Game;
+import com.watabou.noosa.Gizmo;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
@@ -263,10 +264,10 @@ public class WndRanking extends WndTabbed {
 					protected void onClick() {
 						super.onClick();
 						ShatteredPixelDungeon.scene().addToFront(new WndOptions(new Image(icon),
-								Messages.get(WndRanking.StatsTab.this, "copy_seed"),
-								Messages.get(WndRanking.StatsTab.this, "copy_seed_desc"),
-								Messages.get(WndRanking.StatsTab.this, "copy_seed_copy"),
-								Messages.get(WndRanking.StatsTab.this, "copy_seed_cancel")){
+								Messages.get(StatsTab.this, "copy_seed"),
+								Messages.get(StatsTab.this, "copy_seed_desc"),
+								Messages.get(StatsTab.this, "copy_seed_copy"),
+								Messages.get(StatsTab.this, "copy_seed_cancel")){
 							@Override
 							protected void onSelect(int index) {
 								super.onSelect(index);
@@ -306,62 +307,70 @@ public class WndRanking extends WndTabbed {
 	private class ItemsTab extends Group {
 		
 		private float pos;
+        private ScrollPane scrollpane = new ScrollPane( new Component() );
+        private Component items = scrollpane.content();
 		
 		public ItemsTab() {
 			super();
-			
+
+            camera = WndRanking.this.camera;
+
+            add(scrollpane);
+            items.clear();
+
 			Belongings stuff = Dungeon.hero.belongings;
+            Trinket trinket = stuff.getItem(Trinket.class);
+
+            for (int i = -1; i < QuickSlot.SIZE; i++){
+                Item item = null;
+                if (i == -1){
+                    item = trinket;
+                } else if (Dungeon.quickslot.isNonePlaceholder(i)) {
+                    item = Dungeon.quickslot.getItem(i);
+                }
+                if (item != null){
+                    addItem(item);
+                }
+            }
+
 			if (stuff.weapon != null) {
 				addItem( stuff.weapon );
 			}
 			if (stuff.armor != null) {
 				addItem( stuff.armor );
 			}
+
 			stuff.artifacts.forEach(this::addItem);
 			stuff.miscs.forEach(this::addItem);
 			stuff.rings.forEach(this::addItem);
 
 			pos = 0;
 
-			int slotsActive = 0;
-			for (int i = 0; i < QuickSlot.SIZE; i++){
-				if (Dungeon.quickslot.isNonePlaceholder(i)){
-					slotsActive++;
-				}
-			}
+			//int slotsActive = 0;
+			//for (int i = 0; i < QuickSlot.SIZE; i++){
+			//	if (Dungeon.quickslot.isNonePlaceholder(i)){
+			//		slotsActive++;
+			//	}
+			//}
 
-			Trinket trinket = stuff.getItem(Trinket.class);
-			if (trinket != null){
-				slotsActive++;
-			}
 
-			float slotWidth = Math.min(28, ((WIDTH - slotsActive + 1) / (float)slotsActive));
+			//if (trinket != null){
+			//	slotsActive++;
+			//}
 
-			for (int i = -1; i < QuickSlot.SIZE; i++){
-				Item item = null;
-				if (i == -1){
-					item = trinket;
-				} else if (Dungeon.quickslot.isNonePlaceholder(i)) {
-					item = Dungeon.quickslot.getItem(i);
-				}
-				if (item != null){
-					QuickSlotButton slot = new QuickSlotButton(item);
+			//float slotWidth = Math.min(28, ((WIDTH - slotsActive + 1) / (float)slotsActive));
 
-					slot.setRect( pos, 120, slotWidth, 23 );
-					PixelScene.align(slot);
+            scrollpane.setRect(0, 0, WIDTH, HEIGHT);
+            scrollpane.scrollTo(0, 0);
 
-					add(slot);
-
-					pos += slotWidth + 1;
-
-				}
-			}
 		}
 		
-		private void addItem( Item item ) {
+		private void addItem(Item item) {
 			ItemButton slot = new ItemButton( item );
 			slot.setRect( 0, pos, width, ItemButton.HEIGHT );
 			add( slot );
+            items.add( slot );
+            items.setSize(WIDTH - ItemButton.HEIGHT, pos);
 			
 			pos += slot.height() + 1;
 		}
