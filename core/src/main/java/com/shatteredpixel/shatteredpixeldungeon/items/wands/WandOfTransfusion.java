@@ -194,9 +194,9 @@ curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(7+buffedLvl
 	public String statsDesc() {
 		long selfDMG = Dungeon.hero != null ? Math.round(Dungeon.hero.HT*0.05d): 1;
 		if (levelKnown)
-			return Messages.get(this, "stats_desc", selfDMG, selfDMG + 3*buffedLvl(), 5+buffedLvl(), min(), max()) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, getMaxCharges());
+			return Messages.get(this, "stats_desc", selfDMG, selfDMG + 3*buffedLvl(), 7+buffedLvl(), min(), max()) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, getMaxCharges());
 		else
-			return Messages.get(this, "stats_desc", selfDMG, selfDMG, 5, min(0), max(0));
+			return Messages.get(this, "stats_desc", selfDMG, selfDMG, 7, min(0), max(0));
 	}
 
 	@Override
