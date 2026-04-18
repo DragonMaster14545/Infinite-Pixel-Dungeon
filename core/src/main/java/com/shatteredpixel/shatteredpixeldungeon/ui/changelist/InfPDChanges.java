@@ -101,7 +101,8 @@ public class InfPDChanges {
                 "_-_ Nerfed level-up mechanics of Examination Parchment\n" +
                         "_-_ Increased the chances of increased limits of Galactic enchantment\n" +
                         "_-_ Increased max cap of Ring of Elements to 99% elemental resistance\n" +
-                        "_-_ Sacrificial Rooms' prizes has now a chance to upgrade again for 5 times"
+                        "_-_ Sacrificial Rooms' prizes has now a chance to upgrade again for 5 times\n" +
+                        "_-_ Decreased Item Quantifier's crafted output quantity by 50% (from 10 to 5)"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",

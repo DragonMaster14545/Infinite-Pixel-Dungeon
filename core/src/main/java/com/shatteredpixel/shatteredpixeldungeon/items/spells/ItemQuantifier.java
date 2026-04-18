@@ -93,7 +93,7 @@ public class ItemQuantifier extends InventorySpell {
 	
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
 
-		private static final int OUT_QUANTITY = 10;
+		private static final int OUT_QUANTITY = 5;
 
 		{
 			inputs =  new Class[]{ScrollOfUpgrade.class, PotionOfHealing.class};
