@@ -37,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RipperDemon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.YogDzewa;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.AntiMagic;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfForce;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -268,7 +269,8 @@ public class KillEvolution extends Buff implements ActionIndicator.Action {
 
         public static KillEvolutionAbility[] abilities = new KillEvolutionAbility[]{
                 new InvisibleDash(),
-                new PhysicallyEmpowered()
+                new PhysicallyEmpowered(),
+                new Immortalize()
         };
 
         public String name(){
@@ -300,6 +302,17 @@ public class KillEvolution extends Buff implements ActionIndicator.Action {
             public int icon() {
                 return BuffIndicator.NONE;
             }
+        }
+
+        public static class KillInvulnerability extends Invulnerability {
+
+            public static final float DURATION	= 15f;
+
+            @Override
+            public int icon() {
+                return BuffIndicator.NONE;
+            }
+
         }
 
         public static class InvisibleDash extends KillEvolutionAbility {
@@ -381,9 +394,30 @@ public class KillEvolution extends Buff implements ActionIndicator.Action {
 
                 hero.sprite.emitter().start(Speck.factory(Speck.UP), 0.01f, 2);
                 if (Buff.affect(Dungeon.hero, KillEvolution.class).abilitiesEmpowered(Dungeon.hero)) {
-                    Buff.affect(hero, PhysicalEmpower.class).set(2, 10);
-                } else {
                     Buff.affect(hero, PhysicalEmpower.class).set(4, 10);
+                } else {
+                    Buff.affect(hero, PhysicalEmpower.class).set(2, 10);
+                }
+                Buff.affect(hero, KillEvolution.class).abilityUsed(this);
+
+            }
+        }
+
+        public static class Immortalize extends KillEvolutionAbility {
+
+            @Override
+            public int energyCost() {
+                return 100;
+            }
+
+            @Override
+            public void doAbility(Hero hero, Integer target) {
+
+                hero.sprite.emitter().start(Speck.factory(Speck.UP), 0.01f, 2);
+                if (Buff.affect(Dungeon.hero, KillEvolution.class).abilitiesEmpowered(Dungeon.hero)) {
+                    Buff.affect(hero, KillInvulnerability.class, KillInvulnerability.DURATION * 1.5f);
+                } else {
+                    Buff.affect(hero, KillInvulnerability.class, KillInvulnerability.DURATION);
                 }
                 Buff.affect(hero, KillEvolution.class).abilityUsed(this);
 
