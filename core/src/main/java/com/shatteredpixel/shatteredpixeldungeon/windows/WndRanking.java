@@ -43,6 +43,7 @@ import com.watabou.noosa.ui.Component;
 import com.watabou.utils.DeviceCompat;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.stream.IntStream;
 
@@ -307,13 +308,23 @@ public class WndRanking extends WndTabbed {
 	private class ItemsTab extends Group {
 		
 		private float pos;
-        private ScrollPane scrollpane = new ScrollPane( new Component() );
+        private ScrollPane scrollpane = new ScrollPane(new Component()) {
+            @Override
+            public void onClick(float x, float y) {
+                for (ItemButton item : itemButton) {
+                    if (item.onClick(x, y)) break;
+                }
+            }
+        };
         private Component items = scrollpane.content();
+        private ArrayList<ItemButton> itemButton;
 		
 		public ItemsTab() {
 			super();
 
+
             camera = WndRanking.this.camera;
+            itemButton = new ArrayList<>();
 
             add(scrollpane);
             items.clear();
@@ -366,10 +377,17 @@ public class WndRanking extends WndTabbed {
 		}
 		
 		private void addItem(Item item) {
-			ItemButton slot = new ItemButton( item );
+			ItemButton slot = new ItemButton( item ){
+                @Override
+                protected void layout() {
+                    super.layout();
+                    hotArea.y = -5000;
+                }
+            };
 			slot.setRect( 0, pos, width, ItemButton.HEIGHT );
 			add( slot );
             items.add( slot );
+            itemButton.add( slot );
             items.setSize(WIDTH - ItemButton.HEIGHT, pos);
 			
 			pos += slot.height() + 1;
@@ -504,6 +522,7 @@ public class WndRanking extends WndTabbed {
 					y + (height - name.height()) / 2
 			);
 			PixelScene.align(name);
+            hotArea.width = hotArea.height = 0;
 			
 			super.layout();
 		}
@@ -517,7 +536,14 @@ public class WndRanking extends WndTabbed {
 		protected void onPointerUp() {
 			bg.brightness( 1.0f );
 		}
-		
+
+        protected boolean onClick(float x, float y) {
+            if (!inside(x, y)) return false;
+            Sample.INSTANCE.play(Assets.Sounds.CLICK);
+            onClick();
+            return true;
+        }
+
 		@Override
 		protected void onClick() {
 			Game.scene().add( new WndInfoItem( item ) );
