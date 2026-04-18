@@ -38,7 +38,7 @@ public class Galactic extends Weapon.Enchantment {
         additional.clear();
         int limit = 5;
         //Increases chance of adding new enchantment.
-        for (int l = 0; l < Dungeon.Int(1, 20) + 1; l++) {
+        for (int l = 0; l < Dungeon.Int(1, 50) + 1; l++) {
             if (Dungeon.Float() >= 0.90f) {
                 limit++;
             }

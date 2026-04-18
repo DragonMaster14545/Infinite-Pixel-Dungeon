@@ -96,7 +96,8 @@ public class InfPDChanges {
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
-                "_-_ Nerfed level-up mechanics of Examination Parchment\n"
+                "_-_ Nerfed level-up mechanics of Examination Parchment\n" +
+                        "_-_ Increased the chances of increased limits of Galactic enchantment"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
