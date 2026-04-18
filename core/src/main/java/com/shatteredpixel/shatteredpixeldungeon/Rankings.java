@@ -224,6 +224,7 @@ public enum Rankings {
 			Statistics.winMultiplier = 1f;
 			if (Statistics.gameWon)         Statistics.winMultiplier += 1f;
 			if (Statistics.ascended)        Statistics.winMultiplier += 0.5f;
+            Statistics.weeklyMultiplier = Dungeon.weekly ? 2.5f : 1f;
 
 		//pre v1.3.0 runs have different score calculations
 		//only progress and treasure score, and they are each up to 50% bigger
@@ -242,7 +243,6 @@ public enum Rankings {
 		Statistics.chalMultiplier = Math.round(Statistics.chalMultiplier*20f)/20f;
 		Statistics.cycleMultiplier = Math.max(1, 2 * (float)Math.pow(10, Dungeon.cycle-1));
 		Statistics.cycleMultiplier = Math.round(Statistics.cycleMultiplier*20f)/20f;
-        Statistics.weeklyMultiplier = Dungeon.weekly ? 2.5f : 1f;
 
 		Statistics.totalScore = Statistics.progressScore + Statistics.treasureScore + Statistics.exploreScore
 					+ Statistics.totalBossScore + Statistics.totalQuestScore;
@@ -375,21 +375,22 @@ public enum Rankings {
 		if (Dungeon.initialVersion <= 453){
 			Statistics.gameWon = rec.win;
 		}
-		rec.score = calculateScore();
 
-		if (rec.gameData.contains(SEED)){
-			Dungeon.seed = rec.gameData.getLong(SEED);
-			Dungeon.customSeedText = rec.gameData.getString(CUSTOM_SEED);
-			Dungeon.daily = rec.gameData.getBoolean(DAILY);
-			Dungeon.dailyReplay = rec.gameData.getBoolean(DAILY_REPLAY);
+        if (rec.gameData.contains(SEED)){
+            Dungeon.seed = rec.gameData.getLong(SEED);
+            Dungeon.customSeedText = rec.gameData.getString(CUSTOM_SEED);
+            Dungeon.daily = rec.gameData.getBoolean(DAILY);
+            Dungeon.dailyReplay = rec.gameData.getBoolean(DAILY_REPLAY);
             Dungeon.weekly = rec.gameData.getBoolean(WEEKLY);
             Dungeon.weeklyReplay = rec.gameData.getBoolean(WEEKLY_REPLAY);
-		} else {
-			Dungeon.seed = -1;
-			Dungeon.customSeedText = "";
-			Dungeon.daily = Dungeon.dailyReplay = false;
+        } else {
+            Dungeon.seed = -1;
+            Dungeon.customSeedText = "";
+            Dungeon.daily = Dungeon.dailyReplay = false;
             Dungeon.weekly = Dungeon.weeklyReplay = false;
-		}
+        }
+
+		rec.score = calculateScore();
 	}
 	
 	private static final String RECORDS	= "records";

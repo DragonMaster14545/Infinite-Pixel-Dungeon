@@ -103,7 +103,8 @@ public class InfPDChanges {
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
                 "_-_ Fixed NTF in Examination Parchment when warming up\n" +
-                        "_-_ Fixed Wand of Transfusion's desc where self-shield is inaccurate"
+                        "_-_ Fixed Wand of Transfusion's desc where self-shield is inaccurate\n" +
+                        "_-_ Fixed orders for weekly multiplier appearing in record even it is not weekly run"
         ));
 
         changes = new ChangeInfo("A", false, "");
