@@ -28,13 +28,21 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroAction;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DwarfKing;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.NPC;
-import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Ghoul;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RipperDemon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.YogDzewa;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfForce;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
+import com.shatteredpixel.shatteredpixeldungeon.levels.features.Door;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -42,193 +50,345 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndKillEvolutionAbilities;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.Visual;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.BArray;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.PathFinder;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import com.watabou.utils.Callback;
+import com.watabou.utils.GameMath;
 
 public class KillEvolution extends Buff implements ActionIndicator.Action {
-	
-	{
-		//always acts after other buffs, so invisibility effects can process first
-		actPriority = BUFF_PRIO - 1;
-		type = buffType.POSITIVE;
-	}
-	
-	public enum AttackLevel{
-		LVL_1( 55, 1f, 1),
-		LVL_2( 100, 2f, 3),
-		LVL_3( 350, 4f, 8),
-		LVL_4( 760, 8f, 16);
 
-		final int totalKills;
-		final float baseDmgBonus;
-		final int damageRolls;
-		
-		AttackLevel( int kills, float base, int rolls){
-            totalKills = kills;
-			baseDmgBonus = base;
-			damageRolls = rolls;
-		}
-		
-		public long damageRoll( Char attacker ){
-			long dmg = attacker.damageRoll();
-			for( int i = 1; i < damageRolls; i++){
-				long newDmg = attacker.damageRoll();
-				if (newDmg > dmg) dmg = newDmg;
-			}
-			return Math.round(dmg * (1f + baseDmgBonus));
-		}
-		
-		public static AttackLevel getLvl(int turnsInvis){
-			List<AttackLevel> values = Arrays.asList(values());
-			Collections.reverse(values);
-			for ( AttackLevel lvl : values ){
-				if (turnsInvis >= lvl.totalKills){
-					return lvl;
-				}
-			}
-			return LVL_1;
-		}
-	}
-	
-	public int internalKills = 0;
-	
-	@Override
-	public boolean act() {
-		if (target == Dungeon.hero){
-			ActionIndicator.setAction(this);
-			ActionIndicator.refresh();
-		}
-		spend(TICK);
-		return true;
-	}
+    {
+        type = buffType.POSITIVE;
+        revivePersists = true;
+    }
 
-	@Override
-	public boolean usable() {
-		return target == Dungeon.hero;
-	}
+    public float energy;
+    public int cooldown; //currently unused, abilities had cooldowns prior to v2.5
+
+    private static final float MAX_COOLDOWN = 5;
 
     @Override
-    public boolean isSelectable() {
-        return ActionIndicator.Action.super.isSelectable();
+    public int icon() {
+        return BuffIndicator.COMBO;
     }
 
     @Override
-	public void detach() {
-		super.detach();
-		ActionIndicator.clearAction(this);
-	}
+    public void tintIcon(Image icon) {
+        if (cooldown > 0){
+            icon.hardlight(0.33f, 0.33f, 1f);
+        } else {
+            icon.resetColor();
+        }
+    }
 
-	public int attackLevel(){
-		return AttackLevel.getLvl(internalKills).ordinal()+1;
-	}
+    @Override
+    public float iconFadePercent() {
+        return GameMath.gate(0, cooldown/MAX_COOLDOWN, 1);
+    }
 
-	public long damageRoll( Char attacker ){
-		return AttackLevel.getLvl(internalKills).damageRoll(attacker);
-	}
-	
-	@Override
-	public int icon() {
-		return BuffIndicator.PREPARATION;
-	}
-	
-	@Override
-	public void tintIcon(Image icon) {
-		switch (AttackLevel.getLvl(internalKills)){
-			case LVL_1:
-				icon.hardlight(0f, 1f, 0f);
-				break;
-			case LVL_2:
-				icon.hardlight(1f, 1f, 0f);
-				break;
-			case LVL_3:
-				icon.hardlight(1f, 0.6f, 0f);
-				break;
-			case LVL_4:
-				icon.hardlight(1f, 0f, 0f);
-				break;
-		}
-	}
+    @Override
+    public String iconTextDisplay() {
+        if (cooldown > 0){
+            return Integer.toString(cooldown);
+        } else {
+            return "";
+        }
+    }
 
-	@Override
-	public String desc() {
-		String desc = Messages.get(this, "desc");
-		
-		AttackLevel lvl = AttackLevel.getLvl(internalKills);
+    @Override
+    public boolean act() {
+        if (cooldown > 0){
+            cooldown--;
+            if (cooldown == 0 && energy >= 1){
+                ActionIndicator.setAction(this);
+            }
+            BuffIndicator.refreshHero();
+        }
 
-		desc += "\n\n" + Messages.get(this, "desc_dmg",
-				(int)(lvl.baseDmgBonus*100));
-		
-		if (lvl.damageRolls > 1){
-			desc += " " + Messages.get(this, "desc_dmg_likely");
-		}
-		
-		desc += "\n\n" + Messages.get(this, "desc_invis_time", internalKills);
-		
-		if (lvl.ordinal() != AttackLevel.values().length-1){
-			AttackLevel next = AttackLevel.values()[lvl.ordinal()+1];
-			desc += "\n" + Messages.get(this, "desc_total_kills", next.totalKills);
-		}
-		
-		return desc;
-	}
-	
-	private static final String KILLS = "internalKills";
-	
-	@Override
-	public void restoreFromBundle(Bundle bundle) {
-		super.restoreFromBundle(bundle);
-        internalKills = bundle.getInt(KILLS);
-		ActionIndicator.setAction(this);
-	}
-	
-	@Override
-	public void storeInBundle(Bundle bundle) {
-		super.storeInBundle(bundle);
-		bundle.put(KILLS, internalKills);
-	}
+        spend(TICK);
+        return true;
+    }
 
-	@Override
-	public String actionName() {
-		return Messages.get(this, "action_name");
-	}
+    @Override
+    public String desc() {
+        String desc = Messages.get(this, "desc", (int)energy, energyCap());
+        if (cooldown > 0){
+            desc += "\n\n" + Messages.get(this, "desc_cooldown", cooldown);
+        }
+        return desc;
+    }
 
-	@Override
-	public int actionIcon() {
-		return HeroIcon.PREPARATION;
-	}
+    public static String ENERGY = "energy";
+    public static String COOLDOWN = "cooldown";
 
-	@Override
-	public Visual primaryVisual() {
-		Image actionIco = new HeroIcon(this);
-		tintIcon(actionIco);
-		return actionIco;
-	}
+    @Override
+    public void storeInBundle(Bundle bundle) {
+        super.storeInBundle(bundle);
+        bundle.put(ENERGY, energy);
+        bundle.put(COOLDOWN, cooldown);
+    }
 
-	@Override
-	public Visual secondaryVisual() {
-		BitmapText txt = new BitmapText(PixelScene.pixelFont);
-		txt.text(Integer.toString(internalKills));
-		txt.hardlight(CharSprite.POSITIVE);
-		txt.measure();
-		return txt;
-	}
+    @Override
+    public void restoreFromBundle(Bundle bundle) {
+        super.restoreFromBundle(bundle);
+        energy = bundle.getFloat(ENERGY);
+        cooldown = bundle.getInt(COOLDOWN);
 
-	@Override
-	public int indicatorColor() {
-		return 0x444444;
-	}
+        if (energy >= 1 && cooldown == 0){
+            ActionIndicator.setAction(this);
+        }
+    }
+
+    public void gainEnergy(Mob enemy ){
+        if (target == null) return;
+
+        if (!Regeneration.regenOn()){
+            return; //to prevent farming boss minions
+        }
+
+        float energyGain;
+
+        //bosses and minibosses give extra energy, certain enemies give half, otherwise give 1
+        if (Char.hasProp(enemy, Char.Property.BOSS))            energyGain = 5;
+        else if (Char.hasProp(enemy, Char.Property.MINIBOSS))   energyGain = 3;
+        else if (enemy instanceof Ghoul)                        energyGain = 0.5f;
+        else if (enemy instanceof RipperDemon)                  energyGain = 0.5f;
+        else if (enemy instanceof YogDzewa.Larva)               energyGain = 0.5f;
+        else if (enemy instanceof Wraith)                       energyGain = 0.5f;
+        else                                                    energyGain = 1;
+
+        float enGainMulti = 1f;
+        if (target instanceof Hero) {
+            Hero hero = (Hero) target;
+
+            int points = hero.pointsInTalent(Talent.UNENCUMBERED_SPIRIT);
+
+            if (hero.belongings.armor() != null){
+                if (hero.belongings.armor().tier <= 1 && points >= 3){
+                    enGainMulti += 1.00f;
+                } else if (hero.belongings.armor().tier <= 2 && points >= 2){
+                    enGainMulti += 0.75f;
+                } else if (hero.belongings.armor().tier <= 3 && points >= 1){
+                    enGainMulti += 0.50f;
+                }
+            }
+
+            if (hero.belongings.weapon() instanceof MeleeWeapon
+                    && (hero.buff(RingOfForce.BrawlersStance.class) == null
+                    || !hero.buff(RingOfForce.BrawlersStance.class).active)){
+                if (((MeleeWeapon) hero.belongings.weapon()).tier <= 1 && points >= 3){
+                    enGainMulti += 1.00f;
+                } else if (hero.belongings.armor().tier == 2 + Dungeon.cycle*5){
+                    enGainMulti += 0.75f;
+                } else if (hero.belongings.armor().tier == 3 + Dungeon.cycle*5){
+                    enGainMulti += 0.50f;
+                }
+            }
+
+        }
+        energyGain *= enGainMulti;
+
+        energy = Math.min(energy+energyGain, energyCap());
+
+        if (energy > 0 && cooldown == 0){
+            ActionIndicator.setAction(this);
+        }
+        BuffIndicator.refreshHero();
+    }
+
+    //10 at base, 20 at level 30
+    public int energyCap(){
+        return (int) GameMath.gate(10, 5 + Dungeon.hero.lvl / 2, 100);
+    }
+
+    public void abilityUsed( KillEvolutionAbility abil ){
+        energy -= abil.energyCost();
+
+        if (cooldown > 0 || energy < 1){
+            ActionIndicator.clearAction(this);
+        } else {
+            ActionIndicator.refresh();
+        }
+        BuffIndicator.refreshHero();
+    }
+
+    public boolean abilitiesEmpowered( Hero hero ){
+        //100%/85%/70% energy at +1/+2/+3
+        return energy/energyCap() >= 0.7f;
+    }
+
+    @Override
+    public String actionName() {
+        return Messages.get(this, "action");
+    }
+
+    @Override
+    public int actionIcon() {
+        return HeroIcon.COMBO;
+    }
+
+    @Override
+    public void detach() {
+        super.detach();
+        ActionIndicator.clearAction(this);
+    }
+    @Override
+    public Visual secondaryVisual() {
+        BitmapText txt = new BitmapText(PixelScene.pixelFont);
+        txt.text( Integer.toString((int)energy) );
+        txt.hardlight(CharSprite.POSITIVE);
+        txt.measure();
+        return txt;
+    }
+
+    @Override
+    public int indicatorColor() {
+        if (abilitiesEmpowered(Dungeon.hero)){
+            return 0xAAEE22;
+        } else {
+            return 0xA08840;
+        }
+    }
+
+    @Override
+    public boolean usable() {
+        return cooldown == 0 && energy >= 1;
+    }
 
     @Override
     public void doAction() {
+        GameScene.show(new WndKillEvolutionAbilities(this));
+    }
+
+    public static abstract class KillEvolutionAbility {
+
+        public static KillEvolutionAbility[] abilities = new KillEvolutionAbility[]{
+                new InvisibleDash(),
+                new PhysicallyEmpowered()
+        };
+
+        public String name(){
+            return Messages.get(this, "name");
+        }
+
+        public String desc(){
+            if (Buff.affect(Dungeon.hero, KillEvolution.class).abilitiesEmpowered(Dungeon.hero)){
+                return Messages.get(this, "empower_desc");
+            } else {
+                return Messages.get(this, "desc");
+            }
+        }
+
+        public abstract int energyCost();
+
+        public boolean usable(KillEvolution buff){
+            return buff.energy >= energyCost();
+        }
+
+        public String targetingPrompt(){
+            return null; //return a string if uses targeting
+        }
+
+        public abstract void doAbility(Hero hero, Integer target );
+
+        public static class KillInvisibleAbility extends Invisibility {
+            @Override
+            public int icon() {
+                return BuffIndicator.NONE;
+            }
+        }
+
+        public static class InvisibleDash extends KillEvolutionAbility {
+
+            @Override
+            public int energyCost() {
+                return 3;
+            }
+
+            @Override
+            public String targetingPrompt() {
+                return Messages.get(this, "prompt");
+            }
+
+            @Override
+            public void doAbility(Hero hero, Integer target) {
+                if (target == null || target == -1){
+                    return;
+                }
+
+                int range = 4;
+                if (Buff.affect(hero, KillEvolution.class).abilitiesEmpowered(hero)){
+                    range += 4;
+                }
+
+                if (Dungeon.hero.rooted){
+                    PixelScene.shake( 1, 1f );
+                    GLog.w(Messages.get(MeleeWeapon.class, "ability_target_range"));
+                    return;
+                }
+
+                if (Dungeon.level.distance(hero.pos, target) > range){
+                    GLog.w(Messages.get(MeleeWeapon.class, "ability_target_range"));
+                    return;
+                }
+
+                if (Actor.findChar(target) != null){
+                    GLog.w(Messages.get(MeleeWeapon.class, "ability_occupied"));
+                    return;
+                }
+
+                Ballistica dash = new Ballistica(hero.pos, target, Ballistica.PROJECTILE);
+
+                if (!dash.collisionPos.equals(target)
+                        || (Dungeon.level.solid[target] && !Dungeon.level.passable[target])){
+                    GLog.w(Messages.get(MeleeWeapon.class, "ability_target_range"));
+                    return;
+                }
+
+                hero.busy();
+                Sample.INSTANCE.play(Assets.Sounds.MISS);
+                hero.sprite.emitter().start(Speck.factory(Speck.JET), 0.01f, Math.round(4 + 2*Dungeon.level.trueDistance(hero.pos, target)));
+                hero.sprite.jump(hero.pos, target, 0, 0.1f, new Callback() {
+                    @Override
+                    public void call() {
+                        if (Dungeon.level.map[hero.pos] == Terrain.OPEN_DOOR) {
+                            Door.leave( hero.pos );
+                        }
+                        hero.pos = target;
+                        Dungeon.level.occupyCell(hero);
+                        hero.next();
+                    }
+                });
+
+                Buff.affect(hero, KillEvolution.class).abilityUsed(this);
+                Buff.affect(hero, KillInvisibleAbility.class, 1f);
+            }
+        }
+
+        public static class PhysicallyEmpowered extends KillEvolutionAbility {
+
+            @Override
+            public int energyCost() {
+                return 3;
+            }
+
+            @Override
+            public void doAbility(Hero hero, Integer target) {
+
+                hero.sprite.emitter().start(Speck.factory(Speck.UP), 0.01f, 2);
+                if (Buff.affect(Dungeon.hero, KillEvolution.class).abilitiesEmpowered(Dungeon.hero)) {
+                    Buff.affect(hero, PhysicalEmpower.class).set(2, 10);
+                } else {
+                    Buff.affect(hero, PhysicalEmpower.class).set(4, 10);
+                }
+                Buff.affect(hero, KillEvolution.class).abilityUsed(this);
+
+            }
+        }
 
     }
 }

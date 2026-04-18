@@ -92,6 +92,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Lucky;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Longsword;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.Dart;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.traits.InternalKillsThreshold;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.ArenaLevel;
@@ -870,6 +871,10 @@ public abstract class Mob extends Char {
 				if (Dungeon.hero.isSubclass(HeroSubClass.MONK)){
 					Buff.affect(Dungeon.hero, MonkEnergy.class).gainEnergy(this);
 				}
+
+                if (Dungeon.hero.belongings.weapon instanceof InternalKillsThreshold){
+                    Buff.affect(Dungeon.hero, KillEvolution.class).gainEnergy(this);
+                }
 			}
 		}
 	}
@@ -917,10 +922,6 @@ public abstract class Mob extends Char {
 					Buff.affect(Dungeon.hero, Talent.LethalHasteCooldown.class, 100f);
 					Buff.affect(Dungeon.hero, GreaterHaste.class).set(2 + 2*Dungeon.hero.pointsInTalent(Talent.LETHAL_HASTE));
 				}
-
-                if (Dungeon.hero.buff(KillEvolution.class) != null) {
-                    Dungeon.hero.buff(KillEvolution.class).internalKills++;
-                }
 			}
 
 		}

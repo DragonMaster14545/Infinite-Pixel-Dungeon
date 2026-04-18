@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.traits.InternalKillsThreshold;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 
@@ -75,6 +76,9 @@ public abstract class AllyBuff extends Buff{
 			if (hero.isSubclass(HeroSubClass.MONK)){
 				Buff.affect(hero, MonkEnergy.class).gainEnergy(enemy);
 			}
+            if (hero.belongings.weapon instanceof InternalKillsThreshold){
+                Buff.affect(hero, KillEvolution.class).gainEnergy(enemy);
+            }
 		}
 	}
 
