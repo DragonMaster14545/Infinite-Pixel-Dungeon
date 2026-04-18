@@ -106,7 +106,7 @@ public class PsycheChest extends Item {
     }
 
     public static long neededLevel(){
-        long neededLevel = 100 + ((100L ^ (Dungeon.cycle + 1)) * Dungeon.cycle);
+        long neededLevel = 45 + ((45 ^ (Dungeon.cycle + 1)) * Dungeon.cycle);
         if (Dungeon.isChallenged(Challenges.NO_SCROLLS)){
             neededLevel *= 2.5f;
         }

@@ -92,7 +92,8 @@ public class InfPDChanges {
                         "_-_ Examination Parchment no longer detach action indicator based buffs\n" +
                         "_-_ Added an option for strength and luck potions and elixir of divine inspiration to be gulped all at once\n" +
                         "_-_ Stone of Empowerment now damages the target instead of corroding it\n" +
-                        "_-_ Added _Frostbite_ glyph, which nullifies the chilled and frosting effects"
+                        "_-_ Added _Frostbite_ glyph, which nullifies the chilled and frosting effects\n" +
+                        "_-_ Lowered requirements of Dark Fate Lock to 45 (min), from 100 (min)"
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
