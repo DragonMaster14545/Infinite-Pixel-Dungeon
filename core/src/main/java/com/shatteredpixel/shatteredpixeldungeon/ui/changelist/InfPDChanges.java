@@ -65,7 +65,10 @@ public class InfPDChanges {
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Upcoming: v0.1.9",
-                "In the next update, we will try to add new items, and possibly adding new mechanics to the game!\n"
+                "In the next update, we will try to add new items, and possibly adding new mechanics to the game!"
+        ));
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.WEAPON_HOLDER), "Upcoming: Kill Threshold Abilities",
+                "When killing an enemy with a weapon that is associated with kill counter buff, you will gain the power to do dashes and empowering your weapons."
         ));
 
         changes = new ChangeInfo("InfPD-0.1.9", true, "");
