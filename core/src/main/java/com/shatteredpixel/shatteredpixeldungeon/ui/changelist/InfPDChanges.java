@@ -91,7 +91,8 @@ public class InfPDChanges {
                 "_-_ The items tab in ranking window is now scrollable\n" +
                         "_-_ Examination Parchment no longer detach action indicator based buffs\n" +
                         "_-_ Added an option for strength and luck potions and elixir of divine inspiration to be gulped all at once\n" +
-                        "_-_ Stone of Empowerment now damages the target instead of corroding it"
+                        "_-_ Stone of Empowerment now damages the target instead of corroding it\n" +
+                        "_-_ Added _Frostbite_ glyph, which nullifies the chilled and frosting effects"
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
