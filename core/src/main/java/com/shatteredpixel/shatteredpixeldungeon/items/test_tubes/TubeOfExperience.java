@@ -26,6 +26,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.test_tubes;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 
 public class TubeOfExperience extends Tubes {
 
@@ -39,6 +40,7 @@ public class TubeOfExperience extends Tubes {
 	public void apply( Hero hero ) {
 		identify();
 		hero.earnExp(10L * hero.lvl, TubeOfExperience.class);
+        GLog.h("You have gained experience.");
 	}
 	
 	@Override

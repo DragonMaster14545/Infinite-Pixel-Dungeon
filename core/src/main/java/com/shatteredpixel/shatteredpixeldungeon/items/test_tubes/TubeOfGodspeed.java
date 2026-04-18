@@ -36,6 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Overload;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Image;
 
 public class TubeOfGodspeed extends Tubes {
@@ -50,6 +51,7 @@ public class TubeOfGodspeed extends Tubes {
 	public void apply( Hero hero ) {
 		identify();
 		Buff.affect(hero, Godspeed.class, Godspeed.DURATION);
+        GLog.h("You are faster now!");
 	}
 
 	@Override

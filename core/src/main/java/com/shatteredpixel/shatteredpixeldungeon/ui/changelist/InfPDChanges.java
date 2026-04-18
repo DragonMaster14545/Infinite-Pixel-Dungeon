@@ -93,7 +93,8 @@ public class InfPDChanges {
                         "_-_ Added an option for strength and luck potions and elixir of divine inspiration to be gulped all at once\n" +
                         "_-_ Stone of Empowerment now damages the target instead of corroding it\n" +
                         "_-_ Added _Frostbite_ glyph, which nullifies the chilled and frosting effects\n" +
-                        "_-_ Lowered requirements of Dark Fate Lock to 45 (min), from 100 (min)"
+                        "_-_ Lowered requirements of Dark Fate Lock to 45 (min), from 100 (min)\n" +
+                        "_-_ Added a log message when drinking Tube of Experience and Tube of Godspeed"
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
