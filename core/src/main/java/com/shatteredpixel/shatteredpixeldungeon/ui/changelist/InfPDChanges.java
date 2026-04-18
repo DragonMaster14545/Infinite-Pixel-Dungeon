@@ -99,7 +99,8 @@ public class InfPDChanges {
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Nerfed level-up mechanics of Examination Parchment\n" +
-                        "_-_ Increased the chances of increased limits of Galactic enchantment"
+                        "_-_ Increased the chances of increased limits of Galactic enchantment\n" +
+                        "_-_ Increased max cap of Ring of Elements to 99% elemental resistance"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
