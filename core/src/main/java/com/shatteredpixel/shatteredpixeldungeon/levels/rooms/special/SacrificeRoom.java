@@ -92,7 +92,14 @@ public class SacrificeRoom extends SpecialRoom {
 
 		//if it isn't already cursed, give it a free upgrade
 		if (!prize.cursed){
-			prize.upgrade();
+            prize.upgrade();
+
+            //more upgrades for early game
+            for (int i = 0; i < Dungeon.Int(5) + 1; i++) {
+                if (Random.Float() <= 0.25f) {
+                    prize.upgrade();
+                }
+            }
 			//curse the weapon, unless it has a glyph
 			if (!prize.hasGoodEnchant()){
 				prize.enchant(Weapon.Enchantment.randomCurse());
