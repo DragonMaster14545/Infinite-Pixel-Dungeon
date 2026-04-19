@@ -1476,8 +1476,8 @@ if (bundle.contains( "respawner" )){
 
 	}
 
-	public boolean isLevelExplored( int depth ){
-		return false;
+	public float levelExplorePercent( int depth ){
+		return 0;
 	}
 
 	public int distance( int a, int b ) {
