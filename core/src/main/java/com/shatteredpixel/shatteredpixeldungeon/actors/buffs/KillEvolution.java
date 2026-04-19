@@ -515,8 +515,14 @@ public class KillEvolution extends Buff implements ActionIndicator.Action {
                 hero.sprite.emitter().start(Speck.factory(Speck.UP), 0.01f, 2);
                 if (Buff.affect(Dungeon.hero, KillEvolution.class).abilitiesEmpowered(Dungeon.hero)) {
                     hero.belongings.weapon.upgrade(2);
+                    if (hero.belongings.secondWep != null) {
+                        hero.belongings.secondWep.upgrade(2);
+                    }
                 } else {
                     hero.belongings.weapon.upgrade();
+                    if (hero.belongings.secondWep != null) {
+                        hero.belongings.secondWep.upgrade();
+                    }
                 }
                 Buff.affect(hero, KillEvolution.class).abilityUsed(this);
 
