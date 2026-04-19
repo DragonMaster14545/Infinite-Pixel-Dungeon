@@ -36,9 +36,15 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RipperDemon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.YogDzewa;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Chains;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Effects;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.AntiMagic;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.EtherealChains;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfForce;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses.Warmaster;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Door;
@@ -270,6 +276,8 @@ public class KillEvolution extends Buff implements ActionIndicator.Action {
         public static KillEvolutionAbility[] abilities = new KillEvolutionAbility[]{
                 new InvisibleDash(),
                 new PhysicallyEmpowered(),
+                new Chain(),
+                new WeaponUpgrade(),
                 new Immortalize()
         };
 
@@ -397,6 +405,118 @@ public class KillEvolution extends Buff implements ActionIndicator.Action {
                     Buff.affect(hero, PhysicalEmpower.class).set(4, 10);
                 } else {
                     Buff.affect(hero, PhysicalEmpower.class).set(2, 10);
+                }
+                Buff.affect(hero, KillEvolution.class).abilityUsed(this);
+
+            }
+        }
+
+        public static class Chain extends KillEvolutionAbility {
+
+            @Override
+            public String desc(){
+                if (Buff.affect(Dungeon.hero, KillEvolution.class).abilitiesEmpowered(Dungeon.hero)){
+                    return Messages.get(this, "desc");
+                } else {
+                    return Messages.get(this, "desc");
+                }
+            }
+
+            @Override
+            public String targetingPrompt() {
+                return "Choose a target";
+            }
+
+            @Override
+            public int energyCost() {
+                return 5;
+            }
+
+            @Override
+            public void doAbility(Hero hero, Integer target) {
+
+                if (target == null || target == -1){
+                    return;
+                }
+
+                final Ballistica chain = new Ballistica(hero.pos, target, Ballistica.STOP_TARGET);
+                if (Actor.findChar( chain.collisionPos ) != null){
+                    chainEnemy( chain, hero, Actor.findChar( chain.collisionPos ));
+                } else {
+                    GLog.w("No target");
+                    return;
+                }
+
+                Buff.affect(hero, KillEvolution.class).abilityUsed(this);
+
+            }
+
+            private void chainEnemy( Ballistica chain, final Hero hero, final Char enemy ){
+
+                if (enemy.properties().contains(Char.Property.IMMOVABLE)) {
+                    GLog.w( Messages.get(EtherealChains.class, "cant_pull") );
+                    return;
+                }
+
+                int bestPos = -1;
+                for (int i : chain.subPath(1, chain.dist)){
+                    //prefer to the earliest point on the path
+                    if (!Dungeon.level.solid[i]
+                            && Actor.findChar(i) == null
+                            && (!Char.hasProp(enemy, Char.Property.LARGE) || Dungeon.level.openSpace[i])){
+                        bestPos = i;
+                        break;
+                    }
+                }
+
+                if (bestPos == -1) {
+                    GLog.i(Messages.get(EtherealChains.class, "does_nothing"));
+                    return;
+                }
+
+                final int pulledPos = bestPos;
+
+                hero.busy();
+                Sample.INSTANCE.play( Assets.Sounds.CHAINS );
+                hero.sprite.parent.add(new Chains(hero.sprite.center(),
+                        enemy.sprite.center(),
+                        Effects.Type.ETHEREAL_CHAIN,
+                        new Callback() {
+                            public void call() {
+                                Actor.add(new Pushing(enemy, enemy.pos, pulledPos, new Callback() {
+                                    public void call() {
+                                        enemy.pos = pulledPos;
+
+                                        Invisibility.dispel(hero);
+                                        Talent.onArtifactUsed(hero);
+
+                                        Dungeon.level.occupyCell(enemy);
+                                        Dungeon.observe();
+                                        GameScene.updateFog();
+                                        hero.spendAndNext(1f);
+                                    }
+                                }));
+                                hero.next();
+                            }
+                        }));
+            }
+        }
+
+        public static class WeaponUpgrade extends KillEvolutionAbility {
+
+            @Override
+            public int energyCost() {
+                return 15;
+            }
+
+            @Override
+            public void doAbility(Hero hero, Integer target) {
+
+                hero.sprite.emitter().start(Speck.factory(Speck.UP), 0.01f, 2);
+                if (Buff.affect(Dungeon.hero, KillEvolution.class).abilitiesEmpowered(Dungeon.hero)) {
+                    hero.belongings.weapon.upgrade(2);
+                } else {
+                    hero.belongings.weapon.upgrade();
                 }
                 Buff.affect(hero, KillEvolution.class).abilityUsed(this);
 
