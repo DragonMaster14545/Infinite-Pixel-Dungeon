@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -695,6 +696,10 @@ public class GnollGeomancer extends Mob {
 							long dmg = Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(6), Dungeon.getCycleMultiplier(12));
 							ch.damage(dmg, new GnollGeomancer.Boulder());
 
+                            if (ch == Dungeon.hero){
+                                Statistics.questScores[2] -= 100;
+                            }
+
 							if (ch.isAlive()){
 								Buff.prolong( ch, Paralysis.class, ch instanceof GnollGuard ? 10 : 3 );
 							} else if (!ch.isAlive() && ch == Dungeon.hero) {
@@ -797,6 +802,9 @@ public class GnollGeomancer extends Mob {
 		@Override
 		public void affectChar(Char ch) {
 			long dmg = Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(6), Dungeon.getCycleMultiplier(12));
+            if (ch == Dungeon.hero){
+                Statistics.questScores[2] -= 100;
+            }
 			ch.damage(dmg, this);
 			if (ch.isAlive()) {
 				Buff.prolong(ch, Paralysis.class, ch instanceof GnollGuard ? 10 : 3);

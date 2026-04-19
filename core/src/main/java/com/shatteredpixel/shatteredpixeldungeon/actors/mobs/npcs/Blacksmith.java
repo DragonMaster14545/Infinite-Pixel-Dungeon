@@ -677,7 +677,7 @@ public class Blacksmith extends NPC {
 
 			if (bossBeaten) favor += 1500;
 
-			Statistics.questScores[2] = favor;
+			Statistics.questScores[2] += favor;
 		}
 
 		public static boolean rewardsAvailable(){
