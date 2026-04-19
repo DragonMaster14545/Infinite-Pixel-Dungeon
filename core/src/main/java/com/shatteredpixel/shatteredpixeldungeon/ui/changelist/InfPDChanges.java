@@ -67,9 +67,6 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Upcoming: v0.1.9",
                 "In the next update, we will try to add new items, and possibly adding new mechanics to the game!"
         ));
-        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.WEAPON_HOLDER), "Upcoming: Kill Threshold Abilities",
-                "When killing an enemy with a weapon that is associated with kill counter buff, you will gain the power to do dashes and empowering your weapons."
-        ));
 
         changes = new ChangeInfo("InfPD-0.1.9", true, "");
         changes.hardlight(0x00FFFF);
@@ -78,6 +75,11 @@ public class InfPDChanges {
         changes = new ChangeInfo("C", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.STARHAMMER), "Kill Threshold Abilities",
+                "When killing an enemy with a weapon that is associated with kill counter buff, you will gain the power to do dashes and empowering your weapons.\n\n" +
+                        "Blacksmith Weapons now has this ability, which is also part of their small rework!"
+        ));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.STATS), "Exploration and Quest Score",
                 "Implemented score adjustments on ShPD!\n\n" +

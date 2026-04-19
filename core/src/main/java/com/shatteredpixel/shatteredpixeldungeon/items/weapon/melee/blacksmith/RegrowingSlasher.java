@@ -36,6 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.LeafParticle;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.traits.InternalKillsThreshold;
 import com.shatteredpixel.shatteredpixeldungeon.plants.*;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -46,7 +47,7 @@ import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
 
-public class RegrowingSlasher extends BlacksmithWeapon {
+public class RegrowingSlasher extends BlacksmithWeapon implements InternalKillsThreshold {
     {
         image = ItemSpriteSheet.GROWTHSWORD;
         hitSound = Assets.Sounds.HIT_SLASH;

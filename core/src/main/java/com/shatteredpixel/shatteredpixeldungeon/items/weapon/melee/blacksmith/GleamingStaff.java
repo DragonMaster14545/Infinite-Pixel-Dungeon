@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.GambleBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.IdealBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.TreasureBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.traits.InternalKillsThreshold;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -43,7 +44,7 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
-public class GleamingStaff extends BlacksmithWeapon {
+public class GleamingStaff extends BlacksmithWeapon implements InternalKillsThreshold  {
 
     {
         image = ItemSpriteSheet.GREEDSTAFF;

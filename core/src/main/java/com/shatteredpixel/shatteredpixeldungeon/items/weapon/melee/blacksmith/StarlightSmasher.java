@@ -36,6 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.traits.InternalKillsThreshold;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.ConeAOE;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -50,7 +51,7 @@ import com.watabou.utils.*;
 
 import java.util.ArrayList;
 
-public class StarlightSmasher extends BlacksmithWeapon {
+public class StarlightSmasher extends BlacksmithWeapon implements InternalKillsThreshold {
 
     {
         image = ItemSpriteSheet.STARHAMMER;

@@ -42,6 +42,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SmokeParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.traits.InternalKillsThreshold;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -52,7 +53,7 @@ import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
-public class FiringSnapper extends BlacksmithWeapon {
+public class FiringSnapper extends BlacksmithWeapon implements InternalKillsThreshold {
     {
         image = ItemSpriteSheet.FIRINGWHIP;
         hitSound = Assets.Sounds.HIT;
