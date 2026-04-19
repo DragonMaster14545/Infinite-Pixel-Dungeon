@@ -784,6 +784,11 @@ public class InterlevelScene extends PixelScene {
 
 		Level level = Dungeon.newLevel();
 		Dungeon.switchLevel( level, level.entrance() );
+
+        //need to reset key replacement tracking as well
+        if (Dungeon.hero.buff(SkeletonKey.KeyReplacementTracker.class) != null){
+            Dungeon.hero.buff(SkeletonKey.KeyReplacementTracker.class).clearDepth();
+        }
 	}
 	
 	@Override

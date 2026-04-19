@@ -85,6 +85,10 @@ public class InfPDChanges {
                         "_Quest Score_ remains unchanged from the patch on v3.1.0 of ShPD"
         ));
 
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
+                "_-_ Fixed Skeleton key not properly clearing keys on depth\n"
+        ));
+
         changes = new ChangeInfo("B", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);

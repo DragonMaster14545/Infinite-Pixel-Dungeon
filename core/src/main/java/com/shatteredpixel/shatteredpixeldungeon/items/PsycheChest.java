@@ -173,11 +173,6 @@ public class PsycheChest extends Item {
             //Dungeon.resetDamage *= 1.045d;
             Game.switchScene(InterlevelScene.class);
             Catalog.countUse(getClass());
-
-            //need to reset key replacement tracking as well
-            if (Dungeon.hero.buff(SkeletonKey.KeyReplacementTracker.class) != null){
-                Dungeon.hero.buff(SkeletonKey.KeyReplacementTracker.class).clearDepth();
-            }
         } else if (action.contains(AC_RESET) && (hero.HP < Math.round(hero.HT * 0.45d))){
             GLog.w( Messages.get(this, "no_reset") );
         }
