@@ -75,6 +75,16 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes = new ChangeInfo("C", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton( new ChangeButton(Icons.get(Icons.STATS), "Exploration and Quest Score",
+                "Implemented score adjustments on ShPD!\n\n" +
+                        "_Exploration Score_ - For each floor, score is reduced to 75%/50%/25%/5%/0% for 1/2/3/4/5+ missed rooms.\n\n" +
+                        "_Quest Score_ remains unchanged from the patch on v3.1.0 of ShPD"
+        ));
+
         changes = new ChangeInfo("B", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
