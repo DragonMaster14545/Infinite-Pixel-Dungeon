@@ -3,8 +3,8 @@
 -keepnames class com.watabou.** { *; }
 
 # keep members of classes that are instantiated via reflection
--keepclassmembers class * extends com.watabou.glscripts.Script
--keepclassmembers class * implements com.watabou.utils.Bundlable
+-keep class * extends com.watabou.glscripts.Script { *; }
+-keep class * implements com.watabou.utils.Bundlable { *; }
 
 # libGDX stuff
 -dontwarn android.support.**
