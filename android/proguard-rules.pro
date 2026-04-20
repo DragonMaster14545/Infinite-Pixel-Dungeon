@@ -3,8 +3,9 @@
 -keepnames class com.watabou.** { *; }
 
 # keep members of classes that are instantiated via reflection
--keep class * extends com.watabou.glscripts.Script
--keep class * implements com.watabou.utils.Bundlable
+-keep class * extends com.watabou.noosa.Gizmo { *; }
+-keepnames class com.shatteredpixel.** { *; }
+-keepnames class com.watabou.** { *; }
 
 # libGDX stuff
 -dontwarn android.support.**
@@ -16,20 +17,11 @@
 # needed for libGDX skin reflection used in text fields. Perhaps just don't use skin?
 -keep class com.badlogic.gdx.graphics.Color { *; }
 -keep class com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle { *; }
+-keepnames class com.badlogic.gdx.scenes.scene2d.ui.TextField { *; }
 
 # needed for libGDX controllers
 -keep class com.badlogic.gdx.controllers.android.AndroidControllers { *; }
 
 -keepclassmembers class com.badlogic.gdx.backends.android.AndroidInput* {
     <init>(com.badlogic.gdx.Application, android.content.Context, java.lang.Object, com.badlogic.gdx.backends.android.AndroidApplicationConfiguration);
-}
-
--keepclassmembers class com.badlogic.gdx.physics.box2d.World {
-    boolean contactFilter(long, long);
-    void    beginContact(long);
-    void    endContact(long);
-    void    preSolve(long, long);
-    void    postSolve(long, long);
-    boolean reportFixture(long);
-    float   reportRayFixture(long, float, float, float, float, float);
 }
