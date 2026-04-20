@@ -4,8 +4,8 @@
 
 # keep members of classes that are instantiated via reflection
 -keep class * extends com.watabou.noosa.Gizmo { *; }
--keepnames class com.shatteredpixel.** { *; }
--keepnames class com.watabou.** { *; }
+-keep class * extends com.watabou.glscripts.Script { *; }
+-keep class * implements com.watabou.utils.Bundlable { *; }
 
 # libGDX stuff
 -dontwarn android.support.**
