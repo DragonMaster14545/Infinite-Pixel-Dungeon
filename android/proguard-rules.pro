@@ -2,10 +2,15 @@
 -keepnames class com.shatteredpixel.** { *; }
 -keepnames class com.watabou.** { *; }
 
-# keep members of classes that are instantiated via reflection
+# keep classes that are instantiated via reflection
 -keep class * extends com.watabou.noosa.Gizmo { *; }
 -keep class * extends com.watabou.glscripts.Script { *; }
 -keep class * implements com.watabou.utils.Bundlable { *; }
+
+# retained to support meaningful stack traces
+# note that the mapping file must be referenced in order to make sense of line numbers
+# mapping file can be found in core/build/outputs/mapping after running a release build
+-keepattributes SourceFile,LineNumberTable
 
 # libGDX stuff
 -dontwarn android.support.**

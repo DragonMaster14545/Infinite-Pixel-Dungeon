@@ -21,7 +21,7 @@ allprojects {
         appName = 'Infinite Pixel Dungeon'
         appPackageName = 'com.dragonmaster14545.infinitepixeldungeon.com'
 
-        appVersionCode = 689
+        appVersionCode = 690
         appVersionName = 'InfPD-0.1.9c'
 
         appJavaCompatibility = JavaVersion.VERSION_11
@@ -40,7 +40,7 @@ allprojects {
         //maven { url 'https://jitpack.io'}
         google()
         mavenCentral()
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        maven { url 'https://central.sonatype.com/repository/maven-snapshots/' }
     }
 
 }
