@@ -70,6 +70,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Summon
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Trihit;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Unstable;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Vampiric;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.DarkBlade;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.RunicBlade;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Scimitar;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
@@ -518,6 +519,11 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 			if (attacker.buff(RunicBlade.RunicSlashTracker.class) != null){
 				multi += attacker.buff(RunicBlade.RunicSlashTracker.class).boost;
 				attacker.buff(RunicBlade.RunicSlashTracker.class).detach();
+			}
+
+			if (attacker.buff(DarkBlade.RunicSlashTracker.class) != null){
+				multi += attacker.buff(DarkBlade.RunicSlashTracker.class).boost;
+				attacker.buff(DarkBlade.RunicSlashTracker.class).detach();
 			}
 
 			if (attacker.buff(ElementalStrike.DirectedPowerTracker.class) != null){
