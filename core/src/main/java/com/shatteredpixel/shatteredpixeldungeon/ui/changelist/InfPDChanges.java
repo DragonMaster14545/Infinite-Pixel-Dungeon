@@ -87,8 +87,12 @@ public class InfPDChanges {
                         "_Quest Score_ remains unchanged from the patch on v3.1.0 of ShPD"
         ));
 
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Nerfed Elixir of Divine Inspiration's crafting cost (from 45, to 70), and its effect (from 7% compounded, to 1.5% compounded) per stack"
+        ));
+
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
-                "_-_ Fixed Skeleton key not properly clearing keys on depth\n"
+                "_-_ Fixed Skeleton key not properly clearing keys on depth"
         ));
 
         changes = new ChangeInfo("B", false, "");

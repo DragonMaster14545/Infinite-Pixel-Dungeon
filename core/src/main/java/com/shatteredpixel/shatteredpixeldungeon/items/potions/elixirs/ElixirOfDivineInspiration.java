@@ -85,7 +85,7 @@ public class ElixirOfDivineInspiration extends Elixir {
         @Override
         public String desc() {
             return Messages.get(this, "desc",
-                    Math.round((Math.pow(1.07, stacks) - 1f)*100));
+                    Math.round((Math.pow(1.015, stacks) - 1f)*100));
         }
 
         @Override
@@ -114,7 +114,7 @@ public class ElixirOfDivineInspiration extends Elixir {
 			inputs =  new Class[]{PotionOfExperience.class, Alchemize.class};
 			inQuantity = new int[]{1, 1};
 			
-			cost = 45;
+			cost = 70;
 			
 			output = ElixirOfDivineInspiration.class;
 			outQuantity = 3;

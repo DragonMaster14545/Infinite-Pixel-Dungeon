@@ -905,7 +905,7 @@ public abstract class Mob extends Char {
         }
 
         if (Dungeon.hero.buff(ElixirOfDivineInspiration.DivineInspiration.class) != null) {
-            EXP = Math.round(EXP * Math.pow(1.07f, Dungeon.hero.buff(ElixirOfDivineInspiration.DivineInspiration.class).stacks));
+            EXP = Math.round(EXP * Math.pow(1.015f, Dungeon.hero.buff(ElixirOfDivineInspiration.DivineInspiration.class).stacks));
         }
 
 		if (alignment == Alignment.ENEMY){
