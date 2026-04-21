@@ -373,7 +373,7 @@ public class Item implements Bundlable {
 		GameScene.show( new WndTextInput( "Rename","", item.customName, 100, false, "Rename", "Revert" ) {
 			@Override
 			public void onSelect( boolean positive, String text ) {
-				if (text != null && positive && !text.equals(item.name())) {
+				if (text != null && positive && !text.equals(item.trueName())) {
 					curItem.customName = text;
 				} else {
 					curItem.customName = "";
