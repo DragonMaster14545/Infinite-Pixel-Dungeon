@@ -76,6 +76,11 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.WEAPON_HOLDER), "New Enchantments!",
+                "In this update, we added a new early to mid-game enchantments that will help you through your run!\n\n" +
+                        "_- Scorching Enchantment:_ deals additional damage when the attacker deals damage more than 7% of their enemies' max HP (an indicator included)"
+        ));
+
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Made a shortcut button when Sack of Holding is bought or it is in your inventory\n"
         ));

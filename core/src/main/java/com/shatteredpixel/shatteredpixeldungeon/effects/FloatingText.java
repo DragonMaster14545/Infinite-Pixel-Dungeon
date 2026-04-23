@@ -79,6 +79,7 @@ public class FloatingText extends RenderedTextBlock {
 	public static int PHYS_DMG_NO_BLOCK = 1;
 	public static int MAGIC_DMG         = 2;
 	public static int PICK_DMG          = 3;
+    public static int SCORCH_DMG          = 4;
 
 	//debuff/dot damage icons
 	public static int HUNGER    = 5;
