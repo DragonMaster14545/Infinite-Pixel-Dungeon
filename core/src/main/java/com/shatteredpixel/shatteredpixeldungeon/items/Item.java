@@ -241,10 +241,10 @@ public class Item implements Bundlable {
 		ArrayList<String> actions = new ArrayList<>();
 		actions.add( AC_DROP );
 		actions.add( AC_THROW );
-        if (Dungeon.hero.belongings.getItem(SackOfHolding.class) != null) {
-            if (!canCollectWithSOH) actions.add( AC_HOLD_WITH_SOH );
-            else actions.add( AC_DHOLD_WITH_SOH );
-        }
+        //if (Dungeon.hero.belongings.getItem(SackOfHolding.class) != null) {
+        //    if (!canCollectWithSOH) actions.add( AC_HOLD_WITH_SOH );
+        //    else actions.add( AC_DHOLD_WITH_SOH );
+        //}
 		return actions;
 	}
 

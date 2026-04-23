@@ -3,6 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfUnstable;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -22,6 +23,7 @@ import com.watabou.noosa.ui.Component;
 public class ItemIconTitle extends IconTitle {
     private IconButton aimButton = null;
     private IconButton renameButton = null;
+    private IconButton sackButton = null;
 
     public ItemIconTitle(Item item, WndUseItem window ) {
         super(item);
@@ -61,9 +63,32 @@ public class ItemIconTitle extends IconTitle {
                 add(aimButton);
             }
 
+            if (Dungeon.hero.belongings.getItem(SackOfHolding.class) != null) {
+                sackButton = new IconButton(new ItemSprite(ItemSpriteSheet.CHEST, item.canCollectWithSOH ? new ItemSprite.Glowing(0xFFFFFF, 1.5f) : null)) {
+                    @Override
+                    protected void onClick() {
+                        window.hide();
+                        if (window.owner != null && window.owner.parent != null) {
+                            window.owner.hide();
+                        }
+                        if (Dungeon.hero.isAlive() && Dungeon.hero.belongings.contains(item)){
+                            if (!item.canCollectWithSOH) item.execute( Dungeon.hero, Item.AC_HOLD_WITH_SOH );
+                            else item.execute( Dungeon.hero, Item.AC_DHOLD_WITH_SOH  );
+                        }
+                        Item.updateQuickslot();
+                    }
+                };
+                add(sackButton);
+            }
+
 
         }
     }//vjm-dww-rxl
+
+    public ItemSprite.Glowing glowing() {
+        return new ItemSprite.Glowing( 0x0000FF );
+    }
+
     private static class Notes extends Window {
         private static final int WIDTH_MIN=120, WIDTH_MAX=220;
         ScrollPane scrollPane;
@@ -126,6 +151,11 @@ public class ItemIconTitle extends IconTitle {
             aimButton.setRect(x + width - shift, y, 16, 16);
             shift += 16 + 2;
             PixelScene.align(aimButton);
+        }
+        if (sackButton != null) {
+            sackButton.setRect(x + width - shift, y, 16, 16);
+            shift += 16 + 2;
+            PixelScene.align(sackButton);
         }
 
 

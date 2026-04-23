@@ -76,6 +76,10 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ Made a shortcut button when Sack of Holding is bought or it is in your inventory\n"
+        ));
+
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
                 "_-_ Fixed renamed items' name disappears when the same custom name is set"
         ));
