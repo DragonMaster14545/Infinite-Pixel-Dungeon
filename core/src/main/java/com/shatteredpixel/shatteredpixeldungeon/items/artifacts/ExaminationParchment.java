@@ -382,7 +382,7 @@ public class ExaminationParchment extends Artifact {
                 valUsing += 2 + item.level()/2f + item.quantity();
                 chargesUsed++;
             }
-            return chargesUsed;
+            return (int) (chargesUsed + (availableEnergy() * 0.05f));
         }
 
         public void removeBuff(Buff buff) {
@@ -414,7 +414,7 @@ public class ExaminationParchment extends Artifact {
             if (buff instanceof Hunger) {
                 chargesUsed = 1500;
             }
-            return chargesUsed;
+            return (int) (chargesUsed + (availableEnergy() * 0.05f));
         }
 
         public long availableEnergy(){

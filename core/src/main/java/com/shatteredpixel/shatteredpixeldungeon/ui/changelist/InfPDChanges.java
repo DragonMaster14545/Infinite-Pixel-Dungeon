@@ -86,6 +86,10 @@ public class InfPDChanges {
                         "_- Racked Enchantment:_ deals enormous damage on the next hit when reaching 15 stacks of hits on the enemies"
         ));
 
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Nerfed charge use of Examination Parchment, now takes an additional 5% of available energy"
+        ));
+
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Made a shortcut button when Sack of Holding is bought or it is in your inventory\n" +
                         "_-_ Loots, Traps and Enemies has been reduced drastically, and Rooms reduced by 25%\n" +
