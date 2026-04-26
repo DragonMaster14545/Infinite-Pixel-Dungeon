@@ -87,7 +87,8 @@ public class InfPDChanges {
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
-                "_-_ Fixed renamed items' name disappears when the same custom name is set"
+                "_-_ Fixed renamed items' name disappears when the same custom name is set\n" +
+                        "_-_ Fixed typos in Utility bag and Scroll of Insurgence"
         ));
 
         changes = new ChangeInfo("C", false, "");
