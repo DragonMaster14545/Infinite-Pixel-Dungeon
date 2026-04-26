@@ -81,7 +81,7 @@ public abstract class Scroll extends Item {
 	
 	protected static ItemStatusHandler<Scroll> handler;
 	
-	protected String rune;
+	public String rune;
 
 	//affects how strongly on-scroll talents trigger from this scroll
 	protected float talentFactor = 1;

@@ -123,7 +123,7 @@ public class Potion extends Item {
 	
 	protected static ItemStatusHandler<Potion> handler;
 	
-	protected String color;
+	public String color;
 
 	//affects how strongly on-potion talents trigger from this potion
 	protected float talentFactor = 1;

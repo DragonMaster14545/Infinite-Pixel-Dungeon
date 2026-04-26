@@ -93,7 +93,8 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Made a shortcut button when Sack of Holding is bought or it is in your inventory\n" +
                         "_-_ Loots, Traps and Enemies has been reduced drastically, and Rooms reduced by 25%\n" +
-                        "_-_ Elixir of Divine Inspiration has now a proper percentage format and no longer rounds off"
+                        "_-_ Elixir of Divine Inspiration has now a proper percentage format and no longer rounds off\n" +
+                        "_-_ Added Seedfinder based on ESPD"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",

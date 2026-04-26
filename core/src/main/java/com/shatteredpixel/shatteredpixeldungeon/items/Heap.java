@@ -87,6 +87,11 @@ Heap implements Bundlable {
 		TOMB,
 		SKELETON,
 		REMAINS,
+		STATUE,
+		GOLDEN_MIMIC,
+		CRYSTAL_MIMIC,
+		MIMIC,
+		CATALYST,
 		FOR_ARENA_SALE;
 
 		public boolean forSale(){
@@ -113,6 +118,7 @@ Heap implements Bundlable {
 		case SKELETON:
 			CellEmitter.center( pos ).start(Speck.factory(Speck.RATTLE), 0.1f, 3);
 			break;
+
 		default:
 		}
 		
@@ -448,6 +454,8 @@ Heap implements Bundlable {
 				return Messages.get(this, "tomb_desc");
 			case SKELETON:
 				return Messages.get(this, "skeleton_desc");
+			case CATALYST:
+				return Messages.get(this, "catalyst");
 			case REMAINS:
 				return Messages.get(this, "remains_desc");
 			default:

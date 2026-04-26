@@ -169,6 +169,9 @@ public class TitleScene extends PixelScene {
 		StyledButton btnSettings = new SettingsButton(GREY_TR, Messages.get(this, "settings"));
 		add(btnSettings);
 
+		StyledButton btnSeedfinder = new SeedfinderButton(GREY_TR, "Seedfinder");
+		add(btnSeedfinder);
+
 		StyledButton btnAbout = new StyledButton(GREY_TR, Messages.get(this, "about")){
 			@Override
 			protected void onClick() {
@@ -186,6 +189,7 @@ public class TitleScene extends PixelScene {
 		if (landscape()) {
 			btnPlay.setRect(title.x-50, topRegion+GAP, ((title.width()+100)/2)-1, BTN_HEIGHT);
 			align(btnPlay);
+			btnSeedfinder.setRect(btnPlay.right()+2, btnPlay.top(), btnPlay.width(), BTN_HEIGHT);
 			btnRankings.setRect(btnPlay.left(), btnPlay.bottom()+ GAP, (btnPlay.width()*.67f)-1, BTN_HEIGHT);
 			btnBadges.setRect(btnRankings.right()+2, btnRankings.top(), btnRankings.width(), BTN_HEIGHT);
 			btnNews.setRect(btnBadges.right()+2, btnBadges.top(), btnRankings.width(), BTN_HEIGHT);
@@ -195,7 +199,8 @@ public class TitleScene extends PixelScene {
 		} else {
 			btnPlay.setRect(title.x, topRegion+GAP, title.width(), BTN_HEIGHT);
 			align(btnPlay);
-			btnRankings.setRect(btnPlay.left(), btnPlay.bottom()+GAP, (btnPlay.width()/2)-1, BTN_HEIGHT);
+			btnSeedfinder.setRect(btnPlay.left(), btnPlay.bottom()+ GAP, btnPlay.width(), BTN_HEIGHT);
+			btnRankings.setRect(btnPlay.left(), btnSeedfinder.bottom()+GAP, (btnPlay.width()/2)-1, BTN_HEIGHT);
 			btnBadges.setRect(btnRankings.right()+2, btnRankings.top(), btnRankings.width(), BTN_HEIGHT);
 			btnNews.setRect(btnRankings.left(), btnRankings.bottom()+ GAP, btnRankings.width(), BTN_HEIGHT);
 			btnChanges.setRect(btnNews.right()+2, btnNews.top(), btnNews.width(), BTN_HEIGHT);
@@ -347,6 +352,20 @@ public class TitleScene extends PixelScene {
 		@Override
 		protected void onClick() {
 			ShatteredPixelDungeon.switchNoFade(SupporterScene.class);
+		}
+	}
+
+	private static class SeedfinderButton extends StyledButton{
+
+		public SeedfinderButton( Chrome.Type type, String label ){
+			super(type, label);
+			icon(Icons.get(Icons.MAGNIFY));
+			textColor(0xFF4242);
+		}
+
+		@Override
+		protected void onClick() {
+			ShatteredPixelDungeon.switchNoFade(SeedFinderScene.class);
 		}
 	}
 }
