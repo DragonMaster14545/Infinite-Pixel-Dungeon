@@ -76,6 +76,10 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.DARK_RUNIC), "New Weapon: Dark Blade",
+                "This tier 5 weapon can corrupt enemies (higher chance with Duelist's ability) and has higher max damage output than a normal runic blade"
+        ));
+
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.WEAPON_HOLDER), "New Enchantments!",
                 "In this update, we added a new early to mid-game enchantments that will help you through your run!\n\n" +
                         "_- Scorching Enchantment:_ deals additional damage when the attacker deals damage more than 7% of their enemies' max HP (an indicator included)\n" +

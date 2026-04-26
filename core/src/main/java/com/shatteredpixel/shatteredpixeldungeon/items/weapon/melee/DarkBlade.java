@@ -87,6 +87,16 @@ public class DarkBlade extends MeleeWeapon {
                 lvl * (tier()+2);
     }
 
+    @Override
+    public long proc(Char attacker, Char defender, long damage) {
+
+        if (Random.Float() <= 0.15f && attacker instanceof Hero) {
+            Corruption.corruptionHeal(defender);
+            AllyBuff.affectAndLoot((Mob) defender, (Hero) attacker, Corruption.class);
+        }
+
+        return super.proc(attacker, defender, damage);
+    }
 
     @Override
     public Emitter emitter() {
