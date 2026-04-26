@@ -46,6 +46,7 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.Random;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class ElixirOfDivineInspiration extends Elixir {
@@ -85,7 +86,7 @@ public class ElixirOfDivineInspiration extends Elixir {
         @Override
         public String desc() {
             return Messages.get(this, "desc",
-                    Math.round((Math.pow(1.015, stacks) - 1f)*100));
+                    new DecimalFormat("#.###").format((Math.pow(1.015, stacks) - 1f)*100));
         }
 
         @Override
