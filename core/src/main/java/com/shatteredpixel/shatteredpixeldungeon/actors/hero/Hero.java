@@ -279,7 +279,7 @@ public class Hero extends Char {
     public static String customHeroName = "";
 
 	public float getStandardRoomMultiplier() {
-		return 2f * StaircaseTotem.additionalRoomMulti();
+		return 1.5f * StaircaseTotem.additionalRoomMulti();
 	}
 	public float getSpecialRoomMultiplier() {
 		return getStandardRoomMultiplier()*0.5f;
@@ -294,13 +294,13 @@ public class Hero extends Char {
 		return 0.65f;
 	}
 	public float getMobMultiplier() {
-		return 4f * StaircaseTotem.additionalMobMulti();
+		return 2f * StaircaseTotem.additionalMobMulti();
 	}
 	public float getTrapMultiplier() {
-		return 4f;
+		return 2f;
 	}
 	public float getLootMultiplier() {
-		return 6f;
+		return 2f;
 	}
 
 	public Hero() {
