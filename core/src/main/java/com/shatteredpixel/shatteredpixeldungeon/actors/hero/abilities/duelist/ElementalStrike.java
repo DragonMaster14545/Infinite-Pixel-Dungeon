@@ -38,6 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
@@ -94,6 +95,8 @@ public class ElementalStrike extends ArmorAbility {
         effectTypes.put(Laserised.class,    MagicMissile.MAGIC_MISS_CONE);
         effectTypes.put(Summoner.class,     MagicMissile.MAGIC_MISS_CONE);
         effectTypes.put(Trihit.class,       MagicMissile.MAGIC_MISS_CONE);
+		effectTypes.put(Scorching.class,    MagicMissile.MAGIC_MISS_CONE);
+		effectTypes.put(Racked.class,       MagicMissile.MAGIC_MISS_CONE);
 
 		effectTypes.put(Annoying.class,     MagicMissile.SHADOW_CONE);
 		effectTypes.put(Displacing.class,   MagicMissile.SHADOW_CONE);
@@ -582,7 +585,42 @@ public class ElementalStrike extends ArmorAbility {
                     CellEmitter.get(guardianKnight.pos).burst(Speck.factory(Speck.EVOKE), 4);
                 }
             }
-        }
+
+		//*** Scorching ***
+        } else if (ench instanceof Scorching) {
+			for (int cell : cone.cells){
+				if (Actor.findChar(cell) != null) {
+					Char ch = Actor.findChar(cell);
+                    assert ch != null;
+                    if (ch.alignment != hero.alignment){
+						if (hero.damageRoll() > ch.HT * 0.07d) {
+							ch.damage((long) (hero.damageRoll() * powerMulti), Scorching.class);
+							ch.sprite.emitter().burst( FlameParticle.FACTORY, 25);
+						}
+					}
+				}
+			}
+
+		//*** Racked ***
+		} else if (ench instanceof Racked) {
+			for (int cell : cone.cells) {
+				if (Actor.findChar(cell) != null) {
+					Char ch = Actor.findChar(cell);
+                    assert ch != null;
+                    if (ch.alignment != hero.alignment) {
+						if (hero.buff(Racked.StackTracker.class) != null && hero.buff(Racked.StackTracker.class).stacks >= 15) {
+                            ch.damage((long) (hero.damageRoll() * 2d), Racked.class);
+							hero.buff(Racked.StackTracker.class).resetStacks();
+							Buff.affect(hero, Racked.RackedEnchantmentCooldown.class, 5f);
+						}
+
+						if (hero.buff(Racked.RackedEnchantmentCooldown.class) == null) {
+							Buff.affect(hero, Racked.StackTracker.class).stacks++;
+						}
+					}
+				}
+			}
+		}
 
 	}
 
