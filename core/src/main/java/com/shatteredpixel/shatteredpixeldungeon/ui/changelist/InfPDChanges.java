@@ -98,7 +98,8 @@ public class InfPDChanges {
                 "_-_ Made a shortcut button when Sack of Holding is bought or it is in your inventory\n" +
                         "_-_ Loots, Traps and Enemies has been reduced drastically, and Rooms reduced by 25%\n" +
                         "_-_ Elixir of Divine Inspiration has now a proper percentage format and no longer rounds off\n" +
-                        "_-_ Renamed items now highlights in blue"
+                        "_-_ Renamed items now highlights in blue\n" +
+                        "_-_ Dungeon now drops 2 upgrades per chapter"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",

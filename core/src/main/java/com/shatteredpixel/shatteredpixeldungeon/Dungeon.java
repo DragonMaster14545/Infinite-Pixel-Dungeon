@@ -727,7 +727,7 @@ public class Dungeon {
 		if (isChallenged(Challenges.NO_SCROLLS)){
 			return false;
 		} else {
-			souLeftThisSet = Math.round(3*Dungeon.hero.getStandardRoomMultiplier()*Dungeon.hero.getRoomMaxAdditionalSizeMultiplier()) - (LimitedDrops.UPGRADE_SCROLLS.count - (depth / 5) * 3);
+			souLeftThisSet = Math.round(2*Dungeon.hero.getStandardRoomMultiplier()*Dungeon.hero.getRoomMaxAdditionalSizeMultiplier()) - (LimitedDrops.UPGRADE_SCROLLS.count - (depth / 5) * 2);
 		}
 		if (souLeftThisSet <= 0) return false;
 
