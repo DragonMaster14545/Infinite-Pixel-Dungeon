@@ -45,7 +45,7 @@ public class WndSeedfinderMenu extends Window {
         add(title);
 
         slideFloors = new OptionSlider(Messages.get(this, "floors_title", SPDSettings.seedfinderFloors()),
-                "1", "29", 1, 26) {
+                "1", "26", 1, 26) {
             @Override
             protected void onChange() {
                 SPDSettings.seedfinderFloors(getSelectedValue());
