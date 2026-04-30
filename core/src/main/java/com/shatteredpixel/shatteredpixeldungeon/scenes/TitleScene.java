@@ -169,7 +169,7 @@ public class TitleScene extends PixelScene {
 		StyledButton btnSettings = new SettingsButton(GREY_TR, Messages.get(this, "settings"));
 		add(btnSettings);
 
-		StyledButton btnSeedfinder = new SeedfinderButton(GREY_TR, "Seedfinder");
+		StyledButton btnSeedfinder = new SupportButton(GREY_TR, "Support");
 		add(btnSeedfinder);
 
 		StyledButton btnAbout = new StyledButton(GREY_TR, Messages.get(this, "about")){
@@ -365,7 +365,7 @@ public class TitleScene extends PixelScene {
 
 		@Override
 		protected void onClick() {
-			ShatteredPixelDungeon.switchNoFade(SeedFinderScene.class);
+			ShatteredPixelDungeon.switchNoFade(SeedFindScene.class);
 		}
 	}
 }

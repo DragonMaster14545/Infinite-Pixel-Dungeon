@@ -76,6 +76,10 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.MAGNIFY.get(), "Seedfinding",
+                "Implemented seed finding from EsPD, with Weekly run included!"
+        ));
+
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.DARK_RUNIC), "New Weapon: Dark Blade",
                 "This tier 5 weapon can corrupt enemies (higher chance with Duelist's ability) and has higher max damage output than a normal runic blade"
         ));

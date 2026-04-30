@@ -207,6 +207,10 @@ public class SacrificialFire extends Blob {
 		}
 	}
 
+	public Item getPrize() {
+		return prize;
+	}
+
 	public static class Marked extends FlavourBuff {
 
 		public static final float DURATION	= 2f;

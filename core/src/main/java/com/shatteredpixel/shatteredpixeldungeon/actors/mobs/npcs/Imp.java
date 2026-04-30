@@ -158,7 +158,7 @@ public class Imp extends NPC {
 
 	public static class Quest {
 		
-		private static boolean alternative;
+		public static boolean alternative;
 		
 		private static boolean spawned;
 		private static boolean given;
