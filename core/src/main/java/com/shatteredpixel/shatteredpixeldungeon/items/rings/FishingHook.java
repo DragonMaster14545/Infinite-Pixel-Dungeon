@@ -348,8 +348,8 @@ public class FishingHook extends Ring {
 		}
 		//minimum level of sqrt(ringLvl)
 		if (result.isUpgradable()){
-			if (result.level() < Math.floor(level / Math.pow(6, (Dungeon.cycle+1)))){
-				result.level((long)Math.floor(level / Math.pow(6, (Dungeon.cycle+1))));
+			if (result.level() < Math.floor(level / Math.pow(36, (Dungeon.cycle+1)))){
+				result.level((long)Math.floor(level / Math.pow(36, (Dungeon.cycle+1))));
 			}
 		}
 		result.cursed = false;

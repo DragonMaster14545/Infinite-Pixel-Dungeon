@@ -91,7 +91,8 @@ public class InfPDChanges {
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
-                "_-_ Nerfed charge use of Examination Parchment, now takes an additional 5% of available energy"
+                "_-_ Nerfed charge use of Examination Parchment, now takes an additional 5% of available energy\n" +
+                        "_-_ Slightly nerfed SoU farms on Fishing Rods"
         ));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
