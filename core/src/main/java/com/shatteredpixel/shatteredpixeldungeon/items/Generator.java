@@ -247,7 +247,7 @@ public class Generator {
 		RING	( 1, 0, Ring.class ),
 		ARTIFACT( 0, 1, Artifact.class),
 		
-		FOOD	( 4, 0, Food.class ),
+		FOOD	( 3, 0, Food.class ),
 		
 		POTION	( 8, 8, Potion.class ),
         TUBES (1, 0, Tubes.class),
@@ -256,7 +256,7 @@ public class Generator {
 		SCROLL	( 8, 8, Scroll.class ),
 		STONE   ( 1, 1, Runestone.class),
 		
-		GOLD	( 10, 10,   Gold.class );
+		GOLD	( 8, 8,   Gold.class );
 		
 		public Class<?>[] classes;
 
