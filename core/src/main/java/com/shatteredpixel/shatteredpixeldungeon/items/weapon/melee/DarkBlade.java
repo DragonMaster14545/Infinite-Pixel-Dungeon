@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Adrenaline;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Combo;
@@ -90,9 +91,21 @@ public class DarkBlade extends MeleeWeapon {
     @Override
     public long proc(Char attacker, Char defender, long damage) {
 
-        if (Random.Float() <= 0.15f && attacker instanceof Hero) {
-            Corruption.corruptionHeal(defender);
-            AllyBuff.affectAndLoot((Mob) defender, (Hero) attacker, Corruption.class);
+        if (damage >= defender.HP
+                && Random.Float() < 0.15f
+                && !defender.isImmune(Corruption.class)
+                && defender.buff(Corruption.class) == null
+                && defender instanceof Mob
+                && defender.isAlive()){
+
+            Mob enemy = (Mob) defender;
+            Hero hero = (attacker instanceof Hero) ? (Hero) attacker : Dungeon.hero;
+
+            Corruption.corruptionHeal(enemy);
+
+            AllyBuff.affectAndLoot(enemy, hero, Corruption.class);
+
+            return 0;
         }
 
         return super.proc(attacker, defender, damage);
@@ -216,9 +229,18 @@ public class DarkBlade extends MeleeWeapon {
 				beforeAbilityUsed(hero, enemy);
 				AttackIndicator.target(enemy);
 				if (hero.attack(enemy, 1f, 0, Char.INFINITE_ACCURACY)){
-                    if (Random.Float() <= 0.25f) {
+                    if (Random.Float() < 0.25f
+                            && !enemy.isImmune(Corruption.class)
+                            && enemy.buff(Corruption.class) == null
+                            && enemy instanceof Mob
+                            && enemy.isAlive()){
+
+                        Hero hero = Dungeon.hero;
+
                         Corruption.corruptionHeal(enemy);
+
                         AllyBuff.affectAndLoot((Mob) enemy, hero, Corruption.class);
+
                     }
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 					if (!enemy.isAlive()){
