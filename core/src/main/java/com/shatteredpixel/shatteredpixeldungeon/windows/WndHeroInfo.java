@@ -257,7 +257,7 @@ public class WndHeroInfo extends WndTabbed {
 
 			switch (cls){
 				case WARRIOR: default:
-					icons = new Image[]{ new TalentIcon(Talent.HEARTY_MEAL),
+					icons = new Image[]{ new TalentIcon(Talent.STRONGMAN),
 							new TalentIcon(Talent.IMPROVISED_PROJECTILES),
 							new TalentIcon(Talent.STRONGMAN),
 							new TalentIcon(Talent.RUNIC_TRANSFERENCE),

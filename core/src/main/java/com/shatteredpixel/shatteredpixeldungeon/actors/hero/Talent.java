@@ -500,9 +500,10 @@ public enum Talent {
 			if (hero.cooldown() > 0) {
 				Buff.affect(hero, WarriorFoodImmunity.class, hero.cooldown());
 			}
-			long healing = Dungeon.hero.HT / 7;
-			hero.HP = Math.min(hero.HP + healing, hero.HT);
-			hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(healing), FloatingText.HEALING);
+			//long healing = Dungeon.hero.HT / 7;
+			//hero.HP = Math.min(hero.HP + healing, hero.HT);
+			//hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(healing), FloatingText.HEALING);
+			Buff.affect(hero, AdrenalineSurge.class).reset(Math.round(1 + (hero.STR * 0.05f)), 60 + (hero.lvl * 5f));
 		}
 		if (hero.heroClass == HeroClass.MAGE){
 			//5/8 turns of recharging
