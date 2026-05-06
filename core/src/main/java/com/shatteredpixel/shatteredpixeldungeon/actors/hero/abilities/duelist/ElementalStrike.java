@@ -593,7 +593,7 @@ public class ElementalStrike extends ArmorAbility {
 					Char ch = Actor.findChar(cell);
                     assert ch != null;
                     if (ch.alignment != hero.alignment){
-						if (hero.damageRoll() > ch.HT * 0.07d) {
+						if (hero.damageRoll() > ch.HT * 0.07d && !(hero.damageRoll() > ch.HT)) {
 							ch.damage((long) (hero.damageRoll() * powerMulti), Scorching.class);
 							ch.sprite.emitter().burst( FlameParticle.FACTORY, 25);
 						}
@@ -615,7 +615,7 @@ public class ElementalStrike extends ArmorAbility {
 						}
 
 						if (hero.buff(Racked.RackedEnchantmentCooldown.class) == null) {
-							Buff.affect(hero, Racked.StackTracker.class).stacks++;
+							Buff.affect(hero, Racked.StackTracker.class).set(30f);
 						}
 					}
 				}

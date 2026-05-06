@@ -44,7 +44,7 @@ public class Scorching extends Weapon.Enchantment {
 		float procChance = (level+1f)/(level+3f) * procChanceMultiplier(attacker);
 		float powerMulti = Math.min(2f, procChance);
 
-		if (damage > defender.HT * 0.07d) {
+		if (damage > defender.HT * 0.07d && !(damage > defender.HT)) {
 			defender.damage((long) (damage * powerMulti), this);
 			defender.sprite.emitter().burst( FlameParticle.FACTORY, (int) Math.min(10, Math.sqrt(level + 1)));
 		}
