@@ -50,7 +50,7 @@ public class Racked extends Weapon.Enchantment {
 		}
 
 		if (attacker.buff(RackedEnchantmentCooldown.class) == null) {
-			Buff.affect(attacker, StackTracker.class).stacks++;
+			Buff.affect(attacker, StackTracker.class).set(30f);
 		}
 
 		return damage;
@@ -64,6 +64,7 @@ public class Racked extends Weapon.Enchantment {
 	public static class StackTracker extends Buff {
 
 		public int stacks = 0;
+		public float duration = 30f;
 
 		@Override
 		public int icon() {
@@ -72,7 +73,7 @@ public class Racked extends Weapon.Enchantment {
 
 		@Override
 		public String desc() {
-			return Messages.get(this, "desc", stacks);
+			return Messages.get(this, "desc", stacks, dispTurns(visualcooldown()));
 		}
 
 		@Override
@@ -86,23 +87,41 @@ public class Racked extends Weapon.Enchantment {
 			}
 		}
 
+		@Override
+		public boolean act() {
+			spend( duration );
+			if (--stacks <= 0) {
+				detach();
+			}
+			return true;
+		}
+
 		public void resetStacks() {
 			stacks = 0;
 			detach();
 		}
 
+		public void set( float time ) {
+			stacks++;
+			duration = time;
+			spend(time - cooldown() - 1);
+		}
+
 		public static String STACKS = "stacks";
+		public static String DURATION = "duration";
 
 		@Override
 		public void storeInBundle(Bundle bundle) {
 			super.storeInBundle(bundle);
 			bundle.put(STACKS, stacks);
+			bundle.put(DURATION, duration);
 		}
 
 		@Override
 		public void restoreFromBundle(Bundle bundle) {
 			super.restoreFromBundle(bundle);
 			stacks = bundle.getInt(STACKS);
+			duration = bundle.getFloat(DURATION);
 		}
 	}
 

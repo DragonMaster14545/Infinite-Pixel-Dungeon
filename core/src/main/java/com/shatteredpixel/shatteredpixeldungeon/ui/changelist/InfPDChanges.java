@@ -81,7 +81,9 @@ public class InfPDChanges {
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
-                "_-_ Changed Warrior's first perk, now gives adrenaline surge instead\n"
+                "_-_ Changed Warrior's first perk, now gives adrenaline surge instead\n" +
+                        "_-_ Racked enchantment's stacks will now decay in a short time"
+
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
