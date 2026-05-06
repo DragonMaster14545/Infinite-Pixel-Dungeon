@@ -76,6 +76,10 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ Reduced overall rooms per floor by ~33%, special and secret rooms increased by 100%\n"
+        ));
+
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Changed Warrior's first perk, now gives adrenaline surge instead\n"
         ));
