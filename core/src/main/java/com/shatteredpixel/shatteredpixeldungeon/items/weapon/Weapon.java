@@ -67,6 +67,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Lucky;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Projecting;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Racked;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Scorching;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Sharpened;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Shocking;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Summoner;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Trihit;
@@ -476,7 +477,8 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 
 		public static final Class<?>[] uncommon = new Class<?>[]{
 				Blocking.class, Blooming.class, Elastic.class,
-				Lucky.class, Projecting.class, Unstable.class};
+				Lucky.class, Projecting.class, Unstable.class,
+				Sharpened.class};
 
 		public static final Class<?>[] rare = new Class<?>[]{
 				Corrupting.class, Grim.class, Vampiric.class,

@@ -76,6 +76,11 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.WEAPON_HOLDER), "New Enchantments!",
+                "In this update, we added an enchantments that will help you through your run!\n\n" +
+                        "_- Sharpened Enchantment:_ is an uncommon enchantment that inflicts bleeding within a chance\n"
+        ));
+
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Reduced overall rooms per floor by ~33%, special and secret rooms increased by 100%\n"
         ));

@@ -97,6 +97,7 @@ public class ElementalStrike extends ArmorAbility {
         effectTypes.put(Trihit.class,       MagicMissile.MAGIC_MISS_CONE);
 		effectTypes.put(Scorching.class,    MagicMissile.MAGIC_MISS_CONE);
 		effectTypes.put(Racked.class,       MagicMissile.MAGIC_MISS_CONE);
+		effectTypes.put(Sharpened.class,     MagicMissile.MAGIC_MISS_CONE);
 
 		effectTypes.put(Annoying.class,     MagicMissile.SHADOW_CONE);
 		effectTypes.put(Displacing.class,   MagicMissile.SHADOW_CONE);
@@ -616,6 +617,25 @@ public class ElementalStrike extends ArmorAbility {
 
 						if (hero.buff(Racked.RackedEnchantmentCooldown.class) == null) {
 							Buff.affect(hero, Racked.StackTracker.class).set(30f);
+						}
+					}
+				}
+			}
+
+		//*** Sharpened ***
+		} else if (ench instanceof Sharpened) {
+			for (int cell : cone.cells) {
+				if (Actor.findChar(cell) != null) {
+					Char ch = Actor.findChar(cell);
+					assert ch != null;
+					if (ch.alignment != hero.alignment) {
+						if (ch.buff(Bleeding.class) == null) {
+							Bleeding b = ch.buff(Bleeding.class);
+							if (b == null){
+								b = new Bleeding();
+							}
+							b.set(hero.damageRoll()*((double) ch.HP / ch.HT));
+							b.attachTo(ch);
 						}
 					}
 				}
