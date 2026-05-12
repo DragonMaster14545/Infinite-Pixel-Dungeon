@@ -267,17 +267,17 @@ public class WndUpgrade extends Window {
 		//durability
 		if (toUpgrade instanceof MissileWeapon){
 			//missile weapons are always IDed currently, so we always use true level
-			int uses1, uses2;
+			double uses1, uses2;
 			if (toUpgrade.levelKnown) {
-				uses1 = (int) Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(toUpgrade.level()));
-				uses2 = (int) Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(toUpgrade.level()+1));
+				uses1 = Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(toUpgrade.level()));
+				uses2 = Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(toUpgrade.level()+1));
 			} else {
-				uses1 = (int) Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(0));
-				uses2 = (int) Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(1));
+				uses1 = Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(0));
+				uses2 = Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(1));
 			}
 			bottom = fillFields(Messages.get(this, "durability"),
-					uses1 >= 10000 ? "∞" : Integer.toString(uses1),
-					uses2 >= 10000 ? "∞" : Integer.toString(uses2),
+					uses1 >= 10000 ? "∞" : Double.toString(uses1),
+					uses2 >= 10000 ? "∞" : Double.toString(uses2),
 					bottom);
 
 			bottom = fillFields(Messages.get(this, "quantity"),

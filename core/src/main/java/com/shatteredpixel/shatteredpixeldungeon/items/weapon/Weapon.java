@@ -122,8 +122,8 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 	public Augment augment = Augment.NONE;
 	
 	private static final int USES_TO_ID = 20;
-	private float usesLeftToID = USES_TO_ID;
-	private float availableUsesToID = USES_TO_ID/2f;
+	public float usesLeftToID = USES_TO_ID;
+	public float availableUsesToID = USES_TO_ID/2f;
 	
 	public Enchantment enchantment;
 	public boolean enchantHardened = false;
@@ -137,6 +137,10 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 
 	protected Weapon(){
 		//randomizeRarity();
+	}
+
+	public void setIDReady(){
+		usesLeftToID = -1;
 	}
 
 	@Override
@@ -163,7 +167,7 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 					if (usesLeftToID > -1){
 						GLog.p(Messages.get(ShardOfOblivion.class, "identify_ready"), name());
 					}
-					usesLeftToID = -1;
+					setIDReady();
 				} else {
 					identify();
 					GLog.p(Messages.get(Weapon.class, "identify"));
