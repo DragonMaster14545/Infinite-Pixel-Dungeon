@@ -416,7 +416,7 @@ public abstract class YogFist extends Mob {
 					b = new Bleeding();
 				}
 				b.announced = false;
-				b.set(dmg*.6f);
+				b.set(dmg*1.2f);
 				b.attachTo(this);
 				sprite.showStatus(CharSprite.WARNING, Messages.titleCase(b.name()) + " " + (int)b.level());
 			} else{

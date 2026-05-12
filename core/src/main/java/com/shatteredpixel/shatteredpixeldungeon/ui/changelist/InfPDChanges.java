@@ -84,7 +84,8 @@ public class InfPDChanges {
                 "_-_ Changed Warrior's first perk, now gives adrenaline surge instead\n" +
                         "_-_ Racked enchantment's stacks will now decay in a short time\n" +
                         "_-_ Scorching enchantment no longer activates when insta-killing an enemy\n" +
-                        "_-_ Slightly increased the Staircase Totem's initial room multiplier bonus"
+                        "_-_ Slightly increased the Staircase Totem's initial room multiplier bonus\n" +
+                        "_-_ Rotting fist now gets 1.2x bleeding effect, from 0.6x"
 
         ));
 
