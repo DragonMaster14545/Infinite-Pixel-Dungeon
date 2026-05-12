@@ -41,7 +41,7 @@ import com.watabou.utils.Random;
 
 public class Sharpened extends Weapon.Enchantment {
 	
-	private static ItemSprite.Glowing BLUE = new ItemSprite.Glowing( 0x0000FF );
+	private static ItemSprite.Glowing COLOR = new ItemSprite.Glowing( 0xd1ff75 );
 	
 	@Override
 	public long proc(Weapon weapon, Char attacker, Char defender, long damage) {
@@ -68,7 +68,7 @@ public class Sharpened extends Weapon.Enchantment {
 	
 	@Override
 	public ItemSprite.Glowing glowing() {
-		return BLUE;
+		return COLOR;
 	}
 
 }
