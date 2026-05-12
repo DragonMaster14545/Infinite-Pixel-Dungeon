@@ -76,13 +76,30 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.JAVELIN), "Thrown Weapon Sets",
+                "_Thrown weapons have been majorly overhauled to be more worthwhile to upgrade!_\n" +
+                        "\n" +
+                        "_-_ Thrown weapons now spawn in sets of three, sets do not mix.\n" +
+                        "_-_ Thrown weapon base durability increased to 3x5/8/12, from 2x5/10/15.\n" +
+                        "_-_ Sets are upgraded as a unit (all 3), and upgrading fully repairs the set.\n" +
+                        "_-_ Upgrades now boost durability by 1.5x, down from 3x.\n" +
+                        "_-_ Thrown weapon default damage scaling per upgrade reduced to 1-tier, down from 2-tier.\n" +
+                        "_-_ Sets can be enchanted, cursed, augmented, unidentified, etc.\n" +
+                        "_-_ Sets can spawn with natural upgrades, enchants, or curses.\n" +
+                        "_-_ Liquid Metal functionality has been significantly changed to work with these new set mechanics.\n" +
+                        "_-_ A few special rooms now have a chance to spawn higher value thrown weapon sets.\n" +
+                        "\n" +
+                        "Note that darts are not affected by these changes, they effectively all belong to the same set and still cannot be upgraded."));
+
+
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.WEAPON_HOLDER), "New Enchantments!",
                 "In this update, we added an enchantments that will help you through your run!\n\n" +
                         "_- Sharpened Enchantment:_ is an uncommon enchantment that inflicts bleeding within a chance\n"
         ));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ Reduced overall rooms per floor by ~33%, special and secret rooms increased by 100%\n"
+                "_-_ Reduced overall rooms per floor by ~33%, special and secret rooms increased by 100%\n" +
+                        "_-_ Implemented Shard of Oblivion's QoL from ShPD"
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
