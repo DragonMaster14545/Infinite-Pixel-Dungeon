@@ -60,7 +60,7 @@ public class StaircaseTotem extends Trinket {
 		if (level == -1){
 			return 1f;
 		} else {
-			return 1 + (0.125f + 0.125f*level);
+			return 1 + (0.175f + 0.125f*level);
 		}
 	}
 
