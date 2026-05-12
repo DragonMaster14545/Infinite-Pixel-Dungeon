@@ -89,8 +89,6 @@ abstract public class MissileWeapon extends Weapon {
 	//used to reduce durability from the source weapon stack, rather than the one being thrown.
 	public MissileWeapon parent;
 
-	public int tier;
-
 	protected int usesToID(){
 		return 10; //half of a melee weapon
 	}
