@@ -52,9 +52,9 @@ public class RotDart extends TippedDart {
 		
 		return super.proc(attacker, defender, damage);
 	}
-	
+
 	@Override
-	public float durabilityPerUse() {
+	public float durabilityPerUse(long level) {
 		return MAX_DURABILITY/5f; //always 5 uses
 	}
 }

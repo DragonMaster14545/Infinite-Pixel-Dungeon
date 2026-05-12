@@ -52,7 +52,7 @@ import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
 
-public class SpiritBow extends Weapon {
+public class SpiritBow extends MissileWeapon {
 	
 	public static final String AC_SHOOT		= "SHOOT";
 	
@@ -64,6 +64,13 @@ public class SpiritBow extends Weapon {
 		
 		unique = true;
 		bones = false;
+
+		setID = 0L;
+	}
+
+	@Override
+	public int defaultQuantity() {
+		return 1;
 	}
 	
 	public boolean sniperSpecial = false;

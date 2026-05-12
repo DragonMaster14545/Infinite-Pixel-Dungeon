@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
@@ -171,48 +172,50 @@ public class LiquidMetal extends Item {
 
 		@Override
 		public boolean testIngredients(ArrayList<Item> ingredients) {
-			for (Item i : ingredients){
-				if (!(i instanceof MissileWeapon)){
-					return false;
-				}
-			}
-
-			return !ingredients.isEmpty();
+			return ingredients.size() == 1
+					&& ingredients.get(0) instanceof MissileWeapon
+					&& ingredients.get(0).isIdentified()
+					&& !ingredients.get(0).cursed;
 		}
 
 		@Override
 		public long cost(ArrayList<Item> ingredients) {
-			long cost = 1;
-			for (Item i : ingredients){
-				cost += i.quantity();
-			}
-			return cost;
+			return 3;
 		}
 
 		@Override
 		public Item brew(ArrayList<Item> ingredients) {
 			Item result = sampleOutput(ingredients);
 
-			for (Item i : ingredients){
-				i.quantity(0);
-			}
+			MissileWeapon w = (MissileWeapon) ingredients.get(0);
+			w.quantity(0);
+			Buff.affect(Dungeon.hero, MissileWeapon.UpgradedSetTracker.class).levelThresholds.put(w.setID, Long.MAX_VALUE);
 
 			return result;
 		}
 
 		@Override
 		public Item sampleOutput(ArrayList<Item> ingredients) {
-			int metalQuantity = 0;
+			MissileWeapon m = (MissileWeapon) ingredients.get(0);
 
-			for (Item i : ingredients){
-				MissileWeapon m = (MissileWeapon) i;
-				float quantity = m.quantity()-1;
-				quantity += 0.25f + 0.0075f*m.durabilityLeft();
-				quantity *= Math.pow(2, Math.min(3, m.level()));
-				metalQuantity += Math.round((5*(m.tier+1))*quantity);
+			if (m.levelKnown){
+				return new LiquidMetal().quantity(metalQuantity(m));
+			} else {
+				return new LiquidMetal();
 			}
+		}
 
-			return new LiquidMetal().quantity(metalQuantity);
+		private int metalQuantity(MissileWeapon m){
+			float quantityPerWeapon = 5*(m.tier+1);
+			if (m.defaultQuantity() != 3){
+				quantityPerWeapon = 3f / m.defaultQuantity();
+			}
+			quantityPerWeapon += Math.pow(2, Math.min(3, m.level()));
+
+			float quantity = m.quantity()-1;
+			quantity += 0.25f + 0.0075f*m.durabilityLeft();
+
+			return Math.round(quantity * quantityPerWeapon);
 		}
 	}
 

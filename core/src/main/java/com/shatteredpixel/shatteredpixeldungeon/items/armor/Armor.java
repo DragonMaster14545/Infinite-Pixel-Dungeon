@@ -129,6 +129,10 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 		this.visibleTier = tier;
 		//randomizeRarity();
 	}
+
+	public void setIDReady(){
+		usesLeftToID = -1;
+	}
 	
 	private static final String USES_LEFT_TO_ID = "uses_left_to_id";
 	private static final String AVAILABLE_USES  = "available_uses";
@@ -488,7 +492,7 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 					if (usesLeftToID > -1){
 						GLog.p(Messages.get(ShardOfOblivion.class, "identify_ready"), name());
 					}
-					usesLeftToID = -1;
+					setIDReady();
 				} else {
 					identify();
 					GLog.p(Messages.get(Armor.class, "identify"));

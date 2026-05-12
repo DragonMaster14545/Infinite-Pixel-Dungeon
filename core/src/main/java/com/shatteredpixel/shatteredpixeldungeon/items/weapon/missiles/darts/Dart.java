@@ -51,6 +51,8 @@ import java.util.ArrayList;
 public class Dart extends MissileWeapon {
 
 	{
+		levelKnown = true;
+
 		image = ItemSpriteSheet.DART;
 		hitSound = Assets.Sounds.HIT_ARROW;
 		hitSoundPitch = 1.3f;
@@ -59,6 +61,9 @@ public class Dart extends MissileWeapon {
 		
 		//infinite, even with penalties
 		baseUses = 1000;
+
+		//all darts share a set ID
+		setID = 0L;
 	}
 	
 	protected static final String AC_TIP = "TIP";
@@ -250,7 +255,7 @@ public class Dart extends MissileWeapon {
 	
 	@Override
 	public long value() {
-		return super.value()/2; //half normal value
+		return Math.round(super.value()/2f); //half normal value
 	}
 	
 	private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {

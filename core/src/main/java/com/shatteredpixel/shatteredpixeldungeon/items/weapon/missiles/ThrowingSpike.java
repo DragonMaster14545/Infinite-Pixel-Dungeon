@@ -33,6 +33,7 @@ public class ThrowingSpike extends MissileWeapon {
 
 		bones = false;
 
+		baseUses = 12;
 		internalTier = tier = 1;
 	}
 

@@ -1212,7 +1212,8 @@ if (buff(RoundShield.GuardTracker.class) != null){
 							|| item instanceof TimekeepersHourglass.sandBag
 							|| item instanceof DriedRose.Petal
 							|| item instanceof Key
-							|| item instanceof Guidebook) {
+							|| item instanceof Guidebook
+							|| item.quantity() == 0) {
 						//Do Nothing
 					} else if (item instanceof DarkGold) {
 						DarkGold existing = belongings.getItem(DarkGold.class);

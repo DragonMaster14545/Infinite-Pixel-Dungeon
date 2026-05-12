@@ -281,5 +281,6 @@ abstract public class KindOfWeapon extends EquipableItem {
 	public void hitSound( float pitch ){
 		Sample.INSTANCE.play(hitSound, 1, pitch * hitSoundPitch);
 	}
-	
+
+	public abstract int tier();
 }

@@ -72,6 +72,10 @@ public class Ring extends KindofMisc {
             put("obsidian",ItemSpriteSheet.RING_OBSIDIAN);
 		}
 	};
+
+	public void setIDReady(){
+		levelsToID = -1;
+	}
 	
 	private static ItemStatusHandler<Ring> handler;
 	
@@ -339,7 +343,7 @@ public class Ring extends KindofMisc {
 				if (levelsToID > -1){
 					GLog.p(Messages.get(ShardOfOblivion.class, "identify_ready"), name());
 				}
-				levelsToID = -1;
+				setIDReady();
 			} else {
 				identify();
 				GLog.p(Messages.get(Ring.class, "identify"));
