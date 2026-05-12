@@ -56,7 +56,7 @@ public class CurseInfusion extends InventorySpell {
 
 	@Override
 	protected boolean usableOnItem(Item item) {
-		return ((item instanceof EquipableItem && !(item instanceof MissileWeapon)) || item instanceof Wand);
+		return ((item instanceof EquipableItem && item.isUpgradable()) || item instanceof Wand);
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class CurseInfusion extends InventorySpell {
 		Sample.INSTANCE.play(Assets.Sounds.CURSED);
 		
 		item.cursed = true;
-		if (item instanceof MeleeWeapon || item instanceof SpiritBow) {
+		if (item instanceof Weapon) {
 			Weapon w = (Weapon) item;
 			if (w.enchantment != null) {
 				//if we are freshly applying curse infusion, don't replace an existing curse

@@ -267,11 +267,22 @@ public class WndUpgrade extends Window {
 		//durability
 		if (toUpgrade instanceof MissileWeapon){
 			//missile weapons are always IDed currently, so we always use true level
-			int uses1 = (int)Math.ceil(100f/((MissileWeapon) toUpgrade).durabilityPerUse());
-			int uses2 = (int)Math.ceil(300f/((MissileWeapon) toUpgrade).durabilityPerUse());
+			int uses1, uses2;
+			if (toUpgrade.levelKnown) {
+				uses1 = (int) Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(toUpgrade.level()));
+				uses2 = (int) Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(toUpgrade.level()+1));
+			} else {
+				uses1 = (int) Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(0));
+				uses2 = (int) Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(1));
+			}
 			bottom = fillFields(Messages.get(this, "durability"),
 					uses1 >= 10000 ? "∞" : Integer.toString(uses1),
 					uses2 >= 10000 ? "∞" : Integer.toString(uses2),
+					bottom);
+
+			bottom = fillFields(Messages.get(this, "quantity"),
+					Long.toString(toUpgrade.quantity()),
+					Integer.toString(((MissileWeapon) toUpgrade).defaultQuantity()),
 					bottom);
 		}
 
@@ -415,6 +426,11 @@ public class WndUpgrade extends Window {
 		if (toUpgrade instanceof Wand && ((Wand) toUpgrade).resinBonus > 0){
 			bottom = addMessage(Messages.get(this, "resin"), CharSprite.WARNING, bottom);
 		}
+
+		if (toUpgrade instanceof MissileWeapon && ((MissileWeapon) toUpgrade).extraThrownLeft){
+			bottom = addMessage("Weapons from this set that aren't in your inventory will crumble to dust.", CharSprite.WARNING, bottom);
+		}
+
 
 		// *** Buttons for confirming/cancelling ***
 

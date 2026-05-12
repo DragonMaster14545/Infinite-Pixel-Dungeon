@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
@@ -76,7 +77,7 @@ public class PotionOfMastery extends ExoticPotion {
 		@Override
 		public boolean itemSelectable(Item item) {
 			return
-					(item instanceof MeleeWeapon && !((MeleeWeapon) item).masteryPotionBonus)
+					(item instanceof Weapon && !(item instanceof SpiritBow) && !((Weapon) item).masteryPotionBonus)
 					|| (item instanceof Armor && !((Armor) item).masteryPotionBonus);
 		}
 

@@ -76,6 +76,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Vampir
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.DarkBlade;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.RunicBlade;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Scimitar;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -114,16 +115,22 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
             return Math.round(dmg * damageFactor);
 		}
 
+		public double damageFactor(double dmg){
+			return dmg * damageFactor;
+		}
+
 		public float delayFactor(float dly){
 			return dly * delayFactor;
 		}
 	}
 	
 	public Augment augment = Augment.NONE;
-	
-	private static final int USES_TO_ID = 20;
-	private float usesLeftToID = USES_TO_ID;
-	private float availableUsesToID = USES_TO_ID/2f;
+
+	protected int usesToID(){
+		return 20;
+	}
+	protected float usesLeftToID = usesToID();
+	protected float availableUsesToID = usesToID()/2f;
 	
 	public Enchantment enchantment;
 	public boolean enchantHardened = false;
@@ -177,9 +184,10 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 	
 	public void onHeroGainExp( float levelPercent, Hero hero ){
 		levelPercent *= Talent.itemIDSpeedFactor(hero, this);
-		if (!levelKnown && isEquipped(hero) && availableUsesToID <= USES_TO_ID/2f) {
+		if (!levelKnown && (isEquipped(hero) || this instanceof MissileWeapon)
+				&& availableUsesToID <= usesToID()/2f) {
 			//gains enough uses to ID over 0.5 levels
-			availableUsesToID = Math.min(USES_TO_ID/2f, availableUsesToID + levelPercent * USES_TO_ID);
+			availableUsesToID = Math.min(usesToID()/2f, availableUsesToID + levelPercent * usesToID());
 		}
 	}
 	
@@ -222,8 +230,8 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 	@Override
 	public void reset() {
 		super.reset();
-		usesLeftToID = USES_TO_ID;
-		availableUsesToID = USES_TO_ID/2f;
+		usesLeftToID = usesToID();
+		availableUsesToID = usesToID()/2f;
 	}
 
 	@Override

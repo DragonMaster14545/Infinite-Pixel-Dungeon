@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
@@ -286,13 +287,16 @@ public class WndBlacksmith extends Window {
 					if (second.isEquipped( Dungeon.hero )) {
 						((EquipableItem)second).doUnequip( Dungeon.hero, false );
 					}
-					second.detach( Dungeon.hero.belongings.backpack );
+					second.detachAll( Dungeon.hero.belongings.backpack );
 
 					if (second instanceof Armor){
 						BrokenSeal seal = ((Armor) second).checkSeal();
 						if (seal != null){
 							Dungeon.level.drop( seal, Dungeon.hero.pos );
 						}
+					} else if (second instanceof MissileWeapon){
+						Buff.affect(Dungeon.hero, MissileWeapon.UpgradedSetTracker.class)
+								.levelThresholds.put(((MissileWeapon) second).setID, Long.MAX_VALUE);
 					}
 					if (first instanceof MissileWeapon && first.quantity() > 1){
 						first = first.split(1);
@@ -358,7 +362,7 @@ public class WndBlacksmith extends Window {
 					if (item1 == null || item2 == null) {
 						btnReforge.enable(false);
 
-					} else if (item1 == item2 && item1.quantity() == 1) {
+					} else if (item1 == item2) {
 						btnReforge.enable(false);
 
 					} else {
@@ -386,7 +390,7 @@ public class WndBlacksmith extends Window {
 		public boolean itemSelectable(Item item) {
 			return item.isUpgradable()
 					&& item.isIdentified() && !item.cursed
-					&& ((item instanceof MeleeWeapon && !((Weapon) item).enchantHardened)
+					&& ((item instanceof Weapon && !((Weapon) item).enchantHardened)
 					|| (item instanceof Armor && !((Armor) item).glyphHardened));
 		}
 

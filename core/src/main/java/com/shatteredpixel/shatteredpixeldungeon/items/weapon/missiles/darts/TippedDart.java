@@ -3,10 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
- *
- * Experienced Pixel Dungeon
- * Copyright (C) 2019-2024 Trashbox Bobylev
+ * Copyright (C) 2014-2026 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,14 +27,26 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PinCushion;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfRegrowth;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Crossbow;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.plants.*;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Blindweed;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Earthroot;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Fadeleaf;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Firebloom;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Icecap;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Mageroyal;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Rotberry;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Sorrowmoss;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Starflower;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Stormvine;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Sungrass;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
@@ -47,15 +56,15 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 public abstract class TippedDart extends Dart {
-	
+
 	{
-		tier = 2 + Dungeon.cycle * 5;
+		tier = 2;
 
 		baseUses = 1f;
 	}
-	
+
 	private static final String AC_CLEAN = "CLEAN";
-	
+
 	@Override
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = super.actions( hero );
@@ -63,7 +72,7 @@ public abstract class TippedDart extends Dart {
 		actions.add( AC_CLEAN );
 		return actions;
 	}
-	
+
 	@Override
 	public void execute(final Hero hero, String action) {
 		super.execute(hero, action);
@@ -72,14 +81,14 @@ public abstract class TippedDart extends Dart {
 			String[] options;
 			if (quantity() > 1){
 				options = new String[]{
-					Messages.get(this, "clean_all"),
-					Messages.get(this, "clean_one"),
-					Messages.get(this, "cancel")
+						Messages.get(this, "clean_all"),
+						Messages.get(this, "clean_one"),
+						Messages.get(this, "cancel")
 				};
 			} else {
 				options = new String[]{
-					Messages.get(this, "clean_one"),
-					Messages.get(this, "cancel")
+						Messages.get(this, "clean_one"),
+						Messages.get(this, "cancel")
 				};
 			}
 
@@ -92,13 +101,13 @@ public abstract class TippedDart extends Dart {
 					if (index == 0){
 						detachAll(hero.belongings.backpack);
 						new Dart().quantity(quantity).collect();
-						
+
 						hero.spend( 1f );
 						hero.busy();
 						hero.sprite.operate(hero.pos);
 					} else if (index == 1 && quantity() > 1){
 						detach(hero.belongings.backpack);
-						if (!new Dart().collect()) Dungeon.level.drop(new Dart(), hero.pos).sprite.drop();
+						if (!new Dart().quantity(1).collect()) Dungeon.level.drop(new Dart().quantity(1), hero.pos).sprite.drop();
 
 						//reset durability if there are darts left in the stack
 						durability = MAX_DURABILITY;
@@ -109,21 +118,22 @@ public abstract class TippedDart extends Dart {
 					}
 				}
 			});
-			
+
 		}
 	}
-	
+
 	//exact same damage as regular darts, despite being higher tier.
 
 	@Override
 	protected void rangedHit(Char enemy, int cell) {
 		targetPos = cell;
 		super.rangedHit( enemy, cell);
-		
+
 		//need to spawn a dart
-		if (durability <= 0){
+		if (durability <= 0 && !spawnedForEffect){
 			//attempt to stick the dart to the enemy, just drop it if we can't.
 			Dart d = new Dart();
+			d.quantity(1);
 			Catalog.countUse(getClass());
 			if (sticky && enemy != null && enemy.isAlive() && enemy.alignment != Char.Alignment.ALLY){
 				PinCushion p = Buff.affect(enemy, PinCushion.class);
@@ -137,7 +147,7 @@ public abstract class TippedDart extends Dart {
 	}
 
 	//the number of regular darts lost due to merge being called
-	public static long lostDarts = 0;
+	public static int lostDarts = 0;
 
 	@Override
 	public Item merge(Item other) {
@@ -154,13 +164,16 @@ public abstract class TippedDart extends Dart {
 
 	private static int targetPos = -1;
 
+	{
+		useRoundingInDurabilityCalc = false;
+	}
+
 	@Override
-	public float durabilityPerUse() {
-		float use = super.durabilityPerUse(false);
-if (Dungeon.hero != null) {
-			if (Dungeon.hero.subClass == HeroSubClass.WARDEN) {
-			use /= 5;
-		}
+	public float durabilityPerUse(long level) {
+		float use = super.durabilityPerUse(level);
+
+		if (Dungeon.hero != null) {
+			use /= (1 + Dungeon.hero.pointsInTalent(Talent.DURABLE_TIPS));
 
 			//checks both destination and source position
 			float lotusPreserve = 0f;
@@ -200,13 +213,13 @@ if (Dungeon.hero != null) {
 		//add a tiny amount to account for rounding error for calculations like 1/3
 		return (MAX_DURABILITY/usages) + 0.001f;
 	}
-	
+
 	@Override
 	public long value() {
 		//value of regular dart plus half of the seed
-		return 8 * quantity;
+		return Math.round(7.5f * quantity);
 	}
-	
+
 	public static final LinkedHashMap<Class<?extends Plant.Seed>, Class<?extends TippedDart>> types = new LinkedHashMap<>();
 	static {
 		types.put(Rotberry.Seed.class,      RotDart.class);
@@ -222,19 +235,19 @@ if (Dungeon.hero != null) {
 		types.put(Mageroyal.Seed.class,     CleansingDart.class);
 		types.put(Starflower.Seed.class,    HolyDart.class);
 	}
-	
+
 	public static TippedDart getTipped( Plant.Seed s, long quantity ){
 		return (TippedDart) Reflection.newInstance(types.get(s.getClass())).quantity(quantity);
 	}
-	
+
 	public static TippedDart randomTipped( int quantity ){
 		Plant.Seed s;
 		do{
 			s = (Plant.Seed) Generator.randomUsingDefaults(Generator.Category.SEED);
 		} while (!types.containsKey(s.getClass()));
-		
+
 		return getTipped(s, quantity );
-		
+
 	}
-	
+
 }

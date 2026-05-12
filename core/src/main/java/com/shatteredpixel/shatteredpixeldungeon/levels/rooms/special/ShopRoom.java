@@ -59,7 +59,9 @@ import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.AlchemyBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.BiggerGambleBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.GambleBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.QualityBag;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.Clayball;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.TippedDart;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -224,11 +226,12 @@ public class ShopRoom extends SpecialRoom {
 
 		ArrayList<Item> itemsToSpawn = new ArrayList<>();
 
-		Item w;
+		MeleeWeapon w;
+		MissileWeapon m;
 		switch (Dungeon.depth) {
 		case 6: default:
-			w = Generator.random(Generator.wepTiers[1]);
-			itemsToSpawn.add( Generator.random(Generator.misTiers[1]).quantity(2).identify(false) );
+			w = (MeleeWeapon) Generator.random(Generator.wepTiers[1]);
+			m = (MissileWeapon) Generator.random(Generator.misTiers[1]);
 			itemsToSpawn.add( new LeatherArmor().identify(false) );
 
 			switch (Dungeon.cycle){
@@ -242,23 +245,23 @@ public class ShopRoom extends SpecialRoom {
 			break;
 			
 		case 11:
-			w = Generator.random(Generator.wepTiers[2]);
-			itemsToSpawn.add( Generator.random(Generator.misTiers[2]).quantity(2).identify(false) );
+			w = (MeleeWeapon) Generator.random(Generator.wepTiers[2]);
+			m = (MissileWeapon) Generator.random(Generator.misTiers[2]);
 			itemsToSpawn.add( new MailArmor().identify(false) );
 			itemsToSpawn.add( new AlchemyBag());
 			break;
 			
 		case 16:
-			w = Generator.random(Generator.wepTiers[3]);
-			itemsToSpawn.add( Generator.random(Generator.misTiers[3]).quantity(2).identify(false) );
+			w = (MeleeWeapon) Generator.random(Generator.wepTiers[3]);
+			m = (MissileWeapon) Generator.random(Generator.misTiers[3]);
 			itemsToSpawn.add( new ScaleArmor().identify(false) );
 			itemsToSpawn.add( new AlchemyBag());
 			itemsToSpawn.add( new SackOfHolding());
 			break;
 
 		case 20: case 21:
-			w = Generator.random(Generator.wepTiers[4]);
-			itemsToSpawn.add( Generator.random(Generator.misTiers[4]).quantity(2).identify(false) );
+			w = (MeleeWeapon) Generator.random(Generator.wepTiers[4]);
+			m = (MissileWeapon) Generator.random(Generator.misTiers[4]);
 			itemsToSpawn.add( new PlateArmor().identify(false) );
 			itemsToSpawn.add( new Torch() );
 			itemsToSpawn.add( new Torch() );
@@ -267,9 +270,18 @@ public class ShopRoom extends SpecialRoom {
 			itemsToSpawn.add( new AlchemyBag());
 			break;
 		}
+		w.enchant(null);
 		w.cursed = false;
+		w.level(0);
 		w.identify(false);
 		itemsToSpawn.add(w);
+
+		m.enchant(null);
+		m.cursed = false;
+		m.level(0);
+		m.identify(false);
+		itemsToSpawn.add(m);
+
 		itemsToSpawn.add(new PotionOfExperience());
 		if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_1) && !Dungeon.LimitedDrops.CHEESY_CHEEST.dropped())
             itemsToSpawn.add(new CheeseCheest());
