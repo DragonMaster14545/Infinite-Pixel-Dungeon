@@ -79,9 +79,9 @@ public class Extractor extends InventorySpell {
 
 		{
 			inputs =  new Class[]{ScrollOfUpgrade.class, Recycle.class};
-			inQuantity = new int[]{1, 1};
+			inQuantity = new int[]{1, 12};
 			
-			cost = 50;
+			cost = 450;
 			
 			output = Extractor.class;
 			outQuantity = OUT_QUANTITY;

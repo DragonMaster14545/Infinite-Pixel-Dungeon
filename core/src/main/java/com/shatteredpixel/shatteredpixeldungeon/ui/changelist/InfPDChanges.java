@@ -107,7 +107,8 @@ public class InfPDChanges {
                         "_-_ Racked enchantment's stacks will now decay in a short time\n" +
                         "_-_ Scorching enchantment no longer activates when insta-killing an enemy\n" +
                         "_-_ Slightly increased the Staircase Totem's initial room multiplier bonus\n" +
-                        "_-_ Rotting fist now gets 1.2x bleeding effect, from 0.6x"
+                        "_-_ Rotting fist now gets 1.2x bleeding effect, from 0.6x\n" +
+                        "_-_ Extractor spell now requires massive energy cost (from 50 to 450) and increased Recycle spell required to 12, from 1"
 
         ));
 
