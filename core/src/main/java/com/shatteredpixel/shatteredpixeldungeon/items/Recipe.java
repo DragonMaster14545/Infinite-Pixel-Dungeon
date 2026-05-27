@@ -239,7 +239,6 @@ public abstract class Recipe {
 		new IdentificationBomb.Recipe(),
 		new CheeseChunk.oneMeat(),
 			new Raritize.Recipe(),
-			new Extractor.Recipe(),
 			new Gambler.Recipe(),
             new ItemQuantifier.Recipe(),
             new GalacticInfusion.Recipe(),
@@ -247,7 +246,8 @@ public abstract class Recipe {
             new DeterminantInfusion.Recipe(),
             new PocketAlchemy.Recipe(),
             new ElixirOfDivineInspiration.Recipe(),
-			new DanceImmune.Recipe()
+			new DanceImmune.Recipe(),
+			new Extractor.Recipe()
 	};
 	
 	private static Recipe[] threeIngredientRecipes = new Recipe[]{
