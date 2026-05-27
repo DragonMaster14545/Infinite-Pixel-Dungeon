@@ -108,7 +108,8 @@ public class InfPDChanges {
                         "_-_ Scorching enchantment no longer activates when insta-killing an enemy\n" +
                         "_-_ Slightly increased the Staircase Totem's initial room multiplier bonus\n" +
                         "_-_ Rotting fist now gets 1.2x bleeding effect, from 0.6x\n" +
-                        "_-_ Extractor spell now requires massive energy cost (from 50 to 450) and increased Recycle spell required to 12, from 1"
+                        "_-_ Extractor spell now requires massive energy cost (from 50 to 450) and increased Recycle spell required to 12, from 1\n" +
+                        "_-_ Increased view distance from 2 to 3 when Into Darkness challenge is enabled"
 
         ));
 
