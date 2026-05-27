@@ -54,6 +54,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.ArmorTierUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Barricade;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.BeaconOfReturning;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.CurseInfusion;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.DanceImmune;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.DeterminantInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Extractor;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.FireBooster;
@@ -245,7 +246,8 @@ public abstract class Recipe {
             new Barricade.Recipe(),
             new DeterminantInfusion.Recipe(),
             new PocketAlchemy.Recipe(),
-            new ElixirOfDivineInspiration.Recipe()
+            new ElixirOfDivineInspiration.Recipe(),
+			new DanceImmune.Recipe()
 	};
 	
 	private static Recipe[] threeIngredientRecipes = new Recipe[]{

@@ -5,6 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.DamageAmplificationBuff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.DanceImmuneBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Godspeed;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
@@ -89,31 +90,33 @@ public class DanceFloor extends Blob implements Hero.Doom {
     }
 
     private void applyEffect(Char target, int color) {
-        switch (color) {
-            case RED:
-                if (target == Dungeon.hero)
-                    target.damage(target.HT / (CYCLE_LENGTH + 1), this);
-                else
-                    target.damage((Dungeon.depth / 5 + 1) * 3, this);
-            case GREEN:
-                Buff.prolong(target, DanceSpeed.class, 1);
-                break;
-            case BLUE:
-                Buff.prolong(target, DancingStun.class, 1);
-                break;
-            case BLACK:
-                long dmg = (Dungeon.depth / 5 + 1) * 5L;
-                if (target == Dungeon.hero) {
-                    dmg = target.HT / (CYCLE_LENGTH - 1);
-                }
-                Buff.affect(target, DancingDeferedDamage.class).prolong(dmg);
-                break;
-            case YELLOW:
-                if (target == Dungeon.hero) break;
-                Buff.prolong(target, RewardBoost.class, 1);
-                break;
-            case PURPLE:
-                Buff.prolong(target, DancingDoom.class, 1);
+        if (target.buff(DanceImmuneBuff.class) == null) {
+            switch (color) {
+                case RED:
+                    if (target == Dungeon.hero)
+                        target.damage(target.HT / (CYCLE_LENGTH + 1), this);
+                    else
+                        target.damage((Dungeon.depth / 5 + 1) * 3, this);
+                case GREEN:
+                    Buff.prolong(target, DanceSpeed.class, 1);
+                    break;
+                case BLUE:
+                    Buff.prolong(target, DancingStun.class, 1);
+                    break;
+                case BLACK:
+                    long dmg = (Dungeon.depth / 5 + 1) * 5L;
+                    if (target == Dungeon.hero) {
+                        dmg = target.HT / (CYCLE_LENGTH - 1);
+                    }
+                    Buff.affect(target, DancingDeferedDamage.class).prolong(dmg);
+                    break;
+                case YELLOW:
+                    if (target == Dungeon.hero) break;
+                    Buff.prolong(target, RewardBoost.class, 1);
+                    break;
+                case PURPLE:
+                    Buff.prolong(target, DancingDoom.class, 1);
+            }
         }
     }
 
