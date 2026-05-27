@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.NaturesPower;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.LeafParticle;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfSharpshooting;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -69,20 +70,22 @@ public class SpiritBow extends MissileWeapon {
 	}
 
 	@Override
+	public ArrayList<String> actions(Hero hero) {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public String defaultAction() {
+		return null;
+	}
+
+	@Override
 	public int defaultQuantity() {
 		return 1;
 	}
 	
 	public boolean sniperSpecial = false;
 	public float sniperSpecialBonusDamage = 0f;
-
-	@Override
-	public ArrayList<String> actions(Hero hero) {
-		ArrayList<String> actions = super.actions(hero);
-		actions.remove(AC_EQUIP);
-		actions.add(AC_SHOOT);
-		return actions;
-	}
 	
 	@Override
 	public void execute(Hero hero, String action) {
@@ -284,6 +287,11 @@ public class SpiritBow extends MissileWeapon {
 		//level isn't affected by buffs/debuffs
 		return level();
 	}
+
+	@Override
+	public Item split(long amount) {
+		return null;
+	}
 	
 	@Override
 	public boolean isUpgradable() {
@@ -385,7 +393,7 @@ public class SpiritBow extends MissileWeapon {
 						user.buff(Talent.LethalMomentumTracker.class).detach();
 						user.next();
 					} else {
-						user.spendAndNext(castDelay(user, dst));
+						user.spendAndNext(castDelay(user, cell));
 					}
 					sniperSpecial = false;
 					flurryCount = -1;
@@ -440,7 +448,7 @@ public class SpiritBow extends MissileWeapon {
 												user.buff(Talent.LethalMomentumTracker.class).detach();
 												user.next();
 											} else {
-												user.spendAndNext(castDelay(user, dst));
+												user.spendAndNext(castDelay(user, cell));
 											}
 											sniperSpecial = false;
 											flurryCount = -1;

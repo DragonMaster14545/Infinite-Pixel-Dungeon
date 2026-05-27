@@ -39,7 +39,8 @@ public enum Challenges {
 	CHAMPION_ENEMIES("champion_enemies"),
 	STRONGER_BOSSES("stronger_bosses"),
     FOR_THE_WORTHY("for_the_worthy"),
-    CONQUEST("conquest");
+    CONQUEST("conquest"),
+	DANCE_FLOOR("dance_floor");
 
 	public final String nameId;
 

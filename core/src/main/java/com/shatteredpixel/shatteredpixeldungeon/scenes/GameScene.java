@@ -108,6 +108,7 @@ public class GameScene extends PixelScene {
 	
 	private Group terrain;
 	private Group customTiles;
+	private Group lowEffects;
 	private Group levelVisuals;
 	private Group levelWallVisuals;
 	private Group customWalls;
@@ -214,6 +215,9 @@ public class GameScene extends PixelScene {
 
 		ripples = new Group();
 		terrain.add( ripples );
+
+		lowEffects = new Group();
+		add(lowEffects);
 
 		DungeonTileSheet.setupVariance(Dungeon.level.map.length, Dungeon.seedCurDepth());
 		
@@ -1011,6 +1015,14 @@ private static float waterOfs = 0;
 		} else {
 			scene.addCustomTile(t);
 		}
+	}
+
+	public static boolean lowEffect( Visual effect ) {
+		if (scene != null) {
+			scene.lowEffects.add(effect);
+			return true;
+		}
+		return false;
 	}
 	
 	public static void effect( Visual effect ) {

@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.DanceFloor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SmokeScreen;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Web;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.WellWater;
@@ -314,6 +315,10 @@ public abstract class Level implements Bundlable {
 		
 		createMobs();
 		createItems();
+
+		if (Dungeon.isChallenged(Challenges.DANCE_FLOOR)) {
+			GameScene.add(Blob.seed(0, 1, DanceFloor.class, this));
+		}
 
 		Random.popGenerator();
 	}
@@ -1472,6 +1477,11 @@ if (bundle.contains( "respawner" )){
 			for (Heap heap : heaps.valueList())
 				if (!heap.seen && fieldOfView[heap.pos])
 					heap.seen = true;
+
+			DanceFloor dance = (DanceFloor) blobs.get(DanceFloor.class);
+			if (dance != null) {
+				dance.updateFov();
+			}
 		}
 
 	}

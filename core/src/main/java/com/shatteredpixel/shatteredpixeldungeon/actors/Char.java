@@ -48,6 +48,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Chill;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corrosion;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.DamageAmplificationBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Daze;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
@@ -75,6 +76,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SnipersMark;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Speed;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Stamina;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.TimescaleBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vulnerable;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Weakness;
@@ -783,6 +785,12 @@ public abstract class Char extends Actor {
 		if (this.buff(Longsword.HolyExpEffect.class) != null){
 			dmg *= Math.pow(1.14d, buff(Longsword.HolyExpEffect.class).stacks);
 		}
+		for (Buff buff : this.buffs()) {
+			if(buff instanceof DamageAmplificationBuff && !isImmune(buff.getClass())){
+				dmg *= ((DamageAmplificationBuff) buff).damageMultiplier();
+			}
+
+		}
 
 		if (buff(Sickle.HarvestBleedTracker.class) != null){
 			buff(Sickle.HarvestBleedTracker.class).detach();
@@ -1099,6 +1107,9 @@ public abstract class Char extends Actor {
 		}
 		if (buff( Speed.class ) != null) {
 			timeScale *= 2.0f;
+		}
+		for (TimescaleBuff buff : buffs(TimescaleBuff.class)) {
+			timeScale *= buff.speedFactor();
 		}
 		
 		super.spend( time / timeScale );

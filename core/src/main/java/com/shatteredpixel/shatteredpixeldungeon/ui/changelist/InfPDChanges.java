@@ -76,6 +76,10 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.CHALLENGE_COLOR), "Another Challenge",
+                "_Dance Dance_ is another challenge that is implemented from Too Cruel PD. Well, this is a hard challenge even the Last Waltz is not added."
+        ));
+
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.JAVELIN), "Thrown Weapon Sets",
                 "_Thrown weapons have been majorly overhauled to be more worthwhile to upgrade!_\n" +
                         "\n" +
