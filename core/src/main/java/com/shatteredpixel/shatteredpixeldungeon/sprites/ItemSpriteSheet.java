@@ -937,6 +937,7 @@ public class ItemSpriteSheet {
     public static final int PORTABLE_ALCHEMY  = SPELLS_NEW_ROW+8;
     public static final int TIER_UPGRADE  = SPELLS_NEW_ROW+9;
     public static final int A_TIER_UPGRADE  = SPELLS_NEW_ROW+10;
+	public static final int DANCE_IMMUNE  = SPELLS_NEW_ROW+11;
 	static {
 		assignItemRect(EXTRACTOR,     10, 15);
 		assignItemRect(GAMBLER,     10, 15);
@@ -949,6 +950,7 @@ public class ItemSpriteSheet {
         assignItemRect(PORTABLE_ALCHEMY,    	 11, 11);
         assignItemRect(TIER_UPGRADE,     10, 15);
         assignItemRect(A_TIER_UPGRADE,     10, 15);
+		assignItemRect(DANCE_IMMUNE,    	 11, 11);
 	}
 
     private static final int TEST_TUBES =								xy(1, 34);

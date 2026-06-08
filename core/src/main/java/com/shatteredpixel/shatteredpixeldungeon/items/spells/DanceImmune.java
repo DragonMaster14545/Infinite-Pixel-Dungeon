@@ -35,7 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 
 public class DanceImmune extends Spell {
     {
-        image = ItemSpriteSheet.TELE_GRAB;
+        image = ItemSpriteSheet.DANCE_IMMUNE;
 
         talentChance = 1/(float) Recipe.OUT_QUANTITY;
     }
