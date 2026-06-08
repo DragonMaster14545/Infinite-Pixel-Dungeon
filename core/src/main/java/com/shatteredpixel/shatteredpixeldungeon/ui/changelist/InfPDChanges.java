@@ -77,7 +77,7 @@ public class InfPDChanges {
         changeInfos.add(changes);
 
         changes.addButton( new ChangeButton(Icons.get(Icons.CHALLENGE_COLOR), "Another Challenge",
-                "_Dance Dance_ is another challenge that is implemented from Too Cruel PD. Well, this is a hard challenge even the Last Waltz is not added."
+                "_Dance Dance_ is a challenge that is implemented from Too Cruel PD. Well, this is actually a hard challenge even the Last Waltz is not added."
         ));
 
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.JAVELIN), "Thrown Weapon Sets",
@@ -97,7 +97,7 @@ public class InfPDChanges {
 
 
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.WEAPON_HOLDER), "New Enchantments!",
-                "In this update, we added an enchantments that will help you through your run!\n\n" +
+                "In this update, we added an enchantment that will help you through your run!\n\n" +
                         "_- Sharpened Enchantment:_ is an uncommon enchantment that inflicts bleeding within a chance\n"
         ));
 
