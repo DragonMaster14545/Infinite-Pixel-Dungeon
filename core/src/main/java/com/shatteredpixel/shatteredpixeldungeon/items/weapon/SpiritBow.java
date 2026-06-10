@@ -3,10 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
- *
- * Experienced Pixel Dungeon
- * Copyright (C) 2019-2024 Trashbox Bobylev
+ * Copyright (C) 2014-2026 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +36,12 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfSharpshooting;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.plants.*;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Blindweed;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Firebloom;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Icecap;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Sorrowmoss;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Stormvine;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -53,51 +55,42 @@ import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
 
-public class SpiritBow extends MissileWeapon {
-	
+public class SpiritBow extends Weapon {
+
 	public static final String AC_SHOOT		= "SHOOT";
-	
+
 	{
 		image = ItemSpriteSheet.SPIRIT_BOW;
-		
+
 		defaultAction = AC_SHOOT;
 		usesTargeting = true;
-		
+
 		unique = true;
 		bones = false;
-
-		setID = 0L;
 	}
+
+	public boolean sniperSpecial = false;
+	public float sniperSpecialBonusDamage = 0f;
 
 	@Override
 	public ArrayList<String> actions(Hero hero) {
-		return new ArrayList<>();
+		ArrayList<String> actions = super.actions(hero);
+		actions.remove(AC_EQUIP);
+		actions.add(AC_SHOOT);
+		return actions;
 	}
 
-	@Override
-	public String defaultAction() {
-		return null;
-	}
-
-	@Override
-	public int defaultQuantity() {
-		return 1;
-	}
-	
-	public boolean sniperSpecial = false;
-	public float sniperSpecialBonusDamage = 0f;
-	
 	@Override
 	public void execute(Hero hero, String action) {
-		
+
 		super.execute(hero, action);
-		
+
 		if (action.equals(AC_SHOOT)) {
-			
+
 			curUser = hero;
 			curItem = this;
 			GameScene.selectCell( shooter );
-			
+
 		}
 	}
 
@@ -144,18 +137,18 @@ public class SpiritBow extends MissileWeapon {
 	@Override
 	public String info() {
 		String info = super.info();
-		
+
 		info += "\n\n" + Messages.get( SpiritBow.class, "stats",
 				Math.round(augment.damageFactor(min())),
 				Math.round(augment.damageFactor(max())),
 				STRReq());
-		
+
 		if (STRReq() > Dungeon.hero.STR()) {
 			info += " " + Messages.get(Weapon.class, "too_heavy");
 		} else if (Dungeon.hero.STR() > STRReq()){
 			info += " " + Messages.get(Weapon.class, "excess_str", Dungeon.hero.STR() - STRReq());
 		}
-		
+
 		switch (augment) {
 			case SPEED:
 				info += "\n\n" + Messages.get(Weapon.class, "faster");
@@ -173,7 +166,7 @@ public class SpiritBow extends MissileWeapon {
 		} else if (enchantHardened){
 			info += "\n\n" + Messages.get(Weapon.class, "hardened_no_enchant");
 		}
-		
+
 		if (cursed && isEquipped( Dungeon.hero )) {
 			info += "\n\n" + Messages.get(Weapon.class, "cursed_worn");
 		} else if (cursedKnown && cursed) {
@@ -181,30 +174,30 @@ public class SpiritBow extends MissileWeapon {
 		} else if (!isIdentified() && cursedKnown){
 			info += "\n\n" + Messages.get(Weapon.class, "not_cursed");
 		}
-		
+
 		info += "\n\n" + Messages.get(MissileWeapon.class, "distance");
-		
+
 		return info;
 	}
-	
+
 	@Override
 	public int STRReq(long lvl) {
 		return STRReq(1, lvl); //tier 1
 	}
-	
+
 	@Override
 	public long min(long lvl) {
-		long dmg = 1 + Dungeon.hero.lvl/6
-				+ 2*RingOfSharpshooting.levelDamageBonus(Dungeon.hero)
-				+ (curseInfusionBonus ? 1 + Dungeon.hero.lvl/25 : 0);
+		long dmg = (1 + Dungeon.hero.lvl/5)
+				+ RingOfSharpshooting.levelDamageBonus(Dungeon.hero)
+				+ (curseInfusionBonus ? 1 + Dungeon.hero.lvl/30 : 0);
 		return Math.max(0, dmg);
 	}
-	
+
 	@Override
 	public long max(long lvl) {
-		long dmg = 6 + (int)(Dungeon.hero.lvl/2f)
-				+ 3*RingOfSharpshooting.levelDamageBonus(Dungeon.hero)
-				+ (curseInfusionBonus ? 2 + Dungeon.hero.lvl/10 : 0);
+		long dmg = (long) (6 + (Dungeon.hero.lvl/2.5f)
+                        + 2*RingOfSharpshooting.levelDamageBonus(Dungeon.hero)
+                        + (curseInfusionBonus ? 2 + Dungeon.hero.lvl/15 : 0));
 		return Math.max(0, dmg);
 	}
 
@@ -212,13 +205,13 @@ public class SpiritBow extends MissileWeapon {
 	public int targetingPos(Hero user, int dst) {
 		return knockArrow().targetingPos(user, dst);
 	}
-	
+
 	private int targetPos;
-	
+
 	@Override
 	public long damageRoll(Char owner) {
 		long damage = augment.damageFactor(super.damageRoll(owner));
-		
+
 		if (owner instanceof Hero) {
 			int exStr = ((Hero)owner).STR() - STRReq();
 			if (exStr > 0) {
@@ -245,10 +238,10 @@ public class SpiritBow extends MissileWeapon {
 					break;
 			}
 		}
-		
+
 		return damage;
 	}
-	
+
 	@Override
 	protected float baseDelay(Char owner) {
 		if (sniperSpecial){
@@ -289,25 +282,37 @@ public class SpiritBow extends MissileWeapon {
 	}
 
 	@Override
-	public Item split(long amount) {
-		return null;
-	}
-	
-	@Override
 	public boolean isUpgradable() {
 		return false;
 	}
-	
+
 	public SpiritArrow knockArrow(){
 		return new SpiritArrow();
 	}
-	
+
 	public class SpiritArrow extends MissileWeapon {
-		
+
 		{
 			image = ItemSpriteSheet.SPIRIT_ARROW;
 
 			hitSound = Assets.Sounds.HIT_ARROW;
+
+			setID = 0;
+		}
+
+		@Override
+		public ArrayList<String> actions(Hero hero) {
+			return new ArrayList<>();
+		}
+
+		@Override
+		public String defaultAction() {
+			return null;
+		}
+
+		@Override
+		public int defaultQuantity() {
+			return 1;
 		}
 
 		@Override
@@ -327,22 +332,22 @@ public class SpiritBow extends MissileWeapon {
 		public long damageRoll(Char owner) {
 			return SpiritBow.this.damageRoll(owner);
 		}
-		
+
 		@Override
 		public boolean hasEnchant(Class<? extends Enchantment> type, Char owner) {
 			return SpiritBow.this.hasEnchant(type, owner);
 		}
-		
+
 		@Override
 		public long proc(Char attacker, Char defender, long damage) {
 			return SpiritBow.this.proc(attacker, defender, damage);
 		}
-		
+
 		@Override
 		public float delayFactor(Char user) {
 			return SpiritBow.this.delayFactor(user);
 		}
-		
+
 		@Override
 		public float accuracyFactor(Char owner, Char target) {
 			if (sniperSpecial && SpiritBow.this.augment == Augment.DAMAGE){
@@ -351,7 +356,7 @@ public class SpiritBow extends MissileWeapon {
 				return super.accuracyFactor(owner, target);
 			}
 		}
-		
+
 		@Override
 		public int STRReq(long lvl) {
 			return SpiritBow.this.STRReq();
@@ -372,6 +377,11 @@ public class SpiritBow extends MissileWeapon {
 		}
 
 		@Override
+		public Item split(long amount) {
+			return null;
+		}
+
+		@Override
 		public void throwSound() {
 			Sample.INSTANCE.play( Assets.Sounds.ATK_SPIRITBOW, 1, Random.Float(0.87f, 1.15f) );
 		}
@@ -385,9 +395,9 @@ public class SpiritBow extends MissileWeapon {
 			SpiritBow.this.targetPos = cell;
 			if (sniperSpecial && SpiritBow.this.augment == Augment.SPEED){
 				if (flurryCount == -1) flurryCount = 3;
-				
+
 				final Char enemy = Actor.findChar( cell );
-				
+
 				if (enemy == null){
 					if (user.buff(Talent.LethalMomentumTracker.class) != null){
 						user.buff(Talent.LethalMomentumTracker.class).detach();
@@ -406,9 +416,9 @@ public class SpiritBow extends MissileWeapon {
 				}
 
 				QuickSlotButton.target(enemy);
-				
+
 				user.busy();
-				
+
 				throwSound();
 
 				user.sprite.zap(cell);
@@ -460,7 +470,7 @@ public class SpiritBow extends MissileWeapon {
 										}
 									}
 								});
-				
+
 			} else {
 
 				if (user.hasTalent(Talent.SEER_SHOT)
@@ -480,12 +490,12 @@ public class SpiritBow extends MissileWeapon {
 		}
 	}
 
-    @Override
-    public boolean needsAim() {
-        return true;
-    }
+	@Override
+	public boolean needsAim() {
+		return true;
+	}
 
-    private CellSelector.Listener shooter = new CellSelector.Listener() {
+	private CellSelector.Listener shooter = new CellSelector.Listener() {
 		@Override
 		public void onSelect( Integer target ) {
 			if (target != null) {
