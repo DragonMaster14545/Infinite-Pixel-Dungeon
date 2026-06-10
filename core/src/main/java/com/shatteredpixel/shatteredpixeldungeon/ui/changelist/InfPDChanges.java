@@ -72,14 +72,6 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
-        changes = new ChangeInfo("F", false, "");
-        changes.hardlight(0x00FFFF);
-        changeInfos.add(changes);
-
-        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
-                "_-_ Fixed spirit bow's button doesn't show\n"
-        ));
-
         changes = new ChangeInfo("E", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
@@ -127,7 +119,8 @@ public class InfPDChanges {
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
-                "_-_ Fixed how corrupting power of Dark Blade works\n"
+                "_-_ Fixed how corrupting power of Dark Blade works\n" +
+                        "_-_ [Quick Fix] Fixed spirit bow's button doesn't show\n"
         ));
 
         changes = new ChangeInfo("D", false, "");
