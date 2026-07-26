@@ -22,66 +22,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
+package com.shatteredpixel.shatteredpixeldungeon.levels;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.CounterBuff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Overload;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RageShield;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Stamina;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.MobSpawner;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Shopkeeper;
 import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
-import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Torch;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.CommonEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.EpicEmblem;
-import com.shatteredpixel.shatteredpixeldungeon.items.emblem.LaserisedEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.RareEmblem;
-import com.shatteredpixel.shatteredpixeldungeon.items.emblem.SummonerEmblem;
-import com.shatteredpixel.shatteredpixeldungeon.items.emblem.TrihitEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.UncommonEmblem;
-import com.shatteredpixel.shatteredpixeldungeon.items.food.SmallRation;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfAquaticRejuvenation;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMirrorImage;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfPower;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRetribution;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTerror;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.BiggerGambleBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.GambleBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.QualityBag;
-import com.shatteredpixel.shatteredpixeldungeon.levels.CityLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Patch;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
-import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.ArenaShopLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.PortableShop;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.SummoningTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTileSheet;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.audio.Music;
@@ -249,39 +215,16 @@ public class PortableShopLevel extends Level {
 				itemsToSpawn.add( item.upgrade(Random.IntRange(2, 10)) );
 			}
 
-			Point itemPlacement = new Point(cellToPoint(arenaDoor));
-			if (itemPlacement.y == ROOM_TOP-1){
-				itemPlacement.y++;
-			} else if (itemPlacement.y == ROOM_BOTTOM+1) {
-				itemPlacement.y--;
-			} else if (itemPlacement.x == ROOM_LEFT-1){
-				itemPlacement.x++;
-			} else {
-				itemPlacement.x--;
-			}
-
 			for (Item item : itemsToSpawn) {
 
-				if (itemPlacement.x == ROOM_LEFT && itemPlacement.y != ROOM_TOP){
-					itemPlacement.y--;
-				} else if (itemPlacement.y == ROOM_TOP && itemPlacement.x != ROOM_RIGHT){
-					itemPlacement.x++;
-				} else if (itemPlacement.x == ROOM_RIGHT && itemPlacement.y != ROOM_BOTTOM){
-					itemPlacement.y++;
-				} else {
-					itemPlacement.x--;
-				}
-
-				int cell = pointToCell(itemPlacement);
-
-
-
-				if (heaps.get( cell ) != null) {
-					do {
-						cell = pointToCell(new Point( Random.IntRange( ROOM_TOP, ROOM_RIGHT ),
-								Random.IntRange( ROOM_TOP, ROOM_BOTTOM )));
-					} while (heaps.get( cell ) != null || findMob( cell ) != null);
-				}
+				int cell;
+				do {
+					cell = pointToCell(new Point(
+							Random.IntRange( ROOM_LEFT, ROOM_RIGHT ),
+							Random.IntRange( ROOM_TOP, ROOM_BOTTOM )
+					));
+				} while (cell == entrance || cell == arenaDoor
+						|| heaps.get( cell ) != null || findMob( cell ) != null);
 
 				drop( item, cell ).type = Heap.Type.FOR_SALE;
 			}
