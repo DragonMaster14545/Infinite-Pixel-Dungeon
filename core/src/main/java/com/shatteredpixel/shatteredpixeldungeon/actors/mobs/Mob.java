@@ -70,6 +70,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.PsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArmband;
@@ -913,6 +914,8 @@ public abstract class Mob extends Char {
 			EXP *= 2;
 		}
 
+		//TODO sturdy exp nullifier when reaching specific level.
+
 		if (alignment == Alignment.ENEMY){
 			rollToDropLoot();
 
@@ -929,6 +932,9 @@ public abstract class Mob extends Char {
 				}
 			}
 
+			if (PsycheChest.neededLevel() < Dungeon.hero.lvl) {
+				EXP = 0;
+			}
 		}
 
 		if (Dungeon.hero.isAlive() && !Dungeon.level.heroFOV[pos]) {

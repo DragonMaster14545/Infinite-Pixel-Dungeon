@@ -80,6 +80,11 @@ public class InfPDChanges {
                 "_-_ Portable Shop dimension's item placement is now random\n"
         ));
 
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Reaching a specific level in the current cycle no longer gives EXP from mobs. (No SoU challenge have 20% less level requirements)\n"
+
+        ));
+
         changes = new ChangeInfo("E", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
