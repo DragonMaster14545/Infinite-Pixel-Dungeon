@@ -76,13 +76,18 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.MACE), "Weapon Changes",
+                "There are weapons that are OP in the early to mid game, so here are the changes:\n\n" +
+                        "_-_ Dirk's max base damage is now 10 (down from 14)\n" +
+                        "_-_ Mace's max base damage is now 15 (down from 20)\n" +
+                        "_-_ Longsword's max base damage is now 20 (down from 25)\n"
+        ));
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Portable Shop dimension's item placement is now random\n"
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Reaching a specific level in the current cycle no longer gives EXP from mobs. (No SoU challenge have 20% less level requirements)\n"
-
         ));
 
         changes = new ChangeInfo("E", false, "");

@@ -55,7 +55,7 @@ public class Mace extends MeleeWeapon {
 
 	@Override
 	public long max(long lvl) {
-		return  5L*(tier()+1) +    //20 base, down from 24
+		return  (5L*tier()) +    //15 base, down from 20
 				lvl*(tier()+2);   //+5
 	}
 
