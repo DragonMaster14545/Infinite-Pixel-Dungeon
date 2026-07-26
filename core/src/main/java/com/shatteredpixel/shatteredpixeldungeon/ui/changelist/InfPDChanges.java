@@ -82,6 +82,12 @@ public class InfPDChanges {
                         "_-_ Mace's max base damage is now 15 (down from 20)\n" +
                         "_-_ Longsword's max base damage is now 20 (down from 25)\n"
         ));
+
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.ELIXIR_MIGHT), "Luck",
+                "Well, luck is too op for this game.. so we made a change(s):\n\n" +
+                        "_-_ There is 5% chance that the luck you have doesn't apply. This applies to everything that is applicable by dungeon based luck."
+        ));
+
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Portable Shop dimension's item placement is now random\n"
         ));

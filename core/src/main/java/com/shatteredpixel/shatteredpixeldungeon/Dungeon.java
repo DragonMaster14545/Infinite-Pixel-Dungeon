@@ -1358,10 +1358,20 @@ public class Dungeon {
 	}
 
 	//luck-augmented RNG
-	public enum LuckDirection {UP, DOWN};
+	public enum LuckDirection {UP, DOWN}
+
+	//probability that a roll ignores luck entirely and falls back to one plain draw.
+	//states the fact that even the luckiest person still has off days.
+	private static final float BAD_LUCK_CHANCE = 0.05f;
+
+	private static boolean luckApplies(){
+		return luck <= 1 || !(Random.Float() >= BAD_LUCK_CHANCE);
+	}
+
 	public static int Int(int max){
-		int highest = Integer.MIN_VALUE;
-		for (int i = 0; i < luck; i++){
+		if (luckApplies()) return Random.Int(max);
+		int highest = Random.Int(max);
+		for (int i = 1; i < luck; i++){
 			int roll = Random.Int(max);
 			if (roll > highest) highest = roll;
 		}
@@ -1369,8 +1379,9 @@ public class Dungeon {
 	}
 
 	public static int Int(int min, int max){
-		int highest = Integer.MIN_VALUE;
-		for (int i = 0; i < luck; i++){
+		if (luckApplies()) return Random.Int(min, max);
+		int highest = Random.Int(min, max);
+		for (int i = 1; i < luck; i++){
 			int roll = Random.Int(min, max);
 			if (roll > highest) highest = roll;
 		}
@@ -1378,8 +1389,9 @@ public class Dungeon {
 	}
 
 	public static int IntRange(int min, int max){
-		int highest = Integer.MIN_VALUE;
-		for (int i = 0; i < luck; i++){
+		if (luckApplies()) return Random.IntRange(min, max);
+		int highest = Random.IntRange(min, max);
+		for (int i = 1; i < luck; i++){
 			int roll = Random.IntRange(min, max);
 			if (roll > highest) highest = roll;
 		}
@@ -1387,8 +1399,9 @@ public class Dungeon {
 	}
 
 	public static int NormalIntRange(int min, int max){
-		int highest = Integer.MIN_VALUE;
-		for (int i = 0; i < luck; i++){
+		if (luckApplies()) return Random.NormalIntRange(min, max);
+		int highest = Random.NormalIntRange(min, max);
+		for (int i = 1; i < luck; i++){
 			int roll = Random.NormalIntRange(min, max);
 			if (roll > highest) highest = roll;
 		}
@@ -1396,8 +1409,9 @@ public class Dungeon {
 	}
 
 	public static long Long(long min, long max){
-		long highest = Long.MIN_VALUE;
-		for (int i = 0; i < luck; i++){
+		if (luckApplies()) return Random.Long(min, max);
+		long highest = Random.Long(min, max);
+		for (int i = 1; i < luck; i++){
 			long roll = Random.Long(min, max);
 			if (roll > highest) highest = roll;
 		}
@@ -1405,8 +1419,9 @@ public class Dungeon {
 	}
 
 	public static long LongRange(long min, long max){
-		long highest = Long.MIN_VALUE;
-		for (int i = 0; i < luck; i++){
+		if (luckApplies()) return Random.LongRange(min, max);
+		long highest = Random.LongRange(min, max);
+		for (int i = 1; i < luck; i++){
 			long roll = Random.LongRange(min, max);
 			if (roll > highest) highest = roll;
 		}
@@ -1414,8 +1429,9 @@ public class Dungeon {
 	}
 
 	public static long NormalLongRange(long min, long max){
-		long highest = Long.MIN_VALUE;
-		for (int i = 0; i < luck; i++){
+		if (luckApplies()) return Random.NormalLongRange(min, max);
+		long highest = Random.NormalLongRange(min, max);
+		for (int i = 1; i < luck; i++){
 			long roll = Random.NormalLongRange(min, max);
 			if (roll > highest) highest = roll;
 		}
@@ -1423,8 +1439,9 @@ public class Dungeon {
 	}
 
 	public static float Float(){
-		float highest = Float.MIN_VALUE;
-		for (int i = 0; i < luck; i++){
+		if (luckApplies()) return Random.Float();
+		float highest = Random.Float();
+		for (int i = 1; i < luck; i++){
 			float roll = Random.Float();
 			if (roll > highest) highest = roll;
 		}
@@ -1436,33 +1453,39 @@ public class Dungeon {
 	}
 
 	public static float Float(float max, LuckDirection direction){
-		float highest = Float.MIN_VALUE;
-		for (int i = 0; i < luck; i++){
+		if (luckApplies()) return Random.Float(max);
+		float highest = Random.Float(max);
+		for (int i = 1; i < luck; i++){
 			float roll = Random.Float(max);
-			if (i == 0)
-				highest = roll;
-			else {
-				switch (direction) {
-					case UP: if (roll > highest) highest = roll; break;
-					case DOWN: if (roll < highest) highest = roll; break;
-				}
+			switch (direction) {
+				case UP:   if (roll > highest) highest = roll; break;
+				case DOWN: if (roll < highest) highest = roll; break;
 			}
 		}
 		return highest;
 	}
 
 	public static float Float(float min, float max){
-		float highest = Float.MIN_VALUE;
-		for (int i = 0; i < luck; i++){
+		return Float(min, max, LuckDirection.UP);
+	}
+
+	public static float Float(float min, float max, LuckDirection direction){
+		if (luckApplies()) return Random.Float(min, max);
+		float highest = Random.Float(min, max);
+		for (int i = 1; i < luck; i++){
 			float roll = Random.Float(min, max);
-			if (roll > highest) highest = roll;
+			switch (direction) {
+				case UP:   if (roll > highest) highest = roll; break;
+				case DOWN: if (roll < highest) highest = roll; break;
+			}
 		}
 		return highest;
 	}
 
 	public static float NormalFloat(float min, float max){
-		float highest = Float.MIN_VALUE;
-		for (int i = 0; i < luck; i++){
+		if (luckApplies()) return Random.NormalFloat(min, max);
+		float highest = Random.NormalFloat(min, max);
+		for (int i = 1; i < luck; i++){
 			float roll = Random.NormalFloat(min, max);
 			if (roll > highest) highest = roll;
 		}
@@ -1470,8 +1493,9 @@ public class Dungeon {
 	}
 
 	public static double Double(){
-		double highest = Double.MIN_VALUE;
-		for (int i = 0; i < luck; i++){
+		if (luckApplies()) return Random.Double();
+		double highest = Random.Double();
+		for (int i = 1; i < luck; i++){
 			double roll = Random.Double();
 			if (roll > highest) highest = roll;
 		}
@@ -1483,24 +1507,22 @@ public class Dungeon {
 	}
 
 	public static double Double(double max, LuckDirection direction){
-		double highest = Double.MIN_VALUE;
-		for (int i = 0; i < luck; i++){
+		if (luckApplies()) return Random.Double(max);
+		double highest = Random.Double(max);
+		for (int i = 1; i < luck; i++){
 			double roll = Random.Double(max);
-			if (i == 0)
-				highest = roll;
-			else {
-				switch (direction) {
-					case UP: if (roll > highest) highest = roll; break;
-					case DOWN: if (roll < highest) highest = roll; break;
-				}
+			switch (direction) {
+				case UP:   if (roll > highest) highest = roll; break;
+				case DOWN: if (roll < highest) highest = roll; break;
 			}
 		}
 		return highest;
 	}
 
 	public static double Double(double min, double max){
-		double highest = Double.MIN_VALUE;
-		for (int i = 0; i < luck; i++){
+		if (luckApplies()) return Random.Double(min, max);
+		double highest = Random.Double(min, max);
+		for (int i = 1; i < luck; i++){
 			double roll = Random.Double(min, max);
 			if (roll > highest) highest = roll;
 		}
@@ -1508,17 +1530,17 @@ public class Dungeon {
 	}
 
 	public static double NormalDouble(double min, double max){
-		double highest = Double.MIN_VALUE;
-		for (int i = 0; i < luck; i++){
+		if (luckApplies()) return Random.NormalDouble(min, max);
+		double highest = Random.NormalDouble(min, max);
+		for (int i = 1; i < luck; i++){
 			double roll = Random.NormalDouble(min, max);
 			if (roll > highest) highest = roll;
 		}
 		return highest;
 	}
 
-	//returns an index from chances, the probability of each index is the weight values in changes
+	//returns an index from chances, the probability of each index is the weight values in chances
 	public static int chances( float[] chances ) {
-
 		int length = chances.length;
 
 		float sum = 0;
@@ -1541,29 +1563,28 @@ public class Dungeon {
 	@SuppressWarnings("unchecked")
 	//returns a key element from chances, the probability of each key is the weight value it maps to
 	public static <K> K chances( HashMap<K,Float> chances ) {
-
 		int size = chances.size();
 
 		Object[] values = chances.keySet().toArray();
 		float[] probs = new float[size];
-		float sum = 0;
+		float total = 0;
 		for (int i=0; i < size; i++) {
 			probs[i] = chances.get( values[i] );
-			sum += probs[i];
+			total += probs[i];
 		}
 
-		if (sum <= 0) {
+		if (total <= 0) {
 			return null;
 		}
 
-		float value = Float( sum, LuckDirection.UP );
+		float value = Float( total, LuckDirection.UP );
 
-		sum = probs[0];
+		float sum = 0;
 		for (int i=0; i < size; i++) {
+			sum += probs[i];
 			if (value < sum) {
 				return (K)values[i];
 			}
-			sum += probs[i + 1];
 		}
 
 		return null;
