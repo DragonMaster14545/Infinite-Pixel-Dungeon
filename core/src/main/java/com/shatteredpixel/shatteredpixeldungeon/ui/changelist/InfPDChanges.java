@@ -93,7 +93,8 @@ public class InfPDChanges {
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
-                "_-_ Reaching a specific level in the current cycle no longer gives EXP from mobs. (No SoU challenge have 20% less level requirements)\n"
+                "_-_ Reaching a specific level in the current cycle no longer gives EXP from mobs. (No SoU challenge have 20% less level requirements)\n" +
+                        "_-_ Refined bags' specials drop rate decreased to 3.5% from 5%"
         ));
 
         changes = new ChangeInfo("E", false, "");
