@@ -76,6 +76,11 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.WEAPON_HOLDER), "New Enchantment!",
+                "In this update, we added a new enchantment!\n\n" +
+                        "_- Interfered Enchantment:_ is a rare enchantment that inflicts elemental damage all at once within a chance\n"
+        ));
+
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.MACE), "Weapon Changes",
                 "There are weapons that are OP in the early to mid game, so here are the changes:\n\n" +
                         "_-_ Dirk's max base damage is now 10 (down from 14)\n" +

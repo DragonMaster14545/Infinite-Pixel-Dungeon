@@ -61,6 +61,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Corrup
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Elastic;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Galactic;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Grim;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Interfered;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Kinetic;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Laserised;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Lucky;
@@ -486,7 +487,7 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 
 		public static final Class<?>[] rare = new Class<?>[]{
 				Corrupting.class, Grim.class, Vampiric.class,
-				Galactic.class};
+				Galactic.class, Interfered.class};
 
         public static final Class<?>[] emblem_exclusive = new Class<?>[]{
                 Trihit.class, Summoner.class, Laserised.class};

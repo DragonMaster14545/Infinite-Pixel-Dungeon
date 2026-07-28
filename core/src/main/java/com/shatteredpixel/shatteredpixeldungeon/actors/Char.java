@@ -122,6 +122,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Blazing;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Grim;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Interfered;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Kinetic;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Racked;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Scorching;
@@ -909,7 +910,7 @@ public abstract class Char extends Actor {
 			if (src instanceof Burning || src instanceof FiringSnapper) icon = FloatingText.BURNING;
 			if (src instanceof Chill || src instanceof Frost)           icon = FloatingText.FROST;
 			if (src instanceof GeyserTrap || src instanceof StormCloud) icon = FloatingText.WATER;
-			if (src instanceof Electricity)                             icon = FloatingText.SHOCKING;
+			if (src instanceof Electricity)								icon = FloatingText.SHOCKING;
 			if (src instanceof Bleeding)                                icon = FloatingText.BLEEDING;
 			if (src instanceof ToxicGas)                                icon = FloatingText.TOXIC;
 			if (src instanceof Corrosion)                               icon = FloatingText.CORROSION;

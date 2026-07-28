@@ -91,6 +91,7 @@ public class ElementalStrike extends ArmorAbility {
 		effectTypes.put(Grim.class,         MagicMissile.SHADOW_CONE);
 		effectTypes.put(Vampiric.class,     MagicMissile.BLOOD_CONE);
         effectTypes.put(Galactic.class,     MagicMissile.MAGIC_MISS_CONE);
+		effectTypes.put(Interfered.class,     MagicMissile.MAGIC_MISS_CONE);
 
         effectTypes.put(Laserised.class,    MagicMissile.MAGIC_MISS_CONE);
         effectTypes.put(Summoner.class,     MagicMissile.MAGIC_MISS_CONE);
@@ -637,6 +638,18 @@ public class ElementalStrike extends ArmorAbility {
 							b.set(hero.damageRoll()*((double) ch.HP / ch.HT));
 							b.attachTo(ch);
 						}
+					}
+				}
+			}
+
+		//*** Interfered ***
+		} else if (ench instanceof Interfered) {
+			for (int cell : cone.cells) {
+				if (Actor.findChar(cell) != null) {
+					Char ch = Actor.findChar(cell);
+					assert ch != null;
+					if (ch.alignment != hero.alignment) {
+						ch.buff(Interfered.InterferedApplier.class).applyMulti(powerMulti);
 					}
 				}
 			}
