@@ -94,12 +94,14 @@ public class InfPDChanges {
         ));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ Portable Shop dimension's item placement is now random\n"
+                "_-_ Portable Shop dimension's item placement is now random\n" +
+                        "_-_ Racked damage will now deal separately and logs a message when reaching a specific stack"
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Reaching a specific level in the current cycle no longer gives EXP from mobs. (No SoU challenge have 20% less level requirements)\n" +
-                        "_-_ Refined bags' specials drop rate decreased to 3.5% from 5%"
+                        "_-_ Refined bags' specials drop rate decreased to 3.5% from 5%\n" +
+                        "_-_ Slightly buffed Racked enchantments to deal additional damage up to 10x"
         ));
 
         changes = new ChangeInfo("E", false, "");

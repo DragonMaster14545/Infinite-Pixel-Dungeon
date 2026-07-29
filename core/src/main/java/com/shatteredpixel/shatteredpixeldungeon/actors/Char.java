@@ -919,7 +919,7 @@ public abstract class Char extends Actor {
 			if (src instanceof Viscosity.DeferedDamage)                 icon = FloatingText.DEFERRED;
 			if (src instanceof Corruption)                              icon = FloatingText.CORRUPTION;
 			if (src instanceof Scorching)                 				icon = FloatingText.SCORCH_DMG;
-			if (src instanceof Racked)                 					icon = FloatingText.RACKED_DMG;
+			if (src instanceof Racked.RackedDamage)                 	icon = FloatingText.RACKED_DMG;
 			if (src instanceof AscensionChallenge)                      icon = FloatingText.AMULET;
 
             if ((icon == FloatingText.PHYS_DMG || icon == FloatingText.PHYS_DMG_NO_BLOCK) && hitMissIcon != -1){

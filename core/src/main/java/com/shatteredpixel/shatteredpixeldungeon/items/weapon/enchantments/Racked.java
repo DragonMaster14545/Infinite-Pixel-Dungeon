@@ -24,14 +24,19 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Electricity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Chill;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.GameMath;
@@ -43,8 +48,12 @@ public class Racked extends Weapon.Enchantment {
 	@Override
 	public long proc(Weapon weapon, Char attacker, Char defender, long damage) {
 
+		long level = Math.max( 0, weapon.buffedLvl() );
+		double percentage = (level/(level+100d)) * procChanceMultiplier(attacker);
+		double powerMulti = Math.max(9d, percentage);
+
 		if (attacker.buff(StackTracker.class) != null && attacker.buff(StackTracker.class).stacks >= 15) {
-			defender.damage((long) (damage * 2d), this);
+			Buff.affect(defender, RackedApplier.class).applyMulti(powerMulti, damage);
 			attacker.buff(StackTracker.class).resetStacks();
 			Buff.affect(attacker, RackedEnchantmentCooldown.class, 5f);
 		}
@@ -103,6 +112,9 @@ public class Racked extends Weapon.Enchantment {
 
 		public void set( float time ) {
 			stacks++;
+			if (stacks >= 15) {
+				GLog.p("Your next attack will apply massive bonus damage!");
+			}
 			duration = time;
 			spend(time - cooldown() - 1);
 		}
@@ -131,4 +143,15 @@ public class Racked extends Weapon.Enchantment {
 		public float iconFadePercent() { return GameMath.gate(0, visualcooldown() / (5), 1); }
 	};
 
+	public static class RackedApplier extends Buff {
+
+		public void applyMulti(double multi, long damage) {
+			target.damage((long) (damage * (1d + multi)), new RackedDamage());
+			GLog.i("All racked stacks consumed.");
+			detach();
+		}
+
+	}
+
+	public static class RackedDamage {}
 }
