@@ -241,7 +241,6 @@ public class PortableShopLevel extends Level {
 			if (map[i] == Terrain.EMPTY && Random.Int( 6 ) == 0) {
 				map[i] = Terrain.INACTIVE_TRAP;
 				Trap t = new SummoningTrap().reveal();
-				t.active = false;
 				setTrap(t, i);
 			}
 		}

@@ -94,8 +94,8 @@ public class InfPDChanges {
         ));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ Portable Shop dimension's item placement is now random\n" +
-                        "_-_ Racked damage will now deal separately and logs a message when reaching a specific stack"
+                "_-_ Portable Shop dimension's item placement is now random and traps are noew active\n" +
+                        "_-_ Racked damage will now deal separately and logs a message when reaching a specific stack\n"
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
