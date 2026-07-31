@@ -54,7 +54,7 @@ import java.util.ArrayList;
 public class ItemGetter extends TargetedSpell{
 
     {
-        image = ItemSpriteSheet.VAMPIRISM;
+        image = ItemSpriteSheet.ITEMGETTER;
 
         talentChance = 1/(float) Recipe.OUT_QUANTITY;
     }
