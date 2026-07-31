@@ -48,28 +48,30 @@ import com.watabou.utils.PointF;
 import java.util.ArrayList;
 
 public class WndBag extends WndTabbed {
-	
+
 	//only one bag window can appear at a time
 	public static Window INSTANCE;
 
-	protected static final int COLS_P   = 7; //6 //7
-	protected static final int COLS_L   = 11; //7 //10
+	protected static final int COLS_P = 7; //6 //7
+	protected static final int COLS_L = 11; //7 //10
 
-	protected static int SLOT_WIDTH_P   = 17; //17
-	protected static int SLOT_WIDTH_L   = 16; //16
+	protected static int SLOT_WIDTH_P = 17; //17
+	protected static int SLOT_WIDTH_L = 16; //16
+	protected static int SLOT_HEIGHT_P = 18; //16
+	protected static int SLOT_HEIGHT_L = 17; //17
+	protected static final int SLOT_MARGIN = 1;
 
-	protected static int SLOT_HEIGHT_P	= 18; //16
-	protected static int SLOT_HEIGHT_L	= 17; //17
+	protected static final int TITLE_HEIGHT = 14;
 
-	protected static final int SLOT_MARGIN	= 1;
-	
-	protected static final int TITLE_HEIGHT	= 14;
-	
+	protected static final int MAX_PAGE_ROWS_P = 8;
+	protected static final int MAX_PAGE_ROWS_L = 4;
+	protected static final int NAV_HEIGHT = 16;
+	protected static final int NAV_GAP = 2;
+
 	private ItemSelector selector;
 
 	private int nCols;
 	private int nRows;
-
 	private int slotWidth;
 	private int slotHeight;
 
@@ -77,33 +79,62 @@ public class WndBag extends WndTabbed {
 	protected int col;
 	protected int row;
 
+	private Bag bag;
+	private int page;
+	private int totalPages;
+	private int itemsPerPage;
+	private ArrayList<Item> capacitySlots;
+
+	private RedButton btnPrevPage;
+	private RedButton btnNextPage;
+	private RenderedTextBlock pageLabel;
+
 	private static Bag lastBag;
 
 	public WndBag( Bag bag ) {
-		this(bag, null);
+		this(bag, null, 0);
 	}
 
 	public WndBag( Bag bag, ItemSelector selector ) {
-		
+		this(bag, selector, 0);
+	}
+
+	public WndBag( Bag bag, ItemSelector selector, int page ) {
 		super();
-		
+
 		if( INSTANCE != null ){
 			INSTANCE.hide();
 		}
 		INSTANCE = this;
-		
-		this.selector = selector;
 
+		this.selector = selector;
+		this.bag = bag;
 		lastBag = bag;
 
-		slotWidth = PixelScene.landscape() ? SLOT_WIDTH_L : SLOT_WIDTH_P;
+		slotWidth  = PixelScene.landscape() ? SLOT_WIDTH_L  : SLOT_WIDTH_P;
 		slotHeight = PixelScene.landscape() ? SLOT_HEIGHT_L : SLOT_HEIGHT_P;
+		nCols      = PixelScene.landscape() ? COLS_L : COLS_P;
 
-		nCols = PixelScene.landscape() ? COLS_L : COLS_P;
-		nRows = (int)Math.ceil(60/(float)nCols); //we expect to lay out 25 slots in all cases
+		capacitySlots = buildCapacitySlots( bag );
+		int slotCount = capacitySlots.size();
+
+		int maxPageRows = PixelScene.landscape() ? MAX_PAGE_ROWS_L : MAX_PAGE_ROWS_P;
+		int maxItemsPerPage = nCols * maxPageRows;
+		totalPages = Math.max( 1, (int)Math.ceil( slotCount / (float)maxItemsPerPage ) );
+		itemsPerPage = (int)Math.ceil( slotCount / (float)totalPages );
+		this.page = Math.max( 0, Math.min( page, totalPages - 1 ) );
+
+		int equippedSlots = equippedSlotCount( bag );
+
+		int from = this.page * itemsPerPage;
+		int to = Math.min( from + itemsPerPage, slotCount );
+		nRows = (int)Math.ceil( (equippedSlots + (to - from)) / (float)nCols );
 
 		int windowWidth = slotWidth * nCols + SLOT_MARGIN * (nCols - 1);
 		int windowHeight = TITLE_HEIGHT + slotHeight * nRows + SLOT_MARGIN * (nRows - 1);
+		if (totalPages > 1) {
+			windowHeight += NAV_GAP + NAV_HEIGHT;
+		}
 
 		if (PixelScene.landscape()){
 			while (slotHeight >= 24 && (windowHeight + 20 + chrome.marginTop()) > PixelScene.uiCamera.height){
@@ -118,13 +149,14 @@ public class WndBag extends WndTabbed {
 		}
 
 		placeTitle( bag, windowWidth );
-		
 		placeItems( bag );
-
+		if (totalPages > 1) {
+			placePageNav( windowWidth, windowHeight );
+		}
 		resize( windowWidth, windowHeight );
 
 		int i = 1;
-        ArrayList<Bag> bags = new ArrayList<>(Dungeon.hero.belongings.getBags());
+		ArrayList<Bag> bags = new ArrayList<>(Dungeon.hero.belongings.getBags());
 		for (Bag b : bags) {
 			if (b != null) {
 				BagTab tab = new BagTab( b, i++ );
@@ -132,40 +164,32 @@ public class WndBag extends WndTabbed {
 				tab.select( b == bag );
 			}
 		}
-
 		layoutTabs();
 	}
-	
+
 	public static WndBag lastBag( ItemSelector selector ) {
-		
 		if (lastBag != null && Dungeon.hero.belongings.backpack.contains( lastBag )) {
-			
 			return new WndBag( lastBag, selector );
-			
 		} else {
-			
 			return new WndBag( Dungeon.hero.belongings.backpack, selector );
-			
 		}
 	}
 
 	public static WndBag getBag( ItemSelector selector ) {
 		if (selector.preferredBag() == Belongings.Backpack.class){
 			return new WndBag( Dungeon.hero.belongings.backpack, selector );
-
 		} else if (selector.preferredBag() != null){
 			Bag bag = Dungeon.hero.belongings.getItem( selector.preferredBag() );
-			if (bag != null)    return new WndBag( bag, selector );
-			//if a specific preferred bag isn't present, then the relevant items will be in backpack
-			else                return new WndBag( Dungeon.hero.belongings.backpack, selector );
+			if (bag != null) return new WndBag( bag, selector );
+				//if a specific preferred bag isn't present, then the relevant items will be in backpack
+			else return new WndBag( Dungeon.hero.belongings.backpack, selector );
 		}
-
 		return lastBag( selector );
 	}
-	
-	protected void placeTitle( Bag bag, int width ){
 
+	protected void placeTitle( Bag bag, int width ){
 		float titleWidth;
+
 		if (Dungeon.energy == 0) {
 			ItemSprite gold = new ItemSprite(ItemSpriteSheet.GOLD, null);
 			gold.x = width - gold.width();
@@ -183,7 +207,6 @@ public class WndBag extends WndTabbed {
 
 			titleWidth = amt.x;
 		} else {
-
 			Image gold = Icons.get(Icons.COIN_SML);
 			gold.x = width - gold.width() - 0.5f;
 			gold.y = 0;
@@ -229,10 +252,43 @@ public class WndBag extends WndTabbed {
 		PixelScene.align(txtTitle);
 		add( txtTitle );
 	}
-	
+
+	private int equippedSlotCount( Bag container ) {
+		int n = 2; //weapon + armor
+
+		if (container.getClass() == EquipmentBag.class) {
+			n += Dungeon.hero.belongings.artifactSlots();
+			n += Dungeon.hero.belongings.miscSlots();
+			n += Dungeon.hero.belongings.ringSlots();
+		}
+
+		if (container != Dungeon.hero.belongings.backpack && container.getClass() != EquipmentBag.class) {
+			n += 1; //the container itself, shown as an item
+		} else if (container == Dungeon.hero.belongings.backpack && Dungeon.hero.belongings.secondWep != null) {
+			n += 1; //second weapon
+		}
+
+		return n;
+	}
+
+	private ArrayList<Item> buildCapacitySlots( Bag container ) {
+		ArrayList<Item> slots = new ArrayList<>();
+		int used = 0;
+		for (Item item : container.items.toArray(new Item[0])) {
+			used++;
+			if (!(item instanceof Bag)) {
+				slots.add( item );
+			}
+		}
+		int free = container.capacity() - used;
+		for (int i = 0; i < free; i++) {
+			slots.add( null );
+		}
+		return slots;
+	}
+
 	protected void placeItems( Bag container ) {
-		
-		// Equipped items
+
 		Belongings stuff = Dungeon.hero.belongings;
 		placeItem( stuff.weapon != null ? stuff.weapon : new Placeholder( ItemSpriteSheet.WEAPON_HOLDER ) );
 		placeItem( stuff.armor != null ? stuff.armor : new Placeholder( ItemSpriteSheet.ARMOR_HOLDER ) );
@@ -250,9 +306,6 @@ public class WndBag extends WndTabbed {
 			}
 		}
 
-
-		int equipped = 2;
-
 		//the container itself if it's not the root backpack
 		if (container != Dungeon.hero.belongings.backpack && container.getClass() != EquipmentBag.class) {
 			placeItem(container);
@@ -260,28 +313,63 @@ public class WndBag extends WndTabbed {
 		} else if (stuff.secondWep != null) {
 			//second weapon always goes to the front of view on main bag
 			placeItem(stuff.secondWep);
-			equipped++;
 		}
 
-		// Items in the bag, except other containers (they have tags at the bottom)
-		for (Item item : container.items.toArray(new Item[0])) {
-			if (!(item instanceof Bag)) {
-				placeItem( item );
-			} else {
-				count++;
-			}
-		}
-		
-		// Free Space
-		while ((count - equipped) < container.capacity()) {
-			placeItem( null );
+		// The bag's own capacity, this part is paginated
+		int from = page * itemsPerPage;
+		int to = Math.min( from + itemsPerPage, capacitySlots.size() );
+
+		for (int i = from; i < to; i++) {
+			placeItem( capacitySlots.get(i) );
 		}
 	}
-	
-	protected void placeItem( final Item item ) {
 
+	private void placePageNav( int windowWidth, int windowHeight ) {
+		float navY = windowHeight - NAV_HEIGHT;
+
+		btnPrevPage = new RedButton( "<" ) {
+			@Override
+			protected void onClick() {
+				switchToPage( page - 1 );
+			}
+		};
+		btnPrevPage.setRect( 0, navY, 24, NAV_HEIGHT );
+		btnPrevPage.active = page > 0;
+		add( btnPrevPage );
+
+		btnNextPage = new RedButton( ">" ) {
+			@Override
+			protected void onClick() {
+				switchToPage( page + 1 );
+			}
+		};
+		btnNextPage.setRect( windowWidth - 24, navY, 24, NAV_HEIGHT );
+		btnNextPage.active = page < totalPages - 1;
+		add( btnNextPage );
+
+		pageLabel = PixelScene.renderTextBlock( (page + 1) + "/" + totalPages, 8 );
+		pageLabel.hardlight( TITLE_COLOR );
+		pageLabel.setPos(
+				(windowWidth - pageLabel.width()) / 2f,
+				navY + (NAV_HEIGHT - pageLabel.height()) / 2f
+		);
+		PixelScene.align( pageLabel );
+		add( pageLabel );
+	}
+
+	private void switchToPage( int newPage ) {
+		hide();
+		Window w = new WndBag( bag, selector, newPage );
+		if (Game.scene() instanceof GameScene){
+			GameScene.show(w);
+		} else {
+			Game.scene().addToFront(w);
+		}
+	}
+
+	protected void placeItem( final Item item ) {
 		count++;
-		
+
 		int x = col * (slotWidth + SLOT_MARGIN);
 		int y = TITLE_HEIGHT + row * (slotHeight + SLOT_MARGIN);
 
@@ -289,38 +377,27 @@ public class WndBag extends WndTabbed {
 			@Override
 			protected void onClick() {
 				if (lastBag != item && !lastBag.contains(item) && !item.isEquipped(Dungeon.hero)){
-
 					hide();
-
 				} else if (selector != null) {
-
 					if (selector.hideAfterSelecting()){
 						hide();
 					}
 					selector.onSelect( item );
-
 				} else {
-
 					Game.scene().addToFront(new WndUseItem( WndBag.this, item ) );
-
 				}
 			}
 
 			@Override
 			protected void onRightClick() {
 				if (lastBag != item && !lastBag.contains(item) && !item.isEquipped(Dungeon.hero)){
-
 					hide();
-
 				} else if (selector != null) {
-
 					if (selector.hideAfterSelecting()){
 						hide();
 					}
 					selector.onSelect( item );
-
 				} else {
-
 					RightClickMenu r = new RightClickMenu(item){
 						@Override
 						public void onSelect(int index) {
@@ -332,7 +409,6 @@ public class WndBag extends WndTabbed {
 					PointF mousePos = PointerEvent.currentHoverPos();
 					mousePos = camera.screenToCamera((int)mousePos.x, (int)mousePos.y);
 					r.setPos(mousePos.x-3, mousePos.y-3);
-
 				}
 			}
 
@@ -356,12 +432,11 @@ public class WndBag extends WndTabbed {
 		if (item == null || (selector != null && !selector.itemSelectable(item))){
 			slot.enable(false);
 		}
-		
+
 		if (++col >= nCols) {
 			col = 0;
 			row++;
 		}
-
 	}
 
 	@Override
@@ -373,7 +448,7 @@ public class WndBag extends WndTabbed {
 			return super.onSignal(event);
 		}
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		if (selector != null) {
@@ -381,18 +456,19 @@ public class WndBag extends WndTabbed {
 		}
 		super.onBackPressed();
 	}
-	
+
 	@Override
 	protected void onClick( Tab tab ) {
 		hide();
-		Window w = new WndBag(((BagTab) tab).bag, selector);
+		//switching tabs resets pagination to the first page of the new bag
+		Window w = new WndBag(((BagTab) tab).bag, selector, 0);
 		if (Game.scene() instanceof GameScene){
 			GameScene.show(w);
 		} else {
 			Game.scene().addToFront(w);
 		}
 	}
-	
+
 	@Override
 	public void hide() {
 		super.hide();
@@ -400,12 +476,12 @@ public class WndBag extends WndTabbed {
 			INSTANCE = null;
 		}
 	}
-	
+
 	@Override
 	protected int tabHeight() {
 		return 20;
 	}
-	
+
 	private Image icon( Bag bag ) {
 		if (bag instanceof EquipmentBag) {
 			return Icons.get( Icons.TALENT);
@@ -425,7 +501,7 @@ public class WndBag extends WndTabbed {
 			return Icons.get( Icons.BACKPACK );
 		}
 	}
-	
+
 	private class BagTab extends IconTab {
 
 		private Bag bag;
@@ -433,7 +509,6 @@ public class WndBag extends WndTabbed {
 
 		public BagTab( Bag bag, int index ) {
 			super( icon(bag) );
-			
 			this.bag = bag;
 			this.index = index;
 		}
@@ -459,7 +534,7 @@ public class WndBag extends WndTabbed {
 			return Messages.titleCase(bag.name());
 		}
 	}
-	
+
 	public static class Placeholder extends Item {
 
 		public Placeholder(int image ) {
@@ -475,7 +550,7 @@ public class WndBag extends WndTabbed {
 		public boolean isIdentified() {
 			return true;
 		}
-		
+
 		@Override
 		public boolean isEquipped( Hero hero ) {
 			return true;
@@ -484,13 +559,17 @@ public class WndBag extends WndTabbed {
 
 	public abstract static class ItemSelector {
 		public abstract String textPrompt();
+
 		public Class<?extends Bag> preferredBag(){
 			return null; //defaults to last bag opened
 		}
+
 		public boolean hideAfterSelecting(){
 			return true; //defaults to hiding the window when an item is picked
 		}
+
 		public abstract boolean itemSelectable( Item item );
+
 		public abstract void onSelect( Item item );
 	}
 }

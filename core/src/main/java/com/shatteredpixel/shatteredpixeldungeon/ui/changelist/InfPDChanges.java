@@ -76,6 +76,13 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        //TODO ItemGetter sprite..
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.BACKPACK), "Backpack Pagination",
+                "Reconsidering the storage issues before: too small bag size, window problems from too many slots.\n\n" +
+                        "This feature is added for something useful in the future updates. Maybe an upgradable slots would do? Also, this" +
+                        " pagination doesn't affect equipment bags since they are capped to 60 slots."
+        ));
+
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.WEAPON_HOLDER), "New Enchantment!",
                 "In this update, we added a new enchantment!\n\n" +
                         "_- Interfered Enchantment:_ is a rare enchantment that inflicts elemental damage all at once within a chance\n"

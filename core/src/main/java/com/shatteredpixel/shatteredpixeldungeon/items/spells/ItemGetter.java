@@ -85,7 +85,7 @@ public class ItemGetter extends TargetedSpell{
                                 heap.pickUp();
                                 GLog.i(Messages.capitalize(Messages.get(hero, "you_now_have", item.name())));
                             } else {
-                                GLog.w(Messages.get(this, "cant_grab"));
+                                GLog.w(Messages.get(ItemGetter.class, "cant_grab", item.name()));
                                 heap.sprite.drop();
                             }
                         }
