@@ -28,7 +28,7 @@ public class SearingSlasher extends MeleeWeapon {
     private static final int DASH_RANGE = 4;
 
     {
-        image = ItemSpriteSheet.SOMETHING;
+        image = ItemSpriteSheet.SEARING_SLASHER;
         hitSound = Assets.Sounds.HIT_SLASH;
         hitSoundPitch = 1.05f;
 

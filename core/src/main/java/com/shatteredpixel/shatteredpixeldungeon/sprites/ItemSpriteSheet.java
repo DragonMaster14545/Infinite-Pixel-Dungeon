@@ -307,7 +307,7 @@ public class ItemSpriteSheet {
 		assignItemRect(ASSASSINS_BLADE, 14, 15);
 		assignItemRect(CROSSBOW,        15, 15);
 		assignItemRect(KATANA,          15, 16);
-		assignItemRect(KATANA,          15, 16);
+		assignItemRect(SEARING_SLASHER,          15, 16);
 	}
 
 	private static final int WEP_TIER5      =                               xy(1, 9);   //8 slots
