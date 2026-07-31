@@ -61,6 +61,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.FireBooster;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.GalacticInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Gambler;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemGetter;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemQuantifier;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.PhaseShift;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.PocketAlchemy;
@@ -247,7 +248,8 @@ public abstract class Recipe {
             new PocketAlchemy.Recipe(),
             new ElixirOfDivineInspiration.Recipe(),
 			new DanceImmune.Recipe(),
-			new Extractor.Recipe()
+			new Extractor.Recipe(),
+			new ItemGetter.Recipe()
 	};
 	
 	private static Recipe[] threeIngredientRecipes = new Recipe[]{

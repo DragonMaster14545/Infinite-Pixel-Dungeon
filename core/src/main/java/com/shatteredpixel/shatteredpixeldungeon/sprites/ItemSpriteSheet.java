@@ -298,6 +298,7 @@ public class ItemSpriteSheet {
 	public static final int ASSASSINS_BLADE = WEP_TIER4+4;
 	public static final int CROSSBOW        = WEP_TIER4+5;
 	public static final int KATANA          = WEP_TIER4+6;
+	public static final int SEARING_SLASHER          = WEP_TIER4+7;
 	static{
 		assignItemRect(LONGSWORD,       16, 16);
 		assignItemRect(BATTLE_AXE,      16, 16);
@@ -305,6 +306,7 @@ public class ItemSpriteSheet {
 		assignItemRect(RUNIC_BLADE,     14, 14);
 		assignItemRect(ASSASSINS_BLADE, 14, 15);
 		assignItemRect(CROSSBOW,        15, 15);
+		assignItemRect(KATANA,          15, 16);
 		assignItemRect(KATANA,          15, 16);
 	}
 
@@ -938,6 +940,7 @@ public class ItemSpriteSheet {
     public static final int TIER_UPGRADE  = SPELLS_NEW_ROW+9;
     public static final int A_TIER_UPGRADE  = SPELLS_NEW_ROW+10;
 	public static final int DANCE_IMMUNE  = SPELLS_NEW_ROW+11;
+	public static final int ITEMGETTER  = SPELLS_NEW_ROW+12;
 	static {
 		assignItemRect(EXTRACTOR,     10, 15);
 		assignItemRect(GAMBLER,     10, 15);
@@ -951,6 +954,7 @@ public class ItemSpriteSheet {
         assignItemRect(TIER_UPGRADE,     10, 15);
         assignItemRect(A_TIER_UPGRADE,     10, 15);
 		assignItemRect(DANCE_IMMUNE,    	 11, 11);
+		assignItemRect(ITEMGETTER,     10, 15);
 	}
 
     private static final int TEST_TUBES =								xy(1, 34);

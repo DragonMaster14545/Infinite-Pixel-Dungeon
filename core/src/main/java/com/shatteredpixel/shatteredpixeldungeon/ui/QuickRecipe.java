@@ -73,6 +73,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.FireBooster;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.GalacticInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Gambler;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemGetter;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemQuantifier;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.PhaseShift;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.PocketAlchemy;
@@ -427,6 +428,7 @@ public class QuickRecipe extends Component {
                 result.add(new QuickRecipe(new TierUpgrade.Recipe()));
                 result.add(new QuickRecipe(new ArmorTierUpgrade.Recipe()));
 				result.add(new QuickRecipe(new DanceImmune.Recipe()));
+				result.add(new QuickRecipe(new ItemGetter.Recipe()));
 				return result;
             case 9:
                 if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_6)) result.add(new QuickRecipe(new WandOfEarthblast.Recipe(), new ArrayList<>(Arrays.asList(new WandOfFireblast(), new WandOfLivingEarth(), new Cheese())), new WandOfEarthblast()));
