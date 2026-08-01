@@ -4,8 +4,10 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Electricity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Chill;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -40,6 +42,16 @@ public class SearingSlasher extends MeleeWeapon {
     public long max(long lvl) {
         return  Math.round(4.5d*(tier+1)) +    //22 base
                 lvl*Math.round(0.9d*(tier+1));  //+4-5 per level
+    }
+
+    @Override
+    public long proc(Char attacker, Char defender, long damage) {
+
+        defender.damage(Math.round(Dungeon.hero.damageRoll() * 0.05d), new Burning());
+        defender.damage(Math.round(Dungeon.hero.damageRoll() * 0.05d), new Chill());
+        defender.damage(Math.round(Dungeon.hero.damageRoll() * 0.05d), new Electricity());
+
+        return super.proc(attacker, defender, damage);
     }
 
     @Override

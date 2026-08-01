@@ -76,7 +76,11 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
-        //TODO ItemGetter sprite..
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.SEARING_SLASHER), "New Weapon!",
+                "The new T-4 weapon for this update: Searing Slasher\n\n" +
+                        "Searing Slasher may be the newest OP weapon since it inflicts 5% of every elemental damage."
+        ));
+
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.BACKPACK), "Backpack Pagination",
                 "Reconsidering the storage issues before: too small bag size, window problems from too many slots.\n\n" +
                         "This feature is added for something useful in the future updates. Maybe an upgradable slots would do? Also, this" +
