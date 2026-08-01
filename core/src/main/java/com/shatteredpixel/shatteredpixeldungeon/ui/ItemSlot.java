@@ -328,11 +328,12 @@ public class ItemSlot extends Button {
 		}
 
 		if (item.rarity != Item.Rarity.NONE && item.isIdentified()){
-			rarityIcon.text(item.rarity.name);
+			rarityIcon.text(item.pinned ? ("*" + item.rarity.name) : item.rarity.name );
 			rarityIcon.hardlight(item.rarity.color);
 			rarityIcon.scale.set(0.75f);
 		} else {
-			rarityIcon.text(null);
+			rarityIcon.text(item.pinned ? "*" : null);
+			rarityIcon.scale.set(0.75f);
 		}
 
 

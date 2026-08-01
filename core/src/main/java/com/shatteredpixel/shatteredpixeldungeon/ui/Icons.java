@@ -66,6 +66,7 @@ public enum Icons {
 
 	//misc larger icons, mainly used for buttons, tabs, and journal, spacing for 16x16
 	TARGET,
+	TARGET_WHITE,
 	INFO,
 	WARNING,
 	UNCHECKED,
@@ -340,6 +341,9 @@ public enum Icons {
 				break;
 
 			case TARGET:
+				icon.frame( icon.texture.uvRectBySize( 0, 32, 16, 16 ) );
+				break;
+			case TARGET_WHITE:
 				icon.frame( icon.texture.uvRectBySize( 0, 32, 16, 16 ) );
 				break;
 			case WELL_HEALTH:

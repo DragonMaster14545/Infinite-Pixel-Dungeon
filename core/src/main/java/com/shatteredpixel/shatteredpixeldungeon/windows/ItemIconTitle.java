@@ -1,8 +1,11 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import static com.shatteredpixel.shatteredpixeldungeon.windows.WndBag.togglePin;
+
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfUnstable;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
@@ -24,6 +27,7 @@ public class ItemIconTitle extends IconTitle {
     private IconButton aimButton = null;
     private IconButton renameButton = null;
     private IconButton sackButton = null;
+    private IconButton pinButton = null;
 
     public ItemIconTitle(Item item, WndUseItem window ) {
         super(item);
@@ -79,6 +83,23 @@ public class ItemIconTitle extends IconTitle {
                     }
                 };
                 add(sackButton);
+            }
+
+            if (!(item instanceof Bag || item.isEquipped(Dungeon.hero))) {
+                pinButton = new IconButton(item.pinned ? Icons.CHECKED.get() : Icons.UNCHECKED.get()) {
+                    @Override
+                    protected void onClick() {
+                        window.hide();
+                        if (window.owner != null && window.owner.parent != null) {
+                            window.owner.hide();
+                        }
+                        if (Dungeon.hero.isAlive() && Dungeon.hero.belongings.contains(item)){
+                            togglePin(item);
+                        }
+                        Item.updateQuickslot();
+                    }
+                };
+                add(pinButton);
             }
 
 
@@ -156,6 +177,11 @@ public class ItemIconTitle extends IconTitle {
             sackButton.setRect(x + width - shift, y, 16, 16);
             shift += 16 + 2;
             PixelScene.align(sackButton);
+        }
+        if (pinButton != null) {
+            pinButton.setRect(x + width - shift, y, 16, 16);
+            shift += 16 + 2;
+            PixelScene.align(pinButton);
         }
 
 

@@ -273,13 +273,26 @@ public class WndBag extends WndTabbed {
 
 	private ArrayList<Item> buildCapacitySlots( Bag container ) {
 		ArrayList<Item> slots = new ArrayList<>();
+		ArrayList<Item> pinnedHere = new ArrayList<>();
+		ArrayList<Item> others = new ArrayList<>();
+
 		int used = 0;
 		for (Item item : container.items.toArray(new Item[0])) {
 			used++;
 			if (!(item instanceof Bag)) {
-				slots.add( item );
+				if (isPinned(item)) {
+					// keep pinned items in order they were pinned but only if they are actually in this container
+					pinnedHere.add(item);
+				} else {
+					others.add(item);
+				}
 			}
 		}
+
+		// Add pinned items first, then the rest.
+		slots.addAll(pinnedHere);
+		slots.addAll(others);
+
 		int free = container.capacity() - used;
 		for (int i = 0; i < free; i++) {
 			slots.add( null );
@@ -367,6 +380,29 @@ public class WndBag extends WndTabbed {
 		}
 	}
 
+
+	private static boolean isPinned(Item item) {
+		return item != null && item.pinned;
+	}
+
+	private static void pinItem(Item item) {
+		if (item == null) return;
+		if (!item.pinned) {
+			item.pinned = true;
+		}
+	}
+
+	private static void unpinItem(Item item) {
+		if (item == null) return;
+		item.pinned = false;
+	}
+
+	static void togglePin(Item item) {
+		if (item == null) return;
+		if (isPinned(item)) unpinItem(item);
+		else pinItem(item);
+	}
+
 	protected void placeItem( final Item item ) {
 		count++;
 
@@ -398,12 +434,51 @@ public class WndBag extends WndTabbed {
 					}
 					selector.onSelect( item );
 				} else {
-					RightClickMenu r = new RightClickMenu(item){
+					// Build a custom right-click menu so we can add a Pin/Unpin option
+					final ArrayList<String> actionIds = new ArrayList<>();
+					final ArrayList<String> optionLabels = new ArrayList<>();
+
+					ArrayList<String> actions = item.actions(Dungeon.hero);
+					for (String act : actions) {
+						actionIds.add(act);
+						optionLabels.add(item.actionName(act, Dungeon.hero));
+					}
+
+					// add pin/unpin as the last option
+					final String pinId = "PIN_TOGGLE";
+					actionIds.add(pinId);
+					optionLabels.add(isPinned(item) ? "Unpin" : "Pin");
+
+					// Create the menu using display labels (we will handle execution ourselves)
+					RightClickMenu r = new RightClickMenu(new ItemSprite(item),
+							Messages.titleCase(item.name()),
+							optionLabels.toArray(new String[0])) {
 						@Override
 						public void onSelect(int index) {
-							WndBag.this.hide();
+							String id = actionIds.get(index);
+							if (pinId.equals(id)) {
+								// Toggle pin and refresh bag view - go to first page so pinned items are visible
+								togglePin(item);
+								// Re-open bag on first page to show pinned items at front
+								WndBag.this.hide();
+								Window w = new WndBag(bag, selector, 0);
+								if (Game.scene() instanceof GameScene){
+									GameScene.show(w);
+								} else {
+									Game.scene().addToFront(w);
+								}
+                            } else {
+								// execute the underlying item action
+								item.execute(Dungeon.hero, id);
+
+								// replicate the behavior in original RightClickMenu:
+								if (id.equals(item.defaultAction()) && item.usesTargeting){
+									InventoryPane.useTargeting();
+								}
+							}
 						}
 					};
+
 					parent.addToFront(r);
 					r.camera = camera();
 					PointF mousePos = PointerEvent.currentHoverPos();

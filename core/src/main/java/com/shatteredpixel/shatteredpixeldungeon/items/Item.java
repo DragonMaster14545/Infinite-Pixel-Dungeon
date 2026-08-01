@@ -69,7 +69,7 @@ import java.util.List;
 public class Item implements Bundlable {
 
 	public enum Rarity {
-//		ULTRA_RARE(0x8A2BE2, "UR", chance(95), multi(94)),
+		//		ULTRA_RARE(0x8A2BE2, "UR", chance(95), multi(94)),
 //		SUPREME(0x7FFF00, "S", chance(94), multi(93)),
 //		FABLED(0xFFDAB9, "F", chance(93), multi(92)),
 //		EXOTIC(0xFF8C00, "Ex", chance(92), multi(91)),
@@ -183,19 +183,21 @@ public class Item implements Bundlable {
 	protected static final String TXT_TO_STRING_LVL		= "%s %+d";
 	protected static final String TXT_TO_STRING_X		= "%s x%d";
 	protected static final String TXT_TO_STRING_RARITY		= "[%s] %s";
-    protected static final String TXT_TO_STRING_EMBLEM		= "%s (%s)";
-	
+	protected static final String TXT_TO_STRING_EMBLEM		= "%s (%s)";
+
 	protected static final float TIME_TO_THROW		= 1.0f;
 	protected static final float TIME_TO_PICK_UP	= 1.0f;
 	protected static final float TIME_TO_DROP		= 1.0f;
-	
+
 	public static final String AC_DROP		= "DROP";
 	public static final String AC_THROW		= "THROW";
 	public static final String AC_RENAME = "RENAME";
 	public static final String AC_AIM		= "AIM_MI";
-    public static final String AC_HOLD_WITH_SOH		= "HOLD_WITH_SOH";
-    public static final String AC_DHOLD_WITH_SOH		= "DHOLD_WITH_SOH";
-	
+	public static final String AC_HOLD_WITH_SOH		= "HOLD_WITH_SOH";
+	public static final String AC_DHOLD_WITH_SOH		= "DHOLD_WITH_SOH";
+
+	public boolean pinned = false;
+
 	public String defaultAction;
 	public boolean usesTargeting;
 	public String customName = "";
@@ -317,6 +319,7 @@ public class Item implements Bundlable {
 	//resets an item's properties, to ensure consistency between runs
 	public void reset(){
 		keptThoughLostInvent = false;
+		pinned = false;
 	}
 
 	public boolean keptThroughLostInventory(){
@@ -862,9 +865,10 @@ public class Item implements Bundlable {
 	private static final String KEPT_LOST       = "kept_lost";
 	private static final String WERE_OOFED      = "were_oofed";
 	private static final String RARITY           = "rarity";
-    private static final String EMBLEM_USE           = "emblem_use";
-    private static final String CAN_CWSOF           = "can_cwsof";
-	
+	private static final String EMBLEM_USE       = "emblem_use";
+	private static final String CAN_CWSOF        = "can_cwsof";
+	private static final String PINNED           = "pinned";
+
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		bundle.put( QUANTITY, quantity );
@@ -880,6 +884,7 @@ public class Item implements Bundlable {
         bundle.put( CAN_CWSOF, canCollectWithSOH);
         bundle.put( EMBLEM_USE, emblemUse);
 		bundle.put( RARITY, rarity.ordinal() );
+		bundle.put( PINNED, pinned );
 
 		if (!this.customName.equals("")) {
 			bundle.put("customName", this.customName);
@@ -917,6 +922,13 @@ public class Item implements Bundlable {
 
 		keptThoughLostInvent = bundle.getBoolean( KEPT_LOST );
 		rarity = Rarity.values()[bundle.getInt(RARITY)];
+
+		// restore pinned state if present in bundle (backwards-compatible)
+		if (bundle.contains(PINNED)) {
+			pinned = bundle.getBoolean(PINNED);
+		} else {
+			pinned = false;
+		}
 	}
 
 	public int targetingPos( Hero user, int dst ){
