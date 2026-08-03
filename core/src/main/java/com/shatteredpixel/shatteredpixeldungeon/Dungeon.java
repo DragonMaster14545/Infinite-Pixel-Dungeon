@@ -355,6 +355,7 @@ public class Dungeon {
 		Badges.reset();
 		
 		GamesInProgress.selectedClass.initHero( hero );
+		BattlePass.onRunStart();
 	}
 
 	public static void goForNewCycle(){

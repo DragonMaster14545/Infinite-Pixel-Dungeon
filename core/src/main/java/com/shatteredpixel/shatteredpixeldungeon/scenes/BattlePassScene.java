@@ -33,14 +33,16 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Archs;
-import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ScrollPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.StyledButton;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.ui.Component;
+
+import java.util.ArrayList;
 
 public class BattlePassScene extends PixelScene {
 
@@ -50,11 +52,35 @@ public class BattlePassScene extends PixelScene {
     private static final int HEADER_H   = 40;
     private static final int FOOTER_H   = 28;
 
+    private static String pendingViewMonth = null;
+
+    public static void seeMonth(String monthKey) {
+        pendingViewMonth = monthKey;
+        ShatteredPixelDungeon.switchNoFade(BattlePassScene.class);
+    }
+
+    public static void seeCurrentMonth() {
+        pendingViewMonth = null;
+        ShatteredPixelDungeon.switchNoFade(BattlePassScene.class);
+    }
+
+    private String viewMonthKey;
+    private BattlePass.MonthRecord viewRecord;
+    private final ArrayList<TierRow> rows = new ArrayList<>();
+
     @Override
     public void create() {
         super.create();
 
-        uiCamera.visible = false;
+        viewMonthKey = pendingViewMonth;
+        pendingViewMonth = null;
+        if (viewMonthKey != null) {
+            viewRecord = BattlePass.historyRecord(viewMonthKey);
+            if (viewRecord == null) {
+                viewMonthKey = null;
+            }
+        }
+        boolean live = viewMonthKey == null;
 
         int w = Camera.main.width;
         int h = Camera.main.height;
@@ -63,15 +89,24 @@ public class BattlePassScene extends PixelScene {
         archs.setSize( w, h );
         add( archs );
 
-        RenderedTextBlock title = renderTextBlock( Messages.get( this, "title" ), 12 );
+        String titleStr = live
+                ? Messages.get( this, "title" )
+                : Messages.get( this, "title_past", viewRecord.label() );
+        RenderedTextBlock title = renderTextBlock( titleStr, 12 );
         title.hardlight( 0xFFFF44 );
         title.setPos( (w - title.width()) / 2f, 6 );
         align( title );
         add( title );
 
-        int reached = BattlePass.tiersReached();
-        String progressStr = Messages.get( this, "progress",
-                reached, BattlePass.xpIntoCurrentTier(), BattlePass.xpForCurrentTier() );
+        String progressStr;
+        if (live) {
+            int reached = BattlePass.tiersReached();
+            progressStr = Messages.get( this, "progress",
+                    reached, BattlePass.xpIntoCurrentTier(), BattlePass.xpForCurrentTier() );
+            progressStr += "\n" + Messages.get( this, "days_left", BattlePass.daysRemainingInMonth() );
+        } else {
+            progressStr = Messages.get( this, "progress_past", viewRecord.tiersReached(), totalTiers() );
+        }
         RenderedTextBlock progress = renderTextBlock( progressStr, 9 );
         progress.hardlight( 0xCACFC2 );
         progress.setPos( (w - progress.width()) / 2f, title.bottom() + 4 );
@@ -80,21 +115,32 @@ public class BattlePassScene extends PixelScene {
 
         Component content = new Component();
 
-        int totalTiers = BattlePass.TIER_XP.length;
+        rows.clear();
+        int totalTiers = totalTiers();
         int y = 0;
         for (int tier = 1; tier <= totalTiers; tier++){
             TierRow row = new TierRow( tier );
             row.setRect( 0, y, w - MARGIN*2, ROW_HEIGHT );
             content.add( row );
+            rows.add( row );
             y += ROW_HEIGHT + ROW_GAP;
         }
         content.setSize( w - MARGIN*2, Math.max( 0, y - ROW_GAP ) );
 
-        int listTop = HEADER_H;
-        int listHeight = h - HEADER_H - FOOTER_H;
-        ScrollPane list = new ScrollPane( content );
-        list.setRect( MARGIN, listTop, w - MARGIN*2, listHeight );
+        int listTop = HEADER_H + (live ? 0 : 10); //extra room for the wrapped "past" progress line
+        int listHeight = h - listTop - FOOTER_H;
+        ScrollPane list = new ScrollPane( content ) {
+            @Override
+            public void onClick( float x, float y ) {
+                for (TierRow row : rows) {
+                    if (row.tryClaimClick( x, y )) {
+                        break;
+                    }
+                }
+            }
+        };
         add( list );
+        list.setRect( MARGIN, listTop, w - MARGIN*2, listHeight );
 
         StyledButton btnBack = new StyledButton( Chrome.Type.GREY_BUTTON_TR, Messages.get( this, "back" ) ){
             @Override
@@ -102,15 +148,49 @@ public class BattlePassScene extends PixelScene {
                 onBackPressed();
             }
         };
-        btnBack.setRect( (w - 100) / 2f, h - FOOTER_H + 4, 100, FOOTER_H - 8 );
-        add( btnBack );
+
+        if (live) {
+            int btnW = 100;
+            btnBack.setRect( w/2f - btnW - 4, h - FOOTER_H + 4, btnW, FOOTER_H - 8 );
+            add( btnBack );
+
+            StyledButton btnHistory = new StyledButton( Chrome.Type.GREY_BUTTON_TR, Messages.get( this, "history" ) ){
+                @Override
+                protected void onClick(){
+                    ShatteredPixelDungeon.switchNoFade( BattlePassHistoryScene.class );
+                }
+            };
+            btnHistory.setRect( w/2f + 4, h - FOOTER_H + 4, btnW, FOOTER_H - 8 );
+            add( btnHistory );
+        } else {
+            btnBack.setRect( (w - 100) / 2f, h - FOOTER_H + 4, 100, FOOTER_H - 8 );
+            add( btnBack );
+        }
 
         fadeIn();
     }
 
+    private static int totalTiers(){
+        return BattlePass.TIER_XP.length;
+    }
+
+    private boolean unlocked(int tier){
+        return tier <= (viewRecord != null ? viewRecord.tiersReached() : BattlePass.tiersReached());
+    }
+
+    private boolean tierClaimed(int tier){
+        return viewRecord != null ? viewRecord.claimedTiers.contains(tier) : BattlePass.isClaimed(tier);
+    }
+
+    private boolean tierClaimable(int tier){
+        return viewRecord == null && BattlePass.isClaimable(tier);
+    }
+
     @Override
     protected void onBackPressed(){
-        if (Dungeon.hero != null){
+        if (viewMonthKey != null) {
+            ShatteredPixelDungeon.switchNoFade( BattlePassHistoryScene.class );
+        } else if (Dungeon.hero != null && Dungeon.hero.isAlive() && Dungeon.level != null){
             ShatteredPixelDungeon.switchNoFade( GameScene.class );
         } else {
             ShatteredPixelDungeon.switchNoFade( TitleScene.class );
@@ -140,21 +220,39 @@ public class BattlePassScene extends PixelScene {
             label = PixelScene.renderTextBlock( 9 );
             add( label );
 
-            if (BattlePassTiers.isItemTier( tier )){
-                rewardIcon = new ItemSprite();
-            } else {
-                rewardIcon = Icons.get( Icons.GOLD );
-            }
+            rewardIcon = new ItemSprite();
             add( rewardIcon );
 
             btnClaim = new StyledButton( Chrome.Type.RED_BUTTON, Messages.get( BattlePassScene.class, "claim" ), 8 ){
                 @Override
                 protected void onClick(){
-                    BattlePass.claim( tier );
-                    ShatteredPixelDungeon.switchNoFade( BattlePassScene.class );
+                    claim();
                 }
             };
             add( btnClaim );
+        }
+
+        private void claim(){
+            if (!tierClaimable( tier )) {
+                return;
+            }
+            Item reward = BattlePass.claim( tier );
+            if (reward != null) {
+                GLog.p( Messages.get( BattlePassScene.class, "claimed_item", reward.title() ) );
+            } else {
+                GLog.p( Messages.get( BattlePassScene.class, "claimed_gold" ) );
+            }
+            BattlePassScene.seeCurrentMonth();
+        }
+
+        boolean tryClaimClick( float x, float y ){
+            if (btnClaim.visible && btnClaim.active
+                    && x >= btnClaim.left() && x <= btnClaim.right()
+                    && y >= btnClaim.top() && y <= btnClaim.bottom()) {
+                claim();
+                return true;
+            }
+            return false;
         }
 
         @Override
@@ -163,17 +261,17 @@ public class BattlePassScene extends PixelScene {
             bg.y = y;
             bg.size( width(), height() );
 
-            boolean unlocked  = BattlePass.isUnlocked( tier );
-            boolean claimed   = BattlePass.isClaimed( tier );
-            boolean claimable = BattlePass.isClaimable( tier );
+            boolean unlocked  = unlocked( tier );
+            boolean claimed   = tierClaimed( tier );
+            boolean claimable = tierClaimable( tier );
 
             bg.alpha( unlocked ? (claimed ? 0.15f : 0.3f) : 0.08f );
 
             String status = claimed
                     ? Messages.get( BattlePassScene.class, "claimed" )
                     : unlocked
-                    ? Messages.get( BattlePassScene.class, "ready" )
-                    : Messages.get( BattlePassScene.class, "locked" );
+                      ? Messages.get( BattlePassScene.class, "ready" )
+                      : Messages.get( BattlePassScene.class, "locked" );
             label.text( Messages.get( BattlePassScene.class, "tier_row", tier, status ) );
             label.setPos( x + 4, y + (height() - label.height()) / 2f );
 
@@ -187,7 +285,7 @@ public class BattlePassScene extends PixelScene {
             rewardIcon.y = y + (height() - rewardIcon.height()) / 2f;
             rewardIcon.alpha( unlocked ? 1f : 0.3f );
 
-            btnClaim.visible = btnClaim.active = claimable;
+            btnClaim.visible = btnClaim.active = claimable && Dungeon.hero != null && Dungeon.hero.isAlive() && Dungeon.level != null   ;
             btnClaim.setRect( x + width() - 44, y + 2, 40, height() - 4 );
         }
     }

@@ -80,7 +80,8 @@ public enum Rankings {
     public LinkedHashMap<Long, Long> weeklyScoreHistory = new LinkedHashMap<>();
 
 	public void submit( boolean win, Object cause ) {
-
+		BattlePass.onRunEnd();
+		
 		load();
 		
 		Record rec = new Record();
