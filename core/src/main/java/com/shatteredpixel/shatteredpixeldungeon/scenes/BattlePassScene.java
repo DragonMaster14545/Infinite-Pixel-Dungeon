@@ -103,9 +103,17 @@ public class BattlePassScene extends PixelScene {
             int reached = BattlePass.tiersReached();
             progressStr = Messages.get( this, "progress",
                     reached, BattlePass.xpIntoCurrentTier(), BattlePass.xpForCurrentTier() );
+            int bonusReached = BattlePass.repeatableTiersUnlocked();
+            if (bonusReached > 0) {
+                progressStr += "\n" + Messages.get( this, "bonus_tiers", bonusReached );
+            }
             progressStr += "\n" + Messages.get( this, "days_left", BattlePass.daysRemainingInMonth() );
         } else {
             progressStr = Messages.get( this, "progress_past", viewRecord.tiersReached(), totalTiers() );
+            int bonusReachedPast = viewRecord.repeatableTiersReached();
+            if (bonusReachedPast > 0) {
+                progressStr += "\n" + Messages.get( this, "bonus_tiers", bonusReachedPast );
+            }
         }
         RenderedTextBlock progress = renderTextBlock( progressStr, 9 );
         progress.hardlight( 0xCACFC2 );
@@ -125,6 +133,13 @@ public class BattlePassScene extends PixelScene {
             rows.add( row );
             y += ROW_HEIGHT + ROW_GAP;
         }
+
+        TierRow repeatRow = new TierRow( BattlePass.REPEATABLE_TIER );
+        repeatRow.setRect( 0, y, w - MARGIN*2, ROW_HEIGHT );
+        content.add( repeatRow );
+        rows.add( repeatRow );
+        y += ROW_HEIGHT + ROW_GAP;
+
         content.setSize( w - MARGIN*2, Math.max( 0, y - ROW_GAP ) );
 
         int listTop = HEADER_H + (live ? 0 : 10); //extra room for the wrapped "past" progress line
@@ -175,15 +190,33 @@ public class BattlePassScene extends PixelScene {
     }
 
     private boolean unlocked(int tier){
+        if (tier == BattlePass.REPEATABLE_TIER) {
+            return viewRecord != null
+                    ? viewRecord.repeatableTiersReached() > 0
+                    : BattlePass.isUnlocked( tier );
+        }
         return tier <= (viewRecord != null ? viewRecord.tiersReached() : BattlePass.tiersReached());
     }
 
     private boolean tierClaimed(int tier){
+        if (tier == BattlePass.REPEATABLE_TIER) {
+            return viewRecord != null
+                    ? viewRecord.repeatableTiersClaimed >= viewRecord.repeatableTiersReached()
+                    : BattlePass.isClaimed( tier );
+        }
         return viewRecord != null ? viewRecord.claimedTiers.contains(tier) : BattlePass.isClaimed(tier);
     }
 
     private boolean tierClaimable(int tier){
         return viewRecord == null && BattlePass.isClaimable(tier);
+    }
+
+    //how many unclaimed repeats of the infinite tier are currently stacked up
+    private int repeatableAvailable(){
+        if (viewRecord != null) {
+            return Math.max( 0, viewRecord.repeatableTiersReached() - viewRecord.repeatableTiersClaimed );
+        }
+        return BattlePass.repeatableTiersAvailable();
     }
 
     @Override
@@ -267,12 +300,22 @@ public class BattlePassScene extends PixelScene {
 
             bg.alpha( unlocked ? (claimed ? 0.15f : 0.3f) : 0.08f );
 
-            String status = claimed
-                    ? Messages.get( BattlePassScene.class, "claimed" )
-                    : unlocked
-                      ? Messages.get( BattlePassScene.class, "ready" )
-                      : Messages.get( BattlePassScene.class, "locked" );
-            label.text( Messages.get( BattlePassScene.class, "tier_row", tier, status ) );
+            if (tier == BattlePass.REPEATABLE_TIER) {
+                int available = repeatableAvailable();
+                String status = !unlocked
+                        ? Messages.get( BattlePassScene.class, "locked" )
+                        : available > 0
+                        ? Messages.get( BattlePassScene.class, "ready_count", available )
+                        : Messages.get( BattlePassScene.class, "claimed" );
+                label.text( Messages.get( BattlePassScene.class, "tier_row_repeatable", status ) );
+            } else {
+                String status = claimed
+                        ? Messages.get( BattlePassScene.class, "claimed" )
+                        : unlocked
+                        ? Messages.get( BattlePassScene.class, "ready" )
+                        : Messages.get( BattlePassScene.class, "locked" );
+                label.text( Messages.get( BattlePassScene.class, "tier_row", tier, status ) );
+            }
             label.setPos( x + 4, y + (height() - label.height()) / 2f );
 
             if (rewardIcon instanceof ItemSprite){

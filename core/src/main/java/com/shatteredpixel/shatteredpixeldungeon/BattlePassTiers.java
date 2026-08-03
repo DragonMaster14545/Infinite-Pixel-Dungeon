@@ -30,12 +30,15 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import java.util.HashMap;
 public class BattlePassTiers {
 
+    public static final long REPEATABLE_TIER_GOLD = 300L;
+
     public static long goldFor( int tier ){
+        if (tier == BattlePass.REPEATABLE_TIER) return REPEATABLE_TIER_GOLD;
         return 50L + tier * 10L;
     }
 
     public static boolean isItemTier( int tier ){
-        return tier % 5 == 0;
+        return tier != BattlePass.REPEATABLE_TIER && tier % 5 == 0;
     }
     private static final HashMap<Integer, Item> rewardCache = new HashMap<>();
 

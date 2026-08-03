@@ -54,8 +54,14 @@ public class BattlePass {
         return costs;
     }
 
+    public static final int REPEATABLE_TIER    = TIER_XP.length + 1; //101
+    public static final int REPEATABLE_TIER_XP = 100 + TIER_XP.length*30; //3100, continues the same cost curve
+
     public static int totalXP;
     public static ArrayList<Integer> claimedTiers = new ArrayList<>();
+
+    //how many times the repeatable tier has been claimed this month
+    public static int repeatableTiersClaimed;
 
     private static String monthKey;
     private static ArrayList<MonthRecord> history = new ArrayList<>();
@@ -84,7 +90,7 @@ public class BattlePass {
         }
         if (monthKey.equals( now )) return;
 
-        history.add( 0, new MonthRecord( monthKey, totalXP, new ArrayList<>( claimedTiers ) ) );
+        history.add( 0, new MonthRecord( monthKey, totalXP, new ArrayList<>( claimedTiers ), repeatableTiersClaimed ) );
         while (history.size() > MAX_HISTORY_MONTHS){
             history.remove( history.size()-1 );
         }
@@ -92,6 +98,7 @@ public class BattlePass {
         monthKey = now;
         totalXP = 0;
         claimedTiers = new ArrayList<>();
+        repeatableTiersClaimed = 0;
         saveGlobal();
     }
 
@@ -100,31 +107,39 @@ public class BattlePass {
         public final String monthKey;
         public final int finalXP;
         public final ArrayList<Integer> claimedTiers;
+        public final int repeatableTiersClaimed;
 
-        MonthRecord( String monthKey, int finalXP, ArrayList<Integer> claimedTiers ){
+        MonthRecord( String monthKey, int finalXP, ArrayList<Integer> claimedTiers, int repeatableTiersClaimed ){
             this.monthKey = monthKey;
             this.finalXP = finalXP;
             this.claimedTiers = claimedTiers;
+            this.repeatableTiersClaimed = repeatableTiersClaimed;
         }
 
         public int tiersReached(){
             return tiersReachedForXP( finalXP );
         }
 
+        public int repeatableTiersReached(){
+            return repeatableTiersUnlockedForXP( finalXP );
+        }
+
         public String label(){
             return BattlePass.label( monthKey );
         }
 
-        private static final String M_KEY     = "month";
-        private static final String M_XP      = "xp";
-        private static final String M_CLAIMED = "claimed";
+        private static final String M_KEY       = "month";
+        private static final String M_XP        = "xp";
+        private static final String M_CLAIMED   = "claimed";
+        private static final String M_REPEATED  = "repeated";
 
         static MonthRecord restore( Bundle b ){
             String key = b.getString( M_KEY );
             int xp = b.getInt( M_XP );
             ArrayList<Integer> claimed = new ArrayList<>();
             for (int t : b.getIntArray( M_CLAIMED )) claimed.add( t );
-            return new MonthRecord( key, xp, claimed );
+            int repeated = b.contains( M_REPEATED ) ? b.getInt( M_REPEATED ) : 0;
+            return new MonthRecord( key, xp, claimed, repeated );
         }
 
         Bundle store(){
@@ -134,6 +149,7 @@ public class BattlePass {
             int[] arr = new int[claimedTiers.size()];
             for (int i = 0; i < arr.length; i++) arr[i] = claimedTiers.get(i);
             b.put( M_CLAIMED, arr );
+            b.put( M_REPEATED, repeatableTiersClaimed );
             return b;
         }
     }
@@ -196,6 +212,25 @@ public class BattlePass {
         return tier;
     }
 
+    public static int repeatableTiersUnlocked(){
+        ensureLoaded();
+        return repeatableTiersUnlockedForXP( totalXP );
+    }
+
+    private static int repeatableTiersUnlockedForXP( int xp ){
+        int xpLeft = xp;
+        for (int cost : TIER_XP){
+            if (xpLeft < cost) return 0;
+            xpLeft -= cost;
+        }
+        return xpLeft / REPEATABLE_TIER_XP;
+    }
+
+    public static int repeatableTiersAvailable(){
+        ensureLoaded();
+        return Math.max( 0, repeatableTiersUnlocked() - repeatableTiersClaimed );
+    }
+
     public static int xpIntoCurrentTier(){
         ensureLoaded();
         int xpLeft = totalXP;
@@ -203,21 +238,23 @@ public class BattlePass {
             if (xpLeft < cost) return xpLeft;
             xpLeft -= cost;
         }
-        return 0; //every tier cleared
+        return xpLeft % REPEATABLE_TIER_XP;
     }
 
     public static int xpForCurrentTier(){
         int tier = tiersReached();
-        if (tier >= TIER_XP.length) return 0;
+        if (tier >= TIER_XP.length) return REPEATABLE_TIER_XP;
         return TIER_XP[tier];
     }
 
     public static boolean isUnlocked( int tier ){
+        if (tier == REPEATABLE_TIER) return repeatableTiersUnlocked() > 0;
         return tier >= 1 && tier <= tiersReached();
     }
 
     public static boolean isClaimed( int tier ){
         ensureLoaded();
+        if (tier == REPEATABLE_TIER) return repeatableTiersClaimed >= repeatableTiersUnlocked();
         return claimedTiers.contains( tier );
     }
 
@@ -229,7 +266,11 @@ public class BattlePass {
         ensureLoaded();
         if (!isClaimable( tier )) return null;
 
-        claimedTiers.add( tier );
+        if (tier == REPEATABLE_TIER){
+            repeatableTiersClaimed++;
+        } else {
+            claimedTiers.add( tier );
+        }
 
         Item result = null;
         if (BattlePassTiers.isItemTier( tier )){
@@ -283,6 +324,7 @@ public class BattlePass {
     private static final String FILE       = "battlepass.dat";
     private static final String TOTAL_XP   = "battlepass_xp";
     private static final String CLAIMED    = "battlepass_claimed";
+    private static final String REPEATED   = "battlepass_repeated";
     private static final String MONTH_KEY  = "battlepass_month";
     private static final String HISTORY_N  = "battlepass_history_count";
     private static final String HISTORY_I  = "battlepass_history_";
@@ -296,6 +338,7 @@ public class BattlePass {
                 claimedArr[i] = claimedTiers.get(i);
             }
             bundle.put( CLAIMED, claimedArr );
+            bundle.put( REPEATED, repeatableTiersClaimed );
             bundle.put( MONTH_KEY, monthKey );
             bundle.put( HISTORY_N, history.size() );
             for (int i = 0; i < history.size(); i++){
@@ -317,6 +360,7 @@ public class BattlePass {
                     claimedTiers.add( t );
                 }
             }
+            repeatableTiersClaimed = bundle.contains( REPEATED ) ? bundle.getInt( REPEATED ) : 0;
 
             monthKey = bundle.contains( MONTH_KEY ) ? bundle.getString( MONTH_KEY ) : null;
 
@@ -330,6 +374,7 @@ public class BattlePass {
         } catch (IOException e) {
             totalXP = 0;
             claimedTiers = new ArrayList<>();
+            repeatableTiersClaimed = 0;
             monthKey = null;
             history = new ArrayList<>();
         }
