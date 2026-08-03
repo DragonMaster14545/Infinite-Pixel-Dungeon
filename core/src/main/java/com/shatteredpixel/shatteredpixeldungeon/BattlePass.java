@@ -43,7 +43,7 @@ public class BattlePass {
     public static final int XP_PER_KILL = 2;
 
     //1 XP per this many gold collected (rounded down)
-    public static final int GOLD_PER_XP = 10;
+    public static final int GOLD_PER_XP = 1000;
 
     public static final int[] TIER_XP = buildTierCosts();
     private static int[] buildTierCosts(){
