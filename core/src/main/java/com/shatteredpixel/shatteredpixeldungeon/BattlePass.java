@@ -311,6 +311,23 @@ public class BattlePass {
         return lastDay - today + 1;
     }
 
+    public static String timeRemainingInMonth() {
+        ensureLoaded();
+        Calendar end = Calendar.getInstance();
+        end.set( Calendar.DAY_OF_MONTH, end.getActualMaximum( Calendar.DAY_OF_MONTH ));
+        end.set( Calendar.HOUR_OF_DAY, 23 );
+        end.set( Calendar.MINUTE, 59 );
+        end.set( Calendar.SECOND, 59 );
+        end.set( Calendar.MILLISECOND, 999 );
+
+        long millisecondsLeft = Math.max(0,end.getTimeInMillis() - System.currentTimeMillis());
+        long days = millisecondsLeft / (24*60*60*1000L);
+        long hours = (millisecondsLeft / (60*60*1000L)) % 24;
+        long mins = (millisecondsLeft / (60*1000L)) % 60;
+
+        return String.format(Locale.US, "%dd %02dh %02dm", days, hours, mins);
+    }
+
     public static ArrayList<MonthRecord> history(){
         ensureLoaded();
         return new ArrayList<>( history );

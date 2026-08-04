@@ -66,6 +66,7 @@ public class BattlePassScene extends PixelScene {
     }
 
     private String viewMonthKey;
+    private RenderedTextBlock progress;
     private BattlePass.MonthRecord viewRecord;
     private final ArrayList<TierRow> rows = new ArrayList<>();
 
@@ -108,7 +109,7 @@ public class BattlePassScene extends PixelScene {
             if (bonusReached > 0) {
                 progressStr += "\n" + Messages.get( this, "bonus_tiers", bonusReached );
             }
-            progressStr += "\n" + Messages.get( this, "days_left", BattlePass.daysRemainingInMonth() );
+            progressStr += "\n" + Messages.get( this, "days_left", BattlePass.timeRemainingInMonth() );
         } else {
             progressStr = Messages.get( this, "progress_past", viewRecord.tiersReached(), totalTiers() );
             int bonusReachedPast = viewRecord.repeatableTiersReached();
@@ -116,7 +117,7 @@ public class BattlePassScene extends PixelScene {
                 progressStr += "\n" + Messages.get( this, "bonus_tiers", bonusReachedPast );
             }
         }
-        RenderedTextBlock progress = renderTextBlock( progressStr, 9 );
+        progress = renderTextBlock( progressStr, 9 );
         progress.hardlight( 0xCACFC2 );
         progress.setPos( (w - progress.width()) / 2f, title.bottom() + 4 );
         align( progress );
@@ -184,6 +185,14 @@ public class BattlePassScene extends PixelScene {
         }
 
         fadeIn();
+    }
+
+    @Override
+    public void update() {
+        super.update();
+        if (viewMonthKey == null) {
+            progress.text( progress.text().replaceAll("\\S+d \\d{2}h \\d{2}m", BattlePass.timeRemainingInMonth()));
+        }
     }
 
     private static int totalTiers(){
