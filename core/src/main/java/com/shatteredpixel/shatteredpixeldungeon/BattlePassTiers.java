@@ -26,18 +26,52 @@ package com.shatteredpixel.shatteredpixeldungeon;
 
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.fishingrods.GoldenFishingRod;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfEnchantment;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.Raritize;
 
 import java.util.HashMap;
 public class BattlePassTiers {
 
+    static {
+        BattlePassTiers.setCustomItem( 15, Raritize.class, 4 );
+        BattlePassTiers.setCustomItem( 25, ScrollOfEnchantment.class, 2 );
+        BattlePassTiers.setCustomItem( 100, GoldenFishingRod.class );
+    }
+
     public static final long REPEATABLE_TIER_GOLD = 300L;
 
+    private static class CustomReward {
+        final Class<? extends Item> itemClass;
+        final int quantity;
+        CustomReward( Class<? extends Item> itemClass, int quantity ){
+            this.itemClass = itemClass;
+            this.quantity = quantity;
+        }
+    }
+
+    private static final HashMap<Integer, CustomReward> customItems = new HashMap<>();
+
+    public static void setCustomItem( int tier, Class<? extends Item> itemClass ){
+        setCustomItem( tier, itemClass, 1 );
+    }
+
+    public static void setCustomItem( int tier, Class<? extends Item> itemClass, int quantity ){
+        customItems.put( tier, new CustomReward( itemClass, Math.max( 1, quantity ) ) );
+    }
+
+    public static void clearCustomItem( int tier ){
+        customItems.remove( tier );
+    }
     public static long goldFor( int tier ){
         if (tier == BattlePass.REPEATABLE_TIER) return REPEATABLE_TIER_GOLD;
         return 50L + tier * 10L;
     }
 
     public static boolean isItemTier( int tier ){
+        if (customItems.containsKey( tier )) return true;
         return tier != BattlePass.REPEATABLE_TIER && tier % 5 == 0;
     }
     private static final HashMap<Integer, Item> rewardCache = new HashMap<>();
@@ -53,9 +87,20 @@ public class BattlePassTiers {
         if (!isItemTier( tier )) return null;
 
         if (!rewardCache.containsKey( tier )){
-            Generator.Category[] categories = Generator.Category.values();
-            int index = Math.min( tier / 5, categories.length - 1 );
-            rewardCache.put( tier, Generator.random( categories[index] ) );
+            CustomReward custom = customItems.get( tier );
+            if (custom != null){
+                try {
+                    Item item = custom.itemClass.newInstance();
+                    item.quantity( custom.quantity );
+                    rewardCache.put( tier, item );
+                } catch (Exception e){
+                    rewardCache.put( tier, null );
+                }
+            } else {
+                Generator.Category[] categories = Generator.Category.values();
+                int index = Math.min( tier / 5, categories.length - 1 );
+                rewardCache.put( tier, Generator.random( categories[index] ) );
+            }
         }
         return rewardCache.get( tier );
     }
