@@ -132,6 +132,9 @@ public class BattlePassScene extends PixelScene {
                 add( prevLine );
                 headerY = prevLine.bottom() + 2;
             }
+            if (BattlePass.isPremiumUnlocked()) {
+                progressStr += "\n" + Messages.get( this, "premium_active" );
+            }
         } else {
             progressStr = Messages.get( this, "progress_past", viewRecord.tiersReached(), totalTiers() );
             int bonusReachedPast = viewRecord.repeatableTiersReached();
@@ -190,9 +193,13 @@ public class BattlePassScene extends PixelScene {
         };
 
         if (live) {
-            int btnW = 100;
-            btnBack.setRect( w/2f - btnW - 4, h - FOOTER_H + 4, btnW, FOOTER_H - 8 );
+            int gap  = 4;
+            float btnW = (w - MARGIN*2 - gap*2) / 3f;
+            float bx = MARGIN;
+
+            btnBack.setRect( bx, h - FOOTER_H + 4, btnW, FOOTER_H - 8 );
             add( btnBack );
+            bx += btnW + gap;
 
             StyledButton btnHistory = new StyledButton( Chrome.Type.GREY_BUTTON_TR, Messages.get( this, "history" ) ){
                 @Override
@@ -200,33 +207,36 @@ public class BattlePassScene extends PixelScene {
                     ShatteredPixelDungeon.switchNoFade( BattlePassHistoryScene.class );
                 }
             };
-            btnHistory.setRect( w/2f + 4, h - FOOTER_H + 4, btnW, FOOTER_H - 8 );
+            btnHistory.setRect( bx, h - FOOTER_H + 4, btnW, FOOTER_H - 8 );
             add( btnHistory );
+            bx += btnW + gap;
 
-            if (!BattlePass.isPremium()) {
-                String costLabel;
+            String premiumLabel;
+            if (BattlePass.isPremium()) {
+                premiumLabel = Messages.get( this, "premium_owned" );
+            } else {
                 try {
                     Item sample = BattlePass.premiumCostItem().newInstance();
-                    costLabel = Messages.get( this, "buy_premium_item",
+                    premiumLabel = Messages.get( this, "buy_premium_item",
                             BattlePass.premiumCostItemQuantity, sample.name() );
                 } catch (Exception e) {
-                    costLabel = Messages.get( this, "buy_premium", BattlePass.PREMIUM_COST_GOLD );
+                    premiumLabel = Messages.get( this, "buy_premium", BattlePass.PREMIUM_COST_GOLD );
                 }
-
-                StyledButton btnPremium = new StyledButton( Chrome.Type.GREY_BUTTON_TR, costLabel ){
-                    @Override
-                    protected void onClick(){
-                        if (BattlePass.purchasePremium()) {
-                            GLog.p( Messages.get( BattlePassScene.class, "premium_purchased" ) );
-                            BattlePassScene.seeCurrentMonth();
-                        } else {
-                            GLog.w( Messages.get( BattlePassScene.class, "premium_not_enough_gold" ) );
-                        }
-                    }
-                };
-                btnPremium.setRect( w/1.5f - 50, h - FOOTER_H - 24, 100, 20 );
-                add( btnPremium );
             }
+
+            StyledButton btnPremium = new StyledButton( Chrome.Type.RED_BUTTON, premiumLabel, 8 ){
+                @Override
+                protected void onClick(){
+                    BattlePass.unlockPremium();
+                }
+            };
+            btnPremium.setRect( bx, h - FOOTER_H + 4, btnW, FOOTER_H - 8 );
+            btnPremium.text.maxWidth( (int)(btnW - 8) );
+            btnPremium.text.setPos(
+                    btnPremium.left() + (btnW - btnPremium.text.width()) / 2f,
+                    btnPremium.top() + (btnPremium.height() - btnPremium.text.height()) / 2f
+            );
+            add( btnPremium );
         } else {
             btnBack.setRect( (w - 100) / 2f, h - FOOTER_H + 4, 100, FOOTER_H - 8 );
             add( btnBack );
@@ -316,9 +326,11 @@ public class BattlePassScene extends PixelScene {
             add( label );
 
             rewardIcon = new ItemSprite();
+            rewardIcon.visible = false;
             add( rewardIcon );
 
             premiumIcon = new ItemSprite();
+            premiumIcon.visible = false;
             add( premiumIcon );
 
             premiumQtyLabel = PixelScene.renderTextBlock( 8 );

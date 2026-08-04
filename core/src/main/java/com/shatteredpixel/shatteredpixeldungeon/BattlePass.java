@@ -32,6 +32,12 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfEnc
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.GalacticInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Raritize;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.BiggerGambleBag;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.BattlePassScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndMessage;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.FileUtils;
 
@@ -185,6 +191,42 @@ public class BattlePass {
     public static boolean isPremium(){
         ensureLoaded();
         return premium;
+    }
+
+    public static boolean isPremiumUnlocked(){
+        ensureLoaded();
+        return premium;
+    }
+
+    public static void unlockPremium(){
+        if (BattlePass.isPremium()) {
+            ShatteredPixelDungeon.scene().addToFront( new WndMessage( Messages.get( BattlePassScene.class, "premium_already_unlocked" ) ) );
+            return;
+        }
+
+        Class<? extends Item> costItem = BattlePass.premiumCostItem();
+        int qty = BattlePass.premiumCostItemQuantity;
+
+        if (!BattlePass.canAffordPremium()) {
+            ShatteredPixelDungeon.scene().addToFront( new WndMessage(
+                    Messages.get( BattlePassScene.class, "premium_cant_afford", qty, Messages.get( costItem, "name" ) ) ) );
+            return;
+        }
+
+        ShatteredPixelDungeon.scene().addToFront( new WndOptions(
+                new ItemSprite(),
+                Messages.get( BattlePassScene.class, "premium_confirm_title" ),
+                Messages.get( BattlePassScene.class, "premium_confirm_body", qty, Messages.get( costItem, "name" ) ),
+                Messages.get( BattlePassScene.class, "premium_confirm_yes" ),
+                Messages.get( BattlePassScene.class, "premium_confirm_no" ) ){
+            @Override
+            protected void onSelect( int index ){
+                if (index == 0 && BattlePass.purchasePremium()) {
+                    GLog.p( Messages.get( BattlePassScene.class, "premium_unlocked" ) );
+                    BattlePassScene.seeCurrentMonth();
+                }
+            }
+        } );
     }
 
     private static Class<? extends Item> cachedPremiumCostItem;
