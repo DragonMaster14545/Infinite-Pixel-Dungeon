@@ -24,7 +24,14 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfEnchantment;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.GalacticInfusion;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.Raritize;
+import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.BiggerGambleBag;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.FileUtils;
 
@@ -161,20 +168,49 @@ public class BattlePass {
     }
 
     public static final int PREMIUM_COST_GOLD = 500;
+    public static Class<? extends Item> premiumCostItem = null;
 
     public static boolean premium;
-
+    public static int premiumCostItemQuantity = 300;
+    private static final Class<? extends Item>[] PREMIUM_COST_POOL = new Class[] {
+            Raritize.class, ScrollOfUpgrade.class, GalacticInfusion.class,
+            BiggerGambleBag.class, PotionOfHealing.class, ScrollOfEnchantment.class
+    };
+    public static boolean canAffordPremium(){
+        ensureLoaded();
+        Class<? extends Item> costItem = premiumCostItem();
+        return Dungeon.hero != null
+                && Dungeon.hero.belongings.count( costItem ) >= premiumCostItemQuantity;
+    }
     public static boolean isPremium(){
         ensureLoaded();
         return premium;
     }
 
+    private static Class<? extends Item> cachedPremiumCostItem;
+    private static String cachedPremiumCostKey;
+
+    public static Class<? extends Item> premiumCostItem(){
+        ensureLoaded();
+        if (!monthKey.equals( cachedPremiumCostKey )){
+            long hash = 1125899906842597L;
+            for (int i = 0; i < monthKey.length(); i++){
+                hash = 31*hash + monthKey.charAt(i);
+            }
+            int index = (int) Math.floorMod( hash, PREMIUM_COST_POOL.length );
+            cachedPremiumCostItem = PREMIUM_COST_POOL[index];
+            cachedPremiumCostKey = monthKey;
+        }
+        return cachedPremiumCostItem;
+    }
+
     public static boolean purchasePremium(){
         ensureLoaded();
         if (premium) return true;
-        if (Dungeon.gold < PREMIUM_COST_GOLD) return false;
+        if (!canAffordPremium()) return false;
 
-        Dungeon.gold -= PREMIUM_COST_GOLD;
+        Dungeon.hero.belongings.removeItem( premiumCostItem(), premiumCostItemQuantity );
+
         premium = true;
         saveGlobal();
         return true;

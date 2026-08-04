@@ -167,7 +167,7 @@ public class BattlePassScene extends PixelScene {
 
         content.setSize( w - MARGIN*2, Math.max( 0, y - ROW_GAP ) );
 
-        int listTop = HEADER_H + (live ? 0 : 10); //extra room for the wrapped "past" progress line
+        int listTop = (int) progress.bottom() + 6; //extra room for the wrapped "past" progress line
         int listHeight = h - listTop - FOOTER_H;
         ScrollPane list = new ScrollPane( content ) {
             @Override
@@ -204,8 +204,16 @@ public class BattlePassScene extends PixelScene {
             add( btnHistory );
 
             if (!BattlePass.isPremium()) {
-                StyledButton btnPremium = new StyledButton( Chrome.Type.GREY_BUTTON_TR,
-                        Messages.get( this, "buy_premium", BattlePass.PREMIUM_COST_GOLD ) ){
+                String costLabel;
+                try {
+                    Item sample = BattlePass.premiumCostItem().newInstance();
+                    costLabel = Messages.get( this, "buy_premium_item",
+                            BattlePass.premiumCostItemQuantity, sample.name() );
+                } catch (Exception e) {
+                    costLabel = Messages.get( this, "buy_premium", BattlePass.PREMIUM_COST_GOLD );
+                }
+
+                StyledButton btnPremium = new StyledButton( Chrome.Type.GREY_BUTTON_TR, costLabel ){
                     @Override
                     protected void onClick(){
                         if (BattlePass.purchasePremium()) {
@@ -216,7 +224,7 @@ public class BattlePassScene extends PixelScene {
                         }
                     }
                 };
-                btnPremium.setRect( w/2f - 50, h - FOOTER_H - 24, 100, 20 );
+                btnPremium.setRect( w/1.5f - 50, h - FOOTER_H - 24, 100, 20 );
                 add( btnPremium );
             }
         } else {
@@ -283,7 +291,6 @@ public class BattlePassScene extends PixelScene {
     //one row: tier number, lock/claimed/claimable state, reward preview,
     //and (when claimable) a button to actually claim it
 
-    private RenderedTextBlock premiumTag;
     private class TierRow extends Component {
 
         private final int tier;
@@ -293,6 +300,8 @@ public class BattlePassScene extends PixelScene {
         private StyledButton btnClaim;
         private ColorBlock bg;
         private RenderedTextBlock qtyLabel;
+        private Image premiumIcon;
+        private RenderedTextBlock premiumQtyLabel;
 
         TierRow( int tier ){
             this.tier = tier;
@@ -309,9 +318,12 @@ public class BattlePassScene extends PixelScene {
             rewardIcon = new ItemSprite();
             add( rewardIcon );
 
-            premiumTag = PixelScene.renderTextBlock( 8 );
-            premiumTag.hardlight( 0xFFD700 );
-            add( premiumTag );
+            premiumIcon = new ItemSprite();
+            add( premiumIcon );
+
+            premiumQtyLabel = PixelScene.renderTextBlock( 8 );
+            premiumQtyLabel.hardlight( 0xFFD700 );
+            add( premiumQtyLabel );
 
             qtyLabel = PixelScene.renderTextBlock( 8 );
             qtyLabel.hardlight( 0xCACFC2 );
@@ -379,12 +391,33 @@ public class BattlePassScene extends PixelScene {
             }
             label.setPos( x + 4, y + (height() - label.height()) / 2f );
 
-            boolean hasPremiumBonus = tier != BattlePass.REPEATABLE_TIER && BattlePassTiers.isFeaturedPremiumReward( tier );
-            premiumTag.visible = hasPremiumBonus;
-            if (hasPremiumBonus) {
-                boolean owned = viewRecord != null ? viewRecord.premium : BattlePass.isPremium();
-                premiumTag.text( Messages.get( BattlePassScene.class, owned ? "premium_owned" : "premium_locked" ) );
-                premiumTag.setPos( x + width() - 90, y + (height() - premiumTag.height()) / 2f );
+            boolean showPremium = tier != BattlePass.REPEATABLE_TIER && BattlePassTiers.hasPremiumReward( tier );
+            premiumIcon.visible = showPremium;
+            premiumQtyLabel.visible = false;
+
+            if (showPremium) {
+                Item premiumReward = BattlePassTiers.premiumRewardFor( tier );
+
+                if (premiumIcon instanceof ItemSprite) {
+                    if (premiumReward != null) {
+                        ((ItemSprite) premiumIcon).view( premiumReward );
+                    } else {
+                        ((ItemSprite) premiumIcon).view( ItemSpriteSheet.GOLD, null );
+                    }
+                }
+
+                premiumIcon.x = x + width() - 90;
+                premiumIcon.y = y + (height() - premiumIcon.height()) / 2f;
+
+                boolean ownedPremium = viewRecord != null ? viewRecord.premium : BattlePass.isPremium();
+                premiumIcon.alpha( unlocked ? (ownedPremium ? 1f : 0.3f) : 0.15f );
+
+                premiumQtyLabel.visible = premiumReward != null && premiumReward.quantity() > 1;
+                if (premiumQtyLabel.visible) {
+                    premiumQtyLabel.text( "x" + premiumReward.quantity() );
+                    premiumQtyLabel.setPos( premiumIcon.x + (premiumIcon.width() - premiumQtyLabel.width()) / 2f,
+                            premiumIcon.y + premiumIcon.height() - 2 );
+                }
             }
 
             Item reward = null;
@@ -397,6 +430,9 @@ public class BattlePassScene extends PixelScene {
                     ((ItemSprite) rewardIcon).view( ItemSpriteSheet.GOLD, null );
                 }
             }
+            rewardIcon.x = x + width() - 60;
+            rewardIcon.y = y + (height() - rewardIcon.height()) / 2f;
+            rewardIcon.alpha( unlocked ? 1f : 0.3f );
 
             qtyLabel.visible = reward != null && reward.quantity() > 1;
             if (qtyLabel.visible) {
@@ -404,9 +440,6 @@ public class BattlePassScene extends PixelScene {
                 qtyLabel.setPos( rewardIcon.x + (rewardIcon.width() - qtyLabel.width()) / 2f,
                         rewardIcon.y + rewardIcon.height() - 2 );
             }
-            rewardIcon.x = x + width() - 60;
-            rewardIcon.y = y + (height() - rewardIcon.height()) / 2f;
-            rewardIcon.alpha( unlocked ? 1f : 0.3f );
 
             btnClaim.visible = btnClaim.active = claimable && Dungeon.hero != null && Dungeon.hero.isAlive() && Dungeon.level != null   ;
             btnClaim.setRect( x + width() - 44, y + 2, 40, height() - 4 );
