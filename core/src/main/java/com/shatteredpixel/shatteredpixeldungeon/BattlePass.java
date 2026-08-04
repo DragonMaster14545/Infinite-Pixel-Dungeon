@@ -49,13 +49,13 @@ public class BattlePass {
     private static int[] buildTierCosts(){
         int[] costs = new int[100];
         for (int i = 0; i < costs.length; i++){
-            costs[i] = 100 + i*30;
+            costs[i] = 100 + i*100;
         }
         return costs;
     }
 
     public static final int REPEATABLE_TIER    = TIER_XP.length + 1; //101
-    public static final int REPEATABLE_TIER_XP = 100 + TIER_XP.length*30; //3100, continues the same cost curve
+    public static final int REPEATABLE_TIER_XP = 100 + TIER_XP.length*100; //3100, continues the same cost curve
 
     public static int totalXP;
     public static ArrayList<Integer> claimedTiers = new ArrayList<>();
