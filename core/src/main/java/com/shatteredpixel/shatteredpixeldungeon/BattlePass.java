@@ -37,7 +37,7 @@ import java.util.Locale;
 
 public class BattlePass {
 
-    public static final int XP_PER_DEPTH = 50;
+    public static final int XP_PER_DEPTH = 15;
 
     //XP granted per enemy slain
     public static final int XP_PER_KILL = 2;
