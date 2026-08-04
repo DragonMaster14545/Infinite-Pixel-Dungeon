@@ -193,6 +193,11 @@ public class BattlePass {
             lastGoldCollected = Statistics.goldCollected;
         }
 
+        boolean deltaIsAscended = Statistics.ascended;
+        if (deltaIsAscended) {
+            totalXP *= 2; // hehe
+        }
+
         saveGlobal();
     }
 
