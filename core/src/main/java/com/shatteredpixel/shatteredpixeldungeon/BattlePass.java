@@ -91,7 +91,8 @@ public class BattlePass {
         }
         if (monthKey.equals( now )) return;
 
-        history.add( 0, new MonthRecord( monthKey, totalXP, new ArrayList<>( claimedTiers ), repeatableTiersClaimed, BattlePassTiers.rewardSnapshot() ) );
+        history.add( 0, new MonthRecord( monthKey, totalXP, new ArrayList<>( claimedTiers ), repeatableTiersClaimed, BattlePassTiers.rewardSnapshot(),
+                seasonName( monthKey )) );
         while (history.size() > MAX_HISTORY_MONTHS){
             history.remove( history.size()-1 );
         }
@@ -104,6 +105,54 @@ public class BattlePass {
         saveGlobal();
     }
 
+    private static final String[] SEASON_ADJ = {
+            "Ember", "Frost", "Blood", "Storm", "Shadow", "Verdant",
+            "Golden", "Crimson", "Silent", "Wild", "Ashen", "Hollow",
+            "Iron", "Obsidian", "Radiant", "Withered", "Feral", "Gilded",
+            "Molten", "Glacial", "Spectral", "Savage", "Sable", "Burning",
+            "Twilight", "Forsaken", "Emerald", "Bleak", "Thundering", "Sunken"
+    };
+    private static final String[] SEASON_NOUN = {
+            "Moon", "Reckoning", "Bloom", "Vigil", "Ascent", "Tide",
+            "Dawn", "Rising", "Echo", "Requiem", "Gauntlet", "Descent",
+            "Eclipse", "Hunt", "Covenant", "Uprising", "Pact", "Harvest",
+            "Wake", "Trial", "Siege", "Passage", "Awakening", "Reign",
+            "Crossing", "Omen", "Vow", "Blight", "Convergence", "Nightfall"
+    };
+
+    private static final HashMap<String, String> seasonNameOverrides = new HashMap<>();
+
+    public static void setSeasonName( String monthKey, String name ){
+        seasonNameOverrides.put( monthKey, name );
+    }
+
+    private static String cachedSeasonName;
+    private static String cachedSeasonNameKey;
+
+    public static String seasonName( String monthKey ){
+        String custom = seasonNameOverrides.get( monthKey );
+        if (custom != null) return custom;
+
+        if (!monthKey.equals( cachedSeasonNameKey )){
+            long hash = 1125899906842597L; //arbitrary odd seed
+            for (int i = 0; i < monthKey.length(); i++){
+                hash = 31*hash + monthKey.charAt(i);
+            }
+
+            int adjIndex  = (int) Math.floorMod( hash,     SEASON_ADJ.length );
+            int nounIndex = (int) Math.floorMod( hash / 31, SEASON_NOUN.length );
+
+            cachedSeasonName = SEASON_ADJ[adjIndex] + " " + SEASON_NOUN[nounIndex];
+            cachedSeasonNameKey = monthKey;
+        }
+        return cachedSeasonName;
+    }
+
+    public static String currentSeasonName(){
+        ensureLoaded();
+        return seasonName( monthKey );
+    }
+
     public static class MonthRecord {
 
         public final String monthKey;
@@ -111,13 +160,16 @@ public class BattlePass {
         public final ArrayList<Integer> claimedTiers;
         public final HashMap<Integer, Item> rewardSnapshot;
         public final int repeatableTiersClaimed;
+        public final String seasonName;
 
-        MonthRecord( String monthKey, int finalXP, ArrayList<Integer> claimedTiers, int repeatableTiersClaimed, HashMap<Integer, Item> rewardSnapshot ){
+        MonthRecord( String monthKey, int finalXP, ArrayList<Integer> claimedTiers,
+                     int repeatableTiersClaimed, HashMap<Integer, Item> rewardSnapshot, String seasonName ){
             this.monthKey = monthKey;
             this.finalXP = finalXP;
             this.claimedTiers = claimedTiers;
             this.repeatableTiersClaimed = repeatableTiersClaimed;
             this.rewardSnapshot = rewardSnapshot;
+            this.seasonName = seasonName;
         }
 
         public int tiersReached(){
@@ -138,7 +190,7 @@ public class BattlePass {
         private static final String M_REPEATED  = "repeated";
         private static final String M_REWARDTIERS  = "reward_tiers";
         private static final String M_REWARDPREFIX  = "reward_";
-
+        private static final String M_SEASON_NAME = "season_name";
         static MonthRecord restore( Bundle b ){
             String key = b.getString( M_KEY );
             int xp = b.getInt( M_XP );
@@ -152,7 +204,8 @@ public class BattlePass {
                     rewardSnapshot.put(t, (Item) b.get(M_REWARDPREFIX + t));
                 }
             }
-            return new MonthRecord( key, xp, claimed, repeated, rewardSnapshot );
+            String seasonName = b.contains( M_SEASON_NAME ) ? b.getString( M_SEASON_NAME ) : BattlePass.label( key );
+            return new MonthRecord( key, xp, claimed, repeated, rewardSnapshot, seasonName );
         }
 
         Bundle store(){
@@ -169,6 +222,7 @@ public class BattlePass {
             for (int t: rewardSnapshot.keySet()) rewardTiers[i++] = t;
             b.put(M_REWARDTIERS, rewardTiers);
             for (int t : rewardTiers) b.put(M_REWARDPREFIX + t, rewardSnapshot.get(t));
+            b.put( M_SEASON_NAME, seasonName );
             return b;
         }
     }

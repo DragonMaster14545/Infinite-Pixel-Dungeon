@@ -92,8 +92,8 @@ public class BattlePassScene extends PixelScene {
         add( archs );
 
         String titleStr = live
-                ? Messages.get( this, "title" )
-                : Messages.get( this, "title_past", viewRecord.label() );
+                ? Messages.get( this, "title", BattlePass.currentSeasonName() )
+                : Messages.get( this, "title_past", viewRecord.seasonName );
         RenderedTextBlock title = renderTextBlock( titleStr, 12 );
         title.hardlight( 0xFFFF44 );
         title.setPos( (w - title.width()) / 2f, 6 );

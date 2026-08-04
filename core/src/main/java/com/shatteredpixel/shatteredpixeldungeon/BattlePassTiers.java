@@ -35,12 +35,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.Raritize;
 import java.util.HashMap;
 public class BattlePassTiers {
 
-    static {
-        BattlePassTiers.setCustomItem( 15, Raritize.class, 4 );
-        BattlePassTiers.setCustomItem( 25, ScrollOfEnchantment.class, 2 );
-        BattlePassTiers.setCustomItem( 100, GoldenFishingRod.class );
-    }
-
     public static final long REPEATABLE_TIER_GOLD = 300L;
 
     private static class CustomReward {
@@ -75,13 +69,18 @@ public class BattlePassTiers {
         return tier != BattlePass.REPEATABLE_TIER && tier % 5 == 0;
     }
     private static final HashMap<Integer, Item> rewardCache = new HashMap<>();
-
     public static void resetRewards() {
         rewardCache.clear();
     }
 
     public static HashMap<Integer, Item> rewardSnapshot() {
         return new HashMap<>( rewardCache );
+    }
+
+    static {
+        BattlePassTiers.setCustomItem( 15, Raritize.class, 4 );
+        BattlePassTiers.setCustomItem( 25, ScrollOfEnchantment.class, 2 );
+        BattlePassTiers.setCustomItem( 100, GoldenFishingRod.class );
     }
     public static Item rewardFor( int tier ){
         if (!isItemTier( tier )) return null;
