@@ -99,6 +99,7 @@ public class BattlePass {
         totalXP = 0;
         claimedTiers = new ArrayList<>();
         repeatableTiersClaimed = 0;
+        BattlePassTiers.resetRewards();
         saveGlobal();
     }
 
