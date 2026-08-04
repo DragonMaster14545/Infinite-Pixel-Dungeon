@@ -45,6 +45,10 @@ public class BattlePassTiers {
     public static void resetRewards() {
         rewardCache.clear();
     }
+
+    public static HashMap<Integer, Item> rewardSnapshot() {
+        return new HashMap<>( rewardCache );
+    }
     public static Item rewardFor( int tier ){
         if (!isItemTier( tier )) return null;
 

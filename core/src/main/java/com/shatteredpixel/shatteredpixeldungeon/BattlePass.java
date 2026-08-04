@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class BattlePass {
@@ -90,7 +91,7 @@ public class BattlePass {
         }
         if (monthKey.equals( now )) return;
 
-        history.add( 0, new MonthRecord( monthKey, totalXP, new ArrayList<>( claimedTiers ), repeatableTiersClaimed ) );
+        history.add( 0, new MonthRecord( monthKey, totalXP, new ArrayList<>( claimedTiers ), repeatableTiersClaimed, BattlePassTiers.rewardSnapshot() ) );
         while (history.size() > MAX_HISTORY_MONTHS){
             history.remove( history.size()-1 );
         }
@@ -108,13 +109,15 @@ public class BattlePass {
         public final String monthKey;
         public final int finalXP;
         public final ArrayList<Integer> claimedTiers;
+        public final HashMap<Integer, Item> rewardSnapshot;
         public final int repeatableTiersClaimed;
 
-        MonthRecord( String monthKey, int finalXP, ArrayList<Integer> claimedTiers, int repeatableTiersClaimed ){
+        MonthRecord( String monthKey, int finalXP, ArrayList<Integer> claimedTiers, int repeatableTiersClaimed, HashMap<Integer, Item> rewardSnapshot ){
             this.monthKey = monthKey;
             this.finalXP = finalXP;
             this.claimedTiers = claimedTiers;
             this.repeatableTiersClaimed = repeatableTiersClaimed;
+            this.rewardSnapshot = rewardSnapshot;
         }
 
         public int tiersReached(){
@@ -133,6 +136,8 @@ public class BattlePass {
         private static final String M_XP        = "xp";
         private static final String M_CLAIMED   = "claimed";
         private static final String M_REPEATED  = "repeated";
+        private static final String M_REWARDTIERS  = "reward_tiers";
+        private static final String M_REWARDPREFIX  = "reward_";
 
         static MonthRecord restore( Bundle b ){
             String key = b.getString( M_KEY );
@@ -140,7 +145,14 @@ public class BattlePass {
             ArrayList<Integer> claimed = new ArrayList<>();
             for (int t : b.getIntArray( M_CLAIMED )) claimed.add( t );
             int repeated = b.contains( M_REPEATED ) ? b.getInt( M_REPEATED ) : 0;
-            return new MonthRecord( key, xp, claimed, repeated );
+
+            HashMap<Integer, Item> rewardSnapshot = new HashMap<>();
+            if (b.contains( M_REWARDTIERS )) {
+                for (int t : b.getIntArray( M_REWARDTIERS )) {
+                    rewardSnapshot.put(t, (Item) b.get(M_REWARDPREFIX + t));
+                }
+            }
+            return new MonthRecord( key, xp, claimed, repeated, rewardSnapshot );
         }
 
         Bundle store(){
@@ -151,6 +163,12 @@ public class BattlePass {
             for (int i = 0; i < arr.length; i++) arr[i] = claimedTiers.get(i);
             b.put( M_CLAIMED, arr );
             b.put( M_REPEATED, repeatableTiersClaimed );
+
+            int[] rewardTiers = new int[rewardSnapshot.size()];
+            int i = 0;
+            for (int t: rewardSnapshot.keySet()) rewardTiers[i++] = t;
+            b.put(M_REWARDTIERS, rewardTiers);
+            for (int t : rewardTiers) b.put(M_REWARDPREFIX + t, rewardSnapshot.get(t));
             return b;
         }
     }
