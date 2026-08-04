@@ -92,7 +92,7 @@ public class BattlePass {
         if (monthKey.equals( now )) return;
 
         history.add( 0, new MonthRecord( monthKey, totalXP, new ArrayList<>( claimedTiers ), repeatableTiersClaimed, BattlePassTiers.rewardSnapshot(),
-                seasonName( monthKey )) );
+                seasonName( monthKey ), premium) );
         while (history.size() > MAX_HISTORY_MONTHS){
             history.remove( history.size()-1 );
         }
@@ -102,6 +102,7 @@ public class BattlePass {
         claimedTiers = new ArrayList<>();
         repeatableTiersClaimed = 0;
         BattlePassTiers.resetRewards();
+        premium = false;
         saveGlobal();
     }
 
@@ -153,6 +154,32 @@ public class BattlePass {
         return seasonName( monthKey );
     }
 
+    public static String previousSeasonName(){
+        ensureLoaded();
+        if (history.isEmpty()) return null;
+        return history.get( 0 ).seasonName; //history is stored most-recent-first
+    }
+
+    public static final int PREMIUM_COST_GOLD = 500;
+
+    public static boolean premium;
+
+    public static boolean isPremium(){
+        ensureLoaded();
+        return premium;
+    }
+
+    public static boolean purchasePremium(){
+        ensureLoaded();
+        if (premium) return true;
+        if (Dungeon.gold < PREMIUM_COST_GOLD) return false;
+
+        Dungeon.gold -= PREMIUM_COST_GOLD;
+        premium = true;
+        saveGlobal();
+        return true;
+    }
+
     public static class MonthRecord {
 
         public final String monthKey;
@@ -161,15 +188,18 @@ public class BattlePass {
         public final HashMap<Integer, Item> rewardSnapshot;
         public final int repeatableTiersClaimed;
         public final String seasonName;
+        public final boolean premium;
 
         MonthRecord( String monthKey, int finalXP, ArrayList<Integer> claimedTiers,
-                     int repeatableTiersClaimed, HashMap<Integer, Item> rewardSnapshot, String seasonName ){
+                     int repeatableTiersClaimed, HashMap<Integer, Item> rewardSnapshot, String seasonName,
+                     boolean premium){
             this.monthKey = monthKey;
             this.finalXP = finalXP;
             this.claimedTiers = claimedTiers;
             this.repeatableTiersClaimed = repeatableTiersClaimed;
             this.rewardSnapshot = rewardSnapshot;
             this.seasonName = seasonName;
+            this.premium = premium;
         }
 
         public int tiersReached(){
@@ -191,6 +221,8 @@ public class BattlePass {
         private static final String M_REWARDTIERS  = "reward_tiers";
         private static final String M_REWARDPREFIX  = "reward_";
         private static final String M_SEASON_NAME = "season_name";
+        private static final String M_PREMIUM = "premium";
+
         static MonthRecord restore( Bundle b ){
             String key = b.getString( M_KEY );
             int xp = b.getInt( M_XP );
@@ -205,7 +237,8 @@ public class BattlePass {
                 }
             }
             String seasonName = b.contains( M_SEASON_NAME ) ? b.getString( M_SEASON_NAME ) : BattlePass.label( key );
-            return new MonthRecord( key, xp, claimed, repeated, rewardSnapshot, seasonName );
+            boolean premium = b.contains( M_PREMIUM ) && b.getBoolean( M_PREMIUM );
+            return new MonthRecord( key, xp, claimed, repeated, rewardSnapshot, seasonName, premium );
         }
 
         Bundle store(){
@@ -223,6 +256,7 @@ public class BattlePass {
             b.put(M_REWARDTIERS, rewardTiers);
             for (int t : rewardTiers) b.put(M_REWARDPREFIX + t, rewardSnapshot.get(t));
             b.put( M_SEASON_NAME, seasonName );
+            b.put( M_PREMIUM, premium );
             return b;
         }
     }
@@ -361,6 +395,13 @@ public class BattlePass {
             Dungeon.gold += BattlePassTiers.goldFor( tier );
         }
 
+        if (premium && BattlePassTiers.hasPremiumReward( tier )){
+            Item bonus = BattlePassTiers.premiumRewardFor( tier );
+            if (bonus != null && Dungeon.hero != null){
+                bonus.collect();
+            }
+        }
+
         saveGlobal();
         return result;
     }
@@ -423,6 +464,7 @@ public class BattlePass {
     private static final String MONTH_KEY  = "battlepass_month";
     private static final String HISTORY_N  = "battlepass_history_count";
     private static final String HISTORY_I  = "battlepass_history_";
+    private static final String PREMIUM = "battlepass_premium";
 
     public static void saveGlobal(){
         try {
@@ -436,6 +478,7 @@ public class BattlePass {
             bundle.put( REPEATED, repeatableTiersClaimed );
             bundle.put( MONTH_KEY, monthKey );
             bundle.put( HISTORY_N, history.size() );
+            bundle.put( PREMIUM, premium );
             for (int i = 0; i < history.size(); i++){
                 bundle.put( HISTORY_I + i, history.get(i).store() );
             }
@@ -466,12 +509,14 @@ public class BattlePass {
                     history.add( MonthRecord.restore( bundle.getBundle( HISTORY_I + i ) ) );
                 }
             }
+            premium = bundle.contains( PREMIUM ) && bundle.getBoolean( PREMIUM );
         } catch (IOException e) {
             totalXP = 0;
             claimedTiers = new ArrayList<>();
             repeatableTiersClaimed = 0;
             monthKey = null;
             history = new ArrayList<>();
+            premium = false;
         }
     }
 }

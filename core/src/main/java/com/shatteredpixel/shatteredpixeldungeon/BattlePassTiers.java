@@ -27,10 +27,13 @@ package com.shatteredpixel.shatteredpixeldungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.fishingrods.GoldenFishingRod;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfEnchantment;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Raritize;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.SearingSlasher;
 
 import java.util.HashMap;
 public class BattlePassTiers {
@@ -71,6 +74,7 @@ public class BattlePassTiers {
     private static final HashMap<Integer, Item> rewardCache = new HashMap<>();
     public static void resetRewards() {
         rewardCache.clear();
+        premiumRewardCache.clear();
     }
 
     public static HashMap<Integer, Item> rewardSnapshot() {
@@ -102,5 +106,52 @@ public class BattlePassTiers {
             }
         }
         return rewardCache.get( tier );
+    }
+
+    private static final HashMap<Integer, CustomReward> premiumItems = new HashMap<>();
+    private static final HashMap<Integer, Item> premiumRewardCache = new HashMap<>();
+
+    public static void setPremiumItem( int tier, Class<? extends Item> itemClass ){
+        setPremiumItem( tier, itemClass, 1 );
+    }
+
+    public static void setPremiumItem( int tier, Class<? extends Item> itemClass, int quantity ){
+        premiumItems.put( tier, new CustomReward( itemClass, Math.max( 1, quantity ) ) );
+    }
+
+    public static boolean hasPremiumReward( int tier ){
+        return tier >= 1 && tier <= BattlePass.TIER_XP.length;
+    }
+
+    static {
+        setPremiumItem( 10, ScrollOfUpgrade.class, 1 );
+        setPremiumItem( 25, PotionOfExperience.class, 1 );
+        setPremiumItem( 100, SearingSlasher.class, 1 );
+    }
+
+    public static Item premiumRewardFor( int tier ){
+        if (!hasPremiumReward( tier )) return null;
+
+        if (!premiumRewardCache.containsKey( tier )){
+            CustomReward custom = premiumItems.get( tier );
+            if (custom != null){
+                try {
+                    Item item = custom.itemClass.newInstance();
+                    item.quantity( custom.quantity );
+                    premiumRewardCache.put( tier, item );
+                } catch (Exception e){
+                    premiumRewardCache.put( tier, null );
+                }
+            } else {
+                Generator.Category[] categories = Generator.Category.values();
+                int index = Math.min( (tier / 5) + 1, categories.length - 1 );
+                premiumRewardCache.put( tier, Generator.random( categories[index] ) );
+            }
+        }
+        return premiumRewardCache.get( tier );
+    }
+
+    public static boolean isFeaturedPremiumReward( int tier ){
+        return premiumItems.containsKey( tier );
     }
 }
