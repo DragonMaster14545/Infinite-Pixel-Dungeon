@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Archs;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ScrollPane;
@@ -322,6 +323,8 @@ public class BattlePassScene extends PixelScene {
                 Item reward = BattlePassTiers.rewardFor( tier );
                 if (reward != null){
                     ((ItemSprite) rewardIcon).view( reward );
+                } else {
+                    ((ItemSprite) rewardIcon).view( ItemSpriteSheet.GOLD, null );
                 }
             }
             rewardIcon.x = x + width() - 60;
