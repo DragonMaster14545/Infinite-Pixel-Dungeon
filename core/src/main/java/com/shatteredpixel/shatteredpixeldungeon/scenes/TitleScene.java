@@ -138,6 +138,9 @@ public class TitleScene extends PixelScene {
 		btnPlay.icon(Icons.get(Icons.ENTER));
 		add(btnPlay);
 
+		StyledButton btnBattlepass = new BattlePassButton(GREY_TR, "Battle Pass");
+		add(btnBattlepass);
+
 		StyledButton btnRankings = new StyledButton(GREY_TR,Messages.get(this, "rankings")){
 			@Override
 			protected void onClick() {
@@ -186,6 +189,7 @@ public class TitleScene extends PixelScene {
 		if (landscape()) {
 			btnPlay.setRect(title.x-50, topRegion+GAP, ((title.width()+100)/2)-1, BTN_HEIGHT);
 			align(btnPlay);
+			btnBattlepass.setRect(btnPlay.right()+2, btnPlay.top(), btnPlay.width(), BTN_HEIGHT);
 			btnRankings.setRect(btnPlay.left(), btnPlay.bottom()+ GAP, (btnPlay.width()*.67f)-1, BTN_HEIGHT);
 			btnBadges.setRect(btnRankings.right()+2, btnRankings.top(), btnRankings.width(), BTN_HEIGHT);
 			btnNews.setRect(btnBadges.right()+2, btnBadges.top(), btnRankings.width(), BTN_HEIGHT);
@@ -195,7 +199,8 @@ public class TitleScene extends PixelScene {
 		} else {
 			btnPlay.setRect(title.x, topRegion+GAP, title.width(), BTN_HEIGHT);
 			align(btnPlay);
-			btnRankings.setRect(btnPlay.left(), btnPlay.bottom()+GAP, (btnPlay.width()/2)-1, BTN_HEIGHT);
+			btnBattlepass.setRect(btnPlay.left(), btnPlay.bottom()+ GAP, btnPlay.width(), BTN_HEIGHT);
+			btnRankings.setRect(btnPlay.left(), btnBattlepass.bottom()+ GAP, (btnPlay.width()/2)-1, BTN_HEIGHT);
 			btnBadges.setRect(btnRankings.right()+2, btnRankings.top(), btnRankings.width(), BTN_HEIGHT);
 			btnNews.setRect(btnRankings.left(), btnRankings.bottom()+ GAP, btnRankings.width(), BTN_HEIGHT);
 			btnChanges.setRect(btnNews.right()+2, btnNews.top(), btnNews.width(), BTN_HEIGHT);
@@ -336,17 +341,17 @@ public class TitleScene extends PixelScene {
 		}
 	}
 
-	private static class SupportButton extends StyledButton{
+	private static class BattlePassButton extends StyledButton{
 
-		public SupportButton( Chrome.Type type, String label ){
+		public BattlePassButton( Chrome.Type type, String label ){
 			super(type, label);
-			icon(Icons.get(Icons.GOLD));
+			icon(Icons.get(Icons.SCROLL_COLOR));
 			textColor(0xFF4242);
 		}
 
 		@Override
 		protected void onClick() {
-			ShatteredPixelDungeon.switchNoFade(SupporterScene.class);
+			ShatteredPixelDungeon.switchNoFade(BattlePassPreviewScene.class);
 		}
 	}
 
