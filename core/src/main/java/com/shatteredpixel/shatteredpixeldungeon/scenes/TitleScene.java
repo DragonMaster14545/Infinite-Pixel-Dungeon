@@ -26,6 +26,7 @@ package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.BattlePass;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
@@ -138,7 +139,7 @@ public class TitleScene extends PixelScene {
 		btnPlay.icon(Icons.get(Icons.ENTER));
 		add(btnPlay);
 
-		StyledButton btnBattlepass = new BattlePassButton(GREY_TR, "Battle Pass");
+		StyledButton btnBattlepass = new BattlePassButton(GREY_TR, Messages.get(BattlePassScene.class, "title_prev", BattlePass.currentSeasonName()));
 		add(btnBattlepass);
 
 		StyledButton btnRankings = new StyledButton(GREY_TR,Messages.get(this, "rankings")){
@@ -346,7 +347,7 @@ public class TitleScene extends PixelScene {
 		public BattlePassButton( Chrome.Type type, String label ){
 			super(type, label);
 			icon(Icons.get(Icons.SCROLL_COLOR));
-			textColor(0xFF4242);
+			textColor(0xfffb19);
 		}
 
 		@Override

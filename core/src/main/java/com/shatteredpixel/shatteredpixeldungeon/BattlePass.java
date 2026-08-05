@@ -573,7 +573,7 @@ public class BattlePass {
 
 
 
-    private static final String FILE       = "battlepass.dat";
+    private static final String FILE       = "battlepass_new.dat";
     private static final String TOTAL_XP   = "battlepass_xp";
     private static final String CLAIMED    = "battlepass_claimed";
     private static final String REPEATED   = "battlepass_repeated";

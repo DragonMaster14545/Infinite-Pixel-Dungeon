@@ -24,6 +24,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.ArcaneResin;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.fishingrods.GoldenFishingRod;
@@ -33,6 +34,9 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMappi
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfEnchantment;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Raritize;
+import com.shatteredpixel.shatteredpixeldungeon.items.test_tubes.Tubes;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.WondrousResin;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.SearingSlasher;
 
 import java.util.HashMap;
@@ -67,6 +71,21 @@ public class BattlePassTiers {
         return 50L + tier * 10L;
     }
 
+    private static Item deterministicRandom( Generator.Category[] categories, int tier ){
+        String monthKey = BattlePass.currentMonthKey();
+        long hash = 1125899906842597L;
+        String seed = monthKey + ":" + tier;
+        for (int i = 0; i < seed.length(); i++){
+            hash = 31*hash + seed.charAt(i);
+        }
+        int catIndex = (int) Math.floorMod( hash, categories.length );
+        Item item;
+        do {
+            item = Generator.random( categories[catIndex] );
+        } while (item instanceof Tubes);
+        return item;
+    }
+
     public static boolean isItemTier( int tier ){
         if (customItems.containsKey( tier )) return true;
         return tier != BattlePass.REPEATABLE_TIER && tier % 5 == 0;
@@ -84,7 +103,7 @@ public class BattlePassTiers {
     static {
         BattlePassTiers.setCustomItem( 15, Raritize.class, 4 );
         BattlePassTiers.setCustomItem( 25, ScrollOfEnchantment.class, 2 );
-        BattlePassTiers.setCustomItem( 100, GoldenFishingRod.class );
+        BattlePassTiers.setCustomItem( 100, SearingSlasher.class );
     }
     public static Item rewardFor( int tier ){
         if (!isItemTier( tier )) return null;
@@ -100,9 +119,7 @@ public class BattlePassTiers {
                     rewardCache.put( tier, null );
                 }
             } else {
-                Generator.Category[] categories = Generator.Category.values();
-                int index = Math.min( tier / 5, categories.length - 1 );
-                rewardCache.put( tier, Generator.random( categories[index] ) );
+                rewardCache.put( tier, deterministicRandom( Generator.Category.values(), tier ) );
             }
         }
         return rewardCache.get( tier );
@@ -137,9 +154,7 @@ public class BattlePassTiers {
                     premiumRewardCache.put( tier, null );
                 }
             } else {
-                Generator.Category[] categories = Generator.Category.values();
-                int index = Math.min( (tier / 5) + 1, categories.length - 1 );
-                premiumRewardCache.put( tier, Generator.random( categories[index] ) );
+                premiumRewardCache.put( tier, deterministicRandom( Generator.Category.values(), tier ) );
             }
         }
         return premiumRewardCache.get( tier );
@@ -148,7 +163,7 @@ public class BattlePassTiers {
     static {
         setPremiumItem( 10, ScrollOfUpgrade.class, 1 );
         setPremiumItem( 25, PotionOfExperience.class, 1 );
-        setPremiumItem( 100, SearingSlasher.class, 1 );
+        setPremiumItem( 100, GoldenFishingRod.class, 1 );
     }
 
     public static boolean isFeaturedPremiumReward( int tier ){
