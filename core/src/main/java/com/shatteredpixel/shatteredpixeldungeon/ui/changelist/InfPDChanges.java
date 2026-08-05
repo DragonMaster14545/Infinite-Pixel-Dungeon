@@ -76,6 +76,14 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.INFO_PAGE), "Battlepasses",
+                "The brand new feature of the game: Battlepass\n\n" +
+                        "It gives a mere advantage for your hero, every depth, gold, and kills are counted and rewarded every completed run." +
+                        " However, you must finish your run before it gives you the xp, and the premium rewards will cost you x300 of one specific in-game item" +
+                        " per month.\n\n_Every month, the battlepass will refresh, and will give you a different set of items to obtain, every player will have" +
+                        " a different set of items and a same season name throughout the game._"
+        ));
+
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.SEARING_SLASHER), "New Weapon!",
                 "The new T-4 weapon for this update: Searing Slasher\n\n" +
                         "Searing Slasher may be the newest OP weapon since it inflicts 5% of every elemental damage."
