@@ -475,7 +475,7 @@ public class BattlePassScene extends PixelScene {
                 }
             }
 
-            Item reward = null;
+            Item reward = BattlePassTiers.rewardFor( tier );
             if (rewardIcon instanceof ItemSprite){
                 reward = viewRecord != null ? viewRecord.rewardSnapshot.get( tier )
                         : BattlePassTiers.rewardFor( tier );
