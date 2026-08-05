@@ -127,6 +127,8 @@ public class BattlePassPreviewScene extends PixelScene {
         btnBack.setRect( (w - 100) / 2f, h - FOOTER_H + 4, 100, FOOTER_H - 8 );
         add( btnBack );
 
+        BattlePass.saveGlobal();
+
         fadeIn();
     }
 

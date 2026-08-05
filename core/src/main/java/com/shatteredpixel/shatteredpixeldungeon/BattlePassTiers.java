@@ -154,4 +154,18 @@ public class BattlePassTiers {
     public static boolean isFeaturedPremiumReward( int tier ){
         return premiumItems.containsKey( tier );
     }
+
+    public static void restoreRewards( HashMap<Integer, Item> snapshot ){
+        rewardCache.clear();
+        rewardCache.putAll( snapshot );
+    }
+
+    public static HashMap<Integer, Item> premiumRewardSnapshot() {
+        return new HashMap<>( premiumRewardCache );
+    }
+
+    public static void restorePremiumRewards( HashMap<Integer, Item> snapshot ){
+        premiumRewardCache.clear();
+        premiumRewardCache.putAll( snapshot );
+    }
 }

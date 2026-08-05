@@ -140,6 +140,7 @@ public class BattlePassScene extends PixelScene {
             if (BattlePass.isPremiumUnlocked()) {
                 progressStr += "\n" + Messages.get( this, "premium_active" );
             }
+            BattlePass.saveGlobal();
         } else {
             progressStr = Messages.get( this, "progress_past", viewRecord.tiersReached(), totalTiers() );
             int bonusReachedPast = viewRecord.repeatableTiersReached();

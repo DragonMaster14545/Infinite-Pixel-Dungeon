@@ -582,6 +582,10 @@ public class BattlePass {
     private static final String HISTORY_I  = "battlepass_history_";
     private static final String PREMIUM = "battlepass_premium";
     private static final String PREMIUM_CLAIMED = "battlepass_premium_claimed";
+    private static final String REWARD_TIERS         = "battlepass_reward_tiers";
+    private static final String REWARD_PREFIX        = "battlepass_reward_";
+    private static final String PREMIUM_REWARD_TIERS  = "battlepass_premium_reward_tiers";
+    private static final String PREMIUM_REWARD_PREFIX = "battlepass_premium_reward_";
 
     public static void saveGlobal(){
         try {
@@ -604,6 +608,19 @@ public class BattlePass {
                 premiumClaimedArr[i] = premiumClaimedTiers.get(i);
             }
             bundle.put( PREMIUM_CLAIMED, premiumClaimedArr );
+            HashMap<Integer, Item> rewards = BattlePassTiers.rewardSnapshot();
+            int[] rewardTiers = new int[rewards.size()];
+            int ri = 0;
+            for (int t : rewards.keySet()) rewardTiers[ri++] = t;
+            bundle.put( REWARD_TIERS, rewardTiers );
+            for (int t : rewardTiers) bundle.put( REWARD_PREFIX + t, rewards.get(t) );
+
+            HashMap<Integer, Item> premiumRewards = BattlePassTiers.premiumRewardSnapshot();
+            int[] premiumRewardTiers = new int[premiumRewards.size()];
+            int pi = 0;
+            for (int t : premiumRewards.keySet()) premiumRewardTiers[pi++] = t;
+            bundle.put( PREMIUM_REWARD_TIERS, premiumRewardTiers );
+            for (int t : premiumRewardTiers) bundle.put( PREMIUM_REWARD_PREFIX + t, premiumRewards.get(t) );
             FileUtils.bundleToFile( FILE, bundle );
         } catch (IOException e) {
             ShatteredPixelDungeon.reportException( e );
@@ -637,6 +654,20 @@ public class BattlePass {
                 for (int t : bundle.getIntArray( PREMIUM_CLAIMED )){
                     premiumClaimedTiers.add( t );
                 }
+            }
+            if (bundle.contains( REWARD_TIERS )){
+                HashMap<Integer, Item> rewards = new HashMap<>();
+                for (int t : bundle.getIntArray( REWARD_TIERS )){
+                    rewards.put( t, (Item) bundle.get( REWARD_PREFIX + t ) );
+                }
+                BattlePassTiers.restoreRewards( rewards );
+            }
+            if (bundle.contains( PREMIUM_REWARD_TIERS )){
+                HashMap<Integer, Item> premiumRewards = new HashMap<>();
+                for (int t : bundle.getIntArray( PREMIUM_REWARD_TIERS )){
+                    premiumRewards.put( t, (Item) bundle.get( PREMIUM_REWARD_PREFIX + t ) );
+                }
+                BattlePassTiers.restorePremiumRewards( premiumRewards );
             }
         } catch (IOException e) {
             totalXP = 0;
