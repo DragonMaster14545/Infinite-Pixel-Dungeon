@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+import static com.shatteredpixel.shatteredpixeldungeon.BattlePass.claimPremium;
+
 import com.shatteredpixel.shatteredpixeldungeon.BattlePass;
 import com.shatteredpixel.shatteredpixeldungeon.BattlePassTiers;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
@@ -315,7 +317,7 @@ public class BattlePassScene extends PixelScene {
         private RenderedTextBlock qtyLabel;
         private Image premiumIcon;
         private RenderedTextBlock premiumQtyLabel;
-
+        private StyledButton btnClaimPremium;
         TierRow( int tier ){
             this.tier = tier;
         }
@@ -339,6 +341,15 @@ public class BattlePassScene extends PixelScene {
             premiumQtyLabel = PixelScene.renderTextBlock( 8 );
             premiumQtyLabel.hardlight( 0xFFD700 );
             add( premiumQtyLabel );
+
+            btnClaimPremium = new StyledButton( Chrome.Type.GREY_BUTTON_TR, Messages.get( BattlePassScene.class, "claim" ), 8 ){
+                @Override
+                protected void onClick(){
+                    claimPremium();
+                }
+            };
+            btnClaimPremium.visible = false;
+            add( btnClaimPremium );
 
             qtyLabel = PixelScene.renderTextBlock( 8 );
             qtyLabel.hardlight( 0xCACFC2 );
@@ -366,11 +377,28 @@ public class BattlePassScene extends PixelScene {
             BattlePassScene.seeCurrentMonth();
         }
 
-        boolean tryClaimClick( float x, float y ){
+        private void claimPremium(){
+            if (!BattlePass.isPremiumClaimable( tier )) {
+                return;
+            }
+            Item bonus = BattlePass.claimPremium( tier );
+            if (bonus != null) {
+                GLog.p( Messages.get( BattlePassScene.class, "claimed_item", bonus.title() ) );
+            }
+            BattlePassScene.seeCurrentMonth();
+        }
+
+        boolean tryClaimClick( float x, float y ) {
             if (btnClaim.visible && btnClaim.active
                     && x >= btnClaim.left() && x <= btnClaim.right()
                     && y >= btnClaim.top() && y <= btnClaim.bottom()) {
                 claim();
+                return true;
+            }
+            if (btnClaimPremium.visible && btnClaimPremium.active
+                    && x >= btnClaimPremium.left() && x <= btnClaimPremium.right()
+                    && y >= btnClaimPremium.top() && y <= btnClaimPremium.bottom()) {
+                claimPremium();
                 return true;
             }
             return false;
@@ -407,12 +435,11 @@ public class BattlePassScene extends PixelScene {
             label.setPos( x + 4, y + (height() - label.height()) / 2f );
 
             boolean showPremium = tier != BattlePass.REPEATABLE_TIER && BattlePassTiers.hasPremiumReward( tier );
-            premiumIcon.visible = showPremium;
-            premiumQtyLabel.visible = false;
-
             if (showPremium) {
                 Item premiumReward = BattlePassTiers.premiumRewardFor( tier );
 
+                premiumIcon.visible = true;
+                premiumQtyLabel.visible = false;
                 if (premiumIcon instanceof ItemSprite) {
                     if (premiumReward != null) {
                         if (premiumReward instanceof Scroll) {
@@ -433,7 +460,13 @@ public class BattlePassScene extends PixelScene {
 
                 boolean ownedPremium = viewRecord != null ? viewRecord.premium : BattlePass.isPremium();
                 premiumIcon.alpha( unlocked ? (ownedPremium ? 1f : 0.3f) : 0.15f );
+                boolean premiumClaimable = viewRecord == null && BattlePass.isPremiumClaimable(tier);
+                btnClaimPremium.visible = btnClaimPremium.active = premiumClaimable && Dungeon.hero != null && Dungeon.hero.isAlive() && Dungeon.level != null;
+                btnClaimPremium.setRect( premiumIcon.x - 44, y + 2, 40, height() - 4 );
 
+                if (!btnClaimPremium.visible) {
+                    premiumIcon.alpha(ownedPremium ? 1f : 0.3f);
+                }
                 premiumQtyLabel.visible = premiumReward != null && premiumReward.quantity() > 1;
                 if (premiumQtyLabel.visible) {
                     premiumQtyLabel.text( "x" + premiumReward.quantity() );

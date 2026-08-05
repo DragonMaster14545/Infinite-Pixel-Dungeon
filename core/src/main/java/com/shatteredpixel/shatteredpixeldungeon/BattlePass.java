@@ -73,7 +73,7 @@ public class BattlePass {
 
     public static int totalXP;
     public static ArrayList<Integer> claimedTiers = new ArrayList<>();
-
+    public static ArrayList<Integer> premiumClaimedTiers = new ArrayList<>();
     //how many times the repeatable tier has been claimed this month
     public static int repeatableTiersClaimed;
 
@@ -113,6 +113,7 @@ public class BattlePass {
         monthKey = now;
         totalXP = 0;
         claimedTiers = new ArrayList<>();
+        premiumClaimedTiers = new ArrayList<>();
         repeatableTiersClaimed = 0;
         BattlePassTiers.resetRewards();
         premium = false;
@@ -472,6 +473,30 @@ public class BattlePass {
         return isUnlocked( tier ) && !isClaimed( tier );
     }
 
+    public static boolean isPremiumClaimed( int tier ){
+        ensureLoaded();
+        return premiumClaimedTiers.contains( tier );
+    }
+
+    public static boolean isPremiumClaimable( int tier ){
+        return premium && isUnlocked( tier ) && BattlePassTiers.hasPremiumReward( tier ) && !isPremiumClaimed( tier );
+    }
+
+    public static Item claimPremium( int tier ){
+        ensureLoaded();
+        if (!isPremiumClaimable( tier )) return null;
+
+        premiumClaimedTiers.add( tier );
+
+        Item bonus = BattlePassTiers.premiumRewardFor( tier );
+        if (bonus != null && Dungeon.hero != null){
+            bonus.collect();
+        }
+
+        saveGlobal();
+        return bonus;
+    }
+
     public static Item claim( int tier ){
         ensureLoaded();
         if (!isClaimable( tier )) return null;
@@ -491,13 +516,6 @@ public class BattlePass {
             result = reward;
         } else {
             Dungeon.gold += BattlePassTiers.goldFor( tier );
-        }
-
-        if (premium && BattlePassTiers.hasPremiumReward( tier )){
-            Item bonus = BattlePassTiers.premiumRewardFor( tier );
-            if (bonus != null && Dungeon.hero != null){
-                bonus.collect();
-            }
         }
 
         saveGlobal();
@@ -563,6 +581,7 @@ public class BattlePass {
     private static final String HISTORY_N  = "battlepass_history_count";
     private static final String HISTORY_I  = "battlepass_history_";
     private static final String PREMIUM = "battlepass_premium";
+    private static final String PREMIUM_CLAIMED = "battlepass_premium_claimed";
 
     public static void saveGlobal(){
         try {
@@ -580,6 +599,11 @@ public class BattlePass {
             for (int i = 0; i < history.size(); i++){
                 bundle.put( HISTORY_I + i, history.get(i).store() );
             }
+            int[] premiumClaimedArr = new int[premiumClaimedTiers.size()];
+            for (int i = 0; i < premiumClaimedArr.length; i++){
+                premiumClaimedArr[i] = premiumClaimedTiers.get(i);
+            }
+            bundle.put( PREMIUM_CLAIMED, premiumClaimedArr );
             FileUtils.bundleToFile( FILE, bundle );
         } catch (IOException e) {
             ShatteredPixelDungeon.reportException( e );
@@ -608,6 +632,12 @@ public class BattlePass {
                 }
             }
             premium = bundle.contains( PREMIUM ) && bundle.getBoolean( PREMIUM );
+            premiumClaimedTiers = new ArrayList<>();
+            if (bundle.contains( PREMIUM_CLAIMED )){
+                for (int t : bundle.getIntArray( PREMIUM_CLAIMED )){
+                    premiumClaimedTiers.add( t );
+                }
+            }
         } catch (IOException e) {
             totalXP = 0;
             claimedTiers = new ArrayList<>();
@@ -615,6 +645,7 @@ public class BattlePass {
             monthKey = null;
             history = new ArrayList<>();
             premium = false;
+            premiumClaimedTiers = new ArrayList<>();
         }
     }
 }

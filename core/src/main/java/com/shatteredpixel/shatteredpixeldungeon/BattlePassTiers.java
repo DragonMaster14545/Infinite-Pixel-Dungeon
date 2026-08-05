@@ -123,12 +123,6 @@ public class BattlePassTiers {
         return tier >= 1 && tier <= BattlePass.TIER_XP.length;
     }
 
-    static {
-        setPremiumItem( 10, ScrollOfUpgrade.class, 1 );
-        setPremiumItem( 25, PotionOfExperience.class, 1 );
-        setPremiumItem( 100, SearingSlasher.class, 1 );
-    }
-
     public static Item premiumRewardFor( int tier ){
         if (!hasPremiumReward( tier )) return null;
 
@@ -149,6 +143,12 @@ public class BattlePassTiers {
             }
         }
         return premiumRewardCache.get( tier );
+    }
+
+    static {
+        setPremiumItem( 10, ScrollOfUpgrade.class, 1 );
+        setPremiumItem( 25, PotionOfExperience.class, 1 );
+        setPremiumItem( 100, SearingSlasher.class, 1 );
     }
 
     public static boolean isFeaturedPremiumReward( int tier ){
