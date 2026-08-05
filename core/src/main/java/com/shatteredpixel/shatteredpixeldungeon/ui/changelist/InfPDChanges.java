@@ -128,6 +128,12 @@ public class InfPDChanges {
                         "_-_ Slightly buffed Racked enchantments to deal additional damage up to 10x"
         ));
 
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
+                "_-_ [Quick Fix] Fixed rings' crash similar in the way of transmuting the artifacts before\n" +
+                        "_-_ [Quick Fix] The battlepass scene no longer scrolls all the way up when claiming an item"
+
+        ));
+
         changes = new ChangeInfo("E", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
