@@ -30,6 +30,9 @@ import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -412,6 +415,13 @@ public class BattlePassScene extends PixelScene {
 
                 if (premiumIcon instanceof ItemSprite) {
                     if (premiumReward != null) {
+                        if (premiumReward instanceof Scroll) {
+                            ((Scroll) premiumReward).anonymize();
+                        } else if (premiumReward instanceof Ring) {
+                            ((Ring) premiumReward).anonymize();
+                        } else if (premiumReward instanceof Potion) {
+                            ((Potion) premiumReward).anonymize();
+                        }
                         ((ItemSprite) premiumIcon).view( premiumReward );
                     } else {
                         ((ItemSprite) premiumIcon).view( ItemSpriteSheet.GOLD, null );
@@ -437,6 +447,13 @@ public class BattlePassScene extends PixelScene {
                 reward = viewRecord != null ? viewRecord.rewardSnapshot.get( tier )
                         : BattlePassTiers.rewardFor( tier );
                 if (reward != null){
+                    if (reward instanceof Scroll) {
+                        ((Scroll) reward).anonymize();
+                    } else if (reward instanceof Ring) {
+                        ((Ring) reward).anonymize();
+                    } else if (reward instanceof Potion) {
+                        ((Potion) reward).anonymize();
+                    }
                     ((ItemSprite) rewardIcon).view( reward );
                 } else {
                     ((ItemSprite) rewardIcon).view( ItemSpriteSheet.GOLD, null );
