@@ -52,8 +52,8 @@ import java.util.ArrayList;
 
 public class BattlePassScene extends PixelScene {
 
-    private static final int ROW_HEIGHT = 24;
-    private static final int ROW_GAP    = 2;
+    private static final int ROW_HEIGHT = 48;
+    private static final int ROW_GAP    = 4;
     private static final int MARGIN     = 8;
     private static final int HEADER_H   = 40;
     private static final int FOOTER_H   = 28;
@@ -229,7 +229,7 @@ public class BattlePassScene extends PixelScene {
                 }
             }
 
-            StyledButton btnPremium = new StyledButton( Chrome.Type.RED_BUTTON, premiumLabel, 8 ){
+            StyledButton btnPremium = new StyledButton( Chrome.Type.GREY_BUTTON_TR, premiumLabel, 8 ){
                 @Override
                 protected void onClick(){
                     BattlePass.unlockPremium();
@@ -318,6 +318,11 @@ public class BattlePassScene extends PixelScene {
         private Image premiumIcon;
         private RenderedTextBlock premiumQtyLabel;
         private StyledButton btnClaimPremium;
+        private ColorBlock normalBox;
+        private ColorBlock premiumBox;
+        private RenderedTextBlock rewardNameLabel;
+        private RenderedTextBlock premiumNameLabel;
+
         TierRow( int tier ){
             this.tier = tier;
         }
@@ -326,6 +331,12 @@ public class BattlePassScene extends PixelScene {
         protected void createChildren(){
             bg = new ColorBlock( 1, 1, 0x40FFFFFF );
             add( bg );
+
+            normalBox = new ColorBlock( 1, 1, 0x30FFFFFF );
+            add( normalBox );
+
+            premiumBox = new ColorBlock( 1, 1, 0x30FFFFFF );
+            add( premiumBox );
 
             label = PixelScene.renderTextBlock( 9 );
             add( label );
@@ -342,7 +353,7 @@ public class BattlePassScene extends PixelScene {
             premiumQtyLabel.hardlight( 0xFFD700 );
             add( premiumQtyLabel );
 
-            btnClaimPremium = new StyledButton( Chrome.Type.GREY_BUTTON_TR, Messages.get( BattlePassScene.class, "claim" ), 8 ){
+            btnClaimPremium = new StyledButton( Chrome.Type.RED_BUTTON, Messages.get( BattlePassScene.class, "claim" ), 8 ){
                 @Override
                 protected void onClick(){
                     claimPremium();
@@ -362,6 +373,14 @@ public class BattlePassScene extends PixelScene {
                 }
             };
             add( btnClaim );
+
+            rewardNameLabel = PixelScene.renderTextBlock( 8 );
+            rewardNameLabel.hardlight( 0xCACFC2 );
+            add( rewardNameLabel );
+
+            premiumNameLabel = PixelScene.renderTextBlock( 8 );
+            premiumNameLabel.hardlight( 0xFFD700 );
+            add( premiumNameLabel );
         }
 
         private void claim(){
@@ -432,7 +451,64 @@ public class BattlePassScene extends PixelScene {
                         : Messages.get( BattlePassScene.class, "locked" );
                 label.text( Messages.get( BattlePassScene.class, "tier_row", tier, status ) );
             }
-            label.setPos( x + 4, y + (height() - label.height()) / 2f );
+            label.setPos( x + (width() - label.width()) / 2f, y + 2 );
+
+            float boxY = y + label.height() + 6;
+            float boxH = height() - label.height() - 8;
+            float gap  = 4;
+            float boxW = (width() - gap) / 2f;
+
+            float normalX  = x;
+            float premiumX = x + boxW + gap;
+
+            normalBox.x = normalX;
+            normalBox.y = boxY;
+            normalBox.size( boxW, boxH );
+            normalBox.alpha( 0.25f );
+
+            premiumBox.x = premiumX;
+            premiumBox.y = boxY;
+            premiumBox.size( boxW, boxH );
+            premiumBox.alpha( 0.25f );
+
+            Item reward = viewRecord != null ? viewRecord.rewardSnapshot.get( tier ) : BattlePassTiers.rewardFor( tier );
+            if (rewardIcon instanceof ItemSprite){
+                if (reward != null){
+                    if (reward instanceof Scroll) {
+                        ((Scroll) reward).anonymize();
+                    } else if (reward instanceof Ring) {
+                        ((Ring) reward).anonymize();
+                    } else if (reward instanceof Potion) {
+                        ((Potion) reward).anonymize();
+                    }
+                    ((ItemSprite) rewardIcon).view( reward );
+                } else {
+                    ((ItemSprite) rewardIcon).view( ItemSpriteSheet.GOLD, null );
+                }
+            }
+            rewardIcon.x = normalX + 6;
+            rewardIcon.y = boxY + (boxH - rewardIcon.height()) / 2f;
+            rewardIcon.alpha( unlocked ? 1f : 0.3f );
+
+            rewardNameLabel.visible = reward != null;
+            if (reward != null) {
+                rewardNameLabel.text( reward.name() );
+                rewardNameLabel.maxWidth( (int)(btnClaim.left() - (rewardIcon.x + rewardIcon.width() + 6) - 4) );
+                rewardNameLabel.setPos(
+                        rewardIcon.x + rewardIcon.width() + 6,
+                        rewardIcon.y + (rewardIcon.height() - rewardNameLabel.height()) / 2f
+                );
+            }
+
+            qtyLabel.visible = reward != null && reward.quantity() > 1;
+            if (qtyLabel.visible) {
+                qtyLabel.text( "x" + reward.quantity() );
+                qtyLabel.setPos( rewardIcon.x + (rewardIcon.width() - qtyLabel.width()) / 2f,
+                        rewardIcon.y + rewardIcon.height() - 2 );
+            }
+
+            btnClaim.visible = btnClaim.active = claimable && Dungeon.hero != null && Dungeon.hero.isAlive() && Dungeon.level != null;
+            btnClaim.setRect( normalX + boxW - 40, boxY + (boxH - (boxH - 4)) / 2f, 36, boxH - 4 );
 
             boolean showPremium = tier != BattlePass.REPEATABLE_TIER && BattlePassTiers.hasPremiumReward( tier );
             if (showPremium) {
@@ -455,56 +531,38 @@ public class BattlePassScene extends PixelScene {
                     }
                 }
 
-                premiumIcon.x = x + width() - 90;
-                premiumIcon.y = y + (height() - premiumIcon.height()) / 2f;
+                premiumIcon.x = premiumX + 6;
+                premiumIcon.y = boxY + (boxH - premiumIcon.height()) / 2f;
 
                 boolean ownedPremium = viewRecord != null ? viewRecord.premium : BattlePass.isPremium();
                 premiumIcon.alpha( unlocked ? (ownedPremium ? 1f : 0.3f) : 0.15f );
-                boolean premiumClaimable = viewRecord == null && BattlePass.isPremiumClaimable(tier);
-                btnClaimPremium.visible = btnClaimPremium.active = premiumClaimable && Dungeon.hero != null && Dungeon.hero.isAlive() && Dungeon.level != null;
-                btnClaimPremium.setRect( premiumIcon.x - 44, y + 2, 40, height() - 4 );
 
-                if (!btnClaimPremium.visible) {
-                    premiumIcon.alpha(ownedPremium ? 1f : 0.3f);
+                boolean premiumClaimable = viewRecord == null && BattlePass.isPremiumClaimable( tier );
+                btnClaimPremium.visible = btnClaimPremium.active = premiumClaimable && Dungeon.hero != null && Dungeon.hero.isAlive() && Dungeon.level != null;
+                btnClaimPremium.setRect( premiumX + boxW - 40, boxY + 2, 36, boxH - 4 );
+
+                premiumNameLabel.visible = premiumReward != null;
+                if (premiumReward != null) {
+                    premiumNameLabel.text( premiumReward.name() );
+                    premiumNameLabel.maxWidth( (int)(btnClaimPremium.left() - (premiumIcon.x + premiumIcon.width() + 6) - 4) );
+                    premiumNameLabel.setPos(
+                            premiumIcon.x + premiumIcon.width() + 6,
+                            premiumIcon.y + (premiumIcon.height() - premiumNameLabel.height()) / 2f
+                    );
                 }
+
                 premiumQtyLabel.visible = premiumReward != null && premiumReward.quantity() > 1;
                 if (premiumQtyLabel.visible) {
                     premiumQtyLabel.text( "x" + premiumReward.quantity() );
                     premiumQtyLabel.setPos( premiumIcon.x + (premiumIcon.width() - premiumQtyLabel.width()) / 2f,
                             premiumIcon.y + premiumIcon.height() - 2 );
                 }
+            } else {
+                premiumIcon.visible = false;
+                premiumQtyLabel.visible = false;
+                premiumNameLabel.visible = false;
+                btnClaimPremium.visible = btnClaimPremium.active = false;
             }
-
-            Item reward = BattlePassTiers.rewardFor( tier );
-            if (rewardIcon instanceof ItemSprite){
-                reward = viewRecord != null ? viewRecord.rewardSnapshot.get( tier )
-                        : BattlePassTiers.rewardFor( tier );
-                if (reward != null){
-                    if (reward instanceof Scroll) {
-                        ((Scroll) reward).anonymize();
-                    } else if (reward instanceof Ring) {
-                        ((Ring) reward).anonymize();
-                    } else if (reward instanceof Potion) {
-                        ((Potion) reward).anonymize();
-                    }
-                    ((ItemSprite) rewardIcon).view( reward );
-                } else {
-                    ((ItemSprite) rewardIcon).view( ItemSpriteSheet.GOLD, null );
-                }
-            }
-            rewardIcon.x = x + width() - 60;
-            rewardIcon.y = y + (height() - rewardIcon.height()) / 2f;
-            rewardIcon.alpha( unlocked ? 1f : 0.3f );
-
-            qtyLabel.visible = reward != null && reward.quantity() > 1;
-            if (qtyLabel.visible) {
-                qtyLabel.text( "x" + reward.quantity() );
-                qtyLabel.setPos( rewardIcon.x + (rewardIcon.width() - qtyLabel.width()) / 2f,
-                        rewardIcon.y + rewardIcon.height() - 2 );
-            }
-
-            btnClaim.visible = btnClaim.active = claimable && Dungeon.hero != null && Dungeon.hero.isAlive() && Dungeon.level != null   ;
-            btnClaim.setRect( x + width() - 44, y + 2, 40, height() - 4 );
         }
     }
 }
