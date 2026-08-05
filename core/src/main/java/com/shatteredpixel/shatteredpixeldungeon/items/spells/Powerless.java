@@ -40,7 +40,9 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SacrificialParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HornOfPlenty;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.ShadowCaster;
@@ -61,7 +63,7 @@ import java.util.ArrayList;
 public class Powerless extends Spell {
 
 	{
-		image = ItemSpriteSheet.RESPAWN;
+		image = ItemSpriteSheet.POWERLESS;
 
 		talentChance = 1/(float) Recipe.OUT_QUANTITY;
 	}
@@ -130,7 +132,7 @@ public class Powerless extends Spell {
 
 				for (Char ch : affected){
 					if ( ch.alignment != target.alignment ) {
-						target.sprite.parent.add(new Beam.HealthRay(target.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(ch.pos)));
+						Buff.append(Dungeon.hero, TalismanOfForesight.CharAwareness.class, 1f).charID = target.id();
 						Buff.affect(ch, Paralysis.class, 1f);
 						((Mob) ch).aggro(target);
 					}

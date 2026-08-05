@@ -84,6 +84,11 @@ public class InfPDChanges {
                         " a different set of items and a same season name throughout the game._"
         ));
 
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.POWERLESS), "New Spell!",
+                "The new spell for this update: Powerless Spell\n\n" +
+                        "This spell can reveal enemies once per 5 turns, they will also stunned."
+        ));
+
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.SEARING_SLASHER), "New Weapon!",
                 "The new T-4 weapon for this update: Searing Slasher\n\n" +
                         "Searing Slasher may be the newest OP weapon since it inflicts 5% of every elemental damage."

@@ -65,6 +65,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemGetter;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemQuantifier;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.PhaseShift;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.PocketAlchemy;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.Powerless;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Raritize;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ReclaimTrap;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Recycle;
@@ -249,7 +250,8 @@ public abstract class Recipe {
             new ElixirOfDivineInspiration.Recipe(),
 			new DanceImmune.Recipe(),
 			new Extractor.Recipe(),
-			new ItemGetter.Recipe()
+			new ItemGetter.Recipe(),
+			new Powerless.Recipe()
 	};
 	
 	private static Recipe[] threeIngredientRecipes = new Recipe[]{
