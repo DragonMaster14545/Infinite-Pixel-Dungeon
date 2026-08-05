@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpuxel.shatteredpixeldungeon.items.test_tubes.Tubes;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -481,6 +482,8 @@ public class BattlePassScene extends PixelScene {
                         ((Ring) reward).anonymize();
                     } else if (reward instanceof Potion) {
                         ((Potion) reward).anonymize();
+                    } else if (reward instanceof Tubes) {
+                        ((Tubes) reward).anonymize();
                     }
                     ((ItemSprite) rewardIcon).view( reward );
                 } else {
@@ -525,6 +528,8 @@ public class BattlePassScene extends PixelScene {
                             ((Ring) premiumReward).anonymize();
                         } else if (premiumReward instanceof Potion) {
                             ((Potion) premiumReward).anonymize();
+                        } else if (premiumReward instanceof Tubes) {
+                            ((Tubes) premiumReward).anonymize();
                         }
                         ((ItemSprite) premiumIcon).view( premiumReward );
                     } else {
