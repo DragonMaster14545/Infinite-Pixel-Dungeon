@@ -252,6 +252,26 @@ public class BattlePassScene extends PixelScene {
         fadeIn();
     }
 
+    private void refresh(){
+        for (TierRow row : rows) {
+            row.layout();
+        }
+        if (viewMonthKey == null) {
+            int reached = BattlePass.tiersReached();
+            String progressStr = Messages.get( this, "progress",
+                    reached, BattlePass.xpIntoCurrentTier(), BattlePass.xpForCurrentTier() );
+            int bonusReached = BattlePass.repeatableTiersUnlocked();
+            if (bonusReached > 0) {
+                progressStr += "\n" + Messages.get( this, "bonus_tiers", bonusReached );
+            }
+            progressStr += "\n" + Messages.get( this, "days_left", BattlePass.timeRemainingInMonth() );
+            if (BattlePass.isPremiumUnlocked()) {
+                progressStr += "\n" + Messages.get( this, "premium_active" );
+            }
+            progress.text( progressStr );
+        }
+    }
+
     @Override
     public void update() {
         super.update();
@@ -395,7 +415,7 @@ public class BattlePassScene extends PixelScene {
             } else {
                 GLog.p( Messages.get( BattlePassScene.class, "claimed_gold" ) );
             }
-            BattlePassScene.seeCurrentMonth();
+            refresh();
         }
 
         private void claimPremium(){
@@ -406,7 +426,7 @@ public class BattlePassScene extends PixelScene {
             if (bonus != null) {
                 GLog.p( Messages.get( BattlePassScene.class, "claimed_item", bonus.title() ) );
             }
-            BattlePassScene.seeCurrentMonth();
+            refresh();
         }
 
         boolean tryClaimClick( float x, float y ) {
