@@ -213,8 +213,18 @@ public class BattlePass {
             return;
         }
 
+        Item costIcon;
+        try {
+            costIcon = BattlePass.premiumCostItem().newInstance();
+        } catch (Exception e) {
+            costIcon = new Gold( BattlePass.premiumCostItemQuantity );
+        }
+
+        ItemSprite icon = new ItemSprite();
+        icon.view( costIcon );
+
         ShatteredPixelDungeon.scene().addToFront( new WndOptions(
-                new ItemSprite(),
+                icon,
                 Messages.get( BattlePassScene.class, "premium_confirm_title" ),
                 Messages.get( BattlePassScene.class, "premium_confirm_body", qty, Messages.get( costItem, "name" ) ),
                 Messages.get( BattlePassScene.class, "premium_confirm_yes" ),
