@@ -120,7 +120,7 @@ public class BattlePassTiers {
     }
 
     public static boolean hasPremiumReward( int tier ){
-        return premiumItems.containsKey( tier );
+        return tier >= 1 && tier <= BattlePass.TIER_XP.length;
     }
 
     static {
