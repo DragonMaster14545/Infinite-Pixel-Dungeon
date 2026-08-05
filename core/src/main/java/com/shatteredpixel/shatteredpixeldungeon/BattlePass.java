@@ -124,14 +124,24 @@ public class BattlePass {
             "Golden", "Crimson", "Silent", "Wild", "Ashen", "Hollow",
             "Iron", "Obsidian", "Radiant", "Withered", "Feral", "Gilded",
             "Molten", "Glacial", "Spectral", "Savage", "Sable", "Burning",
-            "Twilight", "Forsaken", "Emerald", "Bleak", "Thundering", "Sunken"
+            "Twilight", "Forsaken", "Emerald", "Bleak", "Thundering", "Sunken",
+            "Venomous", "Astral", "Charred", "Cursed", "Divine", "Frozen",
+            "Grim", "Hallowed", "Infernal", "Jagged", "Lunar", "Murky",
+            "Nocturnal", "Onyx", "Primal", "Rotten", "Solar", "Tempest",
+            "Umbral", "Vile", "Whispering", "Abyssal", "Broken", "Celestial",
+            "Draconic", "Eternal", "Fabled", "Ghastly", "Haunted", "Immortal"
     };
     private static final String[] SEASON_NOUN = {
             "Moon", "Reckoning", "Bloom", "Vigil", "Ascent", "Tide",
             "Dawn", "Rising", "Echo", "Requiem", "Gauntlet", "Descent",
             "Eclipse", "Hunt", "Covenant", "Uprising", "Pact", "Harvest",
             "Wake", "Trial", "Siege", "Passage", "Awakening", "Reign",
-            "Crossing", "Omen", "Vow", "Blight", "Convergence", "Nightfall"
+            "Crossing", "Omen", "Vow", "Blight", "Convergence", "Nightfall",
+            "Abyss", "Chorus", "Deluge", "Ember", "Fracture", "Genesis",
+            "Horizon", "Ingress", "Judgment", "Kinship", "Labyrinth", "Maelstrom",
+            "Nemesis", "Onslaught", "Prophecy", "Quietus", "Rampart", "Sanctum",
+            "Threshold", "Undertow", "Verdict", "Wraith", "Zenith", "Ashfall",
+            "Bastion", "Cataclysm", "Dominion", "Exodus", "Fable", "Gloaming"
     };
 
     private static final HashMap<String, String> seasonNameOverrides = new HashMap<>();
