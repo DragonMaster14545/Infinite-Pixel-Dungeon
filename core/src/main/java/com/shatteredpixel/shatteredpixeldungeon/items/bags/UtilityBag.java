@@ -89,7 +89,7 @@ public class UtilityBag extends Bag {
 	}
 
 	public int capacity(){
-		return 60;
+		return 120;
 	}
 
 	@Override
