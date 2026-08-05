@@ -68,7 +68,7 @@ public class BattlePassPreviewScene extends PixelScene {
         archs.setSize( w, h );
         add( archs );
 
-        RenderedTextBlock title = renderTextBlock( Messages.get( this, "title" ), 12 );
+        RenderedTextBlock title = renderTextBlock( Messages.get( this, "title", BattlePass.currentSeasonName() ), 12 );
         title.hardlight( 0xFFFF44 );
         title.setPos( (w - title.width()) / 2f, 6 );
         align( title );
@@ -81,7 +81,6 @@ public class BattlePassPreviewScene extends PixelScene {
         add( notice );
 
         String infoStr = Messages.get( this, "info",
-                BattlePass.currentSeasonName(),
                 BattlePass.tiersReached(),
                 BattlePass.xpIntoCurrentTier(),
                 BattlePass.xpForCurrentTier(),
