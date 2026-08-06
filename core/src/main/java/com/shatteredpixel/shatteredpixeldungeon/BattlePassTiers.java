@@ -94,6 +94,12 @@ public class BattlePassTiers {
     public static void resetRewards() {
         rewardCache.clear();
         premiumRewardCache.clear();
+        rewardExtraCache.clear();
+        premiumRewardExtraCache.clear();
+        repeatableItemClass = null;
+        repeatableItemClassKey = null;
+        premiumRepeatableItemClass = null;
+        premiumRepeatableItemClassKey = null;
     }
 
     public static HashMap<Integer, Item> rewardSnapshot() {
@@ -137,7 +143,7 @@ public class BattlePassTiers {
     }
 
     public static boolean hasPremiumReward( int tier ){
-        return tier >= 1 && tier <= BattlePass.TIER_XP.length;
+        return tier >= 1 && tier <= BattlePass.TIER_XP.length + 1;
     }
 
     public static Item premiumRewardFor( int tier ){
@@ -182,5 +188,118 @@ public class BattlePassTiers {
     public static void restorePremiumRewards( HashMap<Integer, Item> snapshot ){
         premiumRewardCache.clear();
         premiumRewardCache.putAll( snapshot );
+    }
+
+    private static Class<? extends Item> repeatableItemClass;
+    private static String repeatableItemClassKey;
+
+    private static Class<? extends Item> generateRepeatableItem(){
+        String monthKey = BattlePass.currentMonthKey();
+        if (!monthKey.equals( repeatableItemClassKey )){
+            Generator.Category[] categories = Generator.Category.values();
+            long hash = 1125899906842597L;
+            String seed = monthKey + ":repeat";
+            for (int i = 0; i < seed.length(); i++){
+                hash = 31*hash + seed.charAt(i);
+            }
+            int index = (int) Math.floorMod( hash, categories.length );
+            Item sample = Generator.random( categories[index] );
+            while (sample instanceof Tubes) {
+                sample = Generator.random( categories[index] );
+            } 
+            repeatableItemClass = sample != null ? sample.getClass() : null;
+            repeatableItemClassKey = monthKey;
+        }
+        return repeatableItemClass;
+    }
+
+    public static Item repeatableRewardFor(){
+        Class<? extends Item> cls = generateRepeatableItem();
+        if (cls == null) return null;
+        try {
+            return cls.newInstance();
+        } catch (Exception e){
+            return null;
+        }
+    }
+
+    private static Class<? extends Item> premiumRepeatableItemClass;
+    private static String premiumRepeatableItemClassKey;
+
+    private static Class<? extends Item> generatePremiumRepeatableItem(){
+        String monthKey = BattlePass.currentMonthKey();
+        if (!monthKey.equals( premiumRepeatableItemClassKey )){
+            Generator.Category[] categories = Generator.Category.values();
+            long hash = 1125899906842597L;
+            String seed = monthKey + ":premiumRepeat";
+            for (int i = 0; i < seed.length(); i++){
+                hash = 31*hash + seed.charAt(i);
+            }
+            int index = (int) Math.floorMod( hash, categories.length );
+            Item sample = Generator.random( categories[index] );
+            while (sample instanceof Tubes) {
+                sample = Generator.random( categories[index] );
+            } 
+            premiumRepeatableItemClass = sample != null ? sample.getClass() : null;
+            premiumRepeatableItemClassKey = monthKey;
+        }
+        return premiumRepeatableItemClass;
+    }
+
+    public static Item premiumRepeatableRewardFor(){
+        Class<? extends Item> cls = generatePremiumRepeatableItem();
+        if (cls == null) return null;
+        try {
+            return cls.newInstance();
+        } catch (Exception e){
+            return null;
+        }
+    }
+
+    private static final double BONUS_ITEM_CHANCE = 0.2;
+
+    private static ArrayList<Item> rollExtras( int tier, String seedSuffix ){
+        ArrayList<Item> extras = new ArrayList<>();
+        String monthKey = BattlePass.currentMonthKey();
+        long hash = 1125899906842597L;
+        String seed = monthKey + ":" + tier + ":" + seedSuffix;
+        for (int i = 0; i < seed.length(); i++){
+            hash = 31*hash + seed.charAt(i);
+        }
+        double roll = Math.floorMod( hash, 10000L ) / 10000.0;
+        if (roll < BONUS_ITEM_CHANCE) {
+            Generator.Category[] categories = Generator.Category.values();
+            int catIndex = (int) Math.floorMod( hash / 7, categories.length );
+            Item bonus = Generator.random( categories[catIndex] );
+            if (bonus != null) extras.add( bonus );
+        }
+        return extras;
+    }
+
+    private static final HashMap<Integer, ArrayList<Item>> rewardExtraCache = new HashMap<>();
+    private static final HashMap<Integer, ArrayList<Item>> premiumRewardExtraCache = new HashMap<>();
+
+    public static ArrayList<Item> rewardExtrasFor( int tier ){
+        if (tier != BattlePass.REPEATABLE_TIER && !isItemTier( tier )) return new ArrayList<>();
+        if (!rewardExtraCache.containsKey( tier )){
+            rewardExtraCache.put( tier, rollExtras( tier, "extra" ) );
+        }
+        return rewardExtraCache.get( tier );
+    }
+
+    public static ArrayList<Item> premiumRewardExtrasFor( int tier ){
+        if (!hasPremiumReward( tier )) return new ArrayList<>();
+        if (!premiumRewardExtraCache.containsKey( tier )){
+            premiumRewardExtraCache.put( tier, rollExtras( tier, "premiumExtra" ) );
+        }
+        return premiumRewardExtraCache.get( tier );
+    }
+
+    public static HashMap<Integer, ArrayList<Item>> rewardExtraSnapshot() {
+        return new HashMap<>( rewardExtraCache );
+    }
+
+    public static HashMap<Integer, ArrayList<Item>> premiumRewardExtraSnapshot() {
+        return new HashMap<>( premiumRewardExtraCache );
     }
 }

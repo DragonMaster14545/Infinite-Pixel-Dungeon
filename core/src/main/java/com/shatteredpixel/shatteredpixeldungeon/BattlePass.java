@@ -70,12 +70,15 @@ public class BattlePass {
 
     public static final int REPEATABLE_TIER    = TIER_XP.length + 1; //101
     public static final int REPEATABLE_TIER_XP = 100 + TIER_XP.length*100; //3100, continues the same cost curve
+    public static final int RESET_ENERGY_COST = 600000;
+    public static final int HISTORY_CLAIM_ENERGY_COST = 100;
 
     public static int totalXP;
     public static ArrayList<Integer> claimedTiers = new ArrayList<>();
     public static ArrayList<Integer> premiumClaimedTiers = new ArrayList<>();
     //how many times the repeatable tier has been claimed this month
     public static int repeatableTiersClaimed;
+    public static int premiumRepeatableTiersClaimed;
 
     private static String monthKey;
     private static ArrayList<MonthRecord> history = new ArrayList<>();
@@ -104,8 +107,11 @@ public class BattlePass {
         }
         if (monthKey.equals( now )) return;
 
-        history.add( 0, new MonthRecord( monthKey, totalXP, new ArrayList<>( claimedTiers ), repeatableTiersClaimed, BattlePassTiers.rewardSnapshot(),
-                seasonName( monthKey ), premium) );
+        history.add( 0, new MonthRecord( monthKey, totalXP, new ArrayList<>( claimedTiers ), repeatableTiersClaimed,
+            BattlePassTiers.rewardSnapshot(), seasonName( monthKey ), premium,
+            new ArrayList<>( premiumClaimedTiers ), BattlePassTiers.premiumRewardSnapshot(),
+            premiumRepeatableTiersClaimed, BattlePassTiers.rewardExtraSnapshot(),
+            BattlePassTiers.premiumRewardExtraSnapshot() ) );
         while (history.size() > MAX_HISTORY_MONTHS){
             history.remove( history.size()-1 );
         }
@@ -115,9 +121,98 @@ public class BattlePass {
         claimedTiers = new ArrayList<>();
         premiumClaimedTiers = new ArrayList<>();
         repeatableTiersClaimed = 0;
+        premiumRepeatableTiersClaimed = 0;
         BattlePassTiers.resetRewards();
         premium = false;
         saveGlobal();
+    }
+
+    public static boolean canAffordReset(){
+        ensureLoaded();
+        return Dungeon.energy >= RESET_ENERGY_COST && isBattlePassFinished();
+    }
+
+    public static boolean isBattlePassFinished(){
+        ensureLoaded();
+        return tiersReached() >= TIER_XP.length;
+    }
+
+    public static boolean resetImmediately(){
+        ensureLoaded();
+        if (!canAffordReset()) return false;
+
+        Dungeon.energy -= RESET_ENERGY_COST;
+
+        history.add( 0, new MonthRecord( monthKey, totalXP, new ArrayList<>( claimedTiers ), repeatableTiersClaimed,
+            BattlePassTiers.rewardSnapshot(), seasonName( monthKey ), premium,
+            new ArrayList<>( premiumClaimedTiers ), BattlePassTiers.premiumRewardSnapshot(),
+            premiumRepeatableTiersClaimed, BattlePassTiers.rewardExtraSnapshot(),
+            BattlePassTiers.premiumRewardExtraSnapshot() ) );
+        while (history.size() > MAX_HISTORY_MONTHS){
+            history.remove( history.size()-1 );
+        }
+
+        monthKey = monthKey + "-r" + System.currentTimeMillis();
+        totalXP = 0;
+        claimedTiers = new ArrayList<>();
+        repeatableTiersClaimed = 0;
+        premiumClaimedTiers = new ArrayList<>();
+        premiumRepeatableTiersClaimed = 0;
+        premium = false;
+        BattlePassTiers.resetRewards();
+
+        saveGlobal();
+        return true;
+    }
+
+    public static boolean canAffordHistoryClaim(){
+        return Dungeon.energy >= HISTORY_CLAIM_ENERGY_COST;
+    }
+
+    public static Item buyHistoryTier( String monthKey, int tier, boolean premiumTrack ){
+        ensureLoaded();
+        MonthRecord record = historyRecord( monthKey );
+        if (record == null || !canAffordHistoryClaim()) return null;
+
+        boolean tierWasUnlocked = tier == REPEATABLE_TIER
+                ? record.repeatableTiersReached() > 0
+                : tier <= record.tiersReached();
+        if (!tierWasUnlocked) return null;
+
+        Item reward;
+        if (premiumTrack) {
+            if (!record.premium) return null;
+            if (tier == REPEATABLE_TIER) {
+                if (record.premiumRepeatableTiersClaimed >= record.repeatableTiersReached()) return null;
+                record.premiumRepeatableTiersClaimed++;
+                reward = BattlePassTiers.premiumRepeatableRewardFor();
+            } else {
+                if (record.premiumClaimedTiers.contains( tier )) return null;
+                record.premiumClaimedTiers.add( tier );
+                reward = record.premiumRewardSnapshot.get( tier );
+            }
+        } else {
+            if (tier == REPEATABLE_TIER) {
+                if (record.repeatableTiersClaimed >= record.repeatableTiersReached()) return null;
+                record.repeatableTiersClaimed++;
+                reward = BattlePassTiers.repeatableRewardFor();
+            } else {
+                if (record.claimedTiers.contains( tier )) return null;
+                record.claimedTiers.add( tier );
+                reward = record.rewardSnapshot.get( tier );
+            }
+        }
+
+        Dungeon.energy -= HISTORY_CLAIM_ENERGY_COST;
+
+        if (reward != null && Dungeon.hero != null){
+            reward.collect();
+        } else if (reward == null && !premiumTrack) {
+            Dungeon.gold += BattlePassTiers.goldFor( tier );
+        }
+
+        saveGlobal();
+        return reward;
     }
 
     private static final String[] SEASON_ADJ = {
@@ -475,10 +570,16 @@ public class BattlePass {
 
     public static boolean isPremiumClaimed( int tier ){
         ensureLoaded();
+        if (tier == REPEATABLE_TIER) {
+            return premiumRepeatableTiersClaimed >= repeatableTiersUnlocked();
+        }
         return premiumClaimedTiers.contains( tier );
     }
 
     public static boolean isPremiumClaimable( int tier ){
+        if (tier == REPEATABLE_TIER) {
+            return premium && repeatableTiersUnlocked() > premiumRepeatableTiersClaimed;
+        }
         return premium && isUnlocked( tier ) && BattlePassTiers.hasPremiumReward( tier ) && !isPremiumClaimed( tier );
     }
 
@@ -486,11 +587,20 @@ public class BattlePass {
         ensureLoaded();
         if (!isPremiumClaimable( tier )) return null;
 
-        premiumClaimedTiers.add( tier );
+        Item bonus;
+        ArrayList<Item> extras = BattlePassTiers.premiumRewardExtrasFor( tier );
 
-        Item bonus = BattlePassTiers.premiumRewardFor( tier );
-        if (bonus != null && Dungeon.hero != null){
-            bonus.collect();
+        if (tier == REPEATABLE_TIER) {
+            premiumRepeatableTiersClaimed++;
+            bonus = BattlePassTiers.premiumRepeatableRewardFor();
+        } else {
+            premiumClaimedTiers.add( tier );
+            bonus = BattlePassTiers.premiumRewardFor( tier );
+        }
+
+        if (Dungeon.hero != null){
+            if (bonus != null) bonus.collect();
+            for (Item extra : extras) extra.collect();
         }
 
         saveGlobal();
@@ -501,21 +611,35 @@ public class BattlePass {
         ensureLoaded();
         if (!isClaimable( tier )) return null;
 
+        Item result = null;
+        ArrayList<Item> extras = BattlePassTiers.rewardExtrasFor( tier );
+
         if (tier == REPEATABLE_TIER){
             repeatableTiersClaimed++;
-        } else {
-            claimedTiers.add( tier );
-        }
-
-        Item result = null;
-        if (BattlePassTiers.isItemTier( tier )){
-            Item reward = BattlePassTiers.rewardFor( tier );
+            Item reward = BattlePassTiers.repeatableRewardFor();
             if (reward != null && Dungeon.hero != null){
                 reward.collect();
+                result = reward;
+            } else {
+                Dungeon.gold += BattlePassTiers.goldFor( tier );
             }
-            result = reward;
         } else {
-            Dungeon.gold += BattlePassTiers.goldFor( tier );
+            claimedTiers.add( tier );
+            if (BattlePassTiers.isItemTier( tier )){
+                Item reward = BattlePassTiers.rewardFor( tier );
+                if (reward != null && Dungeon.hero != null){
+                    reward.collect();
+                    result = reward;
+                } else {
+                    Dungeon.gold += BattlePassTiers.goldFor( tier );
+                }
+            } else {
+                Dungeon.gold += BattlePassTiers.goldFor( tier );
+            }
+        }
+
+        if (Dungeon.hero != null){
+            for (Item extra : extras) extra.collect();
         }
 
         saveGlobal();
