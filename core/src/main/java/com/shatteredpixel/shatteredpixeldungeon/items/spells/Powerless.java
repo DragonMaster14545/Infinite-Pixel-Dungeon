@@ -137,6 +137,7 @@ public class Powerless extends Spell {
 						((Mob) ch).aggro(target);
 					}
 				}
+      Dungeon.observe();
 
 				if (left <= 0){
 					detach();
