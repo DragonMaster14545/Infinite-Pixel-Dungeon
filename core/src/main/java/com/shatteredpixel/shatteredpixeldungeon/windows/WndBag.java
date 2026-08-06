@@ -115,7 +115,7 @@ public class WndBag extends WndTabbed {
 		slotHeight = PixelScene.landscape() ? SLOT_HEIGHT_L : SLOT_HEIGHT_P;
 		nCols      = PixelScene.landscape() ? COLS_L : COLS_P;
 
-		capacitySlots = buildCapacitySlots( bag );
+		capacitySlots = buildAllSlots( bag );
 		int slotCount = capacitySlots.size();
 
 		int maxPageRows = PixelScene.landscape() ? MAX_PAGE_ROWS_L : MAX_PAGE_ROWS_P;
@@ -124,11 +124,9 @@ public class WndBag extends WndTabbed {
 		itemsPerPage = (int)Math.ceil( slotCount / (float)totalPages );
 		this.page = Math.max( 0, Math.min( page, totalPages - 1 ) );
 
-		int equippedSlots = equippedSlotCount( bag );
-
 		int from = this.page * itemsPerPage;
 		int to = Math.min( from + itemsPerPage, slotCount );
-		nRows = (int)Math.ceil( (equippedSlots + (to - from)) / (float)nCols );
+		nRows = (int)Math.ceil( (to - from) / (float)nCols );
 
 		int windowWidth = slotWidth * nCols + SLOT_MARGIN * (nCols - 1);
 		int windowHeight = TITLE_HEIGHT + slotHeight * nRows + SLOT_MARGIN * (nRows - 1);
@@ -253,82 +251,51 @@ public class WndBag extends WndTabbed {
 		add( txtTitle );
 	}
 
-	private int equippedSlotCount( Bag container ) {
-		int n = 2; //weapon + armor
+	private ArrayList<Item> buildAllSlots( Bag container ) {
+		ArrayList<Item> slots = new ArrayList<>();
+		Belongings stuff = Dungeon.hero.belongings;
+
+		slots.add( stuff.weapon != null ? stuff.weapon : new Placeholder( ItemSpriteSheet.WEAPON_HOLDER ) );
+		slots.add( stuff.armor != null ? stuff.armor : new Placeholder( ItemSpriteSheet.ARMOR_HOLDER ) );
 
 		if (container.getClass() == EquipmentBag.class) {
-			n += Dungeon.hero.belongings.artifactSlots();
-			n += Dungeon.hero.belongings.miscSlots();
-			n += Dungeon.hero.belongings.ringSlots();
+			for (int i = 0; i < stuff.artifactSlots(); i++) {
+				slots.add( stuff.artifacts.size() > i ? stuff.artifacts.get(i) : new Placeholder( ItemSpriteSheet.ARTIFACT_HOLDER ) );
+			}
+			for (int i = 0; i < stuff.miscSlots(); i++) {
+				slots.add( stuff.miscs.size() > i ? stuff.miscs.get(i) : new Placeholder( ItemSpriteSheet.SOMETHING ) );
+			}
+			for (int i = 0; i < stuff.ringSlots(); i++) {
+				slots.add( stuff.rings.size() > i ? stuff.rings.get(i) : new Placeholder( ItemSpriteSheet.RING_HOLDER ) );
+			}
 		}
 
-		if (container != Dungeon.hero.belongings.backpack && container.getClass() != EquipmentBag.class) {
-			n += 1; //the container itself, shown as an item
-		} else if (container == Dungeon.hero.belongings.backpack && Dungeon.hero.belongings.secondWep != null) {
-			n += 1; //second weapon
+		if (container != stuff.backpack && container.getClass() != EquipmentBag.class) {
+			slots.add( container );
+		} else if (container == stuff.backpack && stuff.secondWep != null) {
+			slots.add( stuff.secondWep );
 		}
 
-		return n;
-	}
-
-	private ArrayList<Item> buildCapacitySlots( Bag container ) {
-		ArrayList<Item> slots = new ArrayList<>();
 		ArrayList<Item> pinnedHere = new ArrayList<>();
 		ArrayList<Item> others = new ArrayList<>();
-
 		int used = 0;
 		for (Item item : container.items.toArray(new Item[0])) {
 			used++;
 			if (!(item instanceof Bag)) {
-				if (isPinned(item)) {
-					// keep pinned items in order they were pinned but only if they are actually in this container
-					pinnedHere.add(item);
-				} else {
-					others.add(item);
-				}
+				if (isPinned(item)) pinnedHere.add(item);
+				else others.add(item);
 			}
 		}
-
-		// Add pinned items first, then the rest.
-		slots.addAll(pinnedHere);
-		slots.addAll(others);
+		slots.addAll( pinnedHere );
+		slots.addAll( others );
 
 		int free = container.capacity() - used;
-		for (int i = 0; i < free; i++) {
-			slots.add( null );
-		}
+		for (int i = 0; i < free; i++) slots.add( null );
+
 		return slots;
 	}
 
 	protected void placeItems( Bag container ) {
-
-		Belongings stuff = Dungeon.hero.belongings;
-		placeItem( stuff.weapon != null ? stuff.weapon : new Placeholder( ItemSpriteSheet.WEAPON_HOLDER ) );
-		placeItem( stuff.armor != null ? stuff.armor : new Placeholder( ItemSpriteSheet.ARMOR_HOLDER ) );
-
-		//This part if for showing artifacts, rings and misc slots
-		if (container.getClass() == EquipmentBag.class) {
-			for (int i = 0; i < Dungeon.hero.belongings.artifactSlots(); i++) {
-				placeItem(stuff.artifacts.size() > i ? stuff.artifacts.get(i) : new Placeholder( ItemSpriteSheet.ARTIFACT_HOLDER ));
-			}
-			for (int i = 0; i < Dungeon.hero.belongings.miscSlots(); i++) {
-				placeItem(stuff.miscs.size() > i ? stuff.miscs.get(i) : new Placeholder( ItemSpriteSheet.SOMETHING ));
-			}
-			for (int i = 0; i < Dungeon.hero.belongings.ringSlots(); i++) {
-				placeItem(stuff.rings.size() > i ? stuff.rings.get(i) : new Placeholder( ItemSpriteSheet.RING_HOLDER ));
-			}
-		}
-
-		//the container itself if it's not the root backpack
-		if (container != Dungeon.hero.belongings.backpack && container.getClass() != EquipmentBag.class) {
-			placeItem(container);
-			count--; //don't count this one, as it's not actually inside of itself
-		} else if (stuff.secondWep != null) {
-			//second weapon always goes to the front of view on main bag
-			placeItem(stuff.secondWep);
-		}
-
-		// The bag's own capacity, this part is paginated
 		int from = page * itemsPerPage;
 		int to = Math.min( from + itemsPerPage, capacitySlots.size() );
 
@@ -405,6 +372,9 @@ public class WndBag extends WndTabbed {
 
 	protected void placeItem( final Item item ) {
 		count++;
+		if (item == bag) {
+			count--; //the container itself isn't counted as it is occupated and reserved for it
+		}
 
 		int x = col * (slotWidth + SLOT_MARGIN);
 		int y = TITLE_HEIGHT + row * (slotHeight + SLOT_MARGIN);
