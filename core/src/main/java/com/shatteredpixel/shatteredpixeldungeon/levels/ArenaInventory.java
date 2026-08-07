@@ -1,9 +1,14 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.KindofMisc;
+import com.shatteredpixel.shatteredpixeldungeon.items.TicketToWaveArena;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.SmallRation;
@@ -12,7 +17,6 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.watabou.utils.Bundle;
 
 import java.util.ArrayList;
-
 public class ArenaInventory {
 
     private static Bundle stashedBelongings = null;
@@ -30,22 +34,15 @@ public class ArenaInventory {
         stashedBelongings = b;
         active = true;
 
-        ArrayList<Item> toRemove = new ArrayList<>( hero.belongings.backpack.items );
-        for (Item item : toRemove) {
-            item.detach( hero.belongings.backpack );
-        }
-        if (hero.belongings.weapon != null) {
-            hero.belongings.weapon.detach( hero.belongings.backpack );
-        }
-        if (hero.belongings.armor != null) {
-            hero.belongings.armor.detach( hero.belongings.backpack );
-        }
-        if (hero.belongings.secondWep != null){
-            hero.belongings.secondWep.detach( hero.belongings.backpack );
-        }
-        for (Item ring : new ArrayList<Item>( hero.belongings.rings )) {       ring.detach( hero.belongings.backpack );}
-        for (Item art : new ArrayList<Item>( hero.belongings.artifacts ))    art.detach( hero.belongings.backpack );
-        for (Item misc : new ArrayList<Item>( hero.belongings.miscs ))       misc.detach( hero.belongings.backpack );
+        forceUnequipAll( hero );
+
+        hero.belongings.backpack.clear();
+        hero.belongings.weapon = null;
+        hero.belongings.armor = null;
+        hero.belongings.secondWep = null;
+        hero.belongings.rings = new ArrayList<>();
+        hero.belongings.artifacts = new ArrayList<>();
+        hero.belongings.miscs = new ArrayList<>();
 
         giveStarterKit( hero );
 
@@ -56,10 +53,13 @@ public class ArenaInventory {
         new Dagger().identify().collect();
         new ClothArmor().identify().collect();
         new SmallRation().collect();
+        new TicketToWaveArena().collect();
     }
 
     public static void restoreAndMerge( Hero hero ){
         if (!active || stashedBelongings == null) return;
+
+        forceUnequipAll( hero );
 
         ArrayList<Item> earned = new ArrayList<>( hero.belongings.backpack.items );
         if (hero.belongings.weapon != null)    earned.add( hero.belongings.weapon );
@@ -69,14 +69,13 @@ public class ArenaInventory {
         earned.addAll( hero.belongings.artifacts );
         earned.addAll( hero.belongings.miscs );
 
-        ArrayList<Item> toRemove = new ArrayList<>( hero.belongings.backpack.items );
-        for (Item item : toRemove) item.detach( hero.belongings.backpack );
-        if (hero.belongings.weapon != null)      hero.belongings.weapon.detach( hero.belongings.backpack );
-        if (hero.belongings.armor != null)       hero.belongings.armor.detach( hero.belongings.backpack );
-        if (hero.belongings.secondWep != null)   hero.belongings.secondWep.detach( hero.belongings.backpack );
-        for (Item ring : new ArrayList<Item>( hero.belongings.rings ))       ring.detach( hero.belongings.backpack );
-        for (Item art : new ArrayList<Item>( hero.belongings.artifacts ))    art.detach( hero.belongings.backpack );
-        for (Item misc : new ArrayList<Item>( hero.belongings.miscs ))       misc.detach( hero.belongings.backpack );
+        hero.belongings.backpack.clear();
+        hero.belongings.weapon = null;
+        hero.belongings.armor = null;
+        hero.belongings.secondWep = null;
+        hero.belongings.rings = new ArrayList<>();
+        hero.belongings.artifacts = new ArrayList<>();
+        hero.belongings.miscs = new ArrayList<>();
 
         hero.belongings.restoreFromBundle( stashedBelongings );
 
@@ -91,5 +90,25 @@ public class ArenaInventory {
         active = false;
 
         GLog.p( Messages.get( ArenaInventory.class, "restored" ) );
+    }
+    private static void forceUnequipAll( Hero hero ){
+        boolean addedImmunity = hero.buff( MagicImmune.class ) == null;
+        MagicImmune immune = addedImmunity ? Buff.affect( hero, MagicImmune.class, 1f ) : null;
+
+        if (hero.belongings.weapon != null)    hero.belongings.weapon.doUnequip( hero, false, false );
+        if (hero.belongings.armor != null)     hero.belongings.armor.doUnequip( hero, false, false );
+        if (hero.belongings.secondWep != null) hero.belongings.secondWep.doUnequip( hero, false, false );
+
+        for (Ring ring : new ArrayList<>( hero.belongings.rings )) {
+            if (ring != null) ring.doUnequip( hero, false, false );
+        }
+        for (Artifact art : new ArrayList<>( hero.belongings.artifacts )) {
+            if (art != null) art.doUnequip( hero, false, false );
+        }
+        for (KindofMisc misc : new ArrayList<>( hero.belongings.miscs )) {
+            if (misc != null) misc.doUnequip( hero, false, false );
+        }
+
+        if (addedImmunity && immune != null) immune.detach();
     }
 }
