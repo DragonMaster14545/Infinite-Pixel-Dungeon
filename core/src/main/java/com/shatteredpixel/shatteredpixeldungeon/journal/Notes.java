@@ -590,6 +590,7 @@ public class Notes {
 		if (!records.contains(rec)){
 			boolean result = records.add(rec);
 			Collections.sort(records, comparator);
+			addGlobalCustom( rec );
 			return result;
 		}
 		return false;
@@ -601,6 +602,12 @@ public class Notes {
 			return true;
 		}
 		return false;
+	}
+
+	public static boolean removeGlobalCustom( CustomRecord rec ){
+		boolean result = globalCustomRecords.remove( rec );
+		if (result) Journal.saveNeeded = true;
+		return result;
 	}
 	
 	public static <T extends Record> ArrayList<T> getRecords( Class<T> recordType ){
@@ -702,6 +709,32 @@ public class Notes {
 			int[] counts = bundle.getIntArray( GLOBAL_COUNTS );
 			for (int i = 0; i < names.length; i++){
 				globalLandmarkCounts.put( Landmark.valueOf(names[i]), counts[i] );
+			}
+		}
+	}
+
+	private static ArrayList<CustomRecord> globalCustomRecords = new ArrayList<>();
+
+	public static void addGlobalCustom( CustomRecord rec ){
+		globalCustomRecords.add( rec );
+		Journal.saveNeeded = true;
+	}
+
+	public static ArrayList<CustomRecord> globalCustomRecords(){
+		return new ArrayList<>( globalCustomRecords );
+	}
+
+	private static final String GLOBAL_CUSTOM_RECORDS = "global_custom_records";
+
+	public static void storeGlobalCustomInBundle( Bundle bundle ){
+		bundle.put( GLOBAL_CUSTOM_RECORDS, globalCustomRecords );
+	}
+
+	public static void restoreGlobalCustomFromBundle( Bundle bundle ){
+		globalCustomRecords = new ArrayList<>();
+		if (bundle.contains( GLOBAL_CUSTOM_RECORDS )){
+			for (Bundlable rec : bundle.getCollection( GLOBAL_CUSTOM_RECORDS )){
+				if (rec instanceof CustomRecord) globalCustomRecords.add( (CustomRecord) rec );
 			}
 		}
 	}

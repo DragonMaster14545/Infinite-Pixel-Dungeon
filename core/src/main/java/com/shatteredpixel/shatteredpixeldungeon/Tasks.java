@@ -2,6 +2,7 @@ package com.shatteredpixel.shatteredpixeldungeon;
 
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -125,4 +126,51 @@ public class Tasks {
     public static void onArmorEquipped(){ progress( Type.EQUIP_ARMOR, 1 ); }
     public static void onRestedToFull(){ progress( Type.REST_TO_FULL, 1 ); }
     public static void onItemIdentified(){ progress( Type.IDENTIFY_ITEM, 1 ); }
+
+    private static final String TASK_TYPES      = "task_types";
+    private static final String TASK_TARGETS    = "task_targets";
+    private static final String TASK_PROGRESS   = "task_progress";
+    private static final String TASK_COMPLETED  = "task_completed";
+    private static final String ALL_CLAIMED     = "all_claimed";
+
+    public static void storeInBundle( Bundle bundle ){
+        String[] types = new String[tasks.size()];
+        long[] targets = new long[tasks.size()];
+        long[] progress = new long[tasks.size()];
+        boolean[] completed = new boolean[tasks.size()];
+
+        for (int i = 0; i < tasks.size(); i++){
+            Task t = tasks.get(i);
+            types[i] = t.type.name();
+            targets[i] = t.target;
+            progress[i] = t.progress;
+            completed[i] = t.completed;
+        }
+
+        bundle.put( TASK_TYPES, types );
+        bundle.put( TASK_TARGETS, targets );
+        bundle.put( TASK_PROGRESS, progress );
+        bundle.put( TASK_COMPLETED, completed );
+        bundle.put( ALL_CLAIMED, allClaimed );
+    }
+
+    public static void restoreFromBundle( Bundle bundle ){
+        tasks = new ArrayList<>();
+
+        if (bundle.contains( TASK_TYPES )){
+            String[] types = bundle.getStringArray( TASK_TYPES );
+            long[] targets = bundle.getLongArray( TASK_TARGETS );
+            long[] progress = bundle.getLongArray( TASK_PROGRESS );
+            boolean[] completed = bundle.getBooleanArray( TASK_COMPLETED );
+
+            for (int i = 0; i < types.length; i++){
+                Task t = new Task( Type.valueOf( types[i] ), targets[i] );
+                t.progress = progress[i];
+                t.completed = completed[i];
+                tasks.add( t );
+            }
+        }
+
+        allClaimed = bundle.contains( ALL_CLAIMED ) && bundle.getBoolean( ALL_CLAIMED );
+    }
 }

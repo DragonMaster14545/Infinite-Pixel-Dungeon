@@ -67,6 +67,7 @@ import com.shatteredpixel.shatteredpixeldungeon.tiles.TerrainFeaturesTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BadgesGrid;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BadgesList;
 import com.shatteredpixel.shatteredpixeldungeon.ui.CustomNoteButton;
+import com.shatteredpixel.shatteredpixeldungeon.ui.GlobalCustomNoteButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickRecipe;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
@@ -250,6 +251,12 @@ public class WndJournal extends WndTabbed {
 		notesTab.layout();
 		catalogTab.layout();
 		globalNotesTab.layout();
+	}
+
+	public static void refreshGlobalNotes(){
+		if (INSTANCE != null && INSTANCE.globalNotesTab != null){
+			INSTANCE.globalNotesTab.updateList();
+		}
 	}
 	
 	public static class GuideTab extends Component {
@@ -490,28 +497,27 @@ public class WndJournal extends WndTabbed {
 			list.scrollTo(0, 0);
 		}
 	}
-	
+
 	private static class NotesTab extends Component {
-		
+
 		private ScrollingGridPane grid;
 		private CustomNoteButton custom;
-		
+
 		@Override
 		protected void createChildren() {
 			grid = new ScrollingGridPane();
 			add(grid);
 		}
-		
+
 		@Override
 		protected void layout() {
 			super.layout();
 			grid.setRect( x, y, width, height);
 		}
-		
+
 		private void updateList(){
 
 			grid.addHeader("_" + Messages.get(this, "title") + "_", 9, true);
-
 			grid.addHeader(Messages.get(this, "desc"), 6, true);
 
 			ArrayList<Notes.CustomRecord> customRecs = Notes.getRecords(Notes.CustomRecord.class);
@@ -582,9 +588,106 @@ public class WndJournal extends WndTabbed {
 			grid.setRect(x, y, width, height);
 
 		}
-		
+
 	}
-	
+
+	public static class GlobalNotesTab extends Component {
+
+		private ScrollingGridPane grid;
+		private GlobalCustomNoteButton custom;
+
+		@Override
+		protected void createChildren() {
+			grid = new ScrollingGridPane();
+			add(grid);
+		}
+
+		@Override
+		protected void layout() {
+			super.layout();
+			grid.setRect( x, y, width, height);
+		}
+
+		public void updateList(){
+			grid.clear();
+
+			grid.addHeader("_" + Messages.get(this, "title") + "_", 9, true);
+			grid.addHeader(Messages.get(this, "desc"), 6, true);
+
+			ArrayList<Notes.CustomRecord> customRecs = Notes.globalCustomRecords();
+
+			if (!customRecs.isEmpty()){
+				grid.addHeader("_" + Messages.get(this, "custom_notes") + "_ (" + customRecs.size() + ")");
+
+				for (final Notes.CustomRecord rec : customRecs){
+					ScrollingGridPane.GridItem gridItem = new ScrollingGridPane.GridItem(rec.icon()){
+						@Override
+						public boolean onClick(float x, float y) {
+							if (inside(x, y)) {
+								if (ShatteredPixelDungeon.scene() instanceof GameScene){
+									GameScene.show(new GlobalCustomNoteButton.GlobalCustomNoteWindow(rec));
+								} else {
+									ShatteredPixelDungeon.scene().addToFront(new GlobalCustomNoteButton.GlobalCustomNoteWindow(rec));
+								}
+								return true;
+							} else {
+								return false;
+							}
+						}
+					};
+
+					Visual secondIcon = rec.secondIcon();
+					if (secondIcon != null){
+						gridItem.addSecondIcon( secondIcon );
+					}
+
+					grid.addItem(gridItem);
+				}
+			}
+
+			ArrayList<Notes.Landmark> found = Notes.globalLandmarksFound();
+
+			if (!found.isEmpty()) {
+				grid.addHeader("_" + Messages.get(this, "landmarks") + "_");
+
+				for (Notes.Landmark landmark : found){
+					final Notes.LandmarkRecord sample = new Notes.LandmarkRecord(landmark, 0);
+					final int count = Notes.globalCount(landmark);
+
+					ScrollingGridPane.GridItem gridItem = new ScrollingGridPane.GridItem(sample.icon()){
+						@Override
+						public boolean onClick(float x, float y) {
+							if (inside(x, y)) {
+								GameScene.show(new WndJournalItem(sample.icon(),
+										Messages.titleCase(sample.title()),
+										sample.desc() + "\n\n" + Messages.get(GlobalNotesTab.class, "count", count)));
+								return true;
+							} else {
+								return false;
+							}
+						}
+					};
+
+					BitmapText text = new BitmapText(Integer.toString(count), PixelScene.pixelFont);
+					text.measure();
+					gridItem.addSecondIcon(text);
+
+					grid.addItem(gridItem);
+				}
+			}
+
+			if (found.isEmpty() && customRecs.isEmpty()){
+				grid.addHeader(Messages.get(this, "empty"));
+			}
+
+			custom = new GlobalCustomNoteButton();
+			grid.content().add(custom);
+			custom.setPos(width-custom.width()-1, 0);
+
+			grid.setRect(x, y, width, height);
+		}
+	}
+
 	public static class CatalogTab extends Component{
 		
 		private RedButton[] itemButtons;
@@ -1158,67 +1261,6 @@ title = "???";
 			}
 		}
 
-	}
-
-	public static class GlobalNotesTab extends Component {
-
-		private ScrollingGridPane grid;
-
-		@Override
-		protected void createChildren() {
-			grid = new ScrollingGridPane();
-			add(grid);
-		}
-
-		@Override
-		protected void layout() {
-			super.layout();
-			grid.setRect( x, y, width, height);
-		}
-
-		private void updateList(){
-			grid.clear();
-
-			grid.addHeader("_" + Messages.get(this, "title") + "_", 9, true);
-			grid.addHeader(Messages.get(this, "desc"), 6, true);
-
-			ArrayList<Notes.Landmark> found = Notes.globalLandmarksFound();
-
-			if (found.isEmpty()){
-				grid.addHeader(Messages.get(this, "empty"));
-				grid.setRect(x, y, width, height);
-				return;
-			}
-
-			grid.addHeader("_" + Messages.get(this, "landmarks") + "_");
-
-			for (Notes.Landmark landmark : found){
-				final Notes.LandmarkRecord sample = new Notes.LandmarkRecord(landmark, 0);
-				final int count = Notes.globalCount(landmark);
-
-				ScrollingGridPane.GridItem gridItem = new ScrollingGridPane.GridItem(sample.icon()){
-					@Override
-					public boolean onClick(float x, float y) {
-						if (inside(x, y)) {
-							GameScene.show(new WndJournalItem(sample.icon(),
-									Messages.titleCase(sample.title()),
-									sample.desc() + "\n\n" + Messages.get(GlobalNotesTab.class, "count", count)));
-							return true;
-						} else {
-							return false;
-						}
-					}
-				};
-
-				BitmapText text = new BitmapText(Integer.toString(count), PixelScene.pixelFont);
-				text.measure();
-				gridItem.addSecondIcon(text);
-
-				grid.addItem(gridItem);
-			}
-
-			grid.setRect(x, y, width, height);
-		}
 	}
 	
 }

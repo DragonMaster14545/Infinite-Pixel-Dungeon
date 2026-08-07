@@ -145,6 +145,7 @@ public class JournalScene extends PixelScene {
 						panel.y + panel.marginTop(),
 						panel.width() - panel.marginHor(),
 						panel.height() - panel.marginVer());
+				globalNotes.updateList();
 				break;
 		}
 
