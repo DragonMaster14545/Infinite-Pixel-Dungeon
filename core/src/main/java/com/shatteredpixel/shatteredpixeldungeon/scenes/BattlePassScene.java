@@ -305,17 +305,45 @@ public class BattlePassScene extends PixelScene {
     }
 
     private boolean tierClaimable(int tier){
-    if (viewRecord != null) {
-        boolean tierWasUnlocked = tier == BattlePass.REPEATABLE_TIER
-                ? viewRecord.repeatableTiersReached() > 0
-                : tier <= viewRecord.tiersReached();
-        boolean alreadyClaimed = tier == BattlePass.REPEATABLE_TIER
-                ? viewRecord.repeatableTiersClaimed >= viewRecord.repeatableTiersReached()
-                : viewRecord.claimedTiers.contains( tier );
-        return tierWasUnlocked && !alreadyClaimed;
+        if (viewRecord != null) {
+            boolean tierWasUnlocked = tier == BattlePass.REPEATABLE_TIER
+                    ? viewRecord.repeatableTiersReached() > 0
+                    : tier <= viewRecord.tiersReached();
+            boolean alreadyClaimed = tier == BattlePass.REPEATABLE_TIER
+                    ? viewRecord.repeatableTiersClaimed >= viewRecord.repeatableTiersReached()
+                    : viewRecord.claimedTiers.contains( tier );
+            return tierWasUnlocked && !alreadyClaimed;
+        }
+        return BattlePass.isClaimable(tier);
     }
-    return BattlePass.isClaimable(tier);
-}
+
+    private void resetPass(){
+        if (!BattlePass.isBattlePassFinished()) {
+            ShatteredPixelDungeon.scene().addToFront( new WndMessage(
+                    Messages.get( this, "reset_not_finished" ) ) );
+            return;
+        }
+        if (!BattlePass.canAffordReset()) {
+            ShatteredPixelDungeon.scene().addToFront( new WndMessage(
+                    Messages.get( this, "reset_cant_afford", BattlePass.RESET_ENERGY_COST ) ) );
+            return;
+        }
+
+        ShatteredPixelDungeon.scene().addToFront( new WndOptions(
+                new ItemSprite(),
+                Messages.get( this, "reset_confirm_title" ),
+                Messages.get( this, "reset_confirm_body", BattlePass.RESET_ENERGY_COST ),
+                Messages.get( this, "reset_confirm_yes" ),
+                Messages.get( this, "reset_confirm_no" ) ){
+            @Override
+            protected void onSelect( int index ){
+                if (index == 0 && BattlePass.resetImmediately()) {
+                    GLog.p( Messages.get( BattlePassScene.class, "reset_done" ) );
+                    BattlePassScene.seeCurrentMonth();
+                }
+            }
+        } );
+    }
 
     //how many unclaimed repeats of the infinite tier are currently stacked up
     private int repeatableAvailable(){
@@ -470,34 +498,6 @@ public class BattlePassScene extends PixelScene {
                 GLog.p( Messages.get( BattlePassScene.class, "claimed_item", bonus.title() ) );
             }
             refresh();
-        }
-
-        private void resetPass(){
-            if (!BattlePass.isBattlePassFinished()) {
-                ShatteredPixelDungeon.scene().addToFront( new WndMessage(
-                        Messages.get( this, "reset_not_finished" ) ) );
-                return;
-            }
-            if (!BattlePass.canAffordReset()) {
-                ShatteredPixelDungeon.scene().addToFront( new WndMessage(
-                        Messages.get( this, "reset_cant_afford", BattlePass.RESET_ENERGY_COST ) ) );
-                return;
-            }
-
-            ShatteredPixelDungeon.scene().addToFront( new WndOptions(
-                    new ItemSprite(),
-                    Messages.get( this, "reset_confirm_title" ),
-                    Messages.get( this, "reset_confirm_body", BattlePass.RESET_ENERGY_COST ),
-                    Messages.get( this, "reset_confirm_yes" ),
-                    Messages.get( this, "reset_confirm_no" ) ){
-                @Override
-                protected void onSelect( int index ){
-                    if (index == 0 && BattlePass.resetImmediately()) {
-                        GLog.p( Messages.get( BattlePassScene.class, "reset_done" ) );
-                        BattlePassScene.seeCurrentMonth();
-                    }
-                }
-            } );
         }
 
         boolean tryClaimClick( float x, float y ) {
