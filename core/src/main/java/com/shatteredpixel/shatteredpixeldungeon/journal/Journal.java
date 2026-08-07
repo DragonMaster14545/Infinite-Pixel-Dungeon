@@ -52,6 +52,7 @@ public class Journal {
 		Catalog.restore( bundle );
 		Bestiary.restore( bundle );
 		Document.restore( bundle );
+		Notes.restoreGlobalFromBundle( bundle );
 		
 		loaded = true;
 	}
@@ -73,6 +74,7 @@ public class Journal {
 		Catalog.store(bundle);
 		Bestiary.store(bundle);
 		Document.store(bundle);
+		Notes.storeGlobalInBundle(bundle);
 		
 		try {
 			FileUtils.bundleToFile( JOURNAL_FILE, bundle );

@@ -67,6 +67,7 @@ import com.watabou.utils.Reflection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 
 public class Notes {
 	
@@ -527,12 +528,13 @@ public class Notes {
 			records.add( (Record) rec );
 		}
 	}
-	
+
 	public static boolean add( Landmark landmark ) {
 		LandmarkRecord l = new LandmarkRecord( landmark, Dungeon.depth );
 		if (!records.contains(l)) {
 			boolean result = records.add(new LandmarkRecord(landmark, Dungeon.depth));
 			Collections.sort(records, comparator);
+			addGlobal( landmark );
 			return result;
 		}
 		return false;
@@ -652,5 +654,56 @@ public class Notes {
 			return r1.order() - r2.order();
 		}
 	};
+
+	private static HashMap<Landmark, Integer> globalLandmarkCounts = new HashMap<>();
+
+	public static void addGlobal( Landmark landmark ){
+		Integer count = globalLandmarkCounts.get( landmark );
+		globalLandmarkCounts.put( landmark, (count == null ? 0 : count) + 1 );
+		Journal.saveNeeded = true;
+	}
+
+	public static int globalCount( Landmark landmark ){
+		Integer count = globalLandmarkCounts.get( landmark );
+		return count == null ? 0 : count;
+	}
+
+	public static ArrayList<Landmark> globalLandmarksFound(){
+		ArrayList<Landmark> found = new ArrayList<>( globalLandmarkCounts.keySet() );
+		Collections.sort( found, new Comparator<Landmark>() {
+			@Override
+			public int compare( Landmark a, Landmark b ) {
+				return a.ordinal() - b.ordinal();
+			}
+		} );
+		return found;
+	}
+
+	private static final String GLOBAL_LANDMARKS = "global_landmarks";
+	private static final String GLOBAL_COUNTS    = "global_counts";
+
+	public static void storeGlobalInBundle( Bundle bundle ){
+		String[] names = new String[globalLandmarkCounts.size()];
+		int[] counts = new int[globalLandmarkCounts.size()];
+		int i = 0;
+		for (Landmark l : globalLandmarkCounts.keySet()){
+			names[i] = l.name();
+			counts[i] = globalLandmarkCounts.get(l);
+			i++;
+		}
+		bundle.put( GLOBAL_LANDMARKS, names );
+		bundle.put( GLOBAL_COUNTS, counts );
+	}
+
+	public static void restoreGlobalFromBundle( Bundle bundle ){
+		globalLandmarkCounts = new HashMap<>();
+		if (bundle.contains( GLOBAL_LANDMARKS )){
+			String[] names = bundle.getStringArray( GLOBAL_LANDMARKS );
+			int[] counts = bundle.getIntArray( GLOBAL_COUNTS );
+			for (int i = 0; i < names.length; i++){
+				globalLandmarkCounts.put( Landmark.valueOf(names[i]), counts[i] );
+			}
+		}
+	}
 
 }

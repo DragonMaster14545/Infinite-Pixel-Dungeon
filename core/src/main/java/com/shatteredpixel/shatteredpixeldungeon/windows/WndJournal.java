@@ -103,6 +103,7 @@ public class WndJournal extends WndTabbed {
 	private NotesTab notesTab;
 	private CatalogTab catalogTab;
 	private BadgesTab badgesTab;
+	private GlobalNotesTab globalNotesTab;
 	public static int last_index = 0;
     private static WndJournal INSTANCE = null;
 
@@ -140,6 +141,11 @@ public class WndJournal extends WndTabbed {
 		add(badgesTab);
 		badgesTab.setRect(0, 0, width, height);
 		badgesTab.updateList();
+
+		globalNotesTab = new GlobalNotesTab();
+		add(globalNotesTab);
+		globalNotesTab.setRect(0, 0, width, height);
+		globalNotesTab.updateList();
 		Tab[] tabs = {
 				new IconTab( Icons.JOURNAL.get() ) {
 					protected void select( boolean value ) {
@@ -200,6 +206,18 @@ public class WndJournal extends WndTabbed {
 					protected String hoverText() {
 						return Messages.get(badgesTab, "title");
 					}
+				},
+				new IconTab( Icons.NEWS.get() ) {
+					protected void select( boolean value ) {
+						super.select( value );
+						globalNotesTab.active = globalNotesTab.visible = value;
+						if (value) last_index = 5;
+					}
+
+					@Override
+					protected String hoverText() {
+						return Messages.get(globalNotesTab, "title");
+					}
 				}
 		};
 
@@ -231,6 +249,7 @@ public class WndJournal extends WndTabbed {
 		alchemyTab.layout();
 		notesTab.layout();
 		catalogTab.layout();
+		globalNotesTab.layout();
 	}
 	
 	public static class GuideTab extends Component {
@@ -1139,6 +1158,67 @@ title = "???";
 			}
 		}
 
+	}
+
+	public static class GlobalNotesTab extends Component {
+
+		private ScrollingGridPane grid;
+
+		@Override
+		protected void createChildren() {
+			grid = new ScrollingGridPane();
+			add(grid);
+		}
+
+		@Override
+		protected void layout() {
+			super.layout();
+			grid.setRect( x, y, width, height);
+		}
+
+		private void updateList(){
+			grid.clear();
+
+			grid.addHeader("_" + Messages.get(this, "title") + "_", 9, true);
+			grid.addHeader(Messages.get(this, "desc"), 6, true);
+
+			ArrayList<Notes.Landmark> found = Notes.globalLandmarksFound();
+
+			if (found.isEmpty()){
+				grid.addHeader(Messages.get(this, "empty"));
+				grid.setRect(x, y, width, height);
+				return;
+			}
+
+			grid.addHeader("_" + Messages.get(this, "landmarks") + "_");
+
+			for (Notes.Landmark landmark : found){
+				final Notes.LandmarkRecord sample = new Notes.LandmarkRecord(landmark, 0);
+				final int count = Notes.globalCount(landmark);
+
+				ScrollingGridPane.GridItem gridItem = new ScrollingGridPane.GridItem(sample.icon()){
+					@Override
+					public boolean onClick(float x, float y) {
+						if (inside(x, y)) {
+							GameScene.show(new WndJournalItem(sample.icon(),
+									Messages.titleCase(sample.title()),
+									sample.desc() + "\n\n" + Messages.get(GlobalNotesTab.class, "count", count)));
+							return true;
+						} else {
+							return false;
+						}
+					}
+				};
+
+				BitmapText text = new BitmapText(Integer.toString(count), PixelScene.pixelFont);
+				text.measure();
+				gridItem.addSecondIcon(text);
+
+				grid.addItem(gridItem);
+			}
+
+			grid.setRect(x, y, width, height);
+		}
 	}
 	
 }
