@@ -168,51 +168,84 @@ public class PortableShopLevel extends Level {
             itemsToSpawn.add(new RareEmblem().quantity(Random.IntRange(2, 4)));
             itemsToSpawn.add(new EpicEmblem().quantity(Random.IntRange(2, 4)));
 
-			// TODO make this an optimized code.
 			for (int i = 0; i < 48; i++) {
+				Item base = Generator.random(Generator.Category.SCROLL);
+				if (base == null) continue;
+
 				if (Random.Int(2) == 0) {
-					itemsToSpawn.add( Generator.random(Generator.Category.SCROLL).quantity(Random.IntRange(2, 10)) );
+					itemsToSpawn.add( base.quantity(Random.IntRange(2, 10)) );
 				} else {
-					itemsToSpawn.add( Reflection.newInstance(ExoticScroll.regToExo.get(Generator.random(Generator.Category.SCROLL).getClass())).quantity(Random.IntRange(2, 10)) );
+					Class<?> exoClass = ExoticScroll.regToExo.get(base.getClass());
+					if (exoClass == null) {
+						itemsToSpawn.add( base.quantity(Random.IntRange(2, 10)) );
+					} else {
+						Item exo = (Item) Reflection.newInstance(exoClass);
+						if (exo != null) {
+							itemsToSpawn.add( exo.quantity(Random.IntRange(2, 10)) );
+						}
+					}
 				}
 			}
 
 			for (int i = 0; i < 48; i++) {
+				Item base = Generator.random(Generator.Category.POTION);
+				if (base == null) continue;
+
 				if (Random.Int(2) == 0) {
-					itemsToSpawn.add( Generator.random(Generator.Category.POTION).quantity(Random.IntRange(2, 10)) );
+					itemsToSpawn.add( base.quantity(Random.IntRange(2, 10)) );
 				} else {
-					itemsToSpawn.add( Reflection.newInstance(ExoticPotion.regToExo.get(Generator.random(Generator.Category.POTION).getClass())).quantity(Random.IntRange(2, 10)) );
+					Class<?> exoClass = ExoticPotion.regToExo.get(base.getClass());
+					if (exoClass == null) {
+						itemsToSpawn.add( base.quantity(Random.IntRange(2, 10)) );
+					} else {
+						Item exo = (Item) Reflection.newInstance(exoClass);
+						if (exo != null) {
+							itemsToSpawn.add( exo.quantity(Random.IntRange(2, 10)) );
+						}
+					}
 				}
 			}
 
 			for (int i = 0; i < 24; i++) {
 				Item item = Generator.randomWeapon();
-				itemsToSpawn.add( item.upgrade(Random.IntRange(2, 10)) );
+				if (item != null) {
+					itemsToSpawn.add( item.upgrade(Random.IntRange(2, 10)) );
+				}
 			}
 
 			for (int i = 0; i < 14; i++) {
 				Item item = Generator.random(Generator.Category.TUBES);
-				itemsToSpawn.add( item.quantity(Random.IntRange(2, 10)) );
+				if (item != null) {
+					itemsToSpawn.add( item.quantity(Random.IntRange(2, 10)) );
+				}
 			}
 
 			for (int i = 0; i < 5; i++) {
 				Item item = Generator.random(Generator.Category.FOOD);
-				itemsToSpawn.add( item.quantity(Random.IntRange(2, 5)) );
+				if (item != null) {
+					itemsToSpawn.add( item.quantity(Random.IntRange(2, 5)) );
+				}
 			}
 
 			for (int i = 0; i < 26; i++) {
 				Item item = Generator.random(Generator.Category.STONE);
-				itemsToSpawn.add( item.quantity(Random.IntRange(2, 5)) );
+				if (item != null) {
+					itemsToSpawn.add( item.quantity(Random.IntRange(2, 5)) );
+				}
 			}
 
 			for (int i = 0; i < 28; i++) {
 				Item item = Generator.random(Generator.Category.WAND);
-				itemsToSpawn.add( item.upgrade(Random.IntRange(2, 10)) );
+				if (item != null) {
+					itemsToSpawn.add( item.upgrade(Random.IntRange(2, 10)) );
+				}
 			}
 
 			for (int i = 0; i < 26; i++) {
 				Item item = Generator.random(Generator.Category.RING);
-				itemsToSpawn.add( item.upgrade(Random.IntRange(2, 10)) );
+				if (item != null) {
+					itemsToSpawn.add( item.upgrade(Random.IntRange(2, 10)) );
+				}
 			}
 
 			for (Item item : itemsToSpawn) {
