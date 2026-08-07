@@ -27,6 +27,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.Tasks;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
@@ -127,7 +128,7 @@ public abstract class Wand extends Item {
 		super.execute( hero, action );
 
 		if (action.equals( AC_ZAP )) {
-			
+
 			curUser = hero;
 			curItem = this;
 			GameScene.selectCell( zapper );
@@ -707,7 +708,8 @@ public abstract class Wand extends Item {
 					QuickSlotButton.target(Actor.findChar(cell));
 				
 				if (curWand.tryToZap(curUser, target)) {
-					
+
+					Tasks.onWandUsed();
 					curUser.busy();
 
 					//backup barrier logic

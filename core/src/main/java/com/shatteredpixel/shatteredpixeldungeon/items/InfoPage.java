@@ -24,27 +24,15 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
-import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.Rankings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
-import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SkeletonKey;
-import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
-import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.BattlePassScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
-import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.Game;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndTasks;
 
 import java.util.ArrayList;
 
@@ -56,6 +44,7 @@ public class InfoPage extends Item {
     }
 
     private static final String AC_BATTLEPASS = "BATTLEPASS";
+    private static final String AC_TASKS = "TASKS";
 
    @Override
     public ArrayList<String> actions(Hero hero ) {
@@ -63,6 +52,7 @@ public class InfoPage extends Item {
         actions.remove(AC_DROP);
         actions.remove(AC_THROW);
         actions.add(AC_BATTLEPASS);
+        actions.add(AC_TASKS);
         return actions;
     }
 
@@ -71,6 +61,10 @@ public class InfoPage extends Item {
         super.execute(hero, action);
         if (action.equals(AC_BATTLEPASS)){
             ShatteredPixelDungeon.switchNoFade( BattlePassScene.class );
+        }
+
+        if (action.equals(AC_TASKS)){
+            GameScene.show(new WndTasks());
         }
     }
 

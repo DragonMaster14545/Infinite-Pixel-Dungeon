@@ -33,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
+import com.shatteredpixel.shatteredpixeldungeon.Tasks;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -1308,6 +1309,7 @@ if (buff(RoundShield.GuardTracker.class) != null){
 				}
 				
 				sprite.operate( dst );
+				Tasks.onChestOpened();
 				
 			} else {
 				ready();
@@ -1583,6 +1585,9 @@ if (buff(RoundShield.GuardTracker.class) != null){
 			Buff.affect(Dungeon.hero, Talent.PatientStrikeTracker.class).pos = Dungeon.hero.pos;
 			}
 			sprite.showStatus( CharSprite.DEFAULT, Messages.get(this, "wait") );
+		}
+		if (fullRest) {
+			Tasks.onRestedToFull();
 		}
 		resting = fullRest;
 	}

@@ -560,6 +560,7 @@ public class BattlePass {
         lastDeepestFloor = 0;
         lastEnemiesSlain = 0;
         lastGoldCollected = 0;
+        Tasks.onRunStart();
     }
 
     public static void onRunEnd(){
