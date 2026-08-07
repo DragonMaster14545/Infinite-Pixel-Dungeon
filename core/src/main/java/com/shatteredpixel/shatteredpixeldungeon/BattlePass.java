@@ -380,13 +380,21 @@ public class BattlePass {
         public final int finalXP;
         public final ArrayList<Integer> claimedTiers;
         public final HashMap<Integer, Item> rewardSnapshot;
-        public final int repeatableTiersClaimed;
+        public final HashMap<Integer, ArrayList<Item>> rewardExtraSnapshot;
+        public int repeatableTiersClaimed;
         public final String seasonName;
         public final boolean premium;
+        public final ArrayList<Integer> premiumClaimedTiers;
+        public final HashMap<Integer, Item> premiumRewardSnapshot;
+        public final HashMap<Integer, ArrayList<Item>> premiumRewardExtraSnapshot;
+        public int premiumRepeatableTiersClaimed;
 
         MonthRecord( String monthKey, int finalXP, ArrayList<Integer> claimedTiers,
                      int repeatableTiersClaimed, HashMap<Integer, Item> rewardSnapshot, String seasonName,
-                     boolean premium){
+                     boolean premium, ArrayList<Integer> premiumClaimedTiers,
+                     HashMap<Integer, Item> premiumRewardSnapshot, int premiumRepeatableTiersClaimed,
+                     HashMap<Integer, ArrayList<Item>> rewardExtraSnapshot,
+                     HashMap<Integer, ArrayList<Item>> premiumRewardExtraSnapshot ){
             this.monthKey = monthKey;
             this.finalXP = finalXP;
             this.claimedTiers = claimedTiers;
@@ -394,6 +402,11 @@ public class BattlePass {
             this.rewardSnapshot = rewardSnapshot;
             this.seasonName = seasonName;
             this.premium = premium;
+            this.premiumClaimedTiers = premiumClaimedTiers;
+            this.premiumRewardSnapshot = premiumRewardSnapshot;
+            this.premiumRepeatableTiersClaimed = premiumRepeatableTiersClaimed;
+            this.rewardExtraSnapshot = rewardExtraSnapshot;
+            this.premiumRewardExtraSnapshot = premiumRewardExtraSnapshot;
         }
 
         public int tiersReached(){
@@ -416,6 +429,48 @@ public class BattlePass {
         private static final String M_REWARDPREFIX  = "reward_";
         private static final String M_SEASON_NAME = "season_name";
         private static final String M_PREMIUM = "premium";
+        private static final String M_PREMIUM_CLAIMED = "premium_claimed";
+        private static final String M_PREMIUM_REWARDTIERS = "premium_reward_tiers";
+        private static final String M_PREMIUM_REWARDPREFIX = "premium_reward_";
+        private static final String M_PREMIUM_REPEATED = "premium_repeated";
+        private static final String M_EXTRA_TIERS = "extra_tiers";
+        private static final String M_EXTRA_COUNT_PREFIX = "extra_count_";
+        private static final String M_EXTRA_ITEM_PREFIX = "extra_item_";
+        private static final String M_PREMIUM_EXTRA_TIERS = "premium_extra_tiers";
+        private static final String M_PREMIUM_EXTRA_COUNT_PREFIX = "premium_extra_count_";
+        private static final String M_PREMIUM_EXTRA_ITEM_PREFIX = "premium_extra_item_";
+
+        private static void storeExtras( Bundle b, HashMap<Integer, ArrayList<Item>> extras,
+                                         String tiersKey, String countPrefix, String itemPrefix ){
+            int[] tiers = new int[extras.size()];
+            int i = 0;
+            for (int t : extras.keySet()) tiers[i++] = t;
+            b.put( tiersKey, tiers );
+            for (int t : tiers) {
+                ArrayList<Item> list = extras.get( t );
+                b.put( countPrefix + t, list.size() );
+                for (int j = 0; j < list.size(); j++) {
+                    b.put( itemPrefix + t + "_" + j, list.get(j) );
+                }
+            }
+        }
+
+        private static HashMap<Integer, ArrayList<Item>> restoreExtras( Bundle b,
+                                                                        String tiersKey, String countPrefix, String itemPrefix ){
+            HashMap<Integer, ArrayList<Item>> extras = new HashMap<>();
+            if (b.contains( tiersKey )) {
+                for (int t : b.getIntArray( tiersKey )) {
+                    int count = b.contains( countPrefix + t ) ? b.getInt( countPrefix + t ) : 0;
+                    ArrayList<Item> list = new ArrayList<>();
+                    for (int j = 0; j < count; j++) {
+                        Object item = b.get( itemPrefix + t + "_" + j );
+                        if (item != null) list.add( (Item) item );
+                    }
+                    extras.put( t, list );
+                }
+            }
+            return extras;
+        }
 
         static MonthRecord restore( Bundle b ){
             String key = b.getString( M_KEY );
@@ -432,7 +487,26 @@ public class BattlePass {
             }
             String seasonName = b.contains( M_SEASON_NAME ) ? b.getString( M_SEASON_NAME ) : BattlePass.label( key );
             boolean premium = b.contains( M_PREMIUM ) && b.getBoolean( M_PREMIUM );
-            return new MonthRecord( key, xp, claimed, repeated, rewardSnapshot, seasonName, premium );
+
+            ArrayList<Integer> premiumClaimed = new ArrayList<>();
+            if (b.contains( M_PREMIUM_CLAIMED )){
+                for (int t : b.getIntArray( M_PREMIUM_CLAIMED )) premiumClaimed.add( t );
+            }
+            HashMap<Integer, Item> premiumRewardSnapshot = new HashMap<>();
+            if (b.contains( M_PREMIUM_REWARDTIERS )) {
+                for (int t : b.getIntArray( M_PREMIUM_REWARDTIERS )) {
+                    premiumRewardSnapshot.put(t, (Item) b.get(M_PREMIUM_REWARDPREFIX + t));
+                }
+            }
+            int premiumRepeated = b.contains( M_PREMIUM_REPEATED ) ? b.getInt( M_PREMIUM_REPEATED ) : 0;
+
+            HashMap<Integer, ArrayList<Item>> rewardExtras =
+                    restoreExtras( b, M_EXTRA_TIERS, M_EXTRA_COUNT_PREFIX, M_EXTRA_ITEM_PREFIX );
+            HashMap<Integer, ArrayList<Item>> premiumRewardExtras =
+                    restoreExtras( b, M_PREMIUM_EXTRA_TIERS, M_PREMIUM_EXTRA_COUNT_PREFIX, M_PREMIUM_EXTRA_ITEM_PREFIX );
+
+            return new MonthRecord( key, xp, claimed, repeated, rewardSnapshot, seasonName, premium,
+                    premiumClaimed, premiumRewardSnapshot, premiumRepeated, rewardExtras, premiumRewardExtras );
         }
 
         Bundle store(){
@@ -451,6 +525,21 @@ public class BattlePass {
             for (int t : rewardTiers) b.put(M_REWARDPREFIX + t, rewardSnapshot.get(t));
             b.put( M_SEASON_NAME, seasonName );
             b.put( M_PREMIUM, premium );
+
+            int[] premClaimedArr = new int[premiumClaimedTiers.size()];
+            for (int j = 0; j < premClaimedArr.length; j++) premClaimedArr[j] = premiumClaimedTiers.get(j);
+            b.put( M_PREMIUM_CLAIMED, premClaimedArr );
+
+            int[] premRewardTiers = new int[premiumRewardSnapshot.size()];
+            int k = 0;
+            for (int t : premiumRewardSnapshot.keySet()) premRewardTiers[k++] = t;
+            b.put( M_PREMIUM_REWARDTIERS, premRewardTiers );
+            for (int t : premRewardTiers) b.put( M_PREMIUM_REWARDPREFIX + t, premiumRewardSnapshot.get(t) );
+            b.put( M_PREMIUM_REPEATED, premiumRepeatableTiersClaimed );
+
+            storeExtras( b, rewardExtraSnapshot, M_EXTRA_TIERS, M_EXTRA_COUNT_PREFIX, M_EXTRA_ITEM_PREFIX );
+            storeExtras( b, premiumRewardExtraSnapshot, M_PREMIUM_EXTRA_TIERS, M_PREMIUM_EXTRA_COUNT_PREFIX, M_PREMIUM_EXTRA_ITEM_PREFIX );
+
             return b;
         }
     }

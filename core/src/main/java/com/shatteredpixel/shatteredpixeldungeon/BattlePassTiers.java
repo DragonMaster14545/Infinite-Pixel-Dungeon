@@ -39,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.WondrousResin;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.SearingSlasher;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 public class BattlePassTiers {
 
@@ -258,7 +259,7 @@ public class BattlePassTiers {
 
     private static final double BONUS_ITEM_CHANCE = 0.2;
 
-    private static ArrayList<Item> rollExtras( int tier, String seedSuffix ){
+    private static ArrayList<Item> rollExtras(int tier, String seedSuffix ){
         ArrayList<Item> extras = new ArrayList<>();
         String monthKey = BattlePass.currentMonthKey();
         long hash = 1125899906842597L;
