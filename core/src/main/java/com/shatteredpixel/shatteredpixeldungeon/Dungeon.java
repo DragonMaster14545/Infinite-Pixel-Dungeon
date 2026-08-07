@@ -79,6 +79,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.PrisonLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.RegularLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.SewerLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.WaveArenaLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.SpecialRoom;
@@ -230,6 +231,7 @@ public class Dungeon {
 	public static final int BRANCH_ARENA  = 2;
 	public static final int BRANCH_BLACK  = 3;
     public static final int BRANCH_PORTABLE  = 4;
+	public static final int BRANCH_WAVE_ARENA  = 5;
 
 	public static boolean isAscensionPossible(){
 		return branch != BRANCH_ARENA;
@@ -513,7 +515,13 @@ public class Dungeon {
             } else {
                 level = new DeadEndLevel();
             }
-        }
+        } else if (branch == BRANCH_WAVE_ARENA){
+			if (depth == 29) {
+				level = new WaveArenaLevel();
+			} else {
+				level = new DeadEndLevel();
+			}
+		}
 		else {
 			level = new DeadEndLevel();
 		}
