@@ -576,7 +576,7 @@ public class BattlePassScene extends PixelScene {
                     : BattlePassTiers.rewardFor( tier );
             if (rewardIcon instanceof ItemSprite){
                 if (reward != null){
-                    ((ItemSprite) rewardIcon).view( reward.identify() );
+                    ((ItemSprite) rewardIcon).view( reward );
                 } else {
                     ((ItemSprite) rewardIcon).view( ItemSpriteSheet.GOLD, null );
                 }
@@ -626,7 +626,7 @@ public class BattlePassScene extends PixelScene {
                 premiumQtyLabel.visible = false;
                 if (premiumIcon instanceof ItemSprite) {
                     if (premiumReward != null) {
-                        ((ItemSprite) premiumIcon).view( premiumReward.identify() );
+                        ((ItemSprite) premiumIcon).view( premiumReward );
                     } else {
                         ((ItemSprite) premiumIcon).view( ItemSpriteSheet.GOLD, null );
                     }
