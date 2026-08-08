@@ -325,7 +325,7 @@ public class WaveArenaLevel extends Level {
 
         int spawned = 0;
         for (int i = 0; i < waveSize; i++) {
-            Mob mob = createMob();
+            Mob mob = createMobforWaveArena( waveNumber );
             if (mob == null) continue;
 
             mob.state = mob.WANDERING;

@@ -9,6 +9,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.KindofMisc;
 import com.shatteredpixel.shatteredpixeldungeon.items.TicketToWaveArena;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.Barricade;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.SmallRation;
@@ -72,6 +73,7 @@ public class ArenaInventory {
     private static void giveStarterKit( Hero hero ){
         new Dagger().identify().collect();
         new ClothArmor().identify().collect();
+        new Barricade().quantity(2).collect();
         new SmallRation().collect();
         new TicketToWaveArena().collect();
     }

@@ -447,7 +447,12 @@ public abstract class Level implements Bundlable {
 				if (mob != null) mobsToSpawn.add(mob);
 			}
 		}
-if (bundle.contains( "respawner" )){
+		if (bundle.contains( "mobs_to_spawn_arena" )) {
+			for (Class<? extends Mob> mob : bundle.getClassArray("mobs_to_spawn_arena")) {
+				if (mob != null) mobsToSpawnArena.add(mob);
+			}
+		}
+		if (bundle.contains( "respawner" )){
 			respawner = (MobSpawner) bundle.get("respawner");
 		}
 		buildFlagMaps();
@@ -474,6 +479,7 @@ if (bundle.contains( "respawner" )){
 		bundle.put( BLOBS, blobs.values() );
 		bundle.put( FEELING, feeling );
 		bundle.put( "mobs_to_spawn", mobsToSpawn.toArray(new Class[0]));
+		bundle.put( "mobs_to_spawn_arena", mobsToSpawnArena.toArray(new Class[0]));
 		bundle.put( "respawner", respawner );
 	}
 	
@@ -504,6 +510,7 @@ if (bundle.contains( "respawner" )){
 	abstract protected boolean build();
 	
 	private ArrayList<Class<?extends Mob>> mobsToSpawn = new ArrayList<>();
+	private ArrayList<Class<?extends Mob>> mobsToSpawnArena = new ArrayList<>();
 	
 	public Mob createMob() {
 		if (mobsToSpawn == null || mobsToSpawn.isEmpty()) {
@@ -522,6 +529,18 @@ if (bundle.contains( "respawner" )){
         if (Dungeon.weekly) {
             m.HP = m.HT *= 2;
         }
+		return m;
+	}
+
+	public Mob createMobforWaveArena( int wave ) {
+		if (mobsToSpawnArena == null || mobsToSpawnArena.isEmpty()) {
+			mobsToSpawnArena = MobSpawner.getWavedMobRotation( wave );
+		}
+
+		Mob m = Reflection.newInstance(mobsToSpawnArena.remove(0));
+		if (Dungeon.weekly) {
+			m.HP = m.HT *= 2;
+		}
 		return m;
 	}
 

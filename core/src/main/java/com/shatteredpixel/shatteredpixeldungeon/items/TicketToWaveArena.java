@@ -79,6 +79,7 @@ public class TicketToWaveArena extends Item{
                 InterlevelScene.curTransition = new LevelTransition(Dungeon.level, -1, LevelTransition.Type.BRANCH_EXIT, 29, Dungeon.BRANCH_WAVE_ARENA, LevelTransition.Type.BRANCH_ENTRANCE);
                 InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
                 Game.switchScene( InterlevelScene.class );
+                detach(hero.belongings.backpack);
                 Catalog.countUse(getClass());
                 ArenaInventory.stashAndStart( hero );
             } else {
