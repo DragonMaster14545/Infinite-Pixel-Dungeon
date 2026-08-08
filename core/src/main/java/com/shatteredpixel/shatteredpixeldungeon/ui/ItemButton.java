@@ -54,7 +54,7 @@ public class ItemButton extends Component {
 			}
 
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				ItemButton.this.onClick();
 			}
 

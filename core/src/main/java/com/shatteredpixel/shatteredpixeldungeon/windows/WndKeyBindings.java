@@ -167,7 +167,7 @@ public class WndKeyBindings extends Window {
 
 		RedButton btnDefaults = new RedButton(Messages.get(this, "default"), 9){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				changedBindings = controller ? SPDAction.getControllerDefaults() : SPDAction.getDefaults();
 				for (BindingItem i : listItems){
 					int key1 = 0;
@@ -189,7 +189,7 @@ public class WndKeyBindings extends Window {
 
 		RedButton btnConfirm = new RedButton(Messages.get(this, "confirm"), 9){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				if (controller) KeyBindings.setAllControllerBindings(changedBindings);
 				else            KeyBindings.setAllBindings(changedBindings);
 				SPDAction.saveBindings();
@@ -201,7 +201,7 @@ public class WndKeyBindings extends Window {
 
 		RedButton btnCancel = new RedButton(Messages.get(this, "cancel"), 9){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				hide(); //close and don't save
 			}
 		};
@@ -427,7 +427,7 @@ public class WndKeyBindings extends Window {
 
 			btnUnbind = new RedButton(Messages.get(this, "unbind"), 9){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					if (action == GameAction.LEFT_CLICK && listItem.key2 == 0 && listItem.key3 == 0){
 						ShatteredPixelDungeon.scene().addToFront(new WndMessage(Messages.get(WndChangeBinding.class, "cant_unbind")));
 					} else {
@@ -440,7 +440,7 @@ public class WndKeyBindings extends Window {
 
 			btnConfirm = new RedButton(Messages.get(this, "confirm"), 9){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					if (changedKeyCode != -1){
 
 						changedBindings.remove(changedKeyCode);
@@ -485,7 +485,7 @@ public class WndKeyBindings extends Window {
 
 			btnCancel = new RedButton(Messages.get(this, "cancel"), 9){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					hide();
 				}
 			};

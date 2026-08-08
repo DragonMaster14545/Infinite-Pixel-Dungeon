@@ -140,7 +140,7 @@ public class WndWandmaker extends Window {
 
 			RedButton btnConfirm = new RedButton(Messages.get(WndSadGhost.class, "confirm")){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					RewardWindow.this.hide();
 
 					selectReward( item );
@@ -151,7 +151,7 @@ public class WndWandmaker extends Window {
 
 			RedButton btnCancel = new RedButton(Messages.get(WndSadGhost.class, "cancel")){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					hide();
 				}
 			};

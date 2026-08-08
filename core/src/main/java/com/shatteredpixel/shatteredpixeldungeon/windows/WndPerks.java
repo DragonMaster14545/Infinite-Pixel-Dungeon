@@ -137,7 +137,7 @@ public class WndPerks extends Window {
         }
 
         @Override
-        protected void onClick() {
+        public void onClick() {
             super.onClick();
         }
 

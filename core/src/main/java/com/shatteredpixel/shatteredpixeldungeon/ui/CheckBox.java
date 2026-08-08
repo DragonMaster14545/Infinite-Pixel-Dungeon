@@ -64,7 +64,7 @@ public class CheckBox extends RedButton {
 	}
 	
 	@Override
-	protected void onClick() {
+    public void onClick() {
 		super.onClick();
 		checked( !checked );
 	}

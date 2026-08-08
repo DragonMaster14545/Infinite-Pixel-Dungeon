@@ -436,7 +436,7 @@ public class WndUpgrade extends Window {
 
 		btnUpgrade = new RedButton(Messages.get(this, "upgrade")){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 
 				ScrollOfUpgrade.upgrade(Dungeon.hero);
@@ -471,7 +471,7 @@ public class WndUpgrade extends Window {
 
 		btnCancel = new RedButton(Messages.get(this, "back")){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
                 hide();
 				if (upgrader instanceof ScrollOfUpgrade) {

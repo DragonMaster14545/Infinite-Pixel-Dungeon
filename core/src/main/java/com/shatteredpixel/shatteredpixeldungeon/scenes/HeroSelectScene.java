@@ -112,7 +112,7 @@ public class HeroSelectScene extends PixelScene {
 
 		startBtn = new StyledButton(Chrome.Type.GREY_BUTTON_TR, ""){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 
 				if (GamesInProgress.selectedClass == null) return;
@@ -135,7 +135,7 @@ public class HeroSelectScene extends PixelScene {
 
 		infoButton = new IconButton(Icons.get(Icons.INFO)){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 				HeroClass cls = GamesInProgress.selectedClass;
 				if (cls != null) {
@@ -169,7 +169,7 @@ public class HeroSelectScene extends PixelScene {
 
 		btnOptions = new IconButton(Icons.get(Icons.PREFS)){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 				optionsPane.visible = !optionsPane.visible;
 				optionsPane.active = !optionsPane.active;
@@ -263,7 +263,7 @@ public class HeroSelectScene extends PixelScene {
 
 			btnFade = new IconButton(Icons.CHEVRON.get()){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					enable(false);
 					parent.add(new Tweener(parent, 0.5f) {
 						@Override
@@ -535,7 +535,7 @@ public class HeroSelectScene extends PixelScene {
 		}
 
 		@Override
-		protected void onClick() {
+        public void onClick() {
 			super.onClick();
 
 			if( !cl.isUnlocked() ){
@@ -569,7 +569,7 @@ public class HeroSelectScene extends PixelScene {
 			spacers = new ArrayList<>();
             StyledButton btnRenameHero = new StyledButton(Chrome.Type.BLANK, "Rename", 6){
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     ShatteredPixelDungeon.scene().addToFront(new WndTextInput("Rename Hero", Messages.get(HeroSelectScene.class, "rename_hero_desc"), SPDSettings.customName(), 50, false, "Done", "Revert") {
                         @Override
                         public void onSelect( boolean positive, String text ) {
@@ -595,7 +595,7 @@ public class HeroSelectScene extends PixelScene {
 
 			StyledButton seedButton = new StyledButton(Chrome.Type.BLANK, Messages.get(HeroSelectScene.class, "custom_seed"), 6){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 
 					String existingSeedtext = SPDSettings.customSeed();
 					ShatteredPixelDungeon.scene().addToFront( new WndTextInput(Messages.get(HeroSelectScene.class, "custom_seed_title"),
@@ -646,7 +646,7 @@ public class HeroSelectScene extends PixelScene {
 				private static final long DAY = 24 * HOUR;
 
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 
 					long diff = (SPDSettings.lastDaily() + DAY) - Game.realTime;
@@ -744,7 +744,7 @@ public class HeroSelectScene extends PixelScene {
                 private static final long WEEK = 7 * DAY;
 
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     super.onClick();
 
                     long diff = (SPDSettings.lastWeekly() + WEEK) - Game.realTime;
@@ -837,7 +837,7 @@ public class HeroSelectScene extends PixelScene {
 
 			StyledButton seedfinderButton = new StyledButton(Chrome.Type.BLANK, Messages.get(HeroSelectScene.class, "seedfinder"), 6){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					if (!Badges.isUnlocked(Badges.Badge.VICTORY) && !DeviceCompat.isDebug()){
 						ShatteredPixelDungeon.scene().addToFront( new WndTitledMessage(
 								Icons.get(Icons.SEED),
@@ -857,7 +857,7 @@ public class HeroSelectScene extends PixelScene {
 
 			StyledButton challengeButton = new StyledButton(Chrome.Type.BLANK, Messages.get(WndChallenges.class, "title"), 6){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 
 					ShatteredPixelDungeon.scene().addToFront(new WndChallenges(SPDSettings.challenges(), true) {
 						public void onBackPressed() {

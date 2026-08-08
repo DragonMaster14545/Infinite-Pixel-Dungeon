@@ -202,7 +202,7 @@ public class WndRanking extends WndTabbed {
 
 				IconButton scoreInfo = new IconButton(Icons.get(Icons.INFO)) {
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						super.onClick();
 						ShatteredPixelDungeon.scene().addToFront(new WndScoreBreakdown());
 					}
@@ -262,7 +262,7 @@ public class WndRanking extends WndTabbed {
 				final Image icon = Icons.get(Icons.SEED);
 				RedButton btnSeed = new RedButton(Messages.get(this, "copy_seed")){
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						super.onClick();
 						ShatteredPixelDungeon.scene().addToFront(new WndOptions(new Image(icon),
 								Messages.get(StatsTab.this, "copy_seed"),
@@ -445,7 +445,7 @@ public class WndRanking extends WndTabbed {
 
 				IconButton info = new IconButton(Icons.get(Icons.INFO)){
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						super.onClick();
 						ShatteredPixelDungeon.scene().add(
 								new WndMessage(Messages.get(Challenges.class, challenge+"_desc"))
@@ -545,7 +545,7 @@ public class WndRanking extends WndTabbed {
         }
 
 		@Override
-		protected void onClick() {
+        public void onClick() {
 			Game.scene().add( new WndInfoItem( item ) );
 		}
 	}
@@ -597,7 +597,7 @@ public class WndRanking extends WndTabbed {
 		}
 
 		@Override
-		protected void onClick() {
+        public void onClick() {
 			Game.scene().add(new WndInfoItem(item));
 		}
 	}

@@ -107,7 +107,7 @@ public class TalentButton extends Button {
 	}
 
 	@Override
-	protected void onClick() {
+    public void onClick() {
 		super.onClick();
 
 		Window toAdd;

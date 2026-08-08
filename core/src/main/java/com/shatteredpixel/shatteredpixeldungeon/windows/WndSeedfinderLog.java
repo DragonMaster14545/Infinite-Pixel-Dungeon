@@ -79,7 +79,7 @@ public class WndSeedfinderLog extends WndTabbed {
 
         IconButton btnClose = new IconButton(Icons.CLOSE.get()) {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 WndSeedfinderLog.this.hide();
             }
         };
@@ -88,7 +88,7 @@ public class WndSeedfinderLog extends WndTabbed {
 
         RedButton btnItems = new RedButton("Items") {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 selectedCategory = ITEMS;
                 updateText();
             }
@@ -98,7 +98,7 @@ public class WndSeedfinderLog extends WndTabbed {
 
         RedButton btnRooms = new RedButton("Rooms") {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 selectedCategory = ROOMS;
                 updateText();
             }
@@ -135,7 +135,7 @@ public class WndSeedfinderLog extends WndTabbed {
         if (numTabs > MAX_VISIBLE_TABS) {
             RedButton btnLeft = new RedButton("<", 7) {
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     if (offset > 0) {
                         offset -= 1;
                     }
@@ -148,7 +148,7 @@ public class WndSeedfinderLog extends WndTabbed {
 
             RedButton btnRight = new RedButton(">", 7) {
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     if (offset + 1 <= numTabs - MAX_VISIBLE_TABS) {
                         offset += 1;
                     }
@@ -192,7 +192,7 @@ public class WndSeedfinderLog extends WndTabbed {
 
         RedButton btnUse = new RedButton("Use Seed", 7) {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 ShatteredPixelDungeon.switchNoFade( HeroSelectScene.class );
             }
         };

@@ -151,7 +151,7 @@ public class JournalScene extends PixelScene {
 
 		StyledButton btnBadges =  new StyledButton(Chrome.Type.GREY_BUTTON_TR, ""){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				if (lastIDX != 0) {
 					lastIDX = 0;
 				}
@@ -172,7 +172,7 @@ public class JournalScene extends PixelScene {
 
 		StyledButton btnCatalog =  new StyledButton(Chrome.Type.GREY_BUTTON_TR, ""){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				if (lastIDX != 1) {
 					lastIDX = 1;
 				}
@@ -192,7 +192,7 @@ public class JournalScene extends PixelScene {
 
 		StyledButton btnGuide =  new StyledButton(Chrome.Type.GREY_BUTTON_TR, ""){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				if (lastIDX != 2) {
 					lastIDX = 2;
 				}
@@ -212,7 +212,7 @@ public class JournalScene extends PixelScene {
 
 		StyledButton btnAlchemy =  new StyledButton(Chrome.Type.GREY_BUTTON_TR, ""){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				if (lastIDX != 3) {
 					lastIDX = 3;
 				}
@@ -232,7 +232,7 @@ public class JournalScene extends PixelScene {
 
 		StyledButton btnGlobalNotes =  new StyledButton(Chrome.Type.GREY_BUTTON_TR, ""){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				if (lastIDX != 4) {
 					lastIDX = 4;
 				}
@@ -241,7 +241,7 @@ public class JournalScene extends PixelScene {
 			}
 			@Override
 			protected String hoverText() {
-				return Messages.get(WndJournal.AlchemyTab.class, "title");
+				return Messages.get(WndJournal.GlobalNotesTab.class, "title");
 			}
 		};
 		btnGlobalNotes.icon(Icons.NEWS.get());

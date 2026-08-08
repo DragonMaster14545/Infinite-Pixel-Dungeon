@@ -67,7 +67,7 @@ public class WndInfoBuff extends Window {
 		if(buff instanceof ActionIndicator.Action && ((ActionIndicator.Action)buff).isSelectable()) {
 			RedButton button = new RedButton("Set Active") {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					hide();
 					ActionIndicator.setAction((ActionIndicator.Action)buff);
 				}
@@ -83,7 +83,7 @@ public class WndInfoBuff extends Window {
             final int chargesToUse = questionnaireEnergy.chargesToUseInbuff(buff);
             RedButton btnRemoveBuffquest = new RedButton(Messages.get(this, "quest_remove_buff", chargesToUse, questionnaireEnergy.availableEnergy()), 6) {
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     if (chargesToUse <= questionnaireEnergy.availableEnergy()){
                         questionnaireEnergy.removeBuff(buff);
                         hide();

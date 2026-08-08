@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.StyledButton;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.ui.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BattlePassHistoryScene extends PixelScene {
@@ -65,6 +66,7 @@ public class BattlePassHistoryScene extends PixelScene {
         List<BattlePass.MonthRecord> history = BattlePass.history();
 
         Component content = new Component();
+        final ArrayList<StyledButton> rows = new ArrayList<>();
 
         if (history.isEmpty()) {
 
@@ -80,12 +82,13 @@ public class BattlePassHistoryScene extends PixelScene {
                 StyledButton row = new StyledButton( Chrome.Type.GREY_BUTTON_TR,
                         Messages.get( this, "row", rec.label(), rec.tiersReached(), BattlePass.TIER_XP.length ) ){
                     @Override
-                    protected void onClick(){
+                    public void onClick(){
                         BattlePassScene.seeMonth( rec.monthKey );
                     }
                 };
                 row.setRect( 0, y, w - MARGIN*2, ROW_HEIGHT );
                 content.add( row );
+                rows.add( row );
                 y += ROW_HEIGHT + ROW_GAP;
             }
             content.setSize( w - MARGIN*2, Math.max( 0, y - ROW_GAP ) );
@@ -93,13 +96,23 @@ public class BattlePassHistoryScene extends PixelScene {
 
         int listTop = HEADER_H;
         int listHeight = h - HEADER_H - FOOTER_H;
-        ScrollPane list = new ScrollPane( content );
+        ScrollPane list = new ScrollPane( content ) {
+            @Override
+            public void onClick( float x, float y ) {
+                for (StyledButton row : rows) {
+                    if (x >= row.left() && x <= row.right() && y >= row.top() && y <= row.bottom()) {
+                        row.onClick();
+                        break;
+                    }
+                }
+            }
+        };
         add( list );
         list.setRect( MARGIN, listTop, w - MARGIN*2, listHeight );
 
         StyledButton btnBack = new StyledButton( Chrome.Type.GREY_BUTTON_TR, Messages.get( this, "back" ) ){
             @Override
-            protected void onClick(){
+            public void onClick(){
                 onBackPressed();
             }
         };

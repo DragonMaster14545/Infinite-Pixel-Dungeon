@@ -154,7 +154,7 @@ public class AlchemyScene extends PixelScene {
 
 		ExitButton btnExit = new ExitButton(){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				Game.switchScene(GameScene.class);
 			}
 		};
@@ -234,7 +234,7 @@ public class AlchemyScene extends PixelScene {
 
 		Button invSelector = new Button(){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 						if (Dungeon.hero != null) {
 							ArrayList<Bag> bags = Dungeon.hero.belongings.getBags();
 
@@ -323,7 +323,7 @@ public class AlchemyScene extends PixelScene {
 
 		cancel = new IconButton(Icons.CLOSE.get()){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 				clearSlots();
 				updateState();
@@ -345,7 +345,7 @@ public class AlchemyScene extends PixelScene {
 
 		repeat = new IconButton(Icons.REPEAT.get()){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 				if (lastRecipe != null){
 					populate(lastIngredients, Dungeon.hero.belongings);
@@ -450,7 +450,7 @@ public class AlchemyScene extends PixelScene {
 			}
 
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				WndEnergizeItem.openItemSelector();
 			}
 
@@ -475,7 +475,7 @@ public class AlchemyScene extends PixelScene {
 
 		StyledButton btnGuide = new StyledButton( Chrome.Type.TOAST_TR, "Guide"){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 				if (Camera.main.width >= 300 && Camera.main.height >= PixelScene.MIN_HEIGHT_FULL){
 					splitAlchGuide = !splitAlchGuide;
@@ -955,7 +955,7 @@ public void showIdentify(Item item){
 					bg.resetColor();
 				}
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 					Item item = InputButton.this.item;
 					if (item != null) {
@@ -1054,7 +1054,7 @@ public void showIdentify(Item item){
 
 			button = new RedButton(""){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 					combine(slot);
 				}
@@ -1133,7 +1133,7 @@ public void showIdentify(Item item){
 
 			slot = new ItemSlot() {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 					if (visible && item != null && item.trueName() != null){
 						AlchemyScene.this.addToFront(new WndInfoItem(item));

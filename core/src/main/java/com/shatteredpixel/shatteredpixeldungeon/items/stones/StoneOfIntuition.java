@@ -114,7 +114,7 @@ public class StoneOfIntuition extends InventoryStone {
 			
 			final RedButton guess = new RedButton(""){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 					useAnimation();
 					Catalog.countUse(StoneOfIntuition.class);
@@ -190,7 +190,7 @@ public class StoneOfIntuition extends InventoryStone {
 
 				IconButton btn = new IconButton(){
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						curGuess = i;
 						guess.visible = true;
 						guess.text( Messages.titleCase(Messages.get(curGuess, "name")) );

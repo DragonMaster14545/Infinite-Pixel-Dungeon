@@ -111,7 +111,7 @@ public class DangerIndicator extends Tag {
 	}
 	
 	@Override
-	protected void onClick() {
+    public void onClick() {
 		super.onClick();
 		if (Dungeon.hero.visibleEnemies() > 0) {
 

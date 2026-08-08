@@ -90,7 +90,7 @@ public class StatusPane extends Component {
 
 		heroInfo = new Button(){
 			@Override
-			protected void onClick () {
+            public void onClick() {
 				Camera.main.panTo( Dungeon.hero.sprite.center(), 5f );
 				GameScene.show( new WndHero() );
 			}
@@ -134,7 +134,7 @@ public class StatusPane extends Component {
 
 		heroInfoOnBar = new Button(){
 			@Override
-			protected void onClick () {
+            public void onClick() {
 				Camera.main.panTo( Dungeon.hero.sprite.center(), 5f );
 				GameScene.show( new WndHero() );
 			}

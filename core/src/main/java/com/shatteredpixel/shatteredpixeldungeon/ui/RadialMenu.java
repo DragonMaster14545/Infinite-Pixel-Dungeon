@@ -115,7 +115,7 @@ public class RadialMenu extends Window {
 
 		Button selector = new Button(){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 				if (selectedIdx != -1){
 					hide();

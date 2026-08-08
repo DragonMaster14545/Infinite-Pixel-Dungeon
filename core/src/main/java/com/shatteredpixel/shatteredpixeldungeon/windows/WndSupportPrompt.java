@@ -59,7 +59,7 @@ public class WndSupportPrompt extends Window {
 
 		RedButton link = new RedButton(Messages.get(SupporterScene.class, "supporter_link")){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 				String link = "https://www.patreon.com/ShatteredPixel";
 				//tracking codes, so that the website knows where this pageview came from
@@ -76,7 +76,7 @@ public class WndSupportPrompt extends Window {
 
 		RedButton close = new RedButton(Messages.get(this, "close")){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 				SPDSettings.supportNagged(true);
 				WndSupportPrompt.super.hide();

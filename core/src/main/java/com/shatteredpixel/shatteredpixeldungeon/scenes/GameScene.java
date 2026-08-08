@@ -1328,7 +1328,7 @@ private static float waterOfs = 0;
 
 		StyledButton restart = new StyledButton(Chrome.Type.GREY_BUTTON_TR, Messages.get(StartScene.class, "new"), 9){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				GamesInProgress.selectedClass = Dungeon.hero.heroClass;
 				GamesInProgress.curSlot = GamesInProgress.firstEmpty();
 				ShatteredPixelDungeon.switchScene(HeroSelectScene.class);
@@ -1353,7 +1353,7 @@ private static float waterOfs = 0;
 
 		StyledButton menu = new StyledButton(Chrome.Type.GREY_BUTTON_TR, Messages.get(WndKeyBindings.class, "menu"), 9){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				GameScene.show(new WndGame());
 			}
 

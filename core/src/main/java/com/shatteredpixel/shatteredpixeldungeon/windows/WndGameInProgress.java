@@ -78,7 +78,7 @@ public class WndGameInProgress extends Window {
 		if (IntStream.range(0, info.challenges.length).anyMatch(i -> info.challenges[i])) {
 			RedButton btnChallenges = new RedButton( Messages.get(this, "challenges") ) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					Game.scene().add( new WndChallenges( info.challenges, false ) );
 				}
 			};
@@ -129,7 +129,7 @@ public class WndGameInProgress extends Window {
 		
 		RedButton cont = new RedButton(Messages.get(this, "continue")){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 				
 				GamesInProgress.curSlot = slot;
@@ -145,7 +145,7 @@ public class WndGameInProgress extends Window {
 		
 		RedButton erase = new RedButton( Messages.get(this, "erase")){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 				
 				ShatteredPixelDungeon.scene().add(new WndOptions(Icons.get(Icons.WARNING),

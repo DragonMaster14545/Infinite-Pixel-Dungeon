@@ -73,7 +73,7 @@ public class WndHeapPaged extends Window {
 
         btnPrev = new RedButton( "<" ) {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 if (page > 0) {
                     page--;
                     updateList();
@@ -84,7 +84,7 @@ public class WndHeapPaged extends Window {
 
         btnNext = new RedButton( ">" ) {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 if ((page + 1) * ITEMS_PER_PAGE < items.size()) {
                     page++;
                     updateList();

@@ -502,7 +502,7 @@ public class InventoryPane extends Component {
 		}
 
 		@Override
-		protected void onClick() {
+        public void onClick() {
 			if (lastBag != item && !lastBag.contains(item) && !item.isEquipped(Dungeon.hero)){
 				updateInventory();
 				return;
@@ -673,7 +673,7 @@ public class InventoryPane extends Component {
 		}
 
 		@Override
-		protected void onClick() {
+        public void onClick() {
 			super.onClick();
 			GameScene.cancel();
 			lastBag = bag;

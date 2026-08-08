@@ -283,7 +283,7 @@ public class InterlevelScene extends PixelScene {
 
 					btnContinue = new StyledButton(Chrome.Type.TOAST_TR, Messages.get(InterlevelScene.class, "continue"), 9){
 						@Override
-						protected void onClick() {
+                        public void onClick() {
 							phase = Phase.FADE_OUT;
 							timeLeft = fadeTime;
 
@@ -333,7 +333,7 @@ public class InterlevelScene extends PixelScene {
 
 					btnHideStory = new IconButton(Icons.CHEVRON.get()){
 						@Override
-						protected void onClick() {
+                        public void onClick() {
 							if (btnContinue.alpha() != 0 && btnContinue.alpha() != 1){
 								return;
 							}

@@ -136,7 +136,7 @@ public class WndUpgrades extends Window {
         }
 
         @Override
-        protected void onClick() {
+        public void onClick() {
             class WndTitledMessageWithButton extends WndTitledMessage {
                 RedButton upgradeButton;
                 private WndTitledMessageWithButton(Image icon, String title, String message) {
@@ -145,7 +145,7 @@ public class WndUpgrades extends Window {
                     if (conduct.canUpgrade()) {
                         upgradeButton = new RedButton("Upgrade") {
                             @Override
-                            protected void onClick() {
+                            public void onClick() {
                                 super.onClick();
                                 conduct.tryUpgrade();
                                 WndTitledMessageWithButton.this.reload();

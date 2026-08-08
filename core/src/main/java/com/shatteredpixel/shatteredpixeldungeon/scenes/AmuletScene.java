@@ -79,7 +79,7 @@ public class AmuletScene extends PixelScene {
 
 		btnExit = new StyledButton(Chrome.Type.GREY_BUTTON_TR, Messages.get(this, "exit") ) {
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				Dungeon.win( Amulet.class );
 				Dungeon.deleteGame( GamesInProgress.curSlot, true );
 				Badges.saveGlobal();
@@ -113,7 +113,7 @@ public class AmuletScene extends PixelScene {
 		
 		btnStay = new StyledButton(Chrome.Type.GREY_BUTTON_TR, Messages.get(this, "stay") ) {
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				onBackPressed();
 				btnExit.enable(false);
 				btnStay.enable(false);

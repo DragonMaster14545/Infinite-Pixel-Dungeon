@@ -113,7 +113,7 @@ public class StoneOfAugmentation extends InventoryStone {
 					if (((Weapon) toAugment).augment != aug){
 						RedButton btnSpeed = new RedButton( Messages.get(this, aug.name()) ) {
 							@Override
-							protected void onClick() {
+                            public void onClick() {
 								hide();
 								StoneOfAugmentation.this.apply( (Weapon)toAugment, aug );
 							}
@@ -130,7 +130,7 @@ public class StoneOfAugmentation extends InventoryStone {
 					if (((Armor) toAugment).augment != aug){
 						RedButton btnSpeed = new RedButton( Messages.get(this, aug.name()) ) {
 							@Override
-							protected void onClick() {
+                            public void onClick() {
 								hide();
 								StoneOfAugmentation.this.apply( (Armor) toAugment, aug );
 							}
@@ -145,7 +145,7 @@ public class StoneOfAugmentation extends InventoryStone {
 			
 			RedButton btnCancel = new RedButton( Messages.get(this, "cancel") ) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					hide();
 					StoneOfAugmentation.this.collect();
 				}

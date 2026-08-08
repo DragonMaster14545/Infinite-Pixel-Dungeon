@@ -64,7 +64,7 @@ public class WndInfoTalent extends Window {
 		if (buttonCallback != null) {
 			RedButton button = new RedButton( buttonCallback.prompt() ) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 					hide();
 					buttonCallback.call();

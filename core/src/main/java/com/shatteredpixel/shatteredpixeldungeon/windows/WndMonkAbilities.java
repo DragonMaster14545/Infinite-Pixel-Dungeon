@@ -56,7 +56,7 @@ public class WndMonkAbilities extends Window {
 			String text = "_" + Messages.titleCase(abil.name()) + " " + Messages.get(this, "energycost", abil.energyCost()) + ":_ " + abil.desc();
 			RedButton moveBtn = new RedButton(text, 6){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 					hide();
 					if (abil.targetingPrompt() != null) {

@@ -211,7 +211,7 @@ public class TrinketCatalyst extends Item {
 
 				RedButton btnConfirm = new RedButton(Messages.get(WndSadGhost.class, "confirm")){
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						RewardWindow.this.hide();
 						WndTrinket.this.hide();
 
@@ -254,7 +254,7 @@ public class TrinketCatalyst extends Item {
 
 				RedButton btnCancel = new RedButton(Messages.get(WndSadGhost.class, "cancel")){
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						hide();
 					}
 				};

@@ -153,7 +153,7 @@ public class Alchemize extends Spell {
 
 					RedButton btnSell = new RedButton(Messages.get(this, "sell", item.value())) {
 						@Override
-						protected void onClick() {
+                        public void onClick() {
 							WndTradeItem.sell(item);
 							hide();
 							consumeAlchemize();
@@ -170,7 +170,7 @@ public class Alchemize extends Spell {
 					long priceAll = item.value();
 					RedButton btnSell1 = new RedButton(Messages.get(this, "sell_1", priceAll / item.quantity())) {
 						@Override
-						protected void onClick() {
+                        public void onClick() {
 							WndTradeItem.sellOne(item);
 							hide();
 							consumeAlchemize();
@@ -181,7 +181,7 @@ public class Alchemize extends Spell {
 					add(btnSell1);
 					RedButton btnSellAll = new RedButton(Messages.get(this, "sell_all", priceAll)) {
 						@Override
-						protected void onClick() {
+                        public void onClick() {
 							WndTradeItem.sell(item);
 							hide();
 							consumeAlchemize();
@@ -201,7 +201,7 @@ public class Alchemize extends Spell {
 
 					RedButton btnEnergize = new RedButton(Messages.get(this, "energize", item.energyVal())) {
 						@Override
-						protected void onClick() {
+                        public void onClick() {
 							WndEnergizeItem.energizeAll(item);
 							hide();
 							consumeAlchemize();
@@ -218,7 +218,7 @@ public class Alchemize extends Spell {
 					long energyAll = item.energyVal();
 					RedButton btnEnergize1 = new RedButton(Messages.get(this, "energize_1", energyAll / item.quantity())) {
 						@Override
-						protected void onClick() {
+                        public void onClick() {
 							WndEnergizeItem.energizeOne(item);
 							hide();
 							consumeAlchemize();
@@ -229,7 +229,7 @@ public class Alchemize extends Spell {
 					add(btnEnergize1);
 					RedButton btnEnergizeAll = new RedButton(Messages.get(this, "energize_all", energyAll)) {
 						@Override
-						protected void onClick() {
+                        public void onClick() {
 							WndEnergizeItem.energizeAll(item);
 							hide();
 							consumeAlchemize();

@@ -57,7 +57,7 @@ public class CustomNoteButton extends IconButton {
 	}
 
 	@Override
-	protected void onClick() {
+    public void onClick() {
 		super.onClick();
 
 		if (Notes.getRecords(Notes.CustomRecord.class).size() >= Notes.customRecordLimit()){
@@ -136,7 +136,7 @@ public class CustomNoteButton extends IconButton {
 				int finalI = i;
 				RedButton btnDepth = new RedButton(Integer.toString(finalI)){
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						addNote(WndDepthSelect.this, new Notes.CustomRecord(finalI, "", ""),
 								Messages.get(CustomNoteButton.class, "new_floor"),
 								Messages.get(CustomNoteButton.class, "new_floor_title", finalI));
@@ -271,7 +271,7 @@ public class CustomNoteButton extends IconButton {
 
 			RedButton title = new RedButton( Messages.get(CustomNoteWindow.class, "edit_title") ){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					GameScene.show(new WndTextInput(Messages.get(CustomNoteWindow.class, "edit_title"),
 							"",
 							rec.title(),
@@ -296,7 +296,7 @@ public class CustomNoteButton extends IconButton {
 			String editBodyText = rec.desc().isEmpty() ? Messages.get(CustomNoteWindow.class, "add_text") : Messages.get(CustomNoteWindow.class, "edit_text");
 			RedButton body = new RedButton(editBodyText){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					GameScene.show(new WndTextInput(editBodyText,
 							"",
 							rec.desc(),
@@ -320,7 +320,7 @@ public class CustomNoteButton extends IconButton {
 
 			RedButton delete = new RedButton( Messages.get(CustomNoteWindow.class, "delete") ){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					GameScene.show(new WndOptions(Icons.WARNING.get(),
 							Messages.get(CustomNoteWindow.class, "delete"),
 							Messages.get(CustomNoteWindow.class, "delete_warn"),

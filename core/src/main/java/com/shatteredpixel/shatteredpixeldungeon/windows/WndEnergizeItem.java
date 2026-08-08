@@ -53,7 +53,7 @@ public class WndEnergizeItem extends WndInfoItem {
 
 			RedButton btnEnergize = new RedButton( Messages.get(this, "energize", item.energyVal()) ) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					energizeAll( item );
 					hide();
 				}
@@ -69,7 +69,7 @@ public class WndEnergizeItem extends WndInfoItem {
 			long energyAll = item.energyVal();
 			RedButton btnEnergize1 = new RedButton( Messages.get(this, "energize_1", energyAll / item.quantity()) ) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					energizeOne( item );
 					hide();
 				}
@@ -79,7 +79,7 @@ public class WndEnergizeItem extends WndInfoItem {
 			add( btnEnergize1 );
 			RedButton btnEnergizeAll = new RedButton( Messages.get(this, "energize_all", energyAll ) ) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					energizeAll( item );
 					hide();
 				}

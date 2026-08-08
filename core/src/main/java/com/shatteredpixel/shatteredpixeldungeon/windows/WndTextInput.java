@@ -133,7 +133,7 @@ public class WndTextInput extends Window {
 			}
 
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 				textBox.copyToClipboard();
 			}
@@ -156,7 +156,7 @@ public class WndTextInput extends Window {
 			}
 
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 				if (Gdx.app.getClipboard().hasContents()) {
 					textBox.pasteFromClipboard();
@@ -177,7 +177,7 @@ public class WndTextInput extends Window {
 
 		final RedButton positiveBtn = new RedButton(posTxt) {
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				onSelect(true, textBox.getText());
 				hide();
 			}
@@ -187,7 +187,7 @@ public class WndTextInput extends Window {
 		if (negTxt != null) {
 			negativeBtn = new RedButton(negTxt) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					onSelect(false, textBox.getText());
 					hide();
 				}

@@ -55,7 +55,7 @@ public class WndGame extends Window {
 		RedButton curBtn;
 		addButton( curBtn = new RedButton( Messages.get(this, "settings") ) {
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				hide();
 				GameScene.show(new WndSettings());
 			}
@@ -66,7 +66,7 @@ public class WndGame extends Window {
 		if (IntStream.range(0, Dungeon.challenges.length).anyMatch(i -> Dungeon.challenges[i])) {
 			addButton( curBtn = new RedButton( Messages.get(this, "challenges") ) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					hide();
 					GameScene.show( new WndChallenges( Dungeon.challenges, false ) );
 				}
@@ -79,7 +79,7 @@ public class WndGame extends Window {
 
 			addButton( curBtn = new RedButton( Messages.get(this, "start") ) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					GamesInProgress.selectedClass = Dungeon.hero.heroClass;
 					GamesInProgress.curSlot = GamesInProgress.firstEmpty();
 					ShatteredPixelDungeon.switchScene(HeroSelectScene.class);
@@ -90,7 +90,7 @@ public class WndGame extends Window {
 			
 			addButton( curBtn = new RedButton( Messages.get(this, "rankings") ) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
 					Game.switchScene( RankingsScene.class );
 				}
@@ -101,7 +101,7 @@ public class WndGame extends Window {
 		// Main menu
 		addButton(curBtn = new RedButton(Messages.get(this, "menu")) {
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				try {
 					Dungeon.saveAll();
 				} catch (IOException e) {
@@ -116,7 +116,7 @@ public class WndGame extends Window {
         // Main menu
         addButton(curBtn = new RedButton(Messages.get(this, "save")) {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 try {
                     Dungeon.saveAll();
                 } catch (IOException e) {

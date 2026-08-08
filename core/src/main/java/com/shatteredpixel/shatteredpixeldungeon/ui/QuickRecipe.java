@@ -140,7 +140,7 @@ public class QuickRecipe extends Component {
 				}
 
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					ShatteredPixelDungeon.scene().addToFront(new WndInfoItem(in));
 				}
 			};
@@ -184,7 +184,7 @@ public class QuickRecipe extends Component {
 		anonymize(output);
 		this.output = new ItemSlot(output){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				ShatteredPixelDungeon.scene().addToFront(new WndInfoItem(output));
 			}
 		};
@@ -266,7 +266,7 @@ public class QuickRecipe extends Component {
 		}
 
 		@Override
-		protected void onClick() {
+        public void onClick() {
 			super.onClick();
 			
 			//find the window this is inside of and close it

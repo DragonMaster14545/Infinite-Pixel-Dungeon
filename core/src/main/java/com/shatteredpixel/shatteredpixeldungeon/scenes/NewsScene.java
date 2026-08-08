@@ -174,7 +174,7 @@ public class NewsScene extends PixelScene {
 
 						button = new RedButton(Messages.get(this, "enable_data")) {
 							@Override
-							protected void onClick() {
+                            public void onClick() {
 								super.onClick();
 								SPDSettings.WiFi(false);
 								News.checkForNews();
@@ -190,7 +190,7 @@ public class NewsScene extends PixelScene {
 
 					button = new RedButton(Messages.get(this, "enable_news")) {
 						@Override
-						protected void onClick() {
+                        public void onClick() {
 							super.onClick();
 							SPDSettings.news(true);
 							News.checkForNews();
@@ -254,7 +254,7 @@ public class NewsScene extends PixelScene {
 		}
 
 		@Override
-		protected void onClick() {
+        public void onClick() {
 			super.onClick();
 			textColor(Window.WHITE);
 			ShatteredPixelDungeon.scene().addToFront(new WndArticle(article));

@@ -114,7 +114,7 @@ public class TitleScene extends PixelScene {
 
 		StyledButton btnPlay = new StyledButton(GREY_TR, Messages.get(this, "enter")){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				if (GamesInProgress.checkAll().size() == 0){
 					GamesInProgress.selectedClass = null;
 					GamesInProgress.curSlot = 1;
@@ -144,7 +144,7 @@ public class TitleScene extends PixelScene {
 
 		StyledButton btnRankings = new StyledButton(GREY_TR,Messages.get(this, "rankings")){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				ShatteredPixelDungeon.switchNoFade( RankingsScene.class );
 			}
 		};
@@ -155,7 +155,7 @@ public class TitleScene extends PixelScene {
 
 		StyledButton btnBadges = new StyledButton(GREY_TR, Messages.get(this, "journal")){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				ShatteredPixelDungeon.switchNoFade( JournalScene.class );
 			}
 		};
@@ -175,7 +175,7 @@ public class TitleScene extends PixelScene {
 
 		StyledButton btnAbout = new StyledButton(GREY_TR, Messages.get(this, "about")){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				ShatteredPixelDungeon.switchScene( AboutScene.class );
 			}
 		};
@@ -252,7 +252,7 @@ public class TitleScene extends PixelScene {
 		}
 
 		@Override
-		protected void onClick() {
+        public void onClick() {
 			super.onClick();
 			ShatteredPixelDungeon.switchNoFade( NewsScene.class );
 		}
@@ -282,7 +282,7 @@ public class TitleScene extends PixelScene {
 		}
 
 		@Override
-		protected void onClick() {
+        public void onClick() {
 			if (Updates.updateAvailable()){
 				AvailableUpdateData update = Updates.updateData();
 
@@ -334,7 +334,7 @@ public class TitleScene extends PixelScene {
 		}
 
 		@Override
-		protected void onClick() {
+        public void onClick() {
 			if (Messages.lang().status() == Languages.Status.X_UNFINISH){
 				WndSettings.last_index = 5;
 			}
@@ -351,7 +351,7 @@ public class TitleScene extends PixelScene {
 		}
 
 		@Override
-		protected void onClick() {
+        public void onClick() {
 			ShatteredPixelDungeon.switchNoFade(BattlePassPreviewScene.class);
 		}
 	}
@@ -365,7 +365,7 @@ public class TitleScene extends PixelScene {
 		}
 
 		@Override
-		protected void onClick() {
+        public void onClick() {
 			ShatteredPixelDungeon.switchNoFade(SeedFindScene.class);
 		}
 	}

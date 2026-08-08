@@ -99,7 +99,7 @@ public class RightClickMenu extends Component {
 			int finalI = i;
 			buttons[i] = new RedButton(options[finalI], 6){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 					if (item != null){
 						item.execute(Dungeon.hero, options[finalI]);

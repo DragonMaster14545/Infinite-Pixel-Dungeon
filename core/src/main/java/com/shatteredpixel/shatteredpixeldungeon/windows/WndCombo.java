@@ -66,7 +66,7 @@ public class WndCombo extends Window {
 			String text = "_" + Messages.titleCase(move.title()) + " " + Messages.get(this, "combo_req", move.comboReq) + ":_ " + move.desc(combo.getComboCount());
 			RedButton moveBtn = new RedButton(text, 6){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 					hide();
 					combo.useMove(move);

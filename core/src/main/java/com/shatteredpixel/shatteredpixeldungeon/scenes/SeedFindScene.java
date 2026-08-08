@@ -67,7 +67,7 @@ public class SeedFindScene extends PixelScene {
 
         ExitButton btnExit = new ExitButton() {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 ShatteredPixelDungeon.switchNoFade( HeroSelectScene.class );
             }
         };
@@ -78,7 +78,7 @@ public class SeedFindScene extends PixelScene {
 
         StyledButton btnSeedfinder = new StyledButton(GREY_TR, Messages.get(this, "find_seed_button")) {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 SeedFindScene.this.addToFront(new WndTextInput(
                         Messages.get(SeedFindScene.class, "seedfinder_title"),
                         Messages.get(SeedFindScene.class, "seedfinder_info"),
@@ -154,7 +154,7 @@ public class SeedFindScene extends PixelScene {
 
         StyledButton btnScout = new StyledButton(GREY_TR, Messages.get(this, "scout_seed_button")) {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 SeedFindScene.this.addToFront(new WndTextInput(
                         Messages.get(SeedFindScene.class, "scout_title"),
                         Messages.get(SeedFindScene.class, "scout_info"),
@@ -185,7 +185,7 @@ public class SeedFindScene extends PixelScene {
 
         StyledButton btnDaily = new StyledButton(GREY_TR, Messages.get(this, "scout_daily_button")) {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 SeedFindScene.this.addToFront(new WndOptions(Icons.CALENDAR.get(),
                         Messages.get(SeedFindScene.class, "scout_daily_title"),
                         Messages.get(SeedFindScene.class, "scout_daily_body"),
@@ -210,7 +210,7 @@ public class SeedFindScene extends PixelScene {
 
         StyledButton btnWeekly = new StyledButton(GREY_TR, Messages.get(this, "scout_weekly_button")) {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 SeedFindScene.this.addToFront(new WndOptions(Icons.CALENDAR.get(),
                         Messages.get(SeedFindScene.class, "scout_weekly_title"),
                         Messages.get(SeedFindScene.class, "scout_weekly_body"),
@@ -235,7 +235,7 @@ public class SeedFindScene extends PixelScene {
 
         StyledButton btnInfo = new StyledButton(GREY_TR, Messages.get(this, "info_button")) {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 SeedFindScene.this.addToFront( new WndTitledMessage( Icons.SEED.get(),
                         Messages.get(SeedFindScene.class, "info_title"),
                         Messages.get(SeedFindScene.class, "info_body") )
@@ -247,7 +247,7 @@ public class SeedFindScene extends PixelScene {
 
         StyledButton btnOptions = new StyledButton(GREY_TR, Messages.get(SeedFindScene.class, "options_button")) {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 SeedFindScene.this.addToFront(new WndSeedfinderMenu());
             }
         };

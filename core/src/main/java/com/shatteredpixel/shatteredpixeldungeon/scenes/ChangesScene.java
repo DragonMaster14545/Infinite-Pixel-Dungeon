@@ -203,7 +203,7 @@ if (Messages.lang() != Languages.ENGLISH){
 
 		RedButton btnInf = new RedButton("InfPD"){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 				if (changesSelected != 0) {
 					changesSelected = 0;
@@ -217,7 +217,7 @@ if (Messages.lang() != Languages.ENGLISH){
 
         RedButton btnEXP = new RedButton("ExpPD"){
             @Override
-            protected void onClick() {
+            public void onClick() {
                 super.onClick();
                 if (changesSelected != 1) {
                     changesSelected = 1;
@@ -231,7 +231,7 @@ if (Messages.lang() != Languages.ENGLISH){
 
 		RedButton btn0_8 = new RedButton("ShPD"){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 				if (changesSelected != 2) {
 					changesSelected = 2;

@@ -114,7 +114,7 @@ public class WndVictoryCongrats extends Window {
 
 		RedButton btnSupport = new RedButton(Messages.get(this, "support")) {
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				ShatteredPixelDungeon.switchScene(SupporterScene.class);
 			}
 		};
@@ -124,7 +124,7 @@ public class WndVictoryCongrats extends Window {
 
 		RedButton btnClose = new RedButton(Messages.get(this, "close")) {
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				hide();
 			}
 		};

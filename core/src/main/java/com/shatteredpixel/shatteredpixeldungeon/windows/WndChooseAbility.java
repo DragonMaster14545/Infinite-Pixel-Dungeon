@@ -62,7 +62,7 @@ public class WndChooseAbility extends Window {
 
 			RedButton abilityButton = new RedButton(ability.shortDesc(), 6){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					GameScene.show(new WndOptions( new HeroIcon( ability ),
 							Messages.titleCase(ability.name()),
 							Messages.get(WndChooseAbility.this, "are_you_sure"),
@@ -92,7 +92,7 @@ public class WndChooseAbility extends Window {
 
 			IconButton abilityInfo = new IconButton(Icons.get(Icons.INFO)){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					GameScene.show(new WndInfoArmorAbility(Dungeon.hero.heroClass, ability));
 				}
 			};
@@ -104,7 +104,7 @@ public class WndChooseAbility extends Window {
 
 		RedButton cancelButton = new RedButton(Messages.get(this, "cancel")){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				hide();
 			}
 		};

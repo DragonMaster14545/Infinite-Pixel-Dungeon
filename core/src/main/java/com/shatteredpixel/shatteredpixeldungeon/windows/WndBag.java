@@ -309,7 +309,7 @@ public class WndBag extends WndTabbed {
 
 		btnPrevPage = new RedButton( "<" ) {
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				switchToPage( page - 1 );
 			}
 		};
@@ -319,7 +319,7 @@ public class WndBag extends WndTabbed {
 
 		btnNextPage = new RedButton( ">" ) {
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				switchToPage( page + 1 );
 			}
 		};
@@ -381,7 +381,7 @@ public class WndBag extends WndTabbed {
 
 		InventorySlot slot = new InventorySlot( item ){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				if (lastBag != item && !lastBag.contains(item) && !item.isEquipped(Dungeon.hero)){
 					hide();
 				} else if (selector != null) {

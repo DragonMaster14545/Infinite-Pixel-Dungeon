@@ -119,7 +119,7 @@ public class BattlePassPreviewScene extends PixelScene {
         StyledButton btnBack = new StyledButton( com.shatteredpixel.shatteredpixeldungeon.Chrome.Type.GREY_BUTTON_TR,
                 Messages.get( this, "back" ) ){
             @Override
-            protected void onClick(){
+            public void onClick(){
                 onBackPressed();
             }
         };

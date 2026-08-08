@@ -102,7 +102,7 @@ public class Toolbar extends Component {
 		//hidden button for quickslot selector keybind
 		add(new Button(){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				if (QuickSlotButton.targetingSlot != -1){
 					int cell = QuickSlotButton.autoAim(QuickSlotButton.lastTarget, Dungeon.quickslot.getItem(QuickSlotButton.targetingSlot));
 
@@ -193,7 +193,7 @@ public class Toolbar extends Component {
 		
 		add(btnWait = new Tool(24, 0, 20, 26) {
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				if (Dungeon.hero != null &&  Dungeon.hero.ready && !GameScene.cancel()) {
 					examining = false;
 					Dungeon.hero.rest(false);
@@ -228,7 +228,7 @@ public class Toolbar extends Component {
 		//hidden button for rest keybind
 		add(new Button(){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				if (Dungeon.hero != null && Dungeon.hero.ready && !GameScene.cancel()) {
 					examining = false;
 					Dungeon.hero.rest(true);
@@ -245,7 +245,7 @@ public class Toolbar extends Component {
 		//hidden button for wait / pickup keybind
 		add(new Button(){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				if (Dungeon.hero != null && Dungeon.hero.ready && !GameScene.cancel()) {
 					Dungeon.hero.waitOrPickup = true;
 					if ((Dungeon.level.heaps.get(Dungeon.hero.pos) != null || Dungeon.hero.canSelfTrample())
@@ -282,7 +282,7 @@ public class Toolbar extends Component {
 		
 		add(btnSearch = new Tool(44, 0, 20, 26) {
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				if (Dungeon.hero != null && Dungeon.hero.ready) {
 					if (!examining && !GameScene.cancel()) {
 						GameScene.selectCell(informer);
@@ -318,7 +318,7 @@ public class Toolbar extends Component {
 			private Image arrow;
 
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				if (Dungeon.hero != null && (Dungeon.hero.ready || !Dungeon.hero.isAlive())) {
 					if (SPDSettings.interfaceSize() == 2) {
 						GameScene.toggleInvPane();
@@ -388,7 +388,7 @@ public class Toolbar extends Component {
 		//hidden button for inventory selector keybind
 		add(new Button(){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				if (Dungeon.hero != null && Dungeon.hero.ready && !GameScene.cancel()) {
 					ArrayList<Bag> bags = Dungeon.hero.belongings.getBags();
 					String[] names = new String[bags.size()];
@@ -903,7 +903,7 @@ public class Toolbar extends Component {
 		}
 
 		@Override
-		protected void onClick() {
+        public void onClick() {
 			super.onClick();
 			swappedQuickslots = !swappedQuickslots;
 			updateLayout();

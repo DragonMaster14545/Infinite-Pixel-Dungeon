@@ -61,7 +61,7 @@ public class MiniCheckBox extends RedButton {
     }
 
     @Override
-    protected void onClick() {
+    public void onClick() {
         super.onClick();
         checked( !checked );
     }

@@ -56,7 +56,7 @@ public class WndOptionsCondensed extends WndOptions {
 			final int index = i;
 			RedButton btn = new RedButton( options[i] ) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					hide();
 					onSelect( index );
 				}

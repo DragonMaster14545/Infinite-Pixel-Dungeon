@@ -93,7 +93,7 @@ public class WndTradeItem extends WndInfoItem {
 
 			RedButton btnSell = new RedButton( Messages.get(this, "sell", item.value()) ) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					sell( item, finalShop);
 					hide();
 				}
@@ -109,7 +109,7 @@ public class WndTradeItem extends WndInfoItem {
 			long priceAll= item.value();
 			RedButton btnSell1 = new RedButton( Messages.get(this, "sell_1", priceAll / item.quantity()) ) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					sellOne( item, finalShop );
 					hide();
 				}
@@ -119,7 +119,7 @@ public class WndTradeItem extends WndInfoItem {
 			add( btnSell1 );
 			RedButton btnSellAll = new RedButton( Messages.get(this, "sell_all", priceAll ) ) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					sell( item, finalShop );
 					hide();
 				}
@@ -150,7 +150,7 @@ public class WndTradeItem extends WndInfoItem {
 
 		RedButton btnBuy = new RedButton( Messages.get(this, "buy", price) ) {
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				hide();
 				buy( heap );
 			}
@@ -170,7 +170,7 @@ public class WndTradeItem extends WndInfoItem {
 			final int chargesToUse = thievery.chargesToUse(item);
 			RedButton btnSteal = new RedButton(Messages.get(this, "steal", Math.min(100, (int) (chance * 100)), chargesToUse), 6) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					if (chance >= 1){
 						thievery.steal(item);
 						Hero hero = Dungeon.hero;
@@ -228,7 +228,7 @@ public class WndTradeItem extends WndInfoItem {
             final int chargesToUse = questionnaireEnergy.chargesToUse(item);
             RedButton btnBuyquest = new RedButton(Messages.get(this, "quest_buy", chargesToUse, questionnaireEnergy.availableEnergy()), 6) {
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     if (chargesToUse <= questionnaireEnergy.availableEnergy()){
                         questionnaireEnergy.obtainItem(item);
                         Hero hero = Dungeon.hero;

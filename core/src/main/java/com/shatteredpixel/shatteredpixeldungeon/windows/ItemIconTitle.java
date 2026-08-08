@@ -36,7 +36,7 @@ public class ItemIconTitle extends IconTitle {
             if (!(item instanceof WandOfUnstable || item instanceof MagesStaff)) {
                 renameButton = new IconButton(Icons.get( item.customName.equals("") ? Icons.SCROLL_GREY : Icons.SCROLL_COLOR)) {
                     @Override
-                    protected void onClick() {
+                    public void onClick() {
                         window.hide();
                         if (window.owner != null && window.owner.parent != null) {
                             window.owner.hide();
@@ -53,7 +53,7 @@ public class ItemIconTitle extends IconTitle {
             if (item.needsAim()) {
                 aimButton = new IconButton(Icons.get(Icons.TARGET)) {
                     @Override
-                    protected void onClick() {
+                    public void onClick() {
                         window.hide();
                         if (window.owner != null && window.owner.parent != null) {
                             window.owner.hide();
@@ -70,7 +70,7 @@ public class ItemIconTitle extends IconTitle {
             if (Dungeon.hero.belongings.getItem(SackOfHolding.class) != null) {
                 sackButton = new IconButton(new ItemSprite(ItemSpriteSheet.CHEST, item.canCollectWithSOH ? new ItemSprite.Glowing(0xFFFFFF, 1.5f) : null)) {
                     @Override
-                    protected void onClick() {
+                    public void onClick() {
                         window.hide();
                         if (window.owner != null && window.owner.parent != null) {
                             window.owner.hide();
@@ -88,7 +88,7 @@ public class ItemIconTitle extends IconTitle {
             if (!(item instanceof Bag || item.isEquipped(Dungeon.hero))) {
                 pinButton = new IconButton(item.pinned ? Icons.CHECKED.get() : Icons.UNCHECKED.get()) {
                     @Override
-                    protected void onClick() {
+                    public void onClick() {
                         window.hide();
                         if (window.owner != null && window.owner.parent != null) {
                             window.owner.hide();

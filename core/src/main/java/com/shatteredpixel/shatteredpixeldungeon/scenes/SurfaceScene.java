@@ -250,7 +250,7 @@ public class SurfaceScene extends PixelScene {
 		}
 
 		RedButton gameOver = new RedButton( Messages.get(this, "exit") ) {
-			protected void onClick() {
+			public void onClick() {
 				Game.switchScene( RankingsScene.class );
 			}
 		};

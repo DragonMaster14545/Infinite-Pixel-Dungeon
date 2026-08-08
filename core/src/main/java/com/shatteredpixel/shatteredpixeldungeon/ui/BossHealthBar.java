@@ -95,7 +95,7 @@ public class BossHealthBar extends Component {
 
 		bossInfo = new Button(){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 				if (boss != null){
 					GameScene.show(new WndInfoMob(boss));

@@ -86,7 +86,7 @@ public class WndBlacksmith extends Window {
 		int pickaxeCost = Statistics.questScores[2] >= 2500 ? 0 : 250;
 		RedButton pickaxe = new RedButton(Messages.get(this, "pickaxe", pickaxeCost), 6){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				GameScene.show(new WndOptions(
 						troll.sprite(),
 						Messages.titleCase( troll.name() ),
@@ -120,7 +120,7 @@ public class WndBlacksmith extends Window {
 		int reforgecost = (int) (100 * Math.pow(1.5, Blacksmith.Quest.reforges));
 		RedButton reforge = new RedButton(Messages.get(this, "reforge", reforgecost), 6){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				GameScene.show(new WndReforge(troll, WndBlacksmith.this));
 			}
 		};
@@ -130,7 +130,7 @@ public class WndBlacksmith extends Window {
 		int hardenCost = (int) (400 * Math.pow(1.5, Blacksmith.Quest.hardens));
 		RedButton harden = new RedButton(Messages.get(this, "harden", hardenCost), 6){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				GameScene.selectItem(new HardenSelector());
 			}
 		};
@@ -140,7 +140,7 @@ public class WndBlacksmith extends Window {
 		int upgradeCost = (int) (400 * Math.pow(1.5, Blacksmith.Quest.upgrades));
 		RedButton upgrade = new RedButton(Messages.get(this, "upgrade", upgradeCost), 6){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				GameScene.selectItem(new UpgradeSelector());
 			}
 		};
@@ -149,7 +149,7 @@ public class WndBlacksmith extends Window {
 
 		RedButton smith = new RedButton(Messages.get(this, "smith", 2500), 6){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				GameScene.show(new WndOptions(
 						troll.sprite(),
 						Messages.titleCase( troll.name() ),
@@ -176,7 +176,7 @@ public class WndBlacksmith extends Window {
 
 		RedButton cashOut = new RedButton(Messages.get(this, "cashout", cashOutModifier), 6){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				GameScene.show(new WndOptions(
 						troll.sprite(),
 						Messages.titleCase( troll.name() ),
@@ -264,7 +264,7 @@ public class WndBlacksmith extends Window {
 
 			btnReforge = new RedButton( Messages.get(this, "reforge") ) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 
 					Item first, second;
 					first = btnItem1.item();
@@ -529,7 +529,7 @@ public class WndBlacksmith extends Window {
 
 				RedButton btnConfirm = new RedButton(Messages.get(WndSadGhost.class, "confirm")){
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						RewardWindow.this.hide();
 
 						if (item instanceof Weapon && Blacksmith.Quest.smithEnchant != null){
@@ -559,7 +559,7 @@ public class WndBlacksmith extends Window {
 
 				RedButton btnCancel = new RedButton(Messages.get(WndSadGhost.class, "cancel")){
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						RewardWindow.this.hide();
 					}
 				};

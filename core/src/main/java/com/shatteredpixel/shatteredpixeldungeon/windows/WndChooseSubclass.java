@@ -61,7 +61,7 @@ public class WndChooseSubclass extends Window {
 		for (HeroSubClass subCls : hero.heroClass.subClasses()){
 			RedButton btnCls = new RedButton( subCls.shortDesc(), 6 ) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					GameScene.show(new WndOptions(new HeroIcon(subCls),
 							Messages.titleCase(subCls.title()),
 							Messages.get(WndChooseSubclass.this, "are_you_sure"),
@@ -86,7 +86,7 @@ public class WndChooseSubclass extends Window {
 
 			IconButton clsInfo = new IconButton(Icons.get(Icons.INFO)){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					GameScene.show(new WndInfoSubclass(Dungeon.hero.heroClass, subCls));
 				}
 			};
@@ -98,7 +98,7 @@ public class WndChooseSubclass extends Window {
 
 		RedButton btnCancel = new RedButton( Messages.get(this, "cancel") ) {
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				hide();
 			}
 		};

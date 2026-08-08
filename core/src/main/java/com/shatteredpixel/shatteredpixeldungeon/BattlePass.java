@@ -105,13 +105,13 @@ public class BattlePass {
             monthKey = now;
             return;
         }
-        if (monthKey.equals( now )) return;
+        if (monthKey.equals( now ) || monthKey.startsWith( now + "-r" )) return;
 
         history.add( 0, new MonthRecord( monthKey, totalXP, new ArrayList<>( claimedTiers ), repeatableTiersClaimed,
-            BattlePassTiers.rewardSnapshot(), seasonName( monthKey ), premium,
-            new ArrayList<>( premiumClaimedTiers ), BattlePassTiers.premiumRewardSnapshot(),
-            premiumRepeatableTiersClaimed, BattlePassTiers.rewardExtraSnapshot(),
-            BattlePassTiers.premiumRewardExtraSnapshot() ) );
+                BattlePassTiers.rewardSnapshot(), seasonName( monthKey ), premium,
+                new ArrayList<>( premiumClaimedTiers ), BattlePassTiers.premiumRewardSnapshot(),
+                premiumRepeatableTiersClaimed, BattlePassTiers.rewardExtraSnapshot(),
+                BattlePassTiers.premiumRewardExtraSnapshot() ) );
         while (history.size() > MAX_HISTORY_MONTHS){
             history.remove( history.size()-1 );
         }
@@ -119,11 +119,11 @@ public class BattlePass {
         monthKey = now;
         totalXP = 0;
         claimedTiers = new ArrayList<>();
-        premiumClaimedTiers = new ArrayList<>();
         repeatableTiersClaimed = 0;
         premiumRepeatableTiersClaimed = 0;
-        BattlePassTiers.resetRewards();
+        premiumClaimedTiers = new ArrayList<>();
         premium = false;
+        BattlePassTiers.resetRewards();
         saveGlobal();
     }
 

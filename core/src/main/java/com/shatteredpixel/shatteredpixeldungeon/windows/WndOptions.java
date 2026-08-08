@@ -86,7 +86,7 @@ public class WndOptions extends Window {
 			final int index = i;
 			RedButton btn = new RedButton( options[i] ) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					hide();
 					onSelect( index );
 				}
@@ -101,7 +101,7 @@ public class WndOptions extends Window {
 				btn.setRect(0, pos, width - BUTTON_HEIGHT, BUTTON_HEIGHT);
 				IconButton info = new IconButton(Icons.get(Icons.INFO)){
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						onInfo( index );
 					}
 				};

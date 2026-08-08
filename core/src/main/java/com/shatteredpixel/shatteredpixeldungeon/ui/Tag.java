@@ -61,7 +61,7 @@ public class Tag extends Button {
 	}
 
 	@Override
-	protected void onClick() {
+    public void onClick() {
 		GameScene.tagDisappeared = false;
 	}
 

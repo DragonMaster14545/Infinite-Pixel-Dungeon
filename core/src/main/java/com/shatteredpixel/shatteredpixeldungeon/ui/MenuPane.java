@@ -89,7 +89,7 @@ public class MenuPane extends Component {
 			}
 
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 
 				if (Dungeon.level.feeling == Level.Feeling.NONE){
@@ -114,7 +114,7 @@ public class MenuPane extends Component {
 
 			challengeButton = new Button(){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					GameScene.show(new WndChallenges(Dungeon.challenges, false));
 				}
 
@@ -322,7 +322,7 @@ public class MenuPane extends Component {
 		}
 
 		@Override
-		protected void onClick() {
+        public void onClick() {
 			time = 0;
 			keyIcon.am = journalIcon.am = 1;
 			if (flashingPage != null){
@@ -402,7 +402,7 @@ public class MenuPane extends Component {
 		}
 
 		@Override
-		protected void onClick() {
+        public void onClick() {
 			GameScene.show( new WndGame() );
 		}
 

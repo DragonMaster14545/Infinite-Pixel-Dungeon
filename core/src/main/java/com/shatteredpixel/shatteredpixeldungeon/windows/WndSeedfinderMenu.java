@@ -58,7 +58,7 @@ public class WndSeedfinderMenu extends Window {
 
         infoFloors = new IconButton(Icons.INFO.get()) {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 ShatteredPixelDungeon.scene().addToFront(
                         new WndMessage(Messages.get(WndSeedfinderMenu.class, "floors_info")) );
             }
@@ -79,7 +79,7 @@ public class WndSeedfinderMenu extends Window {
 
         infoFontSize = new IconButton(Icons.INFO.get()) {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 ShatteredPixelDungeon.scene().addToFront(
                         new WndMessage(Messages.get(WndSeedfinderMenu.class, "fontsize_info")) );
             }
@@ -89,7 +89,7 @@ public class WndSeedfinderMenu extends Window {
         String modeBtnDescKey = SPDSettings.seedfinderConditionANY() ? "mode_any" : "mode_all";
         btnMode = new RedButton(Messages.get(this, modeBtnDescKey)) {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 SPDSettings.seedfinderConditionANY(!SPDSettings.seedfinderConditionANY());
 
                 ShatteredPixelDungeon.seamlessResetScene();
@@ -99,7 +99,7 @@ public class WndSeedfinderMenu extends Window {
 
         infoMode = new IconButton(Icons.INFO.get()) {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 ShatteredPixelDungeon.scene().addToFront(
                         new WndMessage(Messages.get(WndSeedfinderMenu.class, "mode_info")) );
             }
@@ -108,7 +108,7 @@ public class WndSeedfinderMenu extends Window {
 
         btnLoggingSettings = new RedButton(Messages.get(this, "logoptions_button"), 9) {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 ShatteredPixelDungeon.scene().addToFront(new WndLoggingOpts());
             }
         };
@@ -116,7 +116,7 @@ public class WndSeedfinderMenu extends Window {
 
         btnChallenges = new RedButton(Messages.get(this, "challenges")) {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 ShatteredPixelDungeon.scene().addToFront(new WndChallenges(SPDSettings.challenges(), true) {
                     public void onBackPressed() {
                         super.onBackPressed();
@@ -184,7 +184,7 @@ public class WndSeedfinderMenu extends Window {
 
             chkTrinkets = new CheckBox(Messages.get(this, "trinkets")) {
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     super.onClick();
                     SPDSettings.logTrinkets(checked());
                 }
@@ -194,7 +194,7 @@ public class WndSeedfinderMenu extends Window {
 
             chkEquipment = new CheckBox(Messages.get(this, "equipment")) {
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     super.onClick();
                     SPDSettings.logEquipment(checked());
                 }
@@ -204,7 +204,7 @@ public class WndSeedfinderMenu extends Window {
 
             chkScrolls = new CheckBox(Messages.get(this, "scrolls")) {
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     super.onClick();
                     SPDSettings.logScrolls(checked());
                 }
@@ -214,7 +214,7 @@ public class WndSeedfinderMenu extends Window {
 
             chkPotions = new CheckBox(Messages.get(this, "potions")) {
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     super.onClick();
                     SPDSettings.logPotions(checked());
                 }
@@ -224,7 +224,7 @@ public class WndSeedfinderMenu extends Window {
 
             chkRings = new CheckBox(Messages.get(this, "rings")) {
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     super.onClick();
                     SPDSettings.logRings(checked());
                 }
@@ -234,7 +234,7 @@ public class WndSeedfinderMenu extends Window {
 
             chkWands = new CheckBox(Messages.get(this, "wands")) {
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     super.onClick();
                     SPDSettings.logWands(checked());
                 }
@@ -244,7 +244,7 @@ public class WndSeedfinderMenu extends Window {
 
             chkArtifacts = new CheckBox(Messages.get(this, "artifacts")) {
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     super.onClick();
                     SPDSettings.logArtifacts(checked());
                 }
@@ -254,7 +254,7 @@ public class WndSeedfinderMenu extends Window {
 
             chkMisc = new CheckBox(Messages.get(this, "misc")) {
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     super.onClick();
                     SPDSettings.logMisc(checked());
                 }
@@ -267,7 +267,7 @@ public class WndSeedfinderMenu extends Window {
 
             chkRooms = new CheckBox(Messages.get(this, "use_rooms")) {
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     super.onClick();
                     SPDSettings.useRooms(checked());
                 }
@@ -277,7 +277,7 @@ public class WndSeedfinderMenu extends Window {
 
             infoRooms = new IconButton(Icons.INFO.get()) {
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     super.onClick();
                     ShatteredPixelDungeon.scene().add(
                             new WndMessage(Messages.get(WndLoggingOpts.class, "rooms_info"))
@@ -288,7 +288,7 @@ public class WndSeedfinderMenu extends Window {
 
             chkBlacklist = new CheckBox(Messages.get(this, "blacklist")) {
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     super.onClick();
                     SPDSettings.ignoreBlacklist(checked());
                 }
@@ -298,7 +298,7 @@ public class WndSeedfinderMenu extends Window {
 
             infoBlacklist = new IconButton(Icons.INFO.get()) {
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     super.onClick();
                     ShatteredPixelDungeon.scene().add(
                             new WndMessage(Messages.get(WndLoggingOpts.class, "blacklist_info"))
@@ -309,7 +309,7 @@ public class WndSeedfinderMenu extends Window {
 
             chkShops = new CheckBox(Messages.get(this, "shops")) {
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     super.onClick();
                     SPDSettings.checkShops(checked());
                 }
@@ -319,7 +319,7 @@ public class WndSeedfinderMenu extends Window {
 
             infoShops = new IconButton(Icons.INFO.get()) {
                 @Override
-                protected void onClick() {
+                public void onClick() {
                     super.onClick();
                     ShatteredPixelDungeon.scene().add(
                             new WndMessage(Messages.get(WndLoggingOpts.class, "shops_info"))

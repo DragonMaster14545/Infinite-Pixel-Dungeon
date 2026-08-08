@@ -9,6 +9,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.JournalScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndJournal;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndJournalItem;
@@ -30,18 +31,34 @@ public class GlobalCustomNoteButton extends IconButton {
         height = 11;
     }
 
+   private static void show(Window w){
+        if (ShatteredPixelDungeon.scene() instanceof GameScene){
+            GameScene.show(w);
+        } else {
+            ShatteredPixelDungeon.scene().addToFront(w);
+        }
+    }
+
+   private static void refreshHost(){
+        if (ShatteredPixelDungeon.scene() instanceof JournalScene) {
+            ShatteredPixelDungeon.seamlessResetScene();
+        } else {
+            WndJournal.refreshGlobalNotes();
+        }
+    }
+
     @Override
-    protected void onClick() {
+    public void onClick() {
         super.onClick();
 
         if (Notes.globalCustomRecords().size() >= Notes.customRecordLimit()){
-            GameScene.show(new WndTitledMessage(Icons.INFO.get(),
+            show(new WndTitledMessage(Icons.INFO.get(),
                     Messages.get(this, "limit_title"),
                     Messages.get(this, "limit_text")));
             return;
         }
 
-        GameScene.show(new WndNoteTypeSelect());
+        show(new WndNoteTypeSelect());
     }
 
     @Override
@@ -71,9 +88,9 @@ public class GlobalCustomNoteButton extends IconButton {
                         Messages.get(GlobalCustomNoteButton.class, "new_text"),
                         Messages.get(GlobalCustomNoteButton.class, "new_text_title"));
             } else if (index == 1){
-                GameScene.show(new WndDepthSelect());
+                show(new WndDepthSelect());
             } else {
-                GameScene.show(new WndItemtypeSelect());
+                show(new WndItemtypeSelect());
             }
         }
 
@@ -107,7 +124,7 @@ public class GlobalCustomNoteButton extends IconButton {
                 int finalI = i;
                 RedButton btnDepth = new RedButton(Integer.toString(finalI)){
                     @Override
-                    protected void onClick() {
+                    public void onClick() {
                         addNote(WndDepthSelect.this, new Notes.CustomRecord(finalI, "", ""),
                                 Messages.get(GlobalCustomNoteButton.class, "new_floor"),
                                 Messages.get(GlobalCustomNoteButton.class, "new_floor_title", finalI));
@@ -194,8 +211,8 @@ public class GlobalCustomNoteButton extends IconButton {
 
             RedButton title = new RedButton( Messages.get(GlobalCustomNoteWindow.class, "edit_title") ){
                 @Override
-                protected void onClick() {
-                    GameScene.show(new WndTextInput(Messages.get(GlobalCustomNoteWindow.class, "edit_title"),
+                public void onClick() {
+                    show(new WndTextInput(Messages.get(GlobalCustomNoteWindow.class, "edit_title"),
                             "",
                             rec.title(),
                             50,
@@ -207,7 +224,13 @@ public class GlobalCustomNoteButton extends IconButton {
                             if (positive && !text.isEmpty()){
                                 rec.editText(text, rec.desc());
                                 GlobalCustomNoteWindow.this.hide();
-                                ShatteredPixelDungeon.scene().addToFront(new GlobalCustomNoteWindow(rec));
+
+                                if (ShatteredPixelDungeon.scene() instanceof JournalScene) {
+                                    refreshHost();
+                                } else {
+                                    show(new GlobalCustomNoteWindow(rec));
+                                    refreshHost();
+                                }
                             }
                         }
                     });
@@ -219,8 +242,8 @@ public class GlobalCustomNoteButton extends IconButton {
             String editBodyText = rec.desc().isEmpty() ? Messages.get(GlobalCustomNoteWindow.class, "add_text") : Messages.get(GlobalCustomNoteWindow.class, "edit_text");
             RedButton body = new RedButton(editBodyText){
                 @Override
-                protected void onClick() {
-                    GameScene.show(new WndTextInput(editBodyText,
+                public void onClick() {
+                    show(new WndTextInput(editBodyText,
                             "",
                             rec.desc(),
                             500,
@@ -232,7 +255,13 @@ public class GlobalCustomNoteButton extends IconButton {
                             if (positive){
                                 rec.editText(rec.title(), text);
                                 GlobalCustomNoteWindow.this.hide();
-                                ShatteredPixelDungeon.scene().addToFront(new GlobalCustomNoteWindow(rec));
+
+                                if (ShatteredPixelDungeon.scene() instanceof JournalScene) {
+                                    refreshHost();
+                                } else {
+                                    show(new GlobalCustomNoteWindow(rec));
+                                    refreshHost();
+                                }
                             }
                         }
                     });
@@ -243,8 +272,8 @@ public class GlobalCustomNoteButton extends IconButton {
 
             RedButton delete = new RedButton( Messages.get(GlobalCustomNoteWindow.class, "delete") ){
                 @Override
-                protected void onClick() {
-                    GameScene.show(new WndOptions(Icons.WARNING.get(),
+                public void onClick() {
+                    show(new WndOptions(Icons.WARNING.get(),
                             Messages.get(GlobalCustomNoteWindow.class, "delete"),
                             Messages.get(GlobalCustomNoteWindow.class, "delete_warn"),
                             Messages.get(GlobalCustomNoteWindow.class, "confirm"),
@@ -253,8 +282,8 @@ public class GlobalCustomNoteButton extends IconButton {
                         protected void onSelect(int index) {
                             if (index == 0){
                                 Notes.removeGlobalCustom(rec);
-                                WndJournal.refreshGlobalNotes();
                                 GlobalCustomNoteWindow.this.hide();
+                                refreshHost();
                             }
                         }
                     });
@@ -273,7 +302,7 @@ public class GlobalCustomNoteButton extends IconButton {
     }
 
     private static void addNote(Window parentWindow, Notes.CustomRecord note, String promptTitle, String prompttext){
-        GameScene.show(new WndTextInput(promptTitle,
+        show(new WndTextInput(promptTitle,
                 prompttext,
                 "",
                 50,
@@ -286,7 +315,6 @@ public class GlobalCustomNoteButton extends IconButton {
                     note.assignID();
                     note.editText(text, "");
                     Notes.addGlobalCustom(note);
-                    WndJournal.refreshGlobalNotes();
 
                     if (parentWindow != null) {
                         parentWindow.hide();
@@ -296,7 +324,12 @@ public class GlobalCustomNoteButton extends IconButton {
                     }
                     hide();
 
-                    GameScene.show(new GlobalCustomNoteWindow(note));
+                    if (ShatteredPixelDungeon.scene() instanceof JournalScene) {
+                       refreshHost();
+                    } else {
+                        show(new GlobalCustomNoteWindow(note));
+                        refreshHost();
+                    }
                 }
             }
         });

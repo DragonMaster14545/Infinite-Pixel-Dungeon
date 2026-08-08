@@ -79,7 +79,7 @@ public class SupporterScene extends PixelScene {
 
 		StyledButton link = new StyledButton(Chrome.Type.GREY_BUTTON_TR, Messages.get(this, "supporter_link")){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 				String link = "mailto:trashbox.bobylev@gmail.com";
 				ShatteredPixelDungeon.platform.openURI(link);
@@ -93,7 +93,7 @@ public class SupporterScene extends PixelScene {
 
 		StyledButton link2 = new StyledButton(Chrome.Type.GREY_BUTTON_TR, Messages.get(this, "issues_link")){
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				super.onClick();
 				String link = "https://github.com/TrashboxBobylev/Experienced-Pixel-Dungeon-Redone/issues";
 				ShatteredPixelDungeon.platform.openURI(link);

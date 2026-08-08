@@ -131,7 +131,7 @@ public class StartScene extends PixelScene {
 
         StyledButton btnSort = new StyledButton(Chrome.Type.TOAST_TR, sortText, 6){
             @Override
-            protected void onClick() {
+            public void onClick() {
                 super.onClick();
 
                 if (SPDSettings.gamesInProgressSort().equals("level")){
@@ -400,7 +400,7 @@ public class StartScene extends PixelScene {
 		}
 		
 		@Override
-		protected void onClick() {
+        public void onClick() {
 			if (newGame) {
 				GamesInProgress.selectedClass = null;
 				GamesInProgress.curSlot = slot;

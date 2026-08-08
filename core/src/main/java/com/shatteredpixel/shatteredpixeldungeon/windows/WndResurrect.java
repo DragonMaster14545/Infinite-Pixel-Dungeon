@@ -100,7 +100,7 @@ public class WndResurrect extends Window {
 		
 		btnContinue = new RedButton( Messages.get(this, "confirm") ) {
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				if (btnItem1.item() == null || btnItem2.item() == null){
 					GameScene.show(new WndOptions(Icons.WARNING.get(),
 							Messages.get(WndResurrect.class, "warn_title"),

@@ -139,7 +139,7 @@ public class WndSadGhost extends Window {
 
 			RedButton btnConfirm = new RedButton(Messages.get(WndSadGhost.class, "confirm")){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					RewardWindow.this.hide();
 
 					WndSadGhost.this.selectReward( item );
@@ -150,7 +150,7 @@ public class WndSadGhost extends Window {
 
 			RedButton btnCancel = new RedButton(Messages.get(WndSadGhost.class, "cancel")){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					RewardWindow.this.hide();
 				}
 			};

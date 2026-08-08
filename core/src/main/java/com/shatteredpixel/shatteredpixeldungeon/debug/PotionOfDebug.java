@@ -368,7 +368,7 @@ public class PotionOfDebug extends Potion {
 				final int index = i;
 				RedButton btn = new RedButton( options[i], fontSize ) {
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						hide();
 						onSelect( index );
 					}

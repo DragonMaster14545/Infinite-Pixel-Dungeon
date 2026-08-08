@@ -233,7 +233,7 @@ public class WndSettings extends WndTabbed {
 
 			chkFullscreen = new CheckBox( Messages.get(this, "fullscreen") ) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 					SPDSettings.fullscreen(checked());
 				}
@@ -253,7 +253,7 @@ public class WndSettings extends WndTabbed {
 				&& (SPDSettings.powerSaver() || !DeviceCompat.supportsFullScreen())) {
 				chkSaver = new CheckBox(Messages.get(this, "saver")) {
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						super.onClick();
 						if (checked()) {
 							checked(!checked());
@@ -289,7 +289,7 @@ public class WndSettings extends WndTabbed {
 						Messages.get(this, "portrait")
 						: Messages.get(this, "landscape")) {
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						SPDSettings.landscape(!finalLandscape);
 					}
 				};
@@ -474,7 +474,7 @@ public class WndSettings extends WndTabbed {
 			if (SPDSettings.interfaceSize() == 0) {
 				btnToolbarSettings = new RedButton(Messages.get(this, "toolbar_settings"), 9){
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						ShatteredPixelDungeon.scene().addToFront(new Window(){
 
 							RenderedTextBlock barDesc;
@@ -490,7 +490,7 @@ public class WndSettings extends WndTabbed {
 
 								btnSplit = new RedButton(Messages.get(WndSettings.UITab.this, "split")) {
 									@Override
-									protected void onClick() {
+                                    public void onClick() {
 										textColor(TITLE_COLOR);
 										btnGrouped.textColor(WHITE);
 										btnCentered.textColor(WHITE);
@@ -505,7 +505,7 @@ public class WndSettings extends WndTabbed {
 
 								btnGrouped = new RedButton(Messages.get(WndSettings.UITab.this, "group")) {
 									@Override
-									protected void onClick() {
+                                    public void onClick() {
 										btnSplit.textColor(WHITE);
 										textColor(TITLE_COLOR);
 										btnCentered.textColor(WHITE);
@@ -520,7 +520,7 @@ public class WndSettings extends WndTabbed {
 
 								btnCentered = new RedButton(Messages.get(WndSettings.UITab.this, "center")) {
 									@Override
-									protected void onClick() {
+                                    public void onClick() {
 										btnSplit.textColor(WHITE);
 										btnGrouped.textColor(WHITE);
 										textColor(TITLE_COLOR);
@@ -535,7 +535,7 @@ public class WndSettings extends WndTabbed {
 
 								chkQuickSwapper = new CheckBox(Messages.get(WndSettings.UITab.this, "quickslot_swapper")) {
 									@Override
-									protected void onClick() {
+                                    public void onClick() {
 										super.onClick();
 										SPDSettings.quickSwapper(checked());
 										Toolbar.updateLayout();
@@ -550,7 +550,7 @@ public class WndSettings extends WndTabbed {
 
 								chkFlipToolbar = new CheckBox(Messages.get(WndSettings.UITab.this, "flip_toolbar")) {
 									@Override
-									protected void onClick() {
+                                    public void onClick() {
 										super.onClick();
 										SPDSettings.flipToolbar(checked());
 										Toolbar.updateLayout();
@@ -561,7 +561,7 @@ public class WndSettings extends WndTabbed {
 
 								chkFlipTags = new CheckBox(Messages.get(WndSettings.UITab.this, "flip_indicators")){
 									@Override
-									protected void onClick() {
+                                    public void onClick() {
 										super.onClick();
 										SPDSettings.flipTags(checked());
 										GameScene.layoutTags();
@@ -596,7 +596,7 @@ public class WndSettings extends WndTabbed {
 
 								chkExtraQuickslotRow = new CheckBox(Messages.get(WndSettings.UITab.this, "extra_quickslot_row")) {
 									@Override
-									protected void onClick() {
+                                    public void onClick() {
 										super.onClick();
 										SPDSettings.extraQuickslotRow(checked());
 										Toolbar.updateLayout();
@@ -626,7 +626,7 @@ public class WndSettings extends WndTabbed {
 
 				chkFlipTags = new CheckBox(Messages.get(this, "flip_indicators")) {
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						super.onClick();
 						SPDSettings.flipTags(checked());
 						GameScene.layoutTags();
@@ -642,7 +642,7 @@ public class WndSettings extends WndTabbed {
 
 			chkFont = new CheckBox(Messages.get(this, "system_font")){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 					ShatteredPixelDungeon.seamlessResetScene(new Game.SceneChangeCallback() {
 						@Override
@@ -662,7 +662,7 @@ public class WndSettings extends WndTabbed {
 
 			chkVibrate = new CheckBox(Messages.get(this, "vibration")){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 					SPDSettings.vibration(checked());
 					if (checked()){
@@ -752,7 +752,7 @@ public class WndSettings extends WndTabbed {
 
 				btnKeyBindings = new RedButton(Messages.get(this, "key_bindings")){
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						super.onClick();
 						ShatteredPixelDungeon.scene().addToFront(new WndKeyBindings(false));
 					}
@@ -764,7 +764,7 @@ public class WndSettings extends WndTabbed {
 			if (ControllerHandler.isControllerConnected()){
 				btnControllerBindings = new RedButton(Messages.get(this, "controller_bindings")){
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						super.onClick();
 						ShatteredPixelDungeon.scene().addToFront(new WndKeyBindings(true));
 					}
@@ -868,7 +868,7 @@ public class WndSettings extends WndTabbed {
 
 			chkNews = new CheckBox(Messages.get(this, "news")){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 					SPDSettings.news(checked());
 					News.clearArticles();
@@ -880,7 +880,7 @@ public class WndSettings extends WndTabbed {
 			if (Updates.supportsUpdates() && Updates.supportsUpdatePrompts()) {
 				chkUpdates = new CheckBox(Messages.get(this, "updates")) {
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						super.onClick();
 						SPDSettings.updates(checked());
 						Updates.clearUpdate();
@@ -892,7 +892,7 @@ public class WndSettings extends WndTabbed {
 				if (Updates.supportsBetaChannel()){
 					chkBetas = new CheckBox(Messages.get(this, "betas")) {
 						@Override
-						protected void onClick() {
+                        public void onClick() {
 							super.onClick();
 							SPDSettings.betas(checked());
 							Updates.clearUpdate();
@@ -906,7 +906,7 @@ public class WndSettings extends WndTabbed {
 			if (!DeviceCompat.isDesktop()){
 				chkWifi = new CheckBox(Messages.get(this, "wifi")){
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						super.onClick();
 						SPDSettings.WiFi(checked());
 					}
@@ -984,7 +984,7 @@ public class WndSettings extends WndTabbed {
 
 			chkMusicMute = new CheckBox(Messages.get(this, "music_mute")){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 					SPDSettings.music(!checked());
 				}
@@ -1016,7 +1016,7 @@ public class WndSettings extends WndTabbed {
 
 			chkMuteSFX = new CheckBox( Messages.get(this, "sfx_mute") ) {
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 					SPDSettings.soundFx(!checked());
 					Sample.INSTANCE.play( Assets.Sounds.CLICK );
@@ -1032,7 +1032,7 @@ public class WndSettings extends WndTabbed {
 
 				chkIgnoreSilent = new CheckBox( Messages.get(this, "ignore_silent") ){
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						super.onClick();
 						SPDSettings.ignoreSilentMode(checked());
 					}
@@ -1047,7 +1047,7 @@ public class WndSettings extends WndTabbed {
 
 				chkMusicBG = new CheckBox( Messages.get(this, "music_bg") ){
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						super.onClick();
 						SPDSettings.playMusicInBackground(checked());
 					}
@@ -1157,7 +1157,7 @@ public class WndSettings extends WndTabbed {
 				final int langIndex = i;
 				RedButton btn = new RedButton(Messages.titleCase(langs.get(i).nativeName()), 6){
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						super.onClick();
 						Messages.setup(langs.get(langIndex));
 						ShatteredPixelDungeon.seamlessResetScene(new Game.SceneChangeCallback() {
@@ -1201,7 +1201,7 @@ public class WndSettings extends WndTabbed {
 				String credText = Messages.titleCase(Messages.get(this, "credits"));
 				btnCredits = new RedButton(credText, credText.length() > 9 ? 6 : 9) {
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						super.onClick();
 						String[] reviewers = currLang.reviewers();
 						String[] translators = currLang.translators();

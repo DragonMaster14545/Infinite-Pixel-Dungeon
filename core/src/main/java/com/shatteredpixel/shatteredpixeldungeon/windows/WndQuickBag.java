@@ -95,7 +95,7 @@ public class WndQuickBag extends Window {
 		for (Item i : items){
 			InventorySlot slot = new InventorySlot(i){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					if (Dungeon.hero == null || !Dungeon.hero.isAlive() || !Dungeon.hero.belongings.contains(item)){
 						Game.scene().addToFront(new WndUseItem(WndQuickBag.this, item));
 						return;

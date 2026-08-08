@@ -59,7 +59,7 @@ public class WndImp extends Window {
 		
 		RedButton btnReward = new RedButton( Messages.get(this, "reward") ) {
 			@Override
-			protected void onClick() {
+            public void onClick() {
 				takeReward( imp, tokens, Imp.Quest.reward );
 			}
 		};

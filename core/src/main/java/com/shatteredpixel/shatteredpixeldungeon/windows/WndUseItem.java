@@ -52,7 +52,7 @@ public class WndUseItem extends WndInfoItem {
 				
 				RedButton btn = new RedButton( item.actionName(action, Dungeon.hero), 8 ) {
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						hide();
 						if (owner != null && owner.parent != null) owner.hide();
 						if (Dungeon.hero.isAlive() && Dungeon.hero.belongings.contains(item)){

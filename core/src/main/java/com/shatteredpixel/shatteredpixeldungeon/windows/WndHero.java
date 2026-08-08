@@ -144,7 +144,7 @@ public class WndHero extends WndTabbed {
 			add(title);
 			IconButton perkInfo = new IconButton(Icons.get(Icons.TALENT)){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 					hide();
 					GameScene.show(new WndPerks(hero.perks, false));
@@ -154,7 +154,7 @@ public class WndHero extends WndTabbed {
 			add(perkInfo);
 			IconButton upgradesInfo = new IconButton(Icons.get(Icons.PLUS)){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 					hide();
 					GameScene.show(new WndUpgrades(hero.upgrades));
@@ -164,7 +164,7 @@ public class WndHero extends WndTabbed {
 			add(upgradesInfo);
 			IconButton raritiesInfo = new IconButton(Icons.get(Icons.NEWS)){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 					hide();
 					GameScene.show(new WndRarities());
@@ -176,7 +176,7 @@ public class WndHero extends WndTabbed {
 
 			IconButton infoButton = new IconButton(Icons.get(Icons.INFO)){
 				@Override
-				protected void onClick() {
+                public void onClick() {
 					super.onClick();
 					if (ShatteredPixelDungeon.scene() instanceof GameScene){
 						GameScene.show(new WndHeroInfo(hero.heroClass));

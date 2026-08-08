@@ -196,23 +196,23 @@ public class BattlePassScene extends PixelScene {
 
         StyledButton btnBack = new StyledButton( Chrome.Type.GREY_BUTTON_TR, Messages.get( this, "back" ) ){
             @Override
-            protected void onClick(){
+            public void onClick(){
                 onBackPressed();
             }
         };
 
         if (live) {
             int gap  = 4;
-            float btnW = (w - MARGIN*2 - gap*2) / 3f;
+            float btnW = (w - MARGIN*2 - gap*3) / 4f;
             float bx = MARGIN;
 
             btnBack.setRect( bx, h - FOOTER_H + 4, btnW, FOOTER_H - 8 );
             add( btnBack );
             bx += btnW + gap;
 
-            StyledButton btnHistory = new StyledButton( Chrome.Type.GREY_BUTTON_TR, Messages.get( this, "history" ) ){
+            StyledButton btnHistory = new StyledButton( Chrome.Type.GREY_BUTTON_TR, Messages.get( this, "history" ), 8 ){
                 @Override
-                protected void onClick(){
+                public void onClick(){
                     ShatteredPixelDungeon.switchNoFade( BattlePassHistoryScene.class );
                 }
             };
@@ -235,21 +235,17 @@ public class BattlePassScene extends PixelScene {
 
             StyledButton btnPremium = new StyledButton( Chrome.Type.GREY_BUTTON_TR, premiumLabel, 8 ){
                 @Override
-                protected void onClick(){
+                public void onClick(){
                     BattlePass.unlockPremium();
                 }
             };
             btnPremium.setRect( bx, h - FOOTER_H + 4, btnW, FOOTER_H - 8 );
-            btnPremium.text.maxWidth( (int)(btnW - 8) );
-            btnPremium.text.setPos(
-                    btnPremium.left() + (btnW - btnPremium.text.width()) / 2f,
-                    btnPremium.top() + (btnPremium.height() - btnPremium.text.height()) / 2f
-            );
             add( btnPremium );
+            bx += btnW + gap;
 
             StyledButton btnReset = new StyledButton( Chrome.Type.GREY_BUTTON_TR, Messages.get( this, "reset" ), 8 ){
                 @Override
-                protected void onClick(){
+                public void onClick(){
                     resetPass();
                 }
             };
@@ -436,7 +432,7 @@ public class BattlePassScene extends PixelScene {
 
             btnClaimPremium = new StyledButton( Chrome.Type.RED_BUTTON, Messages.get( BattlePassScene.class, "claim" ), 8 ){
                 @Override
-                protected void onClick(){
+                public void onClick(){
                     claimPremium();
                 }
             };
@@ -449,7 +445,7 @@ public class BattlePassScene extends PixelScene {
 
             btnClaim = new StyledButton( Chrome.Type.RED_BUTTON, Messages.get( BattlePassScene.class, "claim" ), 8 ){
                 @Override
-                protected void onClick(){
+                public void onClick(){
                     claim();
                 }
             };
@@ -580,16 +576,7 @@ public class BattlePassScene extends PixelScene {
                     : BattlePassTiers.rewardFor( tier );
             if (rewardIcon instanceof ItemSprite){
                 if (reward != null){
-                    if (reward instanceof Scroll) {
-                        ((Scroll) reward).anonymize();
-                    } else if (reward instanceof Ring) {
-                        ((Ring) reward).anonymize();
-                    } else if (reward instanceof Potion) {
-                        ((Potion) reward).anonymize();
-                    } else if (reward instanceof Tubes) {
-                        ((Tubes) reward).anonymize();
-                    }
-                    ((ItemSprite) rewardIcon).view( reward );
+                    ((ItemSprite) rewardIcon).view( reward.identify() );
                 } else {
                     ((ItemSprite) rewardIcon).view( ItemSpriteSheet.GOLD, null );
                 }
@@ -639,16 +626,7 @@ public class BattlePassScene extends PixelScene {
                 premiumQtyLabel.visible = false;
                 if (premiumIcon instanceof ItemSprite) {
                     if (premiumReward != null) {
-                        if (premiumReward instanceof Scroll) {
-                            ((Scroll) premiumReward).anonymize();
-                        } else if (premiumReward instanceof Ring) {
-                            ((Ring) premiumReward).anonymize();
-                        } else if (premiumReward instanceof Potion) {
-                            ((Potion) premiumReward).anonymize();
-                        } else if (premiumReward instanceof Tubes) {
-                            ((Tubes) premiumReward).anonymize();
-                        }
-                        ((ItemSprite) premiumIcon).view( premiumReward );
+                        ((ItemSprite) premiumIcon).view( premiumReward.identify() );
                     } else {
                         ((ItemSprite) premiumIcon).view( ItemSpriteSheet.GOLD, null );
                     }

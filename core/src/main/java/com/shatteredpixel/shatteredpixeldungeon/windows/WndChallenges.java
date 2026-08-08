@@ -148,7 +148,7 @@ public class WndChallenges extends Window {
 		}
 
 		@Override
-		protected void onClick() {
+        public void onClick() {
 			super.onClick();
 		}
 

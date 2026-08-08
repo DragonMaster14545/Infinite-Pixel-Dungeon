@@ -234,6 +234,14 @@ public class WndJournal extends WndTabbed {
 	}
 
 	@Override
+	public void hide() {
+		super.hide();
+		if (INSTANCE == this) {
+			INSTANCE = null;
+		}
+	}
+
+	@Override
 	public boolean onSignal(KeyEvent event) {
 		if (event.pressed && KeyBindings.getActionForKey( event ) == SPDAction.JOURNAL) {
 			onBackPressed();
@@ -343,7 +351,7 @@ public class WndJournal extends WndTabbed {
 				final int idx = i;
 				pageButtons[i] = new RedButton( "" ){
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						currentPageIdx = idx;
 						updateList();
 					}
@@ -710,7 +718,7 @@ public class WndJournal extends WndTabbed {
 				final int idx = i;
 				itemButtons[i] = new RedButton( "" ){
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						currentItemIdx = idx;
 						updateList();
 					}
@@ -1196,7 +1204,7 @@ title = "???";
 			if (Dungeon.hero != null) {
 				btnLocal = new RedButton(Messages.get(this, "this_run")) {
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						super.onClick();
 						global = false;
 						updateList();
@@ -1207,7 +1215,7 @@ title = "???";
 
 				btnGlobal = new RedButton(Messages.get(this, "overall")) {
 					@Override
-					protected void onClick() {
+                    public void onClick() {
 						super.onClick();
 						global = true;
 						updateList();
