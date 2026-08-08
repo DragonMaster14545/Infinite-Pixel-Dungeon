@@ -61,42 +61,38 @@ public class ItemGetter extends TargetedSpell{
 
     @Override
     protected void affectTarget(Ballistica bolt, Hero hero) {
-        for (int n : PathFinder.NEIGHBOURS9) {
-            int cell = bolt.collisionPos + n;
+        int cell = bolt.collisionPos;
 
-            Heap heap = Dungeon.level.heaps.get( cell );
-            ArrayList<Item> matches = new ArrayList<>();
-            if (heap != null) {
-                for (Item item : heap.items) {
-                    matches.add( item );
-                }
+        Heap heap = Dungeon.level.heaps.get( cell );
+        ArrayList<Item> matches = new ArrayList<>();
+        if (heap != null) {
+            for (Item item : heap.items) {
+                matches.add(item);
+            }
 
-                if (matches.isEmpty()) {
-                    GLog.w( Messages.get( this, "no_match" ) );
-                    return;
-                }
+            if (matches.isEmpty()) {
+                GLog.w(Messages.get(this, "no_match"));
+                return;
+            }
 
-                curUser.spendAndNext( 1f );
+            curUser.spendAndNext(1f);
 
-                GameScene.show( new WndHeapPaged(
-                        matches,
-                        new WndHeapPaged.Listener() {
-                            @Override
-                            public void onSelect( Item item ) {
-                                GLog.i( Messages.get( ItemGetter.class, "found", item.name() ) );
-                                if (item.doPickUp(hero, heap.pos)) {
-                                    heap.pickUp();
-                                    GLog.i(Messages.capitalize(Messages.get(hero, "you_now_have", item.name())));
-                                } else {
-                                    GLog.w(Messages.get(ItemGetter.class, "cant_grab", item.name()));
-                                    heap.sprite.drop();
-                                }
+            GameScene.show(new WndHeapPaged(
+                    matches,
+                    new WndHeapPaged.Listener() {
+                        @Override
+                        public void onSelect(Item item) {
+                            GLog.i(Messages.get(ItemGetter.class, "found", item.name()));
+                            if (item.doPickUp(hero, heap.pos)) {
+                                heap.pickUp();
+                                GLog.i(Messages.capitalize(Messages.get(hero, "you_now_have", item.name())));
+                            } else {
+                                GLog.w(Messages.get(ItemGetter.class, "cant_grab", item.name()));
+                                heap.sprite.drop();
                             }
                         }
-                ) );
-            } else {
-                //empty statement lol
-            }
+                    }
+            ));
         }
     }
 
