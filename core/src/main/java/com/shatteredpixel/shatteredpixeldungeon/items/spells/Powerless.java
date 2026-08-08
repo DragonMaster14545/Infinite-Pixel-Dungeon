@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArtifactRecharge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
@@ -132,12 +133,11 @@ public class Powerless extends Spell {
 
 				for (Char ch : affected){
 					if ( ch.alignment != target.alignment ) {
-						Buff.append(Dungeon.hero, TalismanOfForesight.CharAwareness.class, 1f).charID = target.id();
+						Buff.affect(Dungeon.hero, MindVision.class, 1f);
 						Buff.affect(ch, Paralysis.class, 1f);
 						((Mob) ch).aggro(target);
 					}
 				}
-      Dungeon.observe();
 
 				if (left <= 0){
 					detach();
