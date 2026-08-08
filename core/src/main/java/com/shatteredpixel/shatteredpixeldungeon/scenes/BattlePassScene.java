@@ -246,6 +246,16 @@ public class BattlePassScene extends PixelScene {
                     btnPremium.top() + (btnPremium.height() - btnPremium.text.height()) / 2f
             );
             add( btnPremium );
+
+            StyledButton btnReset = new StyledButton( Chrome.Type.GREY_BUTTON_TR, Messages.get( this, "reset" ), 8 ){
+                @Override
+                protected void onClick(){
+                    resetPass();
+                }
+            };
+            btnReset.setRect( bx, h - FOOTER_H + 4, btnW, FOOTER_H - 8 );
+            btnReset.active = BattlePass.isBattlePassFinished();
+            add( btnReset );
         } else {
             btnBack.setRect( (w - 100) / 2f, h - FOOTER_H + 4, 100, FOOTER_H - 8 );
             add( btnBack );
