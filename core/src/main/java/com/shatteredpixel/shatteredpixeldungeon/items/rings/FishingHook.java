@@ -260,9 +260,11 @@ public class FishingHook extends Ring {
                 Item i = genHighValueConsumable();
                 if (i instanceof Bomb){
                     return new Bomb.DoubleBomb();
+                } else if (i instanceof ShurikenOfShadows) {
+					return i.quantity(3);
                 } else {
-                    return i.quantity(i.quantity()*2);
-                }
+					return i.quantity(i.quantity()*2);
+				}
             case 1:
                 return new IdealBag();
         }
