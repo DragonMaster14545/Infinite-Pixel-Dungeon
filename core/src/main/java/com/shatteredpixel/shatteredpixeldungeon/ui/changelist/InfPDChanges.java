@@ -68,6 +68,23 @@ public class InfPDChanges {
                 "In the next update, we will try to add new items, and possibly adding new mechanics to the game!"
         ));
 
+        changes = new ChangeInfo("InfPD-0.2.0", true, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ (Battle Pass) You can now reset the battlepass for 600k energy crystals, able to buy unclaimed tiers from history for 100 energy, and battlepass tiers may now contain bonus items\n" +
+                        "_-_ (Powerless) You are now able to receive mind vision when casting the spell"
+        ));
+
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Decreased ring, misc and artifact slots' cost to _3 ^ level_\n"
+        ));
+
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
+                "" //TODO add fixes
+        ));
+
         changes = new ChangeInfo("InfPD-0.1.9", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
