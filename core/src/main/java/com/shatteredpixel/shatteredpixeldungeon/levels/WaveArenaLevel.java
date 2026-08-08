@@ -44,6 +44,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.emblem.LaserisedEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.SummonerEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.TrihitEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.SmallRation;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfAquaticRejuvenation;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.BiggerGambleBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.GambleBag;
@@ -172,48 +173,22 @@ public class WaveArenaLevel extends Level {
 
         {
             itemsToSpawn = new ArrayList<>();
-            for (int i = 0; i < 3; i++) itemsToSpawn.add(new GambleBag());
-            for (int i = 0; i < 3; i++) itemsToSpawn.add(new BiggerGambleBag());
-            for (int i = 0; i < 3; i++) itemsToSpawn.add(new QualityBag());
-            itemsToSpawn.add(new Ankh());
-            itemsToSpawn.add(new LaserisedEmblem());
-            itemsToSpawn.add(new SummonerEmblem());
-            itemsToSpawn.add(new TrihitEmblem());
-            itemsToSpawn.add(new SmallRation().quantity(Random.IntRange(3, 6)));
 
-            Point itemPlacement = new Point(cellToPoint(arenaDoor));
-            if (itemPlacement.y == ROOM_TOP-1){
-                itemPlacement.y++;
-            } else if (itemPlacement.y == ROOM_BOTTOM+1) {
-                itemPlacement.y--;
-            } else if (itemPlacement.x == ROOM_LEFT-1){
-                itemPlacement.x++;
-            } else {
-                itemPlacement.x--;
-            }
+            itemsToSpawn.add(new SmallRation().quantity(Random.IntRange(2, 4)));
+            itemsToSpawn.add(new PotionOfHealing().quantity(Random.IntRange(2, 4)));
 
             for (Item item : itemsToSpawn) {
 
-                if (itemPlacement.x == ROOM_LEFT && itemPlacement.y != ROOM_TOP){
-                    itemPlacement.y--;
-                } else if (itemPlacement.y == ROOM_TOP && itemPlacement.x != ROOM_RIGHT){
-                    itemPlacement.x++;
-                } else if (itemPlacement.x == ROOM_RIGHT && itemPlacement.y != ROOM_BOTTOM){
-                    itemPlacement.y++;
-                } else {
-                    itemPlacement.x--;
-                }
+                int cell;
+                do {
+                    cell = pointToCell(new Point(
+                            Random.IntRange( ROOM_LEFT, ROOM_RIGHT ),
+                            Random.IntRange( ROOM_TOP, ROOM_BOTTOM )
+                    ));
+                } while (cell == entrance || cell == arenaDoor
+                        || heaps.get( cell ) != null || findMob( cell ) != null);
 
-                int cell = pointToCell(itemPlacement);
-
-                if (heaps.get( cell ) != null) {
-                    do {
-                        cell = pointToCell(new Point( Random.IntRange( ROOM_TOP, ROOM_RIGHT ),
-                                Random.IntRange( ROOM_TOP, ROOM_BOTTOM )));
-                    } while (heaps.get( cell ) != null || findMob( cell ) != null);
-                }
-
-                drop( item, cell ).type = Heap.Type.FOR_ARENA_SALE;
+                drop( item, cell ).type = Heap.Type.FOR_SALE;
             }
         }
 
@@ -380,24 +355,24 @@ public class WaveArenaLevel extends Level {
 
     //the actual "mobs get stronger per wave" scaling
     private static void scaleMobForWave( Mob mob, int wave ) {
-        int power = wave * 10;
+        int power = wave * 5;
 
         Buff.affect( mob, Stamina.class, power );
         mob.aggro( Dungeon.hero );
 
-        if (wave >= 3) {
+        if (wave >= 5) {
             Buff.affect( mob, ElixirOfAquaticRejuvenation.AquaHealing.class ).set( power * 3 );
         }
-        if (wave >= 5) {
+        if (wave >= 10) {
             Buff.affect( mob, Overload.class, 20f + wave );
         }
-        if (wave >= 7) {
+        if (wave >= 15) {
             Buff.affect( mob, RageShield.class ).set( power * 2 );
         }
-        if (wave >= 10) {
+        if (wave >= 20) {
             mob.HP = mob.HT = (int)(mob.HT * (1 + wave / 10f));
         }
-        if (wave >= 8 && Random.Int( 3 ) == 0) {
+        if (wave >= 25 && Random.Int( 3 ) == 0) {
             ChampionEnemy.rollForChampion( mob );
         }
     }
@@ -422,6 +397,7 @@ public class WaveArenaLevel extends Level {
             if (aliveWaveMobs == 0 && level.waveActive) {
                 level.waveActive = false;
                 GLog.p( Messages.get( WaveArenaLevel.class, "wave_cleared", level.waveNumber ) );
+                PotionOfHealing.heal( Dungeon.hero );
             }
 
             if (!level.waveActive && Dungeon.hero != null && Dungeon.hero.isAlive()) {

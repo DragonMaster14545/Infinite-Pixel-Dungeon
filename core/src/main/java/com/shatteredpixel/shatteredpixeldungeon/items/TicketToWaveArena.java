@@ -63,18 +63,14 @@ public class TicketToWaveArena extends Item{
         return actions;
     }
 
-    public int depth;
-    public int branch;
-    public int pos;
-
     @Override
     public void execute(Hero hero, String action) {
         super.execute(hero, action);
         if (action.equals(AC_USE)){
             if (Dungeon.branch != Dungeon.BRANCH_WAVE_ARENA){
-                depth = Dungeon.depth;
-                branch = Dungeon.branch;
-                pos = hero.pos;
+                ArenaInventory.depth = Dungeon.depth;
+                ArenaInventory.branch = Dungeon.branch;
+                ArenaInventory.pos = hero.pos;
                 try {
                     Dungeon.saveLevel(GamesInProgress.curSlot);
                 } catch (Exception e){
@@ -87,9 +83,9 @@ public class TicketToWaveArena extends Item{
                 ArenaInventory.stashAndStart( hero );
             } else {
                 InterlevelScene.mode = InterlevelScene.Mode.RETURN;
-                InterlevelScene.returnDepth = depth;
-                InterlevelScene.returnBranch = branch;
-                InterlevelScene.returnPos = pos;
+                InterlevelScene.returnDepth = ArenaInventory.depth;
+                InterlevelScene.returnBranch = ArenaInventory.branch;
+                InterlevelScene.returnPos = ArenaInventory.pos;
                 Game.switchScene( InterlevelScene.class );
                 detach(hero.belongings.backpack);
                 ArenaInventory.restoreAndMerge( hero );
@@ -104,22 +100,22 @@ public class TicketToWaveArena extends Item{
     @Override
     public void storeInBundle( Bundle bundle ) {
         super.storeInBundle( bundle );
-        bundle.put( DEPTH, depth );
-        bundle.put( BRANCH, branch );
-        if (depth != -1) {
-            bundle.put( POS, pos);
+        bundle.put( DEPTH, ArenaInventory.depth );
+        bundle.put( BRANCH, ArenaInventory.branch );
+        if (ArenaInventory.depth != -1) {
+            bundle.put( POS, ArenaInventory.pos);
         }
     }
 
     @Override
     public void restoreFromBundle( Bundle bundle ) {
         super.restoreFromBundle(bundle);
-        depth	= bundle.getInt( DEPTH );
+        ArenaInventory.depth	= bundle.getInt( DEPTH );
         if (bundle.contains(BRANCH))
-            branch	= bundle.getInt( BRANCH );
+            ArenaInventory.branch	= bundle.getInt( BRANCH );
         else
-            branch = Dungeon.BRANCH_NORMAL;
-        pos	= bundle.getInt( POS );
+            ArenaInventory.branch = Dungeon.BRANCH_NORMAL;
+        ArenaInventory.pos	= bundle.getInt( POS );
     }
 
     @Override
