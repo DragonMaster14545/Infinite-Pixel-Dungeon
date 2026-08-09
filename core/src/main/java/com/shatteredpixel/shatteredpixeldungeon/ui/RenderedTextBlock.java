@@ -152,32 +152,40 @@ public class RenderedTextBlock extends Component {
 		int len = raw.length();
 		while (i < len){
 			char c = raw.charAt(i);
-			if (c == '['){
-				if (i+1 < len && raw.charAt(i+1) == '['){
-					int[] cur = stack.get(stack.size()-1);
-					plain.append('[');
-					colors.add(cur[0]);
-					alphas.add(cur[1]);
-					effects.add(cur.length > 2 ? cur[2] : 0);
-					glintColors.add(cur.length > 3 ? cur[3] : -1);
+			char open = (c == '[') ? '[' : (c == '{') ? '{' : 0;
+
+			if (open != 0){
+				char closeChar = (open == '[') ? ']' : '}';
+
+				if (i+1 < len && raw.charAt(i+1) == open){
+					appendLiteral(open, plain, colors, alphas, effects, glintColors, stack);
 					i += 2;
 					continue;
 				}
 
-				int close = raw.indexOf(']', i);
-				if (close == -1){
-					int[] cur = stack.get(stack.size()-1);
-					for (int k = i; k < len; k++){
-						plain.append(raw.charAt(k));
-						colors.add(cur[0]);
-						alphas.add(cur[1]);
-						effects.add(cur.length > 2 ? cur[2] : 0);
-						glintColors.add(cur.length > 3 ? cur[3] : -1);
+				int scan = i + 1;
+				int closeIdx = -1;
+				boolean hitOtherOpen = false;
+				while (scan < len){
+					char sc = raw.charAt(scan);
+					if (sc == closeChar){
+						closeIdx = scan;
+						break;
 					}
-					break;
+					if (sc == '[' || sc == '{'){
+						hitOtherOpen = true;
+						break;
+					}
+					scan++;
 				}
 
-				String tag = raw.substring(i+1, close);
+				if (closeIdx == -1 || hitOtherOpen){
+					appendLiteral(open, plain, colors, alphas, effects, glintColors, stack);
+					i++;
+					continue;
+				}
+
+				String tag = raw.substring(i+1, closeIdx);
 				if (tag.isEmpty()){
 					if (stack.size() > 1) stack.remove(stack.size()-1);
 				} else {
@@ -220,8 +228,8 @@ public class RenderedTextBlock extends Component {
 					if (anyRecognized){
 						stack.add(new int[]{ newColor, newAlpha, newEffect, newGlintColor });
 					} else {
-						//fully unrecognized - literal fallback, same as before
-						String literal = "[" + tag + "]";
+						//fully unrecognized - literal fallback, preserving original bracket style
+						String literal = open + tag + closeChar;
 						for (int k = 0; k < literal.length(); k++){
 							plain.append(literal.charAt(k));
 							colors.add(cur[0]);
@@ -231,7 +239,7 @@ public class RenderedTextBlock extends Component {
 						}
 					}
 				}
-				i = close + 1;
+				i = closeIdx + 1;
 				continue;
 			}
 
@@ -256,6 +264,17 @@ public class RenderedTextBlock extends Component {
 		}
 
 		return plain.toString();
+	}
+
+	private static void appendLiteral(char ch, StringBuilder plain, ArrayList<Integer> colors,
+	                                  ArrayList<Integer> alphas, ArrayList<Integer> effects,
+	                                  ArrayList<Integer> glintColors, ArrayList<int[]> stack){
+		int[] cur = stack.get(stack.size()-1);
+		plain.append(ch);
+		colors.add(cur[0]);
+		alphas.add(cur[1]);
+		effects.add(cur.length > 2 ? cur[2] : 0);
+		glintColors.add(cur.length > 3 ? cur[3] : -1);
 	}
 
 	private static int[] parseColorTag(String tag){
