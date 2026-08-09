@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.test_tubes.Tubes;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Archs;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
@@ -52,10 +53,6 @@ public class BattlePassHistoryScene extends PixelScene {
     @Override
     public void create() {
         super.create();
-
-        Scroll.clearLabels();
-        Potion.clearColors();
-        Ring.clearGems();
 
         int w = Camera.main.width;
         int h = Camera.main.height;

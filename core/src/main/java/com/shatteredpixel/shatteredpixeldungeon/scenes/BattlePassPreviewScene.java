@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.test_tubes.Tubes;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -60,6 +61,11 @@ public class BattlePassPreviewScene extends PixelScene {
     @Override
     public void create() {
         super.create();
+
+        Potion.clearColors();
+        Scroll.clearLabels();
+        Tubes.clearColors();
+        Ring.clearGems();
 
         int w = Camera.main.width;
         int h = Camera.main.height;

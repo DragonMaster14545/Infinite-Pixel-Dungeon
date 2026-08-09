@@ -82,6 +82,11 @@ public class BattlePassScene extends PixelScene {
     public void create() {
         super.create();
 
+        Scroll.initLabels();
+        Potion.initColors();
+        Ring.initGems();
+        Tubes.initColors();
+
         viewMonthKey = pendingViewMonth;
         pendingViewMonth = null;
         if (viewMonthKey != null) {
