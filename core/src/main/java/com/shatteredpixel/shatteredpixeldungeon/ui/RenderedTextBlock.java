@@ -57,6 +57,10 @@ public class RenderedTextBlock extends Component {
 
 	private ArrayList<Integer> wordMarkupColor = new ArrayList<>();
 	private ArrayList<Integer> wordMarkupAlpha = new ArrayList<>();
+	private ArrayList<Integer> wordEffect = new ArrayList<>();
+	private ArrayList<Integer> wordBaseColor = new ArrayList<>();
+	private ArrayList<Integer> wordEffectSeed = new ArrayList<>();
+	private float animTime = 0f;
 
 	public static final int LEFT_ALIGN = 1;
 	public static final int CENTER_ALIGN = 2;
@@ -117,14 +121,27 @@ public class RenderedTextBlock extends Component {
 
 	private int[] charColors = null;
 	private int[] charAlphas = null;
+	private int[] charEffects = null;
+
+	private static final int EFFECT_RAINBOW = 1;
+	private static final int EFFECT_GLINT   = 1 << 1;
+	private static final int EFFECT_FLICKER = 1 << 2;
+
+	private static final HashMap<String, Integer> EFFECT_FLAGS = new HashMap<>();
+	static {
+		EFFECT_FLAGS.put("RAINBOW", EFFECT_RAINBOW);
+		EFFECT_FLAGS.put("GLINT",   EFFECT_GLINT);
+		EFFECT_FLAGS.put("FLICKER", EFFECT_FLICKER);
+	}
 
 	private String parseMarkup(String raw){
 		StringBuilder plain = new StringBuilder(raw.length());
 		ArrayList<Integer> colors = new ArrayList<>(raw.length());
 		ArrayList<Integer> alphas = new ArrayList<>(raw.length());
+		ArrayList<Integer> effects = new ArrayList<>(raw.length());
 
 		ArrayList<int[]> stack = new ArrayList<>();
-		stack.add(new int[]{-1, -1});
+		stack.add(new int[]{-1, -1, 0});
 
 		int i = 0;
 		int len = raw.length();
@@ -136,6 +153,7 @@ public class RenderedTextBlock extends Component {
 					plain.append('[');
 					colors.add(cur[0]);
 					alphas.add(cur[1]);
+					effects.add(cur.length > 2 ? cur[2] : 0);
 					i += 2;
 					continue;
 				}
@@ -147,6 +165,7 @@ public class RenderedTextBlock extends Component {
 						plain.append(raw.charAt(k));
 						colors.add(cur[0]);
 						alphas.add(cur[1]);
+						effects.add(cur.length > 2 ? cur[2] : 0);
 					}
 					break;
 				}
@@ -155,16 +174,40 @@ public class RenderedTextBlock extends Component {
 				if (tag.isEmpty()){
 					if (stack.size() > 1) stack.remove(stack.size()-1);
 				} else {
-					int[] parsed = parseColorTag(tag);
-					if (parsed != null){
-						stack.add(parsed);
+					int[] cur = stack.get(stack.size()-1);
+					int newColor = cur[0];
+					int newAlpha = cur[1];
+					int newEffect = cur.length > 2 ? cur[2] : 0;
+					boolean anyRecognized = false;
+
+					for (String part : tag.split("\\+")){
+						part = part.trim();
+						if (part.isEmpty()) continue;
+
+						Integer effectFlag = EFFECT_FLAGS.get(part.toUpperCase(Locale.ROOT));
+						if (effectFlag != null){
+							newEffect |= effectFlag;
+							anyRecognized = true;
+						} else {
+							int[] parsed = parseColorTag(part);
+							if (parsed != null){
+								newColor = parsed[0];
+								newAlpha = parsed[1];
+								anyRecognized = true;
+							}
+						}
+					}
+
+					if (anyRecognized){
+						stack.add(new int[]{ newColor, newAlpha, newEffect });
 					} else {
-						int[] cur = stack.get(stack.size()-1);
+						//fully unrecognized - literal fallback, same as before
 						String literal = "[" + tag + "]";
 						for (int k = 0; k < literal.length(); k++){
 							plain.append(literal.charAt(k));
 							colors.add(cur[0]);
 							alphas.add(cur[1]);
+							effects.add(cur.length > 2 ? cur[2] : 0);
 						}
 					}
 				}
@@ -176,14 +219,17 @@ public class RenderedTextBlock extends Component {
 			plain.append(c);
 			colors.add(cur[0]);
 			alphas.add(cur[1]);
+			effects.add(cur.length > 2 ? cur[2] : 0);
 			i++;
 		}
 
 		charColors = new int[colors.size()];
 		charAlphas = new int[alphas.size()];
+		charEffects = new int[effects.size()];
 		for (int k = 0; k < colors.size(); k++){
 			charColors[k] = colors.get(k);
 			charAlphas[k] = alphas.get(k);
+			charEffects[k] = effects.get(k);
 		}
 
 		return plain.toString();
@@ -266,8 +312,13 @@ public class RenderedTextBlock extends Component {
 		words = new ArrayList<>();
 		wordMarkupColor = new ArrayList<>();
 		wordMarkupAlpha = new ArrayList<>();
+		wordEffect = new ArrayList<>();
+		wordBaseColor = new ArrayList<>();
+		wordEffectSeed = new ArrayList<>();
 		boolean highlighting = false;
 		int cursor = 0;
+		int lastWordEffect = -1;
+		int currentGroupSeed = 0;
 		for (String str : tokens){
 
 			if (str.equals("_") && highlightingEnabled){
@@ -277,27 +328,43 @@ public class RenderedTextBlock extends Component {
 				words.add(NEWLINE);
 				wordMarkupColor.add(-1);
 				wordMarkupAlpha.add(-1);
+				wordEffect.add(0);
+				wordBaseColor.add(-1);
+				wordEffectSeed.add(0);
 				cursor += str.length();
 			} else if (str.equals(" ")){
 				words.add(SPACE);
 				wordMarkupColor.add(-1);
 				wordMarkupAlpha.add(-1);
+				wordEffect.add(0);
+				wordBaseColor.add(-1);
+				wordEffectSeed.add(0);
 				cursor += str.length();
 			} else {
 				RenderedText word = new RenderedText(str, size);
 
 				int markupColor = -1;
 				int markupAlpha = -1;
+				int effect = 0;
 				if (charColors != null && cursor < charColors.length){
 					markupColor = charColors[cursor];
 					markupAlpha = charAlphas[cursor];
+					effect = charEffects[cursor];
 				}
 
-				if (markupColor != -1)         word.hardlight(markupColor);
-				else if (highlighting)         word.hardlight(hightlightColor);
-				else if (color != -1)          word.hardlight(color);
+				if (effect != lastWordEffect){
+					currentGroupSeed = words.size();
+					lastWordEffect = effect;
+				}
 
-				if (markupAlpha != -1)         word.alpha(markupAlpha/255f);
+				int baseColor = markupColor != -1 ? markupColor : (color != -1 ? color : 0xffffff);
+
+				if (effect == 0 && markupColor != -1)   word.hardlight(markupColor);
+				else if (effect == 0 && highlighting)   word.hardlight(hightlightColor);
+				else if (effect == 0 && color != -1)    word.hardlight(color);
+				else if (effect != 0)                   word.hardlight(baseColor);
+
+				if (markupAlpha != -1) word.alpha(markupAlpha/255f);
 
 				word.scale.set(zoom);
 
@@ -305,6 +372,9 @@ public class RenderedTextBlock extends Component {
 				add(word);
 				wordMarkupColor.add(markupColor);
 				wordMarkupAlpha.add(markupAlpha);
+				wordEffect.add(effect);
+				wordBaseColor.add(baseColor);
+				wordEffectSeed.add(currentGroupSeed);
 
 				if (height < word.height()) height = word.height();
 
@@ -378,6 +448,73 @@ public class RenderedTextBlock extends Component {
 	public synchronized void align(int align){
 		alignment = align;
 		layout();
+	}
+
+	@Override
+	public void update(){
+		super.update();
+		if (wordEffect.isEmpty()) return;
+
+		animTime += Game.elapsed;
+
+		for (int i = 0; i < words.size(); i++){
+			int effect = wordEffect.get(i);
+			if (effect == 0) continue;
+
+			RenderedText word = words.get(i);
+			if (word == null || word == SPACE || word == NEWLINE) continue;
+
+			int seed = wordEffectSeed.get(i);
+			float phase = animTime + seed * 0.15f;
+			int base = wordBaseColor.get(i);
+
+			if ((effect & EFFECT_RAINBOW) != 0){
+				float hue = (phase * 0.5f) % 1f;
+				word.hardlight( hsvToRgb(hue, 0.9f, 1f) );
+			} else if ((effect & EFFECT_GLINT) != 0){
+				RenderedText anchor = words.get(seed);
+				float diagonal = (anchor.x - this.x) + (anchor.y - this.y) * 1.5f; //~45-degree axis
+
+				float stripeScale = 0.5f; //how many stripes are visible across the text at once
+				float layer1 = (float)Math.sin(diagonal * stripeScale        + animTime * 2.2f);
+				float layer2 = (float)Math.sin(diagonal * stripeScale * 1.7f - animTime * 1.4f);
+				float shimmer = (layer1 + layer2) * 0.5f + 0.5f;
+				shimmer = Math.max(0f, Math.min(1f, shimmer));
+
+				int glintColor = 0x9d7bd8;
+				word.hardlight( lerpColor(base, glintColor, 0.25f + shimmer * 0.75f) );
+			}
+
+			if ((effect & EFFECT_FLICKER) != 0){
+				float flicker = 0.6f + 0.4f * (float)Math.sin(phase * 9f + (seed*7 % 13));
+				word.alpha( Math.max(0.3f, Math.min(1f, flicker)) );
+			}
+		}
+	}
+
+	private static int hsvToRgb(float h, float s, float v){
+		int i = (int)(h * 6f);
+		float f = h * 6f - i;
+		float p = v * (1f - s);
+		float q = v * (1f - f * s);
+		float t = v * (1f - (1f - f) * s);
+		float r, g, b;
+		switch (i % 6){
+			case 0:  r = v; g = t; b = p; break;
+			case 1:  r = q; g = v; b = p; break;
+			case 2:  r = p; g = v; b = t; break;
+			case 3:  r = p; g = q; b = v; break;
+			case 4:  r = t; g = p; b = v; break;
+			default: r = v; g = p; b = q; break;
+		}
+		return ((int)(r*255) << 16) | ((int)(g*255) << 8) | (int)(b*255);
+	}
+
+	private static int lerpColor(int a, int b, float t){
+		int ar = (a >> 16) & 0xff, ag = (a >> 8) & 0xff, ab = a & 0xff;
+		int br = (b >> 16) & 0xff, bg = (b >> 8) & 0xff, bb = b & 0xff;
+		int r = (int)(ar + (br-ar)*t), g = (int)(ag + (bg-ag)*t), bl = (int)(ab + (bb-ab)*t);
+		return (r << 16) | (g << 8) | bl;
 	}
 
 	@Override
