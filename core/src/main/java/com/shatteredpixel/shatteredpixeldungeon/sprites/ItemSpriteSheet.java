@@ -996,6 +996,40 @@ public class ItemSpriteSheet {
         assignItemRect(EXAM_PARCHMENT, 15, 14);
     }
 
+	private static final int MODULES_FIRST =								xy(1, 38);
+	public static final int CHAMPIONIZED				= MODULES_FIRST+0;
+	public static final int CYCLED						= MODULES_FIRST+1;
+	public static final int EXPERIENCED					= MODULES_FIRST+2;
+	public static final int GOLDED						= MODULES_FIRST+3;
+	public static final int HASTED						= MODULES_FIRST+4;
+	public static final int HEALERED					= MODULES_FIRST+5;
+	public static final int HEALTHED					= MODULES_FIRST+6;
+	public static final int IMMORTALIZED				= MODULES_FIRST+7;
+	public static final int ITEMED						= MODULES_FIRST+8;
+	public static final int LEVELED						= MODULES_FIRST+9;
+	public static final int LUCKED						= MODULES_FIRST+10;
+	public static final int MAGICAL_SIGHTED				= MODULES_FIRST+11;
+	public static final int MIND_VISIONED				= MODULES_FIRST+12;
+	public static final int OVERLOADED					= MODULES_FIRST+13;
+	public static final int POTION_GIVED				= MODULES_FIRST+14;
+	public static final int DIMENSIONAL_SUFFERING		= MODULES_FIRST+15;
+	static{
+		for (int i = MODULES_FIRST; i < MODULES_FIRST+16; i++)
+			assignItemRect(i, 16, 16);
+	}
+
+	private static final int MODULES_SECOND =								xy(1, 39);
+	public static final int PURIFIED					= MODULES_SECOND+0;
+	public static final int REWARD_BOOSTED				= MODULES_SECOND+1;
+	public static final int SCROLL_GIVED				= MODULES_SECOND+2;
+	public static final int STAMINIZED					= MODULES_SECOND+3;
+	public static final int STRENGTHENED				= MODULES_SECOND+4;
+	public static final int REVERSED					= MODULES_SECOND+5;
+	static{
+		for (int i = MODULES_SECOND; i < MODULES_SECOND+16; i++)
+			assignItemRect(i, 16, 16);
+	}
+
 	//for smaller 8x8 icons that often accompany an item sprite
 	public static class Icons {
 

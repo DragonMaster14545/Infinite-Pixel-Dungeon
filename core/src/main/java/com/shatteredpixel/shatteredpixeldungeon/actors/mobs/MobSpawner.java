@@ -216,7 +216,7 @@ public class MobSpawner extends Actor {
 						Succubus.class,
 						Eye.class, Eye.class,
 						Scorpio.class, Scorpio.class, Scorpio.class));
-            case 28:
+            case 28: case 30:
                 //every unique and dangerous enemy
 					ArrayList<Class<? extends Mob>> enemies = new ArrayList<>();
 

@@ -55,6 +55,27 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Pasty;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.ChampionModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.CycleModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.DimensionalRiftModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.GoldModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.HasteModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.HealthModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.ImmortalityModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.ItemModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.LevelModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.LuckModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.MagicalSightModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.MindVisionModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.OverloadModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.PotionModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.PurityModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.RewardBoostModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.ScrollModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.StaminaModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.StrengthModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.Module;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.TimeReverserModule;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
@@ -257,7 +278,8 @@ public class Generator {
 		STONE   ( 1, 1, Runestone.class),
 		
 		GOLD	( 8, 8,   Gold.class ),
-		TRINKET ( 0, 0, Trinket.class);
+		TRINKET ( 0, 0, Trinket.class),
+		MODULE (0, 0, Module.class);
 		
 		public Class<?>[] classes;
 
@@ -287,7 +309,7 @@ public class Generator {
 		public float secondProb;
 		public Class<? extends Item> superClass;
 		
-		private Category( float firstProb, float secondProb, Class<? extends Item> superClass ) {
+		Category(float firstProb, float secondProb, Class<? extends Item> superClass) {
 			this.firstProb = firstProb;
 			this.secondProb = secondProb;
 			this.superClass = superClass;
@@ -626,6 +648,35 @@ public class Generator {
 			};
 			TRINKET.defaultProbs = new float[]{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 			TRINKET.probs = TRINKET.defaultProbs.clone();
+
+			MODULE.classes = new Class<?>[]{
+					ChampionModule.class,
+					CycleModule.class,
+					DimensionalRiftModule.class,
+					GoldModule.class,
+					HasteModule.class,
+					HealthModule.class,
+					ImmortalityModule.class,
+					ItemModule.class,
+					LevelModule.class,
+					LuckModule.class,
+					MagicalSightModule.class,
+					MindVisionModule.class,
+					OverloadModule.class,
+					PotionModule.class,
+					PurityModule.class,
+					RewardBoostModule.class,
+					ScrollModule.class,
+					StaminaModule.class,
+					StrengthModule.class,
+					TimeReverserModule.class
+			};
+			MODULE.defaultProbs = new float[]{ 2, 2, 2, 2, 2,
+												2, 2, 2, 2, 2,
+												2, 2, 2, 2, 2,
+												2, 2, 2, 2, 2
+			};
+			MODULE.probs = MODULE.defaultProbs.clone();
 
 			for (Category cat : Category.values()){
 				if (cat.defaultProbs2 != null){

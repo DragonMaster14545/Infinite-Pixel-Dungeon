@@ -130,6 +130,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.keys.GoldenKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.IronKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.Key;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.WornKey;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.HealthModule;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
@@ -324,6 +325,11 @@ public class Hero extends Char {
 		
 		if (buff(ElixirOfMight.HTBoost.class) != null){
 			HT += buff(ElixirOfMight.HTBoost.class).boost();
+		}
+
+		double extender = HealthModule.multi;
+		if (extender >= 1) {
+			HT += (long) (25 * extender);
 		}
 		
 		if (boostHP){

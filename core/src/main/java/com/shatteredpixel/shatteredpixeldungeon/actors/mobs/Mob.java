@@ -79,6 +79,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArm
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.fishingrods.FishingRod;
+import com.shatteredpixel.shatteredpixeldungeon.items.modules.RewardBoostModule;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfDivineInspiration;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
@@ -1057,6 +1058,11 @@ public abstract class Mob extends Char {
                 Dungeon.level.drop(Generator.random(), pos).sprite.drop();
             }
         }
+
+		if (Dungeon.hero.buff(RewardBoostModule.RewardBoost2.class) != null){
+			Dungeon.level.drop(Generator.random(), pos).sprite.drop();
+			if (Random.Float() < 0.2f) Dungeon.level.drop(Generator.random(), pos).sprite.drop();
+		}
 
 		//ring of wealth logic
 		if (Ring.getBuffedBonus(Dungeon.hero, RingOfWealth.Wealth.class) > 0) {

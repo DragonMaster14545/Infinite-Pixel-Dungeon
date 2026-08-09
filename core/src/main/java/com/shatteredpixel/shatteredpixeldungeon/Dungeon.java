@@ -69,6 +69,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.CavesLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CityBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CityLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.DeadEndLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.DimensionalLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.HallsBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.HallsLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.LastLevel;
@@ -518,6 +519,12 @@ public class Dungeon {
         } else if (branch == BRANCH_WAVE_ARENA){
 			if (depth == 29) {
 				level = new WaveArenaLevel();
+			} else {
+				level = new DeadEndLevel();
+			}
+		} else if (branch == 6){
+			if (depth == 30) {
+				level = new DimensionalLevel();
 			} else {
 				level = new DeadEndLevel();
 			}

@@ -219,7 +219,8 @@ public enum Catalog {
 	SPELLS,
 	LOOT_BAGS,
 	MISC_CONSUMABLES,
-    EMBLEMS;
+    EMBLEMS,
+	MODULES;
 
 	//tracks whether an item has been collected while identified
 	private final LinkedHashMap<Class<?>, Boolean> seen = new LinkedHashMap<>();
@@ -359,6 +360,8 @@ public enum Catalog {
                 CommonEmblem.class, UncommonEmblem.class, RareEmblem.class, EpicEmblem.class,
                 LaserisedEmblem.class, SummonerEmblem.class, TrihitEmblem.class
         );
+
+		MODULES.addItems(Generator.Category.MODULE.classes);
 	}
 
 	//old badges for pre-2.5
@@ -405,6 +408,7 @@ public enum Catalog {
 		consumableCatalogs.add(MISC_CONSUMABLES);
         consumableCatalogs.add(EMBLEMS);
         consumableCatalogs.add(TUBES);
+		consumableCatalogs.add(MODULES);
 	}
 
 	public static boolean isSeen(Class<?> cls){
