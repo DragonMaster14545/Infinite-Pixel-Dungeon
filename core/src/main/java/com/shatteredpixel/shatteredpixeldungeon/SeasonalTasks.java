@@ -130,6 +130,7 @@ public class SeasonalTasks {
 
     public static void onHeroDied(){
         progress( Type.DIE_TIMES, 1 );
+        onRunCompleted();
     }
 
 
