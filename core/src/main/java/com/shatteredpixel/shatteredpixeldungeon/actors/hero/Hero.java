@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
+import com.shatteredpixel.shatteredpixeldungeon.SeasonalTasks;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.Tasks;
@@ -2393,6 +2394,7 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 		
 		Dungeon.observe();
 		GameScene.updateFog();
+		SeasonalTasks.onHeroDied();
 				
 		Dungeon.hero.belongings.identify();
 

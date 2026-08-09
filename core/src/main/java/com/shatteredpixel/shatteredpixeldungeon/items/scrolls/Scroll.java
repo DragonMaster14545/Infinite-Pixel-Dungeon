@@ -25,6 +25,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.SeasonalTasks;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Tasks;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
@@ -184,6 +185,7 @@ public abstract class Scroll extends Item {
             } else {
 				doRead();
 				Tasks.onScrollRead();
+				SeasonalTasks.onScrollRead();
 			}
 			
 		}

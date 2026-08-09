@@ -124,6 +124,7 @@ public class BattlePass {
         premiumClaimedTiers = new ArrayList<>();
         premium = false;
         BattlePassTiers.resetRewards();
+        SeasonalTasks.rollForNewSeason();
         saveGlobal();
     }
 
@@ -160,6 +161,7 @@ public class BattlePass {
         premiumRepeatableTiersClaimed = 0;
         premium = false;
         BattlePassTiers.resetRewards();
+        SeasonalTasks.rollForNewSeason();
 
         saveGlobal();
         return true;
@@ -565,6 +567,7 @@ public class BattlePass {
 
     public static void onRunEnd(){
         ensureLoaded();
+        SeasonalTasks.onRunCompleted();
 
         int deltaDepth = Statistics.deepestFloor - lastDeepestFloor;
         if (deltaDepth > 0){
@@ -835,6 +838,7 @@ public class BattlePass {
             for (int t : premiumRewards.keySet()) premiumRewardTiers[pi++] = t;
             bundle.put( PREMIUM_REWARD_TIERS, premiumRewardTiers );
             for (int t : premiumRewardTiers) bundle.put( PREMIUM_REWARD_PREFIX + t, premiumRewards.get(t) );
+            SeasonalTasks.storeInBundle( bundle );
             FileUtils.bundleToFile( FILE, bundle );
         } catch (IOException e) {
             ShatteredPixelDungeon.reportException( e );
@@ -883,6 +887,7 @@ public class BattlePass {
                 }
                 BattlePassTiers.restorePremiumRewards( premiumRewards );
             }
+            SeasonalTasks.restoreFromBundle( bundle );
         } catch (IOException e) {
             totalXP = 0;
             claimedTiers = new ArrayList<>();

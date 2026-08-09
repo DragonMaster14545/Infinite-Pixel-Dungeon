@@ -435,6 +435,7 @@ public class GameScene extends PixelScene {
 				GLog.h(Messages.get(this, "descend"), Dungeon.depth);
 				Sample.INSTANCE.play(Assets.Sounds.DESCEND);
 				Tasks.onDepthReached( Statistics.deepestFloor );
+				SeasonalTasks.onDepthReached( Statistics.deepestFloor );
 				
 				for (Char ch : Actor.chars()){
 					if (ch instanceof DriedRose.GhostHero){

@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.SeasonalTasks;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.Tasks;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -849,6 +850,7 @@ public abstract class Mob extends Char {
 			if (alignment == Alignment.ENEMY) {
 				Statistics.enemiesSlain++;
 				Tasks.onEnemySlain();
+				SeasonalTasks.onEnemySlain();
 				Badges.validateMonstersSlain();
 				Statistics.qualifiedForNoKilling = false;
 				Bestiary.setSeen(getClass());

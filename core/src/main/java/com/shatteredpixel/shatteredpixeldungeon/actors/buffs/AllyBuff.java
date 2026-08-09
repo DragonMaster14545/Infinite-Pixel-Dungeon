@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.SeasonalTasks;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.Tasks;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -62,6 +63,7 @@ public abstract class AllyBuff extends Buff{
 
 			Statistics.enemiesSlain++;
 			Tasks.onEnemySlain();
+			SeasonalTasks.onEnemySlain();
 			Badges.validateMonstersSlain();
 			Statistics.qualifiedForNoKilling = false;
 			Bestiary.setSeen(enemy.getClass());

@@ -59,7 +59,7 @@ public class BattlePassScene extends PixelScene {
     private static final int ROW_GAP    = 4;
     private static final int MARGIN     = 8;
     private static final int HEADER_H   = 40;
-    private static final int FOOTER_H   = 28;
+    private static final int FOOTER_H   = 76;
 
     private static String pendingViewMonth = null;
 
@@ -202,13 +202,15 @@ public class BattlePassScene extends PixelScene {
         };
 
         if (live) {
-            int gap  = 4;
-            float btnW = (w - MARGIN*2 - gap*3) / 4f;
-            float bx = MARGIN;
+            int gap = 4;
+            float rowH = 20;
+            float btnW = (w - MARGIN*2 - gap) / 2f;
+            float row1Y = h - FOOTER_H + 4;
+            float row2Y = row1Y + rowH + gap;
+            float row3Y = row2Y + rowH + gap;
 
-            btnBack.setRect( bx, h - FOOTER_H + 4, btnW, FOOTER_H - 8 );
+            btnBack.setRect( MARGIN, row1Y, btnW, rowH );
             add( btnBack );
-            bx += btnW + gap;
 
             StyledButton btnHistory = new StyledButton( Chrome.Type.GREY_BUTTON_TR, Messages.get( this, "history" ), 8 ){
                 @Override
@@ -216,9 +218,8 @@ public class BattlePassScene extends PixelScene {
                     ShatteredPixelDungeon.switchNoFade( BattlePassHistoryScene.class );
                 }
             };
-            btnHistory.setRect( bx, h - FOOTER_H + 4, btnW, FOOTER_H - 8 );
+            btnHistory.setRect( MARGIN + btnW + gap, row1Y, btnW, rowH );
             add( btnHistory );
-            bx += btnW + gap;
 
             String premiumLabel;
             if (BattlePass.isPremium()) {
@@ -232,16 +233,23 @@ public class BattlePassScene extends PixelScene {
                     premiumLabel = Messages.get( this, "buy_premium", BattlePass.PREMIUM_COST_GOLD );
                 }
             }
-
             StyledButton btnPremium = new StyledButton( Chrome.Type.GREY_BUTTON_TR, premiumLabel, 8 ){
                 @Override
                 public void onClick(){
                     BattlePass.unlockPremium();
                 }
             };
-            btnPremium.setRect( bx, h - FOOTER_H + 4, btnW, FOOTER_H - 8 );
+            btnPremium.setRect( MARGIN, row2Y, btnW, rowH );
             add( btnPremium );
-            bx += btnW + gap;
+
+            StyledButton btnSeasonal = new StyledButton( Chrome.Type.GREY_BUTTON_TR, Messages.get( this, "seasonal_tasks" ), 8 ){
+                @Override
+                public void onClick(){
+                    ShatteredPixelDungeon.switchNoFade( BattlePassSeasonalTasksScene.class );
+                }
+            };
+            btnSeasonal.setRect( MARGIN + btnW + gap, row2Y, btnW, rowH );
+            add( btnSeasonal );
 
             StyledButton btnReset = new StyledButton( Chrome.Type.GREY_BUTTON_TR, Messages.get( this, "reset" ), 8 ){
                 @Override
@@ -249,11 +257,11 @@ public class BattlePassScene extends PixelScene {
                     resetPass();
                 }
             };
-            btnReset.setRect( bx, h - FOOTER_H + 4, btnW, FOOTER_H - 8 );
+            btnReset.setRect( MARGIN, row3Y, w - MARGIN*2, rowH );
             btnReset.active = BattlePass.isBattlePassFinished();
             add( btnReset );
         } else {
-            btnBack.setRect( (w - 100) / 2f, h - FOOTER_H + 4, 100, FOOTER_H - 8 );
+            btnBack.setRect( MARGIN, h - FOOTER_H + 4, w - MARGIN*2, FOOTER_H - 8 );
             add( btnBack );
         }
 

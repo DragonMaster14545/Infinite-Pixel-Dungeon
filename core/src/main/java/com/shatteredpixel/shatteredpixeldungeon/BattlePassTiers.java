@@ -283,7 +283,22 @@ public class BattlePassTiers {
     public static ArrayList<Item> rewardExtrasFor( int tier ){
         if (tier != BattlePass.REPEATABLE_TIER && !isItemTier( tier )) return new ArrayList<>();
         if (!rewardExtraCache.containsKey( tier )){
-            rewardExtraCache.put( tier, rollExtras( tier, "extra" ) );
+            ArrayList<Item> extras = new ArrayList<>();
+            ArrayList<CustomReward> custom = customExtraItems.get( tier );
+            if (custom != null && !custom.isEmpty()){
+                for (CustomReward cr : custom){
+                    try {
+                        Item item = cr.itemClass.newInstance();
+                        item.quantity( cr.quantity );
+                        extras.add( item );
+                    } catch (Exception e){
+                        // hehe no message
+                    }
+                }
+            } else {
+                extras.addAll( rollExtras( tier, "extra" ) );
+            }
+            rewardExtraCache.put( tier, extras );
         }
         return rewardExtraCache.get( tier );
     }
@@ -291,7 +306,22 @@ public class BattlePassTiers {
     public static ArrayList<Item> premiumRewardExtrasFor( int tier ){
         if (!hasPremiumReward( tier )) return new ArrayList<>();
         if (!premiumRewardExtraCache.containsKey( tier )){
-            premiumRewardExtraCache.put( tier, rollExtras( tier, "premiumExtra" ) );
+            ArrayList<Item> extras = new ArrayList<>();
+            ArrayList<CustomReward> custom = premiumExtraItems.get( tier );
+            if (custom != null && !custom.isEmpty()){
+                for (CustomReward cr : custom){
+                    try {
+                        Item item = cr.itemClass.newInstance();
+                        item.quantity( cr.quantity );
+                        extras.add( item );
+                    } catch (Exception e){
+                        // also this one
+                    }
+                }
+            } else {
+                extras.addAll( rollExtras( tier, "premiumExtra" ) );
+            }
+            premiumRewardExtraCache.put( tier, extras );
         }
         return premiumRewardExtraCache.get( tier );
     }
@@ -302,5 +332,24 @@ public class BattlePassTiers {
 
     public static HashMap<Integer, ArrayList<Item>> premiumRewardExtraSnapshot() {
         return new HashMap<>( premiumRewardExtraCache );
+    }
+
+    private static final HashMap<Integer, ArrayList<CustomReward>> customExtraItems  = new HashMap<>();
+    private static final HashMap<Integer, ArrayList<CustomReward>> premiumExtraItems = new HashMap<>();
+
+    public static void addCustomExtraItem( int tier, Class<? extends Item> itemClass ){
+        addCustomExtraItem( tier, itemClass, 1 );
+    }
+    public static void addCustomExtraItem( int tier, Class<? extends Item> itemClass, int quantity ){
+        if (!customExtraItems.containsKey( tier )) customExtraItems.put( tier, new ArrayList<>() );
+        customExtraItems.get( tier ).add( new CustomReward( itemClass, Math.max( 1, quantity ) ) );
+    }
+
+    public static void addPremiumExtraItem( int tier, Class<? extends Item> itemClass ){
+        addPremiumExtraItem( tier, itemClass, 1 );
+    }
+    public static void addPremiumExtraItem( int tier, Class<? extends Item> itemClass, int quantity ){
+        if (!premiumExtraItems.containsKey( tier )) premiumExtraItems.put( tier, new ArrayList<>() );
+        premiumExtraItems.get( tier ).add( new CustomReward( itemClass, Math.max( 1, quantity ) ) );
     }
 }

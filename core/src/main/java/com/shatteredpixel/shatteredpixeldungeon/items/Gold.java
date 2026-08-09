@@ -27,6 +27,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.SeasonalTasks;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.Tasks;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -67,6 +68,7 @@ public class Gold extends Item {
 		Dungeon.gold += quantity;
 		Statistics.goldCollected += quantity;
 		Tasks.onGoldCollected( quantity );
+		SeasonalTasks.onGoldCollected( quantity );
 		Badges.validateGoldCollected();
 
 		GameScene.pickUp( this, pos );

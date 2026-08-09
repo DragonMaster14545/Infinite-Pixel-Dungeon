@@ -26,6 +26,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.SeasonalTasks;
 import com.shatteredpixel.shatteredpixeldungeon.Tasks;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -305,6 +306,7 @@ public class Potion extends Item {
 		hero.busy();
 		apply( hero );
 		Tasks.onPotionDrunk();
+		SeasonalTasks.onPotionDrunk();
 		
 		Sample.INSTANCE.play( Assets.Sounds.DRINK );
 		
