@@ -350,7 +350,7 @@ public class WaveArenaLevel extends Level {
     }
 
     private static int waveSizeFor( int wave ) {
-        return 3 + wave / 2; //grows by 1 every 2 waves
+        return Math.min( 60, 2 + wave / 3); //grows by 1 every 3 waves
     }
 
     //the actual "mobs get stronger per wave" scaling

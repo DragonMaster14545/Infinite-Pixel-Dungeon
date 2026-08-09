@@ -8,17 +8,22 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindofMisc;
 import com.shatteredpixel.shatteredpixeldungeon.items.TicketToWaveArena;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.EtherealChains;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.EquipmentBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Barricade;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.SmallRation;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WornShortsword;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.watabou.utils.Bundle;
 
 import java.util.ArrayList;
+import java.util.Collections;
+
 public class ArenaInventory {
 
     private static Bundle stashedBelongings = null;
@@ -76,6 +81,12 @@ public class ArenaInventory {
         new Barricade().quantity(2).collect();
         new SmallRation().collect();
         new TicketToWaveArena().collect();
+
+        // separate chains lol, I every ethereal chains to be removed from inventory after going back to normal depth.
+        EtherealChains.WaveEternalChains chains = new EtherealChains.WaveEternalChains();
+        chains.collect();
+        chains.identify();
+        Dungeon.quickslot.setSlot(0, chains);
     }
 
     public static void restoreAndMerge( Hero hero ){
@@ -90,6 +101,7 @@ public class ArenaInventory {
             return;
         }
 
+        Dungeon.hero.belongings.getItem(EtherealChains.WaveEternalChains.class).detach(Dungeon.hero.belongings.backpack);
         forceUnequipAll( hero );
 
         ArrayList<Item> earned = new ArrayList<>( hero.belongings.backpack.items );

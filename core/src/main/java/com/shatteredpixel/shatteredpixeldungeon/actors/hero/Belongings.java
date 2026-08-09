@@ -72,6 +72,7 @@ public class Belongings implements Iterable<Item> {
 	}
 
 	public Backpack backpack;
+
 	
 	public Belongings( Hero owner ) {
 		this.owner = owner;
