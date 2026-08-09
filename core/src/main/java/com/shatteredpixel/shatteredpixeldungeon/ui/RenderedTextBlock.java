@@ -60,6 +60,7 @@ public class RenderedTextBlock extends Component {
 	private ArrayList<Integer> wordEffect = new ArrayList<>();
 	private ArrayList<Integer> wordBaseColor = new ArrayList<>();
 	private ArrayList<Integer> wordEffectSeed = new ArrayList<>();
+	private ArrayList<Integer> wordGlintColor = new ArrayList<>();
 	private float animTime = 0f;
 
 	public static final int LEFT_ALIGN = 1;
@@ -122,6 +123,9 @@ public class RenderedTextBlock extends Component {
 	private int[] charColors = null;
 	private int[] charAlphas = null;
 	private int[] charEffects = null;
+	private int[] charGlintColors = null;
+
+	private static final int DEFAULT_GLINT_COLOR = 0x9d7bd8;
 
 	private static final int EFFECT_RAINBOW = 1;
 	private static final int EFFECT_GLINT   = 1 << 1;
@@ -139,9 +143,10 @@ public class RenderedTextBlock extends Component {
 		ArrayList<Integer> colors = new ArrayList<>(raw.length());
 		ArrayList<Integer> alphas = new ArrayList<>(raw.length());
 		ArrayList<Integer> effects = new ArrayList<>(raw.length());
+		ArrayList<Integer> glintColors = new ArrayList<>(raw.length());
 
 		ArrayList<int[]> stack = new ArrayList<>();
-		stack.add(new int[]{-1, -1, 0});
+		stack.add(new int[]{-1, -1, 0, -1});
 
 		int i = 0;
 		int len = raw.length();
@@ -154,6 +159,7 @@ public class RenderedTextBlock extends Component {
 					colors.add(cur[0]);
 					alphas.add(cur[1]);
 					effects.add(cur.length > 2 ? cur[2] : 0);
+					glintColors.add(cur.length > 3 ? cur[3] : -1);
 					i += 2;
 					continue;
 				}
@@ -166,6 +172,7 @@ public class RenderedTextBlock extends Component {
 						colors.add(cur[0]);
 						alphas.add(cur[1]);
 						effects.add(cur.length > 2 ? cur[2] : 0);
+						glintColors.add(cur.length > 3 ? cur[3] : -1);
 					}
 					break;
 				}
@@ -178,7 +185,10 @@ public class RenderedTextBlock extends Component {
 					int newColor = cur[0];
 					int newAlpha = cur[1];
 					int newEffect = cur.length > 2 ? cur[2] : 0;
+					int newGlintColor = cur.length > 3 ? cur[3] : -1;
 					boolean anyRecognized = false;
+					boolean glintFlagInTag = false;
+					int[] colorInTag = null;
 
 					for (String part : tag.split("\\+")){
 						part = part.trim();
@@ -188,18 +198,27 @@ public class RenderedTextBlock extends Component {
 						if (effectFlag != null){
 							newEffect |= effectFlag;
 							anyRecognized = true;
+							if (effectFlag == EFFECT_GLINT) glintFlagInTag = true;
 						} else {
 							int[] parsed = parseColorTag(part);
 							if (parsed != null){
-								newColor = parsed[0];
-								newAlpha = parsed[1];
+								colorInTag = parsed;
 								anyRecognized = true;
 							}
 						}
 					}
 
+					if (colorInTag != null){
+						if (glintFlagInTag){
+							newGlintColor = colorInTag[0];
+						} else {
+							newColor = colorInTag[0];
+							newAlpha = colorInTag[1];
+						}
+					}
+
 					if (anyRecognized){
-						stack.add(new int[]{ newColor, newAlpha, newEffect });
+						stack.add(new int[]{ newColor, newAlpha, newEffect, newGlintColor });
 					} else {
 						//fully unrecognized - literal fallback, same as before
 						String literal = "[" + tag + "]";
@@ -208,6 +227,7 @@ public class RenderedTextBlock extends Component {
 							colors.add(cur[0]);
 							alphas.add(cur[1]);
 							effects.add(cur.length > 2 ? cur[2] : 0);
+							glintColors.add(cur.length > 3 ? cur[3] : -1);
 						}
 					}
 				}
@@ -220,16 +240,19 @@ public class RenderedTextBlock extends Component {
 			colors.add(cur[0]);
 			alphas.add(cur[1]);
 			effects.add(cur.length > 2 ? cur[2] : 0);
+			glintColors.add(cur.length > 3 ? cur[3] : -1);
 			i++;
 		}
 
 		charColors = new int[colors.size()];
 		charAlphas = new int[alphas.size()];
 		charEffects = new int[effects.size()];
+		charGlintColors = new int[glintColors.size()];
 		for (int k = 0; k < colors.size(); k++){
 			charColors[k] = colors.get(k);
 			charAlphas[k] = alphas.get(k);
 			charEffects[k] = effects.get(k);
+			charGlintColors[k] = glintColors.get(k);
 		}
 
 		return plain.toString();
@@ -278,6 +301,8 @@ public class RenderedTextBlock extends Component {
 
 		charColors = null;
 		charAlphas = null;
+		charEffects = null;
+		charGlintColors = null;
 
 		tokens = words;
 		build();
@@ -315,6 +340,7 @@ public class RenderedTextBlock extends Component {
 		wordEffect = new ArrayList<>();
 		wordBaseColor = new ArrayList<>();
 		wordEffectSeed = new ArrayList<>();
+		wordGlintColor = new ArrayList<>();
 		boolean highlighting = false;
 		int cursor = 0;
 		int lastWordEffect = -1;
@@ -331,6 +357,7 @@ public class RenderedTextBlock extends Component {
 				wordEffect.add(0);
 				wordBaseColor.add(-1);
 				wordEffectSeed.add(0);
+				wordGlintColor.add(-1);
 				cursor += str.length();
 			} else if (str.equals(" ")){
 				words.add(SPACE);
@@ -339,6 +366,7 @@ public class RenderedTextBlock extends Component {
 				wordEffect.add(0);
 				wordBaseColor.add(-1);
 				wordEffectSeed.add(0);
+				wordGlintColor.add(-1);
 				cursor += str.length();
 			} else {
 				RenderedText word = new RenderedText(str, size);
@@ -346,10 +374,12 @@ public class RenderedTextBlock extends Component {
 				int markupColor = -1;
 				int markupAlpha = -1;
 				int effect = 0;
+				int markupGlintColor = -1;
 				if (charColors != null && cursor < charColors.length){
 					markupColor = charColors[cursor];
 					markupAlpha = charAlphas[cursor];
 					effect = charEffects[cursor];
+					markupGlintColor = charGlintColors[cursor];
 				}
 
 				if (effect != lastWordEffect){
@@ -375,6 +405,7 @@ public class RenderedTextBlock extends Component {
 				wordEffect.add(effect);
 				wordBaseColor.add(baseColor);
 				wordEffectSeed.add(currentGroupSeed);
+				wordGlintColor.add(markupGlintColor);
 
 				if (height < word.height()) height = word.height();
 
@@ -481,7 +512,7 @@ public class RenderedTextBlock extends Component {
 				float shimmer = (layer1 + layer2) * 0.5f + 0.5f;
 				shimmer = Math.max(0f, Math.min(1f, shimmer));
 
-				int glintColor = 0x9d7bd8;
+				int glintColor = wordGlintColor.get(i) != -1 ? wordGlintColor.get(i) : DEFAULT_GLINT_COLOR;
 				word.hardlight( lerpColor(base, glintColor, 0.25f + shimmer * 0.75f) );
 			}
 
@@ -570,7 +601,7 @@ public class RenderedTextBlock extends Component {
 				curLine.add(word);
 
 				if ((x - this.x) > width) width = (x - this.x);
-				
+
 				//Note that spacing currently doesn't factor in halfwidth and fullwidth characters
 				//(e.g. Ideographic full stop)
 				x -= 0.667f;
