@@ -72,6 +72,21 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.NEWS), "Global Notes",
+                "A newly implemented feature, the Global Notes!\n\n" +
+                        "Aside from the adventurous notes, we implemented the Global Notes for you to create something interesting..\n\n" +
+                        "Not only that, along with the Global Notes, we also implemented how LibGDX color markup works! Like these examples:\n" +
+                        "_-_ [red]This is a red text, mo matter what.[]\n" +
+                        "_-_ [#ff000066]This is a semi-transparent red text in #rrggbbaa format (#rrggbb works too!)[]" +
+                        "_-_ [rainbow]This is a rainbow text, works with [[rainbow] thing[]\n" +
+                        "_-_ [glint+gold]This is a glinted with gold text, works the same as rainbow, you'll need to just add +color inside the sq. brackets"
+        ));
+
+        changes.addButton( new ChangeButton(Icons.get(Icons.DEPTH), "Waved Arena",
+                "Also a newly implemented feature, the same as arenas but in a waved manner, the Waved Arena!\n\n" +
+                        "In this level, you will have your current items temporarily removed can be retrieved after you came back alive. You can also keep things that you obtained in this arena."
+        ));
+
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ (Battle Pass) You can now reset the battlepass for 600k energy crystals, able to buy unclaimed tiers from history for 100 energy, and battlepass tiers may now contain bonus items\n" +
                         "_-_ (Powerless) You are now able to receive mind vision when casting the spell"
@@ -82,7 +97,8 @@ public class InfPDChanges {
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
-                "" //TODO add fixes
+                "_-_ Fixed WndBag's gaps on item slots per page\n" +
+                        "_-_ Added a safety check for generating items in Portable Shop"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.9", true, "");
