@@ -111,6 +111,10 @@ public class Galactic extends Weapon.Enchantment {
         return super.name( weaponName );
     }
 
+    public String trueName( String weaponName ) {
+        return super.name( weaponName );
+    }
+
     @Override
     public String desc() {
         return super.desc();

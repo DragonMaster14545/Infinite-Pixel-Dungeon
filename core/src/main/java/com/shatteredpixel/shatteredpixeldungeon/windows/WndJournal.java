@@ -50,6 +50,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfWarding;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Galactic;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
@@ -943,9 +944,15 @@ public class WndJournal extends WndTabbed {
 				Weapon.Enchantment ench = (Weapon.Enchantment) Reflection.newInstance(itemClass);
 
 				if (seen){
-					sprite = new ItemSprite(ItemSpriteSheet.WORN_SHORTSWORD, ench.glowing());
-					title = Messages.titleCase(ench.name());
-					desc = ench.desc();
+					if (ench instanceof Galactic) {
+						sprite = new ItemSprite(ItemSpriteSheet.WORN_SHORTSWORD, ench.glowing());
+						title = Messages.titleCase(((Galactic) ench).trueName( "enchantment" ));
+						desc = ench.desc();
+					} else {
+						sprite = new ItemSprite(ItemSpriteSheet.WORN_SHORTSWORD, ench.glowing());
+						title = Messages.titleCase(ench.name());
+						desc = ench.desc();
+					}
 				} else {
 					sprite = new ItemSprite(ItemSpriteSheet.WORN_SHORTSWORD);
 					sprite.lightness(0f);
