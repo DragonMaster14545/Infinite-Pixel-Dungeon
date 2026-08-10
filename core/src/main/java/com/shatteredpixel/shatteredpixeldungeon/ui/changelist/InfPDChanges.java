@@ -106,6 +106,7 @@ public class InfPDChanges {
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ (Battle Pass) You can now reset the battlepass for 600k energy crystals, able to buy unclaimed tiers from history for 100 energy, and battlepass tiers may now contain bonus items\n" +
+                        "_-_ Added seasonal tasks, and per-run tasks. They have the similar function but has different objectives.\n" +
                         "_-_ (Powerless) You are now able to receive mind vision when casting the spell\n" +
                         "_-_ Items in the battlepass are now automatically identified when claimed"
         ));
@@ -116,7 +117,9 @@ public class InfPDChanges {
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
                 "_-_ Fixed WndBag's gaps on item slots per page\n" +
-                        "_-_ Added a safety check for generating items in Portable Shop"
+                        "_-_ Added a safety check for generating items in Portable Shop\n" +
+                        "_-_ Fixed Galactic enchantment's name and description on catalog\n" +
+                        "_-_ Fixed high quantity values of shuriken of shadows on fishing rods\n"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.9", true, "");
