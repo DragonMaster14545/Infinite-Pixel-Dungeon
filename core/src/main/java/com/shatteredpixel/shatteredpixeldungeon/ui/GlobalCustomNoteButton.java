@@ -4,8 +4,12 @@ import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.journal.AlchemyPage;
+import com.shatteredpixel.shatteredpixeldungeon.items.journal.GuidePage;
+import com.shatteredpixel.shatteredpixeldungeon.items.journal.RegionLorePage;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -76,7 +80,8 @@ public class GlobalCustomNoteButton extends IconButton {
                     Messages.get(GlobalCustomNoteButton.class, "desc"),
                     Messages.get(GlobalCustomNoteButton.class, "new_text"),
                     Messages.get(GlobalCustomNoteButton.class, "new_floor"),
-                    Messages.get(GlobalCustomNoteButton.class, "new_type"));
+                    Messages.get(GlobalCustomNoteButton.class, "new_type"),
+                    Messages.get(GlobalCustomNoteButton.class, "new_lore"));
             NOTE_SELECT_INSTANCE = this;
         }
 
@@ -89,8 +94,10 @@ public class GlobalCustomNoteButton extends IconButton {
                         Messages.get(GlobalCustomNoteButton.class, "new_text_title"));
             } else if (index == 1){
                 show(new WndDepthSelect());
-            } else {
+            } else if (index == 2) {
                 show(new WndItemtypeSelect());
+            } else {
+                show(new WndLoretypeSelect());
             }
         }
 
@@ -116,7 +123,7 @@ public class GlobalCustomNoteButton extends IconButton {
             int top = height+2;
             int left = 0;
 
-            for (int i = Math.max(Statistics.deepestFloor, 1); i > 0; i --){
+            for (int i = 25; i > 0; i --){
                 if (i % 5 == 0 && left > 0){
                     left = 0;
                     top += 17;
@@ -188,6 +195,53 @@ public class GlobalCustomNoteButton extends IconButton {
         }
     }
 
+    private static class WndLoretypeSelect extends WndTitledMessage {
+
+        public WndLoretypeSelect() {
+            super(Icons.JOURNAL.get(),
+                    Messages.get(GlobalCustomNoteButton.class, "new_lore"),
+                    Messages.get(GlobalCustomNoteButton.class, "new_lore_prompt"));
+
+            int top = height + 2;
+            int left = 0;
+
+            ArrayList<Item> items = new ArrayList<>();
+            items.add(Reflection.newInstance(AlchemyPage.class));
+            items.add(Reflection.newInstance(GuidePage.class));
+            items.add(Reflection.newInstance(RegionLorePage.Sewers.class));
+            items.add(Reflection.newInstance(RegionLorePage.City.class));
+            items.add(Reflection.newInstance(RegionLorePage.Caves.class));
+            items.add(Reflection.newInstance(RegionLorePage.Halls.class));
+            items.add(Reflection.newInstance(RegionLorePage.Prison.class));
+            items.add(Reflection.newInstance(RegionLorePage.Infinity.class));
+            for (Item item : items) {
+                ItemButton itemButton = new ItemButton(){
+                    @Override
+                    protected void onClick() {
+                        addNote(WndLoretypeSelect.this, new Notes.CustomRecord(item, "", ""),
+                                Messages.get(GlobalCustomNoteButton.class, "new_lore"),
+                                Messages.get(GlobalCustomNoteButton.class, "new_lore_title", Messages.titleCase(item.name())));
+                    }
+                };
+                itemButton.item(item);
+                itemButton.setRect(left, top, 19, 19);
+                add(itemButton);
+
+                left += 20;
+                if (left >= width - 19){
+                    top += 20;
+                    left = 0;
+                }
+            }
+            if (left > 0){
+                top += 20;
+                left = 0;
+            }
+
+            resize(width, top);
+        }
+    }
+
     private static Comparator<Item> itemVisualcomparator = new Comparator<Item>() {
         @Override
         public int compare(Item i1, Item i2) {
@@ -223,6 +277,7 @@ public class GlobalCustomNoteButton extends IconButton {
                         public void onSelect(boolean positive, String text) {
                             if (positive && !text.isEmpty()){
                                 rec.editText(text, rec.desc());
+                                Journal.saveGlobal(true);
                                 GlobalCustomNoteWindow.this.hide();
 
                                 if (ShatteredPixelDungeon.scene() instanceof JournalScene) {
@@ -254,6 +309,7 @@ public class GlobalCustomNoteButton extends IconButton {
                         public void onSelect(boolean positive, String text) {
                             if (positive){
                                 rec.editText(rec.title(), text);
+                                Journal.saveGlobal(true);
                                 GlobalCustomNoteWindow.this.hide();
 
                                 if (ShatteredPixelDungeon.scene() instanceof JournalScene) {
@@ -282,6 +338,7 @@ public class GlobalCustomNoteButton extends IconButton {
                         protected void onSelect(int index) {
                             if (index == 0){
                                 Notes.removeGlobalCustom(rec);
+                                Journal.saveGlobal(true);
                                 GlobalCustomNoteWindow.this.hide();
                                 refreshHost();
                             }
@@ -315,6 +372,8 @@ public class GlobalCustomNoteButton extends IconButton {
                     note.assignID();
                     note.editText(text, "");
                     Notes.addGlobalCustom(note);
+                    Journal.saveGlobal(true);
+                    WndJournal.refreshGlobalNotes();
 
                     if (parentWindow != null) {
                         parentWindow.hide();
