@@ -27,6 +27,7 @@ package com.shatteredpixel.shatteredpixeldungeon.ui;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
+import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.RenderedText;
 import com.watabou.noosa.ui.Component;
@@ -61,7 +62,12 @@ public class RenderedTextBlock extends Component {
 	private ArrayList<Integer> wordBaseColor = new ArrayList<>();
 	private ArrayList<Integer> wordEffectSeed = new ArrayList<>();
 	private ArrayList<Integer> wordGlintColor = new ArrayList<>();
+	private ArrayList<ArrayList<ColorBlock>> wordParticles = new ArrayList<>();
+	private ArrayList<ArrayList<float[]>> wordParticleData = new ArrayList<>();
 	private float animTime = 0f;
+	private static final int MAX_PARTICLES_PER_WORD = 3;
+	private static final float PARTICLE_LIFETIME = 0.9f;
+	private static final float PARTICLE_SPAWN_INTERVAL = 0.25f;
 
 	public static final int LEFT_ALIGN = 1;
 	public static final int CENTER_ALIGN = 2;
@@ -130,12 +136,14 @@ public class RenderedTextBlock extends Component {
 	private static final int EFFECT_RAINBOW = 1;
 	private static final int EFFECT_GLINT   = 1 << 1;
 	private static final int EFFECT_FLICKER = 1 << 2;
+	private static final int EFFECT_PARTICLE = 1 << 3;
 
 	private static final HashMap<String, Integer> EFFECT_FLAGS = new HashMap<>();
 	static {
 		EFFECT_FLAGS.put("RAINBOW", EFFECT_RAINBOW);
 		EFFECT_FLAGS.put("GLINT",   EFFECT_GLINT);
 		EFFECT_FLAGS.put("FLICKER", EFFECT_FLICKER);
+		EFFECT_FLAGS.put("PARTICLE", EFFECT_PARTICLE);
 	}
 
 	private String parseMarkup(String raw){
@@ -206,7 +214,7 @@ public class RenderedTextBlock extends Component {
 						if (effectFlag != null){
 							newEffect |= effectFlag;
 							anyRecognized = true;
-							if (effectFlag == EFFECT_GLINT) glintFlagInTag = true;
+							if (effectFlag == EFFECT_GLINT || effectFlag == EFFECT_PARTICLE) glintFlagInTag = true;
 						} else {
 							int[] parsed = parseColorTag(part);
 							if (parsed != null){
@@ -360,6 +368,8 @@ public class RenderedTextBlock extends Component {
 		wordBaseColor = new ArrayList<>();
 		wordEffectSeed = new ArrayList<>();
 		wordGlintColor = new ArrayList<>();
+		wordParticles = new ArrayList<>();
+		wordParticleData = new ArrayList<>();
 		boolean highlighting = false;
 		int cursor = 0;
 		int lastWordEffect = -1;
@@ -377,6 +387,8 @@ public class RenderedTextBlock extends Component {
 				wordBaseColor.add(-1);
 				wordEffectSeed.add(0);
 				wordGlintColor.add(-1);
+				wordParticles.add(new ArrayList<>());
+				wordParticleData.add(new ArrayList<>());
 				cursor += str.length();
 			} else if (str.equals(" ")){
 				words.add(SPACE);
@@ -386,6 +398,8 @@ public class RenderedTextBlock extends Component {
 				wordBaseColor.add(-1);
 				wordEffectSeed.add(0);
 				wordGlintColor.add(-1);
+				wordParticles.add(new ArrayList<>());
+				wordParticleData.add(new ArrayList<>());
 				cursor += str.length();
 			} else {
 				RenderedText word = new RenderedText(str, size);
@@ -425,6 +439,8 @@ public class RenderedTextBlock extends Component {
 				wordBaseColor.add(baseColor);
 				wordEffectSeed.add(currentGroupSeed);
 				wordGlintColor.add(markupGlintColor);
+				wordParticles.add(new ArrayList<>());
+				wordParticleData.add(new ArrayList<>());
 
 				if (height < word.height()) height = word.height();
 
@@ -539,6 +555,57 @@ public class RenderedTextBlock extends Component {
 				float flicker = 0.6f + 0.4f * (float)Math.sin(phase * 9f + (seed*7 % 13));
 				word.alpha( Math.max(0.3f, Math.min(1f, flicker)) );
 			}
+
+			if ((effect & EFFECT_PARTICLE) != 0){
+				updateParticles(i, word, seed);
+			}
+		}
+	}
+
+	private void updateParticles(int wordIndex, RenderedText word, int seed){
+		ArrayList<ColorBlock> blocks = wordParticles.get(wordIndex);
+		ArrayList<float[]> data = wordParticleData.get(wordIndex);
+
+		float localPhase = animTime + seed*0.31f + wordIndex*0.07f;
+		if (blocks.size() < MAX_PARTICLES_PER_WORD
+				&& (localPhase % PARTICLE_SPAWN_INTERVAL) < Game.elapsed){
+			int accent = wordGlintColor.get(wordIndex) != -1 ? wordGlintColor.get(wordIndex) : wordBaseColor.get(wordIndex);
+			float size = 1f + (float)Math.random()*1.5f; //random size, ~1.0 to 2.5px
+			ColorBlock dot = new ColorBlock(size, size, 0xFF000000 | (accent & 0xFFFFFF));
+			add(dot);
+			blocks.add(dot);
+			data.add(new float[]{
+					(float)Math.random(),               //relX, 0..1 across the word's own width
+					(float)Math.random(),               //relY, 0..1 across the word's own height
+					(float)(Math.random()-0.5f)*0.15f,  //slow horizontal drift
+					0f                                   //age
+			});
+		}
+
+		for (int p = blocks.size()-1; p >= 0; p--){
+			float[] d = data.get(p);
+			d[3] += Game.elapsed;
+			float lifeFrac = d[3] / PARTICLE_LIFETIME;
+
+			if (lifeFrac >= 1f){
+				ColorBlock dead = blocks.remove(p);
+				data.remove(p);
+				remove(dead);
+				continue;
+			}
+
+			ColorBlock dot = blocks.get(p);
+			d[0] += d[2] * Game.elapsed;
+
+			float relX = Math.max(0f, Math.min(1f, d[0]));
+			float relY = d[1] + 0.15f*(float)Math.sin(lifeFrac*Math.PI*2 + p);
+			relY = Math.max(0f, Math.min(1f, relY));
+
+			dot.x = word.x + relX * word.width();
+			dot.y = word.y + relY * word.height();
+
+			float alpha = lifeFrac < 0.2f ? lifeFrac/0.2f : (1f - lifeFrac)/0.8f;
+			dot.alpha( Math.max(0f, Math.min(1f, alpha)) );
 		}
 	}
 

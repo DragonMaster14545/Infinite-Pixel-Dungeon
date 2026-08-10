@@ -84,7 +84,8 @@ public class InfPDChanges {
                         "_-_ [red]This is a red text, mo matter what.[]\n" +
                         "_-_ [#ff000066]This is a semi-transparent red text in #rrggbbaa format (#rrggbb works too!)[]\n" +
                         "_-_ [rainbow]This is a rainbow text, works with [[rainbow] thing[]\n" +
-                        "_-_ [glint+gold]This is a glinted with gold text, works the same as rainbow, you'll need to just add +color inside the sq. brackets"
+                        "_-_ [glint+gold]This is a glinted with gold text, works the same as rainbow, you'll need to just add +color inside the sq. brackets\n" +
+                        "_-_ [particle+rainbow]This is good![]"
         ));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.DEPTH), "Waved Arena",
