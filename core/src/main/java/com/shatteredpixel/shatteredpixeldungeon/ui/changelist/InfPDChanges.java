@@ -99,7 +99,7 @@ public class InfPDChanges {
                         "_-_ [particle+rainbow]This is good![]"
         ));
 
-        changes.addButton( new ChangeButton(Icons.get(Icons.DEPTH), "Waved Arena",
+        changes.addButton( new ChangeButton(Icons.get(Icons.STAIRS), "Waved Arena",
                 "Also a newly implemented feature, the same as arenas but in a waved manner, the Waved Arena!\n\n" +
                         "In this level, you will have your current items temporarily removed can be retrieved after you came back alive. You can also keep things that you obtained in this arena."
         ));
