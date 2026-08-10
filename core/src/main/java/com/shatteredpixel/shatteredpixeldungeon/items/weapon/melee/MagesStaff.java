@@ -48,6 +48,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndTerrainSelect;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndUseItem;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
@@ -64,6 +65,7 @@ public class MagesStaff extends MeleeWeapon {
 
 	public static final String AC_IMBUE = "IMBUE";
 	public static final String AC_ZAP	= "ZAP";
+	public static final String AC_CHANGE_TERRAIN	= "CHANGE_TERRAIN";
 
 	private static final float STAFF_SCALE_FACTOR = 0.75f;
 
@@ -135,6 +137,9 @@ public class MagesStaff extends MeleeWeapon {
 		actions.add(AC_IMBUE);
 		if (wand!= null && wand.curCharges > 0) {
 			actions.add( AC_ZAP );
+			if (wand instanceof WandOfTerraforming) {
+				actions.add( AC_CHANGE_TERRAIN );
+			}
 		}
 		return actions;
 	}
@@ -174,6 +179,16 @@ public class MagesStaff extends MeleeWeapon {
 			if (cursed || hasCurseEnchant()) wand.cursed = true;
 			else                             wand.cursed = false;
 			wand.execute(hero, AC_ZAP);
+		} else if (action.equals( AC_CHANGE_TERRAIN )) {
+
+			GameScene.show( new WndTerrainSelect((WandOfTerraforming) wand) {
+				@Override
+				public void onSelect( int terrain ) {
+					((WandOfTerraforming) wand).selectedTerrain = terrain;
+					GLog.i( Messages.get( WandOfTerraforming.class, "terrain_changed" ) );
+				}
+			} );
+
 		}
 	}
 

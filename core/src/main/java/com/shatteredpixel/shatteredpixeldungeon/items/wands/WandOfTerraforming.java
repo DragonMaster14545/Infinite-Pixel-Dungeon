@@ -52,7 +52,7 @@ public class WandOfTerraforming extends Wand {
         collisionProperties = Ballistica.STOP_TARGET;
     }
 
-    private int selectedTerrain = -1;
+    public int selectedTerrain = -1;
 
     @Override
     public ArrayList<String> actions(Hero hero) {
@@ -124,11 +124,11 @@ public class WandOfTerraforming extends Wand {
     @Override
     public void fx(Ballistica bolt, Callback callback) {
         MagicMissile.boltFromChar( curUser.sprite.parent,
-                MagicMissile.FORCE,
+                MagicMissile.RAINBOW,
                 curUser.sprite,
                 bolt.collisionPos,
                 callback);
-        Sample.INSTANCE.play(Assets.Sounds.ZAP);
+        Sample.INSTANCE.play(Assets.Sounds.BEACON);
     }
 
     @Override
