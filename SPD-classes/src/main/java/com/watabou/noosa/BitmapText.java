@@ -56,6 +56,13 @@ public class BitmapText extends Visual {
 	private int[] charEffects = null;
 	private int[] charGlintColors = null;
 	private float[] charX = null;
+	private float[] charWidths = null;
+
+	private ArrayList<ArrayList<ColorBlock>> charParticles = null;
+	private ArrayList<ArrayList<float[]>> charParticleData = null;
+	private static final int MAX_PARTICLES_PER_CHAR = 3;
+	private static final float PARTICLE_LIFETIME = 0.9f;
+	private static final float PARTICLE_SPAWN_INTERVAL = 0.25f;
 
 	private boolean hasMarkup = false;
 	private boolean hasEffects = false;
@@ -64,6 +71,7 @@ public class BitmapText extends Visual {
 	private static final int EFFECT_RAINBOW = 1;
 	private static final int EFFECT_GLINT   = 1 << 1;
 	private static final int EFFECT_FLICKER = 1 << 2;
+	private static final int EFFECT_PARTICLE = 1 << 3;
 
 	private static final int DEFAULT_GLINT_COLOR = 0x9d7bd8;
 
@@ -72,6 +80,7 @@ public class BitmapText extends Visual {
 		EFFECT_FLAGS.put("RAINBOW", EFFECT_RAINBOW);
 		EFFECT_FLAGS.put("GLINT",   EFFECT_GLINT);
 		EFFECT_FLAGS.put("FLICKER", EFFECT_FLICKER);
+		EFFECT_FLAGS.put("PARTICLE", EFFECT_PARTICLE);
 	}
 
 	private static final HashMap<String, Integer> NAMED_COLORS = new HashMap<>();
@@ -173,6 +182,16 @@ public class BitmapText extends Visual {
 			drawMarkupRuns( script );
 		}
 
+		if (hasEffects && charParticles != null) {
+			//these dots aren't part of any scene-graph child list (BitmapText is a leaf
+			//Visual, not a Group), so we draw them manually right here every frame
+			for (ArrayList<ColorBlock> blocks : charParticles) {
+				for (ColorBlock dot : blocks) {
+					dot.draw();
+				}
+			}
+		}
+
 	}
 
 	@Override
@@ -180,6 +199,61 @@ public class BitmapText extends Visual {
 		super.update();
 		if (hasEffects) {
 			animTime += Game.elapsed;
+			if (charEffects != null) {
+				for (int i = 0; i < charEffects.length; i++) {
+					if ((charEffects[i] & EFFECT_PARTICLE) != 0) {
+						updateParticles(i);
+					}
+				}
+			}
+		}
+	}
+
+	private void updateParticles(int i){
+		ArrayList<ColorBlock> blocks = charParticles.get(i);
+		ArrayList<float[]> data = charParticleData.get(i);
+
+		float localPhase = animTime + i*0.11f;
+		if (blocks.size() < MAX_PARTICLES_PER_CHAR
+				&& (localPhase % PARTICLE_SPAWN_INTERVAL) < Game.elapsed){
+			int accent = charGlintColors[i] != -1 ? charGlintColors[i]
+					: (charColors[i] != -1 ? charColors[i] : 0xffffff);
+			float size = 1f + (float)Math.random()*1.5f; //random size, ~1.0 to 2.5px
+			ColorBlock dot = new ColorBlock(size, size, 0xFF000000 | (accent & 0xFFFFFF));
+			blocks.add(dot);
+			data.add(new float[]{
+					(float)Math.random(),               //relX, 0..1 across this character's own width
+					(float)Math.random(),               //relY, 0..1 across the text's height
+					(float)(Math.random()-0.5f)*0.15f,  //slow horizontal drift
+					0f                                   //age
+			});
+		}
+
+		float charWidth = (charWidths != null && i < charWidths.length) ? charWidths[i] : 6f;
+
+		for (int p = blocks.size()-1; p >= 0; p--){
+			float[] d = data.get(p);
+			d[3] += Game.elapsed;
+			float lifeFrac = d[3] / PARTICLE_LIFETIME;
+
+			if (lifeFrac >= 1f){
+				blocks.remove(p);
+				data.remove(p);
+				continue;
+			}
+
+			ColorBlock dot = blocks.get(p);
+			d[0] += d[2] * Game.elapsed;
+
+			float relX = Math.max(0f, Math.min(1f, d[0]));
+			float relY = d[1] + 0.15f*(float)Math.sin(lifeFrac*Math.PI*2 + p);
+			relY = Math.max(0f, Math.min(1f, relY));
+
+			dot.x = this.x + charX[i] + relX * charWidth;
+			dot.y = this.y + relY * height;
+
+			float alpha = lifeFrac < 0.2f ? lifeFrac/0.2f : (1f - lifeFrac)/0.8f;
+			dot.alpha( Math.max(0f, Math.min(1f, alpha)) );
 		}
 	}
 
@@ -299,6 +373,7 @@ public class BitmapText extends Visual {
 		quads = Quad.createSet( length );
 		realLength = 0;
 		charX = new float[length];
+		charWidths = new float[length];
 
 		for (int i=0; i < length; i++) {
 			RectF rect = font.get( plainText.charAt( i ) );
@@ -307,6 +382,7 @@ public class BitmapText extends Visual {
 			float h = font.height( rect );
 
 			charX[i] = width;
+			charWidths[i] = w;
 
 			vertices[0]     = width;
 			vertices[1]     = 0;
@@ -511,6 +587,13 @@ public class BitmapText extends Visual {
 		}
 		hasMarkup = anyTagRecognized;
 		hasEffects = effectsFound;
+
+		charParticles = new ArrayList<>(n);
+		charParticleData = new ArrayList<>(n);
+		for (int k = 0; k < n; k++) {
+			charParticles.add(new ArrayList<>());
+			charParticleData.add(new ArrayList<>());
+		}
 
 		return plain.toString();
 	}

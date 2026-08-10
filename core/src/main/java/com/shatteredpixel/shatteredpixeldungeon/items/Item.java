@@ -106,6 +106,7 @@ public class Item implements Bundlable {
 //		COVENANTED(0xFF69B4, "Co", chance(63), multi(62)),
 //		CELEBRATED(0x00FA9A, "Ce", chance(62), multi(61)),
 //		TREASURED(0x32CD32, "T", chance(61), multi(60)),
+		FIERY(0xFFFFFF, "[red][particle+red]Fe[]", chance(132), multi(72), "[red][particle+red]Fiery"),
 		ZENITH(0xFFFFFF, "[rainbow]Ze[]", chance(130), multi(68), "[rainbow]Zenith"),
 		DESOLATED(0xFFFFFF, "[glint+#ad9100]De[]", chance(123), multi(65), "[glint+#ad9100]Desolated"),
 		LIMINAL(0xFFFFFF, "[flicker]Li[]", chance(118), multi(61), "[flicker]Liminal"),
