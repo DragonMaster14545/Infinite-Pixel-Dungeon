@@ -72,6 +72,17 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.CYCLED), "New Item Category!",
+                "The new category for this update: Modules\n\n" +
+                        "There are several type of modules that directly do its job, but they have the most expensive cost in the game, there are things in on modules that you can't do normally:\n" +
+                        "_-_ Increasing the cycle immediately\n" +
+                        "_-_ Gain extra strength and luck\n" +
+                        "_-_ Permanently increase your health\n" +
+                        "_-_ Makes you immortal for a long time\n" +
+                        "... and many more!\n\n" +
+                        "Modules can be found on battle pass, and in Portable Shop Room :P"
+        ));
+
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.TERRAFORM_WAND), "New Wand!",
                 "The new wand for this update: Wand of Terraforming\n\n" +
                         "This wand can do various terrain tricks... just kidding, they only manipulate your terrain by zapping on to valid cells"
@@ -95,7 +106,8 @@ public class InfPDChanges {
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ (Battle Pass) You can now reset the battlepass for 600k energy crystals, able to buy unclaimed tiers from history for 100 energy, and battlepass tiers may now contain bonus items\n" +
-                        "_-_ (Powerless) You are now able to receive mind vision when casting the spell"
+                        "_-_ (Powerless) You are now able to receive mind vision when casting the spell\n" +
+                        "_-_ Items in the battlepass are now automatically identified when claimed"
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",

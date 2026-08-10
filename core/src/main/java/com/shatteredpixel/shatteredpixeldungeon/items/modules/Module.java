@@ -94,7 +94,7 @@ public class Module extends Item {
 
     @Override
     public Item random() {
-        quantity = (Dungeon.LongRange( 1 + Dungeon.escalatingDepth() * 2, 2 + Dungeon.escalatingDepth() * 2 ));
+        quantity = (Dungeon.LongRange( 2, 4 ));
         return this;
     }
 

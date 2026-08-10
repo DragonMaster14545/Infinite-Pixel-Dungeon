@@ -168,7 +168,7 @@ public class PortableShopLevel extends Level {
             itemsToSpawn.add(new RareEmblem().quantity(Random.IntRange(2, 4)));
             itemsToSpawn.add(new EpicEmblem().quantity(Random.IntRange(2, 4)));
 
-			for (int i = 0; i < 48; i++) {
+			for (int i = 0; i < 36; i++) {
 				Item base = Generator.random(Generator.Category.SCROLL);
 				if (base == null) continue;
 
@@ -187,7 +187,7 @@ public class PortableShopLevel extends Level {
 				}
 			}
 
-			for (int i = 0; i < 48; i++) {
+			for (int i = 0; i < 36; i++) {
 				Item base = Generator.random(Generator.Category.POTION);
 				if (base == null) continue;
 
@@ -245,6 +245,13 @@ public class PortableShopLevel extends Level {
 				Item item = Generator.random(Generator.Category.RING);
 				if (item != null) {
 					itemsToSpawn.add( item.upgrade(Random.IntRange(2, 10)) );
+				}
+			}
+
+			for (int i = 0; i < 12; i++) {
+				Item item = Generator.random(Generator.Category.MODULE);
+				if (item != null) {
+					itemsToSpawn.add( item.random() );
 				}
 			}
 
