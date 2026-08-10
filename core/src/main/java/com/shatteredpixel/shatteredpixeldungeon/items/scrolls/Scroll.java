@@ -78,6 +78,7 @@ public abstract class Scroll extends Item {
 			put("ODAL",ItemSpriteSheet.SCROLL_ODAL);
 			put("TIWAZ",ItemSpriteSheet.SCROLL_TIWAZ);
             put("ZYCHRON",ItemSpriteSheet.SCROLL_ZYCHRON);
+			put("CREUCH",ItemSpriteSheet.SCROLL_CREUCH);
 		}
 	};
 	

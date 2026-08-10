@@ -593,8 +593,8 @@ public class ItemSpriteSheet {
 	public static final int SCROLL_ODAL     = SCROLLS+10;
 	public static final int SCROLL_TIWAZ    = SCROLLS+11;
     public static final int SCROLL_ZYCHRON    = SCROLLS+12;
-
-	public static final int ARCANE_RESIN    = SCROLLS+13;
+	public static final int SCROLL_CREUCH    = SCROLLS+13;
+	public static final int ARCANE_RESIN    = SCROLLS+14;
 	static {
 		for (int i = SCROLLS; i < SCROLLS+16; i++)
 			assignItemRect(i, 15, 14);
@@ -615,6 +615,7 @@ public class ItemSpriteSheet {
 	public static final int EXOTIC_ODAL     = EXOTIC_SCROLLS+10;
 	public static final int EXOTIC_TIWAZ    = EXOTIC_SCROLLS+11;
     public static final int EXOTIC_ZYCRON    = EXOTIC_SCROLLS+12;
+	public static final int EXOTIC_CREUCH    = EXOTIC_SCROLLS+13;
 	static {
 		for (int i = EXOTIC_SCROLLS; i < EXOTIC_SCROLLS+16; i++)
 			assignItemRect(i, 15, 14);
@@ -1099,6 +1100,7 @@ public class ItemSpriteSheet {
 		public static final int SCROLL_TERROR   = SCROLLS+10;
 		public static final int SCROLL_TRANSMUTE= SCROLLS+11;
         public static final int SCROLL_POWER= SCROLLS+12;
+		public static final int SCROLL_FINITE= SCROLLS+13;
 		static {
 			assignIconRect( SCROLL_UPGRADE,     7, 7 );
 			assignIconRect( SCROLL_IDENTIFY,    4, 7 );
@@ -1113,6 +1115,7 @@ public class ItemSpriteSheet {
 			assignIconRect( SCROLL_TERROR,      5, 7 );
 			assignIconRect( SCROLL_TRANSMUTE,   7, 7 );
             assignIconRect( SCROLL_POWER,     7, 7 );
+			assignIconRect( SCROLL_FINITE,     7, 4 );
 		}
 
 		private static final int EXOTIC_SCROLLS =                            xy(1, 4);  //16 slots
@@ -1129,6 +1132,7 @@ public class ItemSpriteSheet {
 		public static final int SCROLL_DREAD    = EXOTIC_SCROLLS+10;
 		public static final int SCROLL_METAMORPH= EXOTIC_SCROLLS+11;
         public static final int SCROLL_INSURGENCE= EXOTIC_SCROLLS+12;
+		public static final int SCROLL_INFINITY= EXOTIC_SCROLLS+13;
 		static {
 			assignIconRect( SCROLL_ENCHANT,     7, 7 );
 			assignIconRect( SCROLL_DIVINATE,    7, 6 );
@@ -1143,6 +1147,7 @@ public class ItemSpriteSheet {
 			assignIconRect( SCROLL_DREAD,       5, 7 );
 			assignIconRect( SCROLL_METAMORPH,   7, 7 );
             assignIconRect( SCROLL_INSURGENCE,   7, 7 );
+			assignIconRect( SCROLL_INFINITY,   7, 4 );
 		}
 
 		                                                                                //16 free slots
