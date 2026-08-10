@@ -692,8 +692,18 @@ public class BattlePass {
         }
 
         if (Dungeon.hero != null){
-            if (bonus != null) bonus.collect();
-            for (Item extra : extras) extra.collect();
+            if (bonus != null) {
+                if (!bonus.isIdentified()) {
+                    bonus.identify();
+                }
+                bonus.collect();
+            }
+            for (Item extra : extras) {
+                if (!extra.isIdentified()) {
+                    extra.identify();
+                }
+                extra.collect();
+            }
         }
 
         saveGlobal();
@@ -721,6 +731,9 @@ public class BattlePass {
             if (BattlePassTiers.isItemTier( tier )){
                 Item reward = BattlePassTiers.rewardFor( tier );
                 if (reward != null && Dungeon.hero != null){
+                    if (!reward.isIdentified()) {
+                        reward.identify();
+                    }
                     reward.collect();
                     result = reward;
                 } else {
@@ -732,7 +745,12 @@ public class BattlePass {
         }
 
         if (Dungeon.hero != null){
-            for (Item extra : extras) extra.collect();
+            for (Item extra : extras) {
+                if (!extra.isIdentified()) {
+                    extra.identify();
+                }
+                extra.collect();
+            }
         }
 
         saveGlobal();
