@@ -49,10 +49,6 @@ public class CycleModule extends Module {
     }
 
     @Override
-    public ItemSprite.Glowing glowing() {
-        return new ItemSprite.Glowing( 0xFF0000 );
-    }
-    @Override
     public void execute( Hero hero, String action ) {
         super.execute(hero, action);
         if (action.equals(AC_USE)) {
