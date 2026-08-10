@@ -986,8 +986,10 @@ public class ItemSpriteSheet {
 
     private static final int NEW_WAND_ROW =								xy(1, 36);
     public static final int LIFESTEAL_WAND	= NEW_WAND_ROW+0;
+	public static final int TERRAFORM_WAND	= NEW_WAND_ROW+1;
     static{
         assignItemRect(LIFESTEAL_WAND, 14, 14);
+		assignItemRect(TERRAFORM_WAND, 14, 14);
     }
 
     private static final int NEW_ARTIFACT_ROW =								xy(1, 37);

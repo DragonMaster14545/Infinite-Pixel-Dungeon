@@ -64,7 +64,7 @@ public class InfPDChanges {
                 "I'd like to make new challenges, but I want to make it harder than the current challenges in this game. Stay tuned!"
         ));
 
-        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Upcoming: v0.1.9",
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Upcoming: v0.2.0",
                 "In the next update, we will try to add new items, and possibly adding new mechanics to the game!"
         ));
 
@@ -72,12 +72,17 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.TERRAFORM_WAND), "New Wand!",
+                "The new wand for this update: Wand of Terraforming\n\n" +
+                        "This wand can do various terrain tricks... just kidding, they only manipulate your terrain by zapping on to valid cells"
+        ));
+
         changes.addButton( new ChangeButton(Icons.get(Icons.NEWS), "Global Notes",
                 "A newly implemented feature, the Global Notes!\n\n" +
                         "Aside from the adventurous notes, we implemented the Global Notes for you to create something interesting..\n\n" +
                         "Not only that, along with the Global Notes, we also implemented how LibGDX color markup works! Like these examples:\n" +
                         "_-_ [red]This is a red text, mo matter what.[]\n" +
-                        "_-_ [#ff000066]This is a semi-transparent red text in #rrggbbaa format (#rrggbb works too!)[]" +
+                        "_-_ [#ff000066]This is a semi-transparent red text in #rrggbbaa format (#rrggbb works too!)[]\n" +
                         "_-_ [rainbow]This is a rainbow text, works with [[rainbow] thing[]\n" +
                         "_-_ [glint+gold]This is a glinted with gold text, works the same as rainbow, you'll need to just add +color inside the sq. brackets"
         ));
