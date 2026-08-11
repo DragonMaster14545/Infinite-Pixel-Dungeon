@@ -372,6 +372,13 @@ public class BattlePassScene extends PixelScene {
         return BattlePass.repeatableTiersAvailable();
     }
 
+    private int premiumRepeatableAvailable(){
+        if (viewRecord != null) {
+            return Math.max( 0, viewRecord.repeatableTiersReached() - viewRecord.premiumRepeatableTiersClaimed );
+        }
+        return BattlePass.repeatablePremiumTiersAvailable();
+    }
+
     @Override
     protected void onBackPressed(){
         if (viewMonthKey != null) {
@@ -549,10 +556,11 @@ public class BattlePassScene extends PixelScene {
 
             if (tier == BattlePass.REPEATABLE_TIER) {
                 int available = repeatableAvailable();
+                int premavailable = premiumRepeatableAvailable();
                 String status = !unlocked
                         ? Messages.get( BattlePassScene.class, "locked" )
                         : available > 0
-                        ? Messages.get( BattlePassScene.class, "ready_count", available )
+                        ? Messages.get( BattlePassScene.class, "ready_count", available, premavailable )
                         : Messages.get( BattlePassScene.class, "claimed" );
                 label.text( Messages.get( BattlePassScene.class, "tier_row_repeatable", status ) );
             } else {

@@ -630,6 +630,11 @@ public class BattlePass {
         return Math.max( 0, repeatableTiersUnlocked() - repeatableTiersClaimed );
     }
 
+    public static int repeatablePremiumTiersAvailable(){
+        ensureLoaded();
+        return Math.max( 0, repeatableTiersUnlocked() - premiumRepeatableTiersClaimed );
+    }
+
     public static int xpIntoCurrentTier(){
         ensureLoaded();
         int xpLeft = totalXP;
