@@ -28,6 +28,13 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.Alchemize;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.Recycle;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.UnstableSpell;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -41,9 +48,10 @@ import java.util.ArrayList;
 public class Blueprint extends Item {
 
 	{
-		image = ItemSpriteSheet.SOMETHING; // i need to make a new item sprite for this
+		image = ItemSpriteSheet.BLUEPRINT;
 		defaultAction = AC_STORE;
 		bones = true;
+		stackable = false;
 	}
 
 	private static final String AC_STORE = "STORE";
@@ -98,6 +106,15 @@ public class Blueprint extends Item {
 	}
 
 	@Override
+	public String name() {
+		if (!storedItems.isEmpty()) {
+			return Messages.get(this, "name_stored", storedItems.get(0).name());
+		} else {
+			return super.name();
+		}
+	}
+
+	@Override
 	public String info() {
 		String info = super.info();
 		if (!storedItems.isEmpty()) {
@@ -111,7 +128,7 @@ public class Blueprint extends Item {
 
 	@Override
 	public long value() {
-		return 20 + storedItems.size() * 10;
+		return 1500;
 	}
 
 	@Override
@@ -192,13 +209,13 @@ public class Blueprint extends Item {
 			return;
 		}
 
-		long highestLevel = 0;
+		long totalLevel = 0;
 		for (Item item : storedItems) {
-			highestLevel = Math.max(highestLevel, item.trueLevel());
+			totalLevel += item.trueLevel();
 			item.quantity(0);
 		}
 
-		base.level(highestLevel + storedItems.size() - 1);
+		base.level(totalLevel);
 		storedItems.clear();
 
 		if (!base.collect()) {
@@ -206,6 +223,7 @@ public class Blueprint extends Item {
 		}
 
 		GLog.i(Messages.get(this, "built", base.name()));
+		detach(Dungeon.hero.belongings.backpack);
 		Item.updateQuickslot();
 	}
 
@@ -222,5 +240,21 @@ public class Blueprint extends Item {
 		storedItems.clear();
 		GLog.i(Messages.get(this, "released"));
 		Item.updateQuickslot();
+	}
+
+	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
+
+		private static final int OUT_QUANTITY = 1;
+
+		{
+			inputs =  new Class[]{Alchemize.class, Recycle.class, UnstableSpell.class};
+			inQuantity = new int[]{1, 1, 1};
+
+			cost = 15;
+
+			output = Blueprint.class;
+			outQuantity = OUT_QUANTITY;
+		}
+
 	}
 }

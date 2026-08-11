@@ -263,7 +263,8 @@ public abstract class Recipe {
             new WandOfTeleportation.Recipe(),
             new WandOfLifesteal.Recipe(),
             new TierUpgrade.Recipe(),
-            new ArmorTierUpgrade.Recipe()
+            new ArmorTierUpgrade.Recipe(),
+			new Blueprint.Recipe()
 	};
 	
 	public static ArrayList<Recipe> findRecipes(ArrayList<Item> ingredients){

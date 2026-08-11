@@ -72,6 +72,11 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.BLUEPRINT), "Blueprints!",
+                "Blueprints are just a raw item used to store similar items and combine them to get the stronger version of themselves.\n\n" +
+                        "They are available on shops with 1/5 chance or craft them with a decent recipe and energy cost."
+        ));
+
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.CYCLED), "New Item Category!",
                 "The new category for this update: Modules\n\n" +
                         "There are several type of modules that directly do its job, but they have the most expensive cost in the game, there are things in on modules that you can't do normally:\n" +
