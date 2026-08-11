@@ -13,7 +13,29 @@ public class AlchemyChamberRoom extends SpecialRoom {
         Painter.fill(level, this, Terrain.WALL);
         Painter.fill(level, this, 1, Terrain.EMPTY_SP);
 
-        int count = Random.IntRange(1, 4);
+        int innerLeft = left + 1;
+        int innerTop = top + 1;
+        int innerRight = right - 1;
+        int innerBottom = bottom - 1;
+
+        for (int x = innerLeft; x <= innerRight; x++) {
+            if (Random.Int(3) == 0) {
+                Painter.set(level, new Point(x, innerTop), Terrain.ALCHEMY);
+            }
+            if (Random.Int(3) == 0) {
+                Painter.set(level, new Point(x, innerBottom), Terrain.ALCHEMY);
+            }
+        }
+        for (int y = innerTop + 1; y <= innerBottom - 1; y++) {
+            if (Random.Int(3) == 0) {
+                Painter.set(level, new Point(innerLeft, y), Terrain.ALCHEMY);
+            }
+            if (Random.Int(3) == 0) {
+                Painter.set(level, new Point(innerRight, y), Terrain.ALCHEMY);
+            }
+        }
+
+        int count = Random.IntRange(1, 3);
         for (int i = 0; i < count; i++) {
             Point pos = random();
             Painter.set(level, pos, Terrain.ALCHEMY);

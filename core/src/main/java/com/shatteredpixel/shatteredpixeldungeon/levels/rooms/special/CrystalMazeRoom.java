@@ -3,7 +3,8 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
-import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
+import com.watabou.utils.Point;
+import com.watabou.utils.Random;
 
 public class CrystalMazeRoom extends SpecialRoom {
 
@@ -12,14 +13,28 @@ public class CrystalMazeRoom extends SpecialRoom {
         Painter.fill(level, this, Terrain.WALL);
         Painter.fill(level, this, 1, Terrain.EMPTY_SP);
 
-        int innerLeft = left + 2;
-        int innerTop = top + 2;
-        int innerWidth = width() - 4;
-        int innerHeight = height() - 4;
+        int inset = 1;
+        boolean gapOnLeft = Random.Int(2) == 0;
+        while (left + inset + 1 < right - inset - 1 && top + inset + 1 < bottom - inset - 1) {
 
-        if (innerWidth > 2 && innerHeight > 2) {
-            Painter.fill(level, innerLeft, innerTop, innerWidth, innerHeight, Terrain.REGION_DECO);
-            Painter.fill(level, innerLeft + 1, innerTop + 1, innerWidth - 2, innerHeight - 2, Terrain.EMPTY_SP);
+            int ringLeft = left + inset;
+            int ringTop = top + inset;
+            int ringRight = right - inset;
+            int ringBottom = bottom - inset;
+            int ringWidth = ringRight - ringLeft + 1;
+            int ringHeight = ringBottom - ringTop + 1;
+
+            Painter.fill(level, ringLeft, ringTop, ringWidth, 1, Terrain.REGION_DECO);
+            Painter.fill(level, ringLeft, ringTop, 1, ringHeight, Terrain.REGION_DECO);
+            Painter.fill(level, ringLeft, ringBottom, ringWidth, 1, Terrain.REGION_DECO);
+            Painter.fill(level, ringRight, ringTop, 1, ringHeight, Terrain.REGION_DECO);
+
+            int gapX = gapOnLeft ? ringLeft : ringRight;
+            int gapY = ringTop + 1 + Random.Int(Math.max(1, ringHeight - 2));
+            Painter.set(level, new Point(gapX, gapY), Terrain.EMPTY_SP);
+            gapOnLeft = !gapOnLeft;
+
+            inset += 2;
         }
 
         for (Door door : connected.values()) {
