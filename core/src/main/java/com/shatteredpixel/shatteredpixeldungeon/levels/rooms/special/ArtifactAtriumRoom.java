@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
@@ -20,12 +21,12 @@ public class ArtifactAtriumRoom extends SpecialRoom {
         int innerRight = right - 1;
         int innerBottom = bottom - 1;
         for (int x = innerLeft; x <= innerRight; x++) {
-            Painter.set(level, new Point(x, innerTop), Terrain.REGION_DECO);
-            Painter.set(level, new Point(x, innerBottom), Terrain.REGION_DECO);
+            Painter.set(level, new Point(x, innerTop), Random.Int(3) == 0 ? Terrain.REGION_DECO : Terrain.CHASM);
+            Painter.set(level, new Point(x, innerBottom), Random.Int(3) == 0 ? Terrain.REGION_DECO : Terrain.CHASM);
         }
         for (int y = innerTop; y <= innerBottom; y++) {
-            Painter.set(level, new Point(innerLeft, y), Terrain.REGION_DECO);
-            Painter.set(level, new Point(innerRight, y), Terrain.REGION_DECO);
+            Painter.set(level, new Point(innerLeft, y), Random.Int(3) == 0 ? Terrain.REGION_DECO : Terrain.CHASM);
+            Painter.set(level, new Point(innerRight, y), Random.Int(3) == 0 ? Terrain.REGION_DECO : Terrain.CHASM);
         }
 
         if (innerRight - innerLeft > 2 && innerBottom - innerTop > 2) {
@@ -41,9 +42,6 @@ public class ArtifactAtriumRoom extends SpecialRoom {
                 pos = level.pointToCell(random());
                 attempts++;
             } while (attempts < 20 && (level.map[pos] != Terrain.EMPTY_SP || level.heaps.get(pos) != null));
-
-            Point p = level.cellToPoint(pos);
-            Painter.set(level, p, Terrain.REGION_DECO);
 
             Item artifact = Generator.random(Generator.Category.ARTIFACT);
             if (artifact != null) {
