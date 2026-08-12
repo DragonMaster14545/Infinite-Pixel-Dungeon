@@ -72,6 +72,11 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.STAIRS), "New Rooms",
+                "In this update, we added new rooms: 5 special and 5 standard rooms\n\n" +
+                        "You'll find them out after you venture in to your runs! :>"
+        ));
+
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.BLUEPRINT), "Blueprints!",
                 "Blueprints are just a raw item used to store similar items and combine them to get the stronger version of themselves.\n\n" +
                         "They are available on shops with 1/5 chance or craft them with a decent recipe and energy cost."
@@ -104,7 +109,7 @@ public class InfPDChanges {
                         "_-_ [particle+rainbow]This is good![]"
         ));
 
-        changes.addButton( new ChangeButton(Icons.get(Icons.STAIRS), "Waved Arena",
+        changes.addButton( new ChangeButton(Icons.get(Icons.CYCLE_COUNT), "Waved Arena",
                 "Also a newly implemented feature, the same as arenas but in a waved manner, the Waved Arena!\n\n" +
                         "In this level, you will have your current items temporarily removed, and can be retrieved after you came back alive. You can also keep things that you obtained in this arena.\n\n" +
                         "_This level is in current beta stage, so feel free to try it._"
