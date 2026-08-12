@@ -381,6 +381,7 @@ public class ShopRoom extends SpecialRoom {
 		itemsToSpawn.add( new Ankh() );
 		itemsToSpawn.add( new StoneOfAugmentation() );
 		itemsToSpawn.add(new TicketToArena());
+		itemsToSpawn.add(new TicketToWaveArena());
 		if (Random.Int(5) == 0) itemsToSpawn.add(new TicketToArena());
 
 		TimekeepersHourglass hourglass = Dungeon.hero.belongings.getItem(TimekeepersHourglass.class);

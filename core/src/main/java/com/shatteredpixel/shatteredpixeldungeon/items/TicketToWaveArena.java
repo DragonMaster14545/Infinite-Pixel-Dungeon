@@ -40,7 +40,7 @@ import java.util.ArrayList;
 public class TicketToWaveArena extends Item{
 
     {
-        image = ItemSpriteSheet.MAGIC_INFUSE;
+        image = ItemSpriteSheet.CRYSTAL_CHEST;
         stackable = true;
     }
 
