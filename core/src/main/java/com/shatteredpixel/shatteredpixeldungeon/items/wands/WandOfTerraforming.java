@@ -30,6 +30,12 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfEnchantment;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.Alchemize;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.GalacticInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -153,5 +159,21 @@ public class WandOfTerraforming extends Wand {
     public void restoreFromBundle(Bundle bundle) {
         super.restoreFromBundle(bundle);
         selectedTerrain = bundle.contains(SELECTED_TERRAIN) ? bundle.getInt(SELECTED_TERRAIN) : -1;
+    }
+
+    public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
+
+        private static final int OUT_QUANTITY = 1;
+
+        {
+            inputs =  new Class[]{ScrollOfMagicMapping.class, ScrollOfTransmutation.class, Alchemize.class};
+            inQuantity = new int[]{1, 1, 1};
+
+            cost = 75;
+
+            output = WandOfTerraforming.class;
+            outQuantity = OUT_QUANTITY;
+        }
+
     }
 }

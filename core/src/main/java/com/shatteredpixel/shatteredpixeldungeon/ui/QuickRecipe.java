@@ -96,6 +96,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfFireblast;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLifesteal;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfTerraforming;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
@@ -437,6 +438,7 @@ public class QuickRecipe extends Component {
                 if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_6)) result.add(new QuickRecipe(new WandOfEarthblast.Recipe(), new ArrayList<>(Arrays.asList(new WandOfFireblast(), new WandOfLivingEarth(), new Cheese())), new WandOfEarthblast()));
                 result.add(new QuickRecipe(new WandOfTeleportation.Recipe()));
                 result.add(new QuickRecipe(new WandOfLifesteal.Recipe()));
+				result.add(new QuickRecipe(new WandOfTerraforming.Recipe()));
 				result.add(new QuickRecipe(new Blueprint.Recipe()));
                 return result;
 		}

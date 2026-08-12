@@ -82,6 +82,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfEarthblast;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLifesteal;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfTerraforming;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.watabou.utils.Reflection;
 
@@ -264,7 +265,8 @@ public abstract class Recipe {
             new WandOfLifesteal.Recipe(),
             new TierUpgrade.Recipe(),
             new ArmorTierUpgrade.Recipe(),
-			new Blueprint.Recipe()
+			new Blueprint.Recipe(),
+			new WandOfTerraforming.Recipe()
 	};
 	
 	public static ArrayList<Recipe> findRecipes(ArrayList<Item> ingredients){
