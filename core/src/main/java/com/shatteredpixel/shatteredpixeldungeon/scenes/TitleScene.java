@@ -162,9 +162,9 @@ public class TitleScene extends PixelScene {
 		btnBadges.icon(Icons.get(Icons.JOURNAL));
 		add(btnBadges);
 
-		StyledButton btnNews = new NewsButton(GREY_TR, Messages.get(this, "news"));
-		btnNews.icon(Icons.get(Icons.NEWS));
-		add(btnNews);
+		StyledButton btnSave = new NewsButton(GREY_TR, "I/E Save");
+		btnSave.icon(Icons.get(Icons.INFO));
+		add(btnSave);
 
 		StyledButton btnChanges = new ChangesButton(GREY_TR, Messages.get(this, "changes"));
 		btnChanges.icon(Icons.get(Icons.CHANGES));
@@ -193,7 +193,7 @@ public class TitleScene extends PixelScene {
 			btnBattlepass.setRect(btnPlay.right()+2, btnPlay.top(), btnPlay.width(), BTN_HEIGHT);
 			btnRankings.setRect(btnPlay.left(), btnPlay.bottom()+ GAP, (btnPlay.width()*.67f)-1, BTN_HEIGHT);
 			btnBadges.setRect(btnRankings.right()+2, btnRankings.top(), btnRankings.width(), BTN_HEIGHT);
-			btnNews.setRect(btnBadges.right()+2, btnBadges.top(), btnRankings.width(), BTN_HEIGHT);
+			btnSave.setRect(btnBadges.right()+2, btnBadges.top(), btnRankings.width(), BTN_HEIGHT);
 			btnSettings.setRect(btnRankings.left(), btnRankings.bottom() + GAP, btnRankings.width(), BTN_HEIGHT);
 			btnChanges.setRect(btnSettings.right()+2, btnSettings.top(), btnRankings.width(), BTN_HEIGHT);
 			btnAbout.setRect(btnChanges.right()+2, btnSettings.top(), btnRankings.width(), BTN_HEIGHT);
@@ -203,9 +203,9 @@ public class TitleScene extends PixelScene {
 			btnBattlepass.setRect(btnPlay.left(), btnPlay.bottom()+ GAP, btnPlay.width(), BTN_HEIGHT);
 			btnRankings.setRect(btnPlay.left(), btnBattlepass.bottom()+ GAP, (btnPlay.width()/2)-1, BTN_HEIGHT);
 			btnBadges.setRect(btnRankings.right()+2, btnRankings.top(), btnRankings.width(), BTN_HEIGHT);
-			btnNews.setRect(btnRankings.left(), btnRankings.bottom()+ GAP, btnRankings.width(), BTN_HEIGHT);
-			btnChanges.setRect(btnNews.right()+2, btnNews.top(), btnNews.width(), BTN_HEIGHT);
-			btnSettings.setRect(btnNews.left(), btnNews.bottom()+GAP, btnRankings.width(), BTN_HEIGHT);
+			btnSave.setRect(btnRankings.left(), btnRankings.bottom()+ GAP, btnRankings.width(), BTN_HEIGHT);
+			btnChanges.setRect(btnSave.right()+2, btnSave.top(), btnSave.width(), BTN_HEIGHT);
+			btnSettings.setRect(btnSave.left(), btnSave.bottom()+GAP, btnRankings.width(), BTN_HEIGHT);
 			btnAbout.setRect(btnSettings.right()+2, btnSettings.top(), btnSettings.width(), BTN_HEIGHT);
 		}
 
@@ -241,10 +241,8 @@ public class TitleScene extends PixelScene {
 
 		public NewsButton(Chrome.Type type, String label ){
 			super(type, label);
-			if (SPDSettings.news()) News.checkForNews();
+			textColor(0x00ff00);
 		}
-
-		int unreadCount = -1;
 
 		@Override
 		public void update() {
@@ -254,7 +252,7 @@ public class TitleScene extends PixelScene {
 		@Override
         public void onClick() {
 			super.onClick();
-			ShatteredPixelDungeon.switchNoFade( NewsScene.class );
+			ShatteredPixelDungeon.switchNoFade( SaveScene.class );
 		}
 	}
 
