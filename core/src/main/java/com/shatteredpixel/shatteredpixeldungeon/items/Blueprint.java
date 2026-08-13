@@ -157,7 +157,7 @@ public class Blueprint extends Item {
 
 		@Override
 		public boolean itemSelectable(Item item) {
-			if (item == null || item == Blueprint.this || item.isEquipped(Dungeon.hero)) {
+			if (item == null || item == Blueprint.this || item.isEquipped(Dungeon.hero) || item.trueLevel() < 1) {
 				return false;
 			}
 			if (!item.isIdentified() || item.cursed || !item.isUpgradable()) {
