@@ -156,6 +156,8 @@ public class BitmapText extends Visual {
 
 		super.draw();
 
+		if (font == null) return;
+
 		if (dirty) {
 			updateVertices();
 			((Buffer)quads).limit(quads.position());
@@ -216,8 +218,9 @@ public class BitmapText extends Visual {
 		float localPhase = animTime + i*0.11f;
 		if (blocks.size() < MAX_PARTICLES_PER_CHAR
 				&& (localPhase % PARTICLE_SPAWN_INTERVAL) < Game.elapsed){
-			int accent = charGlintColors[i] != -1 ? charGlintColors[i]
-					: (charColors[i] != -1 ? charColors[i] : 0xffffff);
+			int glint = (charGlintColors != null && i < charGlintColors.length) ? charGlintColors[i] : -1;
+			int base  = (charColors != null && i < charColors.length) ? charColors[i] : -1;
+			int accent = glint != -1 ? glint : (base != -1 ? base : 0xffffff);
 			float size = 1f + (float)Math.random()*1.5f; //random size, ~1.0 to 2.5px
 			ColorBlock dot = new ColorBlock(size, size, 0xFF000000 | (accent & 0xFFFFFF));
 			if (parent != null) parent.add(dot);
@@ -251,7 +254,8 @@ public class BitmapText extends Visual {
 			float relY = d[1] + 0.15f*(float)Math.sin(lifeFrac*Math.PI*2 + p);
 			relY = Math.max(0f, Math.min(1f, relY));
 
-			dot.x = this.x + charX[i] + relX * charWidth;
+			float baseX = (charX != null && i < charX.length) ? charX[i] : 0f;
+			dot.x = this.x + baseX + relX * charWidth;
 			dot.y = this.y + relY * height;
 
 			float alpha = lifeFrac < 0.2f ? lifeFrac/0.2f : (1f - lifeFrac)/0.8f;
@@ -363,6 +367,8 @@ public class BitmapText extends Visual {
 
 	protected synchronized void updateVertices() {
 
+		if (font == null) return;
+
 		width = 0;
 		height = 0;
 
@@ -429,6 +435,8 @@ public class BitmapText extends Visual {
 
 	public synchronized void measure() {
 
+		if (font == null) return;
+
 		width = 0;
 		height = 0;
 
@@ -455,7 +463,7 @@ public class BitmapText extends Visual {
 	}
 
 	public float baseLine() {
-		return font.baseLine * scale.y;
+		return font != null ? font.baseLine * scale.y : 0f;
 	}
 
 	public Font font() {
