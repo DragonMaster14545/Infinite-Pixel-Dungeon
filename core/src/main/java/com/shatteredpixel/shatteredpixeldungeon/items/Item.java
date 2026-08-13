@@ -873,6 +873,7 @@ public class Item implements Bundlable {
 	private static final String KEPT_LOST       = "kept_lost";
 	private static final String WERE_OOFED      = "were_oofed";
 	private static final String RARITY           = "rarity";
+	private static final String RARITY_NAME      = "rarity_name";
 	private static final String EMBLEM_USE       = "emblem_use";
 	private static final String CAN_CWSOF        = "can_cwsof";
 	private static final String PINNED           = "pinned";
@@ -891,7 +892,7 @@ public class Item implements Bundlable {
 		bundle.put( WERE_OOFED, wereOofed);
         bundle.put( CAN_CWSOF, canCollectWithSOH);
         bundle.put( EMBLEM_USE, emblemUse);
-		bundle.put( RARITY, rarity.ordinal() );
+		bundle.put( RARITY_NAME, rarity.name() );
 		bundle.put( PINNED, pinned );
 
 		if (!this.customName.equals("")) {
@@ -929,7 +930,19 @@ public class Item implements Bundlable {
 		}
 
 		keptThoughLostInvent = bundle.getBoolean( KEPT_LOST );
-		rarity = Rarity.values()[bundle.getInt(RARITY)];
+		if (bundle.contains( RARITY_NAME )) {
+			try {
+				rarity = Rarity.valueOf( bundle.getString( RARITY_NAME ) );
+			} catch (IllegalArgumentException e) {
+				rarity = Rarity.NONE;
+			}
+		} else if (bundle.contains( RARITY )) {
+			int ord = bundle.getInt( RARITY );
+			Rarity[] values = Rarity.values();
+			rarity = (ord >= 0 && ord < values.length) ? values[ord] : Rarity.NONE;
+		} else {
+			rarity = Rarity.NONE;
+		}
 
 		// restore pinned state if present in bundle (backwards-compatible)
 		if (bundle.contains(PINNED)) {

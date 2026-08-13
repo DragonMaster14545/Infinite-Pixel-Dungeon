@@ -130,7 +130,9 @@ public class InfPDChanges {
                 "_-_ Fixed WndBag's gaps on item slots per page\n" +
                         "_-_ Added a safety check for generating items in Portable Shop\n" +
                         "_-_ Fixed Galactic enchantment's name and description on catalog\n" +
-                        "_-_ Fixed high quantity values of shuriken of shadows on fishing rods\n"
+                        "_-_ Fixed high quantity values of shuriken of shadows on fishing rods\n" +
+                        "_-_ [Quick Fix] Rarity invasion when adding new rarities\n" +
+                        "_-_ [Quick Fix] Crashes on rankings due to null array on bitmap texts"
         ));
 
         changes = new ChangeInfo("InfPD-0.1.9", true, "");

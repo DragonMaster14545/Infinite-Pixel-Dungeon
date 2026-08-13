@@ -220,6 +220,7 @@ public class BitmapText extends Visual {
 					: (charColors[i] != -1 ? charColors[i] : 0xffffff);
 			float size = 1f + (float)Math.random()*1.5f; //random size, ~1.0 to 2.5px
 			ColorBlock dot = new ColorBlock(size, size, 0xFF000000 | (accent & 0xFFFFFF));
+			if (parent != null) parent.add(dot);
 			blocks.add(dot);
 			data.add(new float[]{
 					(float)Math.random(),               //relX, 0..1 across this character's own width
@@ -237,8 +238,9 @@ public class BitmapText extends Visual {
 			float lifeFrac = d[3] / PARTICLE_LIFETIME;
 
 			if (lifeFrac >= 1f){
-				blocks.remove(p);
+				ColorBlock dead = blocks.remove(p);
 				data.remove(p);
+				if (parent != null) parent.remove(dead);
 				continue;
 			}
 
