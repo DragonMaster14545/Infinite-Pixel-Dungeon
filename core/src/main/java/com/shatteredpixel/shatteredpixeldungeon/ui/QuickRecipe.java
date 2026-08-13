@@ -97,6 +97,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLifesteal;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfTerraforming;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.SearingSlasher;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
@@ -440,6 +441,7 @@ public class QuickRecipe extends Component {
                 result.add(new QuickRecipe(new WandOfLifesteal.Recipe()));
 				result.add(new QuickRecipe(new WandOfTerraforming.Recipe()));
 				result.add(new QuickRecipe(new Blueprint.Recipe()));
+				result.add(new QuickRecipe(new SearingSlasher.Recipe()));
                 return result;
 		}
 	}
