@@ -269,7 +269,7 @@ public class GlobalCustomNoteButton extends IconButton {
                     show(new WndTextInput(Messages.get(GlobalCustomNoteWindow.class, "edit_title"),
                             "",
                             rec.title(),
-                            50,
+                            Integer.MAX_VALUE,
                             false,
                             Messages.get(GlobalCustomNoteWindow.class, "confirm"),
                             Messages.get(GlobalCustomNoteWindow.class, "cancel")){
@@ -301,7 +301,7 @@ public class GlobalCustomNoteButton extends IconButton {
                     show(new WndTextInput(editBodyText,
                             "",
                             rec.desc(),
-                            500,
+                            Integer.MAX_VALUE,
                             true,
                             Messages.get(GlobalCustomNoteWindow.class, "confirm"),
                             Messages.get(GlobalCustomNoteWindow.class, "cancel")){
@@ -362,7 +362,7 @@ public class GlobalCustomNoteButton extends IconButton {
         show(new WndTextInput(promptTitle,
                 prompttext,
                 "",
-                50,
+                Integer.MAX_VALUE,
                 false,
                 Messages.get(GlobalCustomNoteWindow.class, "confirm"),
                 Messages.get(GlobalCustomNoteWindow.class, "cancel")){
