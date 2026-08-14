@@ -40,9 +40,9 @@ public abstract class PlatformSupport {
 	public PackageTrie findClasses(String pckgname) throws ClassNotFoundException {
 		return PackageTrie.getClassesForPackage(pckgname);
 	}
-	
+
 	public abstract void updateDisplaySize();
-	
+
 	public abstract void updateSystemUI();
 
 	public abstract boolean connectedToUnmeteredNetwork();
@@ -69,13 +69,34 @@ public abstract class PlatformSupport {
 		Gdx.input.setOnscreenKeyboardVisible(value);
 	}
 
+	public boolean supportsFilePicker(){
+		return true;
+	}
+
+	public void saveFileWithPicker( String suggestedName, byte[] data, FilePickerCallback callback ){
+		callback.onComplete( false );
+	}
+
+	public void openFileWithPicker( FileOpenCallback callback ){
+		callback.onFileSelected( null );
+	}
+
+	public interface FilePickerCallback {
+		void onComplete( boolean success );
+	}
+
+	public interface FileOpenCallback {
+		//data is null if the player cancelled, or if reading the picked file failed
+		void onFileSelected( byte[] data );
+	}
+
 	//TODO should consider spinning this into its own class, rather than platform support getting ever bigger
 	protected static HashMap<FreeTypeFontGenerator, HashMap<Integer, BitmapFont>> fonts;
 
 	protected int pageSize;
 	protected PixmapPacker packer;
 	protected boolean systemfont;
-	
+
 	public abstract void setupFontGenerators(int pageSize, boolean systemFont );
 
 	protected abstract FreeTypeFontGenerator getGeneratorForString( String input );

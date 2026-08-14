@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.Archs;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ExitButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndMessage;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
@@ -39,8 +40,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Base64Coder;
 import com.watabou.noosa.Camera;
-import com.watabou.utils.DeviceCompat;
+import com.watabou.noosa.Game;
 import com.watabou.utils.FileUtils;
+import com.watabou.utils.PlatformSupport;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -107,7 +109,7 @@ public class SaveScene extends PixelScene {
         add( btnImport );
 
         float nextTop = btnImport.bottom() + GAP;
-        if (DeviceCompat.supportsFilePicker()){
+        if (Game.platform.supportsFilePicker()){
             RedButton btnExportTo = new RedButton( Messages.get( this, "export_to_device" ) ){
                 @Override
                 public void onClick(){
@@ -310,12 +312,12 @@ public class SaveScene extends PixelScene {
             return;
         }
 
-        DeviceCompat.saveFileWithPicker( EXPORT_BLOB_FILE, blob.getBytes(StandardCharsets.UTF_8),
-                new DeviceCompat.FilePickerCallback(){
+        Game.platform.saveFileWithPicker( EXPORT_BLOB_FILE, blob.getBytes(StandardCharsets.UTF_8),
+                new PlatformSupport.FilePickerCallback(){
                     @Override
                     public void onComplete( boolean success ){
                         if (success){
-                            ShatteredPixelDungeon.scene().addToFront( new WndMessage( Messages.get( SaveScene.this, "export_copied" ) ) );
+                            ShatteredPixelDungeon.scene().addToFront( new WndMessage( Messages.get( SaveScene.this, "export_copied_ex" ) ) );
                         } else {
                             ShatteredPixelDungeon.scene().addToFront( new WndMessage( Messages.get( SaveScene.this, "export_failed" ) ) );
                         }
@@ -324,7 +326,7 @@ public class SaveScene extends PixelScene {
     }
 
     private void doImportFromDevice(){
-        DeviceCompat.openFileWithPicker( new DeviceCompat.FileOpenCallback(){
+        Game.platform.openFileWithPicker( new PlatformSupport.FileOpenCallback(){
             @Override
             public void onFileSelected( byte[] data ){
                 if (data == null){

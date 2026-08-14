@@ -72,6 +72,23 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes = new ChangeInfo("B", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton( new ChangeButton(Icons.get(Icons.INFO), "Import/Export Data System",
+                "In this update, we added a new feature: I/E Saves\n\n" +
+                        "This feature can help you to backup your run, upload them an import to other devices. They are useful on Android devices since Android don't let you access inner application data without root access"
+        ));
+
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
+                "_-_ Added null checks on bitmap texts.\n"
+        ));
+
+        changes = new ChangeInfo("A", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
         changes.addButton( new ChangeButton(Icons.get(Icons.STAIRS), "New Rooms",
                 "In this update, we added new rooms: 5 special and 5 standard rooms\n\n" +
                         "You'll find them out after you venture in to your runs! :>"

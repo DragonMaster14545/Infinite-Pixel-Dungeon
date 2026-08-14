@@ -25,10 +25,13 @@
 package com.shatteredpixel.shatteredpixeldungeon.android;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.view.View;
@@ -45,14 +48,24 @@ import com.watabou.utils.PlatformSupport;
 import com.zrp200.scrollofdebug.PackageTrie;
 import dalvik.system.DexFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AndroidPlatformSupport extends PlatformSupport {
-	
+
+
+	public static AndroidPlatformSupport instance;
+
+	public AndroidPlatformSupport(){
+		instance = this;
+	}
+
 	public void updateDisplaySize(){
 		if (SPDSettings.landscape() != null) {
 			AndroidLauncher.instance.setRequestedOrientation( SPDSettings.landscape() ?
@@ -177,8 +190,117 @@ public class AndroidPlatformSupport extends PlatformSupport {
 		return true; //always true on Android
 	}
 
+
+	private static final int REQUEST_SAVE_FILE = 9001;
+	private static final int REQUEST_OPEN_FILE = 9002;
+
+	private byte[] pendingSaveData;
+	private FilePickerCallback pendingSaveCallback;
+	private FileOpenCallback pendingOpenCallback;
+
+	@Override
+	public boolean supportsFilePicker(){
+		return Build.VERSION.SDK_INT >= 19;
+	}
+
+	@Override
+	public void saveFileWithPicker( String suggestedName, byte[] data, FilePickerCallback callback ){
+		pendingSaveData = data;
+		pendingSaveCallback = callback;
+
+		Intent intent = new Intent( Intent.ACTION_CREATE_DOCUMENT );
+		intent.addCategory( Intent.CATEGORY_OPENABLE );
+		intent.setType( "text/plain" );
+		intent.putExtra( Intent.EXTRA_TITLE, suggestedName );
+
+		try {
+			AndroidLauncher.instance.startActivityForResult( intent, REQUEST_SAVE_FILE );
+		} catch (Exception e){
+			pendingSaveData = null;
+			pendingSaveCallback = null;
+			callback.onComplete( false );
+		}
+	}
+
+	@Override
+	public void openFileWithPicker( FileOpenCallback callback ){
+		pendingOpenCallback = callback;
+
+		Intent intent = new Intent( Intent.ACTION_OPEN_DOCUMENT );
+		intent.addCategory( Intent.CATEGORY_OPENABLE );
+		intent.setType( "*/*" );
+
+		try {
+			AndroidLauncher.instance.startActivityForResult( intent, REQUEST_OPEN_FILE );
+		} catch (Exception e){
+			pendingOpenCallback = null;
+			callback.onFileSelected( null );
+		}
+	}
+
+	public void onActivityResult( int requestCode, int resultCode, Intent data ){
+		if (requestCode == REQUEST_SAVE_FILE){
+			handleSaveResult( resultCode, data );
+		} else if (requestCode == REQUEST_OPEN_FILE){
+			handleOpenResult( resultCode, data );
+		}
+	}
+
+	private void handleSaveResult( int resultCode, Intent data ){
+		final byte[] toWrite = pendingSaveData;
+		final FilePickerCallback callback = pendingSaveCallback;
+		pendingSaveData = null;
+		pendingSaveCallback = null;
+
+		if (callback == null) return;
+
+		boolean success = false;
+		if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null){
+			Uri uri = data.getData();
+			try (OutputStream out = AndroidLauncher.instance.getContentResolver().openOutputStream( uri )){
+				if (out != null && toWrite != null){
+					out.write( toWrite );
+					success = true;
+				}
+			} catch (IOException e){
+				success = false;
+			}
+		}
+
+		final boolean finalSuccess = success;
+		Gdx.app.postRunnable( () -> callback.onComplete( finalSuccess ) );
+	}
+
+	private void handleOpenResult( int resultCode, Intent data ){
+		final FileOpenCallback callback = pendingOpenCallback;
+		pendingOpenCallback = null;
+
+		if (callback == null) return;
+
+		byte[] result = null;
+		if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null){
+			Uri uri = data.getData();
+			try (InputStream in = AndroidLauncher.instance.getContentResolver().openInputStream( uri )){
+				if (in != null){
+					ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+					byte[] chunk = new byte[4096];
+					int read;
+					while ((read = in.read( chunk )) != -1){
+						buffer.write( chunk, 0, read );
+					}
+					result = buffer.toByteArray();
+				}
+			} catch (IOException e){
+				result = null;
+			}
+		}
+
+		final byte[] finalResult = result;
+		Gdx.app.postRunnable( () -> callback.onFileSelected( finalResult ) );
+	}
+
 	/* FONT SUPPORT */
-	
+
 	//droid sans / roboto, or a custom pixel font, for use with Latin and Cyrillic languages
 	private static FreeTypeFontGenerator basicFontGenerator;
 	//droid sans / nanum gothic / noto sans, for use with Korean
@@ -187,10 +309,10 @@ public class AndroidPlatformSupport extends PlatformSupport {
 	private static FreeTypeFontGenerator SCFontGenerator;
 	//droid sans / noto sans, for use with Japanese
 	private static FreeTypeFontGenerator JPFontGenerator;
-	
+
 	//special logic for handling korean android 6.0 font oddities
 	private static boolean koreanAndroid6OTF = false;
-	
+
 	@Override
 	public void setupFontGenerators(int pageSize, boolean systemfont) {
 		//don't bother doing anything if nothing has changed
@@ -203,7 +325,7 @@ public class AndroidPlatformSupport extends PlatformSupport {
 		resetGenerators(false);
 		fonts = new HashMap<>();
 		basicFontGenerator = KRFontGenerator = SCFontGenerator = JPFontGenerator = null;
-		
+
 		if (systemfont && Gdx.files.absolute("/system/fonts/Roboto-Regular.ttf").exists()) {
 			basicFontGenerator = new FreeTypeFontGenerator(Gdx.files.absolute("/system/fonts/Roboto-Regular.ttf"));
 		} else if (systemfont && Gdx.files.absolute("/system/fonts/DroidSans.ttf").exists()){
@@ -211,16 +333,16 @@ public class AndroidPlatformSupport extends PlatformSupport {
 		} else {
 			basicFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/pixel_font.ttf"));
 		}
-		
+
 		//android 7.0+. all asian fonts are nicely contained in one spot
 		if (Gdx.files.absolute("/system/fonts/NotoSansCJK-Regular.ttc").exists()) {
 			//typefaces are 0-JP, 1-KR, 2-SC, 3-TC.
 			int typeFace = 2;
 			KRFontGenerator = SCFontGenerator = JPFontGenerator = new FreeTypeFontGenerator(Gdx.files.absolute("/system/fonts/NotoSansCJK-Regular.ttc"), typeFace);
-			
+
 		//otherwise we have to go over a few possibilities.
 		} else {
-			
+
 			//Korean font generators
 			if (Gdx.files.absolute("/system/fonts/NanumGothic.ttf").exists()){
 				KRFontGenerator = new FreeTypeFontGenerator(Gdx.files.absolute("/system/fonts/NanumGothic.ttf"));
@@ -228,19 +350,19 @@ public class AndroidPlatformSupport extends PlatformSupport {
 				KRFontGenerator = new FreeTypeFontGenerator(Gdx.files.absolute("/system/fonts/NotoSansKR-Regular.otf"));
 				koreanAndroid6OTF = true;
 			}
-			
+
 			//Chinese font generators
 			if (Gdx.files.absolute("/system/fonts/NotoSansSC-Regular.otf").exists()){
 				SCFontGenerator = new FreeTypeFontGenerator(Gdx.files.absolute("/system/fonts/NotoSansSC-Regular.otf"));
 			} else if (Gdx.files.absolute("/system/fonts/NotoSansHans-Regular.otf").exists()){
 				SCFontGenerator = new FreeTypeFontGenerator(Gdx.files.absolute("/system/fonts/NotoSansHans-Regular.otf"));
 			}
-			
+
 			//Japaneses font generators
 			if (Gdx.files.absolute("/system/fonts/NotoSansJP-Regular.otf").exists()){
 				JPFontGenerator = new FreeTypeFontGenerator(Gdx.files.absolute("/system/fonts/NotoSansJP-Regular.otf"));
 			}
-			
+
 			//set up a fallback generator for any remaining fonts
 			FreeTypeFontGenerator fallbackGenerator;
 			if (Gdx.files.absolute("/system/fonts/DroidSansFallback.ttf").exists()){
@@ -249,18 +371,18 @@ public class AndroidPlatformSupport extends PlatformSupport {
 				//no fallback font, just set to null =/
 				fallbackGenerator = null;
 			}
-			
+
 			if (KRFontGenerator == null) KRFontGenerator = fallbackGenerator;
 			if (SCFontGenerator == null) SCFontGenerator = fallbackGenerator;
 			if (JPFontGenerator == null) JPFontGenerator = fallbackGenerator;
-			
+
 		}
-		
+
 		if (basicFontGenerator != null) fonts.put(basicFontGenerator, new HashMap<>());
 		if (KRFontGenerator != null) fonts.put(KRFontGenerator, new HashMap<>());
 		if (SCFontGenerator != null) fonts.put(SCFontGenerator, new HashMap<>());
 		if (JPFontGenerator != null) fonts.put(JPFontGenerator, new HashMap<>());
-		
+
 		//would be nice to use RGBA4444 to save memory, but this causes problems on some gpus =S
 		packer = new PixmapPacker(pageSize, pageSize, Pixmap.Format.RGBA8888, 1, false);
 	}
@@ -281,7 +403,7 @@ public class AndroidPlatformSupport extends PlatformSupport {
 			return basicFontGenerator;
 		}
 	}
-	
+
 	//splits on newlines, underscores, and chinese/japaneses characters
 	private Pattern regularsplitter = Pattern.compile(
 			"(?<=\n)|(?=\n)|(?<=_)|(?=_)|" +
@@ -290,7 +412,7 @@ public class AndroidPlatformSupport extends PlatformSupport {
 					"(?<=\\p{InCJK_Unified_Ideographs})|(?=\\p{InCJK_Unified_Ideographs})|" +
 					"(?<=\\p{InCJK_Symbols_and_Punctuation})|(?=\\p{InCJK_Symbols_and_Punctuation})|" +
 					"(?<=\\p{InHalfwidth_and_Fullwidth_Forms})|(?=\\p{InHalfwidth_and_Fullwidth_Forms})");
-	
+
 	//additionally splits on words, so that each word can be arranged individually
 	private Pattern regularsplitterMultiline = Pattern.compile(
 			"(?<= )|(?= )|(?<=\n)|(?=\n)|(?<=_)|(?=_)|" +
@@ -299,12 +421,12 @@ public class AndroidPlatformSupport extends PlatformSupport {
 					"(?<=\\p{InCJK_Unified_Ideographs})|(?=\\p{InCJK_Unified_Ideographs})|" +
 					"(?<=\\p{InCJK_Symbols_and_Punctuation})|(?=\\p{InCJK_Symbols_and_Punctuation})|" +
 					"(?<=\\p{InHalfwidth_and_Fullwidth_Forms})|(?=\\p{InHalfwidth_and_Fullwidth_Forms})");
-	
+
 	//splits on each non-hangul character. Needed for weird android 6.0 font files
 	private Pattern android6KRSplitter = Pattern.compile(
 			"(?<= )|(?= )|(?<=\n)|(?=\n)|(?<=_)|(?=_)|" +
 					"(?!\\p{InHangul_Syllables})|(?<!\\p{InHangul_Syllables})");
-	
+
 	@Override
 	public String[] splitforTextBlock(String text, boolean multiline) {
 		if (koreanAndroid6OTF && getGeneratorForString(text) == KRFontGenerator){
@@ -318,26 +440,26 @@ public class AndroidPlatformSupport extends PlatformSupport {
 
 	@Override
 	public PackageTrie findClasses(String pkgName) throws ClassNotFoundException {
-				return new PackageTrie() {
+		return new PackageTrie() {
 			{
-								try {
-										Enumeration<String> entries = new DexFile(AndroidLauncher.instance
-														.getContext()
-														.getPackageCodePath()
-												).entries();
-										String n; while(entries.hasMoreElements()) {
-												n = entries.nextElement();
-												if(n.contains(pkgName)) try {
-														addClass(Class.forName(n), pkgName);
-													} catch (Exception e) {
-														e.printStackTrace();
-													}
-											}
-									} catch (IOException e) {
-										//e.printStackTrace();
-											}
-							}
+				try {
+					Enumeration<String> entries = new DexFile(AndroidLauncher.instance
+							.getContext()
+							.getPackageCodePath()
+					).entries();
+					String n; while(entries.hasMoreElements()) {
+						n = entries.nextElement();
+						if(n.contains(pkgName)) try {
+							addClass(Class.forName(n), pkgName);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				} catch (IOException e) {
+					//e.printStackTrace();
+				}
+			}
 		};
-		}
-	
+	}
+
 }

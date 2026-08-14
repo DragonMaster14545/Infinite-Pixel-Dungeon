@@ -45,43 +45,6 @@ public class DeviceCompat {
 				return true;
 		}
 	}
-	public static boolean supportsFilePicker(){
-		return filePickerHandler != null;
-	}
-
-	private static FilePickerHandler filePickerHandler = null;
-
-	public static void setFilePickerHandler( FilePickerHandler handler ){
-		filePickerHandler = handler;
-	}
-
-	public static void saveFileWithPicker( String suggestedName, byte[] data, FilePickerCallback callback ){
-		if (filePickerHandler == null){
-			callback.onComplete( false );
-			return;
-		}
-		filePickerHandler.saveFileWithPicker( suggestedName, data, callback );
-	}
-	public static void openFileWithPicker( FileOpenCallback callback ){
-		if (filePickerHandler == null){
-			callback.onFileSelected( null );
-			return;
-		}
-		filePickerHandler.openFileWithPicker( callback );
-	}
-
-	public interface FilePickerHandler {
-		void saveFileWithPicker( String suggestedName, byte[] data, FilePickerCallback callback );
-		void openFileWithPicker( FileOpenCallback callback );
-	}
-
-	public interface FilePickerCallback {
-		void onComplete( boolean success );
-	}
-
-	public interface FileOpenCallback {
-		void onFileSelected( byte[] data );
-	}
 
 	//return APi level on Android, major OS version on iOS, 0 on desktop
 	public static int getPlatformVersion(){

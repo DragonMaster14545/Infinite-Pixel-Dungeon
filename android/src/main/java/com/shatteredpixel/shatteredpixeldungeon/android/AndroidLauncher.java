@@ -155,6 +155,14 @@ public class AndroidLauncher extends AndroidApplication {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (AndroidPlatformSupport.instance != null) {
+            AndroidPlatformSupport.instance.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
     protected void onResume() {
         //prevents weird rare cases where the app is running twice
         if (instance != this){
