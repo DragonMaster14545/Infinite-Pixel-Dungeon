@@ -350,7 +350,7 @@ public class TitleScene extends PixelScene {
 
 		@Override
         public void onClick() {
-			ShatteredPixelDungeon.switchNoFade(BattlePassPreviewScene.class);
+			// we no longer show preview.
 		}
 	}
 
