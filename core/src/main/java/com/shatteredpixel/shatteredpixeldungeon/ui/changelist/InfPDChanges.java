@@ -19,7 +19,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.emblem.CommonEmblem;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfDivineInspiration;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfArcana;
-import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfValor;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfScorch;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfPower;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfInsurgence;
@@ -75,6 +75,10 @@ public class InfPDChanges {
         changes = new ChangeInfo("B", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.RING_OBSIDIAN), new RingOfScorch().trueName(),
+                "Formerly Ring of Valor, changed to Ring of Scorching where the player can deal additional damage based on player's weapon damage"));
+
 
         changes.addButton( new ChangeButton(Icons.get(Icons.INFO), "Import/Export Data System",
                 "In this update, we added a new feature: I/E Saves\n\n" +
@@ -539,7 +543,7 @@ public class InfPDChanges {
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.INFO_PAGE), new InfoPage().trueName(),
                 "This is your statistic companion, do whatever you want."));
 
-        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.RING_OBSIDIAN), new RingOfValor().trueName(),
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.RING_OBSIDIAN), new RingOfScorch().trueName(),
                 "_A new ring has been added that enhances hero's damage!_\n\n" +
                         "The Ring of Valor lets the player directly enhances their weapons' damage, instead of only being able to enhance the damage up by only upgrading the item itself."));
 

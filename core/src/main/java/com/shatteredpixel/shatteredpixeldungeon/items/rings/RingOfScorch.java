@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
 import java.text.DecimalFormat;
 
-public class RingOfValor extends Ring {
+public class RingOfScorch extends Ring {
 
 	{
 		icon = ItemSpriteSheet.Icons.RING_VALOR;
@@ -40,10 +40,10 @@ public class RingOfValor extends Ring {
 	public String statsInfo() {
 		if (isIdentified()){
 			String info = Messages.get(this, "stats",
-					new DecimalFormat("#.###").format(100f * (1.02f + soloVisualBonus()*0.035 - 1f)));
+					new DecimalFormat("#.###").format(100f * (soloVisualBonus()*0.035)));
 			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
-						Messages.decimalFormat("#.##", 100f * (1.02f + combinedBuffedBonus(Dungeon.hero)*0.035 - 1f)));
+						Messages.decimalFormat("#.##", 100f * (combinedBuffedBonus(Dungeon.hero)*0.035)));
 			}
 			return info;
 		} else {
@@ -54,22 +54,22 @@ public class RingOfValor extends Ring {
 	public String upgradeStat1(long level){
 		if (cursed && cursedKnown) level = Math.min(-1, level-3);
 
-		return Messages.decimalFormat("#.##", 100f * (1.02f + level*0.035 - 1f)) + "%";
+		return Messages.decimalFormat("#.##", 100f * (level*0.035)) + "%";
 	}
 	
 	@Override
 	protected RingBuff buff( ) {
-		return new Valor();
+		return new Scorch();
 	}
 	
-	public static double damageMultiplier( Char target ){
-        double multiplier = 1d;
-        if (getBuffedBonus(target, Valor.class) > 0) multiplier = 1.02d;
-        if (getBuffedBonus(target, Valor.class) > 1) multiplier += getBuffedBonus(target, Valor.class)*0.035d;
+	public static double scorchDamageMultiplier( Char target ){
+        double multiplier = 0d;
+        if (getBuffedBonus(target, Scorch.class) > 0) multiplier = 0.02d;
+        if (getBuffedBonus(target, Scorch.class) > 1) multiplier += getBuffedBonus(target, Scorch.class)*0.035d;
 
 		return Math.min(multiplier, 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
 	}
 	
-	public class Valor extends RingBuff {
+	public class Scorch extends RingBuff {
 	}
 }
