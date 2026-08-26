@@ -172,24 +172,7 @@ public class WaveArenaLevel extends Level {
         map[entrance] = Terrain.PEDESTAL;
 
         {
-            itemsToSpawn = new ArrayList<>();
-
-            itemsToSpawn.add(new SmallRation().quantity(Random.IntRange(2, 4)));
-            itemsToSpawn.add(new PotionOfHealing().quantity(Random.IntRange(2, 4)));
-
-            for (Item item : itemsToSpawn) {
-
-                int cell;
-                do {
-                    cell = pointToCell(new Point(
-                            Random.IntRange( ROOM_LEFT, ROOM_RIGHT ),
-                            Random.IntRange( ROOM_TOP, ROOM_BOTTOM )
-                    ));
-                } while (cell == entrance || cell == arenaDoor
-                        || heaps.get( cell ) != null || findMob( cell ) != null);
-
-                drop( item, cell ).type = Heap.Type.FOR_SALE;
-            }
+            generateItems();
         }
 
         boolean[] patch = Patch.generate( width, height, 0.30f, 6, true );
@@ -239,6 +222,30 @@ public class WaveArenaLevel extends Level {
 
 
         return true;
+    }
+
+    public void generateItems() {
+
+        itemsToSpawn = new ArrayList<>();
+        itemsToSpawn.add(new SmallRation().quantity(Random.IntRange(2, 4)));
+        itemsToSpawn.add(new PotionOfHealing().quantity(Random.IntRange(2, 4)));
+
+        for (Item item : itemsToSpawn) {
+
+            //TODO possible infinite loop here, needs fix
+            //     and we need a gold effect when spawning
+            //     the items.
+            int cell;
+            do {
+                cell = pointToCell(new Point(
+                        Random.IntRange( ROOM_LEFT, ROOM_RIGHT ),
+                        Random.IntRange( ROOM_TOP, ROOM_BOTTOM )
+                ));
+            } while (cell == entrance || cell == arenaDoor
+                    || heaps.get( cell ) != null || findMob( cell ) != null);
+
+            drop( item, cell ).type = Heap.Type.FOR_SALE;
+        }
     }
 
     @Override
@@ -342,6 +349,7 @@ public class WaveArenaLevel extends Level {
 
         if (spawned > 0) {
             GLog.w( Messages.get( WaveArenaLevel.class, "wave_incoming", waveNumber ) );
+            generateItems();
         } else {
             //couldn't spawn anything this wave (no free cells etc) - don't get stuck, try again next tick
             waveActive = false;
