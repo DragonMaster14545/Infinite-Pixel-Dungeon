@@ -73,7 +73,7 @@ public class Raritize extends InventorySpell {
 
 		item.randomizeRarity();
 
-		GLog.p(Messages.get(this, "raritized", item.rarity.trueName));
+		GLog.p(Messages.get(this, "raritized", item.rarity == Rarity.NONE ? "None" : item.rarity.trueName));
 		curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
 	}
 	
@@ -95,7 +95,7 @@ public class Raritize extends InventorySpell {
 			inputs =  new Class[]{ScrollOfUpgrade.class, ScrollOfTransmutation.class};
 			inQuantity = new int[]{1, 1};
 			
-			cost = 150;
+			cost = 175;
 			
 			output = Raritize.class;
 			outQuantity = OUT_QUANTITY;

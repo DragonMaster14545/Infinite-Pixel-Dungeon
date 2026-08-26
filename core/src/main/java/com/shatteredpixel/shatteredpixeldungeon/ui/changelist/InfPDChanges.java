@@ -85,6 +85,11 @@ public class InfPDChanges {
                         "This feature can help you to backup your run, upload them an import to other devices. They are useful on Android devices since Android don't let you access inner application data without root access"
         ));
 
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Raritize's energy cost increased to 175, from 150\n" +
+                        "_-_ Default rarity when gaining a raritized item is now set to common, from none\n"
+        ));
+
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
                 "_-_ Added null checks on bitmap texts.\n"
         ));

@@ -257,7 +257,7 @@ public class Item implements Bundlable {
 	}
 
 	public void randomizeRarity() {
-		rarity = Rarity.NONE;
+		rarity = Rarity.COMMON;
 		double random = Dungeon.Double(1.1, Dungeon.LuckDirection.DOWN);
 		for (Rarity r : Rarity.values()) {
 			if (random <= r.chance) {
