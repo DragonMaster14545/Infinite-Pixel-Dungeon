@@ -72,13 +72,13 @@ public class ShurikenOfShadows extends MissileWeapon {
 		if (Actor.findChar(cell) != null) targets.add(Actor.findChar(cell));
 		
 		for (int i : PathFinder.NEIGHBOURS8){
-            CellEmitter.bottom(cell + i).burst(Speck.factory(Speck.ROCK), 10);
             if (cell + i != Dungeon.level.entrance && cell + i != Dungeon.level.exit && !Dungeon.level.openSpace[cell + i]){
+				CellEmitter.bottom(cell + i).burst(Speck.factory(Speck.ROCK), 10);
                 Level.set( cell + i, Terrain.EMPTY);
-                Dungeon.level.buildFlagMaps();
-                Dungeon.level.cleanWalls();
-                GameScene.updateMap();
             }
+			Dungeon.level.buildFlagMaps();
+			Dungeon.level.cleanWalls();
+			GameScene.updateMap();
 
 			if (!(Dungeon.level.traps.get(cell+i) instanceof TenguDartTrap)) Dungeon.level.pressCell(cell+i);
 			if (Actor.findChar(cell + i) != null) targets.add(Actor.findChar(cell + i));
