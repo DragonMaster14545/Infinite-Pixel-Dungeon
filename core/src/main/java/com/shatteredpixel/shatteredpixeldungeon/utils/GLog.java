@@ -70,4 +70,24 @@ public class GLog {
 	public static void h( String text, Object... args ) {
 		i( HIGHLIGHT + text, args );
 	}
+
+	public static void cc( String text, String color, Object... args ) {
+		i( "["+ color +"]" + text + "[]", args);
+	}
+
+	public static void rainbow( String text, Object... args ) {
+		i( "[rainbow]" + text + "[]", args);
+	}
+
+	public static void flickering( String text, Object... args ) {
+		i( "[flicker]" + text + "[]", args);
+	}
+
+	public static void glinted( String text, String color, Object... args ) {
+		i( "[rainbow+"+ color +"]" + text + "[]", args);
+	}
+
+	public static void particle( String text, String color, Object... args ) {
+		i( "[particle+"+ color +"]" + text + "[]", args);
+	}
 }
