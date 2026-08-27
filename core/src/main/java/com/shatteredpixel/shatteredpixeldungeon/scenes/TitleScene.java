@@ -162,7 +162,7 @@ public class TitleScene extends PixelScene {
 		btnBadges.icon(Icons.get(Icons.JOURNAL));
 		add(btnBadges);
 
-		StyledButton btnSave = new NewsButton(GREY_TR, "I/E Save");
+		StyledButton btnSave = new NewsButton(GREY_TR, "Saves");
 		btnSave.icon(Icons.get(Icons.INFO));
 		add(btnSave);
 
