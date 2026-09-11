@@ -86,13 +86,14 @@ public class InfPDChanges {
         ));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ You can now see current health module's bonus multiplier\n"
+                "_-_ You can now see current health module's bonus multiplier\n" +
+                        "_-_ You can no longer extract upgrades on missile weapons\n"
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Raritize's energy cost increased to 175, from 150\n" +
                         "_-_ Default rarity when gaining a raritized item is now set to common, from none\n" +
-                        "_-_ Added a new mechanic in item quantifier: its energy cost increases when a quantification is successful."
+                        "_-_ Added a new mechanic in item quantifier: its energy cost increases when a quantification is successful.\n"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
