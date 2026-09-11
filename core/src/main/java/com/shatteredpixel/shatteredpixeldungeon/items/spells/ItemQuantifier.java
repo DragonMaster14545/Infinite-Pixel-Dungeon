@@ -24,6 +24,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
@@ -38,7 +39,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
+
+import java.util.ArrayList;
 
 public class ItemQuantifier extends InventorySpell {
 	
@@ -49,6 +53,12 @@ public class ItemQuantifier extends InventorySpell {
 		talentChance = 1/(float) Recipe.OUT_QUANTITY;
 	}
 
+	private static double increaseCost = 1d;
+
+	public static double increaseCost() {
+		return increaseCost;
+	}
+
 	@Override
 	protected boolean usableOnItem(Item item) {
 		return item.quantity() > 1;
@@ -57,27 +67,34 @@ public class ItemQuantifier extends InventorySpell {
 	@Override
 	protected void onItemSelected(Item item) {
 
-		if (item.unique) {
-            if (Random.Float() < 0.25f) {
-                item.quantity(item.quantity() + 2);
-                GLog.p(Messages.get(this, "quantified_unique", item.quantity()));
-                curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
-            } else {
-                item.quantity(item.quantity() - 1);
-                GLog.p(Messages.get(this, "false_quantify_unique", item.quantity()));
-                curUser.sprite.emitter().start(Speck.factory(Speck.CONFUSION), 0.2f, 10);
-            }
-        } else {
-            if (Random.Float() < 0.75f) {
-                item.quantity(item.quantity() + 3);
-                GLog.p(Messages.get(this, "quantified", item.quantity()));
-                curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
-            } else {
-                item.quantity(item.quantity() - 1);
-                GLog.p(Messages.get(this, "false_quantify", item.quantity()));
-                curUser.sprite.emitter().start(Speck.factory(Speck.CONFUSION), 0.2f, 10);
-            }
-        }
+		if (!(item instanceof ItemQuantifier)) {
+			if (item.unique) {
+				if (Random.Float() < 0.25f) {
+					item.quantity(item.quantity() + 2);
+					GLog.p(Messages.get(this, "quantified_unique", item.quantity()));
+					curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
+					increaseCost += Random.Double(0.75d);
+				} else {
+					item.quantity(item.quantity() - 1);
+					GLog.p(Messages.get(this, "false_quantify_unique", item.quantity()));
+					curUser.sprite.emitter().start(Speck.factory(Speck.CONFUSION), 0.2f, 10);
+				}
+			} else {
+				if (Random.Float() < 0.75f) {
+					item.quantity(item.quantity() + 3);
+					GLog.p(Messages.get(this, "quantified", item.quantity()));
+					curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
+					increaseCost += Random.Double(0.25d);
+				} else {
+					item.quantity(item.quantity() - 1);
+					GLog.p(Messages.get(this, "false_quantify", item.quantity()));
+					curUser.sprite.emitter().start(Speck.factory(Speck.CONFUSION), 0.2f, 10);
+				}
+			}
+		} else {
+			GLog.particle("Yes, you wasted a single quantifier to increase itself, how funny.", "green");
+			increaseCost += Random.Double(10d);
+		}
 
 	}
 	
@@ -90,6 +107,20 @@ public class ItemQuantifier extends InventorySpell {
 	public long energyVal() {
 		return (long)(12 * (quantity/(float) Recipe.OUT_QUANTITY));
 	}
+
+	private static final String MULTIPLIER = "multiplier_item";
+
+	@Override
+	public void storeInBundle(Bundle bundle) {
+		super.storeInBundle(bundle);
+		bundle.put(MULTIPLIER, increaseCost);
+	}
+
+	@Override
+	public void restoreFromBundle(Bundle bundle) {
+		super.restoreFromBundle(bundle);
+		if (bundle.contains(MULTIPLIER))    increaseCost = bundle.getDouble(MULTIPLIER);
+	}
 	
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
 
@@ -99,10 +130,17 @@ public class ItemQuantifier extends InventorySpell {
 			inputs =  new Class[]{ScrollOfUpgrade.class, PotionOfHealing.class};
 			inQuantity = new int[]{1, 1};
 			
-			cost = 350;
-			
 			output = ItemQuantifier.class;
 			outQuantity = OUT_QUANTITY;
+		}
+
+		@Override
+		public long cost( ArrayList<Item> ingredients ) {
+			if (Dungeon.hero == null || !Dungeon.hero.isAlive()) {
+				return 350;
+			} else {
+				return (long) (350 * increaseCost());
+			}
 		}
 		
 	}

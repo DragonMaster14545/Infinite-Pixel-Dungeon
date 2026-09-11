@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.modules.HealthModule;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemQuantifier;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.BattlePassScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -94,6 +95,7 @@ public class InfoPage extends Item {
                 Messages.get(this, "ankhs_used", Statistics.ankhsUsed) +
                 Messages.get(this, "ring_cap", 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion())) +
                 Messages.get(this, "health_multi", HealthModule.multi * 25) +
+                Messages.get(this, "itemquantifier_multi", ItemQuantifier.increaseCost()) +
                 Messages.get( this, "battlepass_desc");
     }
 
