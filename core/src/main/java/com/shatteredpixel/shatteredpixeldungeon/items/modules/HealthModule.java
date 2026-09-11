@@ -36,6 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.utils.Bundle;
 
 public class HealthModule extends Module {
 
@@ -62,5 +63,19 @@ public class HealthModule extends Module {
     @Override
     public long value() {
         return 7500 * quantity;
+    }
+
+    private static final String MULTIPLIER = "multiplier";
+
+    @Override
+    public void storeInBundle(Bundle bundle) {
+        super.storeInBundle(bundle);
+        bundle.put(MULTIPLIER, multi);
+    }
+
+    @Override
+    public void restoreFromBundle(Bundle bundle) {
+        super.restoreFromBundle(bundle);
+        if (bundle.contains(MULTIPLIER))    multi = bundle.getDouble(MULTIPLIER);
     }
 }
