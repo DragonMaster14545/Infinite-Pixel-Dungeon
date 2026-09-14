@@ -80,6 +80,10 @@ public class InfPDChanges {
                 "_-_ Deterministically nerfed overall rarity chances.\n"
         ));
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ Powerless spell now actually gives 1 turn of mind vision, and enemies now take 1 damage.\n"
+        ));
+
         changes = new ChangeInfo("B", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);

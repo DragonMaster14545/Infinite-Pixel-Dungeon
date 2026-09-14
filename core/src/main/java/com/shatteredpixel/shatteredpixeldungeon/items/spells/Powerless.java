@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArtifactRecharge;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Awareness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
@@ -133,11 +134,14 @@ public class Powerless extends Spell {
 
 				for (Char ch : affected){
 					if ( ch.alignment != target.alignment ) {
-						Buff.affect(Dungeon.hero, MindVision.class, 1f);
+						//Buff.affect(Dungeon.hero, MindVision.class, 1f);
 						Buff.affect(ch, Paralysis.class, 1f);
+						ch.damage(1, Powerless.class);
 						((Mob) ch).aggro(target);
 					}
 				}
+
+				Buff.prolong(Dungeon.hero, MindVision.class, 1f);
 
 				if (left <= 0){
 					detach();
