@@ -91,7 +91,7 @@ public class PocketAlchemy extends TargetedSpell {
                 || Dungeon.level.map[cell] == Terrain.EMBERS) && ch == null) {
             Level.set(cell, Terrain.ALCHEMY);
             GameScene.updateMap(cell);
-            Buff.affect(hero, AlchemyCooldown.class).set(750);
+            Buff.affect(hero, AlchemyCooldown.class).set(500);
         }
 
 	}
