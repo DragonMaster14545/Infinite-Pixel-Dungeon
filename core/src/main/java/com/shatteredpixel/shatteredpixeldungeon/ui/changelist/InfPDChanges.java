@@ -72,6 +72,14 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes = new ChangeInfo("C", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Deterministically nerfed overall rarity chances.\n"
+        ));
+
         changes = new ChangeInfo("B", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
