@@ -46,6 +46,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.BArray;
+import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
@@ -58,17 +59,21 @@ public class ScrollOfTeleportation extends Scroll {
 		icon = ItemSpriteSheet.Icons.SCROLL_TELEPORT;
 	}
 
+	private float duration_left = 0f;
+
 	@Override
 	public void doRead() {
 
 		detach(curUser.belongings.backpack);
 		Sample.INSTANCE.play( Assets.Sounds.READ );
 
-		Buff.affect(curUser, Paralysis.class, 3f);
+		Buff.affect(curUser, Paralysis.class, Math.max(0f, 3f - duration_left));
 
 		if (teleportPreferringUnseen( curUser )){
 			readAnimation();
 		}
+
+		duration_left -= Random.Float(0.1f);
 		identify();
 
 	}
@@ -327,5 +332,19 @@ public class ScrollOfTeleportation extends Scroll {
 	@Override
 	public long value() {
 		return isKnown() ? 30 * quantity : super.value();
+	}
+
+	private static final String LEFT = "durationLeft";
+
+	@Override
+	public void storeInBundle(Bundle bundle) {
+		super.storeInBundle(bundle);
+		bundle.put(LEFT, duration_left);
+	}
+
+	@Override
+	public void restoreFromBundle(Bundle bundle) {
+		super.restoreFromBundle(bundle);
+		if (bundle.contains(LEFT)) duration_left = bundle.getFloat(LEFT);
 	}
 }
