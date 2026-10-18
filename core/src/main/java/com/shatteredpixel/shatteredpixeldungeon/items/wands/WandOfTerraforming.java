@@ -169,7 +169,7 @@ public class WandOfTerraforming extends Wand {
             inputs =  new Class[]{ScrollOfMagicMapping.class, ScrollOfTransmutation.class, Alchemize.class};
             inQuantity = new int[]{1, 1, 1};
 
-            cost = 75;
+            cost = 25;
 
             output = WandOfTerraforming.class;
             outQuantity = OUT_QUANTITY;
