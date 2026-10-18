@@ -32,7 +32,7 @@ import com.watabou.noosa.Image;
 
 public class DanceImmuneBuff extends FlavourBuff {
 
-	public static final float DURATION = 10f;
+	public static final float DURATION = 20f;
 	
 	{
 		type = buffType.POSITIVE;

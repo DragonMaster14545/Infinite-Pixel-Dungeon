@@ -43,7 +43,7 @@ public class DanceImmune extends Spell {
     @Override
     protected void onCast(Hero hero) {
         if (hero.buff(DanceImmuneBuff.class) == null) {
-            Buff.affect(hero, DanceImmuneBuff.class, 10f);
+            Buff.affect(hero, DanceImmuneBuff.class, 20f);
             GLog.p(Messages.get(this, "applied"));
             Catalog.countUse(getClass());
             detach( curUser.belongings.backpack );
