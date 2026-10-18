@@ -170,13 +170,17 @@ public class ChaliceOfBlood extends Artifact {
 		healDelay /= amount;
 		double heal = 5d/healDelay;
 		//effectively 0.5/1/1.5/2/2.5 HP per turn at +0/+6/+8/+9/+10
-		if (Random.Double() < heal%1){
-			heal++;
-		}
+		//apply rarity first, so the fractional part is rounded probabilistically
+		//instead of being truncated away afterward
+		//(which made regen actually gives a little against what the item's desc says)
 		heal *= getRarityMultiplier();
-		if (heal >= 1f && target.HP < target.HT) {
-			target.HP = Math.min(target.HT, target.HP + (long)heal);
-			target.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString((long)heal), FloatingText.HEALING);
+		long healAmount = (long)heal;
+		if (Random.Double() < heal - healAmount){
+			healAmount++;
+		}
+		if (healAmount >= 1 && target.HP < target.HT) {
+			target.HP = Math.min(target.HT, target.HP + healAmount);
+			target.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(healAmount), FloatingText.HEALING);
 
 			if (target.HP == target.HT && target instanceof Hero) {
 				((Hero) target).resting = false;
