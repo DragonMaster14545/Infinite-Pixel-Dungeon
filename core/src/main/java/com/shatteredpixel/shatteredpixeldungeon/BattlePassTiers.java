@@ -25,6 +25,7 @@
 package com.shatteredpixel.shatteredpixeldungeon;
 
 import com.shatteredpixel.shatteredpixeldungeon.items.ArcaneResin;
+import com.shatteredpixel.shatteredpixeldungeon.items.Blueprint;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.fishingrods.GoldenFishingRod;
@@ -37,6 +38,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.Raritize;
 import com.shatteredpixel.shatteredpixeldungeon.items.test_tubes.Tubes;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.WondrousResin;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLifesteal;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.SearingSlasher;
 
 import java.util.ArrayList;
@@ -109,8 +112,11 @@ public class BattlePassTiers {
 
     static {
         BattlePassTiers.setCustomItem( 15, Raritize.class, 4 );
-        BattlePassTiers.setCustomItem( 25, ScrollOfEnchantment.class, 2 );
-        BattlePassTiers.setCustomItem( 100, SearingSlasher.class );
+        BattlePassTiers.setCustomItem( 25, Blueprint.class );
+        BattlePassTiers.setCustomItem( 50, Blueprint.class );
+        BattlePassTiers.setCustomItem( 75, Blueprint.class );
+        BattlePassTiers.setCustomItem( 80, WandOfLifesteal.class );
+        BattlePassTiers.setCustomItem( 100, WandOfTeleportation.class );
     }
     public static Item rewardFor( int tier ){
         if (!isItemTier( tier )) return null;
@@ -168,8 +174,8 @@ public class BattlePassTiers {
     }
 
     static {
-        setPremiumItem( 10, ScrollOfUpgrade.class, 1 );
-        setPremiumItem( 25, PotionOfExperience.class, 1 );
+        setPremiumItem( 10, ScrollOfUpgrade.class, 10 );
+        setPremiumItem( 75, WandOfLifesteal.class, 1 );
         setPremiumItem( 100, GoldenFishingRod.class, 1 );
     }
 
