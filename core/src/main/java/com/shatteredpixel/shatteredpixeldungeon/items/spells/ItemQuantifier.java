@@ -137,9 +137,9 @@ public class ItemQuantifier extends InventorySpell {
 		@Override
 		public long cost( ArrayList<Item> ingredients ) {
 			if (Dungeon.hero == null || !Dungeon.hero.isAlive()) {
-				return 350;
+				return 150;
 			} else {
-				return (long) (350 * increaseCost());
+				return (long) (150 * increaseCost());
 			}
 		}
 		
