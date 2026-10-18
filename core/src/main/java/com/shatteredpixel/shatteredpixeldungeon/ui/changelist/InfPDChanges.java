@@ -79,11 +79,18 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Deterministically nerfed overall rarity chances.\n" +
                         "_-_ Scroll of Teleportation's paralyzing effect can now be reduced by using the scroll\n" +
-                        "_-_ Pocket Alchemy's cooldown decreased to 500, from 750\n"
+                        "_-_ Pocket Alchemy's cooldown decreased to 500, from 750\n" +
+                        "_-_ Removed Ring of Wealth into the generation\n" +
+                        "_-_ Reduced the cost of Item Quantifier and Wand of Teleportation\n" +
+                        "_-_ Duration of Dance spell effect is increased by 100%"
         ));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Powerless spell now actually gives 1 turn of mind vision, and enemies now take 1 damage.\n"
+        ));
+
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
+                "_-_ Fixed reduced chalice of blood regen\n"
         ));
 
         changes = new ChangeInfo("B", false, "");
