@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.GalacticInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.IdentificationBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ItemQuantifier;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.PocketAlchemy;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.Raritize;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.TierUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.treasurebags.LegendaryTreasureBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.FerretTuft;
@@ -77,6 +78,11 @@ public class InfPDChanges {
         changes = new ChangeInfo("C", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.RARITIZE), new Raritize().trueName(),
+                "Raritize spell has gotten a new revamp! Here's what changed:" +
+                            "\n\n_-_ The spell now draws common all the way to fiery, not jumping to a random rarity like before" +
+                            "\n_-_ You can improve this spell's rarity chances by combining two of them separately in the alchemy (with the same level of course)"));
 
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.TROPHY), new EntrophicalCup().trueName(),
                 "A new artifact that generates a shield overtime by sacrificing ankhs"));

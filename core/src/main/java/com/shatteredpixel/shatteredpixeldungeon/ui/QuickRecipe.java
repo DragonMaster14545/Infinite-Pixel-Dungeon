@@ -442,6 +442,7 @@ public class QuickRecipe extends Component {
 				result.add(new QuickRecipe(new WandOfTerraforming.Recipe()));
 				result.add(new QuickRecipe(new Blueprint.Recipe()));
 				result.add(new QuickRecipe(new SearingSlasher.Recipe()));
+				result.add(new QuickRecipe(new Raritize.MergeRecipe(), new ArrayList<>(Arrays.asList(new Raritize(), new Raritize())), new Raritize()));
                 return result;
 		}
 	}

@@ -51,10 +51,14 @@ import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.utils.Reflection;
+import com.watabou.utils.Random;
+
+import java.util.ArrayList;
 
 public class Raritize extends InventorySpell {
-	
+
+	private static final double CHANCE_MULTIPLIER = 1d;
+
 	{
 		image = ItemSpriteSheet.RARITIZE;
 
@@ -62,19 +66,67 @@ public class Raritize extends InventorySpell {
 		talentChance = 1/(float) Recipe.OUT_QUANTITY;
 	}
 
+	protected double chanceBoost() { return 1d + level(); }
+
+	private static Rarity nextRarity( Rarity current ) {
+		if (current == null) return null;
+		int up = current.ordinal() - 1;
+		return up >= 0 ? Rarity.values()[up] : null;
+	}
+
+	public static double ascensionChance( Rarity target ) {
+		if (target == null) return 0d;
+		if (target.chance <= 0d) return 1d;
+		return Math.min( 1d, CHANCE_MULTIPLIER * target.chance );
+	}
+
+	private static String rarityName( Rarity rarity ) {
+		return rarity == Rarity.NONE ? "None" : rarity.trueName;
+	}
+
+	@SuppressWarnings("DefaultLocale")
+    private String oddsText(Rarity target ) {
+		double p = Math.min( 1d, ascensionChance( target ) * chanceBoost() );
+		if (p >= 1d) return "100%";
+
+		String percent;
+		if (p >= 0.01d)        percent = String.format( "%.1f", p * 100d );
+		else if (p >= 0.0001d) percent = String.format( "%.3f", p * 100d );
+		else                   percent = String.format( "%.2e", p * 100d );
+
+		return "1 in " + String.format( "%,d", Math.round( 1d / p ) ) + " (" + percent + "%)";
+	}
+
 	@Override
 	protected boolean usableOnItem(Item item) {
 		return (item instanceof Weapon || item instanceof Armor || item instanceof Ring || item instanceof Artifact
-				|| item instanceof Wand || item instanceof FishingRod);
+				|| item instanceof Wand || item instanceof FishingRod)
+				&& nextRarity( item.rarity ) != null;
 	}
 
 	@Override
 	protected void onItemSelected(Item item) {
 
-		item.randomizeRarity();
+		Rarity next = nextRarity( item.rarity );
 
-		GLog.p(Messages.get(this, "raritized", item.rarity == Rarity.NONE ? "None" : item.rarity.trueName));
-		curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
+		if (next == null) {
+			GLog.w(Messages.get(this, "ineligible"));
+			return;
+		}
+
+		if (Random.Double() < Math.min( 1d, ascensionChance( next ) * chanceBoost())) {
+			item.rarity = next;
+			GLog.p(Messages.get(this, "raritized", rarityName( next )));
+			curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
+		} else {
+			GLog.n(Messages.get(this, "failed", rarityName( next ), oddsText( next )));
+		}
+	}
+
+	@Override
+	public String desc() {
+		return Messages.get(this, "desc") + "\n\n" + Messages.get(this, "desc_chance")
+				+ (level() > 0 ? "\n\n" + Messages.get(this, "desc_boost", chanceBoost()) : "");
 	}
 	
 	@Override
@@ -101,5 +153,61 @@ public class Raritize extends InventorySpell {
 			outQuantity = OUT_QUANTITY;
 		}
 		
+	}
+
+	public static final int MAX_LEVEL = Integer.MAX_VALUE;
+
+	@Override
+	public String name() {
+		return super.name();
+	}
+
+	@Override
+	public long visiblyUpgraded() { return level(); }
+
+	@Override
+	public long buffedVisiblyUpgraded() { return level(); }
+
+	@Override
+	public boolean isSimilar( Item item ) {
+		return super.isSimilar( item ) && item.level() == level();
+	}
+
+	public static class MergeRecipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe {
+
+		@Override
+		public boolean testIngredients( ArrayList<Item> ingredients ) {
+			if (ingredients == null || ingredients.size() != 2) return false;
+			if (!(ingredients.get( 0 ) instanceof Raritize) || !(ingredients.get( 1 ) instanceof Raritize)) return false;
+			return ingredients.get( 0 ).level() == ingredients.get( 1 ).level()
+					&& ingredients.get( 0 ).level() < MAX_LEVEL;
+		}
+
+		@Override
+		public long cost( ArrayList<Item> ingredients ) {
+			return 5 + ingredients.get( 0 ).level() * 5;
+		}
+
+		@Override
+		public Item brew( ArrayList<Item> ingredients ) {
+			if (!testIngredients( ingredients )) return null;
+			long level = ingredients.get( 0 ).level();
+			for (Item ingredient : ingredients) {
+				ingredient.quantity( ingredient.quantity() - 1 );
+			}
+			Raritize result = new Raritize();
+			result.level( level + 1 );
+			result.identify();
+			return result;
+		}
+
+		@Override
+		public Item sampleOutput( ArrayList<Item> ingredients ) {
+			if (!testIngredients( ingredients )) return null;
+			Raritize result = new Raritize();
+			result.level( ingredients.get( 0 ).level() + 1 );
+			result.identify();
+			return result;
+		}
 	}
 }

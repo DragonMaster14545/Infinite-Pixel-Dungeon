@@ -253,7 +253,8 @@ public abstract class Recipe {
 			new DanceImmune.Recipe(),
 			new Extractor.Recipe(),
 			new ItemGetter.Recipe(),
-			new Powerless.Recipe()
+			new Powerless.Recipe(),
+			new Raritize.MergeRecipe()
 	};
 	
 	private static Recipe[] threeIngredientRecipes = new Recipe[]{
