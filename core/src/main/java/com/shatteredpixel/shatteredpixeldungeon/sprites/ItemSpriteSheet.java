@@ -999,8 +999,10 @@ public class ItemSpriteSheet {
 
     private static final int NEW_ARTIFACT_ROW =								xy(1, 37);
     public static final int EXAM_PARCHMENT	= NEW_ARTIFACT_ROW+0;
+	public static final int TROPHY	= NEW_ARTIFACT_ROW+1;
     static{
         assignItemRect(EXAM_PARCHMENT, 15, 14);
+		assignItemRect(TROPHY, 14, 12);
     }
 
 	private static final int MODULES_FIRST =								xy(1, 38);
