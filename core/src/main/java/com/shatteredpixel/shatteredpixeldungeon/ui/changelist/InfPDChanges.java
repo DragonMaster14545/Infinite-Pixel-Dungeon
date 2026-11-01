@@ -8,6 +8,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.BlackPsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.InfoPage;
 import com.shatteredpixel.shatteredpixeldungeon.items.LostBackpack;
 import com.shatteredpixel.shatteredpixeldungeon.items.PsycheChest;
+import com.shatteredpixel.shatteredpixeldungeon.items.ShulkerBox;
 import com.shatteredpixel.shatteredpixeldungeon.items.TicketToPortableShop;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.ExaminationParchment;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SkeletonKey;
@@ -75,6 +76,9 @@ public class InfPDChanges {
         changes = new ChangeInfo("C", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.SHULK_BOX), new ShulkerBox().trueName(),
+                "A new type of storage that was on the popular game Minecraft, it stores 25 kinds of items and the items that are stored cannot be used unless you take it out of the box."));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Deterministically nerfed overall rarity chances.\n" +
