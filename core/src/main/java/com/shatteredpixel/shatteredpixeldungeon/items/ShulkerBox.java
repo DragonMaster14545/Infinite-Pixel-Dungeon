@@ -154,7 +154,7 @@ public class ShulkerBox extends Item {
 		} else {
 			item.detachAll(hero.belongings.backpack);
 		}
-        addToContents(item);
+        addToContents(toStore);
 
         hero.sprite.operate(hero.pos);
         hero.spend(1f);
@@ -243,7 +243,6 @@ public class ShulkerBox extends Item {
 
     private boolean customColor = false;
     private int color = 0;
-    private boolean glow = false;
 
     public ShulkerBox setColor(int rgb) {
         customColor = true;
@@ -258,36 +257,8 @@ public class ShulkerBox extends Item {
         return this;
     }
 
-    public ShulkerBox setGlow(boolean glow) {
-        updateQuickslot();
-        return this;
-    }
-
     public int color() {
-        return customColor ? color : idColor();
-    }
-
-    private int idColor() {
-        float h = ((boxId >>> 8) % 360L) / 60f;
-        float s = 0.6f, v = 1f;
-        int i = (int) h;
-        float f = h - i;
-        float p = v * (1 - s), q = v * (1 - s * f), t = v * (1 - s * (1 - f));
-        float r, g, b;
-        switch (i % 6) {
-            case 0:  r = v; g = t; b = p; break;
-            case 1:  r = q; g = v; b = p; break;
-            case 2:  r = p; g = v; b = t; break;
-            case 3:  r = p; g = q; b = v; break;
-            case 4:  r = t; g = p; b = v; break;
-            default: r = v; g = p; b = q; break;
-        }
-        return ((int) (r * 255) << 16) | ((int) (g * 255) << 8) | (int) (b * 255);
-    }
-
-    @Override
-    public ItemSprite.Glowing glowing() {
-        return glow && !customColor ? new ItemSprite.Glowing(color(), 2f) : null;
+        return customColor ? color : 0xFFFFFF;
     }
 
 	@Override
@@ -329,12 +300,13 @@ public class ShulkerBox extends Item {
     private void applyColorText(String text) {
         String t = text == null ? "" : text.trim().toLowerCase();
 
-        if (t.isEmpty() || t.equals("reset") || t.equals("default")) {
+        if (t.isEmpty() || t.equals("reset") || t.equals("default")
+                || t.equals("none") || t.equals("off")) {
             resetColor();
             GLog.i(Messages.get(this, "color_reset"));
             return;
         }
-        if (t.equals("none") || t.equals("off")) {
+        if (t.equals("none")) {
             setGlow(false);
             GLog.i(Messages.get(this, "color_off"));
             return;
@@ -479,7 +451,6 @@ public class ShulkerBox extends Item {
     private static final String CONTENTS = "contents";
     private static final String CUSTOM_COLOR = "custom_color";
     private static final String COLOR = "color";
-    private static final String GLOW = "glow";
 
     @Override
     public void storeInBundle(Bundle bundle) {
@@ -488,7 +459,6 @@ public class ShulkerBox extends Item {
         bundle.put(CONTENTS, contents);
         bundle.put(CUSTOM_COLOR, customColor);
         bundle.put(COLOR, color);
-        bundle.put(GLOW, glow);
     }
 
     @Override
@@ -507,7 +477,6 @@ public class ShulkerBox extends Item {
         if (bundle.contains(GLOW)) {
             customColor = bundle.getBoolean(CUSTOM_COLOR);
             color = bundle.getInt(COLOR);
-            glow = bundle.getBoolean(GLOW);
         }
     }
 }
