@@ -324,11 +324,6 @@ public class ShulkerBox extends Item {
             GLog.i(Messages.get(this, "color_reset"));
             return;
         }
-        if (t.equals("none")) {
-            setGlow(false);
-            GLog.i(Messages.get(this, "color_off"));
-            return;
-        }
 
         Integer rgb = parseColor(t);
         if (rgb == null) {
@@ -492,7 +487,7 @@ public class ShulkerBox extends Item {
 		levelKnown = true;
 		cursedKnown = true;
 		if (level() > MAX_LEVEL) level(MAX_LEVEL);
-        if (bundle.contains(GLOW)) {
+        if (bundle.contains(CUSTOM_COLOR)) {
             customColor = bundle.getBoolean(CUSTOM_COLOR);
             color = bundle.getInt(COLOR);
         }
