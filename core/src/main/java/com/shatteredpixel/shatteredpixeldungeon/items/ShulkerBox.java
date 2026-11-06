@@ -241,8 +241,8 @@ public class ShulkerBox extends Item {
         });
     }
 
-    private boolean customColor = false;
-    private int color = 0;
+    private boolean customColor = true;
+    private int color = hueColor(boxId);
 
     public ShulkerBox setColor(int rgb) {
         customColor = true;
@@ -259,6 +259,24 @@ public class ShulkerBox extends Item {
 
     public int color() {
         return customColor ? color : 0xFFFFFF;
+    }
+
+	private static int hueColor(long id) {
+        float h = ((id >>> 8) % 360L) / 60f;
+        float s = 0.6f, v = 1f;
+        int i = (int) h;
+        float f = h - i;
+        float p = v * (1 - s), q = v * (1 - s * f), t = v * (1 - s * (1 - f));
+        float r, g, b;
+        switch (i % 6) {
+            case 0:  r = v; g = t; b = p; break;
+            case 1:  r = q; g = v; b = p; break;
+            case 2:  r = p; g = v; b = t; break;
+            case 3:  r = p; g = q; b = v; break;
+            case 4:  r = t; g = p; b = v; break;
+            default: r = v; g = p; b = q; break;
+        }
+        return ((int) (r * 255) << 16) | ((int) (g * 255) << 8) | (int) (b * 255);
     }
 
 	@Override
