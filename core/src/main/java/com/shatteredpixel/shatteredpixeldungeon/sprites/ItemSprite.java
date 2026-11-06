@@ -202,7 +202,9 @@ public class ItemSprite extends MovieClip {
 	}
 
 	public ItemSprite view( Item item ){
+		resetColor();
 		view(item.image(), item.glowing());
+		if (item.tint() != -1) hardlight(item.tint());
 		Emitter emitter = item.emitter();
 		if (emitter != null && parent != null) {
 			emitter.pos( this );

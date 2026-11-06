@@ -13,6 +13,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.TicketToPortableShop;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.EntrophicalCup;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.ExaminationParchment;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SkeletonKey;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.VaultLink;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.EquipmentBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.SackOfHolding;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.UtilityBag;
@@ -74,6 +75,25 @@ public class InfPDChanges {
         changes = new ChangeInfo("InfPD-0.2.0", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes = new ChangeInfo("D", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.BEACON), new VaultLink().trueName(),
+                "A new artifact (has an option to equip them) has been added in the game to make the shulker boxes useful!\n\n" +
+                        "_-_ Stored boxes can be retrieved when you get this item (boxes that are not restored doesn't keep them)\n" +
+                        "_-_ Other modes has their own separate data (with 50% efficiency), also run with challenges too!\n" +
+                        "_-_ This same artifact only sees the same data on the mode of the run\n\n" +
+                        "You can do a kit system here, or just have some fun!"));
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.SHULK_BOX), new ShulkerBox().trueName(),
+                "An early revamp for the new type of storage in-game, here's what changed:\n\n" +
+                            "_-_ You can now upgrade your boxes up to the _100_th level\n" +
+                            "_-_ The window is now paginated, for the upgradable slots\n" +
+                            "_-_ You can now inspect an item, just click the _INSPECT_ button\n" +
+                            "_-_ Setting a new color now tints the item sprite instead of glowing (not at when you bought/get them)\n" +
+                            "_-_ It no longer glows, just hardlights the item sprite instead"));
 
         changes = new ChangeInfo("C", false, "");
         changes.hardlight(0x00FFFF);

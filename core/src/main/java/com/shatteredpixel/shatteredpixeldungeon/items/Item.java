@@ -791,7 +791,8 @@ public class Item implements Bundlable {
 	}
 
 	public Emitter emitter() { return null; }
-	
+
+	public int tint() { return -1; }
 	public String info() {
 
 		if (Dungeon.hero != null) {

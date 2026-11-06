@@ -12,6 +12,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndShulkerBox;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndShulkerInspect;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndTextInput;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundlable;
@@ -25,15 +26,23 @@ public class ShulkerBox extends Item {
     public static final String AC_OPEN  = "OPEN";
     public static final String AC_STORE = "STORE";
     public static final String AC_COLOR = "COLOR";
+	public static final String AC_INSPECT = "INSPECT";
 
-    public static final int CAPACITY = 25;
+    public static final int BASE_CAPACITY = 25;
+	public static final int CAPACITY_PER_LEVEL = 5;
+	public static final int MAX_LEVEL = 100;
+	public static final int BASE_LIMIT = 10;
+	public static final int LIMIT_PER_LEVEL = 10;
 
     private static final int BASE_VALUE = 60;
+	private static final int VALUE_PER_LEVEL = 40;
 
     {
         image = ItemSpriteSheet.SHULK_BOX;
 
         defaultAction = AC_OPEN;
+        levelKnown = true;
+		cursedKnown = true;
     }
 
     private final ArrayList<Item> contents = new ArrayList<>();
@@ -52,8 +61,38 @@ public class ShulkerBox extends Item {
         return contents.isEmpty();
     }
 
+	public long capacity() {
+		return BASE_CAPACITY + CAPACITY_PER_LEVEL * level();
+	}
+
+	public long maxItemLevel() {
+		return scaledLimit();
+	}
+
+	public long maxQuantity() {
+		return scaledLimit();
+	}
+
+	private long scaledLimit() {
+		long normal = BASE_LIMIT + LIMIT_PER_LEVEL * level();
+		return Math.max(1, Math.round(normal * VaultStore.limitPercent() / 100f));
+	}
+
+	private long quantityRoomFor(Item item) {
+		long existing = 0;
+		if (item.stackable) {
+			for (Item i : contents) {
+				if (item.isSimilar(i)) {
+					existing = i.quantity();
+					break;
+				}
+			}
+		}
+		return Math.max(0, maxQuantity() - existing);
+	}
+
     private boolean hasRoomFor(Item item) {
-        if (contents.size() < CAPACITY) return true;
+        if (contents.size() < capacity()) return true;
         if (item.stackable) {
             for (Item i : contents) {
                 if (item.isSimilar(i)) return true;
@@ -92,14 +131,36 @@ public class ShulkerBox extends Item {
             return;
         }
 
-        item.detachAll(hero.belongings.backpack);
+        if (item.level() > maxItemLevel()) {
+			GLog.w(Messages.get(this, "level_limit", maxItemLevel()));
+			return;
+		}
+
+		long room = quantityRoomFor(item);
+		if (room <= 0) {
+			GLog.w(Messages.get(this, "stack_limit", maxQuantity()));
+			return;
+		}
+
+		Item toStore = item;
+		if (item.quantity() > room) {
+			Item part = item.split(room);
+			if (part == null) {
+				GLog.w(Messages.get(this, "stack_limit", maxQuantity()));
+				return;
+			}
+			toStore = part;
+			GLog.i(Messages.get(this, "stack_split", room, maxQuantity()));
+		} else {
+			item.detachAll(hero.belongings.backpack);
+		}
         addToContents(item);
 
         hero.sprite.operate(hero.pos);
         hero.spend(1f);
         hero.busy();
         Sample.INSTANCE.play(Assets.Sounds.ITEM);
-        GLog.i(Messages.get(this, "stored", item.name()));
+        GLog.i(Messages.get(this, "stored", toStore.name()));
         updateQuickslot();
     }
 
@@ -127,8 +188,9 @@ public class ShulkerBox extends Item {
     public ArrayList<String> actions(Hero hero) {
         ArrayList<String> actions = super.actions(hero);
         actions.add(0, AC_OPEN);
+		actions.add(1, AC_INSPECT);
         if (hero.belongings.backpack.contains(this)) {
-            actions.add(1, AC_STORE);
+            actions.add(2, AC_STORE);
         }
         actions.add(AC_COLOR);
         return actions;
@@ -136,24 +198,23 @@ public class ShulkerBox extends Item {
 
     @Override
     public void execute(Hero hero, String action) {
-        switch (action) {
-            case AC_OPEN:
-                ensureUnique();
-                GameScene.show(new WndShulkerBox(this));
-                defaultAction = AC_OPEN;
-                break;
-            case AC_STORE:
-                ensureUnique();
-                startStore(hero);
-                defaultAction = AC_STORE;
-                break;
-            case AC_COLOR:
-                startColor();
-                break;
-            default:
-                super.execute(hero, action);
-                break;
-        }
+		if (action.equals(AC_OPEN)) {
+			ensureUnique();
+			GameScene.show(new WndShulkerBox(this));
+			defaultAction = AC_OPEN;
+		} else if (action.equals(AC_STORE)) {
+			ensureUnique();
+			startStore(hero);
+			defaultAction = AC_STORE;
+		} else if (action.equals(AC_INSPECT)) {
+			GameScene.show(new WndShulkerInspect(this));
+
+		} else if (action.equals(AC_COLOR)) {
+			startColor();
+
+		} else {
+			super.execute(hero, action);
+		}
     }
 
     private void startStore(Hero hero) {
@@ -182,25 +243,22 @@ public class ShulkerBox extends Item {
 
     private boolean customColor = false;
     private int color = 0;
-    private boolean glow = true;
+    private boolean glow = false;
 
     public ShulkerBox setColor(int rgb) {
         customColor = true;
         color = rgb & 0xFFFFFF;
-        glow = true;
         updateQuickslot();
         return this;
     }
 
     public ShulkerBox resetColor() {
         customColor = false;
-        glow = true;
         updateQuickslot();
         return this;
     }
 
     public ShulkerBox setGlow(boolean glow) {
-        this.glow = glow;
         updateQuickslot();
         return this;
     }
@@ -229,8 +287,19 @@ public class ShulkerBox extends Item {
 
     @Override
     public ItemSprite.Glowing glowing() {
-        return glow ? new ItemSprite.Glowing(color(), 2f) : null;
+        return glow && !customColor ? new ItemSprite.Glowing(color(), 2f) : null;
     }
+
+	@Override
+	public int tint() {
+		if (!customColor) return -1;
+		//mixes in a quarter of white so dark colors don't hide the sprite's shading
+		int r = (color >> 16) & 0xFF, g = (color >> 8) & 0xFF, b = color & 0xFF;
+		r += (255 - r) / 4;
+		g += (255 - g) / 4;
+		b += (255 - b) / 4;
+		return (r << 16) | (g << 8) | b;
+	}
 
     private static final String[] COLOR_NAMES = {
             "red", "orange", "yellow", "green", "cyan", "blue", "purple",
@@ -360,7 +429,21 @@ public class ShulkerBox extends Item {
 
     @Override
     public boolean isUpgradable() {
-        return false;
+        return level() < MAX_LEVEL;
+	}
+
+	@Override
+	public Item upgrade() {
+		if (level() >= MAX_LEVEL) return this;
+		super.upgrade();
+		levelKnown = true;
+		GLog.p(Messages.get(this, "upgraded", capacity()));
+		return this;
+	}
+
+	@Override
+	public Item degrade() {
+		return this;
     }
 
     @Override
@@ -368,32 +451,29 @@ public class ShulkerBox extends Item {
         return true;
     }
 
-    @Override
-    public long value() {
-        long total = BASE_VALUE;
-        for (Item items : contents) {
-            total += items.value();
-        }
-        return total;
-    }
+	@Override
+	public long value() {
+		long total = BASE_VALUE + (long) VALUE_PER_LEVEL * level();
+		for (Item items : contents) {
+			total += items.value();
+		}
+		return (int) Math.min(total, Integer.MAX_VALUE);
+	}
 
     @Override
     public String desc() {
         String desc = super.desc();
 
-        desc += "\n\n" + Messages.get(this, "desc_id",
-                Long.toHexString(boxId).toUpperCase(), contents.size(), CAPACITY);
+		desc += "\n\n" + Messages.get(this, "desc_id",
+				Long.toHexString(boxId).toUpperCase(), contents.size(), capacity());
+		desc += "\n" + Messages.get(this, "desc_limits", maxItemLevel(), maxQuantity());
 
-        if (!contents.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            for (Item items : contents) {
-                sb.append("_").append(Messages.titleCase(items.title())).append("_ * ");
-            }
-            desc += "\n" + sb;
-            desc += "\n\n" + Messages.get(this, "desc_value", value());
-        }
-        return desc;
-    }
+		if (!contents.isEmpty()) {
+			desc += "\n\n" + Messages.get(this, "desc_value", value());
+			desc += "\n" + Messages.get(this, "desc_inspect");
+		}
+		return desc;
+	}
 
     private static final String BOX_ID = "box_id";
     private static final String CONTENTS = "contents";
@@ -421,6 +501,9 @@ public class ShulkerBox extends Item {
         for (Bundlable b : bundle.getCollection(CONTENTS)) {
             if (b != null) contents.add((Item) b);
         }
+		levelKnown = true;
+		cursedKnown = true;
+		if (level() > MAX_LEVEL) level(MAX_LEVEL);
         if (bundle.contains(GLOW)) {
             customColor = bundle.getBoolean(CUSTOM_COLOR);
             color = bundle.getInt(COLOR);
