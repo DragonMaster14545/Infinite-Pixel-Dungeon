@@ -353,6 +353,17 @@ public class PrismBox extends Item {
 	}
 
 	@Override
+	public Item split(long amount) {
+	    Item split = super.split(amount);
+	    if (split instanceof PrismBox) {
+	        PrismBox box = (PrismBox) split;
+	        box.freshPuzzle();
+	        box.lastFloor = currentFloor();
+	    }
+	    return split;
+	}
+
+	@Override
 	public String desc() {
 		checkFloor();
 		return Messages.get(this, "desc")
