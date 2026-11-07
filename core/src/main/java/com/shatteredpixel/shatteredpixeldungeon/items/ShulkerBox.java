@@ -310,7 +310,6 @@ public class ShulkerBox extends Item {
             public void onSelect(boolean positive, String text) {
                 if (positive) {
                     applyColorText(text);
-                    playerColor = true;
                 }
             }
         });
@@ -333,6 +332,7 @@ public class ShulkerBox extends Item {
             return;
         }
         setColor(rgb);
+		playerColor = true;
         GLog.i(Messages.get(this, "color_set", String.format("#%06X", rgb)));
     }
 
@@ -362,7 +362,7 @@ public class ShulkerBox extends Item {
     }
 
     private void rerollId() {
-        boxId = java.util.concurrent.ThreadLocalRandom.current().nextLong();
+        boxId = newId();
         if (!playerColor) color = hueColor(boxId);
     }
 
@@ -383,7 +383,7 @@ public class ShulkerBox extends Item {
             clash = false;
             for (Item i : hero.belongings) {
                 if (i != this && i instanceof ShulkerBox && ((ShulkerBox) i).boxId == boxId) {
-                    boxId = newId();
+                    boxId = rerollId();
                     clash = true;
                     break;
                 }
@@ -470,6 +470,7 @@ public class ShulkerBox extends Item {
     private static final String CONTENTS = "contents";
     private static final String CUSTOM_COLOR = "custom_color";
     private static final String COLOR = "color";
+	private static final String PLAYER_COLOR = "player_color";
 
     @Override
     public void storeInBundle(Bundle bundle) {
@@ -478,6 +479,7 @@ public class ShulkerBox extends Item {
         bundle.put(CONTENTS, contents);
         bundle.put(CUSTOM_COLOR, customColor);
         bundle.put(COLOR, color);
+		bundle.put(PLAYER_COLOR, playerColor);
     }
 
     @Override
@@ -497,5 +499,6 @@ public class ShulkerBox extends Item {
             customColor = bundle.getBoolean(CUSTOM_COLOR);
             color = bundle.getInt(COLOR);
         }
+		playerColor = bundle.getBoolean(PLAYER_COLOR);
     }
 }
