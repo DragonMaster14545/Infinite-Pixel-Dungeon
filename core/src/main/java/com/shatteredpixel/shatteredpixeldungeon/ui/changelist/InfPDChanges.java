@@ -7,6 +7,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.BadgeBanner;
 import com.shatteredpixel.shatteredpixeldungeon.items.BlackPsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.InfoPage;
 import com.shatteredpixel.shatteredpixeldungeon.items.LostBackpack;
+import com.shatteredpixel.shatteredpixeldungeon.items.PrismBox;
 import com.shatteredpixel.shatteredpixeldungeon.items.PsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.ShulkerBox;
 import com.shatteredpixel.shatteredpixeldungeon.items.TicketToPortableShop;
@@ -79,6 +80,9 @@ public class InfPDChanges {
         changes = new ChangeInfo("D", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.SHULK_BOX), new PrismBox().trueName(),
+                "A new item that gives rewards for you by correcting each dials! [red]Warning:[] This gives you headache."));
 
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.BEACON), new VaultLink().trueName(),
                 "A new artifact (has an option to equip them) has been added in the game to make the shulker boxes useful!\n\n" +
