@@ -42,7 +42,8 @@ public class WndShulkerBox extends Window {
 
 		final long capacity = box.capacity();
 		final long pages = Math.max(1, (capacity + PAGE_SIZE - 1) / PAGE_SIZE);
-		this.page = Math.max(0, Math.min(page, pages - 1));
+		int usedPages = Math.max(1, (box.contents().size() + PAGE_SIZE - 1) / PAGE_SIZE);
+		this.page = Math.max(0, Math.min(page, Math.min(pages, usedPages) - 1));
 
 		int slotWidth = 28;
 		int slotHeight = 28;

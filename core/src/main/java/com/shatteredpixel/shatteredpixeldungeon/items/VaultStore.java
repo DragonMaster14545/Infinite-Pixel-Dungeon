@@ -90,10 +90,12 @@ public class VaultStore {
 		}
 	}
 
-	public static void sync() {
+	public static boolean sync() {
 		try {
 			Dungeon.saveAll();
-		} catch (Exception ignored) {
+			return true;
+		} catch (Exception e) {
+			return false;
 		}
 	}
 }

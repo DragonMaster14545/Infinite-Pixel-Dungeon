@@ -34,9 +34,6 @@ public class ShulkerBox extends Item {
 	public static final int BASE_LIMIT = 10;
 	public static final int LIMIT_PER_LEVEL = 10;
 
-    private static final int BASE_VALUE = 60;
-	private static final int VALUE_PER_LEVEL = 40;
-
     {
         image = ItemSpriteSheet.SHULK_BOX;
 
@@ -242,6 +239,7 @@ public class ShulkerBox extends Item {
     }
 
     private boolean customColor = true;
+    private boolean playerColor = false;
     private int color = hueColor(boxId);
 
     public ShulkerBox setColor(int rgb) {
@@ -310,7 +308,10 @@ public class ShulkerBox extends Item {
                 Messages.get(this, "color_cancel")) {
             @Override
             public void onSelect(boolean positive, String text) {
-                if (positive) applyColorText(text);
+                if (positive) {
+                    applyColorText(text);
+                    playerColor = true;
+                }
             }
         });
     }
@@ -320,6 +321,7 @@ public class ShulkerBox extends Item {
 
         if (t.isEmpty() || t.equals("reset") || t.equals("default")
                 || t.equals("none") || t.equals("off")) {
+            playerColor = false;
             resetColor();
             GLog.i(Messages.get(this, "color_reset"));
             return;
@@ -359,6 +361,11 @@ public class ShulkerBox extends Item {
         return id == 0L ? 1L : id;
     }
 
+    private void rerollId() {
+        boxId = java.util.concurrent.ThreadLocalRandom.current().nextLong();
+        if (!playerColor) color = hueColor(boxId);
+    }
+
     public long boxId() {
         return boxId;
     }
@@ -395,9 +402,10 @@ public class ShulkerBox extends Item {
 
     @Override
     public Item duplicate() {
-        Item dupe = super.duplicate();
-        if (dupe instanceof ShulkerBox) {
-            ((ShulkerBox) dupe).boxId = newId();
+        ShulkerBox dupe = (ShulkerBox) super.duplicate();
+        if (dupe != null) {
+            dupe.contents.clear();
+            dupe.rerollId();
         }
         return dupe;
     }
@@ -436,14 +444,12 @@ public class ShulkerBox extends Item {
         return true;
     }
 
-	@Override
-	public long value() {
-		long total = BASE_VALUE + (long) VALUE_PER_LEVEL * level();
-		for (Item items : contents) {
-			total += items.value();
-		}
-		return (int) Math.min(total, Integer.MAX_VALUE);
-	}
+    @Override
+    public long value() {
+        long total = 60L + 40L * level();
+        for (Item i : contents) total += i.value();
+        return total;
+    }
 
     @Override
     public String desc() {
