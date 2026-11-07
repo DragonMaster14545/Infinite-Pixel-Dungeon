@@ -145,28 +145,36 @@ public class VaultLink extends Artifact {
 		});
 	}
 
-	public static boolean deposit(Hero hero, ShulkerBox box) {
+	public void deposit(Hero hero, ShulkerBox box) {
+		String why = refusal(hero, box);
+		if (why != null) {
+			GLog.w(Messages.get(this, why, slots()));
+			return;
+		}
+
 		ArrayList<ShulkerBox> list = VaultStore.boxes();
 		list.add(box);
-		try {
-			VaultStore.save();
-		} catch (Exception e) {
+		if (!VaultStore.save()) {
 			list.remove(box);
-			return false;
+			GLog.w(Messages.get(this, "write_failed"));
+			return;
 		}
 
 		box.detachAll(hero.belongings.backpack);
 		if (!VaultStore.sync()) {
 			list.remove(box);
-			try { VaultStore.save(); } catch (Exception ignored) {}
-			if (!box.collect()) {
+			VaultStore.save();
+			if (!box.collect(hero.belongings.backpack)) {
 				Dungeon.level.drop(box, hero.pos);
 			}
-			return false;
+			GLog.w(Messages.get(this, "write_failed"));
+			return;
 		}
-		return true;
-	}
 
+		finishTurn(hero);
+		GLog.i(Messages.get(this, "deposited", box.name()));
+	}
+	
 	public void withdraw(Hero hero, ShulkerBox box) {
 		if (!VaultStore.boxes().contains(box)) {
 			GLog.w(Messages.get(this, "already_taken"));
@@ -185,7 +193,6 @@ public class VaultLink extends Artifact {
 			GLog.w(Messages.get(this, "write_failed"));
 			return;
 		}
-		VaultStore.sync();
 		if (!VaultStore.sync()) {
 			VaultStore.boxes().add(box);
 			box.detachAll(Dungeon.hero.belongings.backpack);
