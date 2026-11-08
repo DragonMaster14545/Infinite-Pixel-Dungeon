@@ -38,6 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Honeypot;
 import com.shatteredpixel.shatteredpixeldungeon.items.KingsCrown;
 import com.shatteredpixel.shatteredpixeldungeon.items.LiquidMetal;
 import com.shatteredpixel.shatteredpixeldungeon.items.OverloadBeacon;
+import com.shatteredpixel.shatteredpixeldungeon.items.PrismBox;
 import com.shatteredpixel.shatteredpixeldungeon.items.Stylus;
 import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
 import com.shatteredpixel.shatteredpixeldungeon.items.TicketToArena;
@@ -355,7 +356,7 @@ public enum Catalog {
 				GooBlob.class, TengusMask.class, MetalShard.class, KingsCrown.class,
 				LiquidMetal.class, ArcaneResin.class, TicketToArena.class,
 				SealShard.class, BrokenStaff.class, CloakScrap.class, BowFragment.class, BrokenHilt.class,
-				CreativeGloves.class, Clayball.class, KeyToTruth.class);
+				CreativeGloves.class, Clayball.class, KeyToTruth.class, PrismBox.class);
 
         EMBLEMS.addItems(
                 CommonEmblem.class, UncommonEmblem.class, RareEmblem.class, EpicEmblem.class,

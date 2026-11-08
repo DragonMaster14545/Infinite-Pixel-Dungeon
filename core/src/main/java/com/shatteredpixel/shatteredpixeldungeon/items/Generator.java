@@ -52,6 +52,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SkeletonKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.UnstableSpellbook;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.VaultLink;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
@@ -622,9 +623,10 @@ public class Generator {
 					TalismanOfForesight.class,
 					TimekeepersHourglass.class,
 					UnstableSpellbook.class,
-					EntrophicalCup.class
+					EntrophicalCup.class,
+					VaultLink.class
 			};
-			ARTIFACT.defaultProbs = new float[]{ 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+			ARTIFACT.defaultProbs = new float[]{ 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 			ARTIFACT.probs = ARTIFACT.defaultProbs.clone();
 
 			//Trinkets are unique like artifacts, but unlike them you can only have one at once
