@@ -96,19 +96,26 @@ public class ScrollOfUpgrade extends InventoryScroll {
 							if(!positive) return;
 							long number;
 							try {
-								number = Long.parseLong(text);
+								number = Long.parseLong(text.trim());
 							} catch (NumberFormatException e){
 								GLog.w("No valid number was entered.");
 								return;
 							}
-							if (number != 0){
+							if (number <= 0){
+								GLog.w("Enter an amount greater than zero.");
+								return;
+							}
+							if (number >= quantity()){
+								curItem = detachAll(hero.belongings.backpack);
+							} else {
 								curItem = split(number);
 								updateQuickslot();
 								if (curItem != null){
 									curItem.onDetach( );
 								}
-								GameScene.selectItem(itemSelector2);
 							}
+							if (curItem == null) return;
+							GameScene.selectItem(itemSelector2);
 						}
 					});
 				}
