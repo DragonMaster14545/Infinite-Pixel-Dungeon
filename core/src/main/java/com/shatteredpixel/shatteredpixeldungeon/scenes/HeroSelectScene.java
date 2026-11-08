@@ -198,7 +198,6 @@ public class HeroSelectScene extends PixelScene {
 		}
 
 		Dungeon.challenges = new boolean[Challenges.values().length];
-		SPDSettings.customSeed("");
 
 		if (landscape()){
 			float leftArea = Math.max(100, Camera.main.width/3f);
