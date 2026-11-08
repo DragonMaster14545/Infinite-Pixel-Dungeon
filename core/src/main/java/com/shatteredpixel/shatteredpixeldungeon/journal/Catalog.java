@@ -39,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.KingsCrown;
 import com.shatteredpixel.shatteredpixeldungeon.items.LiquidMetal;
 import com.shatteredpixel.shatteredpixeldungeon.items.OverloadBeacon;
 import com.shatteredpixel.shatteredpixeldungeon.items.PrismBox;
+import com.shatteredpixel.shatteredpixeldungeon.items.ShulkerBox;
 import com.shatteredpixel.shatteredpixeldungeon.items.Stylus;
 import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
 import com.shatteredpixel.shatteredpixeldungeon.items.TicketToArena;
@@ -300,7 +301,7 @@ public enum Catalog {
 
 		MISC_EQUIPMENT.addItems(BrokenSeal.class, SpiritBow.class, Waterskin.class, VelvetPouch.class,
 				PotionBandolier.class, ScrollHolder.class, MagicalHolster.class, Amulet.class,
-				CheeseCheest.class, UtilityBag.class, Blueprint.class);
+				CheeseCheest.class, UtilityBag.class, Blueprint.class, ShulkerBox.class);
 
 
 

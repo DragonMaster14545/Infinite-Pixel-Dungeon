@@ -455,14 +455,16 @@ public class ShulkerBox extends Item {
     public String desc() {
         String desc = super.desc();
 
-		desc += "\n\n" + Messages.get(this, "desc_id",
-				Long.toHexString(boxId).toUpperCase(), contents.size(), capacity());
-		desc += "\n" + Messages.get(this, "desc_limits", maxItemLevel(), maxQuantity());
+		if (Dungeon.level != null || Dungeon.hero != null) {
+            desc += "\n\n" + Messages.get(this, "desc_id",
+                    Long.toHexString(boxId).toUpperCase(), contents.size(), capacity());
+            desc += "\n" + Messages.get(this, "desc_limits", maxItemLevel(), maxQuantity());
 
-		if (!contents.isEmpty()) {
-			desc += "\n\n" + Messages.get(this, "desc_value", value());
-			desc += "\n" + Messages.get(this, "desc_inspect");
-		}
+            if (!contents.isEmpty()) {
+                desc += "\n\n" + Messages.get(this, "desc_value", value());
+                desc += "\n" + Messages.get(this, "desc_inspect");
+            }
+        }
 		return desc;
 	}
 
