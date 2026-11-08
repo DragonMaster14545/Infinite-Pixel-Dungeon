@@ -223,19 +223,46 @@ public class VaultLink extends Artifact {
 		String desc = Messages.get(this, "desc", slots());
 		if (cursed) return desc + "\n\n" + Messages.get(this, "desc_cursed");
 
-		if (VaultStore.mode() != VaultStore.Mode.NORMAL) {
-			desc += "\n\n" + Messages.get(this, "desc_separate", modeName());
-			if (VaultStore.capacityPercent() < 100 || VaultStore.limitPercent() < 100) {
-				desc += " " + Messages.get(this, "desc_nerf", VaultStore.capacityPercent(), VaultStore.limitPercent());
+		if (Dungeon.level != null || Dungeon.hero != null) {
+			if (VaultStore.mode() != VaultStore.Mode.NORMAL) {
+				desc += "\n\n" + Messages.get(this, "desc_separate", modeName());
+				if (VaultStore.capacityPercent() < 100 || VaultStore.limitPercent() < 100) {
+					desc += " " + Messages.get(this, "desc_nerf", VaultStore.capacityPercent(), VaultStore.limitPercent());
+				}
+			}
+			ArrayList<ShulkerBox> stored = VaultStore.boxes();
+			if (stored.isEmpty()) {
+				desc += "\n\n" + Messages.get(this, "desc_empty");
+			} else {
+				desc += "\n\n" + Messages.get(this, "desc_stored", stored.size(), slots());
 			}
 		}
-		ArrayList<ShulkerBox> stored = VaultStore.boxes();
-		if (stored.isEmpty()) {
-			desc += "\n\n" + Messages.get(this, "desc_empty");
-		} else {
-			desc += "\n\n" + Messages.get(this, "desc_stored", stored.size(), slots());
-		}
 		return desc;
+	}
+
+	@Override
+	public int tint() {
+		int color;
+
+		if (Dungeon.level == null || Dungeon.hero == null) {
+			return -1;
+		} else {
+			if (VaultStore.mode() == VaultStore.Mode.NORMAL) {
+				color = 0xFFFFFF;
+			} else if (VaultStore.mode() == VaultStore.Mode.DAILY) {
+				color = 0x007bff;
+			} else if (VaultStore.mode() == VaultStore.Mode.WEEKLY || VaultStore.mode() == VaultStore.Mode.CHALLENGE) {
+				color = 0xffff00;
+			} else {
+				color = 0x39d600;
+			}
+		}
+		
+		int r = (color >> 16) & 0xFF, g = (color >> 8) & 0xFF, b = color & 0xFF;
+		r += (255 - r) / 4;
+		g += (255 - g) / 4;
+		b += (255 - b) / 4;
+		return (r << 16) | (g << 8) | b;
 	}
 
 	@Override
