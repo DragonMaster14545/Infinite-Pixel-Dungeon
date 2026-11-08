@@ -32,6 +32,9 @@ import java.util.Locale;
 public class DungeonSeed {
 
 	public static long TOTAL_SEEDS = 5429503678976L; //larges possible seed has a value of 26^9
+	// we extend the total possible seeds to 12 digits, so we have 26^12 seeds total now
+	public static final long EXPANSION = 1_000_000_000_000_000L;
+	public static final long EXPANSION_SEEDS = TOTAL_SEEDS * 17576L;
 
 	//Seed codes take the form @@@-@@@-@@@ where @ is any letter from A to Z (only uppercase)
 	//This is effectively a base-26 number system, therefore 26^9 unique seeds are possible.
@@ -51,62 +54,64 @@ public class DungeonSeed {
 		return seed;
 	}
 
-	//Takes a seed code (@@@@@@@@@) and converts it to the equivalent long value
+	//Takes a seed code (9 or 12 letters, dashes optional) and converts it to the equivalent long value
 	public static long convertFromCode( String code ){
 		//if code is formatted properly, force uppercase
-		if (code.length() == 11 && code.charAt(3) == '-' && code.charAt(7) == '-'){
+		if ((code.length() == 11 && code.charAt(3) == '-' && code.charAt(7) == '-')
+				|| (code.length() == 15 && code.charAt(3) == '-' && code.charAt(7) == '-' && code.charAt(11) == '-')){
 			code = code.toUpperCase(Locale.ROOT);
 		}
 
 		//ignore whitespace characters and dashes
 		code = code.replaceAll("[-\\s]", "");
 
-		if (code.length() != 9) {
-			throw new IllegalArgumentException("codes must be 9 A-Z characters.");
+		if (code.length() != 9 && code.length() != 12) {
+			throw new IllegalArgumentException("codes must be 9 or 12 A-Z characters.");
 		}
 
 		long result = 0;
-		for (int i = 8; i >= 0; i--) {
+		for (int i = 0; i < code.length(); i++) {
 			char c = code.charAt(i);
 			if (c > 'Z' || c < 'A')
-				throw new IllegalArgumentException("codes must be 9 A-Z characters.");
-
-			result += (c - 65) * Math.pow(26, (8 - i));
+				throw new IllegalArgumentException("codes must be A-Z characters.");
+			result = result * 26 + (c - 'A');
 		}
-		return result;
+		return code.length() == 12 ? EXPANSION + result : result;
 	}
 
 	//Takes a long value and converts it to the equivalent seed code
 	public static String convertToCode( long seed ){
-		if (seed < 0 || seed >= TOTAL_SEEDS) {
-			throw new IllegalArgumentException("seeds must be within the range [0, TOTAL_SEEDS)");
+		if (seed >= 0 && seed < TOTAL_SEEDS) {
+			return encode(seed, 9);
+		} else if (seed >= EXPANSION && seed < EXPANSION + EXPANSION_SEEDS) {
+			return encode(seed - EXPANSION, 12);
 		}
+		throw new IllegalArgumentException("seed is outside every valid seed range");
+	}
 
-		//this almost gives us the right answer, but its 0-p instead of A-Z
-		String interrim = Long.toString(seed, 26);
+	private static String encode( long value, int length ){
+		char[] letters = new char[length];
+		for (int i = length - 1; i >= 0; i--) {
+			letters[i] = (char) ('A' + value % 26);
+			value /= 26;
+		}
 		StringBuilder result = new StringBuilder();
-
-		//so we convert
-		for (int i = 0; i < 9; i++) {
-
-			if (i < interrim.length()){
-				char c = interrim.charAt(i);
-				if (c <= '9') c += 17; //convert 0-9 to A-J
-				else          c -= 22; //convert a-p to K-Z
-
-				result.append(c);
-
-			} else {
-				result.insert(0, 'A'); //pad with A (zeroes) until we reach length of 9
-
-			}
+		for (int i = 0; i < length; i++) {
+			if (i > 0 && i % 3 == 0) result.append('-');
+			result.append(letters[i]);
 		}
-
-		//insert dashes for readability
-		result.insert(3, '-');
-		result.insert(7, '-');
-
 		return result.toString();
+	}
+
+	//same rule as randomSeed(), but picks from the extended range
+	public static long randomExtendedSeed(){
+		long seed;
+		String seedText;
+		do {
+			seed = EXPANSION + Random.Long(EXPANSION_SEEDS);
+			seedText = convertToCode(seed);
+		} while (seedText.contains("A") || seedText.contains("E") || seedText.contains("I") || seedText.contains("O") || seedText.contains("U"));
+		return seed;
 	}
 
 	//Creates a seed from arbitrary user text input

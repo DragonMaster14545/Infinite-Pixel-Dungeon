@@ -291,7 +291,7 @@ public class Dungeon {
 			seed = DungeonSeed.convertFromText(customSeedText);
 		} else {
 			customSeedText = "";
-			seed = DungeonSeed.randomSeed();
+			seed = Random.Int(4) == 0 ? DungeonSeed.randomExtendedSeed() : DungeonSeed.randomSeed();
 		}
 	}
 

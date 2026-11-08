@@ -81,6 +81,11 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.STAIRS_LARGE), "Generation Changes",
+                "The dungeon seed generation has been extended to 12 letters, the 9 letter seed is still there." +
+                        " Most of your runs still gives 9 letter seed than 12, and it can be applied in custom seeds."
+        ));
+
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.SHULK_BOX), new PrismBox().trueName(),
                 "A new item that gives rewards for you by correcting each dials! [red]Warning:[] This gives you headache."));
 
@@ -101,6 +106,10 @@ public class InfPDChanges {
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Increased EXP requirement to 150 in Psyche Chest's SoU."
+        ));
+
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
+                "_-_ Fixed the challenge list resets when making a new run\n"
         ));
 
         changes = new ChangeInfo("C", false, "");

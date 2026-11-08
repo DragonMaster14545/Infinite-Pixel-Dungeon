@@ -198,7 +198,6 @@ public class HeroSelectScene extends PixelScene {
 		}
 
 		Dungeon.challenges = new boolean[Challenges.values().length];
-		SPDSettings.challenges(Dungeon.challenges);
 		SPDSettings.customSeed("");
 
 		if (landscape()){
@@ -601,7 +600,7 @@ public class HeroSelectScene extends PixelScene {
 					ShatteredPixelDungeon.scene().addToFront( new WndTextInput(Messages.get(HeroSelectScene.class, "custom_seed_title"),
 							Messages.get(HeroSelectScene.class, "custom_seed_desc"),
 							existingSeedtext,
-							20,
+							25,
 							false,
 							Messages.get(HeroSelectScene.class, "custom_seed_set"),
 							Messages.get(HeroSelectScene.class, "custom_seed_clear")){

@@ -158,7 +158,7 @@ public class SeedFindScene extends PixelScene {
                 SeedFindScene.this.addToFront(new WndTextInput(
                         Messages.get(SeedFindScene.class, "scout_title"),
                         Messages.get(SeedFindScene.class, "scout_info"),
-                        SPDSettings.customSeed(), 20, false,
+                        SPDSettings.customSeed(), 25, false,
                         Messages.get(SeedFindScene.class, "scout_yes"),
                         Messages.get(SeedFindScene.class, "scout_no")) {
                     @Override
