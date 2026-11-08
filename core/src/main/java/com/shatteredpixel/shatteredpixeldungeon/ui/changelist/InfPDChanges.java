@@ -86,10 +86,10 @@ public class InfPDChanges {
                         " Most of your runs still gives 9 letter seed than 12, and it can be applied in custom seeds."
         ));
 
-        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.SHULK_BOX), new PrismBox().trueName(),
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.PRISM_BOX), new PrismBox().trueName(),
                 "A new item that gives rewards for you by correcting each dials! [red]Warning:[] This gives you headache."));
 
-        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.BEACON), new VaultLink().trueName(),
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.VAULT_LINK), new VaultLink().trueName(),
                 "A new artifact (has an option to equip them) has been added in the game to make the shulker boxes useful!\n\n" +
                         "_-_ Stored boxes can be retrieved when you get this item (boxes that are not restored doesn't keep them)\n" +
                         "_-_ Other modes has their own separate data (with 50% efficiency), also run with challenges too!\n" +
