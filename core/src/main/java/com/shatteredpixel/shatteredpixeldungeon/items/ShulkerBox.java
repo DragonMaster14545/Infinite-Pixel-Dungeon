@@ -446,7 +446,7 @@ public class ShulkerBox extends Item {
 
     @Override
     public long value() {
-        long total = 60L + 40L * level();
+        long total = 420L + 40L * level();
         for (Item i : contents) total += i.value();
         return total;
     }
