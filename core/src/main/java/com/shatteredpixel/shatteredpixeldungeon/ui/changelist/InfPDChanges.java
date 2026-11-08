@@ -99,6 +99,10 @@ public class InfPDChanges {
                             "_-_ Setting a new color now tints the item sprite instead of glowing (not at when you bought/get them)\n" +
                             "_-_ It no longer glows, just hardlights the item sprite instead"));
 
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Increased EXP requirement to 150 in Psyche Chest's SoU."
+        ));
+
         changes = new ChangeInfo("C", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
