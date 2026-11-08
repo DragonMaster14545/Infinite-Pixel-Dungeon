@@ -869,6 +869,7 @@ public class ItemSpriteSheet {
 	public static final int VIAL        = BAGS+6;
 	public static final int CHEEST      = BAGS+7;
 	public static final int SHULK_BOX      = BAGS+8;
+	public static final int PRISM_BOX      = BAGS+9;
 	static{
 		assignItemRect(WATERSKIN,   16, 14);
 		assignItemRect(BACKPACK,    16, 16);
@@ -879,6 +880,7 @@ public class ItemSpriteSheet {
 		assignItemRect(VIAL,        12, 12);
 		assignItemRect(CHEEST,      16, 14);
 		assignItemRect(SHULK_BOX,      12, 16);
+		assignItemRect(PRISM_BOX,      12, 13);
 	}
 
 	private static final int TREASURE_BAGS =                       xy(1, 26);
@@ -1000,9 +1002,11 @@ public class ItemSpriteSheet {
     private static final int NEW_ARTIFACT_ROW =								xy(1, 37);
     public static final int EXAM_PARCHMENT	= NEW_ARTIFACT_ROW+0;
 	public static final int TROPHY	= NEW_ARTIFACT_ROW+1;
+	public static final int VAULT_LINK	= NEW_ARTIFACT_ROW+2;
     static{
         assignItemRect(EXAM_PARCHMENT, 15, 14);
 		assignItemRect(TROPHY, 14, 12);
+		assignItemRect(VAULT_LINK, 16, 15);
     }
 
 	private static final int MODULES_FIRST =								xy(1, 38);

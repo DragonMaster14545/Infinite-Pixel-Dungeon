@@ -383,7 +383,7 @@ public class ShulkerBox extends Item {
             clash = false;
             for (Item i : hero.belongings) {
                 if (i != this && i instanceof ShulkerBox && ((ShulkerBox) i).boxId == boxId) {
-                    boxId = rerollId();
+                    rerollId();
                     clash = true;
                     break;
                 }

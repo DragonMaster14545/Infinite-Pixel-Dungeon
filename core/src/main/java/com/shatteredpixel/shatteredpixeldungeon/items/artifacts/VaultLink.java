@@ -28,7 +28,7 @@ public class VaultLink extends Artifact {
 	private static final int SLOTS_PER_LEVEL = 2;
 
 	{
-		image = ItemSpriteSheet.BEACON;
+		image = ItemSpriteSheet.VAULT_LINK;
 
 		levelCap = 10;
 		exp = 0;

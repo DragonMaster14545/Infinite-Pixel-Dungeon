@@ -40,7 +40,7 @@ public class PrismBox extends Item {
 	}
 
 	{
-		image = ItemSpriteSheet.CHEST;
+		image = ItemSpriteSheet.PRISM_BOX;
 		defaultAction = AC_DIAL;
 		stackable = true;
 		levelKnown = true;
