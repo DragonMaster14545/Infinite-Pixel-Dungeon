@@ -94,7 +94,8 @@ public class InfPDChanges {
                         "_-_ Stored boxes can be retrieved when you get this item (boxes that are not restored doesn't keep them)\n" +
                         "_-_ Other modes has their own separate data (with 50% efficiency), also run with challenges too!\n" +
                         "_-_ This same artifact only sees the same data on the mode of the run\n\n" +
-                        "You can do a kit system here, or just have some fun!"));
+                        "You can do a kit system here, or just have some fun!\n\n\n" +
+                        "Unlock the avalanche wand before this... that big green bag contains a kit that may help you unlocking this."));
 
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.SHULK_BOX), new ShulkerBox().trueName(),
                 "An early revamp for the new type of storage in-game, here's what changed:\n\n" +

@@ -33,11 +33,14 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
+import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.PsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.VaultLink;
 import com.shatteredpixel.shatteredpixeldungeon.items.fishingrods.FishingRod;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.KeyToTruth;
+import com.shatteredpixel.shatteredpixeldungeon.items.keys.VaultKit;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DarkGold;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.Pickaxe;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
@@ -60,6 +63,7 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
+import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
@@ -115,6 +119,30 @@ public class Blacksmith extends NPC {
 							Quest.completed = true;
 
 							Badges.truth();
+						}
+					});
+				}
+			});
+			return true;
+		}
+		if (Dungeon.hero.belongings.getItem(VaultKit.class) != null && (Badges.isUnlocked( Badges.Badge.WAND_QUEST_6 ) || DeviceCompat.isDebug())){
+			Game.runOnRenderThread(new Callback() {
+				@Override
+				public void call() {
+					GameScene.show(new WndQuest(Blacksmith.this, Messages.get(Blacksmith.class, "vault")){
+						@Override
+						public void hide() {
+							super.hide();
+							Dungeon.hero.belongings.getItem(VaultKit.class).detach(Dungeon.hero.belongings.backpack);
+
+							Item vaultItem = new VaultLink();
+							vaultItem.identify();
+							Dungeon.level.drop(vaultItem, Blacksmith.this.pos).sprite.drop();
+
+							Blacksmith.this.destroy();
+							Blacksmith.this.sprite.die();
+							Quest.completed = true;
+							Badges.kit();
 						}
 					});
 				}

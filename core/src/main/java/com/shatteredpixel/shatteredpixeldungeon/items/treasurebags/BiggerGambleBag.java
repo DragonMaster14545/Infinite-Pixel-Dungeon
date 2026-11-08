@@ -24,10 +24,12 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.treasurebags;
 
+import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Perks;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.keys.VaultKit;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
 
@@ -47,6 +49,9 @@ public class BiggerGambleBag extends TreasureBag {
         for (Item item: items){
             if (item.stackable && Random.Float() < 0.33f) item.quantity(item.quantity()+1);
         }
+
+        if ((Badges.isUnlocked( Badges.Badge.WAND_QUEST_6 ) && !Badges.isUnlocked( Badges.Badge.KIT_UNLOCKED )) && Random.Int(4) == 0)
+            items.add( new VaultKit() );
         return items;
     }
 

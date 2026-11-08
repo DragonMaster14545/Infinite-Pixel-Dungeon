@@ -41,10 +41,12 @@ public class VaultStore {
 
 	@SuppressWarnings("NewApi")
     public static Mode mode() {
-		if (Dungeon.weekly) return Mode.WEEKLY;
-		if (Dungeon.daily) return Mode.DAILY;
-		if (Dungeon.customSeedText != null && !Dungeon.customSeedText.isEmpty()) return Mode.SEED;
-		if (IntStream.range(0, Dungeon.challenges.length).anyMatch(i -> Dungeon.challenges[i])) return Mode.CHALLENGE;
+		if (Dungeon.level != null || Dungeon.hero != null) {
+			if (Dungeon.weekly) return Mode.WEEKLY;
+			if (Dungeon.daily) return Mode.DAILY;
+			if (Dungeon.customSeedText != null && !Dungeon.customSeedText.isEmpty()) return Mode.SEED;
+			if (IntStream.range(0, Dungeon.challenges.length).anyMatch(i -> Dungeon.challenges[i])) return Mode.CHALLENGE;
+		}
 		return Mode.NORMAL;
 	}
 

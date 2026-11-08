@@ -33,7 +33,9 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.LiquidMetal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Recipe;
+import com.shatteredpixel.shatteredpixeldungeon.items.ShulkerBox;
 import com.shatteredpixel.shatteredpixeldungeon.items.TicketToPortableShop;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.VaultLink;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Blandfruit;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Cheese;
@@ -61,6 +63,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfMi
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfToxicEssence;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Alchemize;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ArmorTierUpgrade;
@@ -437,7 +440,8 @@ public class QuickRecipe extends Component {
 				return result;
             case 9:
                 if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_6)) result.add(new QuickRecipe(new WandOfEarthblast.Recipe(), new ArrayList<>(Arrays.asList(new WandOfFireblast(), new WandOfLivingEarth(), new Cheese())), new WandOfEarthblast()));
-                result.add(new QuickRecipe(new WandOfTeleportation.Recipe()));
+				if (Badges.isUnlocked(Badges.Badge.KIT_UNLOCKED)) result.add(new QuickRecipe(new VaultLink.Recipe(), new ArrayList<>(Arrays.asList(new ShulkerBox(), new ScrollOfUpgrade(), new ElixirOfMight())), new VaultLink()));
+				result.add(new QuickRecipe(new WandOfTeleportation.Recipe()));
                 result.add(new QuickRecipe(new WandOfLifesteal.Recipe()));
 				result.add(new QuickRecipe(new WandOfTerraforming.Recipe()));
 				result.add(new QuickRecipe(new Blueprint.Recipe()));

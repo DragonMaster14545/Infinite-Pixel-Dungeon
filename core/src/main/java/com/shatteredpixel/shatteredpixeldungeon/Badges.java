@@ -205,6 +205,7 @@ public class Badges {
 		WAND_QUEST_4				( 115 ),
 		WAND_QUEST_5				( 116 ),
 		WAND_QUEST_6				( 117 ),
+		KIT_UNLOCKED				( 118 ),
 
 
 		//diamond
@@ -1212,6 +1213,10 @@ public class Badges {
 
 	public static void truth(){
 		displayBadge( Badge.WAND_QUEST_6);
+	}
+
+	public static void kit(){
+		displayBadge( Badge.KIT_UNLOCKED );
 	}
 
     public static void validateTakingTheMick(Object cause){

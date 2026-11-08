@@ -25,6 +25,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.VaultLink;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Blandfruit;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.CheeseChunk;
@@ -269,7 +270,8 @@ public abstract class Recipe {
             new ArmorTierUpgrade.Recipe(),
 			new Blueprint.Recipe(),
 			new WandOfTerraforming.Recipe(),
-			new SearingSlasher.Recipe()
+			new SearingSlasher.Recipe(),
+			new VaultLink.Recipe()
 	};
 	
 	public static ArrayList<Recipe> findRecipes(ArrayList<Item> ingredients){
