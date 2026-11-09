@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -7,6 +8,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.journal.AlchemyPage;
 import com.shatteredpixel.shatteredpixeldungeon.items.journal.GuidePage;
 import com.shatteredpixel.shatteredpixeldungeon.items.journal.RegionLorePage;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
@@ -20,6 +22,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndJournalItem;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndTextInput;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndTitledMessage;
+import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
@@ -153,6 +156,7 @@ public class GlobalCustomNoteButton extends IconButton {
                     Messages.get(GlobalCustomNoteButton.class, "new_type"),
                     Messages.get(GlobalCustomNoteButton.class, "new_type_prompt"));
 
+            itemVisuals();
             int top = height + 2;
             int left = 0;
 
@@ -392,5 +396,17 @@ public class GlobalCustomNoteButton extends IconButton {
                 }
             }
         });
+    }
+
+    public static void itemVisuals() {
+        if (Dungeon.hero != null) return;
+        Random.pushGenerator(5L);
+        try {
+            Potion.initColors();
+            Scroll.initLabels();
+            Ring.initGems();
+        } finally {
+            Random.popGenerator();
+        }
     }
 }

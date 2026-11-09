@@ -110,7 +110,8 @@ public class InfPDChanges {
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
-                "_-_ Fixed the challenge list & custom seed resets when making a new run\n"
+                "_-_ Fixed the challenge list & custom seed resets when making a new run\n",
+                            "_-_ Fixed the unusual same item type in item notes on global notes tab\n"
         ));
 
         changes = new ChangeInfo("C", false, "");
