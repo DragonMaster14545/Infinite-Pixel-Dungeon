@@ -87,6 +87,10 @@ public class InfPDChanges {
                             "In shulker boxes:\n\n" +
                             "_-_ You can now pin and sort items inside it, so you can no longer lose them on sight"));
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ Adjusted the columns of WndBag, 5 for portrait (from 7) and 13 for landscape (from 11)\n"
+        ));
+
         changes = new ChangeInfo("D", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
