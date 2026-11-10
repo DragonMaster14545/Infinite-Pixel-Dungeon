@@ -48,7 +48,8 @@ public enum Document {
 	CAVES_EXPLORER(ItemSpriteSheet.CAVES_PAGE, true),
 	CITY_WARLOCK(ItemSpriteSheet.CITY_PAGE, true),
 	HALLS_KING(ItemSpriteSheet.HALLS_PAGE, true),
-	INFINITY(ItemSpriteSheet.INFO_PAGE, true);
+	INFINITY(ItemSpriteSheet.INFO_PAGE, true),
+	FORBIDDEN_TECHNOLOGY(ItemSpriteSheet.INFO_PAGE, true);
 	Document( int sprite, boolean lore ){
 		pageIcon = null;
 		pageSprite = sprite;
@@ -331,6 +332,11 @@ public enum Document {
 
         INFINITY.pagesStates.put("all_that_matters",                     debug ? READ : NOT_FOUND);
         INFINITY.pagesStates.put("it_was_all_a_dream",                     debug ? READ : NOT_FOUND);
+
+		FORBIDDEN_TECHNOLOGY.pagesStates.put("shulker_boxes",                 	debug ? READ : NOT_FOUND);
+		FORBIDDEN_TECHNOLOGY.pagesStates.put("the_vault",                    	debug ? READ : NOT_FOUND);
+		FORBIDDEN_TECHNOLOGY.pagesStates.put("law_of_vaultkeeping",             debug ? READ : NOT_FOUND);
+		FORBIDDEN_TECHNOLOGY.pagesStates.put("finite_boxes",                  	debug ? READ : NOT_FOUND);
 
 	}
 	

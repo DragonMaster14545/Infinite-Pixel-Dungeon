@@ -103,4 +103,15 @@ public class RegionLorePage {
         }
     }
 
+	public static class ForbiddenTechnology extends DocumentPage {
+		{
+			image = ItemSpriteSheet.INFO_PAGE;
+		}
+
+		@Override
+		public Document document() {
+			return Document.FORBIDDEN_TECHNOLOGY;
+		}
+	}
+
 }

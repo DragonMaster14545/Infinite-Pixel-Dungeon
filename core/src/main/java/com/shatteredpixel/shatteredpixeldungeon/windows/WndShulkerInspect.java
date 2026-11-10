@@ -89,6 +89,7 @@ public class WndShulkerInspect extends Window {
 			add(slot);
 
 			if (item == null) slot.enable(false);
+			else if (index < box.pinnedCount()) WndShulkerItem.markPinned(this, slot);
 		}
 
 		float y = TITLE_HEIGHT + gridHeight + 2;

@@ -24,6 +24,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndVaultLink;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.utils.Bundle;
 
 import java.util.ArrayList;
 public class VaultLink extends Artifact {
@@ -46,9 +47,157 @@ public class VaultLink extends Artifact {
 		unique = true;
 	}
 
+	public static final long[] SHOP_LEVELS = {0, 5, 10, 20, 35, 50, 75, 100};
+
+	public static final long[] SLOT_PACKS = {1, 5, 10, 25, 50, 100, 150, 200};
+
+	public long extraSlots() {
+		return VaultStore.extraSlots();
+	}
+
+	public long packSize(long pack) {
+		return Math.max(0, Math.min(pack, 10000 - VaultStore.extraSlots()));
+	}
+
+	public long slotGoldPrice(long pack) {
+		long n = VaultStore.extraSlots();
+		long c = packSize(pack);
+		return c * 2500 + 250 * (n * c + c * (c - 1) / 2);
+	}
+
+	public long slotEnergyPrice(long pack) {
+		return Math.max(60, slotGoldPrice(pack) / 5);
+	}
+
+	public String buySlots(Hero hero, long pack, boolean withEnergy) {
+		if (cursed) return "cursed";
+		if (hero == null || !hero.isAlive()) return "shop_failed";
+
+		long count = packSize(pack);
+		if (count <= 0) return "shop_slots_max";
+
+		long cost = withEnergy ? slotEnergyPrice(pack) : slotGoldPrice(pack);
+		if ((withEnergy ? Dungeon.energy : Dungeon.gold) < cost) {
+			return withEnergy ? "shop_no_energy" : "shop_no_gold";
+		}
+
+		long before = VaultStore.extraSlots();
+		VaultStore.setExtraSlots(before + count);
+		if (!VaultStore.save()) {
+			VaultStore.setExtraSlots(before);
+			return "write_failed";
+		}
+
+		pay(withEnergy, cost);
+		if (!VaultStore.sync()) {
+			VaultStore.setExtraSlots(before);
+			VaultStore.save();
+			refund(withEnergy, cost);
+			return "write_failed";
+		}
+
+		GLog.i(Messages.get(this, "shop_slots_bought", count, slots()));
+		updateQuickslot();
+		return null;
+	}
+
+	private int bought = 0;
+
+	public int boughtCount() {
+		return bought;
+	}
+
+	public long inflationPercent() {
+		return Math.min(1000, 5 * bought);
+	}
+
+	private long basePrice(long level) {
+		return (long) (2500 + 500 * level + Math.pow(25, 2));
+	}
+
+	private long inflate(long price) {
+		return Math.max(1, price * (100 + inflationPercent()) / 100);
+	}
+
+	public long goldPrice(long level) {
+		return inflate(basePrice(level));
+	}
+
+	public long energyPrice(long level) {
+		return inflate(Math.max(60, basePrice(level) / 5));
+	}
+
+	private void pay(boolean withEnergy, long cost) {
+		if (withEnergy) Dungeon.energy -= cost;
+		else Dungeon.gold -= cost;
+	}
+
+	private void refund(boolean withEnergy, long cost) {
+		if (withEnergy) Dungeon.energy += cost;
+		else Dungeon.gold += cost;
+	}
+
+	public String buy(Hero hero, long level, boolean withEnergy) {
+		if (cursed) return "cursed";
+		if (hero == null || !hero.isAlive()) return "shop_failed";
+
+		level = Math.max(0, Math.min(level, ShulkerBox.MAX_LEVEL));
+		long cost = withEnergy ? energyPrice(level) : goldPrice(level);
+		if ((withEnergy ? Dungeon.energy : Dungeon.gold) < cost) {
+			return withEnergy ? "shop_no_energy" : "shop_no_gold";
+		}
+
+		ShulkerBox box = new ShulkerBox();
+		box.level((int) level);
+
+		if (box.collect(hero.belongings.backpack)) {
+			pay(withEnergy, cost);
+			bought++;
+			GLog.i(Messages.get(this, "shop_bought_pack", box.name()));
+			updateQuickslot();
+			return null;
+		}
+
+		if (VaultStore.boxes().size() >= slots()) return "shop_no_room";
+
+		VaultStore.boxes().add(box);
+		if (!VaultStore.save()) {
+			VaultStore.boxes().remove(box);
+			return "write_failed";
+		}
+
+		pay(withEnergy, cost);
+		bought++;
+		if (!VaultStore.sync()) {
+			VaultStore.boxes().remove(box);
+			VaultStore.save();
+			refund(withEnergy, cost);
+			bought--;
+			return "write_failed";
+		}
+
+		GLog.i(Messages.get(this, "shop_bought_vault", box.name()));
+		updateQuickslot();
+		return null;
+	}
+
+	private static final String BOUGHT = "bought";
+
+	@Override
+	public void storeInBundle(Bundle bundle) {
+		super.storeInBundle(bundle);
+		bundle.put(BOUGHT, bought);
+	}
+
+	@Override
+	public void restoreFromBundle(Bundle bundle) {
+		super.restoreFromBundle(bundle);
+		bought = bundle.getInt(BOUGHT);
+	}
+
 	public long slots() {
 		long normal = BASE_SLOTS + SLOTS_PER_LEVEL * level();
-		return Math.max(1, Math.round(normal * VaultStore.capacityPercent() / 100f));
+		return Math.max(1, Math.round(normal * VaultStore.capacityPercent() / 100f)) + VaultStore.extraSlots();
 	}
 
 	@Override
@@ -188,20 +337,21 @@ public class VaultLink extends Artifact {
 			return;
 		}
 
-		VaultStore.boxes().remove(box);
+		int pinnedBefore = VaultStore.pinnedCount();
+		int at = VaultStore.take(box);
 		if (!box.collect(hero.belongings.backpack)) {
-			VaultStore.boxes().add(box);
+			VaultStore.putBack(box, at, pinnedBefore);
 			GLog.w(Messages.get(this, "pack_full"));
 			return;
 		}
 		if (!VaultStore.save()) {
-			VaultStore.boxes().add(box);
+			VaultStore.putBack(box, at, pinnedBefore);
 			box.detachAll(Dungeon.hero.belongings.backpack);
 			GLog.w(Messages.get(this, "write_failed"));
 			return;
 		}
 		if (!VaultStore.sync()) {
-			VaultStore.boxes().add(box);
+			VaultStore.putBack(box, at, pinnedBefore);
 			box.detachAll(Dungeon.hero.belongings.backpack);
 			VaultStore.save();
 			GLog.w(Messages.get(this, "write_failed"));
@@ -228,6 +378,7 @@ public class VaultLink extends Artifact {
 	@Override
 	public String desc() {
 		String desc = Messages.get(this, "desc", slots());
+		if (Badges.isUnlocked( Badges.Badge.KIT_UNLOCKED )) desc += "\n\n" + Messages.get(this, "desc_lore");
 		if (cursed) return desc + "\n\n" + Messages.get(this, "desc_cursed");
 
 		if (Dungeon.level != null || Dungeon.hero != null) {

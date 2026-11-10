@@ -3,6 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.ShulkerBox;
+import com.shatteredpixel.shatteredpixeldungeon.items.VaultStore;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.VaultLink;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -11,6 +12,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.InventorySlot;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
 
 import java.util.ArrayList;
@@ -56,7 +58,7 @@ public class WndVaultLink extends Window {
 		}
 		int gridHeight = slotHeight * ROWS + SLOT_MARGIN * (ROWS - 1);
 		while (slotHeight >= 20
-				&& (TITLE_HEIGHT + gridHeight + nav + BUTTON_HEIGHT + 2 + 20 + chrome.marginTop()) > PixelScene.uiCamera.height) {
+				&& (TITLE_HEIGHT + gridHeight + nav + BUTTON_HEIGHT * 2 + 3 + 20 + chrome.marginTop()) > PixelScene.uiCamera.height) {
 			slotHeight--;
 			gridHeight -= ROWS;
 		}
@@ -103,6 +105,7 @@ public class WndVaultLink extends Window {
 			add(slot);
 
 			if (locked) slot.enable(false);
+			else if (box != null && index < VaultStore.pinnedCount()) WndShulkerItem.markPinned(this, slot);
 		}
 
 		float y = TITLE_HEIGHT + gridHeight + 2;
@@ -159,7 +162,17 @@ public class WndVaultLink extends Window {
 		all.setRect(half + SLOT_MARGIN, y, half, BUTTON_HEIGHT);
 		add(all);
 
-		resize(windowWidth, (int) (y + BUTTON_HEIGHT));
+		RedButton shop = new RedButton(Messages.get(link, "btn_shop")) {
+			@Override
+			public void onClick() {
+				hide();
+				GameScene.show(new WndVaultShop(WndVaultLink.this.link, reopen()));
+			}
+		};
+		shop.setRect(0, y + BUTTON_HEIGHT + SLOT_MARGIN, windowWidth, BUTTON_HEIGHT);
+		add(shop);
+
+		resize(windowWidth, (int) (y + BUTTON_HEIGHT * 2 + SLOT_MARGIN));
 	}
 
 	private void goTo(long newPage) {
@@ -209,7 +222,28 @@ public class WndVaultLink extends Window {
 			}
 		});
 
+		labels.add(WndShulkerItem.pinLabel(VaultStore.isPinned(box)));
+		runs.add(new Runnable() {
+			@Override
+			public void run() {
+				togglePin(box);
+			}
+		});
+
 		Game.scene().addToFront(new WndShulkerItem(box, labels, runs));
+	}
+
+	private void togglePin(ShulkerBox box) {
+		if (!VaultStore.togglePin(box)) return;
+		if (!VaultStore.save()) {
+			VaultStore.togglePin(box); //undo, the file could not be written
+			GLog.w(Messages.get(link, "write_failed"));
+			return;
+		}
+
+		int index = Math.max(0, VaultStore.indexOf(box));
+		hide();
+		GameScene.show(new WndVaultLink(link, index / PAGE_SIZE));
 	}
 
 	@Override

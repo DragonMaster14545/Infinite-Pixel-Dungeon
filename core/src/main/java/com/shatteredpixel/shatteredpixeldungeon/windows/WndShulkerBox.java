@@ -22,6 +22,7 @@ public class WndShulkerBox extends Window {
     private static final int TITLE_HEIGHT = 14;
 	private static final int NAV_HEIGHT = 16;
 	private static final int FOOTER = 2;
+	private static final int ACTION_HEIGHT = 16;
 	private static final int PAGE_SIZE = ROWS * COLS;
 
     private final ShulkerBox box;
@@ -54,7 +55,7 @@ public class WndShulkerBox extends Window {
             slotWidth--;
             windowWidth -= COLS;
         }
-        int windowHeight = TITLE_HEIGHT + slotHeight * ROWS + SLOT_MARGIN * (ROWS - 1) + nav + FOOTER;
+        int windowHeight = TITLE_HEIGHT + slotHeight * ROWS + SLOT_MARGIN * (ROWS - 1) + nav + ACTION_HEIGHT + 2 + FOOTER;
         while (slotHeight >= 20 && (windowHeight + 20 + chrome.marginTop()) > PixelScene.uiCamera.height) {
             slotHeight--;
             windowHeight -= ROWS;
@@ -95,10 +96,11 @@ public class WndShulkerBox extends Window {
             add(slot);
 
             if (item == null) slot.enable(false);
+            else if (index < box.pinnedCount()) WndShulkerItem.markPinned(this, slot);
         }
 
 		if (pages > 1) {
-			float navY = windowHeight - FOOTER - NAV_HEIGHT;
+			float navY = windowHeight - FOOTER - ACTION_HEIGHT - 2 - NAV_HEIGHT;
 
 			RedButton prev = new RedButton("<") {
 				@Override
@@ -126,6 +128,20 @@ public class WndShulkerBox extends Window {
 			add(label);
 		}
 
+		float actionY = windowHeight - FOOTER - ACTION_HEIGHT;
+
+		RedButton sort = new RedButton(Messages.get(WndShulkerBox.class, "sort")) {
+			@Override
+			public void onClick() {
+				box.sortContents();
+				hide();
+				GameScene.show(new WndShulkerBox(box, 0));
+			}
+		};
+		sort.setRect(0, actionY, windowWidth, ACTION_HEIGHT);
+		sort.enable(box.size() > 1);
+		add(sort);
+
 		resize(windowWidth, windowHeight);
 	}
 
@@ -148,8 +164,24 @@ public class WndShulkerBox extends Window {
 			}
 		});
 
+		labels.add(WndShulkerItem.pinLabel(box.isPinned(item)));
+		runs.add(new Runnable() {
+			@Override
+			public void run() {
+				togglePin(item);
+			}
+		});
+
 		Game.scene().addToFront(new WndShulkerItem(item, labels, runs));
 		return true;
+	}
+
+	private void togglePin(Item item) {
+		if (!box.togglePin(item)) return;
+
+		int index = Math.max(0, box.indexOf(item));
+		hide();
+		GameScene.show(new WndShulkerBox(box, index / PAGE_SIZE));
 	}
 
 	private void takeOut(Item item) {

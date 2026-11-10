@@ -1,6 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -19,6 +20,7 @@ import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ShulkerBox extends Item {
@@ -43,6 +45,40 @@ public class ShulkerBox extends Item {
     }
 
     private final ArrayList<Item> contents = new ArrayList<>();
+
+    private int pinned = 0;
+
+    public int pinnedCount() {
+        return Math.max(0, Math.min(pinned, contents.size()));
+    }
+
+    public int indexOf(Item item) {
+        for (int i = 0; i < contents.size(); i++) {
+            if (contents.get(i) == item) return i;
+        }
+        return -1;
+    }
+
+    public boolean isPinned(Item item) {
+        int i = indexOf(item);
+        return i >= 0 && i < pinnedCount();
+    }
+
+    public boolean togglePin(Item item) {
+        int i = indexOf(item);
+        if (i < 0) return false;
+        int p = pinnedCount();
+
+        contents.remove(i);
+        if (i < p) {
+            contents.add(p - 1, item);
+            pinned = p - 1;
+        } else {
+            contents.add(p, item);
+            pinned = p + 1;
+        }
+        return true;
+    }
 
     private long boxId = newId();
 
@@ -162,12 +198,16 @@ public class ShulkerBox extends Item {
     }
 
     public boolean takeOut(Hero hero, Item item) {
-        if (!contents.contains(item)) return false;
+        int at = indexOf(item);
+        if (at < 0) return false;
+        int pinnedBefore = pinnedCount();
 
-        contents.remove(item);
+        contents.remove(at);
+        if (at < pinnedBefore) pinned = pinnedBefore - 1;
 
         if (!item.collect(hero.belongings.backpack)) {
-            contents.add(item);
+            contents.add(at, item);
+            pinned = pinnedBefore;
             GLog.w(Messages.get(this, "pack_full"));
             return false;
         }
@@ -297,6 +337,35 @@ public class ShulkerBox extends Item {
             0xFF80C0, 0xFFFFFF, 0x909090, 0x9A6030, 0x303030
     };
 
+
+    private static final String[] GROUPS = {
+            ".items.weapon.", ".items.armor.", ".items.wands.", ".items.rings.", ".items.artifacts.",
+            ".items.potions.", ".items.scrolls.", ".items.food.", ".plants.", ".items.stones.", ".items.bombs."
+    };
+
+    private static int group(Item item) {
+        String n = item.getClass().getName();
+        for (int i = 0; i < GROUPS.length; i++) {
+            if (n.contains(GROUPS[i])) return i;
+        }
+        return GROUPS.length;
+    }
+
+    public void sortContents() {
+        int p = pinnedCount();
+        ArrayList<Item> rest = new ArrayList<>(contents.subList(p, contents.size()));
+        Collections.sort(rest, (a, b) -> {
+            int ga = group(a), gb = group(b);
+            if (ga != gb) return ga - gb;
+            int c = a.name().compareToIgnoreCase(b.name());
+            if (c != 0) return c;
+            return Long.compare(b.level(), a.level());
+        });
+        for (int i = 0; i < rest.size(); i++) {
+            contents.set(p + i, rest.get(i));
+        }
+    }
+
     private void startColor() {
         GameScene.show(new WndTextInput(
                 Messages.get(this, "color_title"),
@@ -405,6 +474,7 @@ public class ShulkerBox extends Item {
         ShulkerBox dupe = (ShulkerBox) super.duplicate();
         if (dupe != null) {
             dupe.contents.clear();
+            dupe.pinned = 0;
             dupe.rerollId();
         }
         return dupe;
@@ -456,6 +526,7 @@ public class ShulkerBox extends Item {
         String desc = super.desc();
 
 		if (Dungeon.level != null || Dungeon.hero != null) {
+            if (Badges.isUnlocked( Badges.Badge.KIT_UNLOCKED )) desc += "\n\n" + Messages.get(this, "desc_lore");
             desc += "\n\n" + Messages.get(this, "desc_id",
                     Long.toHexString(boxId).toUpperCase(), contents.size(), capacity());
             desc += "\n" + Messages.get(this, "desc_limits", maxItemLevel(), maxQuantity());
@@ -470,6 +541,7 @@ public class ShulkerBox extends Item {
 
     private static final String BOX_ID = "box_id";
     private static final String CONTENTS = "contents";
+    private static final String PINNED = "pinned";
     private static final String CUSTOM_COLOR = "custom_color";
     private static final String COLOR = "color";
 	private static final String PLAYER_COLOR = "player_color";
@@ -479,6 +551,7 @@ public class ShulkerBox extends Item {
         super.storeInBundle(bundle);
         bundle.put(BOX_ID, boxId);
         bundle.put(CONTENTS, contents);
+        bundle.put(PINNED, pinnedCount());
         bundle.put(CUSTOM_COLOR, customColor);
         bundle.put(COLOR, color);
 		bundle.put(PLAYER_COLOR, playerColor);
@@ -494,6 +567,7 @@ public class ShulkerBox extends Item {
         for (Bundlable b : bundle.getCollection(CONTENTS)) {
             if (b != null) contents.add((Item) b);
         }
+        pinned = bundle.contains(PINNED) ? Math.max(0, Math.min(bundle.getInt(PINNED), contents.size())) : 0;
 		levelKnown = true;
 		cursedKnown = true;
 		if (level() > MAX_LEVEL) level(MAX_LEVEL);

@@ -77,6 +77,16 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes = new ChangeInfo("E", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.VAULT_LINK), new VaultLink().trueName(),
+                "You can now buy shulker boxes in vault links! With another several QoL features:\n\n" +
+                            "- You can now pin shulker boxes, and buy permanent vault slots for you to store more boxes you gain in your next runs",
+                            "In shulker boxes:\n\n" +
+                            "_-_ You can now pin and sort items inside it, so you can no longer lose them on sight"));
+
         changes = new ChangeInfo("D", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);

@@ -24,6 +24,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -608,7 +609,10 @@ public abstract class RegularLevel extends Level {
 						case 1: regionDoc = Document.SEWERS_GUARD; break;
 						case 2: regionDoc = Document.PRISON_WARDEN; break;
 						case 3: regionDoc = Document.CAVES_EXPLORER; break;
-						case 4: regionDoc = Document.CITY_WARLOCK; break;
+						case 4:
+							if (!Badges.isUnlocked( Badges.Badge.KIT_UNLOCKED ) && Badges.isUnlocked( Badges.Badge.VICTORY )) regionDoc = Document.CITY_WARLOCK;
+							else regionDoc = Document.FORBIDDEN_TECHNOLOGY;
+							break;
 						case 5: regionDoc = Document.HALLS_KING; break;
 					}
 				} else {

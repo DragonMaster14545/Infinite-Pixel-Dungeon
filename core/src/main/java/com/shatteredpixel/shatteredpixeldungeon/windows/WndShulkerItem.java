@@ -2,7 +2,11 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
+import com.shatteredpixel.shatteredpixeldungeon.ui.InventorySlot;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
+import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
+import com.watabou.noosa.Group;
 
 import java.util.ArrayList;
 
@@ -11,6 +15,20 @@ public class WndShulkerItem extends WndInfoItem {
 	private static final float GAP = 2;
 	private static final int BUTTON_HEIGHT = 16;
 	private static final int PER_ROW = 3;
+
+	public static final int PIN_COLOR = 0xFFD040;
+
+	public static void markPinned(Group parent, InventorySlot slot) {
+		RenderedTextBlock mark = PixelScene.renderTextBlock("*", 9);
+		mark.hardlight(PIN_COLOR);
+		mark.setPos(slot.left() + 1, slot.top());
+		PixelScene.align(mark);
+		parent.add(mark);
+	}
+
+	public static String pinLabel(boolean pinned) {
+		return Messages.get(WndShulkerItem.class, pinned ? "unpin" : "pin");
+	}
 
 	public WndShulkerItem(Item item, ArrayList<String> labels, final ArrayList<Runnable> runs) {
 		super(item);
