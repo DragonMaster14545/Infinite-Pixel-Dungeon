@@ -119,14 +119,13 @@ public class WndBag extends WndTabbed {
 		int slotCount = capacitySlots.size();
 
 		int maxPageRows = PixelScene.landscape() ? MAX_PAGE_ROWS_L : MAX_PAGE_ROWS_P;
-		int maxItemsPerPage = nCols * maxPageRows;
-		totalPages = Math.max( 1, (int)Math.ceil( slotCount / (float)maxItemsPerPage ) );
-		itemsPerPage = (int)Math.ceil( slotCount / (float)totalPages );
+		int totalRows = Math.max( 1, (int)Math.ceil( slotCount / (float)nCols ) );
+		totalPages = Math.max( 1, (int)Math.ceil( totalRows / (float)maxPageRows ) );
+		int rowsPerPage = (int)Math.ceil( totalRows / (float)totalPages );
+		itemsPerPage = rowsPerPage * nCols;
 		this.page = Math.max( 0, Math.min( page, totalPages - 1 ) );
 
-		int from = this.page * itemsPerPage;
-		int to = Math.min( from + itemsPerPage, slotCount );
-		nRows = (int)Math.ceil( (to - from) / (float)nCols );
+		nRows = rowsPerPage;
 
 		int windowWidth = slotWidth * nCols + SLOT_MARGIN * (nCols - 1);
 		int windowHeight = TITLE_HEIGHT + slotHeight * nRows + SLOT_MARGIN * (nRows - 1);
