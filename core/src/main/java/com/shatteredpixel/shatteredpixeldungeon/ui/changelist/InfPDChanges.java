@@ -86,7 +86,8 @@ public class InfPDChanges {
 
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.VAULT_LINK), new VaultLink().trueName(),
                 "You can now buy shulker boxes in vault links! With another several QoL features:\n\n" +
-                            "- You can now pin shulker boxes, and buy permanent vault slots for you to store more boxes you gain in your next runs",
+                            "- You can now pin shulker boxes, and buy permanent vault slots for you to store more boxes you gain in your next runs\n" +
+                            "- You can now remotely buy things from the so called \"[green]Trader[]\"",
                             "In shulker boxes:\n\n" +
                             "_-_ You can now pin and sort items inside it, so you can no longer lose them on sight"));
 

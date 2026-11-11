@@ -58,7 +58,7 @@ public class WndVaultLink extends Window {
 		}
 		int gridHeight = slotHeight * ROWS + SLOT_MARGIN * (ROWS - 1);
 		while (slotHeight >= 20
-				&& (TITLE_HEIGHT + gridHeight + nav + BUTTON_HEIGHT * 2 + 3 + 20 + chrome.marginTop()) > PixelScene.uiCamera.height) {
+				&& (TITLE_HEIGHT + gridHeight + nav + BUTTON_HEIGHT * 3 + 5 + 20 + chrome.marginTop()) > PixelScene.uiCamera.height) {
 			slotHeight--;
 			gridHeight -= ROWS;
 		}
@@ -172,7 +172,17 @@ public class WndVaultLink extends Window {
 		shop.setRect(0, y + BUTTON_HEIGHT + SLOT_MARGIN, windowWidth, BUTTON_HEIGHT);
 		add(shop);
 
-		resize(windowWidth, (int) (y + BUTTON_HEIGHT * 2 + SLOT_MARGIN));
+		RedButton trader = new RedButton(Messages.get(link, "btn_trader")) {
+			@Override
+			public void onClick() {
+				hide();
+				GameScene.show(new WndTraderShop(reopen()));
+			}
+		};
+		trader.setRect(0, y + (BUTTON_HEIGHT + SLOT_MARGIN) * 2, windowWidth, BUTTON_HEIGHT);
+		add(trader);
+
+		resize(windowWidth, (int) (y + BUTTON_HEIGHT * 3 + SLOT_MARGIN * 2));
 	}
 
 	private void goTo(long newPage) {
