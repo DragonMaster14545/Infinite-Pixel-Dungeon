@@ -118,18 +118,25 @@ public class WndBag extends WndTabbed {
 		capacitySlots = buildAllSlots( bag );
 		int slotCount = capacitySlots.size();
 
-		int maxPageRows = PixelScene.landscape() ? MAX_PAGE_ROWS_L : MAX_PAGE_ROWS_P;
-		int totalRows = Math.max( 1, (int)Math.ceil( slotCount / (float)nCols ) );
-		totalPages = Math.max( 1, (int)Math.ceil( totalRows / (float)maxPageRows ) );
-		int rowsPerPage = (int)Math.ceil( totalRows / (float)totalPages );
+		int[] mine = pageLayout( bag, slotCount );
+		int rowsPerPage = mine[0];
+		totalPages = mine[1];
 		itemsPerPage = rowsPerPage * nCols;
 		this.page = Math.max( 0, Math.min( page, totalPages - 1 ) );
 
-		nRows = rowsPerPage;
+		int windowRows = rowsPerPage;
+		boolean anyPaged = totalPages > 1;
+		for (Bag b : Dungeon.hero.belongings.getBags()) {
+			if (b == null || b == bag) continue;
+			int[] other = pageLayout( b, buildAllSlots( b ).size() );
+			windowRows = Math.max( windowRows, other[0] );
+			if (other[1] > 1) anyPaged = true;
+		}
+		nRows = windowRows;
 
 		int windowWidth = slotWidth * nCols + SLOT_MARGIN * (nCols - 1);
 		int windowHeight = TITLE_HEIGHT + slotHeight * nRows + SLOT_MARGIN * (nRows - 1);
-		if (totalPages > 1) {
+		if (anyPaged) {
 			windowHeight += NAV_GAP + NAV_HEIGHT;
 		}
 
@@ -162,6 +169,19 @@ public class WndBag extends WndTabbed {
 			}
 		}
 		layoutTabs();
+	}
+
+	private int[] pageLayout( Bag b, int slotCount ) {
+		int maxPageRows = PixelScene.landscape() ? MAX_PAGE_ROWS_L : MAX_PAGE_ROWS_P;
+		int availHeight = (int)PixelScene.uiCamera.height - chrome.marginTop() - tabHeight() - 4
+				- TITLE_HEIGHT - NAV_GAP - NAV_HEIGHT;
+		int fitRows = (availHeight + SLOT_MARGIN) / (slotHeight + SLOT_MARGIN);
+		maxPageRows = Math.max( 1, Math.min( maxPageRows, fitRows ) );
+
+		int totalRows = Math.max( 1, (int)Math.ceil( slotCount / (float)nCols ) );
+		int pages = Math.max( 1, (int)Math.ceil( totalRows / (float)maxPageRows ) );
+		int rows = (int)Math.ceil( totalRows / (float)pages );
+		return new int[]{ rows, pages };
 	}
 
 	public static WndBag lastBag( ItemSelector selector ) {

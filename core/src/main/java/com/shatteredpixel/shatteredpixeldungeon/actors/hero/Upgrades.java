@@ -37,7 +37,7 @@ public class Upgrades implements Bundlable {
     }
 
     public enum UpgradeData {
-        RING_SLOTS(18,"Ring Slots","Adds one extra ring slot per level") {
+        RING_SLOTS(65,"Ring Slots","Adds one extra ring slot per level") {
             @Override
             public int ringSlots() {
                 return 1;
