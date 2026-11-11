@@ -1015,7 +1015,7 @@ public abstract class Mob extends Char {
 			a.randomizeCommonRarity();
 			wa.randomizeCommonRarity();
 			ar.randomizeCommonRarity();
-			if (Random.Float() <= 0.07) {
+			if (Random.Float() <= 0.001) {
 				int chance = Random.Int(1, 5);
                 if (chance == 0) {
                     Dungeon.level.drop(w, pos).sprite.drop();

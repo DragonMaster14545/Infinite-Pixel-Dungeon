@@ -91,6 +91,11 @@ public class InfPDChanges {
                             "In shulker boxes:\n\n" +
                             "_-_ You can now pin and sort items inside it, so you can no longer lose them on sight"));
 
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Increased overall chances of all rarities\n" +
+                        "_-_ Nerfed Raritizing Magic chance to 0.1%, from 7%"
+        ));
+
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Adjusted the columns of WndBag, 5 for portrait (from 7) and 13 for landscape (from 11), and the Equipment Bag's base height is now the same as other bags\n" +
                             "_-_ Ring slot upgrades increased to 65, from 18"
