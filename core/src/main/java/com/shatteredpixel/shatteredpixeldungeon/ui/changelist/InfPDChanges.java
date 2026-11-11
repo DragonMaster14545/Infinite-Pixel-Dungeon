@@ -81,6 +81,9 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.GALACTIC_INFUSION), new GalacticInfusion().trueName(),
+                "You can now put runes when the enchantment is Galactic! Well, you need to craft Enchantment Rune to add them in your enchantment."));
+
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.VAULT_LINK), new VaultLink().trueName(),
                 "You can now buy shulker boxes in vault links! With another several QoL features:\n\n" +
                             "- You can now pin shulker boxes, and buy permanent vault slots for you to store more boxes you gain in your next runs",

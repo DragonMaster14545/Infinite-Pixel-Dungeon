@@ -81,8 +81,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.RunicBlade;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Scimitar;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndGalacticSockets;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.ListUtils;
@@ -128,6 +130,8 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 	public float usesLeftToID = USES_TO_ID;
 	public float availableUsesToID = USES_TO_ID/2f;
 	
+	public static final String AC_SOCKETS = "SOCKETS";
+
 	public Enchantment enchantment;
 	public boolean enchantHardened = false;
 	public boolean curseInfusionBonus = false;
@@ -445,6 +449,23 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 		Enchantment ench = Enchantment.random( oldEnchantment );
 
 		return enchant( ench );
+	}
+
+	@Override
+	public ArrayList<String> actions(Hero hero) {
+		ArrayList<String> actions = super.actions(hero);
+		if (enchantment instanceof Galactic) {
+			actions.add(AC_SOCKETS);
+		}
+		return actions;
+	}
+
+	@Override
+	public void execute(Hero hero, String action) {
+		super.execute(hero, action);
+		if (action.equals(AC_SOCKETS) && enchantment instanceof Galactic) {
+			GameScene.show(new WndGalacticSockets(this));
+		}
 	}
 
 	public boolean hasEnchant(Class<?extends Enchantment> type, Char owner) {

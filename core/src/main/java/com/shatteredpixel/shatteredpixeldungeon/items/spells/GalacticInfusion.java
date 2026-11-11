@@ -51,15 +51,28 @@ public class GalacticInfusion extends InventorySpell {
 
 	@Override
 	protected boolean usableOnItem(Item item) {
-		return item instanceof Weapon;
+		if (!(item instanceof Weapon)) return false;
+		Weapon.Enchantment current = ((Weapon) item).enchantment;
+		return !(current instanceof Galactic) || ((Galactic) current).canAddSocket();
 	}
 
 	@Override
 	protected void onItemSelected(Item item) {
 
-        ((Weapon)item).enchant(new Galactic());
+		Weapon weapon = (Weapon) item;
 
-		GLog.p(Messages.get(this, "galactized"));
+		if (weapon.enchantment instanceof Galactic) {
+			Galactic galactic = (Galactic) weapon.enchantment;
+			galactic.addSocket();
+			weapon.enchant(galactic);
+			GLog.p(Messages.get(this, "socket_added", galactic.capacity()));
+		} else {
+			Weapon.Enchantment old = weapon.enchantment;
+			Galactic galactic = Galactic.empty();
+			if (Galactic.socketable(old)) galactic.insert(old);
+			weapon.enchant(galactic);
+			GLog.p(Messages.get(this, "galactized", galactic.capacity()));
+		}
 		curUser.sprite.emitter().start(Speck.factory(Speck.QUESTION), 0.2f, 10);
 	}
 	
