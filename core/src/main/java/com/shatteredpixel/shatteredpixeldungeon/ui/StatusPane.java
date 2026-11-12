@@ -274,9 +274,9 @@ public class StatusPane extends Component {
 
 		if ((oldHP.compareTo(health) != 0) || (oldShield.compareTo(shield) != 0) || (oldMax.compareTo(max) != 0)){
 			if ((shield.compareTo(BigInteger.ZERO) <= 0)) {
-				hpText.text(health + "/" + max);
+				hpText.text(Big.fmt(health) + "/" + Big.fmt(max));
 			} else {
-				hpText.text(health + "+" + shield + "/" + max);
+				hpText.text(Big.fmt(health) + "+" + Big.fmt(shield) + "/" + Big.fmt(max));
 			}
 			oldHP = health;
 			oldShield = shield;
@@ -289,7 +289,7 @@ public class StatusPane extends Component {
 			hpText.measure();
 			hpText.x = hp.x + (128 - hpText.width())/2f;
 
-			expText.text(Dungeon.hero.exp + "/" + Dungeon.hero.maxExp());
+			expText.text(Big.fmt(Dungeon.hero.exp) + "/" + Big.fmt(Dungeon.hero.maxExp()));
 			expText.measure();
 			expText.x = hp.x + (128 - expText.width())/2f;
 

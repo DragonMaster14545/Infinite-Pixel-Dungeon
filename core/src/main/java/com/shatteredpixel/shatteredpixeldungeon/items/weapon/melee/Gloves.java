@@ -56,7 +56,7 @@ public class Gloves extends MeleeWeapon {
 		if (Dungeon.hero != null && Dungeon.hero.buff(AttackBuff.class) != null){
 			return  Big.of((3d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf(tier()))).add(BigInteger.valueOf(Dungeon.hero.buff(AttackBuff.class).stack));
 		}
-		return  BigInteger.valueOf(Math.round(2.5d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf(Math.round(0.5d*(tier()+1)))));  //+1 per level, down from +2
+		return  Big.roundD(2.5d*(tier()+1)).add(lvl.multiply(Big.roundD(0.5d*(tier()+1))));  //+1 per level, down from +2
 	}
 
 	@Override

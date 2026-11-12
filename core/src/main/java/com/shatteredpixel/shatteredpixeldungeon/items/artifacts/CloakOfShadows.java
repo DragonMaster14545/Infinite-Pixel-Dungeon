@@ -378,9 +378,9 @@ public class CloakOfShadows extends Artifact {
 						lvlDiffFromTarget -= Big.toLong(level().subtract(BigInteger.valueOf(6)));
 					}
 					if (lvlDiffFromTarget >= 0){
-						exp = exp.add(BigInteger.valueOf(Math.round(10f * Math.pow(1.1f, lvlDiffFromTarget))));
+						exp = exp.add(Big.roundD(10f * Math.pow(1.1f, lvlDiffFromTarget)));
 					} else {
-						exp = exp.add(BigInteger.valueOf(Math.round(10f * Math.pow(0.75f, -lvlDiffFromTarget))));
+						exp = exp.add(Big.roundD(10f * Math.pow(0.75f, -lvlDiffFromTarget)));
 					}
 					
 					if ((exp.compareTo((level().add(BigInteger.ONE)).multiply(BigInteger.valueOf(50))) >= 0) && (level().compareTo(BigInteger.valueOf(levelCap)) < 0)) {

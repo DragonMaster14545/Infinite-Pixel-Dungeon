@@ -719,7 +719,7 @@ public class DriedRose extends Artifact {
 			BigInteger defense = super.defenseSkill(enemy);
 
             if ((defense.compareTo(BigInteger.ZERO) != 0) && armor() != null){
-                defense = BigInteger.valueOf(Math.round(armor().evasionFactor( this, defense.floatValue() )));
+                defense = Big.roundD(armor().evasionFactor( this, defense.floatValue() ));
 			}
 			
 			return defense;

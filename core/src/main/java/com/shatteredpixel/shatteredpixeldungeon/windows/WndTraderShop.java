@@ -147,8 +147,8 @@ public class WndTraderShop extends Window {
 	}
 
 	private void refresh() {
-		gold.text( Messages.get( this, "gold", fmt( Big.toLong(Dungeon.gold) ) ) );
-		energy.text( Messages.get( this, "energy", fmt( Big.toLong(Dungeon.energy) ) ) );
+		gold.text( Messages.get( this, "gold", Big.fmt(Dungeon.gold) ) );
+		energy.text( Messages.get( this, "energy", Big.fmt(Dungeon.energy) ) );
 
 		content.clear();
 		ArrayList<TraderStock.Offer> offers = TraderStock.offers();
@@ -178,7 +178,7 @@ public class WndTraderShop extends Window {
 			content.add( text );
 
 			RedButton goldBtn = new RedButton( offer.sold ? Messages.get( this, "sold_out" )
-					: Messages.get( this, "buy_gold", fmt( Big.toLong(offer.gold) ) ), 7 ) {
+					: Messages.get( this, "buy_gold", Big.fmt(offer.gold) ), 7 ) {
 				@Override
 				public void onClick() {
 					buy( index, false );
@@ -189,7 +189,7 @@ public class WndTraderShop extends Window {
 			content.add( goldBtn );
 
 			RedButton energyBtn = new RedButton( offer.sold ? Messages.get( this, "sold_out" )
-					: Messages.get( this, "buy_energy", fmt( Big.toLong(offer.energy) ) ), 7 ) {
+					: Messages.get( this, "buy_energy", Big.fmt(offer.energy) ), 7 ) {
 				@Override
 				public void onClick() {
 					buy( index, true );

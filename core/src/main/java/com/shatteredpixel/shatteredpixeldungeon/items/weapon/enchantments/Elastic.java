@@ -60,7 +60,7 @@ public class Elastic extends Weapon.Enchantment {
 			//knock them back along that ballistica
 			WandOfBlastWave.throwChar(defender,
 					trajectory,
-					BigInteger.valueOf(Math.round(2 * powerMulti)),
+					Big.roundD(2 * powerMulti),
 					!(weapon instanceof MissileWeapon || weapon instanceof SpiritBow),
 					true,
 					this);

@@ -107,7 +107,7 @@ public class BlackMimic extends Mob {
 
 	@Override
 	public BigInteger damageRoll() {
-		return Big.normalRange(BigInteger.valueOf(Math.round(Dungeon.hero.lvl*4*Math.pow(7, Dungeon.cycle))), BigInteger.valueOf(Math.round(Dungeon.hero.lvl*32*Math.pow(7, Dungeon.cycle))));
+		return Big.normalRange(Big.roundD(Dungeon.hero.lvl*4*Math.pow(7, Dungeon.cycle)), Big.roundD(Dungeon.hero.lvl*32*Math.pow(7, Dungeon.cycle)));
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class BlackMimic extends Mob {
 
 	@Override
 	public BigInteger cycledDrRoll() {
-		return Big.normalRange(BigInteger.valueOf(Math.round(Dungeon.hero.lvl*0.8d*Math.pow(7, Dungeon.cycle))), BigInteger.valueOf(Math.round(Dungeon.hero.lvl*2.25d*Math.pow(7, Dungeon.cycle))));
+		return Big.normalRange(Big.roundD(Dungeon.hero.lvl*0.8d*Math.pow(7, Dungeon.cycle)), Big.roundD(Dungeon.hero.lvl*2.25d*Math.pow(7, Dungeon.cycle)));
 	}
 
 	public int pylonsActivated = 0;

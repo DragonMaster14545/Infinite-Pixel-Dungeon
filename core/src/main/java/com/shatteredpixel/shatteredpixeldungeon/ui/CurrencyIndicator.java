@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -96,7 +97,7 @@ public class CurrencyIndicator extends Component {
 			
 			lastGold = Dungeon.gold;
 			
-			gold.text( lastGold.toString() );
+			gold.text( Big.fmt(lastGold) );
 			gold.measure();
 			gold.hardlight( 0xFFFF00 );
 			
@@ -109,7 +110,7 @@ public class CurrencyIndicator extends Component {
 		if ((Dungeon.energy.compareTo(lastEnergy) != 0)) {
 			lastEnergy = Dungeon.energy;
 
-			energy.text( lastEnergy.toString() );
+			energy.text( Big.fmt(lastEnergy) );
 			energy.measure();
 			energy.hardlight( 0x44CCFF );
 

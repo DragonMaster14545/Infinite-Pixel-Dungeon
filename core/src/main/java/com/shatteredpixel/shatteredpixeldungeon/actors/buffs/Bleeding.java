@@ -101,7 +101,7 @@ public class Bleeding extends Buff {
 		if (target.isAlive()) {
 			
 			level = Dungeon.NormalDouble(level / 2f, level);
-			BigInteger dmg = BigInteger.valueOf(Math.round(level));
+			BigInteger dmg = Big.roundD(level);
 			
 			if ((dmg.compareTo(BigInteger.ZERO) > 0)) {
 				

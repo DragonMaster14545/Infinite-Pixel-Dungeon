@@ -429,14 +429,15 @@ public abstract class Char extends Actor {
 			//we use a float here briefly so that we don't have to constantly round while
 			// potentially applying various multiplier effects
 			double dmg;
+			int dmgShift = 0;
 			Preparation prep = buff(Preparation.class);
 			if (prep != null){
-				dmg = prep.damageRoll(this).doubleValue();
+				BigInteger rolled = prep.damageRoll(this); dmgShift = Math.max(0, rolled.bitLength() - 900); dmg = rolled.shiftRight(dmgShift).doubleValue();
 				if (this == Dungeon.hero && Dungeon.hero.hasTalent(Talent.BOUNTY_HUNTER)) {
 					Buff.affect(Dungeon.hero, Talent.BountyHunterTracker.class, 0.0f);
 				}
 			} else {
-				dmg = damageRoll().doubleValue();
+				BigInteger rolled = damageRoll(); dmgShift = Math.max(0, rolled.bitLength() - 900); dmg = rolled.shiftRight(dmgShift).doubleValue();
 			}
 
 			dmg = dmg*dmgMulti;
@@ -479,7 +480,7 @@ public abstract class Char extends Actor {
 				dmg *= 0.67f;
 			}
 
-			BigInteger effectiveDamage = enemy.defenseProc( this, BigInteger.valueOf(Math.round(dmg)) );
+			BigInteger effectiveDamage = enemy.defenseProc( this, Big.roundD(dmg).shiftLeft(dmgShift) );
 			//do not trigger on-hit logic if defenseProc returned a negative value
 			if ((effectiveDamage.compareTo(BigInteger.ZERO) >= 0)) {
 				effectiveDamage = effectiveDamage.subtract(dr).max(BigInteger.ZERO);
@@ -870,7 +871,7 @@ public abstract class Char extends Actor {
 			finalChance *= (float)Math.pow( (Big.div(Big.dec((HT.subtract(HP))), Big.dec(HT.doubleValue()))).doubleValue(), 2);
 
 			if (Random.Float() < finalChance) {
-				BigInteger extraDmg = BigInteger.valueOf(Math.round(finalChance*resist(Grim.class)/10f));
+				BigInteger extraDmg = Big.roundD(finalChance*resist(Grim.class)/10f);
 				dmg = dmg.add(extraDmg);
 				HP = HP.subtract(extraDmg);
 
@@ -972,7 +973,7 @@ public abstract class Char extends Actor {
 								Char mob = Actor.findChar(cell);
 								BigInteger damage = Big.normalRange(finalDmg.divide(BigInteger.valueOf(3)), finalDmg.divide(BigInteger.TWO));
 
-								if (mob != null && (damage.compareTo(BigInteger.ZERO) > 0) && mob.alignment != Char.Alignment.ALLY){
+								if (mob != null && (damage.compareTo(BigInteger.ZERO) > 0) && mob.alignment != Alignment.ALLY){
 									mob.damage(damage, src);
 								}
 							}

@@ -25,6 +25,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
 
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -41,7 +42,7 @@ public class Greatshield extends MeleeWeapon {
 
 	@Override
 	public BigInteger max(BigInteger lvl) {
-		return  BigInteger.valueOf(Math.round(3d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf((tier()-1))));                   //+4 per level, down from +7
+		return  Big.roundD(3d*(tier()+1)).add(lvl.multiply(BigInteger.valueOf((tier()-1))));                   //+4 per level, down from +7
 	}
 
 	@Override

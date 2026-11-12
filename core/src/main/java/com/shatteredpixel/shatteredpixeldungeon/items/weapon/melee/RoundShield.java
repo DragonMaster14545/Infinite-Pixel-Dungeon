@@ -25,6 +25,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
 
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -50,7 +51,7 @@ public class RoundShield extends MeleeWeapon {
 
 	@Override
 	public BigInteger max(BigInteger lvl) {
-		return  BigInteger.valueOf(Math.round(3.5d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf((tier()))));                   //+3 per level, down from +5
+		return  Big.roundD(3.5d*(tier()+1)).add(lvl.multiply(BigInteger.valueOf((tier()))));                   //+3 per level, down from +5
 	}
 
 	@Override

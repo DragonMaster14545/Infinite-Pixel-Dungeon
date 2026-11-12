@@ -230,7 +230,7 @@ public class FloatingText extends RenderedTextBlock {
 		
 		zoom( 1 / (float)PixelScene.defaultZoom );
 
-		text( text );
+		text( Big.fmtText(text) );
 		hardlight( color );
 
 		if (iconIdx != NO_ICON){

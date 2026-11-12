@@ -58,7 +58,7 @@ public class Spear extends MeleeWeapon {
 
 	@Override
 	public BigInteger max(BigInteger lvl) {
-		return  BigInteger.valueOf(Math.round(8d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf(Math.round(1.66d*(tier()+2))))); //+6.64 per level, up from +4
+		return  Big.roundD(8d*(tier()+1)).add(lvl.multiply(Big.roundD(1.66d*(tier()+2)))); //+6.64 per level, up from +4
 	}
 
 	@Override

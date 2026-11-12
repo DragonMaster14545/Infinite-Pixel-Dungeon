@@ -43,7 +43,7 @@ public class WarScythe extends MeleeWeapon {
 
     @Override
     public BigInteger max(BigInteger lvl) {
-        return  BigInteger.valueOf(Math.round(6.67d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf((tier()+1))));                   //scaling unchanged
+        return  Big.roundD(6.67d*(tier()+1)).add(lvl.multiply(BigInteger.valueOf((tier()+1))));                   //scaling unchanged
     }
 
     @Override

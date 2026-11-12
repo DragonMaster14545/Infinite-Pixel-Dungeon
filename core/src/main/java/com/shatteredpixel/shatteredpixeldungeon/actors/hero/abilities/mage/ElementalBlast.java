@@ -299,7 +299,7 @@ public class ElementalBlast extends ArmorAbility {
 								//*** Wand of Corrosion ***
 								} else if (finalWandCls == WandOfCorrosion.class){
 									if (mob.isAlive() && mob.alignment != Char.Alignment.ALLY) {
-										Buff.affect( mob, Corrosion.class ).set(4, BigInteger.valueOf(Math.round(6*effectMulti)));
+										Buff.affect( mob, Corrosion.class ).set(4, Big.roundD(6*effectMulti));
 										charsHit++;
 									}
 
@@ -340,7 +340,7 @@ public class ElementalBlast extends ArmorAbility {
 								//*** Wand of Transfusion ***
 								} else if (finalWandCls == WandOfTransfusion.class){
 									if(mob.alignment == Char.Alignment.ALLY || mob.buff(Charm.class) != null){
-										BigInteger healing = BigInteger.valueOf(Math.round(10*effectMulti));
+										BigInteger healing = Big.roundD(10*effectMulti);
 										BigInteger shielding = (mob.HP.add(healing)).subtract(mob.HT);
 										if ((shielding.compareTo(BigInteger.ZERO) > 0)){
 											healing = healing.subtract(shielding);
@@ -406,7 +406,7 @@ public class ElementalBlast extends ArmorAbility {
 						} else if (finalWandCls == WandOfLivingEarth.class && charsHit > 0){
 							for (Mob m : Dungeon.level.mobs){
 								if (m instanceof WandOfLivingEarth.EarthGuardian){
-									((WandOfLivingEarth.EarthGuardian) m).setInfo(hero, BigInteger.ZERO, BigInteger.valueOf(Math.round(effectMulti*charsHit*5)));
+									((WandOfLivingEarth.EarthGuardian) m).setInfo(hero, BigInteger.ZERO, Big.roundD(effectMulti*charsHit*5));
 									m.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + charsHit);
 									break;
 								}

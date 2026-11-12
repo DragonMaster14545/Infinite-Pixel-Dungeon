@@ -37,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ScrollPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 // WndTextInput (added in v0.9.4)
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndTextInput;
 // Output
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -653,14 +654,14 @@ public class ScrollOfDebug extends Scroll {
                                 if(input[i].startsWith("--force") || input[i].equalsIgnoreCase("-f")) {
                                     collect = true;
                                 }
-                                else if(input[i].matches("[\\-x+]\\d+")) {
+                                else if(input[i].matches("[\\-x+](?:\\d*\\.)?\\d+[A-Za-z]*")) {
                                     switch (input[i].charAt(0)) {
                                         case 'x':
-                                            item.quantity(new BigInteger(input[i].substring(1)));
+                                            item.quantity(Big.parse(input[i].substring(1)));
                                             break;
                                         case '-':
                                         case '+':
-                                            item.level(new BigInteger(input[i]));
+                                            item.level(Big.parse(input[i]));
                                             break;
                                     }
                                 }
@@ -982,7 +983,7 @@ public class ScrollOfDebug extends Scroll {
             else if (type == long.class || type == Long.class)
                 args[i] = Long.parseLong(input[j++]);
             else if (type == BigInteger.class)
-                args[i] = new BigInteger(input[j++]);
+                args[i] = Big.parse(input[j++]);
                 // being through, nothing actually uses these (I hope)
             else if (type == short.class || type == Short.class)
                 args[i] = Short.parseShort(input[j++]);
@@ -1064,7 +1065,7 @@ public class ScrollOfDebug extends Scroll {
     private static class ClassNameMap extends HashMap<String, Class> {
         ArrayList<String> getNames() {
             ArrayList<String> names = new ArrayList<>();
-            for(Map.Entry<String,Class> entry : entrySet()) {
+            for(Entry<String,Class> entry : entrySet()) {
                 if(entry.getValue() != null) names.add(entry.getKey());
             }
             Collections.sort(names);

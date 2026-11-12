@@ -81,7 +81,7 @@ public class Electricity extends Blob {
 							Buff.prolong( ch, Paralysis.class, cur[cell].floatValue());
 						}
 						if ((cur[cell].remainder(BigInteger.TWO).compareTo(BigInteger.ONE) == 0)) {
-							ch.damage(BigInteger.valueOf(Math.round(Dungeon.Float(Big.dec(2).add(Big.div(Big.dec(Dungeon.scalingDepth()), Big.dec(5f))).floatValue()))), this);
+							ch.damage(Big.roundD(Dungeon.Float(Big.dec(2).add(Big.div(Big.dec(Dungeon.scalingDepth()), Big.dec(5f))).floatValue())), this);
 							if (!ch.isAlive() && ch == Dungeon.hero){
 								Dungeon.fail( this );
 								GLog.n( Messages.get(this, "ondeath") );

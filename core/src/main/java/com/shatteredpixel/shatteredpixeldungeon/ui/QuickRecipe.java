@@ -25,6 +25,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -127,7 +128,7 @@ public class QuickRecipe extends Component {
 	private ArrayList<Item> ingredients;
 	
 	private ArrayList<ItemSlot> inputs;
-	private QuickRecipe.arrow arrow;
+	private arrow arrow;
 	private ItemSlot output;
 	
 	public QuickRecipe(Recipe.SimpleRecipe r){
@@ -253,7 +254,7 @@ public class QuickRecipe extends Component {
 			super( icon );
 			hotArea.blockLevel = PointerArea.NEVER_BLOCK;
 
-			text = new BitmapText( count.toString(), PixelScene.pixelFont);
+			text = new BitmapText( Big.fmt(count), PixelScene.pixelFont);
 			text.measure();
 			add(text);
 		}

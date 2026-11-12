@@ -346,7 +346,7 @@ public class EtherealChains extends Artifact {
 		public void gainExp(float levelPortion) {
 			if (cursed || target.buff(MagicImmune.class) != null || levelPortion == 0) return;
 
-			exp = exp.add(BigInteger.valueOf(Math.round(levelPortion * 100)));
+			exp = exp.add(Big.roundD(levelPortion * 100));
 
 			//past the soft charge cap, gaining  charge from leveling is slowed.
 			if ((charge.compareTo(BigInteger.valueOf(5).add((level().multiply(BigInteger.TWO)))) > 0)) {

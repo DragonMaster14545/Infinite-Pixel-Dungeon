@@ -25,6 +25,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
 
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -55,7 +56,7 @@ public class Flail extends MeleeWeapon {
 
 	@Override
 	public BigInteger max(BigInteger lvl) {
-		return  BigInteger.valueOf(Math.round(8d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf(Math.round(2d*(tier()+1)))));  //+10 per level, up from +6
+		return  Big.roundD(8d*(tier()+1)).add(lvl.multiply(Big.roundD(2d*(tier()+1))));  //+10 per level, up from +6
 	}
 
 	private static BigInteger spinBoost = BigInteger.ZERO;

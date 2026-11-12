@@ -25,6 +25,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.journal;
 
 
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -305,7 +306,7 @@ public class Notes {
 		@Override
 		public Visual secondIcon() {
 			if ((quantity().compareTo(BigInteger.ONE) > 0)){
-				BitmapText text = new BitmapText(quantity().toString(), PixelScene.pixelFont);
+				BitmapText text = new BitmapText(Big.fmt(quantity()), PixelScene.pixelFont);
 				text.measure();
 				return text;
 			} else {

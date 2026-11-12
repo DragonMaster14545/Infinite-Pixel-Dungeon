@@ -93,7 +93,7 @@ public class MagesStaff extends MeleeWeapon {
 
 	@Override
 	public BigInteger max(BigInteger lvl) {
-		return  BigInteger.valueOf(Math.round(3d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf((tier()+1))));               //scaling unaffected
+		return  Big.roundD(3d*(tier()+1)).add(lvl.multiply(BigInteger.valueOf((tier()+1))));               //scaling unaffected
 	}
 
 	public MagesStaff(Wand wand){

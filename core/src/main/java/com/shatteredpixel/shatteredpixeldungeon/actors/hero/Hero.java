@@ -1698,7 +1698,7 @@ if (buff(RoundShield.GuardTracker.class) != null){
 		if (!(src instanceof Char)){
 			//reduce damage here if it isn't coming from a character (if it is we already reduced it)
 			if (endure != null){
-				dmg = BigInteger.valueOf(Math.round(endure.adjustDamageTaken(dmg.doubleValue())));
+				dmg = Big.roundD(endure.adjustDamageTaken(dmg.doubleValue()));
 			}
 			//the same also applies to challenge scroll damage reduction
 			if (buff(ScrollOfChallenge.ChallengeArena.class) != null){
@@ -1719,7 +1719,7 @@ if (buff(RoundShield.GuardTracker.class) != null){
 			dmg = dmg.multiply(BigInteger.valueOf(3));
 		}
 
-		dmg = BigInteger.valueOf(Big.toInt((Big.ceil(Big.dec(dmg).multiply(Big.dec(RingOfTenacity.damageMultiplier( this ))))).toBigInteger()));
+		dmg = Big.ceil(Big.dec(dmg).multiply(Big.dec(RingOfTenacity.damageMultiplier( this )))).toBigInteger();
 
 		//TODO improve this when I have proper damage source logic
 		if (belongings.armor() != null && belongings.armor().hasGlyph(AntiMagic.class, this)
@@ -1790,9 +1790,9 @@ if (buff(RoundShield.GuardTracker.class) != null){
 						if (PathFinder.distance[i] < Integer.MAX_VALUE) {
 							Char ch = Actor.findChar(i);
 							if (ch != null && ch.alignment != alignment && ch != Dungeon.hero) {
-								int retaliationDamage = Big.toInt(((Big.dec(finalDmg).multiply(Big.dec(1.5f)))).toBigInteger());
-								if (belongings.weapon() instanceof Greatshield) retaliationDamage*=2;
-								ch.damage(BigInteger.valueOf(retaliationDamage), Hero.this);
+								BigInteger retaliationDamage = Big.dec(finalDmg).multiply(Big.dec(1.5f)).toBigInteger();
+								if (belongings.weapon() instanceof Greatshield) retaliationDamage = retaliationDamage.multiply(BigInteger.TWO);
+								ch.damage(retaliationDamage, Hero.this);
 								Sample.INSTANCE.play(Assets.Sounds.HIT_MAGIC);
 								CellEmitter.center(pos).burst(MagicMissile.SlowParticle.FACTORY, 10);
 							}

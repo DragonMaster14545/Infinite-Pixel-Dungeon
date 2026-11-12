@@ -689,7 +689,7 @@ public abstract class Wand extends Item {
 						}
 
 						float shield = Big.dec(curUser.HT).multiply((Big.dec(0.105f).multiply(Big.dec(curWand.curCharges)))).floatValue();
-						Buff.affect(curUser, Barrier.class).setShield(BigInteger.valueOf(Math.round(shield)));
+						Buff.affect(curUser, Barrier.class).setShield(Big.roundD(shield));
 						curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Math.round(shield)), FloatingText.SHIELDING);
 						curWand.curCharges = BigInteger.ZERO;
 						curUser.sprite.operate(curUser.pos);

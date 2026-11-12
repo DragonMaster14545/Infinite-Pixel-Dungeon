@@ -24,6 +24,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -307,6 +308,7 @@ public class RenderedTextBlock extends Component {
 	}
 
 	public void text(String text){
+		text = Big.fmtText(text);
 		this.text = text;
 
 		if (text != null && !text.equals("")) {

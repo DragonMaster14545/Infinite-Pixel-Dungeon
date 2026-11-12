@@ -59,7 +59,7 @@ public class CapeOfThorns extends Artifact {
 	@Override
 	public void charge(Hero target, float amount) {
 		if (cooldown == 0) {
-			charge = charge.add(BigInteger.valueOf(Math.round(4*amount)));
+			charge = charge.add(Big.roundD(4*amount));
 			updateQuickslot();
 		}
 		if ((charge.compareTo(getChargeCap()) >= 0)){

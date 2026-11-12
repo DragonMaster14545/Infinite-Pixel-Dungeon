@@ -26,6 +26,70 @@ public final class Big {
 	}
 	public static BigInteger of(float v){ return of((double) v); }
 
+	public static BigInteger roundD(double d){
+		if (Double.isNaN(d)) return BigInteger.ZERO;
+		return of(Math.floor(d + 0.5));
+	}
+
+	public static float ratio(BigInteger a, BigInteger b){
+		if (b.signum() == 0) return 0f;
+		return new BigDecimal(a).divide(new BigDecimal(b), MC).floatValue();
+	}
+
+	private static final String[] SUF = {"", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Qad", "Qid", "Sxd", "Spd", "Ocd", "Nod", "Vg"};
+
+	public static String fmt(BigInteger v){
+		if (v == null) return "0";
+		String sign = v.signum() < 0 ? "-" : "";
+		String s = v.abs().toString();
+		int len = s.length();
+		if (len <= 4) return sign + s;
+		int idx = (len - 1) / 3;
+		String m;
+		String suffix;
+		if (idx < SUF.length){
+			int lead = len - 3 * idx;
+			m = s.substring(0, lead);
+			int dec = Math.max(0, 3 - lead);
+			if (dec > 0){
+				String f = s.substring(lead, lead + dec).replaceAll("0+$", "");
+				if (!f.isEmpty()) m += "." + f;
+			}
+			suffix = SUF[idx];
+		} else {
+			m = s.substring(0, 1) + "." + s.substring(1, 3);
+			suffix = "e" + (len - 1);
+		}
+		return sign + m + suffix;
+	}
+
+	private static final java.util.regex.Pattern NUM = java.util.regex.Pattern.compile("\\d{5,}");
+
+	public static String fmtText(String t){
+		if (t == null || t.length() < 5) return t;
+		java.util.regex.Matcher m = NUM.matcher(t);
+		StringBuffer sb = new StringBuffer();
+		while (m.find()) m.appendReplacement(sb, java.util.regex.Matcher.quoteReplacement(fmt(new BigInteger(m.group()))));
+		m.appendTail(sb);
+		return sb.toString();
+	}
+
+	public static BigInteger parse(String t){
+		t = t.trim();
+		java.util.regex.Matcher m = java.util.regex.Pattern.compile("([+-]?)(\\d*\\.?\\d+)([A-Za-z]*)").matcher(t);
+		if (!m.matches()) throw new NumberFormatException(t);
+		BigDecimal v = new BigDecimal(m.group(2));
+		String suf = m.group(3);
+		if (!suf.isEmpty()){
+			int idx = -1;
+			for (int i = 1; i < SUF.length; i++) if (SUF[i].equalsIgnoreCase(suf)) { idx = i; break; }
+			if (idx > 0) v = v.scaleByPowerOfTen(3 * idx);
+			else throw new NumberFormatException(t);
+		}
+		BigInteger r = v.toBigInteger();
+		return m.group(1).equals("-") ? r.negate() : r;
+	}
+
 	public static BigInteger trunc(BigDecimal d){ return d.toBigInteger(); }
 
 	

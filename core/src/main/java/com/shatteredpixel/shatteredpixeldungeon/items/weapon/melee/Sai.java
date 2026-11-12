@@ -59,7 +59,7 @@ public class Sai extends MeleeWeapon {
 
 	@Override
 	public BigInteger max(BigInteger lvl) {
-		return  BigInteger.valueOf(Math.round(3d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf(Math.round(0.5d*(tier()+2)))));  //+2.5 per level, down from +5
+		return  Big.roundD(3d*(tier()+1)).add(lvl.multiply(Big.roundD(0.5d*(tier()+2))));  //+2.5 per level, down from +5
 	}
 
     @Override

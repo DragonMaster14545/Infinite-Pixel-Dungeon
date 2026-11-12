@@ -25,6 +25,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
@@ -216,7 +217,7 @@ public class WndBag extends WndTabbed {
 			PixelScene.align(gold);
 			add(gold);
 
-			BitmapText amt = new BitmapText(Dungeon.gold.toString(), PixelScene.pixelFont);
+			BitmapText amt = new BitmapText(Big.fmt(Dungeon.gold), PixelScene.pixelFont);
 			amt.hardlight(TITLE_COLOR);
 			amt.measure();
 			amt.x = width - gold.width() - amt.width() - 1;
@@ -232,7 +233,7 @@ public class WndBag extends WndTabbed {
 			PixelScene.align(gold);
 			add(gold);
 
-			BitmapText amt = new BitmapText(Dungeon.gold.toString(), PixelScene.pixelFont);
+			BitmapText amt = new BitmapText(Big.fmt(Dungeon.gold), PixelScene.pixelFont);
 			amt.hardlight(TITLE_COLOR);
 			amt.measure();
 			amt.x = width - gold.width() - amt.width() - 2f;
@@ -248,7 +249,7 @@ public class WndBag extends WndTabbed {
 			PixelScene.align(energy);
 			add(energy);
 
-			amt = new BitmapText(Dungeon.energy.toString(), PixelScene.pixelFont);
+			amt = new BitmapText(Big.fmt(Dungeon.energy), PixelScene.pixelFont);
 			amt.hardlight(0x44CCFF);
 			amt.measure();
 			amt.x = width - energy.width() - amt.width() - 1;

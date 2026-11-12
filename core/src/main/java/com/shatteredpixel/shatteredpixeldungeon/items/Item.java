@@ -862,7 +862,7 @@ public class Item implements Bundlable {
 	}
 	
 	public String status() {
-		return (quantity.compareTo(BigInteger.ONE) != 0) ? quantity.toString() : null;
+		return (quantity.compareTo(BigInteger.ONE) != 0) ? Big.fmt(quantity) : null;
 	}
 
 	public static void updateQuickslot() {

@@ -85,10 +85,8 @@ public class HealthBar extends Component {
 	}
 
 	public void level(Char c){
-		double health = c.HP.doubleValue();
-		double shield = c.shielding().doubleValue();
-		double max = Big.dec(health+shield).max(Big.dec(c.HT)).doubleValue();
-
-		level(health/max, (health+shield)/max);
+		java.math.BigInteger hp = c.HP, sh = c.shielding();
+		java.math.BigInteger max = hp.add(sh).max(c.HT);
+		level(Big.ratio(hp, max), Big.ratio(hp.add(sh), max));
 	}
 }

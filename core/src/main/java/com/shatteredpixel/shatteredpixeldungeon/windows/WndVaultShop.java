@@ -187,8 +187,8 @@ public class WndVaultShop extends Window {
 
 	private void refresh() {
 		title.text(Messages.get(WndVaultShop.class, "title", VaultStore.boxes().size(), link.slots()));
-		gold.text(Messages.get(WndVaultShop.class, "gold", fmt(Big.toLong(Dungeon.gold))));
-		energy.text(Messages.get(WndVaultShop.class, "energy", fmt(Big.toLong(Dungeon.energy))));
+		gold.text(Messages.get(WndVaultShop.class, "gold", Big.fmt(Dungeon.gold)));
+		energy.text(Messages.get(WndVaultShop.class, "energy", Big.fmt(Dungeon.energy)));
 		note.text(Messages.get(WndVaultShop.class, "note", link.inflationPercent()));
 
 		BigInteger[] levels = VaultLink.SHOP_LEVELS;

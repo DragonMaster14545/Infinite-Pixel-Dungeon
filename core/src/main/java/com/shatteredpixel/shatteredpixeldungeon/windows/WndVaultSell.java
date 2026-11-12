@@ -142,8 +142,8 @@ public class WndVaultSell extends Window {
 	}
 
 	private void refresh() {
-		gold.text( Messages.get( this, "gold", fmt( Big.toLong(Dungeon.gold) ) ) );
-		energy.text( Messages.get( this, "energy", fmt( Big.toLong(Dungeon.energy) ) ) );
+		gold.text( Messages.get( this, "gold", Big.fmt(Dungeon.gold) ) );
+		energy.text( Messages.get( this, "energy", Big.fmt(Dungeon.energy) ) );
 
 		content.clear();
 		ArrayList<Item> items = sellable();
@@ -215,7 +215,7 @@ public class WndVaultSell extends Window {
 		GameScene.show( new WndOptions(
 				new ItemSprite( item ),
 				Messages.titleCase( item.name() ),
-				Messages.get( WndVaultSell.class, "confirm", fmt( Big.toLong(worth) ),
+				Messages.get( WndVaultSell.class, "confirm", Big.fmt(worth),
 						Messages.get( WndVaultSell.class, forEnergy ? "unit_energy" : "unit_gold" ) ),
 				Messages.get( WndVaultSell.class, "yes" ),
 				Messages.get( WndVaultSell.class, "no" ) ) {
@@ -245,7 +245,7 @@ public class WndVaultSell extends Window {
 		}
 
 		Sample.INSTANCE.play( Assets.Sounds.GOLD );
-		GLog.p( Messages.get( WndVaultSell.class, "sold", name, fmt( Big.toLong(worth) ),
+		GLog.p( Messages.get( WndVaultSell.class, "sold", name, Big.fmt(worth),
 				Messages.get( WndVaultSell.class, forEnergy ? "unit_energy" : "unit_gold" ) ) );
 		refresh();
 	}

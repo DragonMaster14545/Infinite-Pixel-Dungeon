@@ -236,15 +236,15 @@ public class ElementalStrike extends ArmorAbility {
 		//*** Blocking ***
 		} else if (ench instanceof Blocking){
 			if (targetsHit > 0){
-				BigInteger shield = BigInteger.valueOf(Math.round(Math.round(6f*targetsHit*powerMulti)));
-				Buff.affect(hero, Barrier.class).setShield(BigInteger.valueOf(Math.round(6f*targetsHit*powerMulti)));
+				BigInteger shield = Big.roundD(Math.round(6f*targetsHit*powerMulti));
+				Buff.affect(hero, Barrier.class).setShield(Big.roundD(6f*targetsHit*powerMulti));
 				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, shield.toString(), FloatingText.SHIELDING);
 			}
 
 		//*** Vampiric ***
 		} else if (ench instanceof Vampiric){
 			if (targetsHit > 0){
-				BigInteger heal = BigInteger.valueOf(Math.round(2.5f*targetsHit*powerMulti));
+				BigInteger heal = Big.roundD(2.5f*targetsHit*powerMulti);
 				heal = heal.min(hero.HT.subtract(hero.HP));
 				if ((heal.compareTo(BigInteger.ZERO) > 0)){
 					hero.HP = hero.HP.add(heal);
@@ -288,19 +288,19 @@ public class ElementalStrike extends ArmorAbility {
 		//*** Blazing ***
 		if (ench instanceof Blazing){
 			for (int cell : cone.cells) {
-				GameScene.add(Blob.seed(cell, BigInteger.valueOf(Math.round(8 * powerMulti)), Fire.class));
+				GameScene.add(Blob.seed(cell, Big.roundD(8 * powerMulti), Fire.class));
 			}
 
 		//*** Chilling ***
 		} else if (ench instanceof Chilling){
 			for (int cell : cone.cells) {
-				GameScene.add(Blob.seed(cell, BigInteger.valueOf(Math.round(8 * powerMulti)), Freezing.class));
+				GameScene.add(Blob.seed(cell, Big.roundD(8 * powerMulti), Freezing.class));
 			}
 
 		//*** Shocking ***
 		} else if (ench instanceof Shocking){
 			for (int cell : cone.cells) {
-				GameScene.add(Blob.seed(cell, BigInteger.valueOf(Math.round(8 * powerMulti)), Electricity.class));
+				GameScene.add(Blob.seed(cell, Big.roundD(8 * powerMulti), Electricity.class));
 			}
 
 		//*** Blooming ***

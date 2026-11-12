@@ -130,10 +130,10 @@ public class RageShield extends Buff {
                     if (Dungeon.level.adjacent(target.pos, ch.pos)){
                         drain = Big.div(Big.dec(ch.HT), Big.dec(8f)).add(Big.dec(1)).floatValue();
                     }
-                    ch.damage(BigInteger.valueOf(Math.round(drain)), this);
+                    ch.damage(Big.roundD(drain), this);
                     left -= drain;
                     Buff.prolong(ch, Amok.class, 2f);
-                    target.HP = target.HP.add(BigInteger.valueOf(Math.round(drain))).min(target.HT);
+                    target.HP = target.HP.add(Big.roundD(drain)).min(target.HT);
                     target.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(Math.round(drain)), FloatingText.HEALING);
                     if (left <= 0){
                         detach();

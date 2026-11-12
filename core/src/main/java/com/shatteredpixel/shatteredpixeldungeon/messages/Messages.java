@@ -24,6 +24,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.messages;
 
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
@@ -33,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.*;
+import java.util.regex.Matcher;
 
 /*
 	Simple wrapper class for libGDX I18NBundles.
@@ -155,6 +157,10 @@ public class Messages {
 	 */
 
 	public static String format( String format, Object...args ) {
+		String[] fa = {format};
+		args = bigArgs(fa, args);
+		format = fa[0];
+
 		try {
 			return String.format(Locale.ENGLISH, format, args);
 		} catch (IllegalFormatException e) {
@@ -162,6 +168,40 @@ public class Messages {
 			return format;
 		}
 	}
+
+	private static final java.util.regex.Pattern SPEC = java.util.regex.Pattern.compile("%(\\d+\\$)?([-#+ 0,(<]*)\\d*(?:\\.\\d+)?([a-zA-Z%])");
+
+	private static Object[] bigArgs( String[] fmt, Object[] args ){
+		boolean any = false;
+		for (Object a : args) if (a instanceof java.math.BigInteger && ((java.math.BigInteger)a).abs().bitLength() > 13) any = true;
+		if (!any) return args;
+		Object[] out = args.clone();
+		StringBuilder sb = null;
+		String format = fmt[0];
+		Matcher m = SPEC.matcher(format);
+		int seq = 0, last = 0;
+		boolean[] done = new boolean[args.length];
+		while (m.find()){
+			char c = m.group(3).charAt(0);
+			if (c == '%' || c == 'n') continue;
+			int idx = m.group(1) != null ? Integer.parseInt(m.group(1).substring(0, m.group(1).length()-1)) - 1 : seq++;
+			if (idx < 0 || idx >= args.length) continue;
+			if (args[idx] instanceof java.math.BigInteger && (c == 'd' || c == 's') && ((java.math.BigInteger)args[idx]).abs().bitLength() > 13){
+				java.math.BigInteger bi = (java.math.BigInteger)args[idx];
+				out[idx] = (m.group(2).contains("+") && bi.signum() >= 0 ? "+" : "") + Big.fmt(bi);
+				done[idx] = true;
+				if (c == 'd'){
+					if (sb == null) sb = new StringBuilder();
+					sb.append(format, last, m.start()).append("%").append(m.group(1) == null ? "" : m.group(1)).append("s");
+					last = m.end();
+				}
+			}
+		}
+		if (sb != null){ sb.append(format.substring(last)); fmt[0] = sb.toString(); }
+		return out;
+	}
+
+	private static String pendingFormat;
 
 	private static HashMap<String, DecimalFormat> formatters = new HashMap<>();
 

@@ -187,9 +187,9 @@ public class BossHealthBar extends Component {
 				}
 
 				if ((shield.compareTo(BigInteger.ZERO) <= 0)){
-					hpText.text(health + "/" + max);
+					hpText.text(Big.fmt(health) + "/" + Big.fmt(max));
 				} else {
-					hpText.text(health + "+" + shield +  "/" + max);
+					hpText.text(Big.fmt(health) + "+" + Big.fmt(shield) + "/" + Big.fmt(max));
 				}
 
 			}

@@ -47,12 +47,12 @@ public class Tomahawk extends MissileWeapon {
 
 	@Override
 	public BigInteger min(BigInteger lvl) {
-		return  BigInteger.valueOf(Math.round(3d * tier())).add(BigInteger.valueOf(4).multiply(lvl));                    //scaling unchanged
+		return  Big.roundD(3d * tier()).add(BigInteger.valueOf(4).multiply(lvl));                    //scaling unchanged
 	}
 	
 	@Override
 	public BigInteger max(BigInteger lvl) {
-		return  BigInteger.valueOf(Math.round(7d * tier())).add(BigInteger.valueOf((tier()*2L)).multiply(lvl));                 //scaling unchanged
+		return  Big.roundD(7d * tier()).add(BigInteger.valueOf((tier()*2L)).multiply(lvl));                 //scaling unchanged
 	}
 	
 	@Override
