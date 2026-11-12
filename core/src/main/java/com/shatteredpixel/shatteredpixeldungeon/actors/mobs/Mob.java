@@ -923,8 +923,6 @@ public abstract class Mob extends Char {
 			EXP = EXP.multiply(BigInteger.TWO);
 		}
 
-		//TODO sturdy exp nullifier when reaching specific level.
-
 		if (alignment == Alignment.ENEMY){
 			rollToDropLoot();
 
@@ -941,9 +939,6 @@ public abstract class Mob extends Char {
 				}
 			}
 
-			if ((PsycheChest.neededLevel().compareTo(BigInteger.valueOf(Dungeon.hero.lvl)) < 0)) {
-				EXP = BigInteger.ZERO;
-			}
 		}
 
 		if (Dungeon.hero.isAlive() && !Dungeon.level.heroFOV[pos]) {
