@@ -24,12 +24,16 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.watabou.utils.Bundle;
 
 public abstract class ShieldBuff extends Buff {
 	
-	private long shielding;
+	private BigInteger shielding = BigInteger.ZERO;
 	
 	@Override
 	public boolean attachTo(Char target) {
@@ -47,43 +51,43 @@ public abstract class ShieldBuff extends Buff {
 		super.detach();
 	}
 	
-	public long shielding(){
+	public BigInteger shielding(){
 		return shielding;
 	}
 	
-	public void setShield( long shield ) {
-		if (this.shielding <= shield) this.shielding = shield;
+	public void setShield( BigInteger shield ) {
+		if ((this.shielding.compareTo(shield) <= 0)) this.shielding = shield;
 		if (target != null) target.needsShieldUpdate = true;
 	}
 	
 	public void incShield(){
-		incShield(1);
+		incShield(BigInteger.ONE);
 	}
 
-	public void incShield( long amt ){
-		shielding += amt;
+	public void incShield( BigInteger amt ){
+		shielding = shielding.add(amt);
 		if (target != null) target.needsShieldUpdate = true;
 	}
 	
 	public void decShield(){
-		decShield(1);
+		decShield(BigInteger.ONE);
 	}
 
-	public void decShield( long amt ){
-		shielding -= amt;
+	public void decShield( BigInteger amt ){
+		shielding = shielding.subtract(amt);
 		if (target != null) target.needsShieldUpdate = true;
 	}
 	
 	//returns the amount of damage leftover
-	public long absorbDamage( long dmg ){
-		if (shielding >= dmg){
-			shielding -= dmg;
-			dmg = 0;
+	public BigInteger absorbDamage( BigInteger dmg ){
+		if ((shielding.compareTo(dmg) >= 0)){
+			shielding = shielding.subtract(dmg);
+			dmg = BigInteger.ZERO;
 		} else {
-			dmg -= shielding;
-			shielding = 0;
+			dmg = dmg.subtract(shielding);
+			shielding = BigInteger.ZERO;
 		}
-		if (shielding == 0){
+		if ((shielding.compareTo(BigInteger.ZERO) == 0)){
 			detach();
 		}
 		if (target != null) target.needsShieldUpdate = true;
@@ -95,13 +99,13 @@ public abstract class ShieldBuff extends Buff {
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );
-		bundle.put( SHIELDING, shielding);
+		Big.put(bundle, SHIELDING, shielding);
 	}
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle( bundle );
-		shielding = bundle.getLong( SHIELDING );
+		shielding = Big.getBig(bundle, SHIELDING);
 	}
 	
 }

@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -65,10 +69,10 @@ import java.util.ArrayList;
 public class GnollGeomancer extends Mob {
 
 	{
-		HP = HT = Dungeon.getCycleMultiplier(150);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(150));
 		spriteClass = GnollGeomancerSprite.class;
 
-		EXP = 20;
+		EXP = BigInteger.valueOf(20);
 
 		//acts after other mobs, just like sappers
 		actPriority = MOB_PRIO-1;
@@ -137,18 +141,18 @@ public class GnollGeomancer extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(3), Dungeon.getCycleMultiplier(6) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(3)), Dungeon.getCycleMultiplier(BigInteger.valueOf(6)) );
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(20);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(20));
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(6));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(6)));
 	}
 
 	@Override
@@ -194,14 +198,14 @@ public class GnollGeomancer extends Mob {
 				public void call() {
 					//does its own special damage calculation that's only influenced by pickaxe level and augment
 					//we pretend the geomancer is the owner here so that properties like hero str or or other equipment do not factor in
-					long dmg = p.damageRoll(GnollGeomancer.this);
+					BigInteger dmg = p.damageRoll(GnollGeomancer.this);
 
 					boolean wasSleeping = state == SLEEPING;
 
 					//ensure we don't do enough damage to break the armor at the start
-					if (wasSleeping) dmg = Math.min(dmg, HT/10);
+					if (wasSleeping) dmg = dmg.min(HT.divide(BigInteger.TEN));
 
-					dmg = Math.min(dmg, buff(RockArmor.class).shielding());
+					dmg = dmg.min(buff(RockArmor.class).shielding());
 
 					damage(dmg, p);
 					sprite.bloodBurstA(Dungeon.hero.sprite.center(), dmg);
@@ -255,31 +259,31 @@ public class GnollGeomancer extends Mob {
 	}
 
 	@Override
-	public void damage(long dmg, Object src) {
-		long hpBracket = HT / 3;
+	public void damage(BigInteger dmg, Object src) {
+		BigInteger hpBracket = HT.divide(BigInteger.valueOf(3));
 
-		long curbracket = HP / hpBracket;
-		if (curbracket == 3) curbracket--; //full HP isn't its own bracket
+		BigInteger curbracket = HP.divide(hpBracket);
+		if ((curbracket.compareTo(BigInteger.valueOf(3)) == 0)) curbracket = curbracket.subtract(BigInteger.ONE); //full HP isn't its own bracket
 
-		inFinalBracket = curbracket == 0;
+		inFinalBracket = (curbracket.compareTo(BigInteger.ZERO) == 0);
 
 		super.damage(dmg, src);
 
-		abilityCooldown -= dmg/10f;
+		abilityCooldown -= Big.toLong((Big.div(Big.dec(dmg), Big.dec(10f))).toBigInteger());
 
-		long newBracket =  HP / hpBracket;
-		if (newBracket == 3) newBracket--; //full HP isn't its own bracket
+		BigInteger newBracket =  HP.divide(hpBracket);
+		if ((newBracket.compareTo(BigInteger.valueOf(3)) == 0)) newBracket = newBracket.subtract(BigInteger.ONE); //full HP isn't its own bracket
 
-		if (newBracket != curbracket) {
+		if ((newBracket.compareTo(curbracket) != 0)) {
 			//cannot be hit through multiple brackets at a time
-			if (HP <= (curbracket-1)*hpBracket){
-				HP = (curbracket-1)*hpBracket + 1;
+			if ((HP.compareTo((curbracket.subtract(BigInteger.ONE)).multiply(hpBracket)) <= 0)){
+				HP = (curbracket.subtract(BigInteger.ONE)).multiply(hpBracket).add(BigInteger.ONE);
 			}
 
-			BossHealthBar.bleed(newBracket <= 0);
+			BossHealthBar.bleed((newBracket.compareTo(BigInteger.ZERO) <= 0));
 
 			carveRockAndDash();
-			Buff.affect(this, RockArmor.class).setShield(HT/6);
+			Buff.affect(this, RockArmor.class).setShield(HT.divide(BigInteger.valueOf(6)));
 		}
 	}
 
@@ -571,9 +575,9 @@ public class GnollGeomancer extends Mob {
 					// 50/50 to either throw a rock or do rockfall, but never do rockfall twice
 					// unless target is next to a barricade, then always try to throw
 					// unless nothing to throw, then always rockfall
-					long hpBracket = HT / 3;
+					BigInteger hpBracket = HT.divide(BigInteger.valueOf(3));
 
-					int curbracket = (int)(HP / hpBracket);
+					int curbracket = Big.toInt((HP.divide(hpBracket)));
 					if (curbracket == 3) curbracket--; //full HP isn't its own bracket
 
 					Ballistica aim = GnollGeomancer.prepRockThrowAttack(enemy, GnollGeomancer.this);
@@ -693,7 +697,7 @@ public class GnollGeomancer extends Mob {
 						}
 
 						if (ch != null && !(ch instanceof GnollGeomancer)){
-							long dmg = Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(6), Dungeon.getCycleMultiplier(12));
+							BigInteger dmg = Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.valueOf(6)), Dungeon.getCycleMultiplier(BigInteger.valueOf(12)));
 							ch.damage(dmg, new GnollGeomancer.Boulder());
 
                             if (ch == Dungeon.hero){
@@ -710,7 +714,7 @@ public class GnollGeomancer extends Mob {
 
 							if (!knockedChars.contains(ch) && rockPath.path.size() > rockPath.dist+1) {
 								Ballistica trajectory = new Ballistica(ch.pos, rockPath.path.get(rockPath.dist + 1), Ballistica.MAGIC_BOLT);
-								WandOfBlastWave.throwChar(ch, trajectory, 1, false, false, source);
+								WandOfBlastWave.throwChar(ch, trajectory, BigInteger.ONE, false, false, source);
 								knockedChars.add(ch);
 							}
 						} else if (ch == null) {
@@ -801,7 +805,7 @@ public class GnollGeomancer extends Mob {
 
 		@Override
 		public void affectChar(Char ch) {
-			long dmg = Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(6), Dungeon.getCycleMultiplier(12));
+			BigInteger dmg = Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.valueOf(6)), Dungeon.getCycleMultiplier(BigInteger.valueOf(12)));
             if (ch == Dungeon.hero){
                 Statistics.questScores[2] -= 100;
             }

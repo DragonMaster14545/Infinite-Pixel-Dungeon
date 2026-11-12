@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
@@ -47,14 +49,14 @@ public class ArmoredBrute extends Brute {
 	}
 	
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.getCycleMultiplier(Dungeon.NormalLongRange(6,10));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.getCycleMultiplier(Dungeon.NormalLongRange(BigInteger.valueOf(6),BigInteger.TEN));
 	}
 	
 	@Override
 	protected void triggerEnrage () {
-		Buff.affect(this, ArmoredRage.class).setShield(HT/2 + 1);
-		sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString(HT/2 + 1), FloatingText.SHIELDING );
+		Buff.affect(this, ArmoredRage.class).setShield(HT.divide(BigInteger.TWO).add(BigInteger.ONE));
+		sprite.showStatusWithIcon( CharSprite.POSITIVE, HT.divide(BigInteger.TWO).add(BigInteger.ONE).toString(), FloatingText.SHIELDING );
 		if (Dungeon.level.heroFOV[pos]) {
 			sprite.showStatus( CharSprite.WARNING, Messages.get(this, "enraged") );
 		}
@@ -76,14 +78,14 @@ public class ArmoredBrute extends Brute {
 		@Override
 		public boolean act() {
 			
-			if (target.HP > 0){
+			if ((target.HP.compareTo(BigInteger.ZERO) > 0)){
 				detach();
 				return true;
 			}
 			
-			absorbDamage( target.HT / 40 );
+			absorbDamage( target.HT.divide(BigInteger.valueOf(40)) );
 			
-			if (shielding() <= 0){
+			if ((shielding().compareTo(BigInteger.ZERO) <= 0)){
 				target.die(null);
 			}
 			

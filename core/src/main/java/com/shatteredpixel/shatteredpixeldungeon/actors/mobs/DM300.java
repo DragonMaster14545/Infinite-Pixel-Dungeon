@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -86,9 +90,9 @@ public class DM300 extends Mob {
 	{
 		spriteClass = DM300Sprite.class;
 
-		HP = HT = (long) ((bossMaxHPMulti + 1) * (Dungeon.getCycleMultiplier(300)));
-		EXP = Dungeon.getCycleMultiplier(30);
-		defenseSkill = Dungeon.getCycleMultiplier(15);
+		HP = HT = Big.trunc((Big.dec((bossMaxHPMulti + 1)).multiply(Big.dec((Dungeon.getCycleMultiplier(BigInteger.valueOf(300)))))));
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(30));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(15));
 
 		properties.add(Property.BOSS);
 		properties.add(Property.INORGANIC);
@@ -96,18 +100,18 @@ public class DM300 extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(15), Dungeon.getCycleMultiplier(25) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(15)), Dungeon.getCycleMultiplier(BigInteger.valueOf(25)) );
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(20);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(20));
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(10));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.TEN));
 	}
 
 	public int pylonsActivated = 0;
@@ -332,7 +336,7 @@ public class DM300 extends Mob {
 		if (!flying && Dungeon.level.map[pos] == Terrain.INACTIVE_TRAP && state == HUNTING) {
 
 			//don't gain energy from cells that are energized
-			if (CavesBossLevel.PylonEnergy.volumeAt(pos, CavesBossLevel.PylonEnergy.class) > 0){
+			if ((CavesBossLevel.PylonEnergy.volumeAt(pos, CavesBossLevel.PylonEnergy.class).compareTo(BigInteger.ZERO) > 0)){
 				return;
 			}
 
@@ -342,10 +346,10 @@ public class DM300 extends Mob {
 				}
 				Sample.INSTANCE.play(Assets.Sounds.LIGHTNING);
 				sprite.emitter().start(SparkParticle.STATIC, 0.05f, 20);
-				sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(30 + (HT - HP)/10), FloatingText.SHIELDING);
+				sprite.showStatusWithIcon(CharSprite.POSITIVE, BigInteger.valueOf(30).add((HT.subtract(HP)).divide(BigInteger.TEN)).toString(), FloatingText.SHIELDING);
 			}
 
-			Buff.affect(this, Barrier.class).setShield( 30 + (HT - HP)/10);
+			Buff.affect(this, Barrier.class).setShield( BigInteger.valueOf(30).add((HT.subtract(HP)).divide(BigInteger.TEN)));
 
 		}
 	}
@@ -385,16 +389,16 @@ public class DM300 extends Mob {
 		int gasMulti = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 2 : 1;
 
 		for (int i : trajectory.subPath(0, trajectory.dist)){
-			GameScene.add(Blob.seed(i, 20*gasMulti, ToxicGas.class));
+			GameScene.add(Blob.seed(i, BigInteger.valueOf(20*gasMulti), ToxicGas.class));
 			gasVented += 20*gasMulti;
 		}
 
-		GameScene.add(Blob.seed(trajectory.collisionPos, 100*gasMulti, ToxicGas.class));
+		GameScene.add(Blob.seed(trajectory.collisionPos, BigInteger.valueOf(100*gasMulti), ToxicGas.class));
 
 		if (gasVented < 250*gasMulti){
 			int toVentAround = (int)Math.ceil(((250*gasMulti) - gasVented)/8f);
 			for (int i : PathFinder.NEIGHBOURS8){
-				GameScene.add(Blob.seed(pos+i, toVentAround, ToxicGas.class));
+				GameScene.add(Blob.seed(pos+i, BigInteger.valueOf(toVentAround), ToxicGas.class));
 			}
 
 		}
@@ -415,7 +419,7 @@ public class DM300 extends Mob {
 		if (Dungeon.level.adjacent(pos, target.pos)){
 			int oppositeAdjacent = target.pos + (target.pos - pos);
 			Ballistica trajectory = new Ballistica(target.pos, oppositeAdjacent, Ballistica.MAGIC_BOLT);
-			WandOfBlastWave.throwChar(target, trajectory, 2, false, false, this);
+			WandOfBlastWave.throwChar(target, trajectory, BigInteger.TWO, false, false, this);
 			if (target == Dungeon.hero){
 				Dungeon.hero.interrupt();
 			}
@@ -425,7 +429,7 @@ public class DM300 extends Mob {
 		} else if (fieldOfView[target.pos] && Dungeon.level.distance(pos, target.pos) == 2) {
 			int oppositeAdjacent = target.pos + (target.pos - pos);
 			Ballistica trajectory = new Ballistica(target.pos, oppositeAdjacent, Ballistica.MAGIC_BOLT);
-			WandOfBlastWave.throwChar(target, trajectory, 1, false, false, this);
+			WandOfBlastWave.throwChar(target, trajectory, BigInteger.ONE, false, false, this);
 			if (target == Dungeon.hero){
 				Dungeon.hero.interrupt();
 			}
@@ -441,7 +445,7 @@ public class DM300 extends Mob {
 			safeCell = rockCenter + PathFinder.NEIGHBOURS8[Random.Int(8)];
 		} while (safeCell == pos
 				|| (Dungeon.level.solid[safeCell] && Random.Int(2) == 0)
-				|| (Blob.volumeAt(safeCell, CavesBossLevel.PylonEnergy.class) > 0 && Random.Int(2) == 0));
+				|| ((Blob.volumeAt(safeCell, CavesBossLevel.PylonEnergy.class).compareTo(BigInteger.ZERO) > 0) && Random.Int(2) == 0));
 
 		ArrayList<Integer> rockCells = new ArrayList<>();
 
@@ -472,34 +476,34 @@ public class DM300 extends Mob {
 	private boolean invulnWarned = false;
 
 	@Override
-	public void damage(long dmg, Object src) {
+	public void damage(BigInteger dmg, Object src) {
 		if (!BossHealthBar.isAssigned()){
 			notice();
 		}
 
-		long preHP = HP;
+		BigInteger preHP = HP;
 		super.damage(dmg, src);
 		if (isInvulnerable(src.getClass())){
 			return;
 		}
 
-		long dmgTaken = preHP - HP;
-		if (dmgTaken > 0) {
+		BigInteger dmgTaken = preHP.subtract(HP);
+		if ((dmgTaken.compareTo(BigInteger.ZERO) > 0)) {
 			LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
 			if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
-				if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmgTaken/2f);
-				else                                                    lock.addTime(dmgTaken);
+				if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(Big.div(Big.dec(dmgTaken), Big.dec(2f)).floatValue());
+				else                                                    lock.addTime(dmgTaken.floatValue());
 			}
 		}
 
-		long threshold;
+		BigInteger threshold;
 		if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
-			threshold = HT / 4 * (3 - pylonsActivated);
+			threshold = HT.divide(BigInteger.valueOf(4)).multiply(BigInteger.valueOf((3 - pylonsActivated)));
 		} else {
-			threshold = HT / 3 * (2 - pylonsActivated);
+			threshold = HT.divide(BigInteger.valueOf(3)).multiply(BigInteger.valueOf((2 - pylonsActivated)));
 		}
 
-		if (HP <= threshold && threshold > 0){
+		if ((HP.compareTo(threshold) <= 0) && (threshold.compareTo(BigInteger.ZERO) > 0)){
 			HP = threshold;
 			supercharge();
 		}

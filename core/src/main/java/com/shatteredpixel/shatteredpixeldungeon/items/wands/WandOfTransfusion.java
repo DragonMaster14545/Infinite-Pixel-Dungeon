@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -62,13 +66,13 @@ public class WandOfTransfusion extends DamageWand {
 	}
 
 	@Override
-	public long min(long level) {
-		return ((3 + level)*getRarityMultiplier());
+	public BigInteger min(BigInteger level) {
+		return ((BigInteger.valueOf(3).add(level)).multiply(getRarityMultiplier()));
 	}
 
 	@Override
-	public long max(long level) {
-		return ((6 + 2*level)*getRarityMultiplier());
+	public BigInteger max(BigInteger level) {
+		return ((BigInteger.valueOf(6).add(BigInteger.TWO.multiply(level))).multiply(getRarityMultiplier()));
 	}
 
 	private boolean freeCharge = false;
@@ -93,25 +97,25 @@ public class WandOfTransfusion extends DamageWand {
 			if (ch.alignment == Char.Alignment.ALLY || ch.buff(Charm.class) != null){
 				
 				// 5% of max hp
-				long selfDmg = Math.round(curUser.HT*0.05f);
+				BigInteger selfDmg = Big.round(Big.dec(curUser.HT).multiply(Big.dec(0.05f)));
 				
-				long healing = (selfDmg + 3*buffedLvl());
-				long shielding = (ch.HP + healing) - ch.HT;
-				if (shielding > 0){
-					healing -= shielding;
+				BigInteger healing = (selfDmg.add(BigInteger.valueOf(3).multiply(buffedLvl())));
+				BigInteger shielding = (ch.HP.add(healing)).subtract(ch.HT);
+				if ((shielding.compareTo(BigInteger.ZERO) > 0)){
+					healing = healing.subtract(shielding);
 					Buff.affect(ch, Barrier.class).setShield(shielding);
 				} else {
-					shielding = 0;
+					shielding = BigInteger.ZERO;
 				}
 				
-				ch.HP += healing;
+				ch.HP = ch.HP.add(healing);
 				
-				ch.sprite.emitter().burst(Speck.factory(Speck.HEALING),  (int) Math.min(Math.sqrt(2 + buffedLvl() / 2f), 1000));
-				if (healing > 0) {
-					ch.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(healing), FloatingText.HEALING);
+				ch.sprite.emitter().burst(Speck.factory(Speck.HEALING),  (int) Math.min(Math.sqrt(Big.dec(2).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue()), 1000));
+				if ((healing.compareTo(BigInteger.ZERO) > 0)) {
+					ch.sprite.showStatusWithIcon(CharSprite.POSITIVE, healing.toString(), FloatingText.HEALING);
 				}
-				if (shielding > 0){
-					ch.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(shielding), FloatingText.SHIELDING);
+				if ((shielding.compareTo(BigInteger.ZERO) > 0)){
+					ch.sprite.showStatusWithIcon(CharSprite.POSITIVE, shielding.toString(), FloatingText.SHIELDING);
 				}
 				
 				if (!freeCharge) {
@@ -125,8 +129,8 @@ public class WandOfTransfusion extends DamageWand {
 			} else if (ch.alignment == Char.Alignment.ENEMY || ch instanceof Mimic) {
 
 				//grant a self-shield, and...
-				Buff.affect(curUser, Barrier.class).setShield((7 + buffedLvl()));
-curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(7+buffedLvl()), FloatingText.SHIELDING);
+				Buff.affect(curUser, Barrier.class).setShield((BigInteger.valueOf(7).add(buffedLvl())));
+curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, BigInteger.valueOf(7).add(buffedLvl()).toString(), FloatingText.SHIELDING);
 
 				//charms living enemies
 				if (!ch.properties().contains(Char.Property.UNDEAD)) {
@@ -137,8 +141,8 @@ curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(7+buffedLvl
 				
 				//harms the undead
 				} else {
-					ch.damage((long) (Random.NormalLongRange(3 + buffedLvl(), 6+2*buffedLvl())*(1+ Dungeon.hero.lvl/150f)), this);
-					ch.sprite.emitter().start(ShadowParticle.UP, 0.05f,  (int) Math.min(Math.sqrt(10 + buffedLvl()), 1000));
+					ch.damage(Big.trunc((Big.dec(Big.normalRange(BigInteger.valueOf(3).add(buffedLvl()), BigInteger.valueOf(6).add(BigInteger.TWO.multiply(buffedLvl())))).multiply(Big.dec((1+ Dungeon.hero.lvl/150f))))), this);
+					ch.sprite.emitter().start(ShadowParticle.UP, 0.05f,  (int) Math.min(Math.sqrt(BigInteger.TEN.add(buffedLvl()).doubleValue()), 1000));
 					Sample.INSTANCE.play(Assets.Sounds.BURNING);
 				}
 
@@ -149,7 +153,7 @@ curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(7+buffedLvl
 	}
 
 	//this wand costs health too
-	private void damageHero(long damage){
+	private void damageHero(BigInteger damage){
 		
 		curUser.damage(damage, this);
 
@@ -161,12 +165,12 @@ curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(7+buffedLvl
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
+	public void onHit(MagesStaff staff, Char attacker, Char defender, BigInteger damage) {
 		if (defender.buff(Charm.class) != null && defender.buff(Charm.class).object == attacker.id()){
 			//grants a free use of the staff and shields self
 			freeCharge = true;
-			int shieldToGive = Math.round((2*(7 + buffedLvl()))*procChanceMultiplier(attacker));
-			Buff.affect(attacker, Barrier.class).setShield(shieldToGive);
+			int shieldToGive = Big.toInt(Big.round(Big.dec((BigInteger.TWO.multiply((BigInteger.valueOf(7).add(buffedLvl()))))).multiply(Big.dec(procChanceMultiplier(attacker)))));
+			Buff.affect(attacker, Barrier.class).setShield(BigInteger.valueOf(shieldToGive));
 			attacker.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
 			GLog.p( Messages.get(this, "charged") );
 			attacker.sprite.emitter().burst(BloodParticle.BURST, 20);
@@ -192,26 +196,26 @@ curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(7+buffedLvl
 
 	@Override
 	public String statsDesc() {
-		long selfDMG = Dungeon.hero != null ? Math.round(Dungeon.hero.HT*0.05d): 1;
+		BigInteger selfDMG = Dungeon.hero != null ? Big.round(Big.dec(Dungeon.hero.HT).multiply(Big.dec(0.05d))): BigInteger.ONE;
 		if (levelKnown)
-			return Messages.get(this, "stats_desc", selfDMG, selfDMG + 3*buffedLvl(), 7+buffedLvl(), min(), max()) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, getMaxCharges());
+			return Messages.get(this, "stats_desc", selfDMG, selfDMG.add(BigInteger.valueOf(3).multiply(buffedLvl())), BigInteger.valueOf(7).add(buffedLvl()), min(), max()) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, getMaxCharges());
 		else
-			return Messages.get(this, "stats_desc", selfDMG, selfDMG, 7, min(0), max(0));
+			return Messages.get(this, "stats_desc", selfDMG, selfDMG, 7, min(BigInteger.ZERO), max(BigInteger.ZERO));
 	}
 
 	@Override
-	public String upgradeStat1(long level) {
-		long selfDMG = Dungeon.hero != null ? Math.round(Dungeon.hero.HT*0.05f): 1;
-		return Long.toString(selfDMG + 3*level);
+	public String upgradeStat1(BigInteger level) {
+		BigInteger selfDMG = Dungeon.hero != null ? Big.round(Big.dec(Dungeon.hero.HT).multiply(Big.dec(0.05f))): BigInteger.ONE;
+		return selfDMG.add(BigInteger.valueOf(3).multiply(level)).toString();
 	}
 
 	@Override
-	public String upgradeStat2(long level) {
-		return Long.toString(7 + level);
+	public String upgradeStat2(BigInteger level) {
+		return BigInteger.valueOf(7).add(level).toString();
 	}
 
 	@Override
-	public String upgradeStat3(long level) {
+	public String upgradeStat3(BigInteger level) {
 		return super.upgradeStat1(level); //damage
 	}
 

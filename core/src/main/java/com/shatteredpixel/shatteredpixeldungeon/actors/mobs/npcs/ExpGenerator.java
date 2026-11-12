@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
@@ -46,7 +49,7 @@ public class ExpGenerator extends Mob {
 
     public void set(int lvl){
         level = lvl;
-        HT = HP = (int) ((25 + Dungeon.escalatingDepth() * 2) * (1.2f * level));
+        HT = HP = BigInteger.valueOf(Big.toInt(((Big.dec((BigInteger.valueOf(25).add(Dungeon.escalatingDepth().multiply(BigInteger.TWO)))).multiply(Big.dec((1.2f * level))))).toBigInteger()));
     }
 
     @Override
@@ -64,12 +67,12 @@ public class ExpGenerator extends Mob {
         super.die(cause);
         if (cause instanceof Char && !(cause instanceof Hero)) {
             Buff.affect((Char) cause, Adrenaline.class, 50f);
-            Buff.affect((Char) cause, Barkskin.class).set((int) (enemy.HT*5), 0);
+            Buff.affect((Char) cause, Barkskin.class).set(BigInteger.valueOf(Big.toInt((enemy.HT.multiply(BigInteger.valueOf(5))))), 0);
             Buff.affect((Char) cause, Bless.class, 60f);
             Buff.affect((Char) cause, Levitation.class, 60f);
-            Buff.affect((Char) cause, ArcaneArmor.class).set((int) (enemy.HT*5), 0);
+            Buff.affect((Char) cause, ArcaneArmor.class).set(BigInteger.valueOf(Big.toInt((enemy.HT.multiply(BigInteger.valueOf(5))))), 0);
         }
-        Dungeon.level.drop(new com.shatteredpixel.shatteredpixeldungeon.items.ExpGenerator().upgrade(level - 1), pos).sprite.drop();
+        Dungeon.level.drop(new com.shatteredpixel.shatteredpixeldungeon.items.ExpGenerator().upgrade(BigInteger.valueOf(level - 1)), pos).sprite.drop();
     }
 
     @Override
@@ -102,8 +105,8 @@ public class ExpGenerator extends Mob {
             }
         }
         if (mobs) {
-            Dungeon.hero.earnExp(Math.round((Dungeon.escalatingDepth()/5) * (1.5f * level)), this.getClass());
-            if (Dungeon.hero.fieldOfView[pos]) sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "exp", Math.round((Dungeon.escalatingDepth()/5) * (1.5f * level))));
+            Dungeon.hero.earnExp(Big.round(Big.dec((Dungeon.escalatingDepth().divide(BigInteger.valueOf(5)))).multiply(Big.dec((1.5f * level)))), this.getClass());
+            if (Dungeon.hero.fieldOfView[pos]) sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "exp", Big.round(Big.dec((Dungeon.escalatingDepth().divide(BigInteger.valueOf(5)))).multiply(Big.dec((1.5f * level))))));
         }
         return super.act();
     }

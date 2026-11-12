@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -46,13 +50,13 @@ public class PhantomPiranha extends Piranha {
 	}
 
 	@Override
-	public void damage(long dmg, Object src) {
+	public void damage(BigInteger dmg, Object src) {
 		Char dmgSource = null;
 		if (src instanceof Char) dmgSource = (Char)src;
 		if (src instanceof Wand) dmgSource = Dungeon.hero;
 
 		if (dmgSource == null || !Dungeon.level.adjacent(pos, dmgSource.pos)){
-			dmg = Math.round(dmg/2f); //halve damage taken if we are going to teleport
+			dmg = Big.round(Big.div(Big.dec(dmg), Big.dec(2f))); //halve damage taken if we are going to teleport
 		}
 		super.damage(dmg, src);
 
@@ -79,7 +83,7 @@ public class PhantomPiranha extends Piranha {
 	}
 
 	@Override
-	public long defenseProc(Char enemy, long damage) {
+	public BigInteger defenseProc(Char enemy, BigInteger damage) {
 		return super.defenseProc(enemy, damage);
 	}
 

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -33,7 +35,7 @@ public class Flow extends Armor.Glyph {
 	private static ItemSprite.Glowing BLUE = new ItemSprite.Glowing( 0x0000FF );
 
 	@Override
-	public long proc(Armor armor, Char attacker, Char defender, long damage) {
+	public BigInteger proc(Armor armor, Char attacker, Char defender, BigInteger damage) {
 		//no proc effect, see armor.speedfactor for effect.
 		return damage;
 	}

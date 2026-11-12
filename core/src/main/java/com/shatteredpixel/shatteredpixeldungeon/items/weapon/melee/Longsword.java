@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -61,13 +65,12 @@ public class Longsword extends MeleeWeapon {
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  4L*(tier()+1) +    //20
-				lvl*(tier()+1);   //+5
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(4L*(tier()+1)).add(lvl.multiply(BigInteger.valueOf((tier()+1))));   //+5
 	}
 
 	@Override
-	public long proc(Char attacker, Char defender, long damage) {
+	public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 		int[] targets = new int[2];
 		int direction = -1;
 		int direction1 = -1, direction2 = -1;
@@ -113,7 +116,7 @@ public class Longsword extends MeleeWeapon {
 				if (Actor.findChar(pos) != null){
 					Char ch = Actor.findChar(pos);
 					if (ch.alignment != attacker.alignment){
-						long dmg = Math.round(damage*0.6f);
+						BigInteger dmg = Big.round(Big.dec(damage).multiply(Big.dec(0.6f)));
 						Sample.INSTANCE.play(Assets.Sounds.HIT_STAB, 1f, 0.75f);
 						if (enchantment != null && attacker.buff(MagicImmune.class) == null) {
 							dmg = enchantment.proc( this, attacker, defender, damage );
@@ -263,8 +266,8 @@ public class Longsword extends MeleeWeapon {
 
 	}
 
-	public String upgradeAbilityStat(long level){
-		long dmgBoost = 6 + level;
-		return augment.damageFactor(min(level)+dmgBoost) + "-" + augment.damageFactor(max(level)+dmgBoost);
+	public String upgradeAbilityStat(BigInteger level){
+		BigInteger dmgBoost = BigInteger.valueOf(6).add(level);
+		return augment.damageFactor(min(level).add(dmgBoost)) + "-" + augment.damageFactor(max(level).add(dmgBoost));
 	}
 }

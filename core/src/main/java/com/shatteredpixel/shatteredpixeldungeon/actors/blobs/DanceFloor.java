@@ -1,5 +1,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -52,11 +55,11 @@ public class DanceFloor extends Blob implements Hero.Doom {
         int heroSquare = getSquare(Dungeon.hero.pos, width);
 
         for (int cell = 0; cell < cur.length; cell++) {
-            long value = cur[cell];
-            int color = Math.toIntExact(value & 0xF);
-            int rotationResetColor = Math.toIntExact((value >> 4) & 0xF);
-            int time = Math.toIntExact((value >> 8) & 0xF);
-            boolean pause = ((value >> 12) & 1) != 0;
+            BigInteger value = cur[cell];
+            int color = Math.toIntExact(Big.toLong(value.and(BigInteger.valueOf(0xF))));
+            int rotationResetColor = Math.toIntExact(Big.toLong((value.shiftRight(4)).and(BigInteger.valueOf(0xF))));
+            int time = Math.toIntExact(Big.toLong((value.shiftRight(8)).and(BigInteger.valueOf(0xF))));
+            boolean pause = (((value.shiftRight(12)).and(BigInteger.ONE)).compareTo(BigInteger.ZERO) != 0);
             if (time > 1) {
                 if (!pause && rotationResetColor == 0 && getSquare(cell, width) == heroSquare) {
                     rotationResetColor = color - 1;
@@ -79,8 +82,8 @@ public class DanceFloor extends Blob implements Hero.Doom {
                     }
                 }
             }
-            off[cell] = storeData(color, rotationResetColor, time, pause);
-            volume += off[cell];
+            off[cell] = BigInteger.valueOf(storeData(color, rotationResetColor, time, pause));
+            volume = volume.add(off[cell]);
             if (!pause && !Dungeon.level.solid[cell]) {
                 Char character = Actor.findChar(cell);
                 if (character != null) applyEffect(character, color);
@@ -94,9 +97,9 @@ public class DanceFloor extends Blob implements Hero.Doom {
             switch (color) {
                 case RED:
                     if (target == Dungeon.hero)
-                        target.damage(target.HT / (CYCLE_LENGTH + 1), this);
+                        target.damage(target.HT.divide(BigInteger.valueOf((CYCLE_LENGTH + 1))), this);
                     else
-                        target.damage((Dungeon.depth / 5 + 1) * 3, this);
+                        target.damage(BigInteger.valueOf((Dungeon.depth / 5 + 1) * 3), this);
                 case GREEN:
                     Buff.prolong(target, DanceSpeed.class, 1);
                     break;
@@ -104,9 +107,9 @@ public class DanceFloor extends Blob implements Hero.Doom {
                     Buff.prolong(target, DancingStun.class, 1);
                     break;
                 case BLACK:
-                    long dmg = (Dungeon.depth / 5 + 1) * 5L;
+                    BigInteger dmg = BigInteger.valueOf((Dungeon.depth / 5 + 1) * 5L);
                     if (target == Dungeon.hero) {
-                        dmg = target.HT / (CYCLE_LENGTH - 1);
+                        dmg = target.HT.divide(BigInteger.valueOf((CYCLE_LENGTH - 1)));
                     }
                     Buff.affect(target, DancingDeferedDamage.class).prolong(dmg);
                     break;
@@ -150,8 +153,8 @@ public class DanceFloor extends Blob implements Hero.Doom {
 
     public void updateFov() {
         for (int i = 0; i < cur.length; i++) {
-            long value = cur[i];
-            updateCellGraphic(i, (int) (value & 0xF), ((value >> 12) & 1) != 0);
+            BigInteger value = cur[i];
+            updateCellGraphic(i, Big.toInt((value.and(BigInteger.valueOf(0xF)))), (((value.shiftRight(12)).and(BigInteger.ONE)).compareTo(BigInteger.ZERO) != 0));
         }
     }
 
@@ -160,10 +163,10 @@ public class DanceFloor extends Blob implements Hero.Doom {
     }
 
     @Override
-    public void seed(Level level, int cell, long amount) {
-        if (volume > 0) return;
-        if (cur == null) cur = new long[level.length()];
-        if (off == null) off = new long[cur.length];
+    public void seed(Level level, int cell, BigInteger amount) {
+        if ((volume.compareTo(BigInteger.ZERO) > 0)) return;
+        if (cur == null) cur = Big.newArray(level.length());
+        if (off == null) off = Big.newArray(cur.length);
 
         int row = level.width();
         int[] squares = new int[row * row];
@@ -182,17 +185,17 @@ public class DanceFloor extends Blob implements Hero.Doom {
             int y = i / row;
             int square = (x / SQUARE_SIZE) + (y / SQUARE_SIZE) * (squaresPerRow);
             int color = squares[square];
-            cur[i] = storeData(color, 0, 0, false);
-            volume += cur[i];
+            cur[i] = BigInteger.valueOf(storeData(color, 0, 0, false));
+            volume = volume.add(cur[i]);
         }
         area.union(0, 0);
         area.union((cur.length - 1) % level.width(), (cur.length - 1) / level.width());
     }
 
     public String tileDesc(int cell) {
-        int curColor = Math.toIntExact(cur[cell] & 0xF);
+        int curColor = Math.toIntExact(Big.toLong(cur[cell].and(BigInteger.valueOf(0xF))));
         int nextColor = curColor % LAST_COLOR + 1;
-        if (((cur[cell] >> 4) & 0xF) == 0) {
+        if ((((cur[cell].shiftRight(4)).and(BigInteger.valueOf(0xF))).compareTo(BigInteger.ZERO) == 0)) {
             if (nextColor == RED || nextColor == BLACK) {
                 nextColor = nextColor % LAST_COLOR + 1;
             }
@@ -212,7 +215,7 @@ public class DanceFloor extends Blob implements Hero.Doom {
 
     public static class DancingStun extends Paralysis {
         @Override
-        public void processDamage(long damage) {
+        public void processDamage(BigInteger damage) {
         }
 
         @Override

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -37,7 +41,7 @@ import com.watabou.utils.Bundle;
 public class CorrosiveGas extends Blob {
 
 	//FIXME should have strength per-cell
-    protected long strength = 0;
+    protected BigInteger strength = BigInteger.ZERO;
 
 	//used in specific cases where the source of the corrosion is important for death logic
 	private Class source;
@@ -46,8 +50,8 @@ public class CorrosiveGas extends Blob {
 	protected void evolve() {
 		super.evolve();
 
-		if (volume == 0){
-			strength = 0;
+		if ((volume.compareTo(BigInteger.ZERO) == 0)){
+			strength = BigInteger.ZERO;
 			source = null;
 		} else {
 			Char ch;
@@ -56,7 +60,7 @@ public class CorrosiveGas extends Blob {
 			for (int i = area.left; i < area.right; i++){
 				for (int j = area.top; j < area.bottom; j++){
 					cell = i + j*Dungeon.level.width();
-					if (cur[cell] > 0 && (ch = Actor.findChar( cell )) != null) {
+					if ((cur[cell].compareTo(BigInteger.ZERO) > 0) && (ch = Actor.findChar( cell )) != null) {
 						if (!ch.isImmune(this.getClass()))
 							Buff.affect(ch, Corrosion.class).set(2f, strength, source);
 					}
@@ -65,12 +69,12 @@ public class CorrosiveGas extends Blob {
 		}
 	}
 
-	public CorrosiveGas setStrength(long str){
+	public CorrosiveGas setStrength(BigInteger str){
 		return setStrength(str, null);
 	}
 
-	public CorrosiveGas setStrength(long str, Class source){
-		if (str > strength) {
+	public CorrosiveGas setStrength(BigInteger str, Class source){
+		if ((str.compareTo(strength) > 0)) {
 			strength = str;
 			this.source = source;
 		}
@@ -83,14 +87,14 @@ public class CorrosiveGas extends Blob {
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
-		strength = bundle.getLong( STRENGTH );
+		strength = Big.getBig(bundle, STRENGTH);
 		source = bundle.getClass( SOURCE );
 	}
 
 	@Override
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
-		bundle.put( STRENGTH, strength );
+		Big.put(bundle, STRENGTH, strength);
 		bundle.put( SOURCE, source );
 	}
 

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.effects;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -394,9 +398,9 @@ public class FloatingText extends RenderedTextBlock {
         if (arm != null && arm.evasionFactor(defender, 100) < 100) {
             //we express armor's normally flat evasion boost as a %, yes this is very awkward
             Armor.testingNoArmDefSkill = true;
-            long baseDef = defender.defenseSkill(attacker);
+            BigInteger baseDef = defender.defenseSkill(attacker);
             Armor.testingNoArmDefSkill = false;
-            hitReasons.put(HIT_ARM, defender.defenseSkill(attacker)/(float)baseDef);
+            hitReasons.put(HIT_ARM, Big.div(Big.dec(defender.defenseSkill(attacker)), Big.dec(baseDef.floatValue())).floatValue());
         }
         //hero specifically gets 1/2 eva when stunned, for mobs its a garunteed hit
         if (defender.paralysed > 0)  {
@@ -462,13 +466,13 @@ public class FloatingText extends RenderedTextBlock {
         if (arm != null && arm.evasionFactor(defender, 100) > 100) {
             //we express armor's normally flat evasion boost as a %, yes this is very awkward
             Armor.testingNoArmDefSkill = true;
-            long baseDef = defender.defenseSkill(attacker);
+            BigInteger baseDef = defender.defenseSkill(attacker);
             Armor.testingNoArmDefSkill = false;
             if (defender.buff(Momentum.class) != null){
                 //this is cheating a little, as evasion aug gets wrapped into this too
-                missReasons.put(MISS_RUN, defender.defenseSkill(attacker) / (float) baseDef);
+                missReasons.put(MISS_RUN, Big.div(Big.dec(defender.defenseSkill(attacker)), Big.dec(baseDef.floatValue())).floatValue());
             } else {
-                missReasons.put(MISS_ARM, defender.defenseSkill(attacker) / (float) baseDef);
+                missReasons.put(MISS_ARM, Big.div(Big.dec(defender.defenseSkill(attacker)), Big.dec(baseDef.floatValue())).floatValue());
             }
         }
         if (defender.buff(Talent.LiquidAgilEVATracker.class) != null)   missReasons.put(MISS_LIQ, 3f);

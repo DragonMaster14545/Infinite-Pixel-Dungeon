@@ -29,6 +29,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.modules;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
@@ -58,7 +60,7 @@ public class StrengthModule extends Module {
     }
 
     @Override
-    public long value() {
-        return 10000 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(10000).multiply(quantity);
     }
 }

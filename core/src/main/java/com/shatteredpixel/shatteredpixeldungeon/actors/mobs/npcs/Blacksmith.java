@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -240,7 +244,7 @@ public class Blacksmith extends NPC {
 					DarkGold gold = Dungeon.hero.belongings.getItem(DarkGold.class);
 					if (pick == null) {
 						tell(Messages.get(this, "lost_pick"));
-					} else if (gold == null || gold.quantity() < 15) {
+					} else if (gold == null || (gold.quantity().compareTo(BigInteger.valueOf(15)) < 0)) {
 						tell(Messages.get(this, "gold_2"));
 					} else {
 						if (pick.isEquipped(Dungeon.hero)) {
@@ -314,7 +318,7 @@ public class Blacksmith extends NPC {
 
 	public static String verify( Item item1, Item item2 ) {
 
-		if (item1 == item2 && (item1.quantity() == 1 && item2.quantity() == 1)) {
+		if (item1 == item2 && ((item1.quantity().compareTo(BigInteger.ONE) == 0) && (item2.quantity().compareTo(BigInteger.ONE) == 0))) {
 			return Messages.get(Blacksmith.class, "same_item");
 		}
 
@@ -337,7 +341,7 @@ public class Blacksmith extends NPC {
 			return Messages.get(Blacksmith.class, "cursed");
 		}
 
-		if (item1.level() < 0 || item2.level() < 0) {
+		if ((item1.level().compareTo(BigInteger.ZERO) < 0) || (item2.level().compareTo(BigInteger.ZERO) < 0)) {
 			return Messages.get(Blacksmith.class, "degraded");
 		}
 
@@ -369,7 +373,7 @@ public class Blacksmith extends NPC {
                 second = item1;
             }
         }
-		if (second.level() > first.level() && !(first instanceof FishingRod)) {
+		if ((second.level().compareTo(first.level()) > 0) && !(first instanceof FishingRod)) {
 		    Item temp = first;
 			first = second;
 			second = temp;
@@ -394,21 +398,21 @@ public class Blacksmith extends NPC {
 		if (first.isEquipped( Dungeon.hero )) {
 			((EquipableItem)first).doUnequip( Dungeon.hero, true );
 		}
-		if (first instanceof MissileWeapon && first.quantity() > 1){
-			first = first.split(1);
+		if (first instanceof MissileWeapon && (first.quantity().compareTo(BigInteger.ONE) > 0)){
+			first = first.split(BigInteger.ONE);
 		}
-		long level = first.level();
+		BigInteger level = first.level();
 		//adjust for curse infusion
-		if (first instanceof Weapon && ((Weapon) first).curseInfusionBonus) level--;
-		if (first instanceof Armor && ((Armor) first).curseInfusionBonus) level--;
-		if (first instanceof Wand && ((Wand) first).curseInfusionBonus) level--;
-		first.level(level+second.level()+1); //prevents on-upgrade effects like enchant/glyph removal
+		if (first instanceof Weapon && ((Weapon) first).curseInfusionBonus) level = level.subtract(BigInteger.ONE);
+		if (first instanceof Armor && ((Armor) first).curseInfusionBonus) level = level.subtract(BigInteger.ONE);
+		if (first instanceof Wand && ((Wand) first).curseInfusionBonus) level = level.subtract(BigInteger.ONE);
+		first.level(level.add(second.level()).add(BigInteger.ONE)); //prevents on-upgrade effects like enchant/glyph removal
 		if (first instanceof MissileWeapon && !Dungeon.hero.belongings.contains(first)) {
 			if (!first.collect()){
 				Dungeon.level.drop( first, Dungeon.hero.pos );
 			}
 		}
-		Dungeon.gold -= getGold();
+		Dungeon.gold = Dungeon.gold.subtract(getGold());
 		Dungeon.hero.spendAndNext( 2f );
 		Badges.validateItemLevelAquired( first );
 		Item.updateQuickslot();
@@ -416,17 +420,17 @@ public class Blacksmith extends NPC {
 		Notes.remove( Notes.Landmark.TROLL );
 	}
 
-	public static long getGold() {
-		return (45 + 15L * Dungeon.escalatingDepth()) * 25;
+	public static BigInteger getGold() {
+		return (BigInteger.valueOf(45).add(BigInteger.valueOf(15L).multiply(Dungeon.escalatingDepth()))).multiply(BigInteger.valueOf(25));
 	}
 
 	@Override
-	public long defenseSkill(Char enemy ) {
-		return INFINITE_EVASION;
+	public BigInteger defenseSkill(Char enemy ) {
+		return BigInteger.valueOf(INFINITE_EVASION);
 	}
 	
 	@Override
-	public void damage( long dmg, Object src ) {
+	public void damage( BigInteger dmg, Object src ) {
 		//do nothing
 	}
 
@@ -635,7 +639,7 @@ public class Blacksmith extends NPC {
 			rewardLevel = (int) Math.pow(rewardLevel, Dungeon.cycle + 1);
 
 			for (Item i : smithRewards){
-				i.level(rewardLevel);
+				i.level(BigInteger.valueOf(rewardLevel));
 				if (i instanceof Weapon) {
 					((Weapon) i).enchant(null);
 				}
@@ -689,7 +693,7 @@ public class Blacksmith extends NPC {
 			favor = 0;
 			DarkGold gold = Dungeon.hero.belongings.getItem(DarkGold.class);
 			if (gold != null){
-				favor += Math.min(10000, gold.quantity()*75);
+				favor += Big.toLong(BigInteger.valueOf(10000).min(gold.quantity().multiply(BigInteger.valueOf(75))));
 				gold.detachAll(Dungeon.hero.belongings.backpack);
 			}
 

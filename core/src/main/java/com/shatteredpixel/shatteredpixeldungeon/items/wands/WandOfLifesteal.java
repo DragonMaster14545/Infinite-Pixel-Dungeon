@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -67,12 +71,12 @@ public class WandOfLifesteal extends DamageWand {
 	}
 
 
-    public long min(long lvl){
-        return ((1+lvl)*getRarityMultiplier());
+    public BigInteger min(BigInteger lvl){
+        return ((BigInteger.ONE.add(lvl)).multiply(getRarityMultiplier()));
     }
 
-    public long max(long lvl){
-        return ((3+3*lvl)*getRarityMultiplier());
+    public BigInteger max(BigInteger lvl){
+        return ((BigInteger.valueOf(3).add(BigInteger.valueOf(3).multiply(lvl))).multiply(getRarityMultiplier()));
     }
 
 	@Override
@@ -117,30 +121,30 @@ public class WandOfLifesteal extends DamageWand {
 	}
 
     private void affectTarget(Char ch){
-        float drain = damageRoll();
-        ch.damage(Math.round(drain), this);
+        float drain = damageRoll().floatValue();
+        ch.damage(BigInteger.valueOf(Math.round(drain)), this);
 
-        if ( ch.alignment != curUser.alignment && curUser.HP < curUser.HT ) {
+        if (ch.alignment != curUser.alignment && (curUser.HP.compareTo(curUser.HT) < 0)) {
             curUser.sprite.parent.add(new Beam.HealthRay(curUser.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(ch.pos)));
-            curUser.HP = Math.min(curUser.HP + Math.round(drain), curUser.HT);
+            curUser.HP = curUser.HP.add(BigInteger.valueOf(Math.round(drain))).min(curUser.HT);
             curUser.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(Math.round(drain)), FloatingText.HEALING);
         }
 
     }
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
+	public void onHit(MagesStaff staff, Char attacker, Char defender, BigInteger damage) {
 		//no direct effect, see magesStaff.reachfactor
-        Buff.prolong( defender, Amok.class, Math.round((1+staff.buffedLvl())*procChanceMultiplier(attacker)));
+        Buff.prolong( defender, Amok.class, Big.round(Big.dec((BigInteger.ONE.add(staff.buffedLvl()))).multiply(Big.dec(procChanceMultiplier(attacker)))).floatValue());
 	}
 
 	private int distance() {
-		return (int) (buffedLvl()*2 + 6);
+		return Big.toInt((buffedLvl().multiply(BigInteger.TWO).add(BigInteger.valueOf(6))));
 	}
 
 	@Override
-	public String upgradeStat2(long level) {
-		return Long.toString(6 + level*2);
+	public String upgradeStat2(BigInteger level) {
+		return BigInteger.valueOf(6).add(level.multiply(BigInteger.TWO)).toString();
 	}
 
 	@Override

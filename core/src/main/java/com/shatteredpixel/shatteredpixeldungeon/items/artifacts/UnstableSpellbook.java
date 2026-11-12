@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
@@ -65,9 +68,9 @@ public class UnstableSpellbook extends Artifact {
 
 		levelCap = 10;
 
-		charge = (int)(level()*0.6f)+2;
+		charge = BigInteger.valueOf(Big.toInt(((Big.dec(level()).multiply(Big.dec(0.6f)))).toBigInteger())+2);
 		partialCharge = 0;
-		setChargeCap((int)(level()*0.6f)+2);
+		setChargeCap(BigInteger.valueOf(Big.toInt(((Big.dec(level()).multiply(Big.dec(0.6f)))).toBigInteger())+2));
 
 		defaultAction = AC_READ;
 	}
@@ -96,10 +99,10 @@ public class UnstableSpellbook extends Artifact {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if (isEquipped( hero ) && charge > 0 && !cursed && hero.buff(MagicImmune.class) == null) {
+		if (isEquipped( hero ) && (charge.compareTo(BigInteger.ZERO) > 0) && !cursed && hero.buff(MagicImmune.class) == null) {
 			actions.add(AC_READ);
 		}
-		if (isEquipped( hero ) && level() < levelCap && !cursed && hero.buff(MagicImmune.class) == null) {
+		if (isEquipped( hero ) && (level().compareTo(BigInteger.valueOf(levelCap)) < 0) && !cursed && hero.buff(MagicImmune.class) == null) {
 			actions.add(AC_ADD);
 		}
 		return actions;
@@ -116,10 +119,10 @@ public class UnstableSpellbook extends Artifact {
 
 			if (hero.buff( Blindness.class ) != null) GLog.w( Messages.get(this, "blinded") );
 			else if (!isEquipped( hero ))             GLog.i( Messages.get(Artifact.class, "need_to_equip") );
-			else if (charge <= 0)                     GLog.i( Messages.get(this, "no_charge") );
+			else if ((charge.compareTo(BigInteger.ZERO) <= 0))                     GLog.i( Messages.get(this, "no_charge") );
 			else if (cursed)                          GLog.i( Messages.get(this, "cursed") );
 			else {
-				charge--;
+				charge = charge.subtract(BigInteger.ONE);
 
 				Scroll scroll;
 				do {
@@ -137,7 +140,7 @@ public class UnstableSpellbook extends Artifact {
 				curUser = hero;
 
 				//if there are charges left and the scroll has been given to the book
-				if (charge > 0 && !scrolls.contains(scroll.getClass())) {
+				if ((charge.compareTo(BigInteger.ZERO) > 0) && !scrolls.contains(scroll.getClass())) {
 					final Scroll fScroll = scroll;
 
 					final ExploitHandler handler = Buff.affect(hero, ExploitHandler.class);
@@ -154,7 +157,7 @@ public class UnstableSpellbook extends Artifact {
 							if (index == 1){
 								Scroll scroll = Reflection.newInstance(ExoticScroll.regToExo.get(fScroll.getClass()));
 								curItem = scroll;
-								charge--;
+								charge = charge.subtract(BigInteger.ONE);
 								scroll.anonymize();
 								scroll.doRead();
 								Talent.onArtifactUsed(Dungeon.hero);
@@ -224,14 +227,14 @@ public class UnstableSpellbook extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (charge < getChargeCap() && !cursed && target.buff(MagicImmune.class) == null){
+		if ((charge.compareTo(getChargeCap()) < 0) && !cursed && target.buff(MagicImmune.class) == null){
 			partialCharge += 0.1f*amount;
-			partialCharge *= getRarityMultiplier();
+			partialCharge *= getRarityMultiplier().doubleValue();
 			while (partialCharge >= 1){
 				partialCharge--;
-				charge++;
+				charge = charge.add(BigInteger.ONE);
 			}
-			if (charge >= getChargeCap()){
+			if ((charge.compareTo(getChargeCap()) >= 0)){
 				partialCharge = 0;
 			}
 			updateQuickslot();
@@ -240,10 +243,10 @@ public class UnstableSpellbook extends Artifact {
 
 	@Override
 	public Item upgrade() {
-		setChargeCap((int)((level()+1)*0.6f)+2);
+		setChargeCap(BigInteger.valueOf(Big.toInt(((Big.dec((level().add(BigInteger.ONE))).multiply(Big.dec(0.6f)))).toBigInteger())+2));
 
 		//for artifact transmutation.
-		while (!scrolls.isEmpty() && scrolls.size() > (levelCap-1-level()))
+		while (!scrolls.isEmpty() && (BigInteger.valueOf(scrolls.size()).compareTo((BigInteger.valueOf(levelCap-1).subtract(level()))) > 0))
 			scrolls.remove(0);
 
 		return super.upgrade();
@@ -258,7 +261,7 @@ public class UnstableSpellbook extends Artifact {
 				desc += "\n\n" + Messages.get(this, "desc_cursed");
 			}
 			
-			if (level() < levelCap && scrolls.size() > 0) {
+			if ((level().compareTo(BigInteger.valueOf(levelCap)) < 0) && scrolls.size() > 0) {
 				desc += "\n\n" + Messages.get(this, "desc_index");
 				desc += "\n" + "_" + Messages.get(scrolls.get(0), "name") + "_";
 				if (scrolls.size() > 1)
@@ -266,7 +269,7 @@ public class UnstableSpellbook extends Artifact {
 			}
 		}
 		
-		if (level() > 0) {
+		if ((level().compareTo(BigInteger.ZERO) > 0)) {
 			desc += "\n\n" + Messages.get(this, "desc_empowered");
 		}
 
@@ -293,20 +296,20 @@ public class UnstableSpellbook extends Artifact {
 	public class bookRecharge extends ArtifactBuff{
 		@Override
 		public boolean act() {
-			if (charge < getChargeCap()
+			if ((charge.compareTo(getChargeCap()) < 0)
 					&& !cursed
 					&& target.buff(MagicImmune.class) == null
 					&& Regeneration.regenOn()) {
 				//120 turns to charge at full, 80 turns to charge at 0/8
-				float chargeGain = 1 / (120f - (getChargeCap() - charge)*5f);
+				float chargeGain = Big.div(Big.dec(1), (Big.dec(120f).subtract(Big.dec((getChargeCap().subtract(charge))).multiply(Big.dec(5f))))).floatValue();
 				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
 				partialCharge += chargeGain;
 
 				while (partialCharge >= 1) {
 					partialCharge --;
-					charge ++;
+					charge = charge.add(BigInteger.ONE);
 
-					if (charge == getChargeCap()){
+					if ((charge.compareTo(getChargeCap()) == 0)){
 						partialCharge = 0;
 					}
 				}

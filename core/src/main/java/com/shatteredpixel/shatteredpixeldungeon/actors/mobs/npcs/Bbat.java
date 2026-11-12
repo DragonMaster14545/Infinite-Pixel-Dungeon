@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -47,8 +51,8 @@ public class Bbat extends Mob {
     public static int level = 1;
 
     {
-        HP = HT = 11;
-        defenseSkill = 16;
+        HP = HT = BigInteger.valueOf(11);
+        defenseSkill = BigInteger.valueOf(16);
         baseSpeed = 2f;
         spriteClass = BbatSprite.class;
         alignment = Alignment.ALLY;
@@ -66,13 +70,13 @@ public class Bbat extends Mob {
     }
 
     @Override
-    public long damageRoll() {
+    public BigInteger damageRoll() {
         if (Dungeon.hero.isSubclass(HeroSubClass.ASSASSIN)){
-            long i = Dungeon.NormalLongRange(0, level * 2L);
-            if (enemy.buff(Marked.class) != null) i *= enemy.buff(Marked.class).bonusDamage();
+            BigInteger i = Dungeon.NormalLongRange(BigInteger.ZERO, BigInteger.valueOf(level * 2L));
+            if (enemy.buff(Marked.class) != null) i = Big.trunc(Big.dec(i).multiply(Big.dec(enemy.buff(Marked.class).bonusDamage())));
             return i;
         }
-        return Dungeon.NormalLongRange( level, 1 + level * 2L );
+        return Dungeon.NormalLongRange( BigInteger.valueOf(level), BigInteger.valueOf(1 + level * 2L) );
     }
 
     @Override
@@ -81,12 +85,12 @@ public class Bbat extends Mob {
     }
 
     @Override
-    public long attackSkill(Char target) {
-        return 10 + level * 3;
+    public BigInteger attackSkill(Char target) {
+        return BigInteger.valueOf(10 + level * 3);
     }
 
     @Override
-    public long attackProc(Char enemy, long damage) {
+    public BigInteger attackProc(Char enemy, BigInteger damage) {
         if (Dungeon.hero.isSubclass(HeroSubClass.ASSASSIN)) Buff.affect(enemy, Marked.class).stack++;
         return super.attackProc(enemy, damage);
     }
@@ -132,8 +136,8 @@ public class Bbat extends Mob {
         if (Dungeon.level != null) {
             for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])) {
                 if (mob instanceof Bbat) {
-                    mob.HP = mob.HT = 8 + level * 3;
-                    mob.defenseSkill = 13 + level * 3;
+                    mob.HP = mob.HT = BigInteger.valueOf(8 + level * 3);
+                    mob.defenseSkill = BigInteger.valueOf(13 + level * 3);
                 }
             }
         }
@@ -142,9 +146,9 @@ public class Bbat extends Mob {
     public static final int RECHARGE_AMOUNT = 50;
 
     @Override
-    public void damage(long dmg, Object src) {
+    public void damage(BigInteger dmg, Object src) {
         super.damage(dmg, src);
-        Buff.affect(Dungeon.hero, ArtifactRecharge.class).prolong(((float)dmg / (float)HT)*RECHARGE_AMOUNT);
+        Buff.affect(Dungeon.hero, ArtifactRecharge.class).prolong((dmg.floatValue() / HT.floatValue())*RECHARGE_AMOUNT);
     }
 
     @Override

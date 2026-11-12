@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -82,8 +84,8 @@ public class GnollRockfallTrap extends RockfallTrap {
 
 			if (ch != null && ch.isAlive() && !(ch instanceof GnollGeomancer)){
 				//deals notably less damage than a regular rockfall trap, but ignores armor
-				long damage = Random.NormalIntRange(6, 12);
-				ch.damage( Math.max(damage, 0) , this);
+				BigInteger damage = BigInteger.valueOf(Random.NormalIntRange(6, 12));
+				ch.damage( damage.max(BigInteger.ZERO) , this);
 
 				//guards take full paralysis, otherwise just a little
 				Buff.prolong(ch, Paralysis.class, ch instanceof GnollGuard ? 10 : 3);

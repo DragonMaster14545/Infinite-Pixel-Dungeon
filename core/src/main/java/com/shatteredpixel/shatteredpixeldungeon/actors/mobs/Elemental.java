@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -70,10 +74,10 @@ import java.util.ArrayList;
 public abstract class Elemental extends Mob {
 
 	{
-		HP = HT = Dungeon.getCycleMultiplier(60);
-		defenseSkill = Dungeon.getCycleMultiplier(20);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(60));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(20));
 		
-		EXP = Dungeon.getCycleMultiplier(10);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.TEN);
 		maxLvl = 20;
 		
 		flying = true;
@@ -81,36 +85,36 @@ public abstract class Elemental extends Mob {
 
 	protected boolean summonedALly;
 	@Override
-	public long damageRoll() {
+	public BigInteger damageRoll() {
 		if (!summonedALly) {
-			return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(16), Dungeon.getCycleMultiplier(26) );
+			return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(16)), Dungeon.getCycleMultiplier(BigInteger.valueOf(26)) );
 		} else {
-			long regionScale = Math.max(2, (1 + Dungeon.scalingDepth()/5));
-			return Dungeon.NormalLongRange(6*regionScale, 15 + 10*regionScale);
+			BigInteger regionScale = BigInteger.TWO.max((BigInteger.ONE.add(Dungeon.scalingDepth().divide(BigInteger.valueOf(5)))));
+			return Dungeon.NormalLongRange(BigInteger.valueOf(6).multiply(regionScale), BigInteger.valueOf(15).add(BigInteger.TEN.multiply(regionScale)));
 		}
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
+	public BigInteger attackSkill(Char target ) {
 		if (!summonedALly) {
-			return Dungeon.getCycleMultiplier(25);
+			return Dungeon.getCycleMultiplier(BigInteger.valueOf(25));
 		} else {
-			long regionScale = Math.max(2, (1 + Dungeon.scalingDepth()/5));
-			return 5 + 10*regionScale;
+			BigInteger regionScale = BigInteger.TWO.max((BigInteger.ONE.add(Dungeon.scalingDepth().divide(BigInteger.valueOf(5)))));
+			return BigInteger.valueOf(5).add(BigInteger.TEN.multiply(regionScale));
 		}
 	}
 
 	public void setSummonedALly(){
 		summonedALly = true;
 		//sewers are prison are equivalent, otherwise scales as normal (2/2/3/4/5)
-		long regionScale = Math.max(2, (1 + Dungeon.scalingDepth()/5));
-		defenseSkill = 10*regionScale;
-		HT = 30*regionScale;
+		BigInteger regionScale = BigInteger.TWO.max((BigInteger.ONE.add(Dungeon.scalingDepth().divide(BigInteger.valueOf(5)))));
+		defenseSkill = BigInteger.TEN.multiply(regionScale);
+		HT = BigInteger.valueOf(30).multiply(regionScale);
 	}
 	
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(5));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(5)));
 	}
 	
 	protected int rangedCooldown = Random.NormalIntRange( 3, 5 );
@@ -160,7 +164,7 @@ public abstract class Elemental extends Mob {
 	}
 	
 	@Override
-	public long attackProc( Char enemy, long damage ) {
+	public BigInteger attackProc( Char enemy, BigInteger damage ) {
 		damage = super.attackProc( enemy, damage );
 		meleeProc( enemy, damage );
 		
@@ -191,14 +195,14 @@ public abstract class Elemental extends Mob {
 	@Override
 	public boolean add( Buff buff ) {
 		if (harmfulBuffs.contains( buff.getClass() )) {
-			damage( Dungeon.NormalLongRange( HT/2, HT * 3/5 ), buff );
+			damage( Dungeon.NormalLongRange( HT.divide(BigInteger.TWO), HT.multiply(BigInteger.valueOf(3)).divide(BigInteger.valueOf(5)) ), buff );
 			return false;
 		} else {
 			return super.add( buff );
 		}
 	}
 	
-	protected abstract void meleeProc( Char enemy, long damage );
+	protected abstract void meleeProc( Char enemy, BigInteger damage );
 	protected abstract void rangedProc( Char enemy );
 	
 	protected ArrayList<Class<? extends Buff>> harmfulBuffs = new ArrayList<>();
@@ -240,12 +244,12 @@ public abstract class Elemental extends Mob {
 		}
 
         @Override
-        public long damageRoll() {
-            return Math.round(super.damageRoll()*Dungeon.fireDamage);
+        public BigInteger damageRoll() {
+            return Big.round(Big.dec(super.damageRoll()).multiply(Big.dec(Dungeon.fireDamage)));
         }
 
         @Override
-		protected void meleeProc( Char enemy, long damage ) {
+		protected void meleeProc( Char enemy, BigInteger damage ) {
 			if (Random.Int( 2 ) == 0 && !Dungeon.level.water[enemy.pos]) {
 				Buff.affect( enemy, Burning.class ).reignite( enemy );
 				if (enemy.sprite.visible) Splash.at( enemy.sprite.center(), sprite.blood(), 5);
@@ -268,7 +272,7 @@ public abstract class Elemental extends Mob {
 		{
 			spriteClass = ElementalSprite.NewbornFire.class;
 
-			defenseSkill = 12;
+			defenseSkill = BigInteger.valueOf(12);
 
 			properties.add(Property.MINIBOSS);
 		}
@@ -367,9 +371,9 @@ public abstract class Elemental extends Mob {
 					if (!Dungeon.level.solid[targetingPos + i]) {
 						CellEmitter.get(targetingPos + i).burst(ElmoParticle.FACTORY, 5);
 						if (Dungeon.level.water[targetingPos + i]) {
-							GameScene.add(Blob.seed(targetingPos + i, 2, Fire.class));
+							GameScene.add(Blob.seed(targetingPos + i, BigInteger.TWO, Fire.class));
 						} else {
-							GameScene.add(Blob.seed(targetingPos + i, 8, Fire.class));
+							GameScene.add(Blob.seed(targetingPos + i, BigInteger.valueOf(8), Fire.class));
 						}
 
 						Char target = Actor.findChar(targetingPos + i);
@@ -389,25 +393,25 @@ public abstract class Elemental extends Mob {
 		}
 
 		@Override
-		public long attackSkill(Char target) {
+		public BigInteger attackSkill(Char target) {
 			if (!summonedALly) {
-				return 15;
+				return BigInteger.valueOf(15);
 			} else {
 				return super.attackSkill(target);
 			}
 		}
 
 		@Override
-		public long damageRoll() {
+		public BigInteger damageRoll() {
 			if (!summonedALly) {
-				return Dungeon.NormalLongRange(10, 12);
+				return Dungeon.NormalLongRange(BigInteger.TEN, BigInteger.valueOf(12));
 			} else {
 				return super.damageRoll();
 			}
 		}
 
 		@Override
-		protected void meleeProc(Char enemy, long damage) {
+		protected void meleeProc(Char enemy, BigInteger damage) {
 			//no fiery on-hit unless it is an ally summon
 			if (summonedALly) {
 				super.meleeProc(enemy, damage);
@@ -495,7 +499,7 @@ public abstract class Elemental extends Mob {
 		}
 		
 		@Override
-		protected void meleeProc( Char enemy, long damage ) {
+		protected void meleeProc( Char enemy, BigInteger damage ) {
 			if (Random.Int( 3 ) == 0 || Dungeon.level.water[enemy.pos]) {
 				Freezing.freeze( enemy.pos );
 				if (enemy.sprite.visible) Splash.at( enemy.sprite.center(), sprite.blood(), 5);
@@ -521,7 +525,7 @@ public abstract class Elemental extends Mob {
 		}
 		
 		@Override
-		protected void meleeProc( Char enemy, long damage ) {
+		protected void meleeProc( Char enemy, BigInteger damage ) {
 			ArrayList<Char> affected = new ArrayList<>();
 			ArrayList<Lightning.Arc> arcs = new ArrayList<>();
 			Shocking.arc( this, enemy, 2, affected, arcs );
@@ -531,7 +535,7 @@ public abstract class Elemental extends Mob {
 			}
 			
 			for (Char ch : affected) {
-				ch.damage( Math.round( damage * 0.4f ), new Shocking() );
+				ch.damage( Big.round(Big.dec(damage).multiply(Big.dec(0.4f))), new Shocking() );
 				if (ch == Dungeon.hero && !ch.isAlive()){
 					Dungeon.fail(this);
 					GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );
@@ -568,7 +572,7 @@ public abstract class Elemental extends Mob {
 		}
 		
 		@Override
-		protected void meleeProc( Char enemy, long damage ) {
+		protected void meleeProc( Char enemy, BigInteger damage ) {
 			Ballistica aim = new Ballistica(pos, enemy.pos, Ballistica.STOP_TARGET);
 			//TODO shortcutting the fx seems fine for now but may cause problems with new cursed effects
 			//of course, not shortcutting it means actor ordering issues =S

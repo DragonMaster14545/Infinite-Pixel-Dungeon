@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
@@ -79,7 +83,7 @@ public abstract class Room extends Rect implements Graph.Node, Bundlable {
 	public int maxHeight() { return -1; }
 
 	protected float sizeMultiplier(){
-		java.util.Random r = new java.util.Random((long) initialTop *initialLeft);
+		java.util.Random r = new java.util.Random(Big.toLong(BigInteger.valueOf(initialTop).multiply(BigInteger.valueOf(initialLeft))));
 		return Dungeon.hero.getRoomMinSizeMultiplier() + r.nextFloat() * (Dungeon.hero.getRoomMaxAdditionalSizeMultiplier());
 	}
 	

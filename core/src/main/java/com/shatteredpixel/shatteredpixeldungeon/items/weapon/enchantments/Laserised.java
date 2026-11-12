@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -53,7 +55,7 @@ public class Laserised extends Weapon.Enchantment {
 	private static ItemSprite.Glowing COLOR = new ItemSprite.Glowing( 0xfc3503 );
 
 	@Override
-	public long proc( Weapon weapon, Char attacker, Char defender, long damage ) {
+	public BigInteger proc( Weapon weapon, Char attacker, Char defender, BigInteger damage ) {
 
         fx(
 
@@ -75,11 +77,11 @@ public class Laserised extends Weapon.Enchantment {
 		return COLOR;
 	}
 
-    public void onZap(Ballistica beam, Weapon weapon, long damage) {
+    public void onZap(Ballistica beam, Weapon weapon, BigInteger damage) {
 
         boolean terrainAffected = false;
 
-        long level = weapon.buffedLvl();
+        BigInteger level = weapon.buffedLvl();
 
         int maxDistance = Math.min(15, beam.dist);
 

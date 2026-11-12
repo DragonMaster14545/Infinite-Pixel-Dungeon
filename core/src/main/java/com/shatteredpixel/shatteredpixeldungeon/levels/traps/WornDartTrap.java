@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -94,7 +96,7 @@ public class WornDartTrap extends Trap {
 								reset(pos, finalTarget.sprite, new Dart(), new Callback() {
 									@Override
 									public void call() {
-										long dmg = Random.NormalIntRange(4, 8) - finalTarget.drRoll();
+										BigInteger dmg = BigInteger.valueOf(Random.NormalIntRange(4, 8)).subtract(finalTarget.drRoll());
 										finalTarget.damage(dmg, WornDartTrap.this);
 										if (finalTarget == Dungeon.hero && !finalTarget.isAlive()){
 											Dungeon.fail( WornDartTrap.this  );
@@ -109,7 +111,7 @@ public class WornDartTrap extends Trap {
 								});
 						return false;
 					} else {
-						finalTarget.damage(Random.NormalIntRange(4, 8) - finalTarget.drRoll(), WornDartTrap.this);
+						finalTarget.damage(BigInteger.valueOf(Random.NormalIntRange(4, 8)).subtract(finalTarget.drRoll()), WornDartTrap.this);
 						return true;
 					}
 				} else {

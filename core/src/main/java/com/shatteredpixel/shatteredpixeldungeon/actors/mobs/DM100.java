@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -47,10 +51,10 @@ public class DM100 extends Mob implements Callback {
 	{
 		spriteClass = DM100Sprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(20);
-		defenseSkill = Dungeon.getCycleMultiplier(8);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(20));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(8));
 		
-		EXP = Dungeon.getCycleMultiplier(6);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(6));
 		maxLvl = 13;
 		
 		loot = Generator.Category.SCROLL;
@@ -61,18 +65,18 @@ public class DM100 extends Mob implements Callback {
 	}
 	
 	@Override
-	public long damageRoll() {
-		return Random.NormalLongRange( Dungeon.getCycleMultiplier(2), Dungeon.getCycleMultiplier(8) );
+	public BigInteger damageRoll() {
+		return Big.normalRange(Dungeon.getCycleMultiplier(BigInteger.TWO), Dungeon.getCycleMultiplier(BigInteger.valueOf(8)));
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(11);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(11));
 	}
 	
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(4));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(4)));
 	}
 
 	@Override
@@ -98,8 +102,8 @@ public class DM100 extends Mob implements Callback {
 
 			Invisibility.dispel(this);
 			if (hit( this, enemy, true )) {
-				long dmg = Random.NormalIntRange(3, 10);
-				dmg = Math.round(Dungeon.getCycleMultiplier(dmg) * AscensionChallenge.statModifier(this));
+				BigInteger dmg = BigInteger.valueOf(Random.NormalIntRange(3, 10));
+				dmg = Big.round(Big.dec(Dungeon.getCycleMultiplier(dmg)).multiply(Big.dec(AscensionChallenge.statModifier(this))));
 				enemy.damage( dmg, new LightningBolt() );
 
 				if (enemy.sprite.visible) {

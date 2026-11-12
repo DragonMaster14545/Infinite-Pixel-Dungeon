@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.items.ArcaneResin;
 import com.shatteredpixel.shatteredpixeldungeon.items.Blueprint;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -46,7 +48,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 public class BattlePassTiers {
 
-    public static final long REPEATABLE_TIER_GOLD = 300L;
+    public static final BigInteger REPEATABLE_TIER_GOLD = BigInteger.valueOf(300L);
 
     private static class CustomReward {
         final Class<? extends Item> itemClass;
@@ -70,9 +72,9 @@ public class BattlePassTiers {
     public static void clearCustomItem( int tier ){
         customItems.remove( tier );
     }
-    public static long goldFor( int tier ){
+    public static BigInteger goldFor( int tier ){
         if (tier == BattlePass.REPEATABLE_TIER) return REPEATABLE_TIER_GOLD;
-        return 50L + tier * 10L;
+        return BigInteger.valueOf(50L + tier * 10L);
     }
 
     private static Item deterministicRandom( Generator.Category[] categories, int tier ){
@@ -126,7 +128,7 @@ public class BattlePassTiers {
             if (custom != null){
                 try {
                     Item item = custom.itemClass.newInstance();
-                    item.quantity( custom.quantity );
+                    item.quantity( BigInteger.valueOf(custom.quantity) );
                     rewardCache.put( tier, item );
                 } catch (Exception e){
                     rewardCache.put( tier, null );
@@ -161,7 +163,7 @@ public class BattlePassTiers {
             if (custom != null){
                 try {
                     Item item = custom.itemClass.newInstance();
-                    item.quantity( custom.quantity );
+                    item.quantity( BigInteger.valueOf(custom.quantity) );
                     premiumRewardCache.put( tier, item );
                 } catch (Exception e){
                     premiumRewardCache.put( tier, null );
@@ -295,7 +297,7 @@ public class BattlePassTiers {
                 for (CustomReward cr : custom){
                     try {
                         Item item = cr.itemClass.newInstance();
-                        item.quantity( cr.quantity );
+                        item.quantity( BigInteger.valueOf(cr.quantity) );
                         extras.add( item );
                     } catch (Exception e){
                         // hehe no message
@@ -318,7 +320,7 @@ public class BattlePassTiers {
                 for (CustomReward cr : custom){
                     try {
                         Item item = cr.itemClass.newInstance();
-                        item.quantity( cr.quantity );
+                        item.quantity( BigInteger.valueOf(cr.quantity) );
                         extras.add( item );
                     } catch (Exception e){
                         // also this one

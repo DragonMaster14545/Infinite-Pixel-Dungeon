@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -37,10 +41,10 @@ public class GnollGuard extends Mob {
 	{
 		spriteClass = GnollGuardSprite.class;
 
-		HP = HT = Dungeon.getCycleMultiplier(35);
-		defenseSkill = Dungeon.getCycleMultiplier(15);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(35));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(15));
 
-		EXP = Dungeon.getCycleMultiplier(7);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(7));
 		maxLvl = -2;
 
 		loot = Spear.class;
@@ -74,37 +78,37 @@ public class GnollGuard extends Mob {
 	}
 
 	@Override
-	public void damage(long dmg, Object src) {
-		if (hasSapper()) dmg /= 4;
+	public void damage(BigInteger dmg, Object src) {
+		if (hasSapper()) dmg = dmg.divide(BigInteger.valueOf(4));
 		super.damage(dmg, src);
 	}
 
 	@Override
-	public long damageRoll() {
+	public BigInteger damageRoll() {
 		if (enemy != null && !Dungeon.level.adjacent(pos, enemy.pos)){
-			return Random.NormalLongRange( Dungeon.getCycleMultiplier(16), Dungeon.getCycleMultiplier(22) );
+			return Big.normalRange(Dungeon.getCycleMultiplier(BigInteger.valueOf(16)), Dungeon.getCycleMultiplier(BigInteger.valueOf(22)));
 		} else {
-			return Random.NormalLongRange(Dungeon.getCycleMultiplier(6), Dungeon.getCycleMultiplier(12) );
+			return Big.normalRange(Dungeon.getCycleMultiplier(BigInteger.valueOf(6)), Dungeon.getCycleMultiplier(BigInteger.valueOf(12)));
 		}
 	}
 
 	@Override
-	public long attackProc(Char enemy, long damage) {
-		long dmg = super.attackProc(enemy, damage);
-		if (enemy == Dungeon.hero && !Dungeon.level.adjacent(pos, enemy.pos) && dmg > 12){
+	public BigInteger attackProc(Char enemy, BigInteger damage) {
+		BigInteger dmg = super.attackProc(enemy, damage);
+		if (enemy == Dungeon.hero && !Dungeon.level.adjacent(pos, enemy.pos) && (dmg.compareTo(BigInteger.valueOf(12)) > 0)){
 			GLog.n(Messages.get(this, "spear_warn"));
 		}
 		return dmg;
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(20);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(20));
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(6));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(6)));
 	}
 
 	@Override

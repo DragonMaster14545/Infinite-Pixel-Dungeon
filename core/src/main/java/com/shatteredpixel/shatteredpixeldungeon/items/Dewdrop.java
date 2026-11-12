@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
@@ -82,33 +86,33 @@ public class Dewdrop extends Item {
 
 	public static boolean consumeDew(int quantity, Hero hero, boolean force){
 		//20 drops for a full heal
-		int heal = Math.round( hero.HT * 0.05f * quantity );
+		int heal = Big.toInt(Big.round(Big.dec(hero.HT).multiply(Big.dec(0.05f)).multiply(Big.dec(quantity))));
 
-		long effect = Math.min( hero.HT - hero.HP, heal );
-		long shield = 0;
+		BigInteger effect = hero.HT.subtract(hero.HP).min(BigInteger.valueOf(heal));
+		BigInteger shield = BigInteger.ZERO;
 		if (hero.subClass == HeroSubClass.WARDEN){
-			shield = heal - effect;
-			long maxShield = hero.HT;
-			long curShield = 0;
+			shield = BigInteger.valueOf(heal).subtract(effect);
+			BigInteger maxShield = hero.HT;
+			BigInteger curShield = BigInteger.ZERO;
 			if (hero.buff(Barrier.class) != null) curShield = hero.buff(Barrier.class).shielding();
-			shield = Math.min(shield, maxShield-curShield);
+			shield = shield.min(maxShield.subtract(curShield));
 		}
-		if (effect > 0 || shield > 0) {
+		if ((effect.compareTo(BigInteger.ZERO) > 0) || (shield.compareTo(BigInteger.ZERO) > 0)) {
 
-			if (effect > 0 && quantity > 1 && VialOfBlood.delayBurstHealing()){
+			if ((effect.compareTo(BigInteger.ZERO) > 0) && quantity > 1 && VialOfBlood.delayBurstHealing()){
 				Healing healing = Buff.affect(hero, Healing.class);
 				healing.setHeal(effect, 0, VialOfBlood.maxHealPerTurn());
 				healing.applyVialEffect();
 			} else {
-				hero.HP += effect;
-				if (effect > 0){
-					hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString(effect), FloatingText.HEALING);
+				hero.HP = hero.HP.add(effect);
+				if ((effect.compareTo(BigInteger.ZERO) > 0)){
+					hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, effect.toString(), FloatingText.HEALING);
 				}
 			}
 
-			if (shield > 0) {
+			if ((shield.compareTo(BigInteger.ZERO) > 0)) {
 				Buff.affect(hero, Barrier.class).incShield(shield);
-				hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString(shield), FloatingText.SHIELDING );
+				hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, shield.toString(), FloatingText.SHIELDING );
 			}
 
 		} else if (!force) {
@@ -134,15 +138,15 @@ public class Dewdrop extends Item {
 	@Override
 	public Item merge( Item other ){
 		if (isSimilar( other )){
-			quantity = 1;
-			other.quantity = 0;
+			quantity = BigInteger.ONE;
+			other.quantity = BigInteger.ZERO;
 		}
 		return this;
 	}
 
 	@Override
-	public Item quantity(long value) {
-		quantity = Math.min( value, 1);
+	public Item quantity(BigInteger value) {
+		quantity = value.min(BigInteger.ONE);
 		return this;
 	}
 

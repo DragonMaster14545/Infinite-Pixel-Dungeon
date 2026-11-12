@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -80,8 +84,8 @@ public abstract class Wand extends Item {
 
 	private static final float TIME_TO_ZAP	= 1f;
 	
-	private long maxCharges = initialCharges();
-	public long curCharges = getMaxCharges();
+	private BigInteger maxCharges = BigInteger.valueOf(initialCharges());
+	public BigInteger curCharges = getMaxCharges();
 	public double partialCharge = 0f;
 	
 	protected Charger charger;
@@ -115,7 +119,7 @@ public abstract class Wand extends Item {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if (curCharges > 0 || !curChargeKnown) {
+		if ((curCharges.compareTo(BigInteger.ZERO) > 0) || !curChargeKnown) {
 			actions.add( AC_ZAP );
 		}
 
@@ -147,7 +151,7 @@ public abstract class Wand extends Item {
 
 	public abstract void onZap(Ballistica attack);
 
-	public abstract void onHit( MagesStaff staff, Char attacker, Char defender, long damage);
+	public abstract void onHit( MagesStaff staff, Char attacker, Char defender, BigInteger damage);
 
 	//not affected by enchantment proc chance changers
 	public static float procChanceMultiplier( Char attacker ){
@@ -165,7 +169,7 @@ public abstract class Wand extends Item {
 		}
 
 		//if we're using wild magic, then assume we have charges
-		if ( owner.buff(WildMagic.WildMagicTracker.class) != null || curCharges >= chargesPerCast()){
+		if (owner.buff(WildMagic.WildMagicTracker.class) != null || (curCharges.compareTo(chargesPerCast()) >= 0)){
 			return true;
 		} else {
 			GLog.w(Messages.get(this, "fizzles"));
@@ -195,8 +199,8 @@ public abstract class Wand extends Item {
 	public void gainCharge( double amt, boolean overcharge ){
 		partialCharge += amt;
 		while (partialCharge >= 1) {
-			if (overcharge) curCharges = Math.min(getMaxCharges() +(long)amt, curCharges+1);
-			else curCharges = Math.min(getMaxCharges(), curCharges+1);
+			if (overcharge) curCharges = getMaxCharges().add(Big.of(amt)).min(curCharges.add(BigInteger.ONE));
+			else curCharges = getMaxCharges().min(curCharges.add(BigInteger.ONE));
 			partialCharge--;
 			updateQuickslot();
 		}
@@ -212,12 +216,12 @@ public abstract class Wand extends Item {
 		charger.setScaleFactor( chargeScaleFactor );
 	}
 
-	protected void wandProc(Char target, long chargesUsed){
+	protected void wandProc(Char target, BigInteger chargesUsed){
 		wandProc(target, buffedLvl(), chargesUsed);
 	}
 
 	//TODO Consider externalizing char awareness buff
-	protected static void wandProc(Char target, long wandLevel, long chargesUsed){
+	protected static void wandProc(Char target, BigInteger wandLevel, BigInteger chargesUsed){
 		if (Dungeon.hero.heroClass == HeroClass.MAGE) {
 			int dur = 10;
 			Buff.append(Dungeon.hero, TalismanOfForesight.CharAwareness.class, dur).charID = target.id();
@@ -226,8 +230,8 @@ public abstract class Wand extends Item {
 		if (target != Dungeon.hero &&
 				Dungeon.hero.isSubclass(HeroSubClass.WARLOCK) &&
 				//standard 1 - 0.92^x chance, plus 7%. Starts at 15%
-				Random.Float() > (Math.pow(0.92f, (wandLevel*chargesUsed)+1) - 0.07f)){
-			SoulMark.prolong(target, SoulMark.class, SoulMark.DURATION + wandLevel);
+				Random.Float() > (Math.pow(0.92f, (wandLevel.multiply(chargesUsed)).add(BigInteger.ONE).doubleValue()) - 0.07f)){
+			SoulMark.prolong(target, SoulMark.class, Big.dec(SoulMark.DURATION).add(Big.dec(wandLevel)).floatValue());
 		}
 	}
 
@@ -243,7 +247,7 @@ public abstract class Wand extends Item {
 		}
 	}
 	
-	public void level(long value) {
+	public void level(BigInteger value) {
 		super.level( value );
 		updateLevel();
 	}
@@ -300,15 +304,15 @@ public abstract class Wand extends Item {
 		return Messages.get(this, "stats_desc") + "\n\n" + Messages.get(Wand.class, "charges", curCharges, getMaxCharges());
 	}
 
-	public String upgradeStat1(long level){
+	public String upgradeStat1(BigInteger level){
 		return null;
 	}
 
-	public String upgradeStat2(long level){
+	public String upgradeStat2(BigInteger level){
 		return null;
 	}
 
-	public String upgradeStat3(long level){
+	public String upgradeStat3(BigInteger level){
 		return null;
 	}
 
@@ -320,21 +324,21 @@ public abstract class Wand extends Item {
 	@Override
 	public String status() {
 		if (levelKnown) {
-			return (curChargeKnown ? Messages.format( "%d%%",  Math.round(((curCharges * 1f) / (getMaxCharges() * 1f)) * 100f)) : "?");
+			return (curChargeKnown ? Messages.format( "%d%%",  Big.round((Big.div((Big.dec(curCharges).multiply(Big.dec(1f))), (Big.dec(getMaxCharges()).multiply(Big.dec(1f))))).multiply(Big.dec(100f)))) : "?");
 		} else {
 			return null;
 		}
 	}
 	
 	@Override
-	public long level() {
+	public BigInteger level() {
 		if (!cursed && curseInfusionBonus){
 			curseInfusionBonus = false;
 			updateLevel();
 		}
-		long level = super.level();
-		if (curseInfusionBonus) level += 1 + level/6;
-		level += resinBonus;
+		BigInteger level = super.level();
+		if (curseInfusionBonus) level = level.add(BigInteger.ONE.add(level.divide(BigInteger.valueOf(6))));
+		level = level.add(BigInteger.valueOf(resinBonus));
 		return level;
 	}
 	
@@ -352,7 +356,7 @@ public abstract class Wand extends Item {
 		}
 
 		updateLevel();
-		curCharges = Math.min( curCharges + 1, getMaxCharges());
+		curCharges = curCharges.add(BigInteger.ONE).min(getMaxCharges());
 		updateQuickslot();
 		
 		return this;
@@ -369,8 +373,8 @@ public abstract class Wand extends Item {
 	}
 
 	@Override
-	public long buffedLvl() {
-		long lvl = super.buffedLvl();
+	public BigInteger buffedLvl() {
+		BigInteger lvl = super.buffedLvl();
 
 		if (charger != null && charger.target != null) {
 
@@ -385,8 +389,8 @@ public abstract class Wand extends Item {
 //				lvl += 2;
 //			}
 
-			if (curCharges == 1 && charger.target instanceof Hero && ((Hero)charger.target).hasTalent(Talent.DESPERATE_POWER)){
-				lvl += ((Hero)charger.target).pointsInTalent(Talent.DESPERATE_POWER);
+			if ((curCharges.compareTo(BigInteger.ONE) == 0) && charger.target instanceof Hero && ((Hero)charger.target).hasTalent(Talent.DESPERATE_POWER)){
+				lvl = lvl.add(BigInteger.valueOf(((Hero)charger.target).pointsInTalent(Talent.DESPERATE_POWER)));
 			}
 
 			if (charger.target.buff(WildMagic.WildMagicTracker.class) != null){
@@ -395,17 +399,17 @@ public abstract class Wand extends Item {
 				bonus /= 2; // +2/+2.5/+3/+3.5/+4 at 0/1/2/3/4 talent points
 
 				int maxBonusLevel = 3 + ((Hero)charger.target).pointsInTalent(Talent.WILD_POWER);
-				if (lvl < maxBonusLevel) {
-					lvl = Math.min(lvl + bonus, maxBonusLevel);
+				if ((lvl.compareTo(BigInteger.valueOf(maxBonusLevel)) < 0)) {
+					lvl = lvl.add(BigInteger.valueOf(bonus)).min(BigInteger.valueOf(maxBonusLevel));
 				}
 			}
 
 			if (charger.target.buff(ScrollEmpower.class) != null){
-				lvl += Math.max(1, ((Hero)charger.target).lvl / 5);
+				lvl = lvl.add(BigInteger.valueOf(Math.max(1, ((Hero)charger.target).lvl / 5)));
 			}
 
 			WandOfMagicMissile.MagicCharge buff = charger.target.buff(WandOfMagicMissile.MagicCharge.class);
-			if (buff != null && buff.level() > lvl){
+			if (buff != null && (buff.level().compareTo(lvl) > 0)){
 				return buff.level();
 			}
 		}
@@ -413,16 +417,16 @@ public abstract class Wand extends Item {
 	}
 
 	public void updateLevel() {
-		setMaxCharges((level() + initialCharges()));
-		curCharges = Math.min( curCharges, getMaxCharges());
+		setMaxCharges((level().add(BigInteger.valueOf(initialCharges()))));
+		curCharges = curCharges.min(getMaxCharges());
 	}
 	
 	public int initialCharges() {
 		return 2;
 	}
 
-	protected long chargesPerCast() {
-		return 1;
+	protected BigInteger chargesPerCast() {
+		return BigInteger.ONE;
 	}
 	
 	public void fx(Ballistica bolt, Callback callback) {
@@ -466,22 +470,22 @@ public abstract class Wand extends Item {
 
 		//inside staff
 		if (charger != null && charger.target == Dungeon.hero && !Dungeon.hero.belongings.contains(this)){
-			if (Dungeon.hero.hasTalent(Talent.EXCESS_CHARGE) && curCharges >= getMaxCharges()){
-				int shieldToGive = Math.round(buffedLvl()*0.67f*Dungeon.hero.pointsInTalent(Talent.EXCESS_CHARGE));
-				Buff.affect(Dungeon.hero, Barrier.class).setShield(shieldToGive);
+			if (Dungeon.hero.hasTalent(Talent.EXCESS_CHARGE) && (curCharges.compareTo(getMaxCharges()) >= 0)){
+				int shieldToGive = Big.toInt(Big.round(Big.dec(buffedLvl()).multiply(Big.dec(0.67f)).multiply(Big.dec(Dungeon.hero.pointsInTalent(Talent.EXCESS_CHARGE)))));
+				Buff.affect(Dungeon.hero, Barrier.class).setShield(BigInteger.valueOf(shieldToGive));
 				Dungeon.hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
 			}
 		}
 		
-		curCharges -= cursed ? 1 : chargesPerCast();
+		curCharges = curCharges.subtract(cursed ? BigInteger.ONE : chargesPerCast());
 
 		//remove magic charge at a higher priority, if we are benefiting from it are and not the
 		//wand that just applied it
 		WandOfMagicMissile.MagicCharge buff = curUser.buff(WandOfMagicMissile.MagicCharge.class);
 		if (buff != null
 				&& buff.wandJustApplied() != this
-				&& buff.level() == buffedLvl()
-				&& buffedLvl() > super.buffedLvl()){
+				&& (buff.level().compareTo(buffedLvl()) == 0)
+				&& (buffedLvl().compareTo(super.buffedLvl()) > 0)){
 			buff.detach();
 		} else {
 			ScrollEmpower empower = curUser.buff(ScrollEmpower.class);
@@ -524,8 +528,8 @@ public abstract class Wand extends Item {
 				n++;
 			}
 		}
-		level(n);
-		curCharges += n;
+		level(BigInteger.valueOf(n));
+		curCharges = curCharges.add(BigInteger.valueOf(n));
 		
 		//30% chance to be cursed
 		if (Random.Float() < 0.3f) {
@@ -543,20 +547,20 @@ public abstract class Wand extends Item {
 	}
 
 	@Override
-	public long value() {
-		long price = 75;
+	public BigInteger value() {
+		BigInteger price = BigInteger.valueOf(75);
 		if (cursed && cursedKnown) {
-			price /= 2;
+			price = price.divide(BigInteger.TWO);
 		}
 		if (levelKnown) {
-			if (level() > 0) {
-				price *= (level() + 1);
-			} else if (level() < 0) {
-				price /= (1 - level());
+			if ((level().compareTo(BigInteger.ZERO) > 0)) {
+				price = price.multiply((level().add(BigInteger.ONE)));
+			} else if ((level().compareTo(BigInteger.ZERO) < 0)) {
+				price = price.divide((BigInteger.ONE.subtract(level())));
 			}
 		}
-		if (price < 1) {
-			price = 1;
+		if ((price.compareTo(BigInteger.ONE) < 0)) {
+			price = BigInteger.ONE;
 		}
 		return price;
 	}
@@ -574,7 +578,7 @@ public abstract class Wand extends Item {
 		super.storeInBundle( bundle );
 		bundle.put( USES_LEFT_TO_ID, usesLeftToID );
 		bundle.put( AVAILABLE_USES, availableUsesToID );
-		bundle.put( CUR_CHARGES, curCharges );
+		Big.put(bundle, CUR_CHARGES, curCharges);
 		bundle.put( CUR_CHARGE_KNOWN, curChargeKnown );
 		bundle.put( PARTIALCHARGE , partialCharge );
 		bundle.put( CURSE_INFUSION_BONUS, curseInfusionBonus );
@@ -591,7 +595,7 @@ public abstract class Wand extends Item {
 
 		updateLevel();
 
-		curCharges = bundle.getLong( CUR_CHARGES );
+		curCharges = Big.getBig(bundle, CUR_CHARGES);
 		curChargeKnown = bundle.getBoolean( CUR_CHARGE_KNOWN );
 		partialCharge = bundle.getDouble( PARTIALCHARGE );
 	}
@@ -608,11 +612,11 @@ public abstract class Wand extends Item {
 		else            return collisionProperties;
 	}
 
-	public long getMaxCharges() {
-		return (maxCharges * getRarityMultiplier());
+	public BigInteger getMaxCharges() {
+		return (maxCharges.multiply(getRarityMultiplier()));
 	}
 
-	public void setMaxCharges(long maxCharges) {
+	public void setMaxCharges(BigInteger maxCharges) {
 		this.maxCharges = maxCharges;
 	}
 
@@ -644,7 +648,7 @@ public abstract class Wand extends Item {
 
 		@Override
 		public void onZap(Ballistica attack) {}
-		public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {}
+		public void onHit(MagesStaff staff, Char attacker, Char defender, BigInteger damage) {}
 
 		@Override
 		public String info() {
@@ -679,15 +683,15 @@ public abstract class Wand extends Item {
 							return;
 						}
 
-						if (curWand.curCharges == 0){
+						if ((curWand.curCharges.compareTo(BigInteger.ZERO) == 0)){
 							GLog.w( Messages.get(Wand.class, "fizzles") );
 							return;
 						}
 
-						float shield = curUser.HT * (0.105f*curWand.curCharges);
-						Buff.affect(curUser, Barrier.class).setShield(Math.round(shield));
+						float shield = Big.dec(curUser.HT).multiply((Big.dec(0.105f).multiply(Big.dec(curWand.curCharges)))).floatValue();
+						Buff.affect(curUser, Barrier.class).setShield(BigInteger.valueOf(Math.round(shield)));
 						curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Math.round(shield)), FloatingText.SHIELDING);
-						curWand.curCharges = 0;
+						curWand.curCharges = BigInteger.ZERO;
 						curUser.sprite.operate(curUser.pos);
 						Sample.INSTANCE.play(Assets.Sounds.CHARGEUP);
 						ScrollOfRecharging.charge(curUser);
@@ -715,28 +719,28 @@ public abstract class Wand extends Item {
 					//backup barrier logic
 					//This triggers before the wand zap, mostly so the barrier helps vs skeletons
 					if (curUser.hasTalent(Talent.BACKUP_BARRIER)
-							&& curWand.curCharges == curWand.chargesPerCast()
+							&& (curWand.curCharges.compareTo(curWand.chargesPerCast()) == 0)
 							&& curWand.charger != null && curWand.charger.target == curUser){
 
 						//regular. If hero owns wand but it isn't in belongings it must be in the staff
 						if (curUser.heroClass == HeroClass.MAGE && !curUser.belongings.contains(curWand)){
 							//grants 3/5 shielding
 							int shieldToGive = 1 + 2 * Dungeon.hero.pointsInTalent(Talent.BACKUP_BARRIER);
-							Buff.affect(Dungeon.hero, Barrier.class).setShield(shieldToGive);
+							Buff.affect(Dungeon.hero, Barrier.class).setShield(BigInteger.valueOf(shieldToGive));
 							Dungeon.hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
 
 						//metamorphed. Triggers if wand is highest level hero has
 						} else if (curUser.heroClass != HeroClass.MAGE) {
 							boolean highest = true;
 							for (Item i : curUser.belongings.getAllItems(Wand.class)){
-								if (i.level() > curWand.level()){
+								if ((i.level().compareTo(curWand.level()) > 0)){
 									highest = false;
 								}
 							}
 							if (highest){
 								//grants 3/5 shielding
 								int shieldToGive = 1 + 2 * Dungeon.hero.pointsInTalent(Talent.BACKUP_BARRIER);
-								Buff.affect(Dungeon.hero, Barrier.class).setShield(shieldToGive);
+								Buff.affect(Dungeon.hero, Barrier.class).setShield(BigInteger.valueOf(shieldToGive));
 								Dungeon.hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
 							}
 						}
@@ -817,16 +821,16 @@ public abstract class Wand extends Item {
 		
 		@Override
 		public boolean act() {
-			if (curCharges < getMaxCharges() && target.buff(MagicImmune.class) == null)
+			if ((curCharges.compareTo(getMaxCharges()) < 0) && target.buff(MagicImmune.class) == null)
 				recharge();
 			
-			while (partialCharge >= 1 && curCharges < getMaxCharges()) {
+			while (partialCharge >= 1 && (curCharges.compareTo(getMaxCharges()) < 0)) {
 				partialCharge--;
-				curCharges++;
+				curCharges = curCharges.add(BigInteger.ONE);
 				updateQuickslot();
 			}
 			
-			if (curCharges == getMaxCharges()){
+			if ((curCharges.compareTo(getMaxCharges()) == 0)){
 				partialCharge = 0;
 			}
 			
@@ -836,14 +840,14 @@ public abstract class Wand extends Item {
 		}
 
 		private void recharge(){
-			long missingCharges = getMaxCharges() - curCharges;
-			missingCharges = Math.max(0, missingCharges);
+			BigInteger missingCharges = getMaxCharges().subtract(curCharges);
+			missingCharges = BigInteger.ZERO.max(missingCharges);
 
 			float turnsToCharge = (float) (BASE_CHARGE_DELAY
-					+ (getScalingChargeAddition() * Math.pow(scalingFactor, missingCharges)));
+					+ (getScalingChargeAddition() * Math.pow(scalingFactor, missingCharges.doubleValue())));
 
 			if (Regeneration.regenOn())
-				partialCharge += (1f/turnsToCharge) * RingOfEnergy.wandChargeMultiplier(target) * getRarityMultiplier();
+				partialCharge += Big.dec((1f/turnsToCharge) * RingOfEnergy.wandChargeMultiplier(target)).multiply(Big.dec(getRarityMultiplier())).doubleValue();
 
 			for (Recharging bonus : target.buffs(Recharging.class)){
 				if (bonus != null && bonus.remainder() > 0f) {
@@ -857,13 +861,13 @@ public abstract class Wand extends Item {
 		}
 
 		public void gainCharge(float charge){
-			if (curCharges < getMaxCharges()) {
-				partialCharge += charge*getRarityMultiplier();
+			if ((curCharges.compareTo(getMaxCharges()) < 0)) {
+				partialCharge += Big.dec(charge).multiply(Big.dec(getRarityMultiplier())).doubleValue();
 				while (partialCharge >= 1f) {
-					curCharges++;
+					curCharges = curCharges.add(BigInteger.ONE);
 					partialCharge--;
 				}
-				if (curCharges >= getMaxCharges()){
+				if ((curCharges.compareTo(getMaxCharges()) >= 0)){
 					partialCharge = 0;
 					curCharges = getMaxCharges();
 				}

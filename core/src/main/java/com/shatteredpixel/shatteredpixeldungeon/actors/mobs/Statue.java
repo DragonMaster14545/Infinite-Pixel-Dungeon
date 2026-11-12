@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -45,7 +49,7 @@ public class Statue extends Mob {
 	{
 		spriteClass = StatueSprite.class;
 
-		EXP = 0;
+		EXP = BigInteger.ZERO;
 		state = PASSIVE;
 		
 		properties.add(Property.INORGANIC);
@@ -58,8 +62,8 @@ public class Statue extends Mob {
 	public Statue() {
 		super();
 		
-		HP = HT = 15 + Dungeon.depth * 5;
-		defenseSkill = 4 + Dungeon.depth;
+		HP = HT = BigInteger.valueOf(15 + Dungeon.depth * 5);
+		defenseSkill = BigInteger.valueOf(4 + Dungeon.depth);
 	}
 
 	public void createWeapon( boolean useDecks ){
@@ -72,8 +76,8 @@ public class Statue extends Mob {
 		weapon.cursed = false;
 		weapon.enchant( Enchantment.random() );
 
-		HP = HT = 15 + Dungeon.escalatingDepth() * 5;
-		defenseSkill = 4 + Dungeon.escalatingDepth();
+		HP = HT = BigInteger.valueOf(15).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(5)));
+		defenseSkill = BigInteger.valueOf(4).add(Dungeon.escalatingDepth());
 	}
 
     public Weapon weapon(){
@@ -95,13 +99,13 @@ public class Statue extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return (int) weapon.damageRoll(this);
+	public BigInteger damageRoll() {
+		return BigInteger.valueOf(Big.toInt(weapon.damageRoll(this)));
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
-		return (int)((9 + Dungeon.escalatingDepth()) * weapon.accuracyFactor( this, target ));
+	public BigInteger attackSkill(Char target ) {
+		return BigInteger.valueOf(Big.toInt(((Big.dec((BigInteger.valueOf(9).add(Dungeon.escalatingDepth()))).multiply(Big.dec(weapon.accuracyFactor( this, target ))))).toBigInteger()));
 	}
 	
 	@Override
@@ -116,8 +120,8 @@ public class Statue extends Mob {
 	}
 
 	@Override
-	public long drRoll() {
-		return (int) (super.drRoll() + Random.NormalLongRange(0, Dungeon.escalatingDepth() + weapon.defenseFactor(this)));
+	public BigInteger drRoll() {
+		return BigInteger.valueOf(Big.toInt((super.drRoll().add(Big.normalRange(BigInteger.ZERO, Dungeon.escalatingDepth().add(weapon.defenseFactor(this)))))));
 	}
 	
 	@Override
@@ -132,7 +136,7 @@ public class Statue extends Mob {
 	}
 
 	@Override
-	public void damage( long dmg, Object src ) {
+	public void damage( BigInteger dmg, Object src ) {
 
 		if (state == PASSIVE) {
 			state = HUNTING;
@@ -142,9 +146,9 @@ public class Statue extends Mob {
 	}
 	
 	@Override
-	public long attackProc( Char enemy, long damage ) {
+	public BigInteger attackProc( Char enemy, BigInteger damage ) {
 		damage = super.attackProc( enemy, damage );
-		damage = (int) weapon.proc( this, enemy, damage );
+		damage = BigInteger.valueOf(Big.toInt(weapon.proc( this, enemy, damage )));
 		if (!enemy.isAlive() && enemy == Dungeon.hero){
 			Dungeon.fail(this);
 			GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );

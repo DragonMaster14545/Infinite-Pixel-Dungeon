@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -54,12 +58,12 @@ public class WandOfDisintegration extends DamageWand {
 	}
 
 
-	public long min(long lvl){
-		return ((2+lvl)*getRarityMultiplier());
+	public BigInteger min(BigInteger lvl){
+		return ((BigInteger.TWO.add(lvl)).multiply(getRarityMultiplier()));
 	}
 
-	public long max(long lvl){
-		return ((8+4*lvl)*getRarityMultiplier());
+	public BigInteger max(BigInteger lvl){
+		return ((BigInteger.valueOf(8).add(BigInteger.valueOf(4).multiply(lvl))).multiply(getRarityMultiplier()));
 	}
 
     @Override
@@ -86,7 +90,7 @@ public class WandOfDisintegration extends DamageWand {
 		
 		boolean terrainAffected = false;
 		
-		long level = buffedLvl();
+		BigInteger level = buffedLvl();
 		
 		int maxDistance = Math.min(distance(), beam.dist);
 		
@@ -132,7 +136,7 @@ public class WandOfDisintegration extends DamageWand {
 			Dungeon.observe();
 		}
 		
-		long lvl = level + (chars.size()-1) + terrainBonus;
+		BigInteger lvl = level.add(BigInteger.valueOf((chars.size()-1))).add(BigInteger.valueOf(terrainBonus));
 		for (Char ch : chars) {
 			wandProc(ch, chargesPerCast());
 			ch.damage(damageRoll(lvl), this );
@@ -142,17 +146,17 @@ public class WandOfDisintegration extends DamageWand {
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
+	public void onHit(MagesStaff staff, Char attacker, Char defender, BigInteger damage) {
 		//no direct effect, see magesStaff.reachfactor
 	}
 
 	private int distance() {
-		return (int) (buffedLvl()*2 + 6);
+		return Big.toInt((buffedLvl().multiply(BigInteger.TWO).add(BigInteger.valueOf(6))));
 	}
 
 	@Override
-	public String upgradeStat2(long level) {
-		return Long.toString(6 + level*2);
+	public String upgradeStat2(BigInteger level) {
+		return BigInteger.valueOf(6).add(level.multiply(BigInteger.TWO)).toString();
 	}
 
 	@Override

@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -115,8 +117,8 @@ public class TrinketCatalyst extends Item {
 		}
 
 		@Override
-		public long cost(ArrayList<Item> ingredients) {
-			return 6;
+		public BigInteger cost(ArrayList<Item> ingredients) {
+			return BigInteger.valueOf(6);
 		}
 
 		@Override
@@ -126,7 +128,7 @@ public class TrinketCatalyst extends Item {
 			TrinketCatalyst newCata = (TrinketCatalyst) ingredients.get(0).duplicate();
 			newCata.collect();
 
-			ingredients.get(0).quantity(0);
+			ingredients.get(0).quantity(BigInteger.ZERO);
 
 			ShatteredPixelDungeon.scene().addToFront(new WndTrinket(newCata));
 			try {

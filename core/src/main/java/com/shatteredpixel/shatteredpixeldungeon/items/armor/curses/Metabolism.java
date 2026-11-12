@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.curses;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
@@ -41,24 +43,24 @@ public class Metabolism extends Glyph {
 	private static ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x000000 );
 	
 	@Override
-	public long proc( Armor armor, Char attacker, Char defender, long damage) {
+	public BigInteger proc( Armor armor, Char attacker, Char defender, BigInteger damage) {
 
 		float procChance = 1/6f * procChanceMultiplier(defender);
 		if ( Random.Float() < procChance && defender instanceof Hero) {
 
 			//assumes using up 10% of starving, and healing of 1 hp per 10 turns;
-			long healing = Math.min((int)Hunger.STARVING/100, defender.HT - defender.HP);
+			BigInteger healing = BigInteger.valueOf((int)Hunger.STARVING/100).min(defender.HT.subtract(defender.HP));
 
-			if (healing > 0) {
+			if ((healing.compareTo(BigInteger.ZERO) > 0)) {
 				
 				Hunger hunger = Buff.affect(defender, Hunger.class);
 				
 				if (!hunger.isStarving()) {
 					
-					hunger.affectHunger( healing * -10 );
+					hunger.affectHunger( healing.multiply(BigInteger.valueOf(-10)).floatValue() );
 					
-					defender.HP += healing;
-					defender.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString( healing ), FloatingText.HEALING);
+					defender.HP = defender.HP.add(healing);
+					defender.sprite.showStatusWithIcon( CharSprite.POSITIVE, healing.toString(), FloatingText.HEALING);
 				}
 			}
 

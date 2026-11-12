@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -81,7 +83,7 @@ public class RegrowthBomb extends Bomb {
 						&& Dungeon.level.plants.get(i) == null){
 					plantCandidates.add(i);
 				}
-				GameScene.add( Blob.seed( i, 10, Regrowth.class ) );
+				GameScene.add( Blob.seed( i, BigInteger.TEN, Regrowth.class ) );
 			}
 		}
 
@@ -114,8 +116,8 @@ public class RegrowthBomb extends Bomb {
 	}
 	
 	@Override
-	public long value() {
+	public BigInteger value() {
 		//prices of ingredients
-		return quantity * (20 + 30);
+		return quantity.multiply(BigInteger.valueOf((20 + 30)));
 	}
 }

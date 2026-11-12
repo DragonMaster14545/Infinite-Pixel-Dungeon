@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -35,7 +37,7 @@ public class DisplacingDart extends TippedDart {
 	}
 	
 	@Override
-	public long proc(Char attacker, Char defender, long damage) {
+	public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 		return super.proc(attacker, defender, damage);
 	}
 
@@ -45,12 +47,12 @@ public class DisplacingDart extends TippedDart {
     }
 
     @Override
-    public long max(long lvl) {
-        return super.max(lvl) * 4 / 3;
+    public BigInteger max(BigInteger lvl) {
+        return super.max(lvl).multiply(BigInteger.valueOf(4)).divide(BigInteger.valueOf(3));
     }
 
     @Override
-    public long min(long lvl) {
-        return super.min(lvl) * 4 / 3;
+    public BigInteger min(BigInteger lvl) {
+        return super.min(lvl).multiply(BigInteger.valueOf(4)).divide(BigInteger.valueOf(3));
     }
 }

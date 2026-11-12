@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -151,15 +153,15 @@ public class Pasty extends Food {
 			case SHATTEREDPD_BIRTHDAY:
 			case PD_BIRTHDAY:
 				//gives 10% of level in exp, min of 2
-				long expToGive = Math.max(2, hero.maxExp()/10);
-				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(expToGive), FloatingText.EXPERIENCE);
+				BigInteger expToGive = BigInteger.TWO.max(hero.maxExp().divide(BigInteger.TEN));
+				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, expToGive.toString(), FloatingText.EXPERIENCE);
 				hero.earnExp(expToGive, PotionOfExperience.class);
 				break;
 			case HALLOWEEN:
 				//heals for 5% max hp, min of 3
-				long toHeal = Math.max(3, hero.HT/20);
-				hero.HP = Math.min(hero.HP + toHeal, hero.HT);
-				hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString(toHeal), FloatingText.HEALING );
+				BigInteger toHeal = BigInteger.valueOf(3).max(hero.HT.divide(BigInteger.valueOf(20)));
+				hero.HP = hero.HP.add(toHeal).min(hero.HT);
+				hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, toHeal.toString(), FloatingText.HEALING );
 				break;
 			case WINTER_HOLIDAYS:
 				hero.belongings.charge(0.5f); //2 turns worth
@@ -167,18 +169,18 @@ public class Pasty extends Food {
 				break;
 			case NEW_YEARS:
 				//shields for 10% of max hp, min of 5
-				long toShield = Math.max(5, hero.HT/10);
+				BigInteger toShield = BigInteger.valueOf(5).max(hero.HT.divide(BigInteger.TEN));
 				Buff.affect(hero, Barrier.class).setShield(toShield);
-				hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString(toShield), FloatingText.SHIELDING );
+				hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, toShield.toString(), FloatingText.SHIELDING );
 				break;
             case MYSTERY_CAKE:
                 //ahh yes, random buff
                 switch (Random.Int(5)) {
                     case 0:
                         //shields for 10% of max hp, min of 5
-                        long mys_toShield = Math.max(5, hero.HT/10);
+                        BigInteger mys_toShield = BigInteger.valueOf(5).max(hero.HT.divide(BigInteger.TEN));
                         Buff.affect(hero, Barrier.class).setShield(mys_toShield);
-                        hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString(mys_toShield), FloatingText.SHIELDING );
+                        hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, mys_toShield.toString(), FloatingText.SHIELDING );
                         break;
                     case 1:
                         //charges
@@ -187,13 +189,13 @@ public class Pasty extends Food {
                         break;
                     case 2:
                         //heals for 5% max hp, min of 3
-                        long mys_toHeal = Math.max(3, hero.HT/20);
-                        hero.HP = Math.min(hero.HP + mys_toHeal, hero.HT);
-                        hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString(mys_toHeal), FloatingText.HEALING );
+                        BigInteger mys_toHeal = BigInteger.valueOf(3).max(hero.HT.divide(BigInteger.valueOf(20)));
+                        hero.HP = hero.HP.add(mys_toHeal).min(hero.HT);
+                        hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, mys_toHeal.toString(), FloatingText.HEALING );
                     case 3:
                         //gives 10% of level in exp, min of 2
-                        long mys_expToGive = Math.max(2, hero.maxExp()/10);
-                        hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(mys_expToGive), FloatingText.EXPERIENCE);
+                        BigInteger mys_expToGive = BigInteger.TWO.max(hero.maxExp().divide(BigInteger.TEN));
+                        hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, mys_expToGive.toString(), FloatingText.EXPERIENCE);
                         hero.earnExp(mys_expToGive, PotionOfExperience.class);
                         break;
                     case 4:
@@ -264,8 +266,8 @@ public class Pasty extends Food {
 	}
 	
 	@Override
-	public long value() {
-		return 20 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(20).multiply(quantity);
 	}
 
 	public static class FishLeftover extends Food {
@@ -276,8 +278,8 @@ public class Pasty extends Food {
 		}
 
 		@Override
-		public long value() {
-			return 10 * quantity;
+		public BigInteger value() {
+			return BigInteger.TEN.multiply(quantity);
 		}
 	}
 }

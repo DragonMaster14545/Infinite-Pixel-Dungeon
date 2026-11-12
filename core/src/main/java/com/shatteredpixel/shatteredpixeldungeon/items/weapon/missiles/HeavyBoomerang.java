@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -48,9 +50,8 @@ public class HeavyBoomerang extends MissileWeapon {
 	}
 	
 	@Override
-	public long max(long lvl) {
-		return  6L * tier() +                  //16 base, down from 20
-				(tier()*2L) * lvl;               //scaling unchanged
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(6L * tier()).add(BigInteger.valueOf((tier()*2L)).multiply(lvl));               //scaling unchanged
 	}
 
 	boolean circleBackhit = false;

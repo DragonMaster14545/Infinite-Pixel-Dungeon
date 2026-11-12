@@ -21,6 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -64,7 +67,7 @@ abstract public class MissileWeapon extends Weapon {
 
 	{
 		stackable = true;
-		quantity = defaultQuantity();
+		quantity = BigInteger.valueOf(defaultQuantity());
 
 		bones = true;
 
@@ -94,36 +97,34 @@ abstract public class MissileWeapon extends Weapon {
 	}
 
 	@Override
-	public long min() {
+	public BigInteger min() {
 		if (Dungeon.hero != null){
-			return Math.max(0, min(buffedLvl() + RingOfSharpshooting.levelDamageBonus(Dungeon.hero)));
+			return BigInteger.ZERO.max(min(buffedLvl().add(RingOfSharpshooting.levelDamageBonus(Dungeon.hero))));
 		} else {
-			return Math.max(0 , min( buffedLvl() ));
+			return BigInteger.ZERO.max(min( buffedLvl() ));
 		}
 	}
 
 	@Override
-	public long min(long lvl) {
-		return  2 * tier +                      //base
-				lvl;                            //level scaling
+	public BigInteger min(BigInteger lvl) {
+		return  BigInteger.valueOf(2 * tier).add(lvl);                            //level scaling
 	}
 
 	@Override
-	public long max() {
+	public BigInteger max() {
 		if (Dungeon.hero != null){
-			return Math.max(0, max( buffedLvl() + RingOfSharpshooting.levelDamageBonus(Dungeon.hero) ));
+			return BigInteger.ZERO.max(max( buffedLvl().add(RingOfSharpshooting.levelDamageBonus(Dungeon.hero)) ));
 		} else {
-			return Math.max(0 , max( buffedLvl() ));
+			return BigInteger.ZERO.max(max( buffedLvl() ));
 		}
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  5 * tier +                      //base
-				tier*lvl;                       //level scaling
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(5 * tier).add(BigInteger.valueOf(tier).multiply(lvl));                       //level scaling
 	}
 
-	public int STRReq(long lvl){
+	public int STRReq(BigInteger lvl){
 		int req = STRReq(tier, lvl) - 1; //1 less str than normal for their tier
 		if (masteryPotionBonus){
 			req -= 2;
@@ -132,7 +133,7 @@ abstract public class MissileWeapon extends Weapon {
 	}
 
 	//use the parent item if this has been thrown from a parent
-	public long buffedLvl(){
+	public BigInteger buffedLvl(){
 		if (parent != null) {
 			return parent.buffedLvl();
 		} else {
@@ -144,8 +145,8 @@ abstract public class MissileWeapon extends Weapon {
 		if (!bundleRestoring) {
 			durability = MAX_DURABILITY;
 			extraThrownLeft = false;
-			quantity = defaultQuantity();
-			Buff.affect(Dungeon.hero, UpgradedSetTracker.class).levelThresholds.put(setID, trueLevel()+1);
+			quantity = BigInteger.valueOf(defaultQuantity());
+			Buff.affect(Dungeon.hero, UpgradedSetTracker.class).levelThresholds.put(setID, trueLevel().add(BigInteger.ONE));
 		}
 		//thrown weapons don't get curse weakened
 		boolean wasCursed = cursed;
@@ -161,8 +162,8 @@ abstract public class MissileWeapon extends Weapon {
 		if (!bundleRestoring) {
 			durability = MAX_DURABILITY;
 			extraThrownLeft = false;
-			quantity = defaultQuantity();
-			Buff.affect(Dungeon.hero, UpgradedSetTracker.class).levelThresholds.put(setID, trueLevel()+1);
+			quantity = BigInteger.valueOf(defaultQuantity());
+			Buff.affect(Dungeon.hero, UpgradedSetTracker.class).levelThresholds.put(setID, trueLevel().add(BigInteger.ONE));
 		}
 		return super.upgrade();
 	}
@@ -181,7 +182,7 @@ abstract public class MissileWeapon extends Weapon {
 	}
 
 	public boolean isSimilar( Item item ) {
-		return trueLevel() == item.trueLevel() && getClass() == item.getClass() && setID == (((MissileWeapon) item).setID);
+		return (trueLevel().compareTo(item.trueLevel()) == 0) && getClass() == item.getClass() && setID == (((MissileWeapon) item).setID);
 	}
 
 	@Override
@@ -231,8 +232,8 @@ abstract public class MissileWeapon extends Weapon {
 	@Override
 	public void doThrow(Hero hero) {
 		parent = null; //reset parent before throwing, just in case
-		if (((levelKnown && level() > 0) || hasGoodEnchant() || masteryPotionBonus || enchantHardened)
-				&& !extraThrownLeft && quantity() == 1 && durabilityLeft() <= durabilityPerUse()){
+		if (((levelKnown && (level().compareTo(BigInteger.ZERO) > 0)) || hasGoodEnchant() || masteryPotionBonus || enchantHardened)
+				&& !extraThrownLeft && (quantity().compareTo(BigInteger.ONE) == 0) && durabilityLeft() <= durabilityPerUse()){
 			GameScene.show(new WndOptions(new ItemSprite(this), Messages.titleCase(title()),
 					Messages.get(MissileWeapon.class, "break_upgraded_warn_desc"),
 					Messages.get(MissileWeapon.class, "break_upgraded_warn_yes"),
@@ -291,7 +292,7 @@ abstract public class MissileWeapon extends Weapon {
 	}
 
 	@Override
-	public long proc(Char attacker, Char defender, long damage) {
+	public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 		if (attacker == Dungeon.hero && Random.Int(3) < Dungeon.hero.pointsInTalent(Talent.SHARED_ENCHANTMENT)){
 			SpiritBow bow = Dungeon.hero.belongings.getItem(SpiritBow.class);
 			if (bow != null && bow.enchantment != null && Dungeon.hero.buff(MagicImmune.class) == null) {
@@ -311,7 +312,7 @@ abstract public class MissileWeapon extends Weapon {
 			availableUsesToID =  Math.max(usesLeftToID, 0);
 		}
 
-		long result = super.proc(attacker, defender, damage);
+		BigInteger result = super.proc(attacker, defender, damage);
 
 		//handle ID progress over parent/child
 		if (parent != null && parent.usesLeftToID > usesLeftToID){
@@ -364,7 +365,7 @@ abstract public class MissileWeapon extends Weapon {
 				n++;
 			}
 		}
-		level(n);
+		level(BigInteger.valueOf(n));
 
 		//we use a separate RNG here so that variance due to things like parchment scrap
 		//does not affect levelgen
@@ -387,7 +388,7 @@ abstract public class MissileWeapon extends Weapon {
 
 	public String status() {
 		//show quantity even when it is 1
-		return Long.toString( quantity );
+		return quantity.toString();
 	}
 
 	@Override
@@ -440,8 +441,8 @@ abstract public class MissileWeapon extends Weapon {
 	//classes that add steps onto durabilityPerUse can turn rounding off, to do their own rounding after more logic
 	protected boolean useRoundingInDurabilityCalc = true;
 
-	public float durabilityPerUse( long level ){
-		float usages = baseUses * (float)(Math.pow(1.5f, level));
+	public float durabilityPerUse( BigInteger level ){
+		float usages = baseUses * (float)(Math.pow(1.5f, level.doubleValue()));
 
 		//+50%/75% durability
 		if (Dungeon.hero != null && Dungeon.hero.hasTalent(Talent.DURABLE_PROJECTILES)){
@@ -498,16 +499,16 @@ abstract public class MissileWeapon extends Weapon {
 	}
 
 	@Override
-	public long damageRoll(Char owner) {
-		long damage = augment.damageFactor(super.damageRoll( owner ));
+	public BigInteger damageRoll(Char owner) {
+		BigInteger damage = augment.damageFactor(super.damageRoll( owner ));
 
 		if (owner instanceof Hero) {
 			int exStr = ((Hero)owner).STR() - STRReq();
 			if (exStr > 0) {
-				damage += Hero.heroDamageIntRange( 0, exStr );
+				damage = damage.add(Hero.heroDamageIntRange( BigInteger.ZERO, BigInteger.valueOf(exStr) ));
 			}
 			if (owner.buff(Momentum.class) != null && owner.buff(Momentum.class).freerunning()) {
-				damage = Math.round(damage * (1f + 0.15f * ((Hero) owner).pointsInTalent(Talent.PROJECTILE_MOMENTUM)));
+				damage = Big.round(Big.dec(damage).multiply(Big.dec((1f + 0.15f * ((Hero) owner).pointsInTalent(Talent.PROJECTILE_MOMENTUM)))));
 			}
 		}
 
@@ -529,13 +530,13 @@ abstract public class MissileWeapon extends Weapon {
 			durability += ((MissileWeapon)other).durability;
 			durability -= MAX_DURABILITY;
 			while (durability <= 0){
-				quantity -= 1;
+				quantity = quantity.subtract(BigInteger.ONE);
 				durability += MAX_DURABILITY;
 			}
 
 			//hashcode check is for pre-3.2 saves, 0 check is for darts
-			if (quantity > defaultQuantity() && setID != 0 && setID != getClass().getSimpleName().hashCode()){
-				quantity = defaultQuantity();
+			if ((quantity.compareTo(BigInteger.valueOf(defaultQuantity())) > 0) && setID != 0 && setID != getClass().getSimpleName().hashCode()){
+				quantity = BigInteger.valueOf(defaultQuantity());
 				durability = MAX_DURABILITY;
 			}
 
@@ -575,7 +576,7 @@ abstract public class MissileWeapon extends Weapon {
 	}
 
 	@Override
-	public Item split(long amount) {
+	public Item split(BigInteger amount) {
 		bundleRestoring = true;
 		Item split = super.split(amount);
 		bundleRestoring = false;
@@ -604,7 +605,7 @@ abstract public class MissileWeapon extends Weapon {
 			Sample.INSTANCE.play( Assets.Sounds.ITEM );
 			hero.spendAndNext( TIME_TO_PICK_UP );
 			GLog.w(Messages.get(this, "dust"));
-			quantity(0);
+			quantity(BigInteger.ZERO);
 			return true;
 		} else {
 			extraThrownLeft = false;
@@ -632,8 +633,8 @@ abstract public class MissileWeapon extends Weapon {
 				}
 			}
 		} else {
-			info += "\n\n" + Messages.get(MissileWeapon.class, "stats_unknown", tier, min(0), max(0), STRReq(0));
-			if (Dungeon.hero != null && STRReq(0) > Dungeon.hero.STR()) {
+			info += "\n\n" + Messages.get(MissileWeapon.class, "stats_unknown", tier, min(BigInteger.ZERO), max(BigInteger.ZERO), STRReq(BigInteger.ZERO));
+			if (Dungeon.hero != null && STRReq(BigInteger.ZERO) > Dungeon.hero.STR()) {
 				info += " " + Messages.get(MissileWeapon.class, "probably_too_heavy");
 			}
 		}
@@ -676,8 +677,8 @@ abstract public class MissileWeapon extends Weapon {
 				info += "\n\n" + Messages.get(this, "unlimited_uses");
 			}
 		}  else {
-			if (durabilityPerUse(0) > 0) {
-				info += "\n\n" + Messages.get(this, "unknown_uses", (int) Math.ceil(MAX_DURABILITY / durabilityPerUse(0)));
+			if (durabilityPerUse(BigInteger.ZERO) > 0) {
+				info += "\n\n" + Messages.get(this, "unknown_uses", (int) Math.ceil(MAX_DURABILITY / durabilityPerUse(BigInteger.ZERO)));
 			} else {
 				info += "\n\n" + Messages.get(this, "unlimited_uses");
 			}
@@ -691,19 +692,19 @@ abstract public class MissileWeapon extends Weapon {
 	}
 
 	@Override
-	public long value() {
-		long price = 5 * tier * quantity;
+	public BigInteger value() {
+		BigInteger price = BigInteger.valueOf(5 * tier).multiply(quantity);
 		if (hasGoodEnchant()) {
-			price *= 1.5;
+			price = Big.trunc(Big.dec(price).multiply(Big.dec(1.5)));
 		}
 		if (cursedKnown && (cursed || hasCurseEnchant())) {
-			price /= 2;
+			price = price.divide(BigInteger.TWO);
 		}
-		if (levelKnown && level() > 0) {
-			price *= (level() + 1);
+		if (levelKnown && (level().compareTo(BigInteger.ZERO) > 0)) {
+			price = price.multiply((level().add(BigInteger.ONE)));
 		}
-		if (price < 1) {
-			price = 1;
+		if ((price.compareTo(BigInteger.ONE) < 0)) {
+			price = BigInteger.ONE;
 		}
 		return price;
 	}
@@ -732,14 +733,14 @@ abstract public class MissileWeapon extends Weapon {
 		bundleRestoring = false;
 
 		if (bundle.contains(SET_ID)){
-			setID = bundle.getLong(SET_ID);
+			setID = Big.toLong(Big.getBig(bundle, SET_ID));
 			//pre v3.2.0 logic
 		} else {
 			//if we have a higher than 0 level, assume that this was a solitary thrown wep upgrade
 			//turn it into a set of full quantity
-			if (level() > 0){
+			if ((level().compareTo(BigInteger.ZERO) > 0)){
 				//set ID will be a random long
-				quantity = defaultQuantity();
+				quantity = BigInteger.valueOf(defaultQuantity());
 
 				//otherwise treat all currently spawned thrown weapons of the same class as if they are part of the same set
 				//darts already do this though and need no conversion
@@ -784,13 +785,13 @@ abstract public class MissileWeapon extends Weapon {
 			revivePersists = true;
 		}
 
-		public HashMap<Long, Long> levelThresholds = new HashMap<>();
+		public HashMap<Long, BigInteger> levelThresholds = new HashMap<>();
 
 		public static boolean pickupValid(Hero h, MissileWeapon w){
 			if (h.buff(UpgradedSetTracker.class) != null){
-				HashMap<Long, Long> levelThresholds = h.buff(UpgradedSetTracker.class).levelThresholds;
+				HashMap<Long, BigInteger> levelThresholds = h.buff(UpgradedSetTracker.class).levelThresholds;
 				if (levelThresholds.containsKey(w.setID)){
-					return w.trueLevel() >= levelThresholds.get(w.setID);
+					return (w.trueLevel().compareTo(levelThresholds.get(w.setID)) >= 0);
 				}
 				return true;
 			}
@@ -804,7 +805,7 @@ abstract public class MissileWeapon extends Weapon {
 		public void storeInBundle(Bundle bundle) {
 			super.storeInBundle(bundle);
 			long[] IDs = new long[levelThresholds.size()];
-			long[] levels = new long[levelThresholds.size()];
+			BigInteger[] levels = Big.newArray(levelThresholds.size());
 			int i = 0;
 			for (Long ID : levelThresholds.keySet()){
 				IDs[i] = ID;
@@ -812,14 +813,14 @@ abstract public class MissileWeapon extends Weapon {
 				i++;
 			}
 			bundle.put(SET_IDS, IDs);
-			bundle.put(SET_LEVELS, levels);
+			Big.putArray(bundle, SET_LEVELS, levels);
 		}
 
 		@Override
 		public void restoreFromBundle(Bundle bundle) {
 			super.restoreFromBundle(bundle);
 			long[] IDs = bundle.getLongArray(SET_IDS);
-			long[] levels = bundle.getLongArray(SET_LEVELS);
+			BigInteger[] levels = Big.getBigArray(bundle, SET_LEVELS);
 			levelThresholds.clear();
 			for (int i = 0; i <IDs.length; i++){
 				levelThresholds.put(IDs[i], levels[i]);

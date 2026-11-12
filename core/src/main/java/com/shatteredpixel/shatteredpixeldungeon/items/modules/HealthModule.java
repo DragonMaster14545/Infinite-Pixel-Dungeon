@@ -29,6 +29,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.modules;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -61,8 +63,8 @@ public class HealthModule extends Module {
 
 
     @Override
-    public long value() {
-        return 7500 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(7500).multiply(quantity);
     }
 
     private static final String MULTIPLIER = "multiplier";

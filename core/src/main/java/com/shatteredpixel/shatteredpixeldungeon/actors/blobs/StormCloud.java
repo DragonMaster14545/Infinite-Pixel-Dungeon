@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -43,7 +45,7 @@ public class StormCloud extends Blob {
 		for (int i = area.left; i < area.right; i++){
 			for (int j = area.top; j < area.bottom; j++){
 				cell = i + j*Dungeon.level.width();
-				if (cur[cell] > 0) {
+				if ((cur[cell].compareTo(BigInteger.ZERO) > 0)) {
 					Dungeon.level.setCellToWater(true, cell);
 					if (fire != null){
 						fire.clear(cell);
@@ -54,7 +56,7 @@ public class StormCloud extends Blob {
 					if (ch != null
 							&& !ch.isImmune(getClass())
 							&& Char.hasProp(ch, Char.Property.FIERY)){
-						ch.damage(1 + Dungeon.scalingDepth()/5, this);
+						ch.damage(BigInteger.ONE.add(Dungeon.scalingDepth().divide(BigInteger.valueOf(5))), this);
 					}
 				}
 			}

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -57,9 +61,9 @@ public class MasterThievesArmband extends Artifact {
 
 		levelCap = 10;
 
-		charge = 0;
+		charge = BigInteger.ZERO;
 		partialCharge = 0;
-		setChargeCap(5+level()/2);
+		setChargeCap(BigInteger.valueOf(5).add(level().divide(BigInteger.TWO)));
 
 		defaultAction = AC_STEAL;
 	}
@@ -70,7 +74,7 @@ public class MasterThievesArmband extends Artifact {
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = super.actions(hero);
 		if (isEquipped(hero)
-				&& charge > 0
+				&& (charge.compareTo(BigInteger.ZERO) > 0)
 				&& hero.buff(MagicImmune.class) == null
 				&& !cursed) {
 			actions.add(AC_STEAL);
@@ -92,7 +96,7 @@ public class MasterThievesArmband extends Artifact {
 				GLog.i( Messages.get(Artifact.class, "need_to_equip") );
 				usesTargeting = false;
 
-			} else if (charge < 1) {
+			} else if ((charge.compareTo(BigInteger.ONE) < 0)) {
 				GLog.i( Messages.get(this, "no_charge") );
 				usesTargeting = false;
 
@@ -132,8 +136,8 @@ public class MasterThievesArmband extends Artifact {
 							Sample.INSTANCE.play(Assets.Sounds.HIT);
 
 							boolean surprised = ((Mob) ch).surprisedBy(curUser, false);
-							float lootMultiplier = 1f + 0.1f*level();
-							int debuffDuration = (int) (3 + level()/2);
+							float lootMultiplier = Big.dec(1f).add(Big.dec(0.1f).multiply(Big.dec(level()))).floatValue();
+							int debuffDuration = Big.toInt((BigInteger.valueOf(3).add(level().divide(BigInteger.TWO))));
 
 							Invisibility.dispel(curUser);
 
@@ -142,7 +146,7 @@ public class MasterThievesArmband extends Artifact {
 								Surprise.hit(ch);
 								Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 								debuffDuration += 2;
-								exp += 2;
+								exp = exp.add(BigInteger.TWO);
 							}
 
 							float lootChance = ((Mob) ch).lootChance() * lootMultiplier;
@@ -178,11 +182,11 @@ public class MasterThievesArmband extends Artifact {
 							Buff.prolong(ch, Blindness.class, debuffDuration);
 							Buff.prolong(ch, Cripple.class, debuffDuration);
 
-							charge--;
-							exp += 3;
+							charge = charge.subtract(BigInteger.ONE);
+							exp = exp.add(BigInteger.valueOf(3));
 							Talent.onArtifactUsed(Dungeon.hero);
-							while (exp >= (10 + Math.round(3.33f * level())) && level() < levelCap) {
-								exp -= 10 + Math.round(3.33f * level());
+							while ((exp.compareTo((BigInteger.TEN.add(Big.round(Big.dec(3.33f).multiply(Big.dec(level())))))) >= 0) && (level().compareTo(BigInteger.valueOf(levelCap)) < 0)) {
+								exp = exp.subtract(BigInteger.TEN.add(Big.round(Big.dec(3.33f).multiply(Big.dec(level())))));
 								Catalog.countUse(MasterThievesArmband.class);
 								GLog.p(Messages.get(MasterThievesArmband.class, "level_up"));
 								upgrade();
@@ -217,14 +221,14 @@ public class MasterThievesArmband extends Artifact {
 	@Override
 	public void charge(Hero target, float amount) {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
-		if (charge < getChargeCap()) {
+		if ((charge.compareTo(getChargeCap()) < 0)) {
 			partialCharge += 0.1f * amount;
-			partialCharge *= getRarityMultiplier();
+			partialCharge *= getRarityMultiplier().doubleValue();
 			while (partialCharge >= 1f) {
-				charge++;
+				charge = charge.add(BigInteger.ONE);
 				partialCharge--;
 			}
-			if (charge >= getChargeCap()) {
+			if ((charge.compareTo(getChargeCap()) >= 0)) {
 				GLog.p(Messages.get(MasterThievesArmband.class, "full"));
 				partialCharge = 0;
 				charge = getChargeCap();
@@ -235,7 +239,7 @@ public class MasterThievesArmband extends Artifact {
 
 	@Override
 	public Item upgrade() {
-		setChargeCap(5 + (level()+1)/2);
+		setChargeCap(BigInteger.valueOf(5).add((level().add(BigInteger.ONE)).divide(BigInteger.TWO)));
 		return super.upgrade();
 	}
 
@@ -258,8 +262,8 @@ public class MasterThievesArmband extends Artifact {
 
 		@Override
 		public boolean act() {
-			if (cursed && Dungeon.gold > 0 && Random.Int(5) == 0){
-				Dungeon.gold--;
+			if (cursed && (Dungeon.gold.compareTo(BigInteger.ZERO) > 0) && Random.Int(5) == 0){
+				Dungeon.gold = Dungeon.gold.subtract(BigInteger.ONE);
 			}
 
 			spend(TICK);
@@ -269,17 +273,17 @@ public class MasterThievesArmband extends Artifact {
 		public void gainCharge(float levelPortion) {
 			if (cursed || target.buff(MagicImmune.class) != null) return;
 
-			if (charge < getChargeCap()){
+			if ((charge.compareTo(getChargeCap()) < 0)){
 				float chargeGain = 3f * levelPortion;
 				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
 
 				partialCharge += chargeGain;
 				while (partialCharge > 1f){
 					partialCharge--;
-					charge++;
+					charge = charge.add(BigInteger.ONE);
 					updateQuickslot();
 
-					if (charge == getChargeCap()){
+					if ((charge.compareTo(getChargeCap()) == 0)){
 						GLog.p( Messages.get(MasterThievesArmband.class, "full") );
 						partialCharge = 0;
 					}
@@ -296,13 +300,13 @@ public class MasterThievesArmband extends Artifact {
 			if (Random.Float() > stealChance){
 				return false;
 			} else {
-				charge -= chargesUsed;
-				exp += 4 * chargesUsed;
+				charge = charge.subtract(BigInteger.valueOf(chargesUsed));
+				exp = exp.add(BigInteger.valueOf(4 * chargesUsed));
 				GLog.i(Messages.get(MasterThievesArmband.class, "stole_item", item.name()));
 
 				Talent.onArtifactUsed(Dungeon.hero);
-				while (exp >= (10 + Math.round(3.33f * level())) && level() < levelCap) {
-					exp -= 10 + Math.round(3.33f * level());
+				while ((exp.compareTo((BigInteger.TEN.add(Big.round(Big.dec(3.33f).multiply(Big.dec(level())))))) >= 0) && (level().compareTo(BigInteger.valueOf(levelCap)) < 0)) {
+					exp = exp.subtract(BigInteger.TEN.add(Big.round(Big.dec(3.33f).multiply(Big.dec(level())))));
 					Catalog.countUse(MasterThievesArmband.class);
 					GLog.p(Messages.get(MasterThievesArmband.class, "level_up"));
 					upgrade();
@@ -314,16 +318,16 @@ public class MasterThievesArmband extends Artifact {
 
 		public float stealChance(Item item){
 			int chargesUsed = chargesToUse(item);
-			float val = chargesUsed * (10 + level()/2f);
-			return Math.min(1f, val/item.value());
+			float val = Big.dec(chargesUsed).multiply((Big.dec(10).add(Big.div(Big.dec(level()), Big.dec(2f))))).floatValue();
+			return Big.dec(1f).min(Big.div(Big.dec(val), Big.dec(item.value()))).floatValue();
 		}
 
 		public int chargesToUse(Item item){
-			long value = item.value();
+			BigInteger value = item.value();
 			float valUsing = 0;
 			int chargesUsed = 0;
-			while (valUsing < value && chargesUsed < charge){
-				valUsing += 10 + level()/2f;
+			while ((Big.dec(valUsing).compareTo(Big.dec(value)) < 0) && (BigInteger.valueOf(chargesUsed).compareTo(charge) < 0)){
+				valUsing += Big.dec(10).add(Big.div(Big.dec(level()), Big.dec(2f))).floatValue();
 				chargesUsed++;
 			}
 			return chargesUsed;

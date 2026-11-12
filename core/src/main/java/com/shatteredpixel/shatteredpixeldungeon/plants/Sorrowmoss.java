@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.plants;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -49,7 +52,7 @@ public class Sorrowmoss extends Plant {
 		}
 		
 		if (ch != null) {
-			Buff.affect( ch, Poison.class ).set( 5 + Math.round(2*Dungeon.scalingDepth() / 3f) );
+			Buff.affect( ch, Poison.class ).set( BigInteger.valueOf(5).add(Big.round(Big.div(Big.dec(BigInteger.TWO.multiply(Dungeon.scalingDepth())), Big.dec(3f)))).doubleValue() );
 		}
 		
 		if (Dungeon.level.heroFOV[pos]) {

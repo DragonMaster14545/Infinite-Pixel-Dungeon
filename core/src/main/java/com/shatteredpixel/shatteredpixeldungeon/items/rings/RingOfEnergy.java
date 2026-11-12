@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -40,10 +44,10 @@ public class RingOfEnergy extends Ring {
 	public String statsInfo() {
 		if (isIdentified()){
 			String info = Messages.get(this, "stats",
-					new DecimalFormat("#.###").format(100f * (1.10f + soloVisualBonus()*0.0125f - 1f)));
-			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)){
+					new DecimalFormat("#.###").format(Big.dec(100f).multiply((Big.dec(1.10f).add(Big.dec(soloVisualBonus()).multiply(Big.dec(0.0125f))).subtract(Big.dec(1f))))));
+			if (isEquipped(Dungeon.hero) && (soloBuffedBonus().compareTo(combinedBuffedBonus(Dungeon.hero)) != 0)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
-						Messages.decimalFormat("#.##", 100f * (1.10f + combinedBuffedBonus(Dungeon.hero)*0.0125f - 1f)));
+						Messages.decimalFormat("#.##", Big.dec(100f).multiply((Big.dec(1.10f).add(Big.dec(combinedBuffedBonus(Dungeon.hero)).multiply(Big.dec(0.0125f))).subtract(Big.dec(1f)))).doubleValue()));
 			}
 			return info;
 		} else {
@@ -52,9 +56,9 @@ public class RingOfEnergy extends Ring {
 		}
 	}
 
-	public String upgradeStat1(long level){
-		if (cursed && cursedKnown) level = Math.min(-1, level-3);
-		return Messages.decimalFormat("#.##", 100f * (1.10f + level*0.0125f - 1f)) + "%";
+	public String upgradeStat1(BigInteger level){
+		if (cursed && cursedKnown) level = BigInteger.valueOf(-1).min(level.subtract(BigInteger.valueOf(3)));
+		return Messages.decimalFormat("#.##", Big.dec(100f).multiply((Big.dec(1.10f).add(Big.dec(level).multiply(Big.dec(0.0125f))).subtract(Big.dec(1f)))).doubleValue()) + "%";
 	}
 
 	@Override
@@ -64,22 +68,22 @@ public class RingOfEnergy extends Ring {
 	
 	public static float wandChargeMultiplier( Char target ){
         float multiplier = 1f;
-        if (getBuffedBonus(target, Energy.class) > 0) multiplier = 1.1f;
-        if (getBuffedBonus(target, Energy.class) > 1) multiplier += getBuffedBonus(target, Energy.class)*0.0125;
+        if ((getBuffedBonus(target, Energy.class).compareTo(BigInteger.ZERO) > 0)) multiplier = 1.1f;
+        if ((getBuffedBonus(target, Energy.class).compareTo(BigInteger.ONE) > 0)) multiplier += Big.dec(getBuffedBonus(target, Energy.class)).multiply(Big.dec(0.0125)).floatValue();
         return Math.min(multiplier, 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
 	}
 
 	public static float artifactChargeMultiplier( Char target ){
         float multiplier = 1f;
-        if (getBuffedBonus(target, Energy.class) > 0) multiplier = 1.1f;
-        if (getBuffedBonus(target, Energy.class) > 1) multiplier += getBuffedBonus(target, Energy.class)*0.0125;
+        if ((getBuffedBonus(target, Energy.class).compareTo(BigInteger.ZERO) > 0)) multiplier = 1.1f;
+        if ((getBuffedBonus(target, Energy.class).compareTo(BigInteger.ONE) > 0)) multiplier += Big.dec(getBuffedBonus(target, Energy.class)).multiply(Big.dec(0.0125)).floatValue();
         return Math.min(multiplier, 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
 	}
 
 	public static float armorChargeMultiplier( Char target ){
 		float multiplier = 1f;
-		if (getBuffedBonus(target, Energy.class) > 0) multiplier = 1.1f;
-		if (getBuffedBonus(target, Energy.class) > 1) multiplier += getBuffedBonus(target, Energy.class)*0.0125;
+		if ((getBuffedBonus(target, Energy.class).compareTo(BigInteger.ZERO) > 0)) multiplier = 1.1f;
+		if ((getBuffedBonus(target, Energy.class).compareTo(BigInteger.ONE) > 0)) multiplier += Big.dec(getBuffedBonus(target, Energy.class)).multiply(Big.dec(0.0125)).floatValue();
 		return Math.min(multiplier, 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
 	}
 

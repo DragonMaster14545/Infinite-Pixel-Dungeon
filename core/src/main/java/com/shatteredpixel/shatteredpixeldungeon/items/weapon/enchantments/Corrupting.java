@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Adrenaline;
@@ -41,14 +45,14 @@ public class Corrupting extends Weapon.Enchantment {
 	private static ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x440066 );
 	
 	@Override
-	public long proc(Weapon weapon, Char attacker, Char defender, long damage) {
-		long level = Math.max( 0, weapon.buffedLvl() );
+	public BigInteger proc(Weapon weapon, Char attacker, Char defender, BigInteger damage) {
+		BigInteger level = BigInteger.ZERO.max(weapon.buffedLvl());
 		
 		// lvl 0 - 20%
 		// lvl 1 ~ 23%
 		// lvl 2 ~ 26%
-		float procChance = (level+5f)/(level+25f) * procChanceMultiplier(attacker);
-		if (damage >= defender.HP
+		float procChance = Big.div((Big.dec(level).add(Big.dec(5f))), (Big.dec(level).add(Big.dec(25f)))).multiply(Big.dec(procChanceMultiplier(attacker))).floatValue();
+		if ((damage.compareTo(defender.HP) >= 0)
 				&& Random.Float() < procChance
 				&& !defender.isImmune(Corruption.class)
 				&& defender.buff(Corruption.class) == null
@@ -67,7 +71,7 @@ float powerMulti = Math.max(1f, procChance);
 				Buff.affect(enemy, Adrenaline.class, Math.round(5*(powerMulti-1f)));
 			}
 
-			return 0;
+			return BigInteger.ZERO;
 		}
 		
 		return damage;

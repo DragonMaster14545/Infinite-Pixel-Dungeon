@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -54,15 +58,14 @@ public class Sai extends MeleeWeapon {
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  Math.round(3d*(tier()+1)) +     //12 base, down from 24
-				lvl*Math.round(0.5d*(tier()+2));  //+2.5 per level, down from +5
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(Math.round(3d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf(Math.round(0.5d*(tier()+2)))));  //+2.5 per level, down from +5
 	}
 
     @Override
-    public long proc(Char attacker, Char defender, long damage) {
+    public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
         DefenseDebuff debuff = Buff.affect(defender, DefenseDebuff.class, 3.33f);
-        debuff.stack += max() / 2;
+        debuff.stack += Big.toLong(max().divide(BigInteger.TWO));
         return super.proc(attacker, defender, damage);
     }
 
@@ -118,25 +121,25 @@ public class Sai extends MeleeWeapon {
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
 		//+(3+0.67*lvl) damage, roughly +45% base damage, +45% scaling
-		long dmgBoost = augment.damageFactor(3 + Math.round(0.67d*buffedLvl()));
+		BigInteger dmgBoost = augment.damageFactor(BigInteger.valueOf(3).add(Big.round(Big.dec(0.67d).multiply(Big.dec(buffedLvl())))));
 		Sai.comboStrikeAbility(hero, target, 0, dmgBoost, this);
 	}
 
 	@Override
 	public String abilityInfo() {
-		int dmgBoost = levelKnown ? 3 + Math.round(0.67f*buffedLvl()) : 3;
+		int dmgBoost = Big.toInt(levelKnown ? BigInteger.valueOf(3).add(Big.round(Big.dec(0.67f).multiply(Big.dec(buffedLvl())))) : BigInteger.valueOf(3));
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", augment.damageFactor(dmgBoost));
+			return Messages.get(this, "ability_desc", augment.damageFactor(BigInteger.valueOf(dmgBoost)));
 		} else {
-			return Messages.get(this, "typical_ability_desc", augment.damageFactor(dmgBoost));
+			return Messages.get(this, "typical_ability_desc", augment.damageFactor(BigInteger.valueOf(dmgBoost)));
 		}
 	}
 
-	public String upgradeAbilityStat(long level){
-		return "+" + augment.damageFactor(3 + Math.round(0.67f*level));
+	public String upgradeAbilityStat(BigInteger level){
+		return "+" + augment.damageFactor(BigInteger.valueOf(3).add(Big.round(Big.dec(0.67f).multiply(Big.dec(level)))));
 	}
 
-	public static void comboStrikeAbility(Hero hero, Integer target, float multiPerHit, long boostPerHit, MeleeWeapon wep){
+	public static void comboStrikeAbility(Hero hero, Integer target, float multiPerHit, BigInteger boostPerHit, MeleeWeapon wep){
 		if (target == null) {
 			return;
 		}
@@ -168,7 +171,7 @@ public class Sai extends MeleeWeapon {
 					buff.detach();
 				}
 
-				boolean hit = hero.attack(enemy, 1f + multiPerHit*recentHits, boostPerHit*recentHits, Char.INFINITE_ACCURACY);
+				boolean hit = hero.attack(enemy, 1f + multiPerHit*recentHits, boostPerHit.multiply(BigInteger.valueOf(recentHits)).floatValue(), Char.INFINITE_ACCURACY);
 				if (hit && !enemy.isAlive()){
 					wep.onAbilityKill(hero, enemy);
 				}

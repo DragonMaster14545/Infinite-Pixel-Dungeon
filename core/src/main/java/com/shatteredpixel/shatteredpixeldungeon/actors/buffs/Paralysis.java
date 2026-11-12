@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -51,14 +55,14 @@ public class Paralysis extends FlavourBuff {
 		}
 	}
 	
-	public void processDamage( long damage ){
+	public void processDamage( BigInteger damage ){
 		if (target == null) return;
 		ParalysisResist resist = target.buff(ParalysisResist.class);
 		if (resist == null){
 			resist = Buff.affect(target, ParalysisResist.class);
 		}
-		resist.damage += damage;
-		if (Random.NormalLongRange(0, resist.damage) >= Random.NormalLongRange(0, target.HP)){
+		resist.damage = resist.damage.add(damage);
+		if ((Big.normalRange(BigInteger.ZERO, resist.damage).compareTo(Big.normalRange(BigInteger.ZERO, target.HP)) >= 0)){
 			if (Dungeon.level.heroFOV[target.pos]) {
 				target.sprite.showStatus(CharSprite.NEUTRAL, Messages.get(this, "out"));
 			}
@@ -95,13 +99,13 @@ public class Paralysis extends FlavourBuff {
 			type = buffType.POSITIVE;
 		}
 		
-		private long damage;
+		private BigInteger damage = BigInteger.ZERO;
 		
 		@Override
 		public boolean act() {
 			if (target.buff(Paralysis.class) == null) {
-				damage -= Math.ceil(damage / 10f);
-				if (damage >= 0) detach();
+				damage = Big.trunc(Big.dec(damage).subtract(Big.ceil(Big.div(Big.dec(damage), Big.dec(10f)))));
+				if ((damage.compareTo(BigInteger.ZERO) >= 0)) detach();
 			}
 			spend(TICK);
 			return true;
@@ -112,13 +116,13 @@ public class Paralysis extends FlavourBuff {
 		@Override
 		public void storeInBundle(Bundle bundle) {
 			super.storeInBundle(bundle);
-			damage = bundle.getLong(DAMAGE);
+			damage = Big.getBig(bundle, DAMAGE);
 		}
 		
 		@Override
 		public void restoreFromBundle(Bundle bundle) {
 			super.restoreFromBundle(bundle);
-			bundle.put( DAMAGE, damage );
+			Big.put(bundle, DAMAGE, damage);
 		}
 	}
 }

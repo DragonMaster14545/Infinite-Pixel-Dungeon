@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -44,7 +46,7 @@ public class IncendiaryDart extends TippedDart {
 	protected void onThrow( int cell ) {
 		Char enemy = Actor.findChar( cell );
 		if ((enemy == null || enemy == curUser) && Dungeon.level.flamable[cell]) {
-			GameScene.add(Blob.seed(cell, 4, Fire.class));
+			GameScene.add(Blob.seed(cell, BigInteger.valueOf(4), Fire.class));
 			decrementDurability();
 			if (durability > 0){
 				super.onThrow(cell);
@@ -57,7 +59,7 @@ public class IncendiaryDart extends TippedDart {
 	}
 	
 	@Override
-	public long proc( Char attacker, Char defender, long damage ) {
+	public BigInteger proc( Char attacker, Char defender, BigInteger damage ) {
 		//when processing charged shot, only burn enemies
 		if (!processingChargedShot || attacker.alignment != defender.alignment) {
 			Buff.affect(defender, Burning.class).reignite(defender);

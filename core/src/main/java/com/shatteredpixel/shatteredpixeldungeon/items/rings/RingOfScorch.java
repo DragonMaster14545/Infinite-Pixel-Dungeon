@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -40,10 +44,10 @@ public class RingOfScorch extends Ring {
 	public String statsInfo() {
 		if (isIdentified()){
 			String info = Messages.get(this, "stats",
-					new DecimalFormat("#.###").format(100f * (soloVisualBonus()*0.035)));
-			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)){
+					new DecimalFormat("#.###").format(Big.dec(100f).multiply((Big.dec(soloVisualBonus()).multiply(Big.dec(0.035))))));
+			if (isEquipped(Dungeon.hero) && (soloBuffedBonus().compareTo(combinedBuffedBonus(Dungeon.hero)) != 0)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
-						Messages.decimalFormat("#.##", 100f * (combinedBuffedBonus(Dungeon.hero)*0.035)));
+						Messages.decimalFormat("#.##", Big.dec(100f).multiply((Big.dec(combinedBuffedBonus(Dungeon.hero)).multiply(Big.dec(0.035)))).doubleValue()));
 			}
 			return info;
 		} else {
@@ -51,10 +55,10 @@ public class RingOfScorch extends Ring {
 		}
 	}
 
-	public String upgradeStat1(long level){
-		if (cursed && cursedKnown) level = Math.min(-1, level-3);
+	public String upgradeStat1(BigInteger level){
+		if (cursed && cursedKnown) level = BigInteger.valueOf(-1).min(level.subtract(BigInteger.valueOf(3)));
 
-		return Messages.decimalFormat("#.##", 100f * (level*0.035)) + "%";
+		return Messages.decimalFormat("#.##", Big.dec(100f).multiply((Big.dec(level).multiply(Big.dec(0.035)))).doubleValue()) + "%";
 	}
 	
 	@Override
@@ -64,8 +68,8 @@ public class RingOfScorch extends Ring {
 	
 	public static double scorchDamageMultiplier( Char target ){
         double multiplier = 0d;
-        if (getBuffedBonus(target, Scorch.class) > 0) multiplier = 0.02d;
-        if (getBuffedBonus(target, Scorch.class) > 1) multiplier += getBuffedBonus(target, Scorch.class)*0.035d;
+        if ((getBuffedBonus(target, Scorch.class).compareTo(BigInteger.ZERO) > 0)) multiplier = 0.02d;
+        if ((getBuffedBonus(target, Scorch.class).compareTo(BigInteger.ONE) > 0)) multiplier += Big.dec(getBuffedBonus(target, Scorch.class)).multiply(Big.dec(0.035d)).doubleValue();
 
 		return Math.min(multiplier, 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
 	}

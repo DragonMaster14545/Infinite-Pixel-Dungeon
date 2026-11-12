@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.EnergyParticle;
@@ -38,14 +42,14 @@ public class Potential extends Glyph {
 	private static ItemSprite.Glowing WHITE = new ItemSprite.Glowing( 0xFFFFFF, 0.6f );
 	
 	@Override
-	public long proc( Armor armor, Char attacker, Char defender, long damage) {
+	public BigInteger proc( Armor armor, Char attacker, Char defender, BigInteger damage) {
 
-		long level = Math.max( 0, armor.buffedLvl() );
+		BigInteger level = BigInteger.ZERO.max(armor.buffedLvl());
 		
 		// lvl 0 - 16.7%
 		// lvl 1 - 28.6%
 		// lvl 2 - 37.5%
-		float procChance = (level+1f)/(level+6f) * procChanceMultiplier(defender);
+		float procChance = Big.div((Big.dec(level).add(Big.dec(1f))), (Big.dec(level).add(Big.dec(6f)))).multiply(Big.dec(procChanceMultiplier(defender))).floatValue();
 		if (Random.Float() < procChance && defender instanceof Hero) {
 
 			float powerMulti = Math.max(1f, procChance);

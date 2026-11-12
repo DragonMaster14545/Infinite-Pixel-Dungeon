@@ -1,5 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.emblem;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Laserised;
@@ -10,9 +12,9 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 public class LaserisedEmblem extends EmblemSystem {
 
     @Override
-    public long value() {
-        long price = 400;
-        return price * Rarity.LEGENDARY.multiplier;
+    public BigInteger value() {
+        BigInteger price = BigInteger.valueOf(400);
+        return price.multiply(Rarity.LEGENDARY.multiplier);
     }
 
     @Override

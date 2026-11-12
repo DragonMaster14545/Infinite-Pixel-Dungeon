@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -46,7 +48,7 @@ public class Javelin extends MissileWeapon {
     protected void rangedHit(Char enemy, int cell) {
         super.rangedHit(enemy, cell);
         if (enemy == null || !enemy.isAlive()){
-            Item item = genConsumableDrop(buffedLvl() * buffedLvl() + 2);
+            Item item = genConsumableDrop(buffedLvl().multiply(buffedLvl()).add(BigInteger.TWO));
             if (item != null) Dungeon.level.drop(item, cell).sprite.drop();
         }
     }

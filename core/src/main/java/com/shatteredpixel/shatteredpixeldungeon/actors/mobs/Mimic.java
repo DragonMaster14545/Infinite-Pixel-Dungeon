@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -53,14 +57,14 @@ import java.util.Collection;
 
 public class Mimic extends Mob {
 	
-	private long level;
+	private BigInteger level = BigInteger.ZERO;
 	
 	{
 		spriteClass = MimicSprite.class;
 
 		properties.add(Property.DEMONIC);
 
-		EXP = 0;
+		EXP = BigInteger.ZERO;
 		
 		//mimics are neutral when hidden
 		alignment = Alignment.NEUTRAL;
@@ -79,7 +83,7 @@ public class Mimic extends Mob {
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );
 		if (items != null) bundle.put( ITEMS, items );
-		bundle.put( LEVEL, level );
+		Big.put(bundle, LEVEL, level);
 		bundle.put( STEALTHY, stealthy );
 	}
 	
@@ -89,7 +93,7 @@ public class Mimic extends Mob {
 		if (bundle.contains( ITEMS )) {
 			items = new ArrayList<>((Collection<Item>) ((Collection<?>) bundle.getCollection(ITEMS)));
 		}
-		level = bundle.getInt( LEVEL );
+		level = BigInteger.valueOf(bundle.getInt( LEVEL ));
 		adjustStats(level);
 		stealthy = bundle.getBoolean(STEALTHY);
 		super.restoreFromBundle(bundle);
@@ -185,7 +189,7 @@ public class Mimic extends Mob {
 	}
 
 	@Override
-	public long defenseProc(Char enemy, long damage) {
+	public BigInteger defenseProc(Char enemy, BigInteger damage) {
 		if (state == PASSIVE){
 			alignment = Alignment.ENEMY;
 			stopHiding();
@@ -194,7 +198,7 @@ public class Mimic extends Mob {
 	}
 
 	@Override
-	public void damage(long dmg, Object src) {
+	public void damage(BigInteger dmg, Object src) {
 		if (state == PASSIVE){
 			alignment = Alignment.ENEMY;
 			stopHiding();
@@ -229,17 +233,17 @@ public class Mimic extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
+	public BigInteger damageRoll() {
 		if (alignment == Alignment.NEUTRAL){
-			return Dungeon.NormalLongRange( 2 + 2*level, 2 + 2*level);
+			return Dungeon.NormalLongRange( BigInteger.TWO.add(BigInteger.TWO.multiply(level)), BigInteger.TWO.add(BigInteger.TWO.multiply(level)));
 		} else {
-			return Dungeon.NormalLongRange( 1 + level, 2 + 2*level);
+			return Dungeon.NormalLongRange( BigInteger.ONE.add(level), BigInteger.TWO.add(BigInteger.TWO.multiply(level)));
 		}
 	}
 
 	@Override
-	public long drRoll() {
-		return super.drRoll() + Dungeon.NormalLongRange(0, 1 + level/2);
+	public BigInteger drRoll() {
+		return super.drRoll().add(Dungeon.NormalLongRange(BigInteger.ZERO, BigInteger.ONE.add(level.divide(BigInteger.TWO))));
 	}
 
 	@Override
@@ -248,22 +252,22 @@ public class Mimic extends Mob {
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
+	public BigInteger attackSkill(Char target ) {
 		if (target != null && alignment == Alignment.NEUTRAL && target.invisible <= 0){
-			return INFINITE_ACCURACY;
+			return BigInteger.valueOf(INFINITE_ACCURACY);
 		} else {
-			return 6 + level;
+			return BigInteger.valueOf(6).add(level);
 		}
 	}
 
-	public void setLevel( long level ){
+	public void setLevel( BigInteger level ){
 		this.level = level;
 		adjustStats(level);
 	}
 	
-	public void adjustStats( long level ) {
-		HP = HT = (1 + level) * 5;
-		defenseSkill = 2 + level/2;
+	public void adjustStats( BigInteger level ) {
+		HP = HT = (BigInteger.ONE.add(level)).multiply(BigInteger.valueOf(5));
+		defenseSkill = BigInteger.TWO.add(level.divide(BigInteger.TWO));
 		
 		enemySeen = true;
 	}

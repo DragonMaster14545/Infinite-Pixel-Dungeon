@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -61,8 +63,8 @@ public class Flashbang extends Bomb {
 	}
 	
 	@Override
-	public long value() {
+	public BigInteger value() {
 		//prices of ingredients
-		return quantity * (20 + 40);
+		return quantity.multiply(BigInteger.valueOf((20 + 40)));
 	}
 }

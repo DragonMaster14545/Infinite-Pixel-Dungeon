@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -43,20 +47,20 @@ public class Blocking extends Weapon.Enchantment {
 	private static ItemSprite.Glowing BLUE = new ItemSprite.Glowing( 0x0000FF );
 	
 	@Override
-	public long proc(Weapon weapon, Char attacker, Char defender, long damage) {
+	public BigInteger proc(Weapon weapon, Char attacker, Char defender, BigInteger damage) {
 		
-		long level = Math.max( 0, weapon.buffedLvl() );
+		BigInteger level = BigInteger.ZERO.max(weapon.buffedLvl());
 
 		// lvl 0 - 10%
 		// lvl 1 ~ 12%
 		// lvl 2 ~ 14%
-		float procChance = (level+4f)/(level+40f) * procChanceMultiplier(attacker);
+		float procChance = Big.div((Big.dec(level).add(Big.dec(4f))), (Big.dec(level).add(Big.dec(40f)))).multiply(Big.dec(procChanceMultiplier(attacker))).floatValue();
 		if (Random.Float() < procChance){
 			float powerMulti = Math.max(1f, procChance);
 
 			BlockBuff b = Buff.affect(attacker, BlockBuff.class);
-			int shield = Math.round(powerMulti * (4 + weapon.buffedLvl()));
-			b.setShield(shield);
+			int shield = Big.toInt(Big.round(Big.dec(powerMulti).multiply(Big.dec((BigInteger.valueOf(4).add(weapon.buffedLvl()))))));
+			b.setShield(BigInteger.valueOf(shield));
 			attacker.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shield), FloatingText.SHIELDING);
 			attacker.sprite.emitter().burst(Speck.factory(Speck.LIGHT), 5);
 		}
@@ -82,7 +86,7 @@ public class Blocking extends Weapon.Enchantment {
 		}
 
 		@Override
-		public void setShield(long shield) {
+		public void setShield(BigInteger shield) {
 			super.setShield(shield);
 			postpone(5f);
 		}

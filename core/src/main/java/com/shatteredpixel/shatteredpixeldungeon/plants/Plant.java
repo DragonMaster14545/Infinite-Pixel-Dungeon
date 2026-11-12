@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.plants;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -66,7 +68,7 @@ public abstract class Plant implements Bundlable {
 
 		if (Dungeon.level.heroFOV[pos] && Dungeon.hero.hasTalent(Talent.NATURES_AID)){
 			// 3/5 turns based on talent points spent
-			Barkskin.conditionallyAppend(Dungeon.hero, 2, 1 + 2*(Dungeon.hero.pointsInTalent(Talent.NATURES_AID)));
+			Barkskin.conditionallyAppend(Dungeon.hero, BigInteger.TWO, 1 + 2*(Dungeon.hero.pointsInTalent(Talent.NATURES_AID)));
 		}
 
 		wither();
@@ -206,13 +208,13 @@ public abstract class Plant implements Bundlable {
 		}
 		
 		@Override
-		public long value() {
-			return 10 * quantity;
+		public BigInteger value() {
+			return BigInteger.TEN.multiply(quantity);
 		}
 
 		@Override
-		public long energyVal() {
-			return 2 * quantity;
+		public BigInteger energyVal() {
+			return BigInteger.TWO.multiply(quantity);
 		}
 
 		@Override

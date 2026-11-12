@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -41,9 +45,8 @@ public class HandAxe extends MeleeWeapon {
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  5L*(tier()+1) +    //15 base, down from 18
-				lvl*(tier()+2);   //+4
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(5L*(tier()+1)).add(lvl.multiply(BigInteger.valueOf((tier()+2))));   //+4
 	}
 
 	@Override
@@ -54,23 +57,23 @@ public class HandAxe extends MeleeWeapon {
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
 		//+(4+1.5*lvl) damage, roughly +55% base dmg, +75% scaling
-		long dmgBoost = augment.damageFactor(4 + Math.round(1.5d*buffedLvl()));
+		BigInteger dmgBoost = augment.damageFactor(BigInteger.valueOf(4).add(Big.round(Big.dec(1.5d).multiply(Big.dec(buffedLvl())))));
 		Mace.heavyBlowAbility(hero, target, 1, dmgBoost, this);
 	}
 
 	@Override
 	public String abilityInfo() {
-		long dmgBoost = levelKnown ? 4 + Math.round(1.5d*buffedLvl()) : 4;
+		BigInteger dmgBoost = levelKnown ? BigInteger.valueOf(4).add(Big.round(Big.dec(1.5d).multiply(Big.dec(buffedLvl())))) : BigInteger.valueOf(4);
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
+			return Messages.get(this, "ability_desc", augment.damageFactor(min().add(dmgBoost)), augment.damageFactor(max().add(dmgBoost)));
 		} else {
-			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);
+			return Messages.get(this, "typical_ability_desc", min(BigInteger.ZERO).add(dmgBoost), max(BigInteger.ZERO).add(dmgBoost));
 		}
 	}
 
-	public String upgradeAbilityStat(long level){
-		int dmgBoost = 4 + Math.round(1.5f*level);
-		return augment.damageFactor(min(level)+dmgBoost) + "-" + augment.damageFactor(max(level)+dmgBoost);
+	public String upgradeAbilityStat(BigInteger level){
+		int dmgBoost = Big.toInt(BigInteger.valueOf(4).add(Big.round(Big.dec(1.5f).multiply(Big.dec(level)))));
+		return augment.damageFactor(min(level).add(BigInteger.valueOf(dmgBoost))) + "-" + augment.damageFactor(max(level).add(BigInteger.valueOf(dmgBoost)));
 	}
 
 }

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -57,8 +59,8 @@ public class Degrade extends FlavourBuff {
 	}
 
 	//called in Item.buffedLevel()
-	public static long reduceLevel( long level ){
-		if (level <= 0){
+	public static BigInteger reduceLevel( BigInteger level ){
+		if ((level.compareTo(BigInteger.ZERO) <= 0)){
 			//zero or negative levels are unaffected
 			return level;
 		} else {
@@ -66,7 +68,7 @@ public class Degrade extends FlavourBuff {
 			// This means that levels 1/2/3/4/5/6/7/8/9/10/11/12/...
 			// Are now instead:       1/2/3/3/4/4/4/5/5/ 5/ 5/ 6/...
 			// Basically every level starting with 3 sticks around for 1 level longer than the last
-			return Math.round(Math.sqrt(2*(level-1)) + 1);
+			return BigInteger.valueOf(Math.round(Math.sqrt(BigInteger.TWO.multiply((level.subtract(BigInteger.ONE))).doubleValue()) + 1));
 		}
 	}
 

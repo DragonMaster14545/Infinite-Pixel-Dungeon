@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.quest;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -43,7 +45,7 @@ public class KingBlade extends Item {
     }
 
     @Override
-    public long value() {
-        return quantity * 100;
+    public BigInteger value() {
+        return quantity.multiply(BigInteger.valueOf(100));
     }
 }

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -35,7 +37,7 @@ public class SmallRation extends Food {
 	}
 	
 	@Override
-	public long value() {
-		return 10 * quantity;
+	public BigInteger value() {
+		return BigInteger.TEN.multiply(quantity);
 	}
 }

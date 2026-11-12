@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -57,25 +61,25 @@ public class Vampirism extends TargetedSpell{
 
         if (target != null && target != hero && !target.properties().contains(Char.Property.INORGANIC)){
             //33-66% of  health is transfered to user
-            long heal = Random.Long(target.HT / 3, target.HT * 2 / 3);
+            BigInteger heal = BigInteger.valueOf(Random.Long(Big.toLong(target.HT.divide(BigInteger.valueOf(3))), Big.toLong(target.HT.multiply(BigInteger.TWO).divide(BigInteger.valueOf(3)))));
             target.damage(heal, this);
             if (target.isAlive()){
                 target.sprite.emitter().burst(ShadowParticle.CURSE, 10);
             }
-            Buff.affect(hero, Healing.class).setHeal(heal, 0, heal / 10);
+            Buff.affect(hero, Healing.class).setHeal(heal, 0, heal.divide(BigInteger.TEN));
             hero.sprite.emitter().burst(Speck.factory(Speck.HEALING), 6);
             Sample.INSTANCE.play(Assets.Sounds.CURSED);
         }
     }
 
     @Override
-    public long value() {
-        return (long)(60 * (quantity/(float) Recipe.OUT_QUANTITY));
+    public BigInteger value() {
+        return Big.trunc((Big.dec(60).multiply((Big.div(Big.dec(quantity), Big.dec((float) Recipe.OUT_QUANTITY))))));
     }
 
     @Override
-    public long energyVal() {
-        return (long)(12 * (quantity/(float) Recipe.OUT_QUANTITY));
+    public BigInteger energyVal() {
+        return Big.trunc((Big.dec(12).multiply((Big.div(Big.dec(quantity), Big.dec((float) Recipe.OUT_QUANTITY))))));
     }
 
     public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {

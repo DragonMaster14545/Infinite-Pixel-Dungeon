@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.BattlePass;
 import com.shatteredpixel.shatteredpixeldungeon.BattlePassTiers;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -260,7 +262,7 @@ public class BattlePassPreviewScene extends PixelScene {
                 );
             }
 
-            qtyLabel.visible = reward != null && reward.quantity() > 1;
+            qtyLabel.visible = reward != null && (reward.quantity().compareTo(BigInteger.ONE) > 0);
             if (qtyLabel.visible) {
                 qtyLabel.text( "x" + reward.quantity() );
                 qtyLabel.setPos( rewardIcon.x + (rewardIcon.width() - qtyLabel.width()) / 2f,
@@ -297,7 +299,7 @@ public class BattlePassPreviewScene extends PixelScene {
                     );
                 }
 
-                premiumQtyLabel.visible = premiumReward != null && premiumReward.quantity() > 1;
+                premiumQtyLabel.visible = premiumReward != null && (premiumReward.quantity().compareTo(BigInteger.ONE) > 0);
                 if (premiumQtyLabel.visible) {
                     premiumQtyLabel.text( "x" + premiumReward.quantity() );
                     premiumQtyLabel.setPos( premiumIcon.x + (premiumIcon.width() - premiumQtyLabel.width()) / 2f,

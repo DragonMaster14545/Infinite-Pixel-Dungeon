@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -52,7 +54,7 @@ public class Summoner extends Weapon.Enchantment {
 	private static ItemSprite.Glowing COLOR = new ItemSprite.Glowing( 0xc2fc03 );
 
 	@Override
-	public long proc( Weapon weapon, Char attacker, Char defender, long damage ) {
+	public BigInteger proc( Weapon weapon, Char attacker, Char defender, BigInteger damage ) {
         if (Random.Float() <= 0.25f) {
             for (int i : PathFinder.NEIGHBOURS9) {
 
@@ -89,8 +91,8 @@ public class Summoner extends Weapon.Enchantment {
         }
 
         public AlephKnight() {
-            HP = HT = 4 + Dungeon.escalatingDepth() * 2;
-            defenseSkill = 6 + Dungeon.escalatingDepth();
+            HP = HT = BigInteger.valueOf(4).add(Dungeon.escalatingDepth().multiply(BigInteger.TWO));
+            defenseSkill = BigInteger.valueOf(6).add(Dungeon.escalatingDepth());
         }
 
         @Override
@@ -105,7 +107,7 @@ public class Summoner extends Weapon.Enchantment {
         }
 
         @Override
-        public long drRoll() {
+        public BigInteger drRoll() {
             return Dungeon.escalatingDepth();
         }
     }

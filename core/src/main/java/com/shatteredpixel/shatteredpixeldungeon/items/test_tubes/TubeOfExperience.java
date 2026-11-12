@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.test_tubes;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -39,17 +41,17 @@ public class TubeOfExperience extends Tubes {
 	@Override
 	public void apply( Hero hero ) {
 		identify();
-		hero.earnExp(10L * hero.lvl, TubeOfExperience.class);
+		hero.earnExp(BigInteger.valueOf(10L * hero.lvl), TubeOfExperience.class);
         GLog.h("You have gained experience.");
 	}
 	
 	@Override
-	public long value() {
-		return isKnown() ? 250 * quantity : super.value();
+	public BigInteger value() {
+		return isKnown() ? BigInteger.valueOf(250).multiply(quantity) : super.value();
 	}
 
 	@Override
-	public long energyVal() {
-		return isKnown() ? 8 * quantity : super.energyVal();
+	public BigInteger energyVal() {
+		return isKnown() ? BigInteger.valueOf(8).multiply(quantity) : super.energyVal();
 	}
 }

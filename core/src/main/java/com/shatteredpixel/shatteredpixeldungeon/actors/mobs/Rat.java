@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.Ratmogrify;
@@ -36,11 +40,11 @@ public class Rat extends Mob {
 	{
 		spriteClass = RatSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(8);
-		defenseSkill = Dungeon.getCycleMultiplier(2);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(8));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.TWO);
 
 		maxLvl = 5;
-		EXP = Dungeon.getCycleMultiplier(1);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.ONE);
 	}
 
 	@Override
@@ -53,18 +57,18 @@ public class Rat extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-        return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(1), Dungeon.getCycleMultiplier(4));
+	public BigInteger damageRoll() {
+        return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ONE), Dungeon.getCycleMultiplier(BigInteger.valueOf(4)));
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(8);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(8));
 	}
 	
 	@Override
-	public long cycledDrRoll() {
-		return Random.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(1));
+	public BigInteger cycledDrRoll() {
+		return Big.normalRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.ONE));
 	}
 
 	private static final String RAT_ALLY = "rat_ally";

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -37,11 +39,11 @@ public class PoisonDart extends TippedDart {
 	}
 	
 	@Override
-	public long proc(Char attacker, Char defender, long damage) {
+	public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 
 		//when processing charged shot, only poison enemies
 		if (!processingChargedShot || attacker.alignment != defender.alignment) {
-			Buff.affect(defender, Poison.class).set(3 + Dungeon.scalingDepth() / 2);
+			Buff.affect(defender, Poison.class).set(BigInteger.valueOf(3).add(Dungeon.scalingDepth().divide(BigInteger.TWO)).doubleValue());
 		}
 		
 		return super.proc(attacker, defender, damage);

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -79,7 +83,7 @@ public class Poison extends Buff implements Hero.Doom {
 	}
 
 	public String iconTextDisplay(){
-		return Long.toString((long) left);
+		return Big.of(left).toString();
 	}
 
 	@Override
@@ -100,7 +104,7 @@ public class Poison extends Buff implements Hero.Doom {
 	public boolean act() {
 		if (target.isAlive()) {
 			
-			target.damage( (long) (left / 3) + 1, this );
+			target.damage( Big.of((left / 3)).add(BigInteger.ONE), this );
 			spend( TICK );
 			
 			if ((left -= TICK) <= 0) {

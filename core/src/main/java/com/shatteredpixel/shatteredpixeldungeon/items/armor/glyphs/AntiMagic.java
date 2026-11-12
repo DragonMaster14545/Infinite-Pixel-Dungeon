@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
@@ -123,7 +127,7 @@ public class AntiMagic extends Armor.Glyph {
 	}
 	
 	@Override
-	public long proc(Armor armor, Char attacker, Char defender, long damage) {
+	public BigInteger proc(Armor armor, Char attacker, Char defender, BigInteger damage) {
 		//no proc effect, see:
 		// Hero.damage
 		// GhostHero.damage
@@ -133,10 +137,10 @@ public class AntiMagic extends Armor.Glyph {
 		return damage;
 	}
 	
-	public static long drRoll(Char ch, long level ){
+	public static BigInteger drRoll(Char ch, BigInteger level ){
 		return Dungeon.NormalLongRange(
-				Math.round(level * genericProcChanceMultiplier(ch)),
-				Math.round((3 + (level*1.5f)) * genericProcChanceMultiplier(ch)));
+				Big.round(Big.dec(level).multiply(Big.dec(genericProcChanceMultiplier(ch)))),
+				Big.round((Big.dec(3).add((Big.dec(level).multiply(Big.dec(1.5f))))).multiply(Big.dec(genericProcChanceMultiplier(ch)))));
 	}
 
 	@Override

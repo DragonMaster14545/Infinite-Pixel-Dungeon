@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.quest;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -229,9 +233,9 @@ public class TenguBomb extends Bomb {
             float multipler = 0.4f + (0.6f/affected.size());
             //if the main target is in water, all affected take full damage
             if (Actor.findChar(cell) != null && Dungeon.level.water[cell]) multipler = 1f;
-            int dmg = Math.round(damageRoll() * 12f * charge * multipler);
+            int dmg = Big.toInt(Big.round(Big.dec(damageRoll()).multiply(Big.dec(12f)).multiply(Big.dec(charge)).multiply(Big.dec(multipler))));
 
-            target.damage(dmg, new WandOfLightning());
+            target.damage(BigInteger.valueOf(dmg), new WandOfLightning());
             if (Random.Float() < 0.6f * charge && target.alignment == Char.Alignment.ENEMY)
                 Buff.affect(target, Longsword.HolyExpEffect.class).stacks++;
             if (target == Dungeon.hero) Camera.main.shake( 2, 0.3f );
@@ -310,10 +314,10 @@ public class TenguBomb extends Bomb {
     @Override
     public String desc() {
         String desc_fuse = Messages.get(this, "desc",
-                Math.round(minDamage()* 3f * charge), Math.round(maxDamage()* 3f * charge))+ "\n\n" + Messages.get(this, "desc_fuse");
+                Big.round(Big.dec(minDamage()).multiply(Big.dec(3f)).multiply(Big.dec(charge))), Big.round(Big.dec(maxDamage()).multiply(Big.dec(3f)).multiply(Big.dec(charge))))+ "\n\n" + Messages.get(this, "desc_fuse");
         if (fuse != null){
             desc_fuse = Messages.get(this, "desc",
-                    Math.round(minDamage()* 3f * charge), Math.round(maxDamage()* 3f * charge)) + "\n\n" + Messages.get(this, "desc_burning");
+                    Big.round(Big.dec(minDamage()).multiply(Big.dec(3f)).multiply(Big.dec(charge))), Big.round(Big.dec(maxDamage()).multiply(Big.dec(3f)).multiply(Big.dec(charge)))) + "\n\n" + Messages.get(this, "desc_burning");
         }
         desc_fuse += "\n\n" + Messages.get(this, "counter", new DecimalFormat("#.##").format(canBreak() * 100f));
         return desc_fuse;
@@ -379,8 +383,8 @@ public class TenguBomb extends Bomb {
     }
 
     @Override
-	public long value() {
+	public BigInteger value() {
 		//prices of ingredients
-		return quantity * 85;
+		return quantity.multiply(BigInteger.valueOf(85));
 	}
 }

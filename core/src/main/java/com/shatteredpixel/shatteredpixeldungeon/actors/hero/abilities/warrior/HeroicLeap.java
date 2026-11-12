@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -99,15 +103,15 @@ public class HeroicLeap extends ArmorAbility {
 						Char mob = Actor.findChar(hero.pos + i);
 						if (mob != null && mob != hero && mob.alignment != Char.Alignment.ALLY) {
 							if (hero.hasTalent(Talent.BODY_SLAM)){
-								long damage = Hero.heroDamageIntRange(hero.pointsInTalent(Talent.BODY_SLAM), 4*hero.pointsInTalent(Talent.BODY_SLAM));
-								damage += Math.round(hero.drRoll()*0.25f*hero.pointsInTalent(Talent.BODY_SLAM));
-								damage -= mob.drRoll();
+								BigInteger damage = Hero.heroDamageIntRange(BigInteger.valueOf(hero.pointsInTalent(Talent.BODY_SLAM)), BigInteger.valueOf(4*hero.pointsInTalent(Talent.BODY_SLAM)));
+								damage = damage.add(Big.round(Big.dec(hero.drRoll()).multiply(Big.dec(0.25f)).multiply(Big.dec(hero.pointsInTalent(Talent.BODY_SLAM)))));
+								damage = damage.subtract(mob.drRoll());
 								mob.damage(damage, hero);
 							}
 							if (mob.pos == hero.pos + i && hero.hasTalent(Talent.IMPACT_WAVE)){
 								Ballistica trajectory = new Ballistica(mob.pos, mob.pos + i, Ballistica.MAGIC_BOLT);
 								int strength = 1+hero.pointsInTalent(Talent.IMPACT_WAVE);
-								WandOfBlastWave.throwChar(mob, trajectory, strength, true, true, HeroicLeap.this);
+								WandOfBlastWave.throwChar(mob, trajectory, BigInteger.valueOf(strength), true, true, HeroicLeap.this);
 								if (Random.Int(4) < hero.pointsInTalent(Talent.IMPACT_WAVE)){
 									Buff.prolong(mob, Vulnerable.class, 5f);
 								}

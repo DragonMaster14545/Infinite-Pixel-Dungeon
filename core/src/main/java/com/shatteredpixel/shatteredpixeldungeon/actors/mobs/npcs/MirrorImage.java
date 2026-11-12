@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -49,8 +53,8 @@ public class MirrorImage extends NPC {
 	{
 		spriteClass = MirrorSprite.class;
 		
-		HP = HT = 1;
-		defenseSkill = 1;
+		HP = HT = BigInteger.ONE;
+		defenseSkill = BigInteger.ONE;
 		
 		alignment = Alignment.ALLY;
 		state = HUNTING;
@@ -104,38 +108,38 @@ public class MirrorImage extends NPC {
 	}
 	
 	@Override
-	public long damageRoll() {
-		long damage;
+	public BigInteger damageRoll() {
+		BigInteger damage;
 		if (hero.belongings.weapon() != null){
 			damage = hero.belongings.weapon().damageRoll(this);
 		} else {
 			damage = hero.damageRoll(); //handles ring of force
 		}
-		return (int) ((damage+1)/2); //half hero damage, rounded up
+		return BigInteger.valueOf(Big.toInt(((damage.add(BigInteger.ONE)).divide(BigInteger.TWO)))); //half hero damage, rounded up
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
+	public BigInteger attackSkill(Char target ) {
 		//same base attack skill as hero, benefits from accuracy ring and weapon
 		int attackSkill = 9 + hero.lvl;
 		attackSkill *= RingOfAccuracy.accuracyMultiplier(hero);
 		if (hero.belongings.attackingWeapon() != null){
 			attackSkill *= hero.belongings.attackingWeapon().accuracyFactor(this, target);
 		}
-		return attackSkill;
+		return BigInteger.valueOf(attackSkill);
 	}
 	
 	@Override
-	public long defenseSkill(Char enemy) {
+	public BigInteger defenseSkill(Char enemy) {
 		if (hero != null) {
 			int baseEvasion = 4 + hero.lvl;
 			int heroEvasion = (int)((4 + hero.lvl) * RingOfEvasion.evasionMultiplier( hero ));
 			
 			//if the hero has more/less evasion, 50% of it is applied
 			//includes ring of evasion boost
-			return super.defenseSkill(enemy) * (baseEvasion + heroEvasion) / 2;
+			return super.defenseSkill(enemy).multiply(BigInteger.valueOf((baseEvasion + heroEvasion))).divide(BigInteger.TWO);
 		} else {
-			return 0;
+			return BigInteger.ZERO;
 		}
 	}
 	
@@ -150,17 +154,17 @@ public class MirrorImage extends NPC {
 	}
 	
 	@Override
-	public long drRoll() {
-		long dr = super.drRoll();
+	public BigInteger drRoll() {
+		BigInteger dr = super.drRoll();
 		if (hero != null && hero.belongings.weapon() != null){
-			return dr + Dungeon.NormalLongRange(0, hero.belongings.weapon().defenseFactor(this)/2);
+			return dr.add(Dungeon.NormalLongRange(BigInteger.ZERO, hero.belongings.weapon().defenseFactor(this).divide(BigInteger.TWO)));
 		} else {
 			return dr;
 		}
 	}
 	
 	@Override
-	public long attackProc( Char enemy, long damage ) {
+	public BigInteger attackProc( Char enemy, BigInteger damage ) {
 		damage = super.attackProc( enemy, damage );
 		
 		MirrorInvis buff = buff(MirrorInvis.class);
@@ -172,7 +176,7 @@ public class MirrorImage extends NPC {
 			((Mob)enemy).aggro( this );
 		}
 		if (hero.belongings.weapon() != null){
-			damage = (int) hero.belongings.weapon().proc( this, enemy, damage );
+			damage = BigInteger.valueOf(Big.toInt(hero.belongings.weapon().proc( this, enemy, damage )));
 			if (!enemy.isAlive() && enemy == Dungeon.hero){
 				Dungeon.fail(this);
 				GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );

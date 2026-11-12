@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
@@ -92,8 +94,8 @@ public class Torch extends Item {
 	}
 	
 	@Override
-	public long value() {
-		return 8 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(8).multiply(quantity);
 	}
 
 }

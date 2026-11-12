@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -71,9 +75,9 @@ public class HolyBomb extends Bomb {
 				ch.sprite.emitter().start( ShadowParticle.UP, 0.05f, 10 );
 				
 				//bomb deals an additional 50% damage to unholy enemies in a 5x5 range
-				long damage = Math.round(Dungeon.NormalLongRange( Dungeon.scalingDepth()+5, 10 + Dungeon.scalingDepth() * 2 ) * 0.5f);
+				BigInteger damage = Big.round(Big.dec(Dungeon.NormalLongRange( Dungeon.scalingDepth().add(BigInteger.valueOf(5)), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.TWO)) )).multiply(Big.dec(0.5f)));
 				if (Dungeon.hero.heroClass == HeroClass.ROGUE){
-					damage *= 2.5f;
+					damage = Big.trunc(Big.dec(damage).multiply(Big.dec(2.5f)));
 				}
 				ch.damage(damage, new HolyDamage());
 			}
@@ -85,8 +89,8 @@ public class HolyBomb extends Bomb {
 	public static class HolyDamage{}
 
 	@Override
-	public long value() {
+	public BigInteger value() {
 		//prices of ingredients
-		return quantity * (20 + 30);
+		return quantity.multiply(BigInteger.valueOf((20 + 30)));
 	}
 }

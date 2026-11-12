@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -44,10 +48,10 @@ public class Skeleton extends Mob {
 	{
 		spriteClass = SkeletonSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(25);
-		defenseSkill = Dungeon.getCycleMultiplier(9);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(25));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(9));
 		
-		EXP = Dungeon.getCycleMultiplier(5);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(5));
 		maxLvl = 10;
 
 		loot = Generator.Category.WEAPON;
@@ -58,8 +62,8 @@ public class Skeleton extends Mob {
 	}
 	
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(2), Dungeon.getCycleMultiplier(10) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.TWO), Dungeon.getCycleMultiplier(BigInteger.TEN) );
 	}
 	
 	@Override
@@ -73,28 +77,28 @@ public class Skeleton extends Mob {
 		for (int i = 0; i < PathFinder.NEIGHBOURS8.length; i++) {
 			Char ch = findChar( pos + PathFinder.NEIGHBOURS8[i] );
 			if (ch != null && ch.isAlive()) {
-				long damage = Math.round(damageRoll()*1.5d);
-				damage = Math.round( damage * AscensionChallenge.statModifier(this));
+				BigInteger damage = Big.round(Big.dec(damageRoll()).multiply(Big.dec(1.5d)));
+				damage = Big.round(Big.dec(damage).multiply(Big.dec(AscensionChallenge.statModifier(this))));
 
 				//all sources of DR are 2x effective vs. bone explosion
 				//this does not consume extra uses of rock armor and earthroot armor
 
 				WandOfLivingEarth.RockArmor rockArmor = ch.buff(WandOfLivingEarth.RockArmor.class);
 				if (rockArmor != null) {
-					long preDmg = damage;
+					BigInteger preDmg = damage;
 					damage = rockArmor.absorb(damage);
-					damage *= Math.round(damage/(float)preDmg); //apply the % reduction twice
+					damage = damage.multiply(Big.round(Big.div(Big.dec(damage), Big.dec(preDmg.floatValue())))); //apply the % reduction twice
 				}
 
 				Earthroot.Armor armor = ch.buff( Earthroot.Armor.class );
-				if (damage > 0 && armor != null) {
-					long preDmg = damage;
+				if ((damage.compareTo(BigInteger.ZERO) > 0) && armor != null) {
+					BigInteger preDmg = damage;
 					damage = armor.absorb( damage );
-					damage -= (preDmg - damage); //apply the flat reduction twice
+					damage = damage.subtract((preDmg.subtract(damage))); //apply the flat reduction twice
 				}
 
 				//apply DR twice (with 2 rolls for more consistency)
-				damage = Math.max( 0,  damage - (ch.drRoll() + ch.drRoll()) );
+				damage = BigInteger.ZERO.max(damage.subtract((ch.drRoll().add(ch.drRoll()))));
 				ch.damage( damage, this );
 				if (ch == Dungeon.hero && !ch.isAlive()) {
 					heroKilled = true;
@@ -126,13 +130,13 @@ public class Skeleton extends Mob {
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(12);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(12));
 	}
 	
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(5));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(5)));
 	}
 
 }

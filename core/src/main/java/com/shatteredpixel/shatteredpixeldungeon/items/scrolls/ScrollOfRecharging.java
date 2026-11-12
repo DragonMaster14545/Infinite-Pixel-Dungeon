@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -67,7 +69,7 @@ public class ScrollOfRecharging extends Scroll {
 	}
 	
 	@Override
-	public long value() {
-		return isKnown() ? 30 * quantity : super.value();
+	public BigInteger value() {
+		return isKnown() ? BigInteger.valueOf(30).multiply(quantity) : super.value();
 	}
 }

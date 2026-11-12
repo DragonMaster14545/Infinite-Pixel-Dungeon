@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -43,10 +45,10 @@ public class Brute extends Mob {
 	{
 		spriteClass = BruteSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(40);
-		defenseSkill = Dungeon.getCycleMultiplier(15);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(40));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(15));
 		
-		EXP = Dungeon.getCycleMultiplier(8);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(8));
 		maxLvl = 16;
 		
 		loot = Gold.class;
@@ -56,18 +58,18 @@ public class Brute extends Mob {
 	protected boolean hasRaged = false;
 	
 	@Override
-	public long damageRoll() {
-		return buff(BruteRage.class) != null ? Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(15),Dungeon.getCycleMultiplier(40)) : Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(5), Dungeon.getCycleMultiplier(25));
+	public BigInteger damageRoll() {
+		return buff(BruteRage.class) != null ? Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.valueOf(15)),Dungeon.getCycleMultiplier(BigInteger.valueOf(40))) : Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.valueOf(5)), Dungeon.getCycleMultiplier(BigInteger.valueOf(25)));
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(20);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(20));
 	}
 	
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(8));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(8)));
 	}
 
 	@Override
@@ -92,8 +94,8 @@ public class Brute extends Mob {
 	}
 	
 	protected void triggerEnrage(){
-		Buff.affect(this, BruteRage.class).setShield(HT/2 + 4);
-		sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString(HT/2 + 4), FloatingText.SHIELDING );
+		Buff.affect(this, BruteRage.class).setShield(HT.divide(BigInteger.TWO).add(BigInteger.valueOf(4)));
+		sprite.showStatusWithIcon( CharSprite.POSITIVE, HT.divide(BigInteger.TWO).add(BigInteger.valueOf(4)).toString(), FloatingText.SHIELDING );
 		if (Dungeon.level.heroFOV[pos]) {
 			SpellSprite.show( this, SpellSprite.BERSERK);
 		}
@@ -124,14 +126,14 @@ public class Brute extends Mob {
 		@Override
 		public boolean act() {
 			
-			if (target.HP > 0){
+			if ((target.HP.compareTo(BigInteger.ZERO) > 0)){
 				detach();
 				return true;
 			}
 			
-			absorbDamage( target.HT / 10 );
+			absorbDamage( target.HT.divide(BigInteger.TEN) );
 			
-			if (shielding() <= 0){
+			if ((shielding().compareTo(BigInteger.ZERO) <= 0)){
 				target.die(null);
 			}
 			

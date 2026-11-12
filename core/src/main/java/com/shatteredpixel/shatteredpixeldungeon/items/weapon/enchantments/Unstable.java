@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -50,9 +52,9 @@ public class Unstable extends Weapon.Enchantment {
 	};
 
 	@Override
-	public long proc( Weapon weapon, Char attacker, Char defender, long damage ) {
+	public BigInteger proc( Weapon weapon, Char attacker, Char defender, BigInteger damage ) {
 		
-		long conservedDamage = 0;
+		BigInteger conservedDamage = BigInteger.ZERO;
 		if (attacker.buff(Kinetic.ConservedDamage.class) != null) {
 			conservedDamage = attacker.buff(Kinetic.ConservedDamage.class).damageBonus();
 			attacker.buff(Kinetic.ConservedDamage.class).detach();
@@ -60,7 +62,7 @@ public class Unstable extends Weapon.Enchantment {
 		
 		damage = Reflection.newInstance(Random.oneOf(randomEnchants)).proc( weapon, attacker, defender, damage );
 		
-		return damage + conservedDamage;
+		return damage.add(conservedDamage);
 	}
 
 	@Override

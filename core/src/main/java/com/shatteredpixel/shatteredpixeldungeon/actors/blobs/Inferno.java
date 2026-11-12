@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -47,14 +49,14 @@ public class Inferno extends Blob {
 		for (int i = area.left-1; i <= area.right; i++) {
 			for (int j = area.top-1; j <= area.bottom; j++) {
 				cell = i + j * Dungeon.level.width();
-				if (cur[cell] > 0) {
+				if ((cur[cell].compareTo(BigInteger.ZERO) > 0)) {
 					
 					if (fire != null)   fire.clear(cell);
 					if (freeze != null) freeze.clear(cell);
 					
-					if (bliz != null && bliz.volume > 0 && bliz.cur[cell] > 0){
+					if (bliz != null && (bliz.volume.compareTo(BigInteger.ZERO) > 0) && (bliz.cur[cell].compareTo(BigInteger.ZERO) > 0)){
 						bliz.clear(cell);
-						off[cell] = cur[cell] = 0;
+						off[cell] = cur[cell] = BigInteger.ZERO;
 						continue;
 					}
 					
@@ -68,13 +70,13 @@ public class Inferno extends Blob {
 					}
 					
 				} else if (Dungeon.level.flamable[cell]
-						&& (cur[cell-1] > 0
-						|| cur[cell+1] > 0
-						|| cur[cell-Dungeon.level.width()] > 0
-						|| cur[cell+Dungeon.level.width()] > 0)) {
+						&& ((cur[cell-1].compareTo(BigInteger.ZERO) > 0)
+						|| (cur[cell+1].compareTo(BigInteger.ZERO) > 0)
+						|| (cur[cell-Dungeon.level.width()].compareTo(BigInteger.ZERO) > 0)
+						|| (cur[cell+Dungeon.level.width()].compareTo(BigInteger.ZERO) > 0))) {
 
-					if (fire == null || fire.cur == null || fire.cur[cell] == 0) {
-						GameScene.add(Fire.seed(cell, 4, Fire.class));
+					if (fire == null || fire.cur == null || (fire.cur[cell].compareTo(BigInteger.ZERO) == 0)) {
+						GameScene.add(Fire.seed(cell, BigInteger.valueOf(4), Fire.class));
 					}
 
 				}

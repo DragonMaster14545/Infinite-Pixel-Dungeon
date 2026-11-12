@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -49,10 +53,10 @@ public class Gold extends Item {
 	}
 	
 	public Gold() {
-		this( 1 );
+		this( BigInteger.ONE );
 	}
 	
-	public Gold(long value ) {
+	public Gold(BigInteger value ) {
 		this.quantity = value;
 	}
 	
@@ -65,14 +69,14 @@ public class Gold extends Item {
 	public boolean doPickUp(Hero hero, int pos, float time) {
 
 		Catalog.setSeen(getClass());
-		Dungeon.gold += quantity;
-		Statistics.goldCollected += quantity;
+		Dungeon.gold = Dungeon.gold.add(quantity);
+		Statistics.goldCollected = Statistics.goldCollected.add(quantity);
 		Tasks.onGoldCollected( quantity );
 		SeasonalTasks.onGoldCollected( quantity );
 		Badges.validateGoldCollected();
 
 		GameScene.pickUp( this, pos );
-		hero.sprite.showStatusWithIcon( CharSprite.NEUTRAL, Long.toString(quantity), FloatingText.GOLD );
+		hero.sprite.showStatusWithIcon( CharSprite.NEUTRAL, quantity.toString(), FloatingText.GOLD );
 		if (time > 0)
 			hero.spendAndNext( TIME_TO_PICK_UP );
 		
@@ -94,7 +98,7 @@ public class Gold extends Item {
 	
 	@Override
 	public Item random() {
-		quantity = Dungeon.LongRange( Math.round(25 + Dungeon.escalatingDepth() * 2.5d), Math.round(40 + Dungeon.escalatingDepth() * 7.5d) );
+		quantity = Dungeon.LongRange( Big.round(Big.dec(25).add(Big.dec(Dungeon.escalatingDepth()).multiply(Big.dec(2.5d)))), Big.round(Big.dec(40).add(Big.dec(Dungeon.escalatingDepth()).multiply(Big.dec(7.5d)))) );
 		return this;
 	}
 

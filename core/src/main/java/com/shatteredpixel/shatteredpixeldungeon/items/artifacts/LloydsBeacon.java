@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -69,8 +72,8 @@ public class LloydsBeacon extends Artifact {
 
 		levelCap = 3;
 
-		charge = 0;
-		setChargeCap(3+level());
+		charge = BigInteger.ZERO;
+		setChargeCap(BigInteger.valueOf(3).add(level()));
 
 		defaultAction = AC_ZAP;
 		usesTargeting = true;
@@ -137,7 +140,7 @@ public class LloydsBeacon extends Artifact {
 				GLog.i( Messages.get(Artifact.class, "need_to_equip") );
 				QuickSlotButton.cancel();
 
-			} else if (charge < chargesToUse) {
+			} else if ((charge.compareTo(BigInteger.valueOf(chargesToUse)) < 0)) {
 				GLog.i( Messages.get(this, "no_charge") );
 				QuickSlotButton.cancel();
 
@@ -198,7 +201,7 @@ public class LloydsBeacon extends Artifact {
 			if (target == null) return;
 
 			Invisibility.dispel();
-			charge -= Dungeon.scalingDepth() > 20 ? 2 : 1;
+			charge = charge.subtract(BigInteger.valueOf((Dungeon.scalingDepth().compareTo(BigInteger.valueOf(20)) > 0) ? 2 : 1));
 			updateQuickslot();
 
 			if (Actor.findChar(target) == curUser){
@@ -277,15 +280,15 @@ public class LloydsBeacon extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (charge < getChargeCap()){
+		if ((charge.compareTo(getChargeCap()) < 0)){
 			partialCharge += 0.25f*amount;
-			partialCharge *= getRarityMultiplier();
-			while (partialCharge >= 1 && charge+1 >= getChargeCap()){
+			partialCharge *= getRarityMultiplier().doubleValue();
+			while (partialCharge >= 1 && (charge.add(BigInteger.ONE).compareTo(getChargeCap()) >= 0)){
 				partialCharge--;
-				charge++;
+				charge = charge.add(BigInteger.ONE);
 
 			}
-			if (charge >= getChargeCap()){
+			if ((charge.compareTo(getChargeCap()) >= 0)){
 				partialCharge = 0;
 				charge = getChargeCap();
 			}
@@ -295,8 +298,8 @@ public class LloydsBeacon extends Artifact {
 
 	@Override
 	public Item upgrade() {
-		if (level() == levelCap) return this;
-		setChargeCap(getChargeCap() + 1);
+		if ((level().compareTo(BigInteger.valueOf(levelCap)) == 0)) return this;
+		setChargeCap(getChargeCap().add(BigInteger.ONE));
 		GLog.p( Messages.get(this, "levelup") );
 		return super.upgrade();
 	}
@@ -320,14 +323,14 @@ public class LloydsBeacon extends Artifact {
 	public class beaconRecharge extends ArtifactBuff{
 		@Override
 		public boolean act() {
-			if (charge < getChargeCap() && !cursed && Regeneration.regenOn()) {
-				partialCharge += 1 / (100f - (getChargeCap() - charge)*10f);
+			if ((charge.compareTo(getChargeCap()) < 0) && !cursed && Regeneration.regenOn()) {
+				partialCharge += Big.div(Big.dec(1), (Big.dec(100f).subtract(Big.dec((getChargeCap().subtract(charge))).multiply(Big.dec(10f))))).doubleValue();
 
 				while (partialCharge >= 1) {
 					partialCharge --;
-					charge ++;
+					charge = charge.add(BigInteger.ONE);
 
-					if (charge == getChargeCap()){
+					if ((charge.compareTo(getChargeCap()) == 0)){
 						partialCharge = 0;
 					}
 				}

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
@@ -55,9 +59,9 @@ public class HornOfPlenty extends Artifact {
 
 		levelCap = 10;
 
-		charge = 0;
+		charge = BigInteger.ZERO;
 		partialCharge = 0;
-		setChargeCap(5 + level()/2);
+		setChargeCap(BigInteger.valueOf(5).add(level().divide(BigInteger.TWO)));
 
 		defaultAction = AC_SNACK;
 	}
@@ -72,11 +76,11 @@ public class HornOfPlenty extends Artifact {
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
 		if (hero.buff(MagicImmune.class) != null) return actions;
-		if (isEquipped( hero ) && charge > 0) {
+		if (isEquipped( hero ) && (charge.compareTo(BigInteger.ZERO) > 0)) {
 			actions.add(AC_SNACK);
 			actions.add(AC_EAT);
 		}
-		if (isEquipped( hero ) && level() < levelCap && !cursed) {
+		if (isEquipped( hero ) && (level().compareTo(BigInteger.valueOf(levelCap)) < 0) && !cursed) {
 			actions.add(AC_STORE);
 		}
 		return actions;
@@ -92,7 +96,7 @@ public class HornOfPlenty extends Artifact {
 		if (action.equals(AC_EAT) || action.equals(AC_SNACK)){
 
 			if (!isEquipped(hero)) GLog.i( Messages.get(Artifact.class, "need_to_equip") );
-			else if (charge == 0)  GLog.i( Messages.get(this, "no_food") );
+			else if ((charge.compareTo(BigInteger.ZERO) == 0))  GLog.i( Messages.get(this, "no_food") );
 			else {
 				//consume as much food as it takes to be full, to a minimum of 1
 				int satietyPerCharge = (int) (Hunger.STARVING/5f);
@@ -101,19 +105,19 @@ public class HornOfPlenty extends Artifact {
 				}
 
 				Hunger hunger = Buff.affect(Dungeon.hero, Hunger.class);
-				long chargesToUse = Math.max( 1, hunger.hunger() / satietyPerCharge);
-				if (chargesToUse > charge) chargesToUse = charge;
+				BigInteger chargesToUse = BigInteger.valueOf(Math.max( 1, hunger.hunger() / satietyPerCharge));
+				if ((chargesToUse.compareTo(charge) > 0)) chargesToUse = charge;
 
 				//always use 1 charge if snacking
 				if (action.equals(AC_SNACK)){
-					chargesToUse = 1;
+					chargesToUse = BigInteger.ONE;
 				}
 
-				hunger.satisfy(satietyPerCharge * chargesToUse);
+				hunger.satisfy(BigInteger.valueOf(satietyPerCharge).multiply(chargesToUse).floatValue());
 
 				Statistics.foodEaten++;
 
-				charge -= chargesToUse;
+				charge = charge.subtract(chargesToUse);
 				Talent.onArtifactUsed(hero);
 
 				hero.sprite.operate(hero.pos);
@@ -132,13 +136,13 @@ public class HornOfPlenty extends Artifact {
 					hero.spend(Food.TIME_TO_EAT);
 				}
 
-				Talent.onFoodEaten(hero, satietyPerCharge * chargesToUse, this);
+				Talent.onFoodEaten(hero, BigInteger.valueOf(satietyPerCharge).multiply(chargesToUse).floatValue(), this);
 
 				Badges.validateFoodEaten();
 
-				if (charge >= 8)        image = ItemSpriteSheet.ARTIFACT_HORN4;
-				else if (charge >= 5)   image = ItemSpriteSheet.ARTIFACT_HORN3;
-				else if (charge >= 2)   image = ItemSpriteSheet.ARTIFACT_HORN2;
+				if ((charge.compareTo(BigInteger.valueOf(8)) >= 0))        image = ItemSpriteSheet.ARTIFACT_HORN4;
+				else if ((charge.compareTo(BigInteger.valueOf(5)) >= 0))   image = ItemSpriteSheet.ARTIFACT_HORN3;
+				else if ((charge.compareTo(BigInteger.TWO) >= 0))   image = ItemSpriteSheet.ARTIFACT_HORN2;
 				else                    image = ItemSpriteSheet.ARTIFACT_HORN1;
 
 				updateQuickslot();
@@ -158,21 +162,21 @@ public class HornOfPlenty extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (charge < getChargeCap() && !cursed && target.buff(MagicImmune.class) == null){
+		if ((charge.compareTo(getChargeCap()) < 0) && !cursed && target.buff(MagicImmune.class) == null){
 			partialCharge += 0.25f*amount;
-			partialCharge *= getRarityMultiplier();
+			partialCharge *= getRarityMultiplier().doubleValue();
 			while (partialCharge >= 1){
 				partialCharge--;
-				charge++;
+				charge = charge.add(BigInteger.ONE);
 				
-				if (charge == getChargeCap()){
+				if ((charge.compareTo(getChargeCap()) == 0)){
 					GLog.p( Messages.get(HornOfPlenty.class, "full") );
 					partialCharge = 0;
 				}
 
-				if (charge >= 8)        image = ItemSpriteSheet.ARTIFACT_HORN4;
-				else if (charge >= 5)   image = ItemSpriteSheet.ARTIFACT_HORN3;
-				else if (charge >= 2)   image = ItemSpriteSheet.ARTIFACT_HORN2;
+				if ((charge.compareTo(BigInteger.valueOf(8)) >= 0))        image = ItemSpriteSheet.ARTIFACT_HORN4;
+				else if ((charge.compareTo(BigInteger.valueOf(5)) >= 0))   image = ItemSpriteSheet.ARTIFACT_HORN3;
+				else if ((charge.compareTo(BigInteger.TWO) >= 0))   image = ItemSpriteSheet.ARTIFACT_HORN2;
 				else                    image = ItemSpriteSheet.ARTIFACT_HORN1;
 
 				updateQuickslot();
@@ -186,7 +190,7 @@ public class HornOfPlenty extends Artifact {
 
 		if ( isEquipped( Dungeon.hero ) ){
 			if (!cursed) {
-				if (level() < levelCap)
+				if ((level().compareTo(BigInteger.valueOf(levelCap)) < 0))
 					desc += "\n\n" +Messages.get(this, "desc_hint");
 			} else {
 				desc += "\n\n" +Messages.get(this, "desc_cursed");
@@ -197,20 +201,20 @@ public class HornOfPlenty extends Artifact {
 	}
 
 	@Override
-	public void level(long value) {
+	public void level(BigInteger value) {
 		super.level(value);
-		setChargeCap(5 + level()/2);
+		setChargeCap(BigInteger.valueOf(5).add(level().divide(BigInteger.TWO)));
 	}
 
 	@Override
 	public Item upgrade() {
 		super.upgrade();
-		setChargeCap(5 + level()/2);
+		setChargeCap(BigInteger.valueOf(5).add(level().divide(BigInteger.TWO)));
 		return this;
 	}
 	
 	public void gainFoodValue( Food food ){
-		if (level() >= 10) return;
+		if ((level().compareTo(BigInteger.TEN) >= 0)) return;
 		
 		storedFoodEnergy += food.energy;
 		//Pasties and phantom meat are worth two upgrades instead of 1.5, meat pies are worth 4 instead of 3!
@@ -221,11 +225,11 @@ public class HornOfPlenty extends Artifact {
 		}
 		if (storedFoodEnergy >= Hunger.HUNGRY){
 			int upgrades = storedFoodEnergy / (int)Hunger.HUNGRY;
-			upgrades = (int) Math.min(upgrades, 10 - level());
-			upgrade(upgrades);
+			upgrades = Big.toInt(BigInteger.valueOf(upgrades).min(BigInteger.TEN.subtract(level())));
+			upgrade(BigInteger.valueOf(upgrades));
 			Catalog.countUse(HornOfPlenty.class);
 			storedFoodEnergy -= upgrades * Hunger.HUNGRY;
-			if (level() == 10){
+			if ((level().compareTo(BigInteger.TEN) == 0)){
 				storedFoodEnergy = 0;
 				GLog.p( Messages.get(this, "maxlevel") );
 			} else {
@@ -255,9 +259,9 @@ public class HornOfPlenty extends Artifact {
 
 		storedFoodEnergy = bundle.getInt(STORED);
 		
-		if (charge >= 8)       image = ItemSpriteSheet.ARTIFACT_HORN4;
-		else if (charge >= 5)  image = ItemSpriteSheet.ARTIFACT_HORN3;
-		else if (charge >= 2)   image = ItemSpriteSheet.ARTIFACT_HORN2;
+		if ((charge.compareTo(BigInteger.valueOf(8)) >= 0))       image = ItemSpriteSheet.ARTIFACT_HORN4;
+		else if ((charge.compareTo(BigInteger.valueOf(5)) >= 0))  image = ItemSpriteSheet.ARTIFACT_HORN3;
+		else if ((charge.compareTo(BigInteger.TWO) >= 0))   image = ItemSpriteSheet.ARTIFACT_HORN2;
 	}
 
 	public class hornRecharge extends ArtifactBuff{
@@ -265,12 +269,12 @@ public class HornOfPlenty extends Artifact {
 		public void gainCharge(float levelPortion) {
 			if (cursed || target.buff(MagicImmune.class) != null) return;
 			
-			if (charge < getChargeCap()) {
+			if ((charge.compareTo(getChargeCap()) < 0)) {
 
 				//generates 0.25x max hunger value every hero level, +0.125x max value per horn level
 				//to a max of 1.5x max hunger value per hero level
 				//This means that a standard ration will be recovered in ~5.333 hero levels
-				float chargeGain = Hunger.STARVING * levelPortion * (0.25f + (0.125f*level()));
+				float chargeGain = Big.dec(Hunger.STARVING * levelPortion).multiply((Big.dec(0.25f).add((Big.dec(0.125f).multiply(Big.dec(level())))))).floatValue();
 				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
 
 				//each charge is equal to 1/5 the max hunger value
@@ -279,17 +283,17 @@ public class HornOfPlenty extends Artifact {
 
 				//charge is in increments of 1/5 max hunger value.
 				while (partialCharge >= 1) {
-					charge++;
+					charge = charge.add(BigInteger.ONE);
 					partialCharge -= 1;
 
-					if (charge >= 8)        image = ItemSpriteSheet.ARTIFACT_HORN4;
-					else if (charge >= 5)   image = ItemSpriteSheet.ARTIFACT_HORN3;
-					else if (charge >= 2)   image = ItemSpriteSheet.ARTIFACT_HORN2;
+					if ((charge.compareTo(BigInteger.valueOf(8)) >= 0))        image = ItemSpriteSheet.ARTIFACT_HORN4;
+					else if ((charge.compareTo(BigInteger.valueOf(5)) >= 0))   image = ItemSpriteSheet.ARTIFACT_HORN3;
+					else if ((charge.compareTo(BigInteger.TWO) >= 0))   image = ItemSpriteSheet.ARTIFACT_HORN2;
 					else                    image = ItemSpriteSheet.ARTIFACT_HORN1;
 
 					updateQuickslot();
 
-					if (charge == getChargeCap()){
+					if ((charge.compareTo(getChargeCap()) == 0)){
 						GLog.p( Messages.get(HornOfPlenty.class, "full") );
 						partialCharge = 0;
 					}

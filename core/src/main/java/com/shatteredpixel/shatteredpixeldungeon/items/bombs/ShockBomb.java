@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -74,9 +78,9 @@ public class ShockBomb extends Bomb {
 			int power = 16 - 4*Dungeon.level.distance(ch.pos, cell);
 			if (power > 0){
 				//32% to 8% regular bomb damage
-				long damage = Math.round(Dungeon.NormalLongRange(5 + Dungeon.scalingDepth(), 10 + 2*Dungeon.scalingDepth()) * (power/50f));
+				BigInteger damage = Big.round(Big.dec(Dungeon.NormalLongRange(BigInteger.valueOf(5).add(Dungeon.scalingDepth()), BigInteger.TEN.add(BigInteger.TWO.multiply(Dungeon.scalingDepth())))).multiply(Big.dec((power/50f))));
 				if (Dungeon.hero.heroClass == HeroClass.ROGUE){
-					damage *= 2.5f;
+					damage = Big.trunc(Big.dec(damage).multiply(Big.dec(2.5f)));
 				}
 				ch.damage(damage, this);
 				if (ch.isAlive()) Buff.prolong(ch, Paralysis.class, power);
@@ -90,8 +94,8 @@ public class ShockBomb extends Bomb {
 	}
 	
 	@Override
-	public long value() {
+	public BigInteger value() {
 		//prices of ingredients
-		return quantity * (20 + 30);
+		return quantity.multiply(BigInteger.valueOf((20 + 30)));
 	}
 }

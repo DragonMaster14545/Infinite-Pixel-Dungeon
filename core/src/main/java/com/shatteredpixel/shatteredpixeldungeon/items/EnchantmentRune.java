@@ -1,5 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -82,13 +84,13 @@ public class EnchantmentRune extends Item {
 	}
 
 	@Override
-	public long value() {
-		return 120 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(120).multiply(quantity);
 	}
 
 	@Override
-	public long energyVal() {
-		return 8 * quantity;
+	public BigInteger energyVal() {
+		return BigInteger.valueOf(8).multiply(quantity);
 	}
 
 	@Override

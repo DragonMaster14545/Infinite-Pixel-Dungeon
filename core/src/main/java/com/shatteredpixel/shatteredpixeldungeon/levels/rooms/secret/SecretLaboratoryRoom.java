@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Alchemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -67,18 +69,18 @@ public class SecretLaboratoryRoom extends SecretRoom {
 		Point pot = center();
 		Painter.set( level, pot, Terrain.ALCHEMY );
 
-		Blob.seed( pot.x + level.width() * pot.y, 1, Alchemy.class, level );
+		Blob.seed( pot.x + level.width() * pot.y, BigInteger.ONE, Alchemy.class, level );
 
 		int pos;
 		do {
 			pos = level.pointToCell(random());
 		} while (level.map[pos] != Terrain.EMPTY_SP || level.heaps.get( pos ) != null);
-		level.drop( new EnergyCrystal().quantity(Random.IntRange(3, 5)), pos );
+		level.drop( new EnergyCrystal().quantity(BigInteger.valueOf(Random.IntRange(3, 5))), pos );
 
 		do {
 			pos = level.pointToCell(random());
 		} while (level.map[pos] != Terrain.EMPTY_SP || level.heaps.get( pos ) != null);
-		level.drop( new EnergyCrystal().quantity(Random.IntRange(3, 5)), pos );
+		level.drop( new EnergyCrystal().quantity(BigInteger.valueOf(Random.IntRange(3, 5))), pos );
 
 		int n = Dungeon.IntRange( 2, 3 );
 		HashMap<Class<? extends Potion>, Float> chances = new HashMap<>(potionChances);

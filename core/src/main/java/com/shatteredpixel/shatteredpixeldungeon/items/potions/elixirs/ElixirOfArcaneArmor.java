@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArcaneArmor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -43,7 +45,7 @@ public class ElixirOfArcaneArmor extends Elixir {
 	
 	@Override
 	public void apply(Hero hero) {
-		Buff.affect(hero, ArcaneArmor.class).set(5 + hero.lvl/2, 80);
+		Buff.affect(hero, ArcaneArmor.class).set(BigInteger.valueOf(5 + hero.lvl/2), 80);
 	}
 
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {

@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Recipe;
@@ -43,7 +47,7 @@ public abstract class Trinket extends Item {
 		return false;
 	}
 
-	protected abstract long upgradeEnergyCost();
+	protected abstract BigInteger upgradeEnergyCost();
 
 	protected static int trinketLevel(Class<? extends Trinket> trinketType ){
 		if (Dungeon.hero == null || Dungeon.hero.belongings == null){
@@ -53,7 +57,7 @@ public abstract class Trinket extends Item {
 		Trinket trinket = Dungeon.hero.belongings.getItem(trinketType);
 
 		if (trinket != null){
-			return (int)trinket.buffedLvl();
+			return Big.toInt(trinket.buffedLvl());
 		} else {
 			return -1;
 		}
@@ -68,11 +72,11 @@ public abstract class Trinket extends Item {
 
 	public abstract String statsDesc();
 
-	public long energyVal() {
-		return 5;
+	public BigInteger energyVal() {
+		return BigInteger.valueOf(5);
 	}
-    public long maxUpgrade() {
-        return 3;
+    public BigInteger maxUpgrade() {
+        return BigInteger.valueOf(3);
     }
 
 	@Override
@@ -88,8 +92,8 @@ public abstract class Trinket extends Item {
 		}
 
 		@Override
-		protected long upgradeEnergyCost() {
-			return 0;
+		protected BigInteger upgradeEnergyCost() {
+			return BigInteger.ZERO;
 		}
 
 		@Override
@@ -113,18 +117,18 @@ public abstract class Trinket extends Item {
 
 		@Override
 		public boolean testIngredients(ArrayList<Item> ingredients) {
-			return ingredients.size() == 1 && ingredients.get(0) instanceof Trinket && ingredients.get(0).level() < ((Trinket) ingredients.get(0)).maxUpgrade();
+			return ingredients.size() == 1 && ingredients.get(0) instanceof Trinket && (ingredients.get(0).level().compareTo(((Trinket) ingredients.get(0)).maxUpgrade()) < 0);
 		}
 
 		@Override
-		public long cost(ArrayList<Item> ingredients) {
+		public BigInteger cost(ArrayList<Item> ingredients) {
 			return ((Trinket)ingredients.get(0)).upgradeEnergyCost();
 		}
 
 		@Override
 		public Item brew(ArrayList<Item> ingredients) {
 			Item result = ingredients.get(0).duplicate();
-			ingredients.get(0).quantity(0);
+			ingredients.get(0).quantity(BigInteger.ZERO);
 			result.upgrade();
 
 			Catalog.countUse(result.getClass());

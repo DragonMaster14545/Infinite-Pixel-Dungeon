@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.quest;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -66,8 +68,8 @@ public class SuperPickaxe extends Item {
     }
 
     @Override
-    public long value() {
-        return quantity * 100;
+    public BigInteger value() {
+        return quantity.multiply(BigInteger.valueOf(100));
     }
 
     @Override

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -108,19 +110,19 @@ public class MagicalInfusion extends InventorySpell {
 		Catalog.countUse(item.getClass());
 		Catalog.countUse(getClass());
 
-		Statistics.upgradesUsed++;
+		Statistics.upgradesUsed = Statistics.upgradesUsed.add(BigInteger.ONE);
 
 		return item;
 	}
 	
 	@Override
-	public long value() {
-		return 60 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(60).multiply(quantity);
 	}
 
 	@Override
-	public long energyVal() {
-		return 12 * quantity;
+	public BigInteger energyVal() {
+		return BigInteger.valueOf(12).multiply(quantity);
 	}
 	
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {

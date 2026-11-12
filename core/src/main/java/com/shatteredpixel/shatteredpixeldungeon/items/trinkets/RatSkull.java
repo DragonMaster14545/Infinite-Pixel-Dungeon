@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -31,20 +35,20 @@ public class RatSkull extends Trinket {
 	}
 
 	@Override
-	protected long upgradeEnergyCost() {
+	protected BigInteger upgradeEnergyCost() {
 		//6 -> 8(14) -> 10(24) -> 12(36)
-		return 6+2*level();
+		return BigInteger.valueOf(6).add(BigInteger.TWO.multiply(level()));
 	}
 
     @Override
-    public long maxUpgrade() {
-        return 15;
+    public BigInteger maxUpgrade() {
+        return BigInteger.valueOf(15);
     }
 
 	@Override
 	public String statsDesc() {
 		if (isIdentified()){
-			return Messages.get(this, "stats_desc", (int)(exoticChanceMultiplier((int)buffedLvl())));
+			return Messages.get(this, "stats_desc", (int)(exoticChanceMultiplier(Big.toInt(buffedLvl()))));
 		} else {
 			return Messages.get(this, "typical_stats_desc", (int)(exoticChanceMultiplier(0)));
 		}

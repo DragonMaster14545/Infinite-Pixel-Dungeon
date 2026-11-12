@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -54,7 +58,7 @@ public class PoisonDartTrap extends Trap {
 	}
 	
 	protected int poisonAmount(){
-		return 8 + Math.round(2*Dungeon.escalatingDepth() / 3f);
+		return Big.toInt(BigInteger.valueOf(8).add(Big.round(Big.div(Big.dec(BigInteger.TWO.multiply(Dungeon.escalatingDepth())), Big.dec(3f)))));
 	}
 	
 	protected boolean canTarget( Char ch ){
@@ -109,7 +113,7 @@ public class PoisonDartTrap extends Trap {
 								reset(pos, finalTarget.sprite, new PoisonDart(), new Callback() {
 									@Override
 									public void call() {
-										long dmg = Random.NormalIntRange(4, 8) - finalTarget.drRoll();
+										BigInteger dmg = BigInteger.valueOf(Random.NormalIntRange(4, 8)).subtract(finalTarget.drRoll());
 										finalTarget.damage(dmg, PoisonDartTrap.this);
 										if (finalTarget == Dungeon.hero){
 											//for the poison dart traps in the Tengu fight
@@ -132,7 +136,7 @@ public class PoisonDartTrap extends Trap {
 								});
 						return false;
 					} else {
-						finalTarget.damage(Random.NormalIntRange(4, 8) - finalTarget.drRoll(), PoisonDartTrap.this);
+						finalTarget.damage(BigInteger.valueOf(Random.NormalIntRange(4, 8)).subtract(finalTarget.drRoll()), PoisonDartTrap.this);
 						Buff.affect( finalTarget, Poison.class ).set( poisonAmount() );
 						return true;
 					}

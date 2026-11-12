@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -41,7 +43,7 @@ public class ConfusionTrap extends Trap {
 	@Override
 	public void activate() {
 
-		GameScene.add(Blob.seed(pos, 300 + 20 * Dungeon.escalatingDepth(), ConfusionGas.class));
+		GameScene.add(Blob.seed(pos, BigInteger.valueOf(300).add(BigInteger.valueOf(20).multiply(Dungeon.escalatingDepth())), ConfusionGas.class));
 		Sample.INSTANCE.play(Assets.Sounds.GAS);
 
 	}

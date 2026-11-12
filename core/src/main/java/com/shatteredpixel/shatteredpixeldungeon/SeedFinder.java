@@ -1,5 +1,9 @@
 package com.shatteredpixel.shatteredpixeldungeon;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -370,8 +374,8 @@ public class SeedFinder {
 
         SeedFinder.loadConfig();
 
-        long start = Random.Long(DungeonSeed.TOTAL_SEEDS);
-        for (long i = start; i < DungeonSeed.TOTAL_SEEDS; i++) {
+        BigInteger start = BigInteger.valueOf(Random.Long(DungeonSeed.TOTAL_SEEDS));
+        for (long i = Big.toLong(start); i < DungeonSeed.TOTAL_SEEDS; i++) {
             if (Thread.currentThread().isInterrupted()) {
                 Gdx.app.postRunnable(() -> ShatteredPixelDungeon.scene()
                         .addToFront(new WndMessage("Searched interrupted.")));
@@ -385,7 +389,7 @@ public class SeedFinder {
 
             if ((Options.condition == CONDITION_ALL && !targets.containsValue(false)) ||
                     (Options.condition == CONDITION_ANY && targets.containsValue(true))) {
-                long count = i - start + 1;
+                BigInteger count = BigInteger.valueOf(i).subtract(start).add(BigInteger.ONE);
                 Gdx.app.postRunnable(() -> ShatteredPixelDungeon.scene()
                         .addToFront(new WndMessage("Searched through _" + count + "_ seeds.")));
                 return log;
@@ -419,12 +423,12 @@ public class SeedFinder {
         long lastDaily = SPDSettings.lastDaily();
         long time = Game.realTime - (Game.realTime % DAY);
         time = Math.max(time, 20_148 * DAY);
-        SPDSettings.lastDaily(time);
+        SPDSettings.lastDaily(BigInteger.valueOf(time));
         Dungeon.daily = Options.searchForDaily = true;
         targets = new HashMap<>(DEFAULT_TARGETS);
         SeedLog log = scoutDungeon();
         Dungeon.daily = Options.searchForDaily = false;
-        SPDSettings.lastDaily(lastDaily);
+        SPDSettings.lastDaily(BigInteger.valueOf(lastDaily));
         return log;
     }
 
@@ -433,12 +437,12 @@ public class SeedFinder {
         long lastWeekly = SPDSettings.lastWeekly();
         long time = Game.realTime - (Game.realTime % WEEK);
         time = Math.max(time, 2_821 * WEEK);
-        SPDSettings.lastWeekly(time);
+        SPDSettings.lastWeekly(BigInteger.valueOf(time));
         Dungeon.weekly = Options.searchForWeekly = true;
         targets = new HashMap<>(DEFAULT_TARGETS);
         SeedLog log = scoutDungeon();
         Dungeon.weekly = Options.searchForWeekly = false;
-        SPDSettings.lastWeekly(lastWeekly);
+        SPDSettings.lastWeekly(BigInteger.valueOf(lastWeekly));
         return log;
     }
 
@@ -528,9 +532,9 @@ public class SeedFinder {
                     }
                     WaterOfHealth health = (WaterOfHealth) level.blobs.get(WaterOfHealth.class);
                     WaterOfAwareness aware = (WaterOfAwareness) level.blobs.get(WaterOfAwareness.class);
-                    if (health != null && health.cur[wellPos] != 0) {
+                    if (health != null && (health.cur[wellPos].compareTo(BigInteger.ZERO) != 0)) {
                         caption = "health";
-                    } else if (aware != null && aware.cur[wellPos] != 0) {
+                    } else if (aware != null && (aware.cur[wellPos].compareTo(BigInteger.ZERO) != 0)) {
                         caption = "awareness";
                     }
                 } else {

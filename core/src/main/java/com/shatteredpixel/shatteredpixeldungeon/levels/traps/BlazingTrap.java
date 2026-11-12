@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -49,9 +51,9 @@ public class BlazingTrap extends Trap {
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
 				if (Dungeon.level.pit[i] || Dungeon.level.water[i])
-					GameScene.add(Blob.seed(i, 1, Fire.class));
+					GameScene.add(Blob.seed(i, BigInteger.ONE, Fire.class));
 				else
-					GameScene.add(Blob.seed(i, 5, Fire.class));
+					GameScene.add(Blob.seed(i, BigInteger.valueOf(5), Fire.class));
 				CellEmitter.get(i).burst(FlameParticle.FACTORY, 5);
 			}
 		}

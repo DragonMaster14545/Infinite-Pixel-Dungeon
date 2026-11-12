@@ -1,5 +1,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -32,7 +36,7 @@ public class WndVaultSell extends Window {
 	private static final int BTN_H = 16;
 	private static final int ICON = 16;
 	private static final int ROW_H = ICON + BTN_H + GAP + 3;
-	private static final long CONFIRM_VALUE = 1000;
+	private static final BigInteger CONFIRM_VALUE = BigInteger.valueOf(1000);
 
 	private final Runnable back;
 
@@ -119,7 +123,7 @@ public class WndVaultSell extends Window {
 				&& !( item instanceof Amulet )
 				&& !( item instanceof ShulkerBox )
 				&& !( item instanceof VaultLink )
-				&& ( item.value() > 0 || item.energyVal() > 0 );
+				&& ((item.value().compareTo(BigInteger.ZERO) > 0) || (item.energyVal().compareTo(BigInteger.ZERO) > 0));
 	}
 
 	private static ArrayList<Item> sellable() {
@@ -138,8 +142,8 @@ public class WndVaultSell extends Window {
 	}
 
 	private void refresh() {
-		gold.text( Messages.get( this, "gold", fmt( Dungeon.gold ) ) );
-		energy.text( Messages.get( this, "energy", fmt( Dungeon.energy ) ) );
+		gold.text( Messages.get( this, "gold", fmt( Big.toLong(Dungeon.gold) ) ) );
+		energy.text( Messages.get( this, "energy", fmt( Big.toLong(Dungeon.energy) ) ) );
 
 		content.clear();
 		ArrayList<Item> items = sellable();
@@ -167,8 +171,8 @@ public class WndVaultSell extends Window {
 			PixelScene.align( text );
 			content.add( text );
 
-			final long g = item.value();
-			final long e = item.energyVal();
+			final long g = Big.toLong(item.value());
+			final long e = Big.toLong(item.energyVal());
 
 			RedButton goldBtn = new RedButton( Messages.get( this, "sell_gold", fmt( g ) ), 7 ) {
 				@Override
@@ -200,8 +204,8 @@ public class WndVaultSell extends Window {
 		Hero hero = Dungeon.hero;
 		if (hero == null || !hero.isAlive()) return;
 
-		long worth = forEnergy ? item.energyVal() : item.value();
-		boolean valuable = worth >= CONFIRM_VALUE || ( item.isUpgradable() && item.level() > 0 );
+		BigInteger worth = forEnergy ? item.energyVal() : item.value();
+		boolean valuable = (worth.compareTo(CONFIRM_VALUE) >= 0) || (item.isUpgradable() && (item.level().compareTo(BigInteger.ZERO) > 0));
 
 		if (!valuable) {
 			complete( item, forEnergy );
@@ -211,7 +215,7 @@ public class WndVaultSell extends Window {
 		GameScene.show( new WndOptions(
 				new ItemSprite( item ),
 				Messages.titleCase( item.name() ),
-				Messages.get( WndVaultSell.class, "confirm", fmt( worth ),
+				Messages.get( WndVaultSell.class, "confirm", fmt( Big.toLong(worth) ),
 						Messages.get( WndVaultSell.class, forEnergy ? "unit_energy" : "unit_gold" ) ),
 				Messages.get( WndVaultSell.class, "yes" ),
 				Messages.get( WndVaultSell.class, "no" ) ) {
@@ -230,18 +234,18 @@ public class WndVaultSell extends Window {
 			return;
 		}
 
-		long worth = forEnergy ? item.energyVal() : item.value();
+		BigInteger worth = forEnergy ? item.energyVal() : item.value();
 		String name = item.name();
 
 		item.detachAll( hero.belongings.backpack );
 		if (forEnergy) {
-			Dungeon.energy += worth;
+			Dungeon.energy = Dungeon.energy.add(worth);
 		} else {
-			Dungeon.gold += worth;
+			Dungeon.gold = Dungeon.gold.add(worth);
 		}
 
 		Sample.INSTANCE.play( Assets.Sounds.GOLD );
-		GLog.p( Messages.get( WndVaultSell.class, "sold", name, fmt( worth ),
+		GLog.p( Messages.get( WndVaultSell.class, "sold", name, fmt( Big.toLong(worth) ),
 				Messages.get( WndVaultSell.class, forEnergy ? "unit_energy" : "unit_gold" ) ) );
 		refresh();
 	}

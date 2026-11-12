@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -106,83 +110,83 @@ public class Item implements Bundlable {
 //		COVENANTED(0xFF69B4, "Co", chance(63), multi(62)),
 //		CELEBRATED(0x00FA9A, "Ce", chance(62), multi(61)),
 //		TREASURED(0x32CD32, "T", chance(61), multi(60)),
-		FIERY(0xFFFFFF, "[red][particle+red]Fe[]", chance(15000), multi(85), "[red][particle+red]Fiery"),
-		ZENITH(0xFFFFFF, "[rainbow]Ze[]", chance(12450), multi(68), "[rainbow]Zenith"),
-		DESOLATED(0xFFFFFF, "[glint+#ad9100]De[]", chance(11420), multi(65), "[glint+#ad9100]Desolated"),
-		LIMINAL(0xFFFFFF, "[flicker]Li[]", chance(10350), multi(61), "[flicker]Liminal"),
-		RADIANT(0xF0E68C, "R", chance(8950), multi(59), "Radiant"),
-		STELLAR(0x87CEFA, "St", chance(7850), multi(58), "Stellar"),
-		MAGNIFICENT(0xFFD700, "Mg", chance(6250), multi(57), "Magnificent"),
-		EXALTED(0xDAA520, "Ex", chance(5960), multi(56), "Exalted"),
-		VALIANT(0xB0C4DE, "V", chance(5750), multi(55), "Valiant"),
-		ETHEREAL(0x98FB98, "Et", chance(5500), multi(54), "Ethereal"),
-		BRILLIANT(0xFF8C00, "Br", chance(5000), multi(53), "Brilliant"),
-		IMPRESSIVE(0xF0E68C, "Im", chance(4650), multi(52), "Impressive"),
-		INCREDIBLE(0xFFD700, "In", chance(4250), multi(51), "Incredible"),
-		CHERISHED(0xFF1493, "Ch", chance(4050), multi(50), "Cherished"),
-		SPLENDID(0x7FFF00, "Sp", chance(3950), multi(49), "Splendid"),
-		GLORIOUS(0xFF6347, "G", chance(3750), multi(48), "Glorious"),
-		UNFORGETTABLE(0x6A5ACD, "U", chance(3300), multi(47), "Unforgettable"),
-		MAGNANIMOUS(0xD2691E, "M", chance(3200), multi(46), "Magnanimous"),
-		NOBILITY(0xCD5C5C, "N", chance(3100), multi(45), "Nobility"),
-		VISIONARY(0xFFB6C1, "V", chance(2990), multi(44), "Visionary"),
-		RESPLENDENT(0xFFD700, "Re", chance(2960), multi(43), "Resplendent"),
-		MAGNETIC(0x8B008B, "M", chance(2945), multi(42), "Magnetic"),
-		FORTUITOUS(0xFF8C00, "F", chance(2900), multi(41), "Fortuitous"),
-		SUPERNATURAL(0x7B68EE, "S", chance(2875), multi(40), "Supernatural"),
-		GRANDIOSE(0xFFA07A, "Gr", chance(2850), multi(39), "Grandiose"),
-		VALOROUS(0xB22222, "V", chance(2825), multi(38), "Valorous"),
-		HEROIC(0xB8860B, "H", chance(2810), multi(37), "Heroic"),
-		RESILIENT(0x00FA9A, "R", chance(2800), multi(36), "Resilient"),
-		ILLUSIVE(0x20B2AA, "I", chance(2785), multi(35), "Illusive"),
-		CONQUEROR(0xFF6347, "C", chance(2740), multi(34), "Conqueror"),
-		ROGUE(0xCD853F, "R", chance(2725), multi(33), "Rogue"),
-		SOVEREIGN(0x8A2BE2, "S", chance(2705), multi(32), "Sovereign"),
-		ASCENDED(0xFFE4E1, "A", chance(2695), multi(31), "Ascended"),
-		TRANSLUCENT(0xB0E0E6, "T", chance(2675), multi(30), "Translucent"),
-		MAGNIFIC(0xFF4500, "Mg", chance(2650), multi(29), "Magnific"),
-		UNSTOPPABLE(0xF08080, "U", chance(2450), multi(28), "Unstoppable"),
-		FORTIFIED(0xE6E6FA, "F", chance(2100), multi(27), "Fortified"),
-		HEAVENLY(0xF0E68C, "H", chance(18500), multi(26), "Heavenly"),
-		LUMINOUS(0xB22222, "L", chance(1600), multi(25), "Luminous"),
-		MYSTICAL(0x7FFF00, "My", chance(1400), multi(24), "Mystical"),
-		EXQUISITE(0xFFD700, "Ex", chance(1250), multi(23), "Exquisite"),
-		BLAZING(0xFF4500, "Bl", chance(1150), multi(22), "Blazing"),
-		COSMIC(0x8A2BE2, "C", chance(1100), multi(21), "Cosmic"),
-		TRANQUIL(0x87CEFA, "T", chance(1010), multi(20), "Tranquil"),
-		PRISTINE(0x98FB98, "Pr", chance(1000), multi(19), "Pristine"),
-		ULTIMATE(0xF5FFFA, "U", chance(900), multi(18), "Ultimate"),
-		WHIMSICAL(0xFF00FF, "Wh", chance(750), multi(17), "Whimsical"),
-		HARMONIOUS(0x8FBC8F, "H", chance(600), multi(16), "Harmonious"),
-		OMNIPOTENT(0x9932CC, "O", chance(450), multi(15), "Omnipotent"),
-		ETERNAL(0xDC143C, "Et", chance(250), multi(14), "Eternal"),
-		INFINITE(0x4682B4, "In", chance(200), multi(13), "Infinite"),
-		CELESTIAL(0x98FB98, "Ce", chance(150), multi(12), "Celestial"),
-		GALACTIC(0x20B2AA, "G", chance(100), multi(11), "Galactic"),
-		IMMORTAL(0x4B0082, "I", chance(80), multi(10), "Immortal"),
-		TRANSCENDENT(0x8B4513, "T", chance(70), multi(9), "Transcendent"),
-		DIVINE(0x87CEEB, "D", chance(50), multi(8), "Divine"),
-		ANCIENT(0xFF1493, "A", chance(25), multi(7), "Ancient"),
-		MYTHICAL(0x800080, "M", chance(15), multi(6), "Mythical"),
-		LEGENDARY(0xFF4500, "L", chance(10), multi(5), "Legendary"),
-		EPIC(0xFF00FF, "E", chance(6), multi(4), "Epic"),
-		RARE(0x0000FF, "R", chance(4), multi(3), "Rare"),
-		UNCOMMON(0xFFFF00, "U", chance(2), multi(2), "Uncommon"),
-		COMMON(0x00FF00, "C", chance(0), multi(1), "Common"),
+		FIERY(0xFFFFFF, "[red][particle+red]Fe[]", chance(15000), multi(BigInteger.valueOf(85)), "[red][particle+red]Fiery"),
+		ZENITH(0xFFFFFF, "[rainbow]Ze[]", chance(12450), multi(BigInteger.valueOf(68)), "[rainbow]Zenith"),
+		DESOLATED(0xFFFFFF, "[glint+#ad9100]De[]", chance(11420), multi(BigInteger.valueOf(65)), "[glint+#ad9100]Desolated"),
+		LIMINAL(0xFFFFFF, "[flicker]Li[]", chance(10350), multi(BigInteger.valueOf(61)), "[flicker]Liminal"),
+		RADIANT(0xF0E68C, "R", chance(8950), multi(BigInteger.valueOf(59)), "Radiant"),
+		STELLAR(0x87CEFA, "St", chance(7850), multi(BigInteger.valueOf(58)), "Stellar"),
+		MAGNIFICENT(0xFFD700, "Mg", chance(6250), multi(BigInteger.valueOf(57)), "Magnificent"),
+		EXALTED(0xDAA520, "Ex", chance(5960), multi(BigInteger.valueOf(56)), "Exalted"),
+		VALIANT(0xB0C4DE, "V", chance(5750), multi(BigInteger.valueOf(55)), "Valiant"),
+		ETHEREAL(0x98FB98, "Et", chance(5500), multi(BigInteger.valueOf(54)), "Ethereal"),
+		BRILLIANT(0xFF8C00, "Br", chance(5000), multi(BigInteger.valueOf(53)), "Brilliant"),
+		IMPRESSIVE(0xF0E68C, "Im", chance(4650), multi(BigInteger.valueOf(52)), "Impressive"),
+		INCREDIBLE(0xFFD700, "In", chance(4250), multi(BigInteger.valueOf(51)), "Incredible"),
+		CHERISHED(0xFF1493, "Ch", chance(4050), multi(BigInteger.valueOf(50)), "Cherished"),
+		SPLENDID(0x7FFF00, "Sp", chance(3950), multi(BigInteger.valueOf(49)), "Splendid"),
+		GLORIOUS(0xFF6347, "G", chance(3750), multi(BigInteger.valueOf(48)), "Glorious"),
+		UNFORGETTABLE(0x6A5ACD, "U", chance(3300), multi(BigInteger.valueOf(47)), "Unforgettable"),
+		MAGNANIMOUS(0xD2691E, "M", chance(3200), multi(BigInteger.valueOf(46)), "Magnanimous"),
+		NOBILITY(0xCD5C5C, "N", chance(3100), multi(BigInteger.valueOf(45)), "Nobility"),
+		VISIONARY(0xFFB6C1, "V", chance(2990), multi(BigInteger.valueOf(44)), "Visionary"),
+		RESPLENDENT(0xFFD700, "Re", chance(2960), multi(BigInteger.valueOf(43)), "Resplendent"),
+		MAGNETIC(0x8B008B, "M", chance(2945), multi(BigInteger.valueOf(42)), "Magnetic"),
+		FORTUITOUS(0xFF8C00, "F", chance(2900), multi(BigInteger.valueOf(41)), "Fortuitous"),
+		SUPERNATURAL(0x7B68EE, "S", chance(2875), multi(BigInteger.valueOf(40)), "Supernatural"),
+		GRANDIOSE(0xFFA07A, "Gr", chance(2850), multi(BigInteger.valueOf(39)), "Grandiose"),
+		VALOROUS(0xB22222, "V", chance(2825), multi(BigInteger.valueOf(38)), "Valorous"),
+		HEROIC(0xB8860B, "H", chance(2810), multi(BigInteger.valueOf(37)), "Heroic"),
+		RESILIENT(0x00FA9A, "R", chance(2800), multi(BigInteger.valueOf(36)), "Resilient"),
+		ILLUSIVE(0x20B2AA, "I", chance(2785), multi(BigInteger.valueOf(35)), "Illusive"),
+		CONQUEROR(0xFF6347, "C", chance(2740), multi(BigInteger.valueOf(34)), "Conqueror"),
+		ROGUE(0xCD853F, "R", chance(2725), multi(BigInteger.valueOf(33)), "Rogue"),
+		SOVEREIGN(0x8A2BE2, "S", chance(2705), multi(BigInteger.valueOf(32)), "Sovereign"),
+		ASCENDED(0xFFE4E1, "A", chance(2695), multi(BigInteger.valueOf(31)), "Ascended"),
+		TRANSLUCENT(0xB0E0E6, "T", chance(2675), multi(BigInteger.valueOf(30)), "Translucent"),
+		MAGNIFIC(0xFF4500, "Mg", chance(2650), multi(BigInteger.valueOf(29)), "Magnific"),
+		UNSTOPPABLE(0xF08080, "U", chance(2450), multi(BigInteger.valueOf(28)), "Unstoppable"),
+		FORTIFIED(0xE6E6FA, "F", chance(2100), multi(BigInteger.valueOf(27)), "Fortified"),
+		HEAVENLY(0xF0E68C, "H", chance(18500), multi(BigInteger.valueOf(26)), "Heavenly"),
+		LUMINOUS(0xB22222, "L", chance(1600), multi(BigInteger.valueOf(25)), "Luminous"),
+		MYSTICAL(0x7FFF00, "My", chance(1400), multi(BigInteger.valueOf(24)), "Mystical"),
+		EXQUISITE(0xFFD700, "Ex", chance(1250), multi(BigInteger.valueOf(23)), "Exquisite"),
+		BLAZING(0xFF4500, "Bl", chance(1150), multi(BigInteger.valueOf(22)), "Blazing"),
+		COSMIC(0x8A2BE2, "C", chance(1100), multi(BigInteger.valueOf(21)), "Cosmic"),
+		TRANQUIL(0x87CEFA, "T", chance(1010), multi(BigInteger.valueOf(20)), "Tranquil"),
+		PRISTINE(0x98FB98, "Pr", chance(1000), multi(BigInteger.valueOf(19)), "Pristine"),
+		ULTIMATE(0xF5FFFA, "U", chance(900), multi(BigInteger.valueOf(18)), "Ultimate"),
+		WHIMSICAL(0xFF00FF, "Wh", chance(750), multi(BigInteger.valueOf(17)), "Whimsical"),
+		HARMONIOUS(0x8FBC8F, "H", chance(600), multi(BigInteger.valueOf(16)), "Harmonious"),
+		OMNIPOTENT(0x9932CC, "O", chance(450), multi(BigInteger.valueOf(15)), "Omnipotent"),
+		ETERNAL(0xDC143C, "Et", chance(250), multi(BigInteger.valueOf(14)), "Eternal"),
+		INFINITE(0x4682B4, "In", chance(200), multi(BigInteger.valueOf(13)), "Infinite"),
+		CELESTIAL(0x98FB98, "Ce", chance(150), multi(BigInteger.valueOf(12)), "Celestial"),
+		GALACTIC(0x20B2AA, "G", chance(100), multi(BigInteger.valueOf(11)), "Galactic"),
+		IMMORTAL(0x4B0082, "I", chance(80), multi(BigInteger.TEN), "Immortal"),
+		TRANSCENDENT(0x8B4513, "T", chance(70), multi(BigInteger.valueOf(9)), "Transcendent"),
+		DIVINE(0x87CEEB, "D", chance(50), multi(BigInteger.valueOf(8)), "Divine"),
+		ANCIENT(0xFF1493, "A", chance(25), multi(BigInteger.valueOf(7)), "Ancient"),
+		MYTHICAL(0x800080, "M", chance(15), multi(BigInteger.valueOf(6)), "Mythical"),
+		LEGENDARY(0xFF4500, "L", chance(10), multi(BigInteger.valueOf(5)), "Legendary"),
+		EPIC(0xFF00FF, "E", chance(6), multi(BigInteger.valueOf(4)), "Epic"),
+		RARE(0x0000FF, "R", chance(4), multi(BigInteger.valueOf(3)), "Rare"),
+		UNCOMMON(0xFFFF00, "U", chance(2), multi(BigInteger.TWO), "Uncommon"),
+		COMMON(0x00FF00, "C", chance(0), multi(BigInteger.ONE), "Common"),
 		NONE(0xFFFFFF, " ", 0, 1, "");
 
 		Rarity(int color, String name, double chance, double multiplier, String trueName) {
 			this.color = color;
 			this.name = name;
 			this.chance = chance;
-			this.multiplier = (long) multiplier;
+			this.multiplier = Big.of(multiplier);
 			this.trueName = Messages.titleCase(trueName);
 		}
 
 		public final int color;
 		public final String name;
 		public final double chance;
-		public final long multiplier;
+		public final BigInteger multiplier;
 		public final String trueName;
 	}
 
@@ -213,10 +217,10 @@ public class Item implements Bundlable {
 	public int icon = -1; //used as an identifier for items with randomized images
 	
 	public boolean stackable = false;
-	protected long quantity = 1;
+	protected BigInteger quantity = BigInteger.ONE;
 	public boolean dropsDownHeap = false;
 	
-	private long level = 0;
+	private BigInteger level = BigInteger.ZERO;
 	public Rarity rarity = Rarity.NONE;
     public int emblemUse = 0;
 
@@ -278,7 +282,7 @@ public class Item implements Bundlable {
         }
     }
 
-	public long getRarityMultiplier() {
+	public BigInteger getRarityMultiplier() {
 		return rarity.multiplier;
 	}
 
@@ -286,8 +290,8 @@ public class Item implements Bundlable {
 		return 1d / (div + 1);
 	}
 
-	public static double multi(long multi) {
-		return 2 * multi;
+	public static double multi(BigInteger multi) {
+		return BigInteger.TWO.multiply(multi).doubleValue();
 	}
 
 	public String actionName(String action, Hero hero){
@@ -418,15 +422,15 @@ public class Item implements Bundlable {
 	//takes two items and merges them (if possible)
 	public Item merge( Item other ){
 		if (isSimilar( other )){
-			quantity += other.quantity;
-			other.quantity = 0;
+			quantity = quantity.add(other.quantity);
+			other.quantity = BigInteger.ZERO;
 		}
 		return this;
 	}
 	
 	public boolean collect( Bag container ) {
 
-		if (quantity <= 0){
+		if ((quantity.compareTo(BigInteger.ZERO) <= 0)){
 			return true;
 		}
 
@@ -460,7 +464,7 @@ public class Item implements Bundlable {
 					}
 					if (TippedDart.lostDarts > 0){
 						Dart d = new Dart();
-						d.quantity(TippedDart.lostDarts);
+						d.quantity(BigInteger.valueOf(TippedDart.lostDarts));
 						TippedDart.lostDarts = 0;
 						if (!d.collect()){
 							//have to handle this in an actor as we can't manipulate the heap during pickup
@@ -499,8 +503,8 @@ public class Item implements Bundlable {
 	}
 	
 	//returns a new item if the split was sucessful and there are now 2 items, otherwise null
-	public Item split( long amount ){
-		if (amount <= 0 || amount >= quantity()) {
+	public Item split( BigInteger amount ){
+		if ((amount.compareTo(BigInteger.ZERO) <= 0) || (amount.compareTo(quantity()) >= 0)) {
 			return null;
 		} else {
 			//pssh, who needs copy constructors?
@@ -514,7 +518,7 @@ public class Item implements Bundlable {
 			this.storeInBundle(copy);
 			split.restoreFromBundle(copy);
 			split.quantity(amount);
-			quantity -= amount;
+			quantity = quantity.subtract(amount);
 			
 			return split;
 		}
@@ -551,22 +555,22 @@ public class Item implements Bundlable {
 		return dupe;
 	}
 
-	public void remove(long amount){
-		if (amount >= quantity()){
+	public void remove(BigInteger amount){
+		if ((amount.compareTo(quantity()) >= 0)){
 			detachAll(Dungeon.hero.belongings.backpack);
 		} else {
-			quantity(quantity() - amount);
+			quantity(quantity().subtract(amount));
 		}
 	}
 	
 	public final Item detach( Bag container ) {
 		
-		if (quantity <= 0) {
+		if ((quantity.compareTo(BigInteger.ZERO) <= 0)) {
 			
 			return null;
 			
 		} else
-		if (quantity == 1) {
+		if ((quantity.compareTo(BigInteger.ONE) == 0)) {
 
 			if (stackable){
 				Dungeon.quickslot.convertToPlaceholder(this);
@@ -577,7 +581,7 @@ public class Item implements Bundlable {
 		} else {
 			
 			
-			Item detached = split(1);
+			Item detached = split(BigInteger.ONE);
 			updateQuickslot();
 			if (detached != null) detached.onDetach( );
 			return detached;
@@ -614,18 +618,18 @@ public class Item implements Bundlable {
 	public void onDetach(){}
 
 	//returns the true level of the item, ignoring all modifiers aside from upgrades
-	public final long trueLevel(){
+	public final BigInteger trueLevel(){
 		return level;
 	}
 
 	//returns the persistant level of the item, only affected by modifiers which are persistent (e.g. curse infusion)
-	public long level(){
+	public BigInteger level(){
 		return level;
 	}
 	
 	//returns the level of the item, after it may have been modified by temporary boosts/reductions
 	//note that not all item properties should care about buffs/debuffs! (e.g. str requirement)
-	public long buffedLvl(){
+	public BigInteger buffedLvl(){
 		//only the hero can be affected by Degradation
 		if (Dungeon.hero != null && Dungeon.hero.buff( Degrade.class ) != null
 			&& (isEquipped( Dungeon.hero ) || Dungeon.hero.belongings.contains( this ))) {
@@ -635,7 +639,7 @@ public class Item implements Bundlable {
 		}
 	}
 
-	public void level(long value ){
+	public void level(BigInteger value ){
 		level = value;
 
 		updateQuickslot();
@@ -643,22 +647,22 @@ public class Item implements Bundlable {
 	
 	public Item upgrade() {
 		
-		this.level++;
+		this.level = this.level.add(BigInteger.ONE);
 
 		updateQuickslot();
 		
 		return this;
 	}
 	
-	final public Item upgrade(long n ) {
-		if (n > 20){
-			this.level += n - 20;
-			for (long i=0; i < 20; i++) {
+	final public Item upgrade(BigInteger n ) {
+		if ((n.compareTo(BigInteger.valueOf(20)) > 0)){
+			this.level = this.level.add(n.subtract(BigInteger.valueOf(20)));
+			for (int i=0; i < 20; i++) {
 				upgrade();
 			}
 			updateQuickslot();
 		} else {
-			for (long i = 0; i < n; i++) {
+			for (long i = 0; i < n.longValue(); i++) {
 				upgrade();
 			}
 		}
@@ -668,20 +672,20 @@ public class Item implements Bundlable {
 	
 	public Item degrade() {
 		
-		this.level--;
+		this.level = this.level.subtract(BigInteger.ONE);
 		
 		return this;
 	}
 	
-	final public Item degrade(long n ) {
-		if (n > 20){
-			this.level -= n - 20;
-			for (long i=0; i < 20; i++) {
+	final public Item degrade(BigInteger n ) {
+		if ((n.compareTo(BigInteger.valueOf(20)) > 0)){
+			this.level = this.level.subtract(n.subtract(BigInteger.valueOf(20)));
+			for (int i=0; i < 20; i++) {
 				degrade();
 			}
 			updateQuickslot();
 		} else {
-			for (long i = 0; i < n; i++) {
+			for (long i = 0; i < n.longValue(); i++) {
 				degrade();
 			}
 		}
@@ -689,12 +693,12 @@ public class Item implements Bundlable {
 		return this;
 	}
 	
-	public long visiblyUpgraded() {
-		return levelKnown ? level() : 0;
+	public BigInteger visiblyUpgraded() {
+		return levelKnown ? level() : BigInteger.ZERO;
 	}
 
-	public long buffedVisiblyUpgraded() {
-		return levelKnown ? buffedLvl() : 0;
+	public BigInteger buffedVisiblyUpgraded() {
+		return levelKnown ? buffedLvl() : BigInteger.ZERO;
 	}
 	
 	public boolean visiblyCursed() {
@@ -755,10 +759,10 @@ public class Item implements Bundlable {
 
 		String name = name();
 
-		if (visiblyUpgraded() != 0)
+		if ((visiblyUpgraded().compareTo(BigInteger.ZERO) != 0))
 			name = Messages.format( TXT_TO_STRING_LVL, name, visiblyUpgraded()  );
 
-		if (quantity > 1)
+		if ((quantity.compareTo(BigInteger.ONE) > 0))
 			name = Messages.format( TXT_TO_STRING_X, name, quantity );
 
 		if (rarity != Rarity.NONE && isIdentified())
@@ -821,34 +825,34 @@ public class Item implements Bundlable {
 		return Messages.get(this, "desc");
 	}
 	
-	public long quantity() {
+	public BigInteger quantity() {
 		return quantity;
 	}
 	
-	public Item quantity(long value ) {
+	public Item quantity(BigInteger value ) {
 		quantity = value;
 		return this;
 	}
 
 	//item's value in gold coins
-	public long value() {
-		return 0;
+	public BigInteger value() {
+		return BigInteger.ZERO;
 	}
 
 	//item's value in energy crystals
-	public long energyVal() {
-		return 0;
+	public BigInteger energyVal() {
+		return BigInteger.ZERO;
 	}
 
-	public final long sellPrice(){
-		return value() * 5 * (Dungeon.depth / 5 + 1);
+	public final BigInteger sellPrice(){
+		return value().multiply(BigInteger.valueOf(5)).multiply(BigInteger.valueOf((Dungeon.depth / 5 + 1)));
 	}
 	
 	public Item virtual(){
 		Item item = Reflection.newInstance(getClass());
 		if (item == null) return null;
 		
-		item.quantity = 0;
+		item.quantity = BigInteger.ZERO;
 		item.level = level;
 		return item;
 	}
@@ -858,7 +862,7 @@ public class Item implements Bundlable {
 	}
 	
 	public String status() {
-		return quantity != 1 ? Long.toString( quantity ) : null;
+		return (quantity.compareTo(BigInteger.ONE) != 0) ? quantity.toString() : null;
 	}
 
 	public static void updateQuickslot() {
@@ -881,8 +885,8 @@ public class Item implements Bundlable {
 
 	@Override
 	public void storeInBundle( Bundle bundle ) {
-		bundle.put( QUANTITY, quantity );
-		bundle.put( LEVEL, level );
+		Big.put(bundle, QUANTITY, quantity);
+		Big.put(bundle, LEVEL, level);
 		bundle.put( LEVEL_KNOWN, levelKnown );
 		bundle.put( CURSED, cursed );
 		bundle.put( CURSED_KNOWN, cursedKnown );
@@ -903,18 +907,18 @@ public class Item implements Bundlable {
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
-		quantity	= bundle.getLong( QUANTITY );
+		quantity	= Big.getBig(bundle, QUANTITY);
 		levelKnown	= bundle.getBoolean( LEVEL_KNOWN );
 		cursedKnown	= bundle.getBoolean( CURSED_KNOWN );
 		wereOofed = bundle.getBoolean(WERE_OOFED);
         emblemUse = bundle.getInt(EMBLEM_USE);
         canCollectWithSOH = bundle.getBoolean(CAN_CWSOF);
 		
-		long level = bundle.getLong( LEVEL );
-		if (level > 0) {
-			upgrade( level );
-		} else if (level < 0) {
-			degrade( -level );
+		BigInteger level = Big.getBig(bundle, LEVEL);
+		if ((level.compareTo(BigInteger.ZERO) > 0)) {
+			upgrade( (level) );
+		} else if ((level.compareTo(BigInteger.ZERO) < 0)) {
+			degrade( (level.negate()) );
 		}
 		
 		cursed	= bundle.getBoolean( CURSED );

@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -53,7 +55,7 @@ public class WndScoreBreakdown extends Window {
 					num.format(Statistics.progressScore), pos, Statistics.progressScore >= 250_000);
 			pos = addInfo(this, Messages.get(this, "progress_desc"), pos);
 			pos = statSlot(this, Messages.get(this, "treasure_title"),
-					num.format(Statistics.treasureScore), pos, Statistics.treasureScore >= 100_000);
+					num.format(Statistics.treasureScore), pos, (Statistics.treasureScore.compareTo(BigInteger.valueOf(100_000)) >= 0));
 			pos = addInfo(this, Messages.get(this, "treasure_desc"), pos);
 			pos = statSlot(this, Messages.get(this, "explore_title"),
 					num.format(Statistics.exploreScore), pos, Statistics.exploreScore >= 20_000);
@@ -69,7 +71,7 @@ public class WndScoreBreakdown extends Window {
 					num.format(Statistics.progressScore), pos, Statistics.progressScore >= 78_000);
 			pos = addInfo(this, Messages.get(this, "progress_desc"), pos);
 			pos = statSlot(this, Messages.get(this, "treasure_title"),
-					num.format(Statistics.treasureScore), pos, Statistics.treasureScore >= 30_000);
+					num.format(Statistics.treasureScore), pos, (Statistics.treasureScore.compareTo(BigInteger.valueOf(30_000)) >= 0));
 			pos = addInfo(this, Messages.get(this, "treasure_desc_old"), pos);
 		}
 

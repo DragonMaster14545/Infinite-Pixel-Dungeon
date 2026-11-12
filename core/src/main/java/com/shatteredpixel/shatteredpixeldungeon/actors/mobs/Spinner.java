@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -46,10 +50,10 @@ public class Spinner extends Mob {
 	{
 		spriteClass = SpinnerSprite.class;
 
-		HP = HT = Dungeon.getCycleMultiplier(50);
-		defenseSkill = Dungeon.getCycleMultiplier(17);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(50));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(17));
 
-		EXP = Dungeon.getCycleMultiplier(9);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(9));
 		maxLvl = 17;
 
 		loot = new MysteryMeat();
@@ -60,18 +64,18 @@ public class Spinner extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(10), Dungeon.getCycleMultiplier(20));
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.TEN), Dungeon.getCycleMultiplier(BigInteger.valueOf(20)));
 	}
 
 	@Override
-	public long attackSkill(Char target) {
-		return Dungeon.getCycleMultiplier(22);
+	public BigInteger attackSkill(Char target) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(22));
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(6));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(6)));
 	}
 
 	private int webCoolDown = 0;
@@ -120,13 +124,13 @@ public class Spinner extends Mob {
 	}
 
 	@Override
-	public long attackProc(Char enemy, long damage) {
+	public BigInteger attackProc(Char enemy, BigInteger damage) {
 		damage = super.attackProc( enemy, damage );
 		if (Random.Int(2) == 0) {
-			long duration = Random.IntRange(7, 8);
+			BigInteger duration = BigInteger.valueOf(Random.IntRange(7, 8));
 			//we only use half the ascension modifier here as total poison dmg doesn't scale linearly
-			duration = Math.round(duration * (AscensionChallenge.statModifier(this)/2f + 0.5f));
-			Buff.affect(enemy, Poison.class).set(duration);
+			duration = Big.round(Big.dec(duration).multiply(Big.dec((AscensionChallenge.statModifier(this)/2f + 0.5f))));
+			Buff.affect(enemy, Poison.class).set(duration.doubleValue());
 			webCoolDown = 0;
 			state = FLEEING;
 		}
@@ -208,7 +212,7 @@ public class Spinner extends Mob {
 	}
 
 	protected void applyWebToCell(int cell){
-		GameScene.add(Blob.seed(cell, 20, Web.class));
+		GameScene.add(Blob.seed(cell, BigInteger.valueOf(20), Web.class));
 	}
 	
 	private int left(int direction){

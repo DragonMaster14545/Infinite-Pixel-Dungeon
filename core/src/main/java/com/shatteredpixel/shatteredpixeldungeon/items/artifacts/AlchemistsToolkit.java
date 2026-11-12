@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
@@ -53,7 +57,7 @@ public class AlchemistsToolkit extends Artifact {
 
 		levelCap = 10;
 		
-		charge = 0;
+		charge = BigInteger.ZERO;
 		partialCharge = 0;
 	}
 
@@ -67,7 +71,7 @@ public class AlchemistsToolkit extends Artifact {
 		ArrayList<String> actions = super.actions( hero );
 		if (isEquipped( hero ) && !cursed && hero.buff(MagicImmune.class) == null) {
 			actions.add(AC_BREW);
-			if (level() < levelCap) {
+			if ((level().compareTo(BigInteger.valueOf(levelCap)) < 0)) {
 				actions.add(AC_ENERGIZE);
 			}
 		}
@@ -93,10 +97,10 @@ public class AlchemistsToolkit extends Artifact {
 		} else if (action.equals(AC_ENERGIZE)){
 			if (!isEquipped(hero))              GLog.i( Messages.get(this, "need_to_equip") );
 			else if (cursed)                    GLog.w( Messages.get(this, "cursed") );
-			else if (Dungeon.energy < 6)        GLog.w( Messages.get(this, "need_energy") );
+			else if ((Dungeon.energy.compareTo(BigInteger.valueOf(6)) < 0))        GLog.w( Messages.get(this, "need_energy") );
 			else {
 
-				final int maxLevels = (int) Math.min(levelCap - level(), Dungeon.energy/6);
+				final int maxLevels = Big.toInt(BigInteger.valueOf(levelCap).subtract(level()).min(Dungeon.energy.divide(BigInteger.valueOf(6))));
 
 				String[] options;
 				if (maxLevels > 1){
@@ -114,19 +118,19 @@ public class AlchemistsToolkit extends Artifact {
 						super.onSelect(index);
 
 						if (index == 0){
-							Dungeon.energy -= 6;
+							Dungeon.energy = Dungeon.energy.subtract(BigInteger.valueOf(6));
 							Sample.INSTANCE.play(Assets.Sounds.DRINK);
 							Sample.INSTANCE.playDelayed(Assets.Sounds.PUFF, 0.5f);
 							Dungeon.hero.sprite.operate(Dungeon.hero.pos);
 							upgrade();
 							Catalog.countUse(AlchemistsToolkit.class);
 						} else if (index == 1){
-							Dungeon.energy -= 6*maxLevels;
+							Dungeon.energy = Dungeon.energy.subtract(BigInteger.valueOf(6*maxLevels));
 							Sample.INSTANCE.play(Assets.Sounds.DRINK);
 							Sample.INSTANCE.playDelayed(Assets.Sounds.PUFF, 0.5f);
 							Dungeon.hero.sprite.operate(Dungeon.hero.pos);
-							upgrade((int) maxLevels);
-							Catalog.countUses(AlchemistsToolkit.class, maxLevels);
+							upgrade(BigInteger.valueOf((int) maxLevels));
+							Catalog.countUses(AlchemistsToolkit.class, BigInteger.valueOf(maxLevels));
 						}
 
 					}
@@ -166,22 +170,22 @@ public class AlchemistsToolkit extends Artifact {
 		if (target.buff(MagicImmune.class) != null) return;
 		partialCharge += 0.25f*amount;
 		if (partialCharge >= 1){
-			long charge = (long)partialCharge;
-			partialCharge -= charge;
-			this.charge += charge;
+			BigInteger charge = Big.of(partialCharge);
+			partialCharge -= charge.doubleValue();
+			this.charge = this.charge.add(charge);
 			updateQuickslot();
 		}
 	}
 
-	public long availableEnergy(){
+	public BigInteger availableEnergy(){
 		return charge;
 	}
 
-	public int consumeEnergy(long amount){
-		long result = amount - charge;
-		charge = (int) Math.max(0, charge - amount);
+	public int consumeEnergy(BigInteger amount){
+		BigInteger result = amount.subtract(charge);
+		charge = BigInteger.valueOf(Big.toInt(BigInteger.ZERO.max(charge.subtract(amount))));
 		Talent.onArtifactUsed(Dungeon.hero);
-		return (int) Math.max(0, result);
+		return Big.toInt(BigInteger.ZERO.max(result));
 	}
 
 	@Override
@@ -227,12 +231,12 @@ public class AlchemistsToolkit extends Artifact {
 		public boolean act() {
 
 			if (warmUpDelay > 0){
-				if (level() >= 10){
+				if ((level().compareTo(BigInteger.TEN) >= 0)){
 					warmUpDelay = 0;
 				} else if (warmUpDelay == 101){
 					warmUpDelay = 100f;
 				} else if (!cursed && target.buff(MagicImmune.class) == null) {
-					float turnsToWarmUp = (int) Math.pow(10 - level(), 2);
+					float turnsToWarmUp = (int) Math.pow(BigInteger.TEN.subtract(level()).doubleValue(), 2);
 					warmUpDelay -= 100 / turnsToWarmUp;
 				}
 				updateQuickslot();
@@ -248,15 +252,15 @@ public class AlchemistsToolkit extends Artifact {
 			//generates 2 energy every hero level, +1 energy per toolkit level
 			//to a max of 12 energy per hero level
 			//This means that energy absorbed into the kit is recovered in 5 hero levels
-			double chargeGain = (2 + level()) * levelPortion;
+			double chargeGain = Big.dec((BigInteger.TWO.add(level()))).multiply(Big.dec(levelPortion)).doubleValue();
 			chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
-			chargeGain *= getRarityMultiplier();
+			chargeGain *= getRarityMultiplier().doubleValue();
 			chargeGain = Math.min(2000000000, chargeGain);
 				partialCharge += chargeGain;
 
 			//charge is in increments of 1 energy.
 			while (partialCharge >= 1) {
-				charge++;
+				charge = charge.add(BigInteger.ONE);
 				partialCharge -= 1;
 
 				updateQuickslot();

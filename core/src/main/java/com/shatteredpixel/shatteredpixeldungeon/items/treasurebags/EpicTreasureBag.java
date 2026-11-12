@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.treasurebags;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Perks;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -50,8 +52,8 @@ public class EpicTreasureBag extends TreasureBag {
         if (Dungeon.hero.perks.contains(Perks.Perk.MORE_BAG)) amount *= 1.5f;
         for(int i = 0; i < amount; i++) items.add(Generator.random());
         for (Item item: items){
-            if (item.stackable && Random.Float() < 0.33f) item.quantity(item.quantity()+6);
-            if (item.isUpgradable() && Random.Float() < 0.33f) item.upgrade(5);
+            if (item.stackable && Random.Float() < 0.33f) item.quantity(item.quantity().add(BigInteger.valueOf(6)));
+            if (item.isUpgradable() && Random.Float() < 0.33f) item.upgrade(BigInteger.valueOf(5));
             if ((item instanceof Weapon || item instanceof Armor || item instanceof Ring || item instanceof Artifact
                     || item instanceof Wand) && Random.Float() < 0.16f) item.randomizeRarity();
         }
@@ -59,7 +61,7 @@ public class EpicTreasureBag extends TreasureBag {
     }
 
     @Override
-    public long value() {
-        return 950 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(950).multiply(quantity);
     }
 }

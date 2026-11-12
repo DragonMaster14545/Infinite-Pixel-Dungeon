@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
@@ -67,16 +71,16 @@ public class WndUpgrade extends Window {
 
 	private Item upgrader;
 	private boolean force;
-	private long amount;
+	private BigInteger amount = BigInteger.ZERO;
 
 	private RedButton btnUpgrade;
 	private RedButton btnCancel;
 
 	public WndUpgrade( Item upgrader, Item toUpgrade, boolean force){
-		this(upgrader, toUpgrade, force, 1);
+		this(upgrader, toUpgrade, force, BigInteger.ONE);
 	}
 
-	public WndUpgrade( Item upgrader, Item toUpgrade, boolean force, long amount){
+	public WndUpgrade( Item upgrader, Item toUpgrade, boolean force, BigInteger amount){
 
 		this.upgrader = upgrader;
 		this.force = force;
@@ -87,15 +91,15 @@ public class WndUpgrade extends Window {
 		title.setRect(0, 0, WIDTH, 0);
 		add(title);
 
-		long quantity = Math.max(amount, upgrader.quantity());
+		BigInteger quantity = amount.max(upgrader.quantity());
 		Item moreUpgradeItem = Dungeon.hero.belongings.getItem(upgrader.getClass());
 
 		if (moreUpgradeItem != null && moreUpgradeItem != upgrader){
-			quantity += moreUpgradeItem.quantity();
+			quantity = quantity.add(moreUpgradeItem.quantity());
 		}
 
 		String mainText = Messages.get(this, "desc");
-		if (quantity > 1){
+		if ((quantity.compareTo(BigInteger.ONE) > 0)){
 			mainText += "\n" + Messages.get(this, "remaining", quantity);
 		}
 
@@ -106,11 +110,11 @@ public class WndUpgrade extends Window {
 
 		// *** Computing current and next level to display ***
 
-		long levelFrom = toUpgrade.isIdentified() ? toUpgrade.level() : 0;
-		long levelTo = levelFrom + amount;
+		BigInteger levelFrom = toUpgrade.isIdentified() ? toUpgrade.level() : BigInteger.ZERO;
+		BigInteger levelTo = levelFrom.add(amount);
 
 		if (toUpgrade instanceof Wand && ((Wand) toUpgrade).resinBonus > 0){
-			levelTo--;
+			levelTo = levelTo.subtract(BigInteger.ONE);
 		}
 
 		boolean curseInfused = (toUpgrade instanceof Weapon && ((Weapon) toUpgrade).curseInfusionBonus)
@@ -118,9 +122,9 @@ public class WndUpgrade extends Window {
 				|| (toUpgrade instanceof Wand && ((Wand) toUpgrade).curseInfusionBonus);
 
 		if (curseInfused){
-			if (toUpgrade.trueLevel()/6 < (toUpgrade.trueLevel()+amount)/6){
+			if ((toUpgrade.trueLevel().divide(BigInteger.valueOf(6)).compareTo((toUpgrade.trueLevel().add(amount)).divide(BigInteger.valueOf(6))) < 0)){
 				//new level bracket for curse infusion bonus
-				levelTo++;
+				levelTo = levelTo.add(BigInteger.ONE);
 			}
 		}
 
@@ -168,7 +172,7 @@ public class WndUpgrade extends Window {
 		BitmapText t1 = new BitmapText(PixelScene.pixelFont);
 		BitmapText t2 = new BitmapText(PixelScene.pixelFont);
 		if (toUpgrade.isIdentified()){
-			if (levelFrom > 0){
+			if ((levelFrom.compareTo(BigInteger.ZERO) > 0)){
 				t1.text("+" + levelFrom);
 			} else {
 				t1.text("");
@@ -188,13 +192,13 @@ public class WndUpgrade extends Window {
 			t2.hardlight(ItemSlot.UPGRADED);
 		}
 		t1.measure();
-		scaleDown(t1, 0.012f*(63 - Long.numberOfLeadingZeros(levelFrom)));
+		scaleDown(t1, 0.012f*(63 - Long.numberOfLeadingZeros(Big.toLong(levelFrom))));
 		t1.x = COL_2 + ITEMSLOT_SIZE/2f - t1.width();
 		t1.y = bg1.y + ITEMSLOT_SIZE - t1.baseLine() - 1;
 		add(t1);
 
 		t2.measure();
-		scaleDown(t2, 0.012f*(63 - Long.numberOfLeadingZeros(levelTo)));
+		scaleDown(t2, 0.012f*(63 - Long.numberOfLeadingZeros(Big.toLong(levelTo))));
 		t2.x = COL_3 + ITEMSLOT_SIZE/2f - t2.width();
 		t2.y = bg2.y + ITEMSLOT_SIZE - t2.baseLine() - 1;
 		add(t2);
@@ -247,8 +251,8 @@ public class WndUpgrade extends Window {
 					bottom);
 		} else if (toUpgrade instanceof Armor) {
 			bottom = fillFields(Messages.get(this, "weight"),
-					Long.toString((((Armor) toUpgrade).STRReq(levelFrom))),
-					Long.toString((((Armor) toUpgrade).STRReq(levelTo))),
+					(((Armor) toUpgrade).STRReq(levelFrom)).toString(),
+					(((Armor) toUpgrade).STRReq(levelTo)).toString(),
 					bottom);
 		}
 
@@ -270,10 +274,10 @@ public class WndUpgrade extends Window {
 			double uses1, uses2;
 			if (toUpgrade.levelKnown) {
 				uses1 = Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(toUpgrade.level()));
-				uses2 = Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(toUpgrade.level()+1));
+				uses2 = Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(toUpgrade.level().add(BigInteger.ONE)));
 			} else {
-				uses1 = Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(0));
-				uses2 = Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(1));
+				uses1 = Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(BigInteger.ZERO));
+				uses2 = Math.ceil(100f / ((MissileWeapon) toUpgrade).durabilityPerUse(BigInteger.ONE));
 			}
 			bottom = fillFields(Messages.get(this, "durability"),
 					uses1 >= 10000 ? "∞" : Double.toString(uses1),
@@ -281,7 +285,7 @@ public class WndUpgrade extends Window {
 					bottom);
 
 			bottom = fillFields(Messages.get(this, "quantity"),
-					Long.toString(toUpgrade.quantity()),
+					toUpgrade.quantity().toString(),
 					Integer.toString(((MissileWeapon) toUpgrade).defaultQuantity()),
 					bottom);
 		}
@@ -316,10 +320,10 @@ public class WndUpgrade extends Window {
 
 		//max charges
 		if (wand instanceof Wand){
-			long chargeboost = levelFrom + (toUpgrade instanceof MagesStaff ? 1 : 0);
+			BigInteger chargeboost = levelFrom.add(BigInteger.valueOf((toUpgrade instanceof MagesStaff ? 1 : 0)));
 			bottom = fillFields(Messages.get(this, "charges"),
-					Long.toString(((Wand) wand).initialCharges() + chargeboost),
-					Long.toString(((Wand) wand).initialCharges() + chargeboost + amount),
+					BigInteger.valueOf(((Wand) wand).initialCharges()).add(chargeboost).toString(),
+					BigInteger.valueOf(((Wand) wand).initialCharges()).add(chargeboost).add(amount).toString(),
 					bottom);
 		}
 
@@ -379,9 +383,9 @@ public class WndUpgrade extends Window {
 				int lossChance;
 				if ((toUpgrade instanceof Weapon && ((Weapon) toUpgrade).enchantHardened)
 						|| (toUpgrade instanceof Armor && ((Armor) toUpgrade).glyphHardened)) {
-					lossChance = Math.min(100, 10 * (int) Math.pow(2, levelFrom - 6));
+					lossChance = Math.min(100, 10 * (int) Math.pow(2, levelFrom.subtract(BigInteger.valueOf(6)).doubleValue()));
 				} else {
-					lossChance = Math.min(100, 10 * (int) Math.pow(2, levelFrom - 4));
+					lossChance = Math.min(100, 10 * (int) Math.pow(2, levelFrom.subtract(BigInteger.valueOf(4)).doubleValue()));
 				}
 				lossChance = -1;
 
@@ -452,10 +456,10 @@ public class WndUpgrade extends Window {
 				}
 
 				if (!force) {
-					if (upgrader.quantity() <= amount)
+					if ((upgrader.quantity().compareTo(amount) <= 0))
 						upgrader.detach(Dungeon.hero.belongings.backpack);
 					else
-						upgrader.quantity(upgrader.quantity()-amount);
+						upgrader.quantity(upgrader.quantity().subtract(amount));
 				}
 				//Item moreUpgradeItem = Dungeon.hero.belongings.getItem(upgrader.getClass());
 
@@ -475,7 +479,7 @@ public class WndUpgrade extends Window {
 				super.onClick();
                 hide();
 				if (upgrader instanceof ScrollOfUpgrade) {
-					((ScrollOfUpgrade) upgrader).reShowSelector(force, amount > 1);
+					((ScrollOfUpgrade) upgrader).reShowSelector(force, (amount.compareTo(BigInteger.ONE) > 0));
 				} else if (upgrader instanceof MagicalInfusion){
 					((MagicalInfusion)upgrader).reShowSelector();
 				}
@@ -508,7 +512,7 @@ public class WndUpgrade extends Window {
 	public void onBackPressed() {
 		super.onBackPressed();
 		if (upgrader instanceof ScrollOfUpgrade) {
-			((ScrollOfUpgrade) upgrader).reShowSelector(force, amount > 1);
+			((ScrollOfUpgrade) upgrader).reShowSelector(force, (amount.compareTo(BigInteger.ONE) > 0));
 		} else if (upgrader instanceof MagicalInfusion){
 			((MagicalInfusion)upgrader).reShowSelector();
 		}

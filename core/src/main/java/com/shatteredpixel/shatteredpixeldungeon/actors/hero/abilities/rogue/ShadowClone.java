@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -152,7 +156,7 @@ public class ShadowClone extends ArmorAbility {
 		{
 			spriteClass = ShadowSprite.class;
 
-			HP = HT = 80;
+			HP = HT = BigInteger.valueOf(80);
 
 			immunities.add(AllyBuff.class);
 
@@ -168,10 +172,10 @@ public class ShadowClone extends ArmorAbility {
 			int hpBonus = 15 + 5*heroLevel;
 			hpBonus = Math.round(0.1f * Dungeon.hero.pointsInTalent(Talent.PERFECT_COPY) * hpBonus);
 			if (hpBonus > 0){
-				HT += hpBonus;
-				HP += hpBonus;
+				HT = HT.add(BigInteger.valueOf(hpBonus));
+				HP = HP.add(BigInteger.valueOf(hpBonus));
 			}
-			defenseSkill = heroLevel + 5; //equal to base hero defense skill
+			defenseSkill = BigInteger.valueOf(heroLevel + 5); //equal to base hero defense skill
 		}
 
 		@Override
@@ -204,40 +208,40 @@ public class ShadowClone extends ArmorAbility {
 		}
 
 		@Override
-		public long attackSkill(Char target) {
-			return defenseSkill+5; //equal to base hero attack skill
+		public BigInteger attackSkill(Char target) {
+			return defenseSkill.add(BigInteger.valueOf(5)); //equal to base hero attack skill
 		}
 
 		@Override
-		public long damageRoll() {
-			long damage = Dungeon.NormalLongRange(10, 20);
-			long heroDamage = Dungeon.hero.damageRoll();
-			heroDamage /= Dungeon.hero.attackDelay(); //normalize hero damage based on atk speed
-			heroDamage = Math.round(0.08f * Dungeon.hero.pointsInTalent(Talent.SHADOW_BLADE) * heroDamage);
-			if (heroDamage > 0){
-				damage += heroDamage;
+		public BigInteger damageRoll() {
+			BigInteger damage = Dungeon.NormalLongRange(BigInteger.TEN, BigInteger.valueOf(20));
+			BigInteger heroDamage = Dungeon.hero.damageRoll();
+			heroDamage = Big.trunc(Big.div(Big.dec(heroDamage), Big.dec(Dungeon.hero.attackDelay()))); //normalize hero damage based on atk speed
+			heroDamage = Big.round(Big.dec(0.08f * Dungeon.hero.pointsInTalent(Talent.SHADOW_BLADE)).multiply(Big.dec(heroDamage)));
+			if ((heroDamage.compareTo(BigInteger.ZERO) > 0)){
+				damage = damage.add(heroDamage);
 			}
 			return damage;
 		}
 
 		@Override
-		public long attackProc( Char enemy, long damage ) {
+		public BigInteger attackProc( Char enemy, BigInteger damage ) {
 			damage = super.attackProc( enemy, damage );
 			if (Random.Int(4) < Dungeon.hero.pointsInTalent(Talent.SHADOW_BLADE)
 					&& Dungeon.hero.belongings.weapon() != null){
-				return (int) Dungeon.hero.belongings.weapon().proc( this, enemy, damage );
+				return BigInteger.valueOf(Big.toInt(Dungeon.hero.belongings.weapon().proc( this, enemy, damage )));
 			} else {
 				return damage;
 			}
 		}
 
 		@Override
-		public long drRoll() {
-			long dr = super.drRoll();
-			long heroRoll = Dungeon.hero.drRoll();
-			heroRoll = Math.round(0.12f * Dungeon.hero.pointsInTalent(Talent.CLONED_ARMOR) * heroRoll);
-			if (heroRoll > 0){
-				dr += heroRoll;
+		public BigInteger drRoll() {
+			BigInteger dr = super.drRoll();
+			BigInteger heroRoll = Dungeon.hero.drRoll();
+			heroRoll = Big.round(Big.dec(0.12f * Dungeon.hero.pointsInTalent(Talent.CLONED_ARMOR)).multiply(Big.dec(heroRoll)));
+			if ((heroRoll.compareTo(BigInteger.ZERO) > 0)){
+				dr = dr.add(heroRoll);
 			}
 			return dr;
 		}
@@ -260,26 +264,26 @@ public class ShadowClone extends ArmorAbility {
 		}
 
 		@Override
-		public long defenseProc(Char enemy, long damage) {
+		public BigInteger defenseProc(Char enemy, BigInteger damage) {
 			damage = super.defenseProc(enemy, damage);
 			if (Random.Int(4) < Dungeon.hero.pointsInTalent(Talent.CLONED_ARMOR)
 					&& Dungeon.hero.belongings.armor() != null){
-				return (int) Dungeon.hero.belongings.armor().proc( enemy, this, damage );
+				return BigInteger.valueOf(Big.toInt(Dungeon.hero.belongings.armor().proc( enemy, this, damage )));
 			} else {
 				return damage;
 			}
 		}
 
 		@Override
-		public void damage(long dmg, Object src) {
+		public void damage(BigInteger dmg, Object src) {
 
 			//TODO improve this when I have proper damage source logic
 			if (Random.Int(4) < Dungeon.hero.pointsInTalent(Talent.CLONED_ARMOR)
 					&& Dungeon.hero.belongings.armor() != null
 					&& Dungeon.hero.belongings.armor().hasGlyph(AntiMagic.class, this)
 					&& AntiMagic.RESISTS.contains(src.getClass())){
-				dmg -= AntiMagic.drRoll(Dungeon.hero, Dungeon.hero.belongings.armor().buffedLvl());
-				dmg = Math.max(dmg, 0);
+				dmg = dmg.subtract(AntiMagic.drRoll(Dungeon.hero, Dungeon.hero.belongings.armor().buffedLvl()));
+				dmg = dmg.max(BigInteger.ZERO);
 			}
 
 			super.damage(dmg, src);
@@ -361,13 +365,13 @@ public class ShadowClone extends ArmorAbility {
 		@Override
 		public void storeInBundle(Bundle bundle) {
 			super.storeInBundle(bundle);
-			bundle.put(DEF_SKILL, defenseSkill);
+			Big.put(bundle, DEF_SKILL, defenseSkill);
 		}
 
 		@Override
 		public void restoreFromBundle(Bundle bundle) {
 			super.restoreFromBundle(bundle);
-			defenseSkill = bundle.getInt(DEF_SKILL);
+			defenseSkill = BigInteger.valueOf(bundle.getInt(DEF_SKILL));
 		}
 	}
 

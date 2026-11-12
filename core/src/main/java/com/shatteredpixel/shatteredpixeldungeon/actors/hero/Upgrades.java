@@ -1,5 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
@@ -44,9 +46,9 @@ public class Upgrades implements Bundlable {
             }
 
             @Override
-            public LinkedHashMap<Class<? extends Item>, Long> cost(int level) {
-                LinkedHashMap<Class<? extends Item>, Long> cost = new LinkedHashMap<>();
-                cost.put(ScrollOfUpgrade.class, (long) Math.pow(3,level));
+            public LinkedHashMap<Class<? extends Item>, BigInteger> cost(int level) {
+                LinkedHashMap<Class<? extends Item>, BigInteger> cost = new LinkedHashMap<>();
+                cost.put(ScrollOfUpgrade.class, BigInteger.valueOf(3).pow(level));
                 return cost;
             }
         },
@@ -57,9 +59,9 @@ public class Upgrades implements Bundlable {
             }
 
             @Override
-            public LinkedHashMap<Class<? extends Item>, Long> cost(int level) {
-                LinkedHashMap<Class<? extends Item>, Long> cost = new LinkedHashMap<>();
-                cost.put(ScrollOfUpgrade.class, (long) Math.pow(3,level));
+            public LinkedHashMap<Class<? extends Item>, BigInteger> cost(int level) {
+                LinkedHashMap<Class<? extends Item>, BigInteger> cost = new LinkedHashMap<>();
+                cost.put(ScrollOfUpgrade.class, BigInteger.valueOf(3).pow(level));
                 return cost;
             }
         },
@@ -70,9 +72,9 @@ public class Upgrades implements Bundlable {
             }
 
             @Override
-            public LinkedHashMap<Class<? extends Item>, Long> cost(int level) {
-                LinkedHashMap<Class<? extends Item>, Long> cost = new LinkedHashMap<>();
-                cost.put(ScrollOfUpgrade.class, (long) Math.pow(3,level));
+            public LinkedHashMap<Class<? extends Item>, BigInteger> cost(int level) {
+                LinkedHashMap<Class<? extends Item>, BigInteger> cost = new LinkedHashMap<>();
+                cost.put(ScrollOfUpgrade.class, BigInteger.valueOf(3).pow(level));
                 return cost;
             }
         },
@@ -84,10 +86,10 @@ public class Upgrades implements Bundlable {
             }
 
             @Override
-            public LinkedHashMap<Class<? extends Item>, Long> cost(int level) {
-                LinkedHashMap<Class<? extends Item>, Long> cost = new LinkedHashMap<>();
-                cost.put(ScrollOfUpgrade.class, (long) Math.pow(2,level));
-                cost.put(ScrollOfMagicMapping.class, (long) Math.pow(3,level));
+            public LinkedHashMap<Class<? extends Item>, BigInteger> cost(int level) {
+                LinkedHashMap<Class<? extends Item>, BigInteger> cost = new LinkedHashMap<>();
+                cost.put(ScrollOfUpgrade.class, BigInteger.valueOf(2).pow(level));
+                cost.put(ScrollOfMagicMapping.class, BigInteger.valueOf(3).pow(level));
                 return cost;
             }
         },
@@ -99,10 +101,10 @@ public class Upgrades implements Bundlable {
             }
 
             @Override
-            public LinkedHashMap<Class<? extends Item>, Long> cost(int level) {
-                LinkedHashMap<Class<? extends Item>, Long> cost = new LinkedHashMap<>();
-                cost.put(ScrollOfUpgrade.class, (long) Math.pow(2,level));
-                cost.put(ScrollOfRecharging.class, (long) Math.pow(3,level));
+            public LinkedHashMap<Class<? extends Item>, BigInteger> cost(int level) {
+                LinkedHashMap<Class<? extends Item>, BigInteger> cost = new LinkedHashMap<>();
+                cost.put(ScrollOfUpgrade.class, BigInteger.valueOf(2).pow(level));
+                cost.put(ScrollOfRecharging.class, BigInteger.valueOf(3).pow(level));
                 return cost;
             }
         },;
@@ -116,7 +118,7 @@ public class Upgrades implements Bundlable {
             this.name = name;
             this.desc = desc;
         }
-        public LinkedHashMap<Class<? extends Item>,Long> cost(int level) {
+        public LinkedHashMap<Class<? extends Item>,BigInteger> cost(int level) {
             return new LinkedHashMap<>();
         }
         public int ringSlots() {
@@ -194,7 +196,7 @@ public class Upgrades implements Bundlable {
             this.level = level;
         }
 
-        public LinkedHashMap<Class<? extends Item>,Long> getUpgradeCost() {
+        public LinkedHashMap<Class<? extends Item>,BigInteger> getUpgradeCost() {
             return data.cost(level+1);
         }
 

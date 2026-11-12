@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -102,11 +104,11 @@ public class Perks {
         public void tintIcon(Image icon) { icon.hardlight(0.15f, 0.7f, 0.5f); }
     }
 
-    public static long onAttackProc(Hero hero, Char enemy, long damage){
+    public static BigInteger onAttackProc(Hero hero, Char enemy, BigInteger damage){
         if (hero.perks.contains(Perk.SUCKER_PUNCH)
                 && enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)
                 && enemy.buff(SuckerPunchTracker.class) == null){
-            damage += hero.damageRoll()/4;
+            damage = damage.add(hero.damageRoll().divide(BigInteger.valueOf(4)));
             Buff.affect(enemy, SuckerPunchTracker.class);
         }
         if (hero.perks.contains(Perk.DIRECTIVE)
@@ -118,7 +120,7 @@ public class Perks {
             if (hero.belongings.weapon instanceof MissileWeapon) {
                 Buff.affect(enemy, FollowupStrikeTracker.class);
             } else if (enemy.buff(FollowupStrikeTracker.class) != null){
-                damage += hero.damageRoll()/4;
+                damage = damage.add(hero.damageRoll().divide(BigInteger.valueOf(4)));
                 if (!(enemy instanceof Mob) || !((Mob) enemy).surprisedBy(hero)){
                     Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG, 0.75f, 1.2f);
                 }

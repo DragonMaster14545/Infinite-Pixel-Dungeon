@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -227,7 +229,7 @@ public class SentryRoom extends SpecialRoom {
 
 			properties.add(Property.IMMOVABLE);
 
-			HT = HP = 9_000_000_000_000_000_000L;
+			HT = HP = BigInteger.valueOf(9_000_000_000_000_000_000L);
 		}
 
 		private float initialChargeDelay;
@@ -290,7 +292,7 @@ public class SentryRoom extends SpecialRoom {
 
 		public void onZapComplete(){
 			if (hit(this, Dungeon.hero, true)) {
-				Dungeon.hero.damage(Random.NormalIntRange(2 + Dungeon.depth / 2, 4 + Dungeon.depth), new Eye.DeathGaze());
+				Dungeon.hero.damage(BigInteger.valueOf(Random.NormalIntRange(2 + Dungeon.depth / 2, 4 + Dungeon.depth)), new Eye.DeathGaze());
 				if (!Dungeon.hero.isAlive()) {
 					Badges.validateDeathFromEnemyMagic();
 					Dungeon.fail(this);
@@ -302,13 +304,13 @@ public class SentryRoom extends SpecialRoom {
 		}
 
 		@Override
-		public long attackSkill(Char target) {
-			return 20 + Dungeon.depth * 2;
+		public BigInteger attackSkill(Char target) {
+			return BigInteger.valueOf(20 + Dungeon.depth * 2);
 		}
 
 		@Override
-		public long defenseSkill(Char enemy ) {
-			return INFINITE_EVASION;
+		public BigInteger defenseSkill(Char enemy ) {
+			return BigInteger.valueOf(INFINITE_EVASION);
 		}
 
 		@Override

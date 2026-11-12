@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
@@ -446,27 +448,27 @@ public class Badges {
 	public static void validateGoldCollected() {
 		Badge badge = null;
 		
-		if (!local.contains( Badge.GOLD_COLLECTED_1 ) && Statistics.goldCollected >= 10000) {
+		if (!local.contains( Badge.GOLD_COLLECTED_1 ) && (Statistics.goldCollected.compareTo(BigInteger.valueOf(10000)) >= 0)) {
 			if (badge != null) unlock(badge);
 			badge = Badge.GOLD_COLLECTED_1;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.GOLD_COLLECTED_2 ) && Statistics.goldCollected >= 25000) {
+		if (!local.contains( Badge.GOLD_COLLECTED_2 ) && (Statistics.goldCollected.compareTo(BigInteger.valueOf(25000)) >= 0)) {
 			if (badge != null) unlock(badge);
 			badge = Badge.GOLD_COLLECTED_2;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.GOLD_COLLECTED_3 ) && Statistics.goldCollected >= 75000) {
+		if (!local.contains( Badge.GOLD_COLLECTED_3 ) && (Statistics.goldCollected.compareTo(BigInteger.valueOf(75000)) >= 0)) {
 			if (badge != null) unlock(badge);
 			badge = Badge.GOLD_COLLECTED_3;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.GOLD_COLLECTED_4 ) && Statistics.goldCollected >= 150000) {
+		if (!local.contains( Badge.GOLD_COLLECTED_4 ) && (Statistics.goldCollected.compareTo(BigInteger.valueOf(150000)) >= 0)) {
 			if (badge != null) unlock(badge);
 			badge = Badge.GOLD_COLLECTED_4;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.GOLD_COLLECTED_5 ) && Statistics.goldCollected >= 500000) {
+		if (!local.contains( Badge.GOLD_COLLECTED_5 ) && (Statistics.goldCollected.compareTo(BigInteger.valueOf(500000)) >= 0)) {
 			if (badge != null) unlock(badge);
 			badge = Badge.GOLD_COLLECTED_5;
 			local.add( badge );
@@ -627,26 +629,26 @@ public class Badges {
 		}
 		
 		Badge badge = null;
-		if (!local.contains( Badge.ITEM_LEVEL_1 ) && item.level() >= 50) {
+		if (!local.contains( Badge.ITEM_LEVEL_1 ) && (item.level().compareTo(BigInteger.valueOf(50)) >= 0)) {
 			badge = Badge.ITEM_LEVEL_1;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.ITEM_LEVEL_2 ) && item.level() >= 120) {
+		if (!local.contains( Badge.ITEM_LEVEL_2 ) && (item.level().compareTo(BigInteger.valueOf(120)) >= 0)) {
 			if (badge != null) unlock(badge);
 			badge = Badge.ITEM_LEVEL_2;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.ITEM_LEVEL_3 ) && item.level() >= 250) {
+		if (!local.contains( Badge.ITEM_LEVEL_3 ) && (item.level().compareTo(BigInteger.valueOf(250)) >= 0)) {
 			if (badge != null) unlock(badge);
 			badge = Badge.ITEM_LEVEL_3;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.ITEM_LEVEL_4 ) && item.level() >= 600) {
+		if (!local.contains( Badge.ITEM_LEVEL_4 ) && (item.level().compareTo(BigInteger.valueOf(600)) >= 0)) {
 			if (badge != null) unlock(badge);
 			badge = Badge.ITEM_LEVEL_4;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.ITEM_LEVEL_5 ) && item.level() >= 1500) {
+		if (!local.contains( Badge.ITEM_LEVEL_5 ) && (item.level().compareTo(BigInteger.valueOf(1500)) >= 0)) {
 			if (badge != null) unlock(badge);
 			badge = Badge.ITEM_LEVEL_5;
 			local.add( badge );
@@ -1021,7 +1023,7 @@ public class Badges {
 	}
 	
 	public static void validateMageUnlock(){
-		if (Statistics.upgradesUsed >= 1 && !isUnlocked(Badge.UNLOCK_MAGE)){
+		if ((Statistics.upgradesUsed.compareTo(BigInteger.ONE) >= 0) && !isUnlocked(Badge.UNLOCK_MAGE)){
 			displayBadge( Badge.UNLOCK_MAGE );
 		}
 	}
@@ -1049,7 +1051,7 @@ public class Badges {
 				displayBadge(Badge.UNLOCK_DUELIST);
 
 			} else if (!Dungeon.hero.belongings.weapon.isIdentified() &&
-					((MeleeWeapon) Dungeon.hero.belongings.weapon).STRReq(0) <= Dungeon.hero.STR()){
+					((MeleeWeapon) Dungeon.hero.belongings.weapon).STRReq(BigInteger.ZERO) <= Dungeon.hero.STR()){
 				displayBadge(Badge.UNLOCK_DUELIST);
 			}
 		}
@@ -1128,28 +1130,28 @@ public class Badges {
 		displayBadge( badge );
 	}
 
-	public static void validateHighScore(long score ){
+	public static void validateHighScore(BigInteger score ){
 		Badge badge = null;
-		if (score >= 100_000) {
+		if ((score.compareTo(BigInteger.valueOf(100_000)) >= 0)) {
 			badge = Badge.HIGH_SCORE_1;
 			local.add( badge );
 		}
-		if (score >= 250_000) {
+		if ((score.compareTo(BigInteger.valueOf(250_000)) >= 0)) {
 			unlock(badge);
 			badge = Badge.HIGH_SCORE_2;
 			local.add( badge );
 		}
-		if (score >= 1_000_000) {
+		if ((score.compareTo(BigInteger.valueOf(1_000_000)) >= 0)) {
 			unlock(badge);
 			badge = Badge.HIGH_SCORE_3;
 			local.add( badge );
 		}
-		if (score >= 4_000_000) {
+		if ((score.compareTo(BigInteger.valueOf(4_000_000)) >= 0)) {
 			unlock(badge);
 			badge = Badge.HIGH_SCORE_4;
 			local.add( badge );
 		}
-		if (score >= 10_000_000) {
+		if ((score.compareTo(BigInteger.valueOf(10_000_000)) >= 0)) {
 			unlock(badge);
 			badge = Badge.HIGH_SCORE_5;
 			local.add( badge );
@@ -1222,7 +1224,7 @@ public class Badges {
     public static void validateTakingTheMick(Object cause){
         if ((cause == Dungeon.hero || cause instanceof Explosive.ExplosiveCurseBomb)
                 && Dungeon.hero.belongings.attackingWeapon() instanceof Pickaxe
-                && Dungeon.hero.belongings.attackingWeapon().level() >= 50){
+                && (Dungeon.hero.belongings.attackingWeapon().level().compareTo(BigInteger.valueOf(50)) >= 0)){
             local.add( Badge.TAKING_THE_MICK );
             displayBadge(Badge.TAKING_THE_MICK);
         }

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -47,15 +51,13 @@ public class WarHammer extends MeleeWeapon {
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  20L*(tier()+1) +    //120 base, up from 36
-				5*lvl*(tier()+1);   //scaling is 5x
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(20L*(tier()+1)).add(BigInteger.valueOf(5).multiply(lvl).multiply(BigInteger.valueOf((tier()+1))));   //scaling is 5x
 	}
 
 	@Override
-	public long min(long lvl) {
-		return  tier()*12L +  //base
-				lvl*10;    //level scaling
+	public BigInteger min(BigInteger lvl) {
+		return  BigInteger.valueOf(tier()*12L).add(lvl.multiply(BigInteger.TEN));    //level scaling
 	}
 
 	@Override
@@ -66,27 +68,27 @@ public class WarHammer extends MeleeWeapon {
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
 		//+(6+1.5*lvl) damage, roughly +40% base dmg, +45% scaling
-		long dmgBoost = augment.damageFactor(tier()*10L + buffedLvl()*tier()*12);
+		BigInteger dmgBoost = augment.damageFactor(BigInteger.valueOf(tier()*10L).add(buffedLvl().multiply(BigInteger.valueOf(tier())).multiply(BigInteger.valueOf(12))));
 		Mace.heavyBlowAbility(hero, target, 1, dmgBoost, this);
 	}
 
-	public String upgradeAbilityStat(long level){
-		int dmgBoost = 6 + Math.round(1.5f*level);
-		return augment.damageFactor(min(level)+dmgBoost) + "-" + augment.damageFactor(max(level)+dmgBoost);
+	public String upgradeAbilityStat(BigInteger level){
+		int dmgBoost = Big.toInt(BigInteger.valueOf(6).add(Big.round(Big.dec(1.5f).multiply(Big.dec(level)))));
+		return augment.damageFactor(min(level).add(BigInteger.valueOf(dmgBoost))) + "-" + augment.damageFactor(max(level).add(BigInteger.valueOf(dmgBoost)));
 	}
 
 	@Override
 	public String abilityInfo() {
-		long dmgBoost = levelKnown ? tier()*10L + buffedLvl()*tier()*12 : tier()*10L;
+		BigInteger dmgBoost = levelKnown ? BigInteger.valueOf(tier()*10L).add(buffedLvl().multiply(BigInteger.valueOf(tier())).multiply(BigInteger.valueOf(12))) : BigInteger.valueOf(tier()*10L);
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
+			return Messages.get(this, "ability_desc", augment.damageFactor(min().add(dmgBoost)), augment.damageFactor(max().add(dmgBoost)));
 		} else {
-			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);
+			return Messages.get(this, "typical_ability_desc", min(BigInteger.ZERO).add(dmgBoost), max(BigInteger.ZERO).add(dmgBoost));
 		}
 	}
 
 	@Override
-    public long proc(Char attacker, Char defender, long damage) {
+    public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
         attacker.sprite.centerEmitter().start( Speck.factory( Speck.STAR ), 0.05f, 10 );
         Buff.affect(attacker, Paralysis.class, Random.Int(1, 3)
 				* (Math.round((1f/(1d + (speedMultiplier(attacker) - 1d) * 0.75f))*100))/100f);

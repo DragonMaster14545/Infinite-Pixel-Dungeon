@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -98,9 +102,9 @@ public class RockfallTrap extends Trap {
 			Char ch = Actor.findChar( cell );
 
 			if (ch != null && ch.isAlive()){
-				long damage = Random.NormalLongRange(5+Dungeon.escalatingDepth(), 10+Dungeon.escalatingDepth()*2);
-				damage -= ch.drRoll();
-				ch.damage( Math.max(damage, 0) , this);
+				BigInteger damage = Big.normalRange(BigInteger.valueOf(5).add(Dungeon.escalatingDepth()), BigInteger.TEN.add(Dungeon.escalatingDepth().multiply(BigInteger.TWO)));
+				damage = damage.subtract(ch.drRoll());
+				ch.damage( damage.max(BigInteger.ZERO) , this);
 
 				Buff.prolong( ch, Paralysis.class, Paralysis.DURATION );
 

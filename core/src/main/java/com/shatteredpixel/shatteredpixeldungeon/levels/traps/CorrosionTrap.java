@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -41,10 +43,10 @@ public class CorrosionTrap extends Trap {
 	@Override
 	public void activate() {
 
-		CorrosiveGas corrosiveGas = Blob.seed(pos, Math.min(250, 80 + 5 * Dungeon.escalatingDepth()), CorrosiveGas.class);
+		CorrosiveGas corrosiveGas = Blob.seed(pos, BigInteger.valueOf(250).min(BigInteger.valueOf(80).add(BigInteger.valueOf(5).multiply(Dungeon.escalatingDepth()))), CorrosiveGas.class);
 		Sample.INSTANCE.play(Assets.Sounds.GAS);
 
-		corrosiveGas.setStrength(1+Dungeon.escalatingDepth()/4);
+		corrosiveGas.setStrength(BigInteger.ONE.add(Dungeon.escalatingDepth().divide(BigInteger.valueOf(4))));
 
 		GameScene.add(corrosiveGas);
 

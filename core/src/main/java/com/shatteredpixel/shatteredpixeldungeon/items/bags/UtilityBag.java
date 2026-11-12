@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bags;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
 import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
@@ -93,8 +95,8 @@ public class UtilityBag extends Bag {
 	}
 
 	@Override
-	public long value() {
-		return 650 * (Dungeon.cycle + 1);
+	public BigInteger value() {
+		return BigInteger.valueOf(650 * (Dungeon.cycle + 1));
 	}
 
 }

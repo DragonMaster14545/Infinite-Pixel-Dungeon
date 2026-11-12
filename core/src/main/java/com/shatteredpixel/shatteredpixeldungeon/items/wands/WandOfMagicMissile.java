@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -47,12 +51,12 @@ public class WandOfMagicMissile extends DamageWand {
 		image = ItemSpriteSheet.WAND_MAGIC_MISSILE;
 	}
 
-	public long min(long lvl){
-		return ((2 +lvl)*getRarityMultiplier());
+	public BigInteger min(BigInteger lvl){
+		return ((BigInteger.TWO.add(lvl)).multiply(getRarityMultiplier()));
 	}
 
-	public long max(long lvl){
-		return ((8+2*lvl)*getRarityMultiplier());
+	public BigInteger max(BigInteger lvl){
+		return ((BigInteger.valueOf(8).add(BigInteger.TWO.multiply(lvl))).multiply(getRarityMultiplier()));
 	}
 	
 	@Override
@@ -65,11 +69,11 @@ public class WandOfMagicMissile extends DamageWand {
 			ch.damage(damageRoll(), this);
 			Sample.INSTANCE.play( Assets.Sounds.HIT_MAGIC, 1, Random.Float(0.87f, 1.15f) );
 
-			ch.sprite.burst(0xFFFFFFFF,  (int) Math.min(Math.sqrt(2 + buffedLvl() / 2f), 1000));
+			ch.sprite.burst(0xFFFFFFFF,  (int) Math.min(Math.sqrt(Big.dec(2).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue()), 1000));
 
 			//apply the magic charge buff if we have another wand in inventory of a lower level, or already have the buff
 			for (Wand.Charger wandCharger : curUser.buffs(Wand.Charger.class)){
-				if (wandCharger.wand().buffedLvl() < buffedLvl() || curUser.buff(MagicCharge.class) != null){
+				if ((wandCharger.wand().buffedLvl().compareTo(buffedLvl()) < 0) || curUser.buff(MagicCharge.class) != null){
 					Buff.prolong(curUser, MagicCharge.class, MagicCharge.DURATION).setup(this);
 					break;
 				}
@@ -81,7 +85,7 @@ public class WandOfMagicMissile extends DamageWand {
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
+	public void onHit(MagesStaff staff, Char attacker, Char defender, BigInteger damage) {
 		SpellSprite.show(attacker, SpellSprite.CHARGE);
 		for (Wand.Charger c : attacker.buffs(Wand.Charger.class)){
 			if (c.wand() != this){
@@ -104,11 +108,11 @@ public class WandOfMagicMissile extends DamageWand {
 
 		public static float DURATION = 4f;
 
-		private long level = 0;
+		private BigInteger level = BigInteger.ZERO;
 		private Wand wandJustApplied; //we don't bundle this as it's only used right as the buff is applied
 
 		public void setup(Wand wand){
-			if (level < wand.buffedLvl()){
+			if ((level.compareTo(wand.buffedLvl()) < 0)){
 				this.level = wand.buffedLvl();
 				this.wandJustApplied = wand;
 			}
@@ -120,7 +124,7 @@ public class WandOfMagicMissile extends DamageWand {
 			updateQuickslot();
 		}
 
-		public long level(){
+		public BigInteger level(){
 			return this.level;
 		}
 
@@ -156,13 +160,13 @@ public class WandOfMagicMissile extends DamageWand {
 		@Override
 		public void storeInBundle(Bundle bundle) {
 			super.storeInBundle(bundle);
-			bundle.put(LEVEL, level);
+			Big.put(bundle, LEVEL, level);
 		}
 
 		@Override
 		public void restoreFromBundle(Bundle bundle) {
 			super.restoreFromBundle(bundle);
-			level = bundle.getLong(LEVEL);
+			level = Big.getBig(bundle, LEVEL);
 		}
 	}
 

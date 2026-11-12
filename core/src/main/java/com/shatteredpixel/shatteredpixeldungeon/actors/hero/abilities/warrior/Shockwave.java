@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -110,9 +114,9 @@ public class Shockwave extends ArmorAbility {
 							Char ch = Actor.findChar(cell);
 							if (ch != null && ch.alignment != hero.alignment){
 								int scalingStr = hero.STR()-10;
-								long damage = Hero.heroDamageIntRange(5 + scalingStr, 10 + 2*scalingStr);
-								damage = Math.round(damage * (1f + 0.2f*hero.pointsInTalent(Talent.SHOCK_FORCE)));
-								damage -= ch.drRoll();
+								BigInteger damage = Hero.heroDamageIntRange(BigInteger.valueOf(5 + scalingStr), BigInteger.valueOf(10 + 2*scalingStr));
+								damage = Big.round(Big.dec(damage).multiply(Big.dec((1f + 0.2f*hero.pointsInTalent(Talent.SHOCK_FORCE)))));
+								damage = damage.subtract(ch.drRoll());
 
 								if (hero.pointsInTalent(Talent.STRIKING_WAVE) == 4){
 									Buff.affect(hero, Talent.StrikingWaveTracker.class, 0f);

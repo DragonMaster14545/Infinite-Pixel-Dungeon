@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.VialOfBlood;
@@ -35,10 +39,10 @@ import com.watabou.utils.GameMath;
 
 public class Healing extends Buff {
 
-	private long healingLeft;
+	private BigInteger healingLeft = BigInteger.ZERO;
 	
 	private float percentHealPerTick;
-	private long flatHealPerTick;
+	private BigInteger flatHealPerTick = BigInteger.ZERO;
 
 	private boolean healingLimited = false;
 	
@@ -53,18 +57,18 @@ public class Healing extends Buff {
 	@Override
 	public boolean act(){
 
-		if (target.HP < target.HT) {
-			target.HP = Math.min(target.HT, target.HP + healingThisTick());
+		if ((target.HP.compareTo(target.HT) < 0)) {
+			target.HP = target.HT.min(target.HP.add(healingThisTick()));
 
-			if (target.HP == target.HT && target instanceof Hero) {
+			if ((target.HP.compareTo(target.HT) == 0) && target instanceof Hero) {
 				((Hero) target).resting = false;
 			}
 		}
 
-		target.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(healingThisTick()), FloatingText.HEALING);
-		healingLeft -= healingThisTick();
+		target.sprite.showStatusWithIcon(CharSprite.POSITIVE, healingThisTick().toString(), FloatingText.HEALING);
+		healingLeft = healingLeft.subtract(healingThisTick());
 		
-		if (healingLeft <= 0){
+		if ((healingLeft.compareTo(BigInteger.ZERO) <= 0)){
 			if (target instanceof Hero) {
 				((Hero) target).resting = false;
 			}
@@ -76,32 +80,32 @@ public class Healing extends Buff {
 		return true;
 	}
 	
-	private long healingThisTick(){
-		long heal = (long)GameMath.gate(1d,
-				Math.round(healingLeft * percentHealPerTick * 1d) + flatHealPerTick,
-				healingLeft);
-		if (healingLimited && heal > VialOfBlood.maxHealPerTurn()){
+	private BigInteger healingThisTick(){
+		BigInteger heal = Big.of(GameMath.gate(1d,
+				Big.round(Big.dec(healingLeft).multiply(Big.dec(percentHealPerTick)).multiply(Big.dec(1d))).add(flatHealPerTick).floatValue(),
+				healingLeft.floatValue()));
+		if (healingLimited && (heal.compareTo(VialOfBlood.maxHealPerTurn()) > 0)){
 			heal = VialOfBlood.maxHealPerTurn();
 		}
 		return heal;
 	}
 
-	public void setHeal(long amount, float percentPerTick, long flatPerTick){
+	public void setHeal(BigInteger amount, float percentPerTick, BigInteger flatPerTick){
 		//multiple sources of healing do not overlap, but do combine the best of their properties
-		healingLeft = Math.max(healingLeft, amount);
+		healingLeft = healingLeft.max(amount);
 		percentHealPerTick = Math.max(percentHealPerTick, percentPerTick);
-		flatHealPerTick = Math.max(flatHealPerTick, flatPerTick);
+		flatHealPerTick = flatHealPerTick.max(flatPerTick);
 	}
 
 	public void applyVialEffect(){
 		healingLimited = VialOfBlood.delayBurstHealing();
 		if (healingLimited){
-			healingLeft = Math.round(healingLeft*VialOfBlood.totalHealMultiplier());
+			healingLeft = Big.round(Big.dec(healingLeft).multiply(Big.dec(VialOfBlood.totalHealMultiplier())));
 		}
 	}
 
-	public void increaseHeal( long amount ){
-		healingLeft += amount;
+	public void increaseHeal( BigInteger amount ){
+		healingLeft = healingLeft.add(amount);
 	}
 	
 	@Override
@@ -119,18 +123,18 @@ public class Healing extends Buff {
 	@Override
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
-		bundle.put(LEFT, healingLeft);
+		Big.put(bundle, LEFT, healingLeft);
 		bundle.put(PERCENT, percentHealPerTick);
-		bundle.put(FLAT, flatHealPerTick);
+		Big.put(bundle, FLAT, flatHealPerTick);
 		bundle.put(HEALING_LIMITED, healingLimited);
 	}
 	
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
-		healingLeft = bundle.getLong(LEFT);
+		healingLeft = Big.getBig(bundle, LEFT);
 		percentHealPerTick = bundle.getFloat(PERCENT);
-		flatHealPerTick = bundle.getLong(FLAT);
+		flatHealPerTick = Big.getBig(bundle, FLAT);
 		healingLimited = bundle.getBoolean(HEALING_LIMITED);
 	}
 	
@@ -141,7 +145,7 @@ public class Healing extends Buff {
 
 	@Override
 	public String iconTextDisplay() {
-		return Long.toString(healingLeft);
+		return healingLeft.toString();
 	}
 	
 	@Override

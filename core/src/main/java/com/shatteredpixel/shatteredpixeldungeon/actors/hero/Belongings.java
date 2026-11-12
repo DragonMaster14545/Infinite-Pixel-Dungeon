@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
@@ -347,16 +349,16 @@ public class Belongings implements Iterable<Item> {
 		return result;
 	}
 
-	public long count( Class<? extends Item> itemClass ){
+	public BigInteger count( Class<? extends Item> itemClass ){
 
-		long result = 0;
+		BigInteger result = BigInteger.ZERO;
 
 		boolean lostInvent = lostInventory();
 
 		for (Item item : this) {
 			if (itemClass.isInstance( item )) {
 				if (!lostInvent || item.keptThroughLostInventory()) {
-					result += item.quantity();
+					result = result.add(item.quantity());
 				}
 			}
 		}
@@ -365,25 +367,25 @@ public class Belongings implements Iterable<Item> {
 	}
 
 
-	public boolean hasItems(LinkedHashMap<Class<? extends Item>,Long> items) {
-		for (Map.Entry<Class<? extends Item>,Long> entry : items.entrySet()) {
-			if(count(entry.getKey()) < entry.getValue()) {
+	public boolean hasItems(LinkedHashMap<Class<? extends Item>,BigInteger> items) {
+		for (Map.Entry<Class<? extends Item>,BigInteger> entry : items.entrySet()) {
+			if((count(entry.getKey()).compareTo(entry.getValue()) < 0)) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	public void removeItems(LinkedHashMap<Class<? extends Item>,Long> items) {
-		for (Map.Entry<Class<? extends Item>,Long> entry : items.entrySet()) {
+	public void removeItems(LinkedHashMap<Class<? extends Item>,BigInteger> items) {
+		for (Map.Entry<Class<? extends Item>,BigInteger> entry : items.entrySet()) {
 			removeItem(entry.getKey(),entry.getValue());
 		}
 	}
 
-	public void removeItem(Class<? extends Item> item, long quantity) {
+	public void removeItem(Class<? extends Item> item, BigInteger quantity) {
         for(Item i : this) {
 			if (item == i.getClass()) {
-				if (i.quantity() >= quantity) {
+				if ((i.quantity().compareTo(quantity) >= 0)) {
 					i.remove(quantity);
 					return;
 				} else {
@@ -393,9 +395,9 @@ public class Belongings implements Iterable<Item> {
 		}
 	}
 
-	public String formatItems(LinkedHashMap<Class<? extends Item>,Long> items) {
+	public String formatItems(LinkedHashMap<Class<? extends Item>,BigInteger> items) {
 		StringBuilder result = new StringBuilder();
-		for (Map.Entry<Class<? extends Item>,Long> entry : items.entrySet()) {
+		for (Map.Entry<Class<? extends Item>,BigInteger> entry : items.entrySet()) {
 			String itemName = "";
 			try {
 				Item nameItem = entry.getKey().newInstance();

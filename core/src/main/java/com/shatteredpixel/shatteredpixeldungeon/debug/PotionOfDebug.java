@@ -1,6 +1,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.debug;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -105,7 +107,7 @@ public class PotionOfDebug extends Potion {
 				} catch ( NumberFormatException e ) {
 					GLog.w( "Invalid number" );
 				}
-				item.quantity( amount );
+				item.quantity( BigInteger.valueOf(amount) );
 				next.accept( item );
 			}
 		} );
@@ -127,7 +129,7 @@ public class PotionOfDebug extends Potion {
 				} catch ( NumberFormatException e ) {
 					GLog.w( "Invalid number" );
 				}
-				item.upgrade( level );
+				item.upgrade( BigInteger.valueOf(level) );
 				next.accept( item );
 			}
 		} );

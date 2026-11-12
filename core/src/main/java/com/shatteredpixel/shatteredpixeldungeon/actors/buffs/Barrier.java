@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Blocking;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -40,28 +44,28 @@ public class Barrier extends ShieldBuff {
 	double partialLostShield;
 
 	@Override
-	public void incShield(long amt) {
+	public void incShield(BigInteger amt) {
 		super.incShield(amt);
 		partialLostShield = 0;
 	}
 
 	@Override
-	public void setShield(long shield) {
+	public void setShield(BigInteger shield) {
 		super.setShield(shield);
-		if (shielding() == shield) partialLostShield = 0;
+		if ((shielding().compareTo(shield) == 0)) partialLostShield = 0;
 	}
 
 	@Override
 	public boolean act() {
 
-		partialLostShield += Math.min(1f, shielding()/20f);
+		partialLostShield += Big.dec(1f).min(Big.div(Big.dec(shielding()), Big.dec(20f))).doubleValue();
 
 		if (partialLostShield >= 1f) {
-			absorbDamage(1);
+			absorbDamage(BigInteger.ONE);
 			partialLostShield = 0;
 		}
 		
-		if (shielding() <= 0){
+		if ((shielding().compareTo(BigInteger.ZERO) <= 0)){
 			detach();
 		}
 		
@@ -91,7 +95,7 @@ public class Barrier extends ShieldBuff {
 
 	@Override
 	public String iconTextDisplay() {
-		return Long.toString(shielding());
+		return shielding().toString();
 	}
 	
 	@Override

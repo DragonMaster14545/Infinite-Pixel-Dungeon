@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -67,12 +71,12 @@ public class WandOfTeleportation extends DamageWand {
 		collisionProperties = Ballistica.STOP_TARGET;
 	}
 
-	public long min(long lvl){
-		return ((1+lvl)*getRarityMultiplier());
+	public BigInteger min(BigInteger lvl){
+		return ((BigInteger.ONE.add(lvl)).multiply(getRarityMultiplier()));
 	}
 
-	public long max(long lvl){
-		return ((5+3*lvl)*getRarityMultiplier());
+	public BigInteger max(BigInteger lvl){
+		return ((BigInteger.valueOf(5).add(BigInteger.valueOf(3).multiply(lvl))).multiply(getRarityMultiplier()));
 	}
 
 	@Override
@@ -84,10 +88,10 @@ public class WandOfTeleportation extends DamageWand {
             ch.damage(damageRoll(), this);
 
             Sample.INSTANCE.play( Assets.Sounds.HIT_MAGIC, 1, Random.Float(0.87f, 1.15f) );
-            ch.sprite.burst(0xFFFFFFFF,  (int) Math.min(Math.sqrt(2 + buffedLvl() / 2f), 100));
+            ch.sprite.burst(0xFFFFFFFF,  (int) Math.min(Math.sqrt(Big.dec(2).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue()), 100));
 
             for (Wand.Charger wandCharger : curUser.buffs(Wand.Charger.class)){
-                if (wandCharger.wand().buffedLvl() < buffedLvl() || curUser.buff(WandOfMagicMissile.MagicCharge.class) != null){
+                if ((wandCharger.wand().buffedLvl().compareTo(buffedLvl()) < 0) || curUser.buff(WandOfMagicMissile.MagicCharge.class) != null){
                     Buff.prolong(curUser, WandOfMagicMissile.MagicCharge.class, WandOfMagicMissile.MagicCharge.DURATION).setup(this);
                     break;
                 }
@@ -99,8 +103,8 @@ public class WandOfTeleportation extends DamageWand {
 	}
 
     @Override
-    protected long chargesPerCast() {
-        return 2;
+    protected BigInteger chargesPerCast() {
+        return BigInteger.TWO;
     }
 
     @Override
@@ -109,13 +113,13 @@ public class WandOfTeleportation extends DamageWand {
     }
 
     @Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
+	public void onHit(MagesStaff staff, Char attacker, Char defender, BigInteger damage) {
         defender.damage(damage, staff);
 	}
 
 	@Override
-	public String upgradeStat2(long level) {
-		return Long.toString(3 + level);
+	public String upgradeStat2(BigInteger level) {
+		return BigInteger.valueOf(3).add(level).toString();
 	}
 
     @Override

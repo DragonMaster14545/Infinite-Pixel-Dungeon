@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Alchemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -65,8 +67,8 @@ public class LaboratoryRoom extends SpecialRoom {
 		}
 		Painter.set( level, pot, Terrain.ALCHEMY );
 		
-		long chapter = 1 + Dungeon.escalatingDepth()/5;
-		Blob.seed( pot.x + level.width() * pot.y, 1, Alchemy.class, level );
+		BigInteger chapter = BigInteger.ONE.add(Dungeon.escalatingDepth().divide(BigInteger.valueOf(5)));
+		Blob.seed( pot.x + level.width() * pot.y, BigInteger.ONE, Alchemy.class, level );
 
 		int pos;
 		do {
@@ -74,7 +76,7 @@ public class LaboratoryRoom extends SpecialRoom {
 		} while (
 				level.map[pos] != Terrain.EMPTY_SP ||
 						level.heaps.get( pos ) != null);
-		level.drop( new EnergyCrystal().quantity(5), pos );
+		level.drop( new EnergyCrystal().quantity(BigInteger.valueOf(5)), pos );
 
 		int n = Random.NormalIntRange( 1, 2 );
 		for (int i=0; i < n; i++) {
@@ -103,12 +105,12 @@ public class LaboratoryRoom extends SpecialRoom {
 			chapterTarget = 1;
 		}
 		
-		if(!missingPages.isEmpty() && chapter >= chapterTarget){
+		if(!missingPages.isEmpty() && (chapter.compareTo(BigInteger.valueOf(chapterTarget)) >= 0)){
 			
 			//for each chapter ahead of the target chapter, drop 1 additional page
-			long pagesToDrop = Math.min(missingPages.size(), (chapter - chapterTarget) + 1);
+			BigInteger pagesToDrop = BigInteger.valueOf(missingPages.size()).min((chapter.subtract(BigInteger.valueOf(chapterTarget))).add(BigInteger.ONE));
 			
-			for (int i = 0; i < pagesToDrop; i++) {
+			for (int i = 0; (BigInteger.valueOf(i).compareTo(pagesToDrop) < 0); i++) {
 				AlchemyPage p = new AlchemyPage();
 				p.page(missingPages.remove(0));
 				do {

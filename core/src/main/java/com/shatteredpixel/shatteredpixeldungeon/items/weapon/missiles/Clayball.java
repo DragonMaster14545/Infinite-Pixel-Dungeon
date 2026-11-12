@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -67,8 +69,8 @@ public class Clayball extends MissileWeapon {
 	}
 
 	@Override
-	public long value() {
-		return 826 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(826).multiply(quantity);
 	}
 
 	@Override
@@ -104,9 +106,9 @@ public class Clayball extends MissileWeapon {
 			if (target != Dungeon.hero) {
 				Viscosity.DeferedDamage dmg = Buff.affect(target, Viscosity.DeferedDamage.class);
 				if (dmg != null) {
-					dmg.prolong(target.HT * 10);
+					dmg.prolong(target.HT.multiply(BigInteger.TEN));
 					if (target instanceof Slime || target instanceof DemonSpawner || target instanceof YogFist.RustedFist || target instanceof YogFist.RottingFist)
-						dmg.prolong(target.HT * 100);
+						dmg.prolong(target.HT.multiply(BigInteger.valueOf(100)));
 				}
 			}
 			if (target == Dungeon.hero && !target.isAlive()){

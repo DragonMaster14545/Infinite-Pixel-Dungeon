@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
@@ -41,8 +45,8 @@ public class Hook extends NPC {
     public int tries;
     public ArrayList<Item> items = new ArrayList<>();
     public int tier = 1;
-    public long power = 0;
-    public long level = 0;
+    public BigInteger power = BigInteger.ZERO;
+    public BigInteger level = BigInteger.ZERO;
 
     {
         spriteClass = HookSprite.class;
@@ -56,7 +60,7 @@ public class Hook extends NPC {
         bundle.put("tries", tries);
         bundle.put("items", items);
         bundle.put("tier", tier);
-        bundle.put("power", power);
+        Big.put(bundle, "power", power);
     }
 
     @Override
@@ -64,7 +68,7 @@ public class Hook extends NPC {
         super.restoreFromBundle(bundle);
         tries = bundle.getInt("tries");
         tier = bundle.getInt("tier");
-        power = bundle.getLong("power");
+        power = Big.getBig(bundle, "power");
         items = new ArrayList<>((Collection<Item>) ((Collection<?>) bundle.getCollection("items")));
     }
 
@@ -83,8 +87,8 @@ public class Hook extends NPC {
     }
 
     @Override
-    public long defenseSkill(Char enemy ) {
-        return INFINITE_EVASION;
+    public BigInteger defenseSkill(Char enemy ) {
+        return BigInteger.valueOf(INFINITE_EVASION);
     }
 
     @Override
@@ -98,7 +102,7 @@ public class Hook extends NPC {
     }
 
     @Override
-    public void damage( long dmg, Object src ) {
+    public void damage( BigInteger dmg, Object src ) {
     }
 
     @Override

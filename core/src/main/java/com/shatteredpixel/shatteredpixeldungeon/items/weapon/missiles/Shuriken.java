@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -41,9 +43,8 @@ public class Shuriken extends MissileWeapon {
 	}
 	
 	@Override
-	public long max(long lvl) {
-		return  5L * tier() +                      //8 base, down from 10
-				(tier == 1 ? 4L*lvl : tier()*lvl*2L); //scaling unchanged
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(5L * tier()).add((tier == 1 ? BigInteger.valueOf(4L).multiply(lvl) : BigInteger.valueOf(tier()).multiply(lvl).multiply(BigInteger.TWO))); //scaling unchanged
 	}
 	
 	@Override

@@ -29,6 +29,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.modules;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invulnerability;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -54,8 +56,8 @@ public class ImmortalityModule extends Module {
     }
 
     @Override
-    public long value() {
-        return 25000 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(25000).multiply(quantity);
     }
 
 }

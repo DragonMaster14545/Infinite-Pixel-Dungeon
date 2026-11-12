@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -86,17 +90,17 @@ public class EbonyMimic extends Mimic {
 	}
 
 	@Override
-	public long damageRoll() {
+	public BigInteger damageRoll() {
 		if (alignment == Alignment.NEUTRAL){
-			return Math.round(super.damageRoll()*1.75d); //BIG damage on surprise
+			return Big.round(Big.dec(super.damageRoll()).multiply(Big.dec(1.75d))); //BIG damage on surprise
 		} else {
 			return super.damageRoll();
 		}
 	}
 
 	@Override
-	public void setLevel(long level) {
-		super.setLevel(Math.round(level*1.25f));
+	public void setLevel(BigInteger level) {
+		super.setLevel(Big.round(Big.dec(level).multiply(Big.dec(1.25f))));
 	}
 
 	@Override
@@ -116,7 +120,7 @@ public class EbonyMimic extends Mimic {
 				if (i instanceof Armor && ((Armor) i).hasCurseGlyph()){
 					((Armor) i).inscribe(null);
 				}
-				if (!(i instanceof MissileWeapon || i instanceof Artifact) && i.level() == 0){
+				if (!(i instanceof MissileWeapon || i instanceof Artifact) && (i.level().compareTo(BigInteger.ZERO) == 0)){
 					i.upgrade();
 				}
 			}

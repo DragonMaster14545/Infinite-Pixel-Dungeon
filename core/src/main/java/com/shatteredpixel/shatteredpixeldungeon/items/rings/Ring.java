@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -228,15 +232,15 @@ public class Ring extends KindofMisc {
 		return "";
 	}
 
-	public String upgradeStat1(long level){
+	public String upgradeStat1(BigInteger level){
 		return null;
 	}
 
-	public String upgradeStat2(long level){
+	public String upgradeStat2(BigInteger level){
 		return null;
 	}
 
-	public String upgradeStat3(long level){
+	public String upgradeStat3(BigInteger level){
 		return null;
 	}
 	
@@ -279,7 +283,7 @@ public class Ring extends KindofMisc {
 				n++;
 			}
 		}
-		level(n);
+		level(BigInteger.valueOf(n));
 
 		return this;
 	}
@@ -297,22 +301,22 @@ public class Ring extends KindofMisc {
 	}
 	
 	@Override
-	public long value() {
-		int price = 75;
+	public BigInteger value() {
+		BigInteger price = BigInteger.valueOf(75);
 		if (cursed && cursedKnown) {
-			price /= 2;
+			price = price.divide(BigInteger.TWO);
 		}
 		if (levelKnown) {
-			if (level() > 0) {
-				price *= (level() + 1);
-			} else if (level() < 0) {
-				price /= (1 - level());
+			if ((level().compareTo(BigInteger.ZERO) > 0)) {
+				price = price.multiply(((level().add(BigInteger.ONE))));
+			} else if ((level().compareTo(BigInteger.ZERO) < 0)) {
+				price = price.divide(((BigInteger.ONE.subtract(level()))));
 			}
 		}
-		if (price < 1) {
-			price = 1;
+		if ((price.compareTo(BigInteger.ONE) < 0)) {
+			price = BigInteger.ONE;
 		}
-		return price;
+		return (price);
 	}
 	
 	protected RingBuff buff() {
@@ -353,10 +357,10 @@ public class Ring extends KindofMisc {
 	}
 
 	@Override
-	public long buffedLvl() {
-		long lvl = super.buffedLvl();
+	public BigInteger buffedLvl() {
+		BigInteger lvl = super.buffedLvl();
 		if (Dungeon.hero.buff(EnhancedRings.class) != null){
-			lvl++;
+			lvl = lvl.add(BigInteger.ONE);
 		}
 		return lvl;
 	}
@@ -365,67 +369,67 @@ public class Ring extends KindofMisc {
 		if (target.buff(MagicImmune.class) != null) return 0;
 		int bonus = 0;
 		for (RingBuff buff : target.buffs(type)) {
-			bonus += buff.level();
+			bonus += Big.toLong(buff.level());
 		}
 		return bonus;
 	}
 
-	public static long getBuffedBonus(Char target, Class<?extends RingBuff> type){
-		if (target.buff(MagicImmune.class) != null) return 0;
-		long bonus = 0;
+	public static BigInteger getBuffedBonus(Char target, Class<?extends RingBuff> type){
+		if (target.buff(MagicImmune.class) != null) return BigInteger.ZERO;
+		BigInteger bonus = BigInteger.ZERO;
 		for (RingBuff buff : target.buffs(type)) {
-			bonus += buff.buffedLvl();
+			bonus = bonus.add(buff.buffedLvl());
 		}
-		return Math.min(200_000_000_000L, bonus);
+		return BigInteger.valueOf(200_000_000_000L).min(bonus);
 	}
 
 	//just used for ring descriptions
-	public long soloBonus(){
+	public BigInteger soloBonus(){
 		if (cursed){
-			return (Math.min( 0, Ring.this.level()-2 ) * getRarityMultiplier());
+			return (BigInteger.ZERO.min(Ring.this.level().subtract(BigInteger.TWO)).multiply(getRarityMultiplier()));
 		} else {
-			return ((Ring.this.level()+1) * getRarityMultiplier());
+			return ((Ring.this.level().add(BigInteger.ONE)).multiply(getRarityMultiplier()));
 		}
 	}
 
 	//just used for ring descriptions
-	public long soloBuffedBonus(){
+	public BigInteger soloBuffedBonus(){
 		if (cursed){
-			return (Math.min( 0, Ring.this.buffedLvl()-2 ) * getRarityMultiplier());
+			return (BigInteger.ZERO.min(Ring.this.buffedLvl().subtract(BigInteger.TWO)).multiply(getRarityMultiplier()));
 		} else {
-			return ((Ring.this.buffedLvl()+1) * getRarityMultiplier());
+			return ((Ring.this.buffedLvl().add(BigInteger.ONE)).multiply(getRarityMultiplier()));
 		}
 	}
 
-    public long soloVisualBonus(){
+    public BigInteger soloVisualBonus(){
         if (cursed){
-            return (Math.min( 0, Ring.this.buffedLvl()-2 ) * getRarityMultiplier());
+            return (BigInteger.ZERO.min(Ring.this.buffedLvl().subtract(BigInteger.TWO)).multiply(getRarityMultiplier()));
         } else {
-            return (Ring.this.buffedLvl() * getRarityMultiplier());
+            return (Ring.this.buffedLvl().multiply(getRarityMultiplier()));
         }
     }
 
 	//just used for ring descriptions
-	public long combinedBonus(Hero hero){
-		long bonus = 0;
+	public BigInteger combinedBonus(Hero hero){
+		BigInteger bonus = BigInteger.ZERO;
 		for (Ring ring : hero.belongings.rings.stream().filter(ring -> ring.getClass() == getClass()).toArray(Ring[]::new)) {
-			bonus += ring.soloBonus();
+			bonus = bonus.add(ring.soloBonus());
 		}
 		for (Ring ring : hero.belongings.miscs.stream().filter(item -> item instanceof Ring ).filter(ring -> ring.getClass() == getClass()).toArray(Ring[]::new)) {
-			bonus += ring.soloBonus();
+			bonus = bonus.add(ring.soloBonus());
 		}
 		return bonus;
 	}
 
 	//just used for ring descriptions
-	public long combinedBuffedBonus(Hero hero){
-		long bonus = 0;
+	public BigInteger combinedBuffedBonus(Hero hero){
+		BigInteger bonus = BigInteger.ZERO;
 		for (Ring ring : hero.belongings.rings.stream().filter(ring -> ring.getClass() == getClass()).toArray(Ring[]::new)) {
 			System.out.println(ring);
-			bonus += ring.soloBuffedBonus();
+			bonus = bonus.add(ring.soloBuffedBonus());
 		}
 		for (Ring ring : hero.belongings.miscs.stream().filter(item -> item instanceof Ring ).filter(ring -> ring.getClass() == getClass()).toArray(Ring[]::new)) {
-			bonus += ring.soloBuffedBonus();
+			bonus = bonus.add(ring.soloBuffedBonus());
 		}
 		return bonus;
 	}
@@ -449,11 +453,11 @@ if (target instanceof Hero && Dungeon.hero == null && cooldown() == 0 && target.
 			return true;
 		}
 
-		public long level(){
+		public BigInteger level(){
 			return Ring.this.soloBonus();
 		}
 
-		public long buffedLvl(){
+		public BigInteger buffedLvl(){
 			return Ring.this.soloBuffedBonus();
 		}
 

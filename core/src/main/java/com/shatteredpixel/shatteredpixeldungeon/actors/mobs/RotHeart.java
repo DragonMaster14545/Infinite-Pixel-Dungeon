@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -41,10 +43,10 @@ public class RotHeart extends Mob {
 	{
 		spriteClass = RotHeartSprite.class;
 
-		HP = HT = Dungeon.getCycleMultiplier(80);
-		defenseSkill = 0;
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(80));
+		defenseSkill = BigInteger.ZERO;
 
-		EXP = Dungeon.getCycleMultiplier(4);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(4));
 
 		state = PASSIVE;
 
@@ -60,7 +62,7 @@ public class RotHeart extends Mob {
 	}
 
 	@Override
-	public void damage(long dmg, Object src) {
+	public void damage(BigInteger dmg, Object src) {
 		//TODO: when effect properties are done, change this to FIRE
 		if (src instanceof Burning) {
 			destroy();
@@ -71,7 +73,7 @@ public class RotHeart extends Mob {
 	}
 
 	@Override
-	public long defenseProc(Char enemy, long damage) {
+	public BigInteger defenseProc(Char enemy, BigInteger damage) {
 		//rot heart spreads less gas in enclosed spaces
 		int openNearby = 0;
 		for (int i : PathFinder.NEIGHBOURS8){
@@ -80,7 +82,7 @@ public class RotHeart extends Mob {
 			}
 		}
 
-		GameScene.add(Blob.seed(pos, 5 + 3*openNearby, ToxicGas.class));
+		GameScene.add(Blob.seed(pos, BigInteger.valueOf(5 + 3*openNearby), ToxicGas.class));
 
 		return super.defenseProc(enemy, damage);
 	}
@@ -121,18 +123,18 @@ public class RotHeart extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return 0;
+	public BigInteger damageRoll() {
+		return BigInteger.ZERO;
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return 0;
+	public BigInteger attackSkill(Char target ) {
+		return BigInteger.ZERO;
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(5));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(5)));
 	}
 	
 	{

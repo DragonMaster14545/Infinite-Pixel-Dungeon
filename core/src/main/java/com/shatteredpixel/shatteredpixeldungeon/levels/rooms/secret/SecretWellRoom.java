@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.WaterOfAwareness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.WaterOfHealth;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.WellWater;
@@ -67,7 +69,7 @@ public class SecretWellRoom extends SecretRoom {
 		@SuppressWarnings("unchecked")
 		Class<? extends WellWater> waterClass = (Class<? extends WellWater>) Random.element( WATERS );
 		
-		WellWater.seed(well.x + level.width() * well.y, 1, waterClass, level);
+		WellWater.seed(well.x + level.width() * well.y, BigInteger.ONE, waterClass, level);
 		
 		entrance().set( Door.Type.HIDDEN );
 	}

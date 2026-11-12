@@ -29,6 +29,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.modules;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
@@ -58,8 +60,8 @@ public class RewardBoostModule extends Module {
     }
 
     @Override
-    public long value() {
-        return 10000 * quantity * Dungeon.depth;
+    public BigInteger value() {
+        return BigInteger.valueOf(10000).multiply(quantity).multiply(BigInteger.valueOf(Dungeon.depth));
     }
 
     public static class RewardBoost2 extends FlavourBuff {

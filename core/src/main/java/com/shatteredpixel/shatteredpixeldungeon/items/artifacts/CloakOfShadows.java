@@ -22,6 +22,10 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -59,12 +63,12 @@ public class CloakOfShadows extends Artifact {
 	{
 		image = ItemSpriteSheet.ARTIFACT_CLOAK;
 
-		exp = 0;
+		exp = BigInteger.ZERO;
 		levelCap = 10;
 
-		charge = level()+3;
+		charge = level().add(BigInteger.valueOf(3));
 		partialCharge = 0;
-		setChargeCap(level()+3);
+		setChargeCap(level().add(BigInteger.valueOf(3)));
 
 		defaultAction = AC_STEALTH;
 
@@ -81,7 +85,7 @@ public class CloakOfShadows extends Artifact {
 		if ((isEquipped( hero ) || hero.heroClass == HeroClass.ROGUE)
 				&& !cursed
 				&& hero.buff(MagicImmune.class) == null
-				&& (charge > 0 || activeBuff != null)) {
+				&& ((charge.compareTo(BigInteger.ZERO) > 0) || activeBuff != null)) {
 			actions.add(AC_STEALTH);
 		boolean needToSpawn = true;
         for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
@@ -110,7 +114,7 @@ public class CloakOfShadows extends Artifact {
 			if (activeBuff == null){
 				if (!isEquipped(hero) && hero.heroClass != HeroClass.ROGUE) GLog.i( Messages.get(Artifact.class, "need_to_equip") );
 				else if (cursed)       GLog.i( Messages.get(this, "cursed") );
-				else if (charge <= 0)  GLog.i( Messages.get(this, "no_charge") );
+				else if ((charge.compareTo(BigInteger.ZERO) <= 0))  GLog.i( Messages.get(this, "no_charge") );
 				else {
 					hero.spend( 1f );
 					hero.busy();
@@ -142,8 +146,8 @@ public class CloakOfShadows extends Artifact {
                     if (respawnPoints.size() > 0){
                         Bbat bat = new Bbat();
                         bat.pos = respawnPoints.get(Random.index( respawnPoints ));
-                        bat.HP = bat.HT = 8 + Bbat.level * 3;
-                        ((Bbat) bat).defenseSkill = 13 + Bbat.level*3;
+                        bat.HP = bat.HT = BigInteger.valueOf(8 + Bbat.level * 3);
+                        ((Bbat) bat).defenseSkill = BigInteger.valueOf(13 + Bbat.level*3);
                         bat.state = bat.WANDERING;
                         GameScene.add(bat);
                         bat.sprite.emitter().burst(Speck.factory(Speck.SMOKE), 10);
@@ -219,15 +223,15 @@ public class CloakOfShadows extends Artifact {
 	public void charge(Hero target, float amount) {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
 
-		if (charge < getChargeCap()) {
+		if ((charge.compareTo(getChargeCap()) < 0)) {
 			if (!isEquipped(target)) amount *= 0.66f;
 			partialCharge += 0.25f*amount;
-			partialCharge *= getRarityMultiplier();
+			partialCharge *= getRarityMultiplier().doubleValue();
 			while (partialCharge >= 1f) {
-				charge++;
+				charge = charge.add(BigInteger.ONE);
 				partialCharge--;
 			}
-			if (charge >= getChargeCap()){
+			if ((charge.compareTo(getChargeCap()) >= 0)){
 				partialCharge = 0;
 				charge = getChargeCap();
 			}
@@ -236,13 +240,13 @@ public class CloakOfShadows extends Artifact {
 	}
 
 	public void directCharge(int amount){
-		charge = Math.min(charge+amount*getRarityMultiplier(), getChargeCap());
+		charge = charge.add(BigInteger.valueOf(amount).multiply(getRarityMultiplier())).min(getChargeCap());
 		updateQuickslot();
 	}
 
 	@Override
 	public Item upgrade() {
-		setChargeCap(getChargeCap() +1);
+		setChargeCap(getChargeCap().add(BigInteger.ONE));
 		return super.upgrade();
 	}
 
@@ -265,17 +269,17 @@ public class CloakOfShadows extends Artifact {
 	}
 
 	@Override
-	public long value() {
-		return 0;
+	public BigInteger value() {
+		return BigInteger.ZERO;
 	}
 
 	public class cloakRecharge extends ArtifactBuff{
 		@Override
 		public boolean act() {
-			if (charge < getChargeCap() && !cursed && target.buff(MagicImmune.class) == null) {
+			if ((charge.compareTo(getChargeCap()) < 0) && !cursed && target.buff(MagicImmune.class) == null) {
 				if (activeBuff == null && Regeneration.regenOn()) {
-					float missing = (getChargeCap() - charge);
-					if (level() > 7) missing += 5*(level() - 7)/3f;
+					float missing = (getChargeCap().subtract(charge)).floatValue();
+					if ((level().compareTo(BigInteger.valueOf(7)) > 0)) missing += Big.div(Big.dec(BigInteger.valueOf(5).multiply((level().subtract(BigInteger.valueOf(7))))), Big.dec(3f)).floatValue();
 					float turnsToCharge = Math.max(1, 45 - missing);
 					turnsToCharge /= RingOfEnergy.artifactChargeMultiplier(target);
 					float chargeToGain = (1f / turnsToCharge);
@@ -286,9 +290,9 @@ public class CloakOfShadows extends Artifact {
 				}
 
 				while (partialCharge >= 1) {
-					charge++;
+					charge = charge.add(BigInteger.ONE);
 					partialCharge -= 1;
-					if (charge == getChargeCap()){
+					if ((charge.compareTo(getChargeCap()) == 0)){
 						partialCharge = 0;
 					}
 
@@ -360,29 +364,29 @@ public class CloakOfShadows extends Artifact {
 			turnsToCost--;
 			
 			if (turnsToCost <= 0){
-				charge--;
-				if (charge < 0) {
-					charge = 0;
+				charge = charge.subtract(BigInteger.ONE);
+				if ((charge.compareTo(BigInteger.ZERO) < 0)) {
+					charge = BigInteger.ZERO;
 					detach();
 					GLog.w(Messages.get(this, "no_charge"));
 					((Hero) target).interrupt();
 				} else {
 					//target hero level is 1 + 2*cloak level
-					int lvlDiffFromTarget = (int) (((Hero) target).lvl - (1+level()*2));
+					int lvlDiffFromTarget = Big.toInt((BigInteger.valueOf(((Hero) target).lvl).subtract((BigInteger.ONE.add(level().multiply(BigInteger.TWO))))));
 					//plus an extra one for each level after 6
-					if (level() >= 7){
-						lvlDiffFromTarget -= level()-6;
+					if ((level().compareTo(BigInteger.valueOf(7)) >= 0)){
+						lvlDiffFromTarget -= Big.toLong(level().subtract(BigInteger.valueOf(6)));
 					}
 					if (lvlDiffFromTarget >= 0){
-						exp += Math.round(10f * Math.pow(1.1f, lvlDiffFromTarget));
+						exp = exp.add(BigInteger.valueOf(Math.round(10f * Math.pow(1.1f, lvlDiffFromTarget))));
 					} else {
-						exp += Math.round(10f * Math.pow(0.75f, -lvlDiffFromTarget));
+						exp = exp.add(BigInteger.valueOf(Math.round(10f * Math.pow(0.75f, -lvlDiffFromTarget))));
 					}
 					
-					if (exp >= (level() + 1) * 50 && level() < levelCap) {
+					if ((exp.compareTo((level().add(BigInteger.ONE)).multiply(BigInteger.valueOf(50))) >= 0) && (level().compareTo(BigInteger.valueOf(levelCap)) < 0)) {
 						upgrade();
 						Catalog.countUse(CloakOfShadows.class);
-						exp -= level() * 50;
+						exp = exp.subtract(level().multiply(BigInteger.valueOf(50)));
 						GLog.p(Messages.get(this, "levelup"));
 						
 					}
@@ -397,8 +401,8 @@ public class CloakOfShadows extends Artifact {
 		}
 
 		public void dispel(){
-			if (turnsToCost <= 0 && charge > 0){
-				charge--;
+			if (turnsToCost <= 0 && (charge.compareTo(BigInteger.ZERO) > 0)){
+				charge = charge.subtract(BigInteger.ONE);
 			}
 			updateQuickslot();
 			detach();
@@ -406,7 +410,7 @@ public class CloakOfShadows extends Artifact {
 
         public void dispelAssassin(){
             updateQuickslot();
-            charge = Math.min(0, charge - 2);
+            charge = BigInteger.ZERO.min(charge.subtract(BigInteger.TWO));
         }
 
 		@Override

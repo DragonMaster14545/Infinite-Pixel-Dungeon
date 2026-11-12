@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -49,11 +53,11 @@ public class RipperDemon extends Mob {
 	{
 		spriteClass = RipperSprite.class;
 
-		HP = HT = Dungeon.getCycleMultiplier(60);
-		defenseSkill = Dungeon.getCycleMultiplier(22);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(60));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(22));
 		viewDistance = Light.DISTANCE;
 
-		EXP = Dungeon.getCycleMultiplier(9); //for corrupting
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(9)); //for corrupting
 		maxLvl = -2;
 
 		HUNTING = new Hunting();
@@ -70,13 +74,13 @@ public class RipperDemon extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(15), Dungeon.getCycleMultiplier(25) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(15)), Dungeon.getCycleMultiplier(BigInteger.valueOf(25)) );
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(30);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(30));
 	}
 
 	@Override
@@ -85,8 +89,8 @@ public class RipperDemon extends Mob {
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(4));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(4)));
 	}
 
 	private static final String LAST_ENEMY_POS = "last_enemy_pos";
@@ -143,7 +147,7 @@ public class RipperDemon extends Mob {
 
 			if (leapPos != -1){
 
-				leapCooldown = Dungeon.NormalLongRange(2, 4);
+				leapCooldown = Dungeon.NormalLongRange(BigInteger.TWO, BigInteger.valueOf(4)).floatValue();
 
 				if (rooted){
 					leapPos = -1;
@@ -194,7 +198,7 @@ public class RipperDemon extends Mob {
 
 						if (leapVictim != null && alignment != leapVictim.alignment){
 							if (hit(RipperDemon.this, leapVictim, Char.INFINITE_ACCURACY, false)) {
-								Buff.affect(leapVictim, Bleeding.class).set(0.75f * damageRoll());
+								Buff.affect(leapVictim, Bleeding.class).set(Big.dec(0.75f).multiply(Big.dec(damageRoll())).doubleValue());
 								leapVictim.sprite.flash();
 								Sample.INSTANCE.play(Assets.Sounds.HIT);
 							} else {

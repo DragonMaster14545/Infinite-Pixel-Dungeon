@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -76,8 +80,8 @@ public class GeyserTrap extends Trap {
 
 				//does the equivalent of a bomb's damage against fiery enemies.
 				if (Char.hasProp(ch, Char.Property.FIERY)){
-					long dmg = Dungeon.NormalLongRange(5 + scalingDepth(), 10 + scalingDepth()*2);
-					dmg *= 0.67f;
+					BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(5).add(scalingDepth()), BigInteger.TEN.add(scalingDepth().multiply(BigInteger.TWO)));
+					dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(0.67f)));
 					if (!ch.isImmune(GeyserTrap.class)){
 						ch.damage(dmg, this);
 					}
@@ -93,7 +97,7 @@ public class GeyserTrap extends Trap {
 					//trim it to just be the part that goes past them
 					trajectory = new Ballistica(trajectory.collisionPos, trajectory.path.get(trajectory.path.size() - 1), Ballistica.PROJECTILE);
 					//knock them back along that ballistica
-					WandOfBlastWave.throwChar(ch, trajectory, 2, true, true, source);
+					WandOfBlastWave.throwChar(ch, trajectory, BigInteger.TWO, true, true, source);
 				}
 			}
 		}
@@ -122,7 +126,7 @@ public class GeyserTrap extends Trap {
 
 			//does the equivalent of a bomb's damage against fiery enemies.
 			if (Char.hasProp(ch, Char.Property.FIERY)){
-				long dmg = Dungeon.NormalLongRange(5 + scalingDepth(), 10 + scalingDepth()*2);
+				BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(5).add(scalingDepth()), BigInteger.TEN.add(scalingDepth().multiply(BigInteger.TWO)));
 				if (!ch.isImmune(GeyserTrap.class)){
 					ch.damage(dmg, this);
 				}
@@ -135,7 +139,7 @@ public class GeyserTrap extends Trap {
 				//trace a ballistica in the direction of our target
 				Ballistica trajectory = new Ballistica(pos, targetpos, Ballistica.MAGIC_BOLT);
 				//knock them back along that ballistica
-				WandOfBlastWave.throwChar(ch, trajectory, 2, true, true, source);
+				WandOfBlastWave.throwChar(ch, trajectory, BigInteger.TWO, true, true, source);
 			}
 		}
 	}

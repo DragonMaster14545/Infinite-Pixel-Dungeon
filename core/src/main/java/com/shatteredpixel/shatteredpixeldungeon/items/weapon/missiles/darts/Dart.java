@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -84,36 +88,30 @@ public class Dart extends MissileWeapon {
 	}
 	
 	@Override
-	public long min(long lvl) {
+	public BigInteger min(BigInteger lvl) {
 		if (bow != null){
 			if (!(this instanceof TippedDart) && Dungeon.hero.buff(Crossbow.ChargedShot.class) != null){
 				//ability increases base dmg by 37.5%, scaling by 50%
-				return  7 +                     //7 base
-						2*bow.buffedLvl() + lvl;//+2 per bow level, +1 per level
+				return  BigInteger.valueOf(7).add(BigInteger.TWO.multiply(bow.buffedLvl())).add(lvl);//+2 per bow level, +1 per level
 			} else {
-				return  (tier()+3) +                     //4 base
-						bow.buffedLvl() + lvl;  //+1 per level or bow level
+				return  BigInteger.valueOf((tier()+3)).add(bow.buffedLvl()).add(lvl);  //+1 per level or bow level
 			}
 		} else {
-			return  tier() +     //1 base, down from 2
-					lvl*tier();    //scaling unchanged
+			return  BigInteger.valueOf(tier()).add(lvl.multiply(BigInteger.valueOf(tier())));    //scaling unchanged
 		}
 	}
 
 	@Override
-	public long max(long lvl) {
+	public BigInteger max(BigInteger lvl) {
 		if (bow != null){
 			if (!(this instanceof TippedDart) && Dungeon.hero.buff(Crossbow.ChargedShot.class) != null){
 				//ability increases base dmg by 37.5%, scaling by 50%
-				return  15 +                       //15 base
-						4*bow.buffedLvl() + 2*lvl; //+4 per bow level, +2 per level
+				return  BigInteger.valueOf(15).add(BigInteger.valueOf(4).multiply(bow.buffedLvl())).add(BigInteger.TWO.multiply(lvl)); //+4 per bow level, +2 per level
 			} else {
-				return  4L*(tier()+3) +                       //12 base
-                    (tier()+2)*bow.buffedLvl() + (tier()+1)*lvl; //+3 per bow level, +2 per level
+				return  BigInteger.valueOf(4L*(tier()+3)).add(BigInteger.valueOf((tier()+2)).multiply(bow.buffedLvl())).add(BigInteger.valueOf((tier()+1)).multiply(lvl)); //+3 per bow level, +2 per level
 			}
 		} else {
-			return  tier()*2L +     //2 base, down from 5
-					2*lvl*tier();  //scaling unchanged
+			return  BigInteger.valueOf(tier()*2L).add(BigInteger.TWO.multiply(lvl).multiply(BigInteger.valueOf(tier())));  //scaling unchanged
 		}
 	}
 	
@@ -157,12 +155,12 @@ public class Dart extends MissileWeapon {
 	}
 
 	@Override
-	public long proc(Char attacker, Char defender, long damage) {
+	public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 		if (bow != null && !processingChargedShot){
 			damage = bow.proc(attacker, defender, damage);
 		}
 
-		long dmg = super.proc(attacker, defender, damage);
+		BigInteger dmg = super.proc(attacker, defender, damage);
 		if (!processingChargedShot) {
 			processChargedShot(defender, damage);
 		}
@@ -185,7 +183,7 @@ public class Dart extends MissileWeapon {
 
 	protected boolean processingChargedShot = false;
 	private int chargedShotPos;
-	protected void processChargedShot( Char target, long dmg ){
+	protected void processChargedShot( Char target, BigInteger dmg ){
 		//don't update xbow here, as dart may be the active weapon atm
 		processingChargedShot = true;
 		if (chargedShotPos != -1 && bow != null && Dungeon.hero.buff(Crossbow.ChargedShot.class) != null) {
@@ -237,9 +235,9 @@ public class Dart extends MissileWeapon {
 
 		updateCrossbow();
 		if (bow != null && !bow.isIdentified()){
-			long level = bow.level();
+			BigInteger level = bow.level();
 			//temporarily sets the level of the bow to 0 for IDing purposes
-			bow.level(0);
+			bow.level(BigInteger.ZERO);
 			String info = super.info();
 			bow.level(level);
 			return info;
@@ -254,8 +252,8 @@ public class Dart extends MissileWeapon {
 	}
 	
 	@Override
-	public long value() {
-		return Math.round(super.value()/2f); //half normal value
+	public BigInteger value() {
+		return Big.round(Big.div(Big.dec(super.value()), Big.dec(2f))); //half normal value
 	}
 	
 	private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
@@ -280,21 +278,21 @@ public class Dart extends MissileWeapon {
 			
 			if (item == null) return;
 			
-			final long maxToTip = Math.min(curItem.quantity(), item.quantity()*2);
-			final long maxSeedsToUse = (maxToTip+1)/2;
+			final BigInteger maxToTip = curItem.quantity().min(item.quantity().multiply(BigInteger.TWO));
+			final long maxSeedsToUse = Big.toLong((maxToTip.add(BigInteger.ONE)).divide(BigInteger.TWO));
 			
 			final int singleSeedDarts;
 			
 			final String[] options;
 			
-			if (curItem.quantity() == 1){
+			if ((curItem.quantity().compareTo(BigInteger.ONE) == 0)){
 				singleSeedDarts = 1;
 				options = new String[]{
 						Messages.get(Dart.class, "tip_one"),
 						Messages.get(Dart.class, "tip_cancel")};
 			} else {
 				singleSeedDarts = 2;
-				if (maxToTip <= 2){
+				if ((maxToTip.compareTo(BigInteger.TWO) <= 0)){
 					options = new String[]{
 							Messages.get(Dart.class, "tip_two"),
 							Messages.get(Dart.class, "tip_cancel")};
@@ -306,7 +304,7 @@ public class Dart extends MissileWeapon {
 				}
 			}
 			
-			TippedDart tipResult = TippedDart.getTipped((Plant.Seed) item, 1);
+			TippedDart tipResult = TippedDart.getTipped((Plant.Seed) item, BigInteger.ONE);
 			
 			GameScene.show(new WndOptions( new ItemSprite(item),
 					Messages.titleCase(item.name()),
@@ -318,14 +316,14 @@ public class Dart extends MissileWeapon {
 					super.onSelect(index);
 					
 					if (index == 0 && options.length == 3){
-						if (item.quantity() <= maxSeedsToUse){
+						if ((item.quantity().compareTo(BigInteger.valueOf(maxSeedsToUse)) <= 0)){
 							item.detachAll( curUser.belongings.backpack );
 						} else {
-							item.quantity(item.quantity() - maxSeedsToUse);
+							item.quantity(item.quantity().subtract(BigInteger.valueOf(maxSeedsToUse)));
 						}
 						
-						if (maxToTip < curItem.quantity()){
-							curItem.quantity(curItem.quantity() - maxToTip);
+						if ((maxToTip.compareTo(curItem.quantity()) < 0)){
+							curItem.quantity(curItem.quantity().subtract(maxToTip));
 						} else {
 							curItem.detachAll(curUser.belongings.backpack);
 						}
@@ -340,13 +338,13 @@ public class Dart extends MissileWeapon {
 					} else if ((index == 1 && options.length == 3) || (index == 0 && options.length == 2)){
 						item.detach( curUser.belongings.backpack );
 						
-						if (curItem.quantity() <= singleSeedDarts){
+						if ((curItem.quantity().compareTo(BigInteger.valueOf(singleSeedDarts)) <= 0)){
 							curItem.detachAll( curUser.belongings.backpack );
 						} else {
-							curItem.quantity(curItem.quantity() - singleSeedDarts);
+							curItem.quantity(curItem.quantity().subtract(BigInteger.valueOf(singleSeedDarts)));
 						}
 						
-						TippedDart newDart = TippedDart.getTipped((Plant.Seed) item, singleSeedDarts);
+						TippedDart newDart = TippedDart.getTipped((Plant.Seed) item, BigInteger.valueOf(singleSeedDarts));
 						if (!newDart.collect()) Dungeon.level.drop(newDart, curUser.pos).sprite.drop();
 						
 						curUser.spend( 1f );

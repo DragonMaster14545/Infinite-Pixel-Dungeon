@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Electricity;
@@ -46,10 +50,10 @@ public class Racked extends Weapon.Enchantment {
 	private static ItemSprite.Glowing COLOR = new ItemSprite.Glowing( 0x3244a8 );
 
 	@Override
-	public long proc(Weapon weapon, Char attacker, Char defender, long damage) {
+	public BigInteger proc(Weapon weapon, Char attacker, Char defender, BigInteger damage) {
 
-		long level = Math.max( 0, weapon.buffedLvl() );
-		double percentage = (level/(level+100d)) * procChanceMultiplier(attacker);
+		BigInteger level = BigInteger.ZERO.max(weapon.buffedLvl());
+		double percentage = (Big.div(Big.dec(level), (Big.dec(level).add(Big.dec(100d))))).multiply(Big.dec(procChanceMultiplier(attacker))).doubleValue();
 		double powerMulti = Math.max(9d, percentage);
 
 		if (attacker.buff(StackTracker.class) != null && attacker.buff(StackTracker.class).stacks >= 15) {
@@ -145,8 +149,8 @@ public class Racked extends Weapon.Enchantment {
 
 	public static class RackedApplier extends Buff {
 
-		public void applyMulti(double multi, long damage) {
-			target.damage((long) (damage * (1d + multi)), new RackedDamage());
+		public void applyMulti(double multi, BigInteger damage) {
+			target.damage(Big.trunc((Big.dec(damage).multiply(Big.dec((1d + multi))))), new RackedDamage());
 			GLog.i("All racked stacks consumed.");
 			detach();
 		}

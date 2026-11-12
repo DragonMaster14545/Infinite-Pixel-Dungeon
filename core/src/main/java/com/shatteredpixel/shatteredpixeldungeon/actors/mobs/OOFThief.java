@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -51,11 +55,11 @@ public class OOFThief extends Mob {
 	{
 		spriteClass = OofSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(50);
-		defenseSkill = Dungeon.getCycleMultiplier(18);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(50));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(18));
 		baseSpeed = 3f;
 		
-		EXP = 0;
+		EXP = BigInteger.ZERO;
 		maxLvl = 11;
 
 		loot = IdealBag.class;
@@ -82,8 +86,8 @@ public class OOFThief extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(8), Dungeon.getCycleMultiplier(14) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(8)), Dungeon.getCycleMultiplier(BigInteger.valueOf(14)) );
 	}
 
 	@Override
@@ -108,18 +112,18 @@ public class OOFThief extends Mob {
 	@Override
 	public Item createLoot() {
 		Dungeon.LimitedDrops.OOF_DROP.count++;
-		Dungeon.hero.earnExp(Math.round(Dungeon.hero.maxExp()*Math.pow(25, Dungeon.cycle+1)), getClass());
+		Dungeon.hero.earnExp(Big.round(Big.dec(Dungeon.hero.maxExp()).multiply(Big.dec(Math.pow(25, Dungeon.cycle+1)))), getClass());
 		return super.createLoot();
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(18);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(18));
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(4), Dungeon.getCycleMultiplier(8));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.valueOf(4)), Dungeon.getCycleMultiplier(BigInteger.valueOf(8)));
 	}
 
 	@Override
@@ -144,7 +148,7 @@ public class OOFThief extends Mob {
     }
 
 	protected void triggerEnrage(){
-		HP = 1;
+		HP = BigInteger.ONE;
 		Buff.affect(this, Invulnerability.class, 3f);
 		if (Dungeon.level.heroFOV[pos]) {
 			SpellSprite.show( this, SpellSprite.BERSERK);
@@ -160,7 +164,7 @@ public class OOFThief extends Mob {
 	private static final int STEAL_COUNT = 4;
 
 	@Override
-	public long attackProc( Char enemy, long damage ) {
+	public BigInteger attackProc( Char enemy, BigInteger damage ) {
 		damage = super.attackProc( enemy, damage );
 		counter++;
 

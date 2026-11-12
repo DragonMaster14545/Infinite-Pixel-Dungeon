@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -43,7 +45,7 @@ public class Fire extends Blob {
 
 		boolean[] flamable = Dungeon.level.flamable;
 		int cell;
-		long fire;
+		BigInteger fire;
 		
 		Freezing freeze = (Freezing)Dungeon.level.blobs.get( Freezing.class );
 
@@ -52,18 +54,18 @@ public class Fire extends Blob {
 		for (int i = area.left-1; i <= area.right; i++) {
 			for (int j = area.top-1; j <= area.bottom; j++) {
 				cell = i + j*Dungeon.level.width();
-				if (cur[cell] > 0) {
+				if ((cur[cell].compareTo(BigInteger.ZERO) > 0)) {
 					
-					if (freeze != null && freeze.volume > 0 && freeze.cur[cell] > 0){
+					if (freeze != null && (freeze.volume.compareTo(BigInteger.ZERO) > 0) && (freeze.cur[cell].compareTo(BigInteger.ZERO) > 0)){
 						freeze.clear(cell);
-						off[cell] = cur[cell] = 0;
+						off[cell] = cur[cell] = BigInteger.ZERO;
 						continue;
 					}
 
 					burn( cell );
 
-					fire = cur[cell] - 1;
-					if (fire <= 0 && flamable[cell]) {
+					fire = cur[cell].subtract(BigInteger.ONE);
+					if ((fire.compareTo(BigInteger.ZERO) <= 0) && flamable[cell]) {
 
 						Dungeon.level.destroy( cell );
 
@@ -72,25 +74,25 @@ public class Fire extends Blob {
 
 					}
 
-				} else if (freeze == null || freeze.volume <= 0 || freeze.cur[cell] <= 0) {
+				} else if (freeze == null || (freeze.volume.compareTo(BigInteger.ZERO) <= 0) || (freeze.cur[cell].compareTo(BigInteger.ZERO) <= 0)) {
 
 					if (flamable[cell]
-							&& (cur[cell-1] > 0
-							|| cur[cell+1] > 0
-							|| cur[cell-Dungeon.level.width()] > 0
-							|| cur[cell+Dungeon.level.width()] > 0)) {
-						fire = 4;
+							&& ((cur[cell-1].compareTo(BigInteger.ZERO) > 0)
+							|| (cur[cell+1].compareTo(BigInteger.ZERO) > 0)
+							|| (cur[cell-Dungeon.level.width()].compareTo(BigInteger.ZERO) > 0)
+							|| (cur[cell+Dungeon.level.width()].compareTo(BigInteger.ZERO) > 0))) {
+						fire = BigInteger.valueOf(4);
 						burn( cell );
 						area.union(i, j);
 					} else {
-						fire = 0;
+						fire = BigInteger.ZERO;
 					}
 
 				} else {
-					fire = 0;
+					fire = BigInteger.ZERO;
 				}
 
-				volume += (off[cell] = fire);
+				volume = volume.add((off[cell] = fire));
 			}
 		}
 

@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -35,14 +39,14 @@ public class DimensionalSundial extends Trinket {
 	}
 
 	@Override
-	protected long upgradeEnergyCost() {
+	protected BigInteger upgradeEnergyCost() {
 		//6 -> 8(14) -> 10(24) -> 12(36)
-		return 6+2*level();
+		return BigInteger.valueOf(6).add(BigInteger.TWO.multiply(level()));
 	}
 
     @Override
-    public long maxUpgrade() {
-        return 10;
+    public BigInteger maxUpgrade() {
+        return BigInteger.TEN;
     }
 
     @Override
@@ -50,8 +54,8 @@ public class DimensionalSundial extends Trinket {
 		if (isIdentified()){
 			return Messages.get(this,
 					"stats_desc",
-					(int)(100*(1f - enemySpawnMultiplierDaytime((int)buffedLvl()))),
-					(int)(100*(enemySpawnMultiplierNighttime((int)buffedLvl())-1f)));
+					(int)(100*(1f - enemySpawnMultiplierDaytime(Big.toInt(buffedLvl())))),
+					(int)(100*(enemySpawnMultiplierNighttime(Big.toInt(buffedLvl()))-1f)));
 		} else {
 			return Messages.get(this, "typical_stats_desc",
 					(int)(100*(1f - enemySpawnMultiplierDaytime(0))),

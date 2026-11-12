@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -31,9 +35,9 @@ public class FerretTuft extends Trinket {
     }
 
     @Override
-    protected long upgradeEnergyCost() {
+    protected BigInteger upgradeEnergyCost() {
         //6 -> 8(14) -> 10(24) -> 12(36)
-        return 6+2*level();
+        return BigInteger.valueOf(6).add(BigInteger.TWO.multiply(level()));
     }
 
     @Override
@@ -41,21 +45,21 @@ public class FerretTuft extends Trinket {
         if (isIdentified()){
             return Messages.get(this, "stats_desc", Messages.decimalFormat("#.##", 100 * (evasionMultiplier(buffedLvl())-1f)));
         } else {
-            return Messages.get(this, "typical_stats_desc", Messages.decimalFormat("#.##", 100 * (evasionMultiplier(0)-1f)));
+            return Messages.get(this, "typical_stats_desc", Messages.decimalFormat("#.##", 100 * (evasionMultiplier(BigInteger.ZERO)-1f)));
         }
     }
 
     public static float evasionMultiplier(){
-        return evasionMultiplier(trinketLevel(FerretTuft.class));
+        return evasionMultiplier(BigInteger.valueOf(trinketLevel(FerretTuft.class)));
     }
 
-    public static float evasionMultiplier( long level ){
-        if (level <= -1){
+    public static float evasionMultiplier( BigInteger level ){
+        if ((level.compareTo(BigInteger.valueOf(-1)) <= 0)){
             return 1;
 
 
         } else {
-            return 1 + 0.125f*(level+1);
+            return Big.dec(1).add(Big.dec(0.125f).multiply(Big.dec((level.add(BigInteger.ONE))))).floatValue();
         }
     }
 

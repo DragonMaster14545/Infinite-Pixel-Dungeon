@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -172,8 +176,8 @@ public abstract class Char extends Actor {
 	
 	public CharSprite sprite;
 	
-	public long HT;
-	public long HP;
+	public BigInteger HT = BigInteger.ZERO;
+	public BigInteger HP = BigInteger.ZERO;
 	
 	protected float baseSpeed	= 1;
 	protected PathFinder.Path path;
@@ -344,8 +348,8 @@ public abstract class Char extends Actor {
 		super.storeInBundle( bundle );
 		
 		bundle.put( POS, pos );
-		bundle.put( TAG_HP, HP );
-		bundle.put( TAG_HT, HT );
+		Big.put(bundle, TAG_HP, HP);
+		Big.put(bundle, TAG_HT, HT);
 		bundle.put( BUFFS, buffs );
 	}
 	
@@ -355,8 +359,8 @@ public abstract class Char extends Actor {
 		super.restoreFromBundle( bundle );
 		
 		pos = bundle.getInt( POS );
-		HP = bundle.getLong( TAG_HP );
-		HT = bundle.getLong( TAG_HT );
+		HP = Big.getBig(bundle, TAG_HP);
+		HT = Big.getBig(bundle, TAG_HT);
 		
 		for (Bundlable b : bundle.getCollection( BUFFS )) {
 			if (b != null) {
@@ -404,21 +408,21 @@ public abstract class Char extends Actor {
 
 		} else if (hit( this, enemy, accMulti, false )) {
 			
-			long dr = Math.round(enemy.drRoll() * AscensionChallenge.statModifier(enemy));
+			BigInteger dr = Big.round(Big.dec(enemy.drRoll()).multiply(Big.dec(AscensionChallenge.statModifier(enemy))));
 			
 			if (this instanceof Hero){
 				Hero h = (Hero)this;
 				if (h.belongings.attackingWeapon() instanceof MissileWeapon
 						&& h.isSubclass(HeroSubClass.SNIPER)
 						&& !Dungeon.level.adjacent(h.pos, enemy.pos)){
-					dr = 0;
+					dr = BigInteger.ZERO;
 				}
 				if (enemy.buff(Sai.DefenseDebuff.class) != null){
-				    dr = Math.max(0, dr -enemy.buff(Sai.DefenseDebuff.class).stack);
+				    dr = BigInteger.ZERO.max(dr.subtract(BigInteger.valueOf(enemy.buff(Sai.DefenseDebuff.class).stack)));
                 }
 
 				if (h.buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null){
-					dr = 0;
+					dr = BigInteger.ZERO;
 				}
 			}
 
@@ -427,12 +431,12 @@ public abstract class Char extends Actor {
 			double dmg;
 			Preparation prep = buff(Preparation.class);
 			if (prep != null){
-				dmg = prep.damageRoll(this);
+				dmg = prep.damageRoll(this).doubleValue();
 				if (this == Dungeon.hero && Dungeon.hero.hasTalent(Talent.BOUNTY_HUNTER)) {
 					Buff.affect(Dungeon.hero, Talent.BountyHunterTracker.class, 0.0f);
 				}
 			} else {
-				dmg = damageRoll();
+				dmg = damageRoll().doubleValue();
 			}
 
 			dmg = dmg*dmgMulti;
@@ -475,10 +479,10 @@ public abstract class Char extends Actor {
 				dmg *= 0.67f;
 			}
 
-			long effectiveDamage = enemy.defenseProc( this, Math.round(dmg) );
+			BigInteger effectiveDamage = enemy.defenseProc( this, BigInteger.valueOf(Math.round(dmg)) );
 			//do not trigger on-hit logic if defenseProc returned a negative value
-			if (effectiveDamage >= 0) {
-				effectiveDamage = Math.max(effectiveDamage - dr, 0);
+			if ((effectiveDamage.compareTo(BigInteger.ZERO) >= 0)) {
+				effectiveDamage = effectiveDamage.subtract(dr).max(BigInteger.ZERO);
 
 				if (enemy.buff(Viscosity.ViscosityTracker.class) != null) {
 					effectiveDamage = enemy.buff(Viscosity.ViscosityTracker.class).deferDamage(effectiveDamage);
@@ -487,13 +491,13 @@ public abstract class Char extends Actor {
 
 				//vulnerable specifically applies after armor reductions
 				if (enemy.buff(Vulnerable.class) != null) {
-					effectiveDamage *= 1.33f;
+					effectiveDamage = Big.trunc(Big.dec(effectiveDamage).multiply(Big.dec(1.33f)));
 				}
 
 				effectiveDamage = attackProc(enemy, effectiveDamage);
 			}
 			if (visibleFight) {
-				if (effectiveDamage > 0 || !enemy.blockSound(Random.Float(0.96f, 1.05f))) {
+				if ((effectiveDamage.compareTo(BigInteger.ZERO) > 0) || !enemy.blockSound(Random.Float(0.96f, 1.05f))) {
 					hitSound(Random.Float(0.87f, 1.15f));
 				}
 			}
@@ -510,12 +514,12 @@ public abstract class Char extends Actor {
 			if (buff(FrostImbue.class) != null) buff(FrostImbue.class).proc(enemy);
 
 			if (enemy.isAlive() && enemy.alignment != alignment && prep != null && prep.canKO(enemy)){
-				enemy.HP = 0;
+				enemy.HP = BigInteger.ZERO;
 				if (!enemy.isAlive()) {
 					enemy.die(this);
 				} else {
 					//helps with triggering any on-damage effects that need to activate
-					enemy.damage(-1, this);
+					enemy.damage(BigInteger.valueOf(-1), this);
 					DeathMark.processFearTheReaper(enemy);
 				}
 				if (enemy.sprite != null) {
@@ -525,15 +529,15 @@ public abstract class Char extends Actor {
 
 			Talent.CombinedLethalityAbilityTracker combinedLethality = buff(Talent.CombinedLethalityAbilityTracker.class);
 			if (combinedLethality != null && this instanceof Hero && ((Hero) this).belongings.attackingWeapon() instanceof MeleeWeapon && combinedLethality.weapon != ((Hero) this).belongings.attackingWeapon()){
-				if ( enemy.isAlive() && enemy.alignment != alignment && !Char.hasProp(enemy, Property.BOSS)
+				if (enemy.isAlive() && enemy.alignment != alignment && !Char.hasProp(enemy, Property.BOSS)
 						&& !Char.hasProp(enemy, Property.MINIBOSS) &&
-						(enemy.HP/(float)enemy.HT) <= 0.35f) {
-					enemy.HP = 0;
+						((Big.div(Big.dec(enemy.HP), Big.dec(enemy.HT.floatValue()))).compareTo(Big.dec(0.35f)) <= 0)) {
+					enemy.HP = BigInteger.ZERO;
 					if (!enemy.isAlive()) {
 						enemy.die(this);
 					} else {
 						//helps with triggering any on-damage effects that need to activate
-						enemy.damage(-1, this);
+						enemy.damage(BigInteger.valueOf(-1), this);
 						DeathMark.processFearTheReaper(enemy);
 					}
 					if (enemy.sprite != null) {
@@ -590,8 +594,8 @@ public abstract class Char extends Actor {
 	}
 
 	public static boolean hit( Char attacker, Char defender, float accMulti, boolean magic ) {
-		float acuStat = attacker.attackSkill( defender );
-		float defStat = defender.defenseSkill( attacker );
+		float acuStat = attacker.attackSkill( defender ).floatValue();
+		float defStat = defender.defenseSkill( attacker ).floatValue();
 
 		if (defender instanceof Hero && ((Hero) defender).damageInterrupt){
 			((Hero) defender).interrupt();
@@ -648,41 +652,41 @@ public abstract class Char extends Actor {
 	}
 
     private static int hitMissIcon = -1;
-	public long attackSkill(Char target ) {
-		return 0;
+	public BigInteger attackSkill(Char target ) {
+		return BigInteger.ZERO;
 	}
 	
-	public long defenseSkill(Char enemy ) {
-		return 0;
+	public BigInteger defenseSkill(Char enemy ) {
+		return BigInteger.ZERO;
 	}
 	
 	public String defenseVerb() {
 		return Messages.get(this, "def_verb");
 	}
 	
-	public long drRoll() {
-		long dr = 0;
+	public BigInteger drRoll() {
+		BigInteger dr = BigInteger.ZERO;
 
-		dr += Dungeon.NormalLongRange( 0 , Barkskin.currentLevel(this) );
+		dr = dr.add(Dungeon.NormalLongRange( BigInteger.ZERO , Barkskin.currentLevel(this) ));
 
 		return dr;
 	}
 	
-	public long damageRoll() {
-		return 1;
+	public BigInteger damageRoll() {
+		return BigInteger.ONE;
 	}
 	
 	//TODO it would be nice to have a pre-armor and post-armor proc.
 	// atm attack is always post-armor and defence is already pre-armor
 	
-	public long attackProc( Char enemy, long damage ) {
+	public BigInteger attackProc( Char enemy, BigInteger damage ) {
 		for (ChampionEnemy buff : buffs(ChampionEnemy.class)){
 			buff.onAttackProc( enemy );
 		}
 		return damage;
 	}
 	
-	public long defenseProc( Char enemy, long damage ) {
+	public BigInteger defenseProc( Char enemy, BigInteger damage ) {
 
 		Earthroot.Armor armor = buff( Earthroot.Armor.class );
 		if (armor != null) {
@@ -712,25 +716,25 @@ public abstract class Char extends Actor {
 	}
 
 	//used so that buffs(Shieldbuff.class) isn't called every time unnecessarily
-	private long cachedShield = 0;
+	private BigInteger cachedShield = BigInteger.ZERO;
 	public boolean needsShieldUpdate = true;
 	
-	public long shielding(){
+	public BigInteger shielding(){
 		if (!needsShieldUpdate){
 			return cachedShield;
 		}
 		
-		cachedShield = 0;
+		cachedShield = BigInteger.ZERO;
 		for (ShieldBuff s : buffs(ShieldBuff.class)){
-			cachedShield += s.shielding();
+			cachedShield = cachedShield.add(s.shielding());
 		}
 		needsShieldUpdate = false;
 		return cachedShield;
 	}
 	
-	public void damage( long dmg, Object src ) {
+	public void damage( BigInteger dmg, Object src ) {
 		
-		if (!isAlive() || dmg < 0) {
+		if (!isAlive() || (dmg.compareTo(BigInteger.ZERO) < 0)) {
 			return;
 		}
 
@@ -747,7 +751,7 @@ public abstract class Char extends Actor {
 					link.detach();
 				}
 			}
-			dmg = (long) Math.ceil(dmg / (float)(links.size()+1));
+			dmg = Big.trunc(Big.ceil(Big.div(Big.dec(dmg), Big.dec((float)(links.size()+1)))));
 			for (LifeLink link : links){
 				Char ch = (Char)Actor.findById(link.object);
 				if (ch != null) {
@@ -778,17 +782,17 @@ public abstract class Char extends Actor {
 			Buff.detach(this, MagicalSleep.class);
 		}
 		if (this.buff(Doom.class) != null && !isImmune(Doom.class)){
-			dmg *= 1.67d;
+			dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(1.67d)));
 		}
 		if (alignment != Alignment.ALLY && this.buff(DeathMark.DeathMarkTracker.class) != null){
-			dmg *= 1.25d;
+			dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(1.25d)));
 		}
 		if (this.buff(Longsword.HolyExpEffect.class) != null){
-			dmg *= Math.pow(1.14d, buff(Longsword.HolyExpEffect.class).stacks);
+			dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(Math.pow(1.14d, buff(Longsword.HolyExpEffect.class).stacks))));
 		}
 		for (Buff buff : this.buffs()) {
 			if(buff instanceof DamageAmplificationBuff && !isImmune(buff.getClass())){
-				dmg *= ((DamageAmplificationBuff) buff).damageMultiplier();
+				dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(((DamageAmplificationBuff) buff).damageMultiplier())));
 			}
 
 		}
@@ -802,7 +806,7 @@ public abstract class Char extends Actor {
 					b = new Bleeding();
 				}
 				b.announced = false;
-				b.set(dmg, Sickle.HarvestBleedTracker.class);
+				b.set(dmg.doubleValue(), Sickle.HarvestBleedTracker.class);
 				b.attachTo(this);
 				sprite.showStatus(CharSprite.WARNING, Messages.titleCase(b.name()) + " " + (int)b.level());
 				return;
@@ -810,65 +814,65 @@ public abstract class Char extends Actor {
 		}
 
 		for (ChampionEnemy buff : buffs(ChampionEnemy.class)){
-			dmg = (long) Math.ceil(dmg * buff.damageTakenFactor());
+			dmg = Big.trunc(Big.ceil(Big.dec(dmg).multiply(Big.dec(buff.damageTakenFactor()))));
 		}
 
 		if (this instanceof Hero && Dungeon.isChallenged(Challenges.NO_ARMOR)){
 			LolEffect lol = Buff.affect(this, LolEffect.class);
 			lol.stacks++;
-			dmg = (long) Math.ceil(dmg * Math.pow(1.005, lol.stacks));
+			dmg = Big.trunc(Big.ceil(Big.dec(dmg).multiply(Big.dec(Math.pow(1.005, lol.stacks)))));
 		}
 
 		Class<?> srcClass = src.getClass();
 		if (isImmune( srcClass )) {
-			dmg = 0;
+			dmg = BigInteger.ZERO;
 		} else {
-			dmg = Math.round( dmg * (double)resist( srcClass ));
+			dmg = Big.round(Big.dec(dmg).multiply(Big.dec((double)resist( srcClass ))));
 		}
 
 		//TODO improve this when I have proper damage source logic
 		if (AntiMagic.RESISTS.contains(src.getClass()) && buff(ArcaneArmor.class) != null){
-			dmg -= Dungeon.NormalLongRange(0, buff(ArcaneArmor.class).level());
-			if (dmg < 0) dmg = 0;
+			dmg = dmg.subtract(Dungeon.NormalLongRange(BigInteger.ZERO, buff(ArcaneArmor.class).level()));
+			if ((dmg.compareTo(BigInteger.ZERO) < 0)) dmg = BigInteger.ZERO;
 		}
 
 		if (buff( Paralysis.class ) != null) {
 			buff( Paralysis.class ).processDamage(dmg);
 		}
 
-		long overflow = 0;
+		BigInteger overflow = BigInteger.ZERO;
 
 		if (buff(IdealBag.OsmirdiumShield.class) != null){
-			overflow = dmg / 2;
-			dmg = 0;
+			overflow = dmg.divide(BigInteger.TWO);
+			dmg = BigInteger.ZERO;
 		}
 
-		long shielded = dmg;
+		BigInteger shielded = dmg;
 		//FIXME: when I add proper damage properties, should add an IGNORES_SHIELDS property to use here.
 		if (!(src instanceof Hunger)){
 			for (ShieldBuff s : buffs(ShieldBuff.class)){
 				dmg = s.absorbDamage(dmg);
-				if (dmg == 0) break;
+				if ((dmg.compareTo(BigInteger.ZERO) == 0)) break;
 			}
 		}
-		shielded -= dmg;
-		HP -= dmg;
+		shielded = shielded.subtract(dmg);
+		HP = HP.subtract(dmg);
 
-		if (HP > 0 && shielded > 0 && shielding() == 0){
+		if ((HP.compareTo(BigInteger.ZERO) > 0) && (shielded.compareTo(BigInteger.ZERO) > 0) && (shielding().compareTo(BigInteger.ZERO) == 0)){
 			if (this instanceof Hero && ((Hero) this).hasTalent(Talent.PROVOKED_ANGER)){
 				Buff.affect(this, Talent.ProvokedAngerTracker.class, 5f);
 			}
 		}
 
-		if (HP > 0 && buff(Grim.GrimTracker.class) != null){
+		if ((HP.compareTo(BigInteger.ZERO) > 0) && buff(Grim.GrimTracker.class) != null){
 
 			float finalChance = buff(Grim.GrimTracker.class).maxChance;
-			finalChance *= (float)Math.pow( ((HT - HP) / (double)HT), 2);
+			finalChance *= (float)Math.pow( (Big.div(Big.dec((HT.subtract(HP))), Big.dec(HT.doubleValue()))).doubleValue(), 2);
 
 			if (Random.Float() < finalChance) {
-				long extraDmg = Math.round(finalChance*resist(Grim.class)/10f);
-				dmg += extraDmg;
-				HP -= extraDmg;
+				BigInteger extraDmg = BigInteger.valueOf(Math.round(finalChance*resist(Grim.class)/10f));
+				dmg = dmg.add(extraDmg);
+				HP = HP.subtract(extraDmg);
 
 				sprite.emitter().burst( ShadowParticle.UP, 5 );
 				if (!isAlive() && buff(Grim.GrimTracker.class).qualifiesForBadge){
@@ -877,12 +881,12 @@ public abstract class Char extends Actor {
 			}
 		}
 
-		if (HP < 0 && src instanceof Char && alignment == Alignment.ENEMY){
+		if ((HP.compareTo(BigInteger.ZERO) < 0) && src instanceof Char && alignment == Alignment.ENEMY){
 			if (((Char) src).buff(Kinetic.KineticTracker.class) != null){
-				long dmgToAdd = -HP;
-				dmgToAdd -= ((Char) src).buff(Kinetic.KineticTracker.class).conservedDamage;
-				dmgToAdd = Math.round(dmgToAdd * Weapon.Enchantment.genericProcChanceMultiplier((Char) src));
-				if (dmgToAdd > 0) {
+				BigInteger dmgToAdd = HP.negate();
+				dmgToAdd = dmgToAdd.subtract(((Char) src).buff(Kinetic.KineticTracker.class).conservedDamage);
+				dmgToAdd = Big.round(Big.dec(dmgToAdd).multiply(Big.dec(Weapon.Enchantment.genericProcChanceMultiplier((Char) src))));
+				if ((dmgToAdd.compareTo(BigInteger.ZERO) > 0)) {
 					Buff.affect((Char) src, Kinetic.ConservedDamage.class).setBonus(dmgToAdd);
 				}
 				((Char) src).buff(Kinetic.KineticTracker.class).detach();
@@ -928,10 +932,10 @@ public abstract class Char extends Actor {
             }
             hitMissIcon = -1;
 
-			sprite.showStatusWithIcon(CharSprite.NEGATIVE, Long.toString(dmg + shielded), icon);
+			sprite.showStatusWithIcon(CharSprite.NEGATIVE, dmg.add(shielded).toString(), icon);
 		}
 
-		if (this instanceof Hero && ((Hero) this).perks.contains(IRON_WILL) && HP <= HT/2 &&
+		if (this instanceof Hero && ((Hero) this).perks.contains(IRON_WILL) && (HP.compareTo(HT.divide(BigInteger.TWO)) <= 0) &&
 				(icon == FloatingText.PHYS_DMG || icon == FloatingText.PHYS_DMG_NO_BLOCK || icon == FloatingText.MAGIC_DMG)){
 			Camera.main.shake(4, 0.25f);
 			Sample.INSTANCE.play(Assets.Sounds.HIT_PARRY);
@@ -956,7 +960,7 @@ public abstract class Char extends Actor {
 						null
 				);
 			}
-			long finalDmg = dmg;
+			BigInteger finalDmg = dmg;
 			((MagicMissile)sprite.parent.recycle( MagicMissile.class )).reset(
 					MagicMissile.FORCE_CONE,
 					sprite,
@@ -966,9 +970,9 @@ public abstract class Char extends Actor {
 						public void call() {
 							for (int cell : aoe.cells) {
 								Char mob = Actor.findChar(cell);
-								long damage = Random.NormalLongRange(finalDmg /3, finalDmg/2);
+								BigInteger damage = Big.normalRange(finalDmg.divide(BigInteger.valueOf(3)), finalDmg.divide(BigInteger.TWO));
 
-								if (mob != null && damage > 0 && mob.alignment != Char.Alignment.ALLY){
+								if (mob != null && (damage.compareTo(BigInteger.ZERO) > 0) && mob.alignment != Char.Alignment.ALLY){
 									mob.damage(damage, src);
 								}
 							}
@@ -978,17 +982,17 @@ public abstract class Char extends Actor {
 
 		}
 
-		if (overflow > 0) {
-			HP += overflow;
+		if ((overflow.compareTo(BigInteger.ZERO) > 0)) {
+			HP = HP.add(overflow);
 			if (sprite != null)
-				sprite.showStatusWithIcon(CharSprite.NEGATIVE, Long.toString(overflow), FloatingText.HEALING);
+				sprite.showStatusWithIcon(CharSprite.NEGATIVE, overflow.toString(), FloatingText.HEALING);
 		}
 
-		if (HP < 0) HP = 0;
+		if ((HP.compareTo(BigInteger.ZERO) < 0)) HP = BigInteger.ZERO;
 
 		if (!isAlive()) {
 			die( src );
-		} else if (HP == 0 && buff(DeathMark.DeathMarkTracker.class) != null){
+		} else if ((HP.compareTo(BigInteger.ZERO) == 0) && buff(DeathMark.DeathMarkTracker.class) != null){
 			DeathMark.processFearTheReaper(this);
 		}
 	}
@@ -1030,7 +1034,7 @@ public abstract class Char extends Actor {
 	}
 
 	public void destroy() {
-		HP = 0;
+		HP = BigInteger.ZERO;
 		Actor.remove( this );
 
 		for (Char ch : Actor.chars().toArray(new Char[0])){
@@ -1073,7 +1077,7 @@ public abstract class Char extends Actor {
 	public boolean deathMarked = false;
 
 	public boolean isAlive() {
-		return HP > 0 || deathMarked;
+		return (HP.compareTo(BigInteger.ZERO) > 0) || deathMarked;
 	}
 
 	public boolean isActive() {

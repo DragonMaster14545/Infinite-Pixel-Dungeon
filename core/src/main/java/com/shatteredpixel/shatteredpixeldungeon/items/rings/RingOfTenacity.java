@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -40,10 +42,10 @@ public class RingOfTenacity extends Ring {
 	public String statsInfo() {
 		if (isIdentified()){
 			String info = Messages.get(this, "stats",
-					Messages.decimalFormat("#.##", 100f * (1f - Math.pow(0.99f, soloBuffedBonus()))));
-			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)){
+					Messages.decimalFormat("#.##", 100f * (1f - Math.pow(0.99f, soloBuffedBonus().doubleValue()))));
+			if (isEquipped(Dungeon.hero) && (soloBuffedBonus().compareTo(combinedBuffedBonus(Dungeon.hero)) != 0)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
-						Messages.decimalFormat("#.##", 100f * (1f - Math.pow(0.99f, combinedBuffedBonus(Dungeon.hero)))));
+						Messages.decimalFormat("#.##", 100f * (1f - Math.pow(0.99f, combinedBuffedBonus(Dungeon.hero).doubleValue()))));
 			}
 			return info;
 		} else {
@@ -62,7 +64,7 @@ public class RingOfTenacity extends Ring {
 	}
 	
 	public static double damageMultiplier( Char t ){
-		return Math.max(Math.pow(0.99d, getBuffedBonus( t, Tenacity.class)*((double) (t.HT - t.HP) /t.HT)), 0.001d);
+		return Math.max(Math.pow(0.99d, Big.dec(getBuffedBonus( t, Tenacity.class)).multiply((Big.div(Big.dec((t.HT.subtract(t.HP)).doubleValue()), Big.dec(t.HT)))).doubleValue()), 0.001d);
 	}
 
 	public class Tenacity extends RingBuff {

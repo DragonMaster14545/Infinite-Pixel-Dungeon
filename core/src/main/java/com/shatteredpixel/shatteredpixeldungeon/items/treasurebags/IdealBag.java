@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.treasurebags;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -98,7 +102,7 @@ public class IdealBag extends TreasureBag {
 
         @Override
         public boolean doPickUp(Hero hero, int pos, float time) {
-            Buff.affect(hero, Poison.class).set((hero.HT + hero.HTBoost) / 6f);
+            Buff.affect(hero, Poison.class).set(Big.div(Big.dec((hero.HT.add(BigInteger.valueOf(hero.HTBoost)))), Big.dec(6f)).doubleValue());
             return super.doPickUp(hero, pos, time);
         }
 
@@ -115,8 +119,8 @@ public class IdealBag extends TreasureBag {
 
 
         @Override
-        public long value() {
-            return 66 * quantity;
+        public BigInteger value() {
+            return BigInteger.valueOf(66).multiply(quantity);
         }
     }
 
@@ -185,8 +189,8 @@ public class IdealBag extends TreasureBag {
         }
 
         @Override
-        public long value() {
-            return (new Gold().random().quantity())*15 * quantity;
+        public BigInteger value() {
+            return (new Gold().random().quantity()).multiply(BigInteger.valueOf(15)).multiply(quantity);
         }
     }
 
@@ -207,13 +211,13 @@ public class IdealBag extends TreasureBag {
         }
 
         @Override
-        public long value() {
-            return (new Gold().random().quantity())*4 * quantity;
+        public BigInteger value() {
+            return (new Gold().random().quantity()).multiply(BigInteger.valueOf(4)).multiply(quantity);
         }
 
         @Override
-        public long energyVal() {
-            return 125 * quantity;
+        public BigInteger energyVal() {
+            return BigInteger.valueOf(125).multiply(quantity);
         }
     }
 }

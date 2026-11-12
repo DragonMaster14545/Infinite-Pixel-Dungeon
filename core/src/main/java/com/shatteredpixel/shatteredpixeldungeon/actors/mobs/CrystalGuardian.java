@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -47,10 +49,10 @@ public class CrystalGuardian extends Mob{
 	{
 		spriteClass = CrystalGuardianSprite.class;
 
-		HP = HT = Dungeon.getCycleMultiplier(100);
-		defenseSkill = Dungeon.getCycleMultiplier(14);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(100));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(14));
 
-		EXP = Dungeon.getCycleMultiplier(10);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.TEN);
 		maxLvl = -2;
 
 		SLEEPING = new Sleeping();
@@ -70,11 +72,11 @@ public class CrystalGuardian extends Mob{
 	protected boolean act() {
 		if (recovering){
 			throwItems();
-			HP = Math.min(HT, HP+(Math.max(1, HP/20)));
+			HP = HT.min(HP.add((BigInteger.ONE.max(HP.divide(BigInteger.valueOf(20))))));
 			if (Dungeon.level.heroFOV[pos]) {
 				sprite.showStatusWithIcon(CharSprite.POSITIVE, "5", FloatingText.HEALING);
 			}
-			if (HP == HT){
+			if ((HP.compareTo(HT) == 0)){
 				recovering = false;
 				if (sprite instanceof CrystalGuardianSprite) ((CrystalGuardianSprite) sprite).endCrumple();
 			}
@@ -85,18 +87,18 @@ public class CrystalGuardian extends Mob{
 	}
 
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(10), Dungeon.getCycleMultiplier(16) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.TEN), Dungeon.getCycleMultiplier(BigInteger.valueOf(16)) );
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(20);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(20));
 	}
 
 	@Override
-	public long defenseSkill(Char enemy) {
-		if (recovering) return 0;
+	public BigInteger defenseSkill(Char enemy) {
+		if (recovering) return BigInteger.ZERO;
 		else            return super.defenseSkill(enemy);
 	}
 
@@ -107,8 +109,8 @@ public class CrystalGuardian extends Mob{
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(10));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.TEN));
 	}
 
 	@Override
@@ -117,12 +119,12 @@ public class CrystalGuardian extends Mob{
 	}
 
     @Override
-    public long attackProc(Char enemy, long damage) {
+    public BigInteger attackProc(Char enemy, BigInteger damage) {
         //if enemy is hero, and they aren't currently fighting the spire, -100 points
         if (enemy == Dungeon.hero){
             boolean spireNear = false;
             for (Mob m : Dungeon.level.mobs.toArray(new Mob[0])){
-                if (m instanceof CrystalSpire && m.HP != m.HT && Dungeon.level.distance(pos, m.pos) <= 8){
+                if (m instanceof CrystalSpire && (m.HP.compareTo(m.HT) != 0) && Dungeon.level.distance(pos, m.pos) <= 8){
                     spireNear = true;
                 }
             }
@@ -134,12 +136,12 @@ public class CrystalGuardian extends Mob{
     }
 
 	@Override
-	public long defenseProc(Char enemy, long damage) {
+	public BigInteger defenseProc(Char enemy, BigInteger damage) {
 		if (recovering){
 			if (sprite != null)
-				sprite.showStatus(CharSprite.NEGATIVE, Long.toString(damage));
-			HP = Math.max(1, HP-damage);
-			damage = -1;
+				sprite.showStatus(CharSprite.NEGATIVE, damage.toString());
+			HP = BigInteger.ONE.max(HP.subtract(damage));
+			damage = BigInteger.valueOf(-1);
 		}
 
 		return super.defenseProc(enemy, damage);
@@ -147,8 +149,8 @@ public class CrystalGuardian extends Mob{
 
 	@Override
 	public boolean isAlive() {
-		if (HP <= 0){
-			HP = 1;
+		if ((HP.compareTo(BigInteger.ZERO) <= 0)){
+			HP = BigInteger.ONE;
 
 			for (Buff b : buffs()){
 				if (!(b instanceof Doom || b instanceof Cripple)) {

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -48,7 +50,7 @@ public class FrostBomb extends Bomb {
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-				GameScene.add(Blob.seed(i, 10, Freezing.class));
+				GameScene.add(Blob.seed(i, BigInteger.TEN, Freezing.class));
 				Char ch = Actor.findChar(i);
 				if (ch != null){
 					Buff.affect(ch, Frost.class, 2f);
@@ -58,8 +60,8 @@ public class FrostBomb extends Bomb {
 	}
 	
 	@Override
-	public long value() {
+	public BigInteger value() {
 		//prices of ingredients
-		return quantity * (20 + 30);
+		return quantity.multiply(BigInteger.valueOf((20 + 30)));
 	}
 }

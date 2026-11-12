@@ -29,6 +29,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.test_tubes;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bless;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
@@ -55,13 +57,13 @@ public class TubeOfGodspeed extends Tubes {
 	}
 
 	@Override
-	public long value() {
-		return isKnown() ? 250 * quantity : super.value();
+	public BigInteger value() {
+		return isKnown() ? BigInteger.valueOf(250).multiply(quantity) : super.value();
 	}
 
 	@Override
-	public long energyVal() {
-		return isKnown() ? 8 * quantity : super.energyVal();
+	public BigInteger energyVal() {
+		return isKnown() ? BigInteger.valueOf(8).multiply(quantity) : super.energyVal();
 	}
 
 	public static class Godspeed extends FlavourBuff {

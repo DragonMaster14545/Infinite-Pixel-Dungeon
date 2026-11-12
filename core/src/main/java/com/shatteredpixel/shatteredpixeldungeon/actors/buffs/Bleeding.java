@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
@@ -97,14 +101,14 @@ public class Bleeding extends Buff {
 		if (target.isAlive()) {
 			
 			level = Dungeon.NormalDouble(level / 2f, level);
-			long dmg = Math.round(level);
+			BigInteger dmg = BigInteger.valueOf(Math.round(level));
 			
-			if (dmg > 0) {
+			if ((dmg.compareTo(BigInteger.ZERO) > 0)) {
 				
 				target.damage( dmg, this );
 				if (target.sprite.visible) {
 					Splash.at( target.sprite.center(), -PointF.PI / 2, PointF.PI / 6,
-							target.sprite.blood(), (int) Math.min(Integer.MAX_VALUE, Math.min( 10 * dmg / target.HT, 10 )));
+							target.sprite.blood(), Big.toInt(BigInteger.valueOf(Integer.MAX_VALUE).min(BigInteger.TEN.multiply(dmg).divide(target.HT).min(BigInteger.TEN))));
 				}
 				
 				if (target == Dungeon.hero && !target.isAlive()) {

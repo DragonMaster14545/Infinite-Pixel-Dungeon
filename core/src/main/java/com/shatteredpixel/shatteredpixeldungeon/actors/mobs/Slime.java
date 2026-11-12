@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
@@ -38,34 +42,34 @@ public class Slime extends Mob {
 	{
 		spriteClass = SlimeSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(20);
-		defenseSkill = Dungeon.getCycleMultiplier(5);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(20));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(5));
 		
-		EXP = Dungeon.getCycleMultiplier(4);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(4));
 		maxLvl = 9;
 		
 		lootChance = 0.2f; //by default, see lootChance()
 	}
 	
 	@Override
-	public long damageRoll() {
-	    return Random.NormalLongRange( Dungeon.getCycleMultiplier(2), Dungeon.getCycleMultiplier(5) );
+	public BigInteger damageRoll() {
+	    return Big.normalRange(Dungeon.getCycleMultiplier(BigInteger.TWO), Dungeon.getCycleMultiplier(BigInteger.valueOf(5)));
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(12);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(12));
 	}
 	
 	@Override
-	public void damage(long dmg, Object src) {
+	public void damage(BigInteger dmg, Object src) {
 		double scaleFactor = AscensionChallenge.statModifier(this);
-		long scaledDmg = Math.round(dmg/scaleFactor);
-		if (scaledDmg >= 5 + Dungeon.cycle * 75L && Dungeon.cycle < 2){
+		BigInteger scaledDmg = Big.round(Big.div(Big.dec(dmg), Big.dec(scaleFactor)));
+		if ((scaledDmg.compareTo(BigInteger.valueOf(5 + Dungeon.cycle * 75L)) >= 0) && Dungeon.cycle < 2){
 			//takes 5/6/7/8/9/10 dmg at 5/7/10/14/19/25 incoming dmg
-			scaledDmg = 4 + Dungeon.cycle * 75L + (int)(Math.sqrt(8*(scaledDmg - 4) + 1) - 1)/2;
+			scaledDmg = BigInteger.valueOf(4 + Dungeon.cycle * 75L + (int)(Math.sqrt(BigInteger.valueOf(8).multiply((scaledDmg.subtract(BigInteger.valueOf(4)))).add(BigInteger.ONE).doubleValue()) - 1)/2);
 		}
-		dmg = (long) (scaledDmg*AscensionChallenge.statModifier(this));
+		dmg = Big.trunc((Big.dec(scaledDmg).multiply(Big.dec(AscensionChallenge.statModifier(this)))));
 		super.damage(dmg, src);
 	}
 
@@ -80,7 +84,7 @@ public class Slime extends Mob {
 	public Item createLoot() {
 		Dungeon.LimitedDrops.SLIME_WEP.count++;
 		MeleeWeapon w = (MeleeWeapon)Generator.randomUsingDefaults(Generator.Category.WEP_T2);
-		w.level(0);
+		w.level(BigInteger.ZERO);
 		return w;
 	}
 }

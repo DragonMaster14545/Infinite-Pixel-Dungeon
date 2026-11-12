@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -123,7 +125,7 @@ public class WandOfTerraforming extends Wand {
     }
 
     @Override
-    public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
+    public void onHit(MagesStaff staff, Char attacker, Char defender, BigInteger damage) {
         //this wand doesn't damage on melee proc, nothing to do
     }
 

@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -55,7 +58,7 @@ public class ElixirOfAquaticRejuvenation extends Elixir {
 		if (Dungeon.isChallenged(Challenges.NO_HEALING)){
 			PotionOfHealing.pharmacophobiaProc(hero);
 		} else {
-			Buff.affect(hero, AquaHealing.class).set(Math.round(hero.HT * 1.5f));
+			Buff.affect(hero, AquaHealing.class).set(Big.toInt(Big.round(Big.dec(hero.HT).multiply(Big.dec(1.5f)))));
 		}
 	}
 
@@ -75,19 +78,19 @@ public class ElixirOfAquaticRejuvenation extends Elixir {
 		@Override
 		public boolean act() {
 			
-			if (!target.flying && Dungeon.level.water[target.pos] && target.HP < target.HT){
-				float healAmt = GameMath.gate( 1, target.HT/50f, left );
-				healAmt = Math.min(healAmt, target.HT - target.HP);
+			if (!target.flying && Dungeon.level.water[target.pos] && (target.HP.compareTo(target.HT) < 0)){
+				float healAmt = GameMath.gate( 1, Big.div(Big.dec(target.HT), Big.dec(50f)).floatValue(), left );
+				healAmt = Big.dec(healAmt).min(Big.dec(target.HT.subtract(target.HP))).floatValue();
 				if (Random.Float() < (healAmt % 1)){
 					healAmt = (float)Math.ceil(healAmt);
 				} else {
 					healAmt = (float)Math.floor(healAmt);
 				}
-				target.HP += (int)healAmt;
+				target.HP = target.HP.add(BigInteger.valueOf((int)healAmt));
 				left -= (int)healAmt;
 				target.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString((int)healAmt), FloatingText.HEALING );
 
-				if (target.HP >= target.HT) {
+				if ((target.HP.compareTo(target.HT) >= 0)) {
 					target.HP = target.HT;
 					if (target instanceof Hero) {
 						((Hero) target).resting = false;
@@ -118,7 +121,7 @@ public class ElixirOfAquaticRejuvenation extends Elixir {
 
 		@Override
 		public float iconFadePercent() {
-			float max = Math.round(target.HT * 1.5f);
+			float max = Big.round(Big.dec(target.HT).multiply(Big.dec(1.5f))).floatValue();
 			return Math.max(0, (max - left) / max);
 		}
 

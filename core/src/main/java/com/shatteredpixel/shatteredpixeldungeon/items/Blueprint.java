@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -127,8 +129,8 @@ public class Blueprint extends Item {
 	}
 
 	@Override
-	public long value() {
-		return 1500;
+	public BigInteger value() {
+		return BigInteger.valueOf(1500);
 	}
 
 	@Override
@@ -157,7 +159,7 @@ public class Blueprint extends Item {
 
 		@Override
 		public boolean itemSelectable(Item item) {
-			if (item == null || item == Blueprint.this || item.isEquipped(Dungeon.hero) || item.trueLevel() < 1) {
+			if (item == null || item == Blueprint.this || item.isEquipped(Dungeon.hero) || (item.trueLevel().compareTo(BigInteger.ONE) < 0)) {
 				return false;
 			}
 			if (!item.isIdentified() || item.cursed || !item.isUpgradable()) {
@@ -209,10 +211,10 @@ public class Blueprint extends Item {
 			return;
 		}
 
-		long totalLevel = 0;
+		BigInteger totalLevel = BigInteger.ZERO;
 		for (Item item : storedItems) {
-			totalLevel += item.trueLevel();
-			item.quantity(0);
+			totalLevel = totalLevel.add(item.trueLevel());
+			item.quantity(BigInteger.ZERO);
 		}
 
 		base.level(totalLevel);

@@ -21,16 +21,18 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.FungalCoreSprite;
 
 public class FungalCore extends Mob {
 
 	{
-		HP = HT = 300;
+		HP = HT = BigInteger.valueOf(300);
 		spriteClass = FungalCoreSprite.class;
 
-		EXP = 20;
+		EXP = BigInteger.valueOf(20);
 
 		state = PASSIVE;
 

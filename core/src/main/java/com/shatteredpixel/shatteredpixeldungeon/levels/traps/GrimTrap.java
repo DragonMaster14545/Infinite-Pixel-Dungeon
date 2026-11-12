@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -90,14 +94,14 @@ public class GrimTrap extends Trap {
 				if (target != null) {
 					final Char finalTarget = target;
 					//instant kill, use a mix of current HP and max HP, just like psi blast (for resistances)
-					long damage = Math.round(finalTarget.HT/2f + finalTarget.HP/2f);
+					BigInteger damage = Big.round(Big.div(Big.dec(finalTarget.HT), Big.dec(2f)).add(Big.div(Big.dec(finalTarget.HP), Big.dec(2f))));
 
 					//can't do more than 90% HT for the hero specifically
 					if (finalTarget == Dungeon.hero){
-						damage = (int)Math.min(damage, finalTarget.HT*0.9f);
+						damage = BigInteger.valueOf(Big.toInt((Big.dec(damage).min(Big.dec(finalTarget.HT).multiply(Big.dec(0.9f)))).toBigInteger()));
 					}
 
-					final long finalDmg = damage;
+					final BigInteger finalDmg = damage;
 					if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[target.pos]) {
 						((MagicMissile)finalTarget.sprite.parent.recycle(MagicMissile.class)).reset(
 								MagicMissile.SHADOW,

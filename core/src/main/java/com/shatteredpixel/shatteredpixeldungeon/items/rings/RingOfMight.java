@@ -25,6 +25,10 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -66,7 +70,7 @@ public class RingOfMight extends Ring {
 	}
 
 	@Override
-	public void level(long value) {
+	public void level(BigInteger value) {
 		super.level(value);
 		updateTargetHT();
 	}
@@ -80,10 +84,10 @@ public class RingOfMight extends Ring {
 	public String statsInfo() {
 		if (isIdentified()){
 			String info = Messages.get(this, "stats",
-					soloBuffedBonus()-1, (soloBuffedBonus()-1)*2);
-			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)){
+					soloBuffedBonus().subtract(BigInteger.ONE), (soloBuffedBonus().subtract(BigInteger.ONE)).multiply(BigInteger.TWO));
+			if (isEquipped(Dungeon.hero) && (soloBuffedBonus().compareTo(combinedBuffedBonus(Dungeon.hero)) != 0)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
-						combinedBuffedBonus(Dungeon.hero)-1, (combinedBuffedBonus(Dungeon.hero)-1)*2);
+						combinedBuffedBonus(Dungeon.hero).subtract(BigInteger.ONE), (combinedBuffedBonus(Dungeon.hero).subtract(BigInteger.ONE)).multiply(BigInteger.TWO));
 			}
 			return info;
 		} else {
@@ -92,15 +96,15 @@ public class RingOfMight extends Ring {
 	}
 
 	@Override
-	public String upgradeStat1(long level) {
-		if (cursed && cursedKnown) level = Math.min(-1, level-3)-1;
-		return Long.toString(level+1);
+	public String upgradeStat1(BigInteger level) {
+		if (cursed && cursedKnown) level = BigInteger.valueOf(-1).min(level.subtract(BigInteger.valueOf(3))).subtract(BigInteger.ONE);
+		return level.add(BigInteger.ONE).toString();
 	}
 
 	@Override
-	public String upgradeStat2(long level) {
-		if (cursed && cursedKnown) level = Math.min(-1, level-3)-1;
-		return Long.toString(level*2);
+	public String upgradeStat2(BigInteger level) {
+		if (cursed && cursedKnown) level = BigInteger.valueOf(-1).min(level.subtract(BigInteger.valueOf(3))).subtract(BigInteger.ONE);
+		return level.multiply(BigInteger.TWO).toString();
 	}
 
 	@Override
@@ -109,14 +113,14 @@ public class RingOfMight extends Ring {
 	}
 	
 	public static int strengthBonus( Char target ){
-		int boost = (int)Math.min(2000000000L, getBuffedBonus(target, Might.class));
+		int boost = Big.toInt(BigInteger.valueOf(2000000000L).min(getBuffedBonus(target, Might.class)));
 		return (boost >= 1) ? Math.min(boost, 10 * (1 + Dungeon.cycle)) : 0;
     }
 	
 	public static int HTMultiplier( Char target ){
 		int multiplier = 0;
-		if (getBuffedBonus(target, Might.class) == 1) multiplier = 2;
-		if (getBuffedBonus(target, Might.class) > 1) multiplier += getBuffedBonus(target, Might.class)*2;
+		if ((getBuffedBonus(target, Might.class).compareTo(BigInteger.ONE) == 0)) multiplier = 2;
+		if ((getBuffedBonus(target, Might.class).compareTo(BigInteger.ONE) > 0)) multiplier += Big.toLong(getBuffedBonus(target, Might.class).multiply(BigInteger.TWO));
 		return Math.min(multiplier, 20 * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
 	}
 

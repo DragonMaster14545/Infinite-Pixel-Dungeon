@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.blacksmith;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -48,19 +52,19 @@ public class FantasmalStabber extends BlacksmithWeapon implements PreparationAll
     }
 
     @Override
-    public long min(long lvl) {
-        return super.min(lvl)/4;
+    public BigInteger min(BigInteger lvl) {
+        return super.min(lvl).divide(BigInteger.valueOf(4));
     }
 
     @Override
-    public long max(long lvl) {
-        return super.max(lvl)/4;
+    public BigInteger max(BigInteger lvl) {
+        return super.max(lvl).divide(BigInteger.valueOf(4));
     }
 
     @Override
-    public long proc(Char attacker, Char defender, long damage) {
-        long dmg = super.proc(attacker, defender, damage);
-        dmg += defender.drRoll();
+    public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
+        BigInteger dmg = super.proc(attacker, defender, damage);
+        dmg = dmg.add(defender.drRoll());
         if (attacker instanceof Hero){
             for (Buff b : attacker.buffs()) {
                 if (b instanceof Artifact.ArtifactBuff) {
@@ -77,19 +81,19 @@ public class FantasmalStabber extends BlacksmithWeapon implements PreparationAll
     }
 
     @Override
-    public long damageRoll(Char owner) {
+    public BigInteger damageRoll(Char owner) {
         if (owner instanceof Hero) {
             Hero hero = (Hero)owner;
             Char enemy = hero.enemy();
             if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
                 //deals 75% toward max to max on surprise, instead of min to max.
-                long diff = max() - min();
-                long damage = augment.damageFactor(Dungeon.NormalLongRange(
-                        min() + Math.round(diff*0.750f),
+                BigInteger diff = max().subtract(min());
+                BigInteger damage = augment.damageFactor(Dungeon.NormalLongRange(
+                        min().add(Big.round(Big.dec(diff).multiply(Big.dec(0.750f)))),
                         max()));
                 int exStr = hero.STR() - STRReq();
                 if (exStr > 0) {
-                    damage += Dungeon.IntRange(0, exStr);
+                    damage = damage.add(BigInteger.valueOf(Dungeon.IntRange(0, exStr)));
                 }
                 return damage;
             }
@@ -108,6 +112,6 @@ public class FantasmalStabber extends BlacksmithWeapon implements PreparationAll
 
     @Override
     protected void duelistAbility(Hero hero, Integer target) {
-        Dagger.sneakAbility(hero, target, 10, 2,this);
+        Dagger.sneakAbility(hero, target, 10, BigInteger.TWO,this);
     }
 }

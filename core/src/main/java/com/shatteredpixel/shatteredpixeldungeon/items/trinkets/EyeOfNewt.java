@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -31,17 +35,17 @@ public class EyeOfNewt extends Trinket {
 	}
 
 	@Override
-	protected long upgradeEnergyCost() {
+	protected BigInteger upgradeEnergyCost() {
 		//6 -> 8(14) -> 10(24) -> 12(36)
-		return 6+2*level();
+		return BigInteger.valueOf(6).add(BigInteger.TWO.multiply(level()));
 	}
 
 	@Override
 	public String statsDesc() {
 		if (isIdentified()){
 			return Messages.get(this, "stats_desc",
-					Messages.decimalFormat("#.##", 100*(1f-visionRangeMultiplier((int)buffedLvl()))),
-					mindVisionRange((int)buffedLvl()));
+					Messages.decimalFormat("#.##", 100*(1f-visionRangeMultiplier(Big.toInt(buffedLvl())))),
+					mindVisionRange(Big.toInt(buffedLvl())));
 		} else {
 			return Messages.get(this, "typical_stats_desc",
 					Messages.decimalFormat("#.##", 100*(1f-visionRangeMultiplier(0))),

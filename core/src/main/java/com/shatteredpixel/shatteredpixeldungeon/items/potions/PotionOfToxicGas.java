@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -49,11 +51,11 @@ public class PotionOfToxicGas extends Potion {
 			Sample.INSTANCE.play( Assets.Sounds.GAS );
 		}
 
-		GameScene.add( Blob.seed( cell, 1000, ToxicGas.class ) );
+		GameScene.add( Blob.seed( cell, BigInteger.valueOf(1000), ToxicGas.class ) );
 	}
 	
 	@Override
-	public long value() {
-		return isKnown() ? 30 * quantity : super.value();
+	public BigInteger value() {
+		return isKnown() ? BigInteger.valueOf(30).multiply(quantity) : super.value();
 	}
 }

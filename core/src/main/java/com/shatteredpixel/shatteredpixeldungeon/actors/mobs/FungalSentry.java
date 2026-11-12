@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
@@ -34,10 +36,10 @@ public class FungalSentry extends Mob {
 	{
 		spriteClass = FungalSentrySprite.class;
 
-		HP = HT = 200;
-		defenseSkill = 12;
+		HP = HT = BigInteger.valueOf(200);
+		defenseSkill = BigInteger.valueOf(12);
 
-		EXP = 10;
+		EXP = BigInteger.TEN;
 		maxLvl = -2;
 
 		state = WANDERING = new Waiting();
@@ -67,8 +69,8 @@ public class FungalSentry extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange(5, 10);
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange(BigInteger.valueOf(5), BigInteger.TEN);
 	}
 
 	@Override
@@ -81,14 +83,14 @@ public class FungalSentry extends Mob {
 	//TODO if we want to allow them to be literally killed, probably should give them a heal if hero is out of FOV, or similar
 
 	@Override
-	public long attackProc(Char enemy, long damage) {
+	public BigInteger attackProc(Char enemy, BigInteger damage) {
 		Buff.affect(enemy, Poison.class).extend(6);
 		return super.attackProc(enemy, damage);
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return 50;
+	public BigInteger attackSkill(Char target ) {
+		return BigInteger.valueOf(50);
 	}
 
 	{

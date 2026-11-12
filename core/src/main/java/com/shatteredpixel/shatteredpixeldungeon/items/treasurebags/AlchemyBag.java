@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.treasurebags;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Perks;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -59,12 +61,12 @@ public class AlchemyBag extends TreasureBag {
                 RegrowthBomb.class, ShockBomb.class, WoollyBomb.class, ArcaneBomb.class, ShrapnelBomb.class);
         int amount = Random.Int(2, 8);
         if (Dungeon.hero.perks.contains(Perks.Perk.MORE_BAG)) amount *= 1.5f;
-        items.add(Reflection.newInstance(Random.element(possibleItems)).quantity(amount));
+        items.add(Reflection.newInstance(Random.element(possibleItems)).quantity(BigInteger.valueOf(amount)));
         return items;
     }
 
     @Override
-    public long value() {
-        return 65 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(65).multiply(quantity);
     }
 }

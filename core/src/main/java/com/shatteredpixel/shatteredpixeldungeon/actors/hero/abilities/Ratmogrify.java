@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -241,7 +245,7 @@ public class Ratmogrify extends ArmorAbility {
 				original.clearTime();
 				GameScene.add(original);
 
-				EXP = 0;
+				EXP = BigInteger.ZERO;
 				destroy();
 				sprite.killAndErase();
 				CellEmitter.get(original.pos).burst(Speck.factory(Speck.WOOL), 4);
@@ -266,19 +270,19 @@ public class Ratmogrify extends ArmorAbility {
 			Bestiary.countEncounter(original.getClass());
 		}
 
-		public long attackSkill(Char target) {
+		public BigInteger attackSkill(Char target) {
 			return original.attackSkill(target);
 		}
 
-		public long drRoll() {
+		public BigInteger drRoll() {
 			return original.drRoll();
 		}
 
 		@Override
-		public long damageRoll() {
-			long damage = original.damageRoll();
+		public BigInteger damageRoll() {
+			BigInteger damage = original.damageRoll();
 			if (!allied && Dungeon.hero.hasTalent(Talent.RATSISTANCE)){
-				damage *= Math.pow(0.9f, Dungeon.hero.pointsInTalent(Talent.RATSISTANCE));
+				damage = Big.trunc(Big.dec(damage).multiply(Big.dec(Math.pow(0.9f, Dungeon.hero.pointsInTalent(Talent.RATSISTANCE)))));
 			}
 			return damage;
 		}

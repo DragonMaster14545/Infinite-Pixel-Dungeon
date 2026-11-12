@@ -21,6 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.journal;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue.ShadowClone;
@@ -178,13 +181,13 @@ public enum Bestiary {
 	//tracks whether an entity has been encountered
 	private final LinkedHashMap<Class<?>, Boolean> seen = new LinkedHashMap<>();
 	//tracks enemy kills, trap activations, plant tramples, or just sets to 1 for seen on allies
-	private final LinkedHashMap<Class<?>, Long> encounterCount = new LinkedHashMap<>();
+	private final LinkedHashMap<Class<?>, BigInteger> encounterCount = new LinkedHashMap<>();
 
 	//should only be used when initializing
 	private void addEntities(Class<?>... classes ){
 		for (Class<?> cls : classes){
 			seen.put(cls, false);
-			encounterCount.put(cls, 0L);
+			encounterCount.put(cls, BigInteger.ZERO);
 		}
 	}
 
@@ -301,23 +304,23 @@ public enum Bestiary {
 		Badges.validateCatalogBadges();
 	}
 
-	public static long encounterCount(Class<?> cls) {
+	public static BigInteger encounterCount(Class<?> cls) {
 		for (Bestiary cat : values()) {
 			if (cat.encounterCount.containsKey(cls)) {
 				return cat.encounterCount.get(cls);
 			}
 		}
-		return 0;
+		return BigInteger.ZERO;
 	}
 
 	//used primarily when bosses are killed and need to clean up their minions
 	public static boolean skipCountingEncounters = false;
 
 	public static void countEncounter(Class<?> cls){
-		countEncounters(cls, 1);
+		countEncounters(cls, BigInteger.ONE);
 	}
 
-	public static void countEncounters(Class<?> cls, long encounters){
+	public static void countEncounters(Class<?> cls, BigInteger encounters){
 		if (skipCountingEncounters){
 			return;
 		}
@@ -325,10 +328,10 @@ public enum Bestiary {
 			cls = classConversions.get(cls);
 		}
 		for (Bestiary cat : values()) {
-			if (cat.encounterCount.containsKey(cls) && cat.encounterCount.get(cls) != Integer.MAX_VALUE){
-				cat.encounterCount.put(cls, cat.encounterCount.get(cls)+encounters);
-				if (cat.encounterCount.get(cls) < -1_000_000_000){ //to catch cases of overflow
-					cat.encounterCount.put(cls, 2_000_000_000_000L);
+			if (cat.encounterCount.containsKey(cls) && (cat.encounterCount.get(cls).compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) != 0)){
+				cat.encounterCount.put(cls, cat.encounterCount.get(cls).add(encounters));
+				if ((cat.encounterCount.get(cls).compareTo(BigInteger.valueOf(-1_000_000_000)) < 0)){ //to catch cases of overflow
+					cat.encounterCount.put(cls, BigInteger.valueOf(2_000_000_000_000L));
 				}
 				Journal.saveNeeded = true;
 			}
@@ -343,11 +346,11 @@ public enum Bestiary {
 
 		ArrayList<Class<?>> classes = new ArrayList<>();
 		ArrayList<Boolean> seen = new ArrayList<>();
-		ArrayList<Long> encounters = new ArrayList<>();
+		ArrayList<BigInteger> encounters = new ArrayList<>();
 
 		for (Bestiary cat : values()) {
 			for (Class<?> entity : cat.entities()) {
-				if (cat.seen.get(entity) || cat.encounterCount.get(entity) > 0){
+				if (cat.seen.get(entity) || (cat.encounterCount.get(entity).compareTo(BigInteger.ZERO) > 0)){
 					classes.add(entity);
 					seen.add(cat.seen.get(entity));
 					encounters.add(cat.encounterCount.get(entity));
@@ -357,7 +360,7 @@ public enum Bestiary {
 
 		Class<?>[] storeCls = new Class[classes.size()];
 		boolean[] storeSeen = new boolean[seen.size()];
-		long[] storeEncounters = new long[encounters.size()];
+		BigInteger[] storeEncounters = Big.newArray(encounters.size());
 
 		for (int i = 0; i < storeCls.length; i++){
 			storeCls[i] = classes.get(i);
@@ -367,7 +370,7 @@ public enum Bestiary {
 
 		bundle.put( BESTIARY_CLASSES, storeCls );
 		bundle.put( BESTIARY_SEEN, storeSeen );
-		bundle.put( BESTIARY_ENCOUNTERS, storeEncounters );
+		Big.putArray(bundle, BESTIARY_ENCOUNTERS, storeEncounters);
 
 	}
 
@@ -378,7 +381,7 @@ public enum Bestiary {
 				&& bundle.contains(BESTIARY_ENCOUNTERS)){
 			Class<?>[] classes = bundle.getClassArray(BESTIARY_CLASSES);
 			boolean[] seen = bundle.getBooleanArray(BESTIARY_SEEN);
-			long[] encounters = bundle.getLongArray(BESTIARY_ENCOUNTERS);
+			BigInteger[] encounters = Big.getBigArray(bundle, BESTIARY_ENCOUNTERS);
 
 			for (int i = 0; i < classes.length; i++){
 				for (Bestiary cat : values()){

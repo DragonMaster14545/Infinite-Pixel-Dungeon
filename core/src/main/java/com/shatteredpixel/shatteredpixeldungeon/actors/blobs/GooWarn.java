@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
@@ -50,10 +53,10 @@ public class GooWarn extends Blob {
 		for (int i = area.left; i < area.right; i++){
 			for (int j = area.top; j < area.bottom; j++){
 				cell = i + j*Dungeon.level.width();
-				off[cell] = cur[cell] > 0 ? cur[cell] - 1 : 0;
+				off[cell] = (cur[cell].compareTo(BigInteger.ZERO) > 0) ? cur[cell].subtract(BigInteger.ONE) : BigInteger.ZERO;
 
-				if (off[cell] > 0) {
-					volume += off[cell];
+				if ((off[cell].compareTo(BigInteger.ZERO) > 0)) {
+					volume = volume.add(off[cell]);
 				}
 			}
 		}
@@ -62,13 +65,13 @@ public class GooWarn extends Blob {
 
 	//to prevent multiple arcane bombs from visually stacking their effects
 	public void seed(Level level, int cell, int amount ) {
-		if (cur == null) cur = new long[level.length()];
-		if (off == null) off = new long[cur.length];
+		if (cur == null) cur = Big.newArray(level.length());
+		if (off == null) off = Big.newArray(cur.length);
 
-		long toAdd = amount - cur[cell];
-		if (toAdd > 0){
-			cur[cell] += toAdd;
-			volume += toAdd;
+		BigInteger toAdd = BigInteger.valueOf(amount).subtract(cur[cell]);
+		if ((toAdd.compareTo(BigInteger.ZERO) > 0)){
+			cur[cell] = cur[cell].add(toAdd);
+			volume = volume.add(toAdd);
 		}
 
 		area.union(cell%level.width(), cell/level.width());

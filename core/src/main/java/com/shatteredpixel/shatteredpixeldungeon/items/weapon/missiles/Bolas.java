@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -42,13 +44,12 @@ public class Bolas extends MissileWeapon {
 	}
 	
 	@Override
-	public long max(long lvl) {
-		return  5L * tier() +                      //9 base, down from 15
-				(tier == 1 ? 3*lvl : tier()*lvl*2); //scaling unchanged
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(5L * tier()).add((tier == 1 ? BigInteger.valueOf(3).multiply(lvl) : BigInteger.valueOf(tier()).multiply(lvl).multiply(BigInteger.TWO))); //scaling unchanged
 	}
 	
 	@Override
-	public long proc( Char attacker, Char defender, long damage ) {
+	public BigInteger proc( Char attacker, Char defender, BigInteger damage ) {
 		Buff.prolong( defender, Cripple.class, Cripple.DURATION );
 		return super.proc( attacker, defender, damage );
 	}

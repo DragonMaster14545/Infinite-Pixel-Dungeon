@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -54,7 +58,7 @@ public class PotionOfHealing extends Potion {
 		} else {
 			//starts out healing 30 hp, equalizes with hero health total at level 11
 			Healing healing = Buff.affect(ch, Healing.class);
-			healing.setHeal((int) (0.8f * ch.HT + 14), 0.25f, 0);
+			healing.setHeal(BigInteger.valueOf(Big.toInt(((Big.dec(0.8f).multiply(Big.dec(ch.HT)).add(Big.dec(14)))).toBigInteger())), 0.25f, BigInteger.ZERO);
 			healing.applyVialEffect();
 			if (ch == Dungeon.hero){
 				GLog.p( Messages.get(PotionOfHealing.class, "heal") );
@@ -80,7 +84,7 @@ public class PotionOfHealing extends Potion {
 	}
 
 	@Override
-	public long value() {
-		return isKnown() ? 30 * quantity : super.value();
+	public BigInteger value() {
+		return isKnown() ? BigInteger.valueOf(30).multiply(quantity) : super.value();
 	}
 }

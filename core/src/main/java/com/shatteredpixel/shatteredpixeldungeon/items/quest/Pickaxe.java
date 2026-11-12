@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.quest;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -82,14 +84,13 @@ public class Pickaxe extends MeleeWeapon {
 	public boolean bloodStained = false;
 
 	@Override
-	public int STRReq(long lvl) {
+	public int STRReq(BigInteger lvl) {
 		return super.STRReq(lvl) + 2; //tier 3 strength requirement with tier 2 damage stats
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  12*(tier()+1) +    //36 base, up from 24
-				lvl*(tier());   //+2, down from +3
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(12*(tier()+1)).add(lvl.multiply(BigInteger.valueOf((tier()))));   //+2, down from +3
 	}
 
 	@Override
@@ -157,7 +158,7 @@ public class Pickaxe extends MeleeWeapon {
 	}
 	
 	@Override
-	public long proc( Char attacker, Char defender, long damage ) {
+	public BigInteger proc( Char attacker, Char defender, BigInteger damage ) {
 		if (Blacksmith.Quest.oldBloodQuest() && !bloodStained && defender instanceof Bat) {
 			Actor.add(new Actor() {
 
@@ -225,7 +226,7 @@ public class Pickaxe extends MeleeWeapon {
 		hero.sprite.attack(enemy.pos, new Callback() {
 			@Override
 			public void call() {
-				long damageBoost = 0;
+				BigInteger damageBoost = BigInteger.ZERO;
 				if (Char.hasProp(enemy, Char.Property.INORGANIC)
 						|| enemy instanceof Swarm
 						|| enemy instanceof Bee
@@ -233,11 +234,11 @@ public class Pickaxe extends MeleeWeapon {
 						|| enemy instanceof Spinner
 						|| enemy instanceof Scorpio) {
 					//+(8+2*lvl) damage, equivalent to +100% damage
-					damageBoost = augment.damageFactor(8 + 2*buffedLvl());
+					damageBoost = augment.damageFactor(BigInteger.valueOf(8).add(BigInteger.TWO.multiply(buffedLvl())));
 				}
 				beforeAbilityUsed(hero, enemy);
 				AttackIndicator.target(enemy);
-				if (hero.attack(enemy, 1, damageBoost, Char.INFINITE_ACCURACY)) {
+				if (hero.attack(enemy, 1, damageBoost.floatValue(), Char.INFINITE_ACCURACY)) {
 					if (enemy.isAlive()) {
 						Buff.affect(enemy, Vulnerable.class, 3f);
 					} else {
@@ -254,13 +255,13 @@ public class Pickaxe extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		long dmgBoost = 8 + 2*buffedLvl();
-		return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
+		BigInteger dmgBoost = BigInteger.valueOf(8).add(BigInteger.TWO.multiply(buffedLvl()));
+		return Messages.get(this, "ability_desc", augment.damageFactor(min().add(dmgBoost)), augment.damageFactor(max().add(dmgBoost)));
 	}
 
-	public String upgradeAbilityStat(long level){
-		long dmgBoost = 8 + 2*level;
-		return augment.damageFactor(min(level)+dmgBoost) + "-" + augment.damageFactor(max(level)+dmgBoost);
+	public String upgradeAbilityStat(BigInteger level){
+		BigInteger dmgBoost = BigInteger.valueOf(8).add(BigInteger.TWO.multiply(level));
+		return augment.damageFactor(min(level).add(dmgBoost)) + "-" + augment.damageFactor(max(level).add(dmgBoost));
 	}
 
 	private static final String BLOODSTAINED = "bloodStained";

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -36,12 +40,12 @@ public class Sacrificial extends Weapon.Enchantment {
 	private static ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x000000 );
 
 	@Override
-	public long proc(Weapon weapon, Char attacker, Char defender, long damage ) {
+	public BigInteger proc(Weapon weapon, Char attacker, Char defender, BigInteger damage ) {
 
 		float procChance = 1/10f * procChanceMultiplier(attacker);
 		if (Random.Float() < procChance) {
-			float missingPercent = attacker.HP/(float)attacker.HT;
-			float bleedAmt = (float)(Math.pow(missingPercent, 2) * attacker.HT)/8f;
+			float missingPercent = Big.div(Big.dec(attacker.HP), Big.dec(attacker.HT.floatValue())).floatValue();
+			float bleedAmt = (Big.dec(Math.pow(missingPercent, 2)).multiply(Big.dec(attacker.HT))).floatValue()/8f;
 			if (Random.Float() < bleedAmt) {
 				Buff.affect(attacker, Bleeding.class).set(Math.max(1, bleedAmt), getClass());
 			}

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -42,7 +44,7 @@ public class CausticSlime extends Slime {
 	}
 	
 	@Override
-	public long attackProc( Char enemy, long damage ) {
+	public BigInteger attackProc( Char enemy, BigInteger damage ) {
 		if (Dungeon.Int( 2 ) == 0) {
 			Buff.affect( enemy, Ooze.class ).set( Ooze.DURATION );
 			enemy.sprite.burst( 0x000000, 5 );

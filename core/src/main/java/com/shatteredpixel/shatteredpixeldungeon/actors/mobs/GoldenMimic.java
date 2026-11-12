@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -85,8 +89,8 @@ public class GoldenMimic extends Mimic {
 	}
 
 	@Override
-	public void setLevel(long level) {
-		super.setLevel(Math.round(level*1.33f));
+	public void setLevel(BigInteger level) {
+		super.setLevel(Big.round(Big.dec(level).multiply(Big.dec(1.33f))));
 	}
 
 	@Override
@@ -103,7 +107,7 @@ public class GoldenMimic extends Mimic {
 				if (i instanceof Armor && ((Armor) i).hasCurseGlyph()){
 					((Armor) i).inscribe(null);
 				}
-				if (!(i instanceof MissileWeapon || i instanceof Artifact) && i.level() == 0 && Random.Int(2) == 0){
+				if (!(i instanceof MissileWeapon || i instanceof Artifact) && (i.level().compareTo(BigInteger.ZERO) == 0) && Random.Int(2) == 0){
 					i.upgrade();
 				}
 			}

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
@@ -53,7 +57,7 @@ public class ArmoredStatue extends Statue {
 		super();
 
 		//double HP
-		HP = HT = 30 + Dungeon.escalatingDepth() * 10;
+		HP = HT = BigInteger.valueOf(30).add(Dungeon.escalatingDepth().multiply(BigInteger.TEN));
 	}
 
 	@Override
@@ -80,8 +84,8 @@ public class ArmoredStatue extends Statue {
 	}
 
 	@Override
-	public long drRoll() {
-		return (int) (super.drRoll() + Random.NormalLongRange( armor.DRMin(), armor.DRMax()));
+	public BigInteger drRoll() {
+		return BigInteger.valueOf(Big.toInt((super.drRoll().add(Big.normalRange(armor.DRMin(), armor.DRMax())))));
 	}
 
 	//used in some glyph calculations
@@ -105,18 +109,18 @@ public class ArmoredStatue extends Statue {
 	}
 
 	@Override
-	public long defenseProc(Char enemy, long damage) {
-		damage = (int) armor.proc(enemy, this, damage);
+	public BigInteger defenseProc(Char enemy, BigInteger damage) {
+		damage = BigInteger.valueOf(Big.toInt(armor.proc(enemy, this, damage)));
 		return super.defenseProc(enemy, damage);
 	}
 
 	@Override
-	public void damage(long dmg, Object src) {
+	public void damage(BigInteger dmg, Object src) {
 		//TODO improve this when I have proper damage source logic
 		if (armor != null && armor.hasGlyph(AntiMagic.class, this)
 				&& AntiMagic.RESISTS.contains(src.getClass())){
-			dmg -= AntiMagic.drRoll(this, armor.buffedLvl());
-			dmg = Math.max(dmg, 0);
+			dmg = dmg.subtract(AntiMagic.drRoll(this, armor.buffedLvl()));
+			dmg = dmg.max(BigInteger.ZERO);
 		}
 
 		super.damage( dmg, src );
@@ -147,8 +151,8 @@ public class ArmoredStatue extends Statue {
 	}
 
 	@Override
-	public long defenseSkill(Char enemy) {
-		return Math.round(armor.evasionFactor(this, super.defenseSkill(enemy)));
+	public BigInteger defenseSkill(Char enemy) {
+		return BigInteger.valueOf(Math.round(armor.evasionFactor(this, super.defenseSkill(enemy).floatValue())));
 	}
 
 	@Override

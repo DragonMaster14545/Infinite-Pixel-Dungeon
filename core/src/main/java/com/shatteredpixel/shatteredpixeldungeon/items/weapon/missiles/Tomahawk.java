@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
@@ -42,20 +46,18 @@ public class Tomahawk extends MissileWeapon {
 	}
 
 	@Override
-	public long min(long lvl) {
-		return  Math.round(3d * tier()) +   //6 base, down from 8
-				4 * lvl;                    //scaling unchanged
+	public BigInteger min(BigInteger lvl) {
+		return  BigInteger.valueOf(Math.round(3d * tier())).add(BigInteger.valueOf(4).multiply(lvl));                    //scaling unchanged
 	}
 	
 	@Override
-	public long max(long lvl) {
-		return  Math.round(7d * tier()) +  //15 base, down from 20
-				(tier()*2L)*lvl;                 //scaling unchanged
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(Math.round(7d * tier())).add(BigInteger.valueOf((tier()*2L)).multiply(lvl));                 //scaling unchanged
 	}
 	
 	@Override
-	public long proc( Char attacker, Char defender, long damage ) {
-		Buff.affect( defender, Bleeding.class ).set( Math.round(damage*0.6f) );
+	public BigInteger proc( Char attacker, Char defender, BigInteger damage ) {
+		Buff.affect( defender, Bleeding.class ).set( Big.round(Big.dec(damage).multiply(Big.dec(0.6f))).doubleValue() );
 		return super.proc( attacker, defender, damage );
 	}
 }

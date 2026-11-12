@@ -29,6 +29,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.test_tubes;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bless;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Overload;
@@ -46,18 +48,18 @@ public class TubeOfUltimatePower extends Tubes {
 	@Override
 	public void apply( Hero hero ) {
 		identify();
-		hero.earnExp(3L * hero.lvl, TubeOfUltimatePower.class);
+		hero.earnExp(BigInteger.valueOf(3L * hero.lvl), TubeOfUltimatePower.class);
 		Buff.affect(hero, Bless.class, 25f * hero.lvl);
 		Buff.affect(hero, Overload.class, 7.5f * hero.lvl);
 	}
 
 	@Override
-	public long value() {
-		return isKnown() ? 250 * quantity : super.value();
+	public BigInteger value() {
+		return isKnown() ? BigInteger.valueOf(250).multiply(quantity) : super.value();
 	}
 
 	@Override
-	public long energyVal() {
-		return isKnown() ? 8 * quantity : super.energyVal();
+	public BigInteger energyVal() {
+		return isKnown() ? BigInteger.valueOf(8).multiply(quantity) : super.energyVal();
 	}
 }

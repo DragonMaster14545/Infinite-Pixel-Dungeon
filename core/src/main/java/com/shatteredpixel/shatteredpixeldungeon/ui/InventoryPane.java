@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
@@ -340,13 +342,13 @@ public class InventoryPane extends Component {
 		if (selector == null) {
 			promptTxt.visible = false;
 
-			goldTxt.text(Long.toString(Dungeon.gold));
+			goldTxt.text(Dungeon.gold.toString());
 			goldTxt.measure();
 			goldTxt.visible = gold.visible = true;
 
-			energyTxt.text(Long.toString(Dungeon.energy));
+			energyTxt.text(Dungeon.energy.toString());
 			energyTxt.measure();
-			energyTxt.visible = energy.visible = Dungeon.energy > 0;
+			energyTxt.visible = energy.visible = (Dungeon.energy.compareTo(BigInteger.ZERO) > 0);
 		} else {
 			promptTxt.text(selector.textPrompt());
 			promptTxt.visible = true;

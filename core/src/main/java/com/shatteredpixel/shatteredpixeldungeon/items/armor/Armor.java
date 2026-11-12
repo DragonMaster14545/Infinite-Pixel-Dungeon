@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -100,12 +104,12 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 			defenceFactor = df;
 		}
 		
-		public long evasionFactor(long level){
-			return Math.round((2 + level) * evasionFactor);
+		public BigInteger evasionFactor(BigInteger level){
+			return Big.round(Big.dec((BigInteger.TWO.add(level))).multiply(Big.dec(evasionFactor)));
 		}
 		
-		public long defenseFactor(long level){
-			return Math.round((2 + level) * defenceFactor);
+		public BigInteger defenseFactor(BigInteger level){
+			return Big.round(Big.dec((BigInteger.TWO.add(level))).multiply(Big.dec(defenceFactor)));
 		}
 	}
 	
@@ -202,7 +206,7 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 			BrokenSeal detaching = seal;
 			seal = null;
 
-			if (detaching.level() > 0){
+			if ((detaching.level().compareTo(BigInteger.ZERO) > 0)){
 				degrade();
 			}
 			if (detaching.canTransferGlyph()){
@@ -280,9 +284,9 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 
 	public void affixSeal(BrokenSeal seal){
 		this.seal = seal;
-		if (seal.level() > 0){
+		if ((seal.level().compareTo(BigInteger.ZERO) > 0)){
 			//doesn't trigger upgrading logic such as affecting curses/glyphs
-			long newLevel = trueLevel()+1;
+			BigInteger newLevel = trueLevel().add(BigInteger.ONE);
 			level(newLevel);
 			Badges.validateItemLevelAquired(this);
 		}
@@ -322,39 +326,39 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 		return hero.belongings.armor() == this;
 	}
 
-	public final long DRMax(){
-		return Math.round((DRMax(buffedLvl())*(1d + (glyphHardened ? Weapon.hardenBoost(buffedLvl()) : 0d)))*getRarityMultiplier());
+	public final BigInteger DRMax(){
+		return Big.round((Big.dec(DRMax(buffedLvl())).multiply(Big.dec((1d + (glyphHardened ? Weapon.hardenBoost(buffedLvl()) : 0d))))).multiply(Big.dec(getRarityMultiplier())));
 	}
 
-	public long DRMax(long lvl){
+	public BigInteger DRMax(BigInteger lvl){
    if (Dungeon.isChallenged(Challenges.FOR_THE_WORTHY)) {
-            return 0;
+            return BigInteger.ZERO;
         }
 
 		if (Dungeon.isChallenged(Challenges.NO_ARMOR)){
-			return 1 + tier() + lvl + augment.defenseFactor(lvl);
+			return BigInteger.valueOf(1 + tier()).add(lvl).add(augment.defenseFactor(lvl));
 		}
         
-		long max = tier() * (2 + lvl) + augment.defenseFactor(lvl);
-		if (lvl > max){
-			return ((lvl - max)+1)/2;
+		BigInteger max = BigInteger.valueOf(tier()).multiply((BigInteger.TWO.add(lvl))).add(augment.defenseFactor(lvl));
+		if ((lvl.compareTo(max) > 0)){
+			return ((lvl.subtract(max)).add(BigInteger.ONE)).divide(BigInteger.TWO);
 		} else {
 			return max;
 		}
 	}
 
-	public final long DRMin(){
-		return Math.round((DRMin(buffedLvl())*(1d + (glyphHardened ? Weapon.hardenBoost(buffedLvl()) : 0d)))*getRarityMultiplier());
+	public final BigInteger DRMin(){
+		return Big.round((Big.dec(DRMin(buffedLvl())).multiply(Big.dec((1d + (glyphHardened ? Weapon.hardenBoost(buffedLvl()) : 0d))))).multiply(Big.dec(getRarityMultiplier())));
 	}
 
-	public long DRMin(long lvl){
+	public BigInteger DRMin(BigInteger lvl){
 		if (Dungeon.isChallenged(Challenges.NO_ARMOR) || Dungeon.isChallenged(Challenges.FOR_THE_WORTHY)){
-			return 0;
+			return BigInteger.ZERO;
 		}
 
-		long max = DRMax(lvl);
-		if (lvl >= max){
-			return (lvl - max);
+		BigInteger max = DRMax(lvl);
+		if ((lvl.compareTo(max) >= 0)){
+			return (lvl.subtract(max));
 		} else {
 			return lvl;
 		}
@@ -371,23 +375,23 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 		}
 		
 		if (owner instanceof Hero){
-			long aEnc = STRReq() - ((Hero) owner).STR();
-			if (aEnc > 0) evasion /= Math.pow(1.5, aEnc);
+			BigInteger aEnc = STRReq().subtract(BigInteger.valueOf(((Hero) owner).STR()));
+			if ((aEnc.compareTo(BigInteger.ZERO) > 0)) evasion /= Math.pow(1.5, aEnc.doubleValue());
 			
 			Momentum momentum = owner.buff(Momentum.class);
 			if (momentum != null){
-				evasion += momentum.evasionBonus(((Hero) owner).lvl, Math.max(0, -aEnc));
+				evasion += momentum.evasionBonus(BigInteger.valueOf(((Hero) owner).lvl), BigInteger.ZERO.max(aEnc.negate()));
 			}
 		}
 		
-		return evasion + augment.evasionFactor(buffedLvl());
+		return Big.dec(evasion).add(Big.dec(augment.evasionFactor(buffedLvl()))).floatValue();
 	}
 	
 	public float speedFactor( Char owner, float speed ){
 		
 		if (owner instanceof Hero) {
-			long aEnc = STRReq() - ((Hero) owner).STR();
-			if (aEnc > 0) speed /= Math.pow(1.2, aEnc);
+			BigInteger aEnc = STRReq().subtract(BigInteger.valueOf(((Hero) owner).STR()));
+			if ((aEnc.compareTo(BigInteger.ZERO) > 0)) speed /= Math.pow(1.2, aEnc.doubleValue());
 		}
 		
 		if (hasGlyph(Swiftness.class, owner)) {
@@ -408,9 +412,9 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 					}
 				}
 			}
-			if (!enemyNear) speed *= (0.95f - 0.05f * buffedLvl()) / glyph.procChanceMultiplier(owner);
+			if (!enemyNear) speed *= Big.div((Big.dec(0.95f).subtract(Big.dec(0.05f).multiply(Big.dec(buffedLvl())))), Big.dec(glyph.procChanceMultiplier(owner))).floatValue();
 		} else if (hasGlyph(Flow.class, owner) && Dungeon.level.water[owner.pos]){
-			speed *= (1.25f + 0.0005f*buffedLvl()) * glyph.procChanceMultiplier(owner);
+			speed *= (Big.dec(1.25f).add(Big.dec(0.0005f).multiply(Big.dec(buffedLvl())))).multiply(Big.dec(glyph.procChanceMultiplier(owner))).floatValue();
 		}
 		
 		if (hasGlyph(Bulk.class, owner) &&
@@ -426,7 +430,7 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 	public float stealthFactor( Char owner, float stealth ){
 		
 		if (hasGlyph(Obfuscation.class, owner)){
-			stealth += (1 + buffedLvl()/3f) * glyph.procChanceMultiplier(owner);
+			stealth += (Big.dec(1).add(Big.div(Big.dec(buffedLvl()), Big.dec(3f)))).multiply(Big.dec(glyph.procChanceMultiplier(owner))).floatValue();
 		}
 		
 		return stealth;
@@ -452,11 +456,11 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 	}
 
 	@Override
-	public long level() {
-		long level = super.level();
+	public BigInteger level() {
+		BigInteger level = super.level();
 		//TODO warrior's seal upgrade should probably be considered here too
 		// instead of being part of true level
-		if (curseInfusionBonus) level += 1 + level/6;
+		if (curseInfusionBonus) level = level.add(BigInteger.ONE.add(level.divide(BigInteger.valueOf(6))));
 		return level;
 	}
 	
@@ -473,13 +477,13 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 		
 		cursed = false;
 
-		if (seal != null && seal.level() == 0)
+		if (seal != null && (seal.level().compareTo(BigInteger.ZERO) == 0))
 			seal.upgrade();
 
 		return super.upgrade();
 	}
 	
-	public long proc( Char attacker, Char defender, long damage ) {
+	public BigInteger proc( Char attacker, Char defender, BigInteger damage ) {
 		
 		if (glyph != null && defender.buff(MagicImmune.class) == null) {
 			damage = glyph.proc( this, attacker, defender, damage );
@@ -528,13 +532,13 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 
 			info += "\n\n" + Messages.get(Armor.class, "curr_absorb", tier, DRMin(), DRMax(), STRReq());
 			
-			if (Dungeon.hero != null && STRReq() > Dungeon.hero.STR()) {
+			if (Dungeon.hero != null && (STRReq().compareTo(BigInteger.valueOf(Dungeon.hero.STR())) > 0)) {
 				info += " " + Messages.get(Armor.class, "too_heavy");
 			}
 		} else {
-			info += "\n\n" + Messages.get(Armor.class, "avg_absorb", tier, DRMin(0), DRMax(0), STRReq(0));
+			info += "\n\n" + Messages.get(Armor.class, "avg_absorb", tier, DRMin(BigInteger.ZERO), DRMax(BigInteger.ZERO), STRReq(BigInteger.ZERO));
 
-			if (Dungeon.hero != null && STRReq(0) > Dungeon.hero.STR()) {
+			if (Dungeon.hero != null && (STRReq(BigInteger.ZERO).compareTo(BigInteger.valueOf(Dungeon.hero.STR())) > 0)) {
 				info += " " + Messages.get(Armor.class, "probably_too_heavy");
 			}
 		}
@@ -595,7 +599,7 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 				n++;
 			}
 		}
-		level(n);
+		level(BigInteger.valueOf(n));
 
 		//we use a separate RNG here so that variance due to things like parchment scrap
 		//does not affect levelgen
@@ -617,43 +621,43 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 		return this;
 	}
 
-	public long STRReq(){
+	public BigInteger STRReq(){
 		return STRReq(level());
 	}
 
-	public long STRReq(long lvl){
-		long req = STRReq(tier, lvl);
+	public BigInteger STRReq(BigInteger lvl){
+		BigInteger req = STRReq(tier, lvl);
 		if (masteryPotionBonus){
-			req -= 2;
+			req = req.subtract(BigInteger.TWO);
 		}
 		return req;
 	}
 
-	protected static long STRReq(int tier, long lvl){
-		lvl = Math.max(0, lvl);
+	protected static BigInteger STRReq(int tier, BigInteger lvl){
+		lvl = BigInteger.ZERO.max(lvl);
 
 		//strength req decreases at +1,+3,+6,+10,etc.
-		return (8 + Math.round(tier * 2)) - (int)(Math.sqrt(8 * lvl + 1) - 1)/2;
+		return BigInteger.valueOf((8 + Math.round(tier * 2)) - (int)(Math.sqrt(BigInteger.valueOf(8).multiply(lvl).add(BigInteger.ONE).doubleValue()) - 1)/2);
 	}
 	
 	@Override
-	public long value() {
-		if (seal != null) return 0;
+	public BigInteger value() {
+		if (seal != null) return BigInteger.ZERO;
 
-		int price = 20 * tier;
+		BigInteger price = BigInteger.valueOf(20 * tier);
 		if (hasGoodGlyph()) {
-			price *= 1.5;
+			price = Big.trunc(Big.dec(price).multiply(Big.dec(1.5)));
 		}
 		if (cursedKnown && (cursed || hasCurseGlyph())) {
-			price /= 2;
+			price = price.divide(BigInteger.TWO);
 		}
-		if (levelKnown && level() > 0) {
-			price *= (level() + 1);
+		if (levelKnown && (level().compareTo(BigInteger.ZERO) > 0)) {
+			price = price.multiply(((level().add(BigInteger.ONE))));
 		}
-		if (price < 1) {
-			price = 1;
+		if ((price.compareTo(BigInteger.ONE) < 0)) {
+			price = BigInteger.ONE;
 		}
-		return price;
+		return (price);
 	}
 
 	public Armor inscribe( Glyph glyph ) {
@@ -722,7 +726,7 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 				Multiplicity.class, Stench.class, Overgrowth.class, Bulk.class, Swiftness.class
 		};
 		
-		public abstract long proc( Armor armor, Char attacker, Char defender, long damage );
+		public abstract BigInteger proc( Armor armor, Char attacker, Char defender, BigInteger damage );
 
 		protected float procChanceMultiplier( Char defender ){
 			return genericProcChanceMultiplier( defender );

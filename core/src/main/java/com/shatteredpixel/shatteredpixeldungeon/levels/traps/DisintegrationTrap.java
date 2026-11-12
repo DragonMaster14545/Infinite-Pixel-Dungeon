@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -84,7 +86,7 @@ public class DisintegrationTrap extends Trap {
 				Sample.INSTANCE.play(Assets.Sounds.RAY);
 				ShatteredPixelDungeon.scene().add(new Beam.DeathRay(DungeonTilemap.tileCenterToWorld(pos), target.sprite.center()));
 			}
-			target.damage( Random.NormalIntRange(30, 50) + scalingDepth(), this );
+			target.damage( BigInteger.valueOf(Random.NormalIntRange(30, 50)).add(scalingDepth()), this );
 			if (target == Dungeon.hero){
 				Hero hero = (Hero)target;
 				if (!hero.isAlive()){

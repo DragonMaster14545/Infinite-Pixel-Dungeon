@@ -21,6 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -576,7 +579,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 							//trim it to just be the part that goes past them
 							trajectory = new Ballistica(trajectory.collisionPos, trajectory.path.get(trajectory.path.size() - 1), Ballistica.PROJECTILE);
 							//knock them back along that ballistica
-							WandOfBlastWave.throwChar(enemy, trajectory, 6, true, false, hero);
+							WandOfBlastWave.throwChar(enemy, trajectory, BigInteger.valueOf(6), true, false, hero);
 
 							if (trajectory.dist > 0 && enemy.isActive()) {
 								Buff.affect(enemy, Paralysis.class, Math.min( 6, trajectory.dist));
@@ -597,7 +600,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 									//trim it to just be the part that goes past them
 									trajectory = new Ballistica(trajectory.collisionPos, trajectory.path.get(trajectory.path.size() - 1), Ballistica.PROJECTILE);
 									//knock them back along that ballistica
-									WandOfBlastWave.throwChar(ch, trajectory, 6, true, false, hero);
+									WandOfBlastWave.throwChar(ch, trajectory, BigInteger.valueOf(6), true, false, hero);
 
 									if (trajectory.dist > 0 && enemy.isActive()) {
 										Buff.affect(ch, Paralysis.class, Math.min( 6, trajectory.dist));
@@ -637,9 +640,9 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 				for (int i = 0; i < 5; i++) hero.spendConstant(Actor.TICK);
 
 				if (Buff.affect(hero, MonkEnergy.class).abilitiesEmpowered(hero)){
-					int toHeal = Math.round((hero.HT - hero.HP)/5f);
+					int toHeal = Big.toInt(Big.round(Big.div(Big.dec((hero.HT.subtract(hero.HP))), Big.dec(5f))));
 					if (toHeal > 0) {
-						Buff.affect(hero, Healing.class).setHeal(toHeal, 0, 1);
+						Buff.affect(hero, Healing.class).setHeal(BigInteger.valueOf(toHeal), 0, BigInteger.ONE);
 					}
 					Buff.affect(hero, MeditateResistance.class, hero.cooldown());
 				}

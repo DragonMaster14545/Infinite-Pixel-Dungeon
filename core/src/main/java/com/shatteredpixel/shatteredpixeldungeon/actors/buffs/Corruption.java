@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -41,7 +45,7 @@ public class Corruption extends AllyBuff {
 	//corrupted enemies are usually fully healed and cleansed of most debuffs
 	public static void corruptionHeal(Char target){
 		target.HP = target.HT;
-		target.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(target.HT), FloatingText.HEALING);
+		target.sprite.showStatusWithIcon(CharSprite.POSITIVE, target.HT.toString(), FloatingText.HEALING);
 		for (Buff buff : target.buffs()) {
 			if (buff.type == Buff.buffType.NEGATIVE
 					&& !(buff instanceof SoulMark)) {
@@ -52,12 +56,12 @@ public class Corruption extends AllyBuff {
 	
 	@Override
 	public boolean act() {
-		buildToDamage += target.HT/100f;
+		buildToDamage += Big.div(Big.dec(target.HT), Big.dec(100f)).doubleValue();
 
-		long damage = (long) buildToDamage;
-		buildToDamage -= damage;
+		BigInteger damage = Big.of(buildToDamage);
+		buildToDamage -= damage.doubleValue();
 
-		if (damage > 0)
+		if ((damage.compareTo(BigInteger.ZERO) > 0))
 			target.damage(damage, this);
 
 		spend(TICK);

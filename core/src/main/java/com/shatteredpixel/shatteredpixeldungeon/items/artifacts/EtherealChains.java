@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -66,9 +70,9 @@ public class EtherealChains extends Artifact {
 		image = ItemSpriteSheet.ARTIFACT_CHAINS;
 
 		levelCap = 5;
-		exp = 0;
+		exp = BigInteger.ZERO;
 
-		charge = 5;
+		charge = BigInteger.valueOf(5);
 
 		defaultAction = AC_CAST;
 		usesTargeting = true;
@@ -77,7 +81,7 @@ public class EtherealChains extends Artifact {
 	@Override
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = super.actions(hero);
-		if (isEquipped(hero) && charge > 0 && !cursed && hero.buff(MagicImmune.class) == null) {
+		if (isEquipped(hero) && (charge.compareTo(BigInteger.ZERO) > 0) && !cursed && hero.buff(MagicImmune.class) == null) {
 			actions.add(AC_CAST);
 		}
 		return actions;
@@ -102,7 +106,7 @@ public class EtherealChains extends Artifact {
 				GLog.i(Messages.get(Artifact.class, "need_to_equip"));
 				usesTargeting = false;
 
-			} else if (charge < 1) {
+			} else if ((charge.compareTo(BigInteger.ONE) < 0)) {
 				GLog.i(Messages.get(this, "no_charge"));
 				usesTargeting = false;
 
@@ -176,7 +180,7 @@ public class EtherealChains extends Artifact {
 		final int pulledPos = bestPos;
 
 		int chargeUse = Dungeon.level.distance(enemy.pos, pulledPos);
-		if (chargeUse > charge) {
+		if ((BigInteger.valueOf(chargeUse).compareTo(charge) > 0)) {
 			GLog.w(Messages.get(this, "no_charge"));
 			return;
 		}
@@ -193,7 +197,7 @@ public class EtherealChains extends Artifact {
 							public void call() {
 								enemy.pos = pulledPos;
 
-								charge -= chargeUse;
+								charge = charge.subtract(BigInteger.valueOf(chargeUse));
 								Invisibility.dispel(hero);
 								Talent.onArtifactUsed(hero);
 								updateQuickslot();
@@ -242,7 +246,7 @@ public class EtherealChains extends Artifact {
 		final int newHeroPos = chain.collisionPos;
 
 		int chargeUse = Dungeon.level.distance(hero.pos, newHeroPos);
-		if (chargeUse > charge) {
+		if ((BigInteger.valueOf(chargeUse).compareTo(charge) > 0)) {
 			GLog.w(Messages.get(EtherealChains.class, "no_charge"));
 			return;
 		}
@@ -259,7 +263,7 @@ public class EtherealChains extends Artifact {
 							public void call() {
 								hero.pos = newHeroPos;
 
-								charge -= chargeUse;
+								charge = charge.subtract(BigInteger.valueOf(chargeUse));
 								Invisibility.dispel(hero);
 								Talent.onArtifactUsed(hero);
 								updateQuickslot();
@@ -283,14 +287,14 @@ public class EtherealChains extends Artifact {
 	@Override
 	public void charge(Hero target, float amount) {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
-		long chargeTarget = ((5 + (level() * 2)) * getRarityMultiplier());
-		if (charge < chargeTarget * 2) {
+		BigInteger chargeTarget = ((BigInteger.valueOf(5).add((level().multiply(BigInteger.TWO)))).multiply(getRarityMultiplier()));
+		if ((charge.compareTo(chargeTarget.multiply(BigInteger.TWO)) < 0)) {
 			partialCharge += 0.5f * amount;
-			partialCharge *= getRarityMultiplier();
+			partialCharge *= getRarityMultiplier().doubleValue();
 			if (partialCharge >= 1) {
-				long charge = (long) partialCharge;
-				partialCharge -= charge;
-				this.charge += charge;
+				BigInteger charge = Big.of(partialCharge);
+				partialCharge -= charge.doubleValue();
+				this.charge = this.charge.add(charge);
 				updateQuickslot();
 			}
 		}
@@ -314,13 +318,13 @@ public class EtherealChains extends Artifact {
 
 		@Override
 		public boolean act() {
-			long chargeTarget = 5 + (level() * 2);
-			if (charge < chargeTarget
+			BigInteger chargeTarget = BigInteger.valueOf(5).add((level().multiply(BigInteger.TWO)));
+			if ((charge.compareTo(chargeTarget) < 0)
 					&& !cursed
 					&& target.buff(MagicImmune.class) == null
 					&& Regeneration.regenOn()) {
 				//gains a charge in 40 - 2*missingCharge turns
-				float chargeGain = (1 / Math.max(1, 40f - (chargeTarget - charge) * 2f));
+				float chargeGain = (Big.div(Big.dec(1), Big.dec(1).max(Big.dec(40f).subtract(Big.dec((chargeTarget.subtract(charge))).multiply(Big.dec(2f)))))).floatValue();
 				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
 				partialCharge += chargeGain;
 			} else if (cursed && Random.Int(100) == 0) {
@@ -329,7 +333,7 @@ public class EtherealChains extends Artifact {
 
 			while (partialCharge >= 1) {
 				partialCharge--;
-				charge++;
+				charge = charge.add(BigInteger.ONE);
 			}
 
 			updateQuickslot();
@@ -342,18 +346,18 @@ public class EtherealChains extends Artifact {
 		public void gainExp(float levelPortion) {
 			if (cursed || target.buff(MagicImmune.class) != null || levelPortion == 0) return;
 
-			exp += Math.round(levelPortion * 100);
+			exp = exp.add(BigInteger.valueOf(Math.round(levelPortion * 100)));
 
 			//past the soft charge cap, gaining  charge from leveling is slowed.
-			if (charge > 5 + (level() * 2)) {
-				levelPortion *= (5 + ((float) level() * 2)) / charge;
+			if ((charge.compareTo(BigInteger.valueOf(5).add((level().multiply(BigInteger.TWO)))) > 0)) {
+				levelPortion *= Big.div(Big.dec((5 + (level().floatValue() * 2))), Big.dec(charge)).floatValue();
 			}
 			partialCharge += levelPortion * 6f;
 
-			if (exp > 100 + level() * 100 && level() < levelCap) {
-				exp -= 100 + level() * 100;
+			if ((exp.compareTo(BigInteger.valueOf(100).add(level().multiply(BigInteger.valueOf(100)))) > 0) && (level().compareTo(BigInteger.valueOf(levelCap)) < 0)) {
+				exp = exp.subtract(BigInteger.valueOf(100).add(level().multiply(BigInteger.valueOf(100))));
 				GLog.p(Messages.get(this, "levelup"));
-				Catalog.countUses(EtherealChains.class, 2);
+				Catalog.countUses(EtherealChains.class, BigInteger.TWO);
 				upgrade();
 			}
 
@@ -362,7 +366,7 @@ public class EtherealChains extends Artifact {
 
 	public static class WaveEternalChains extends EtherealChains {
 		{
-			charge = 25;
+			charge = BigInteger.valueOf(25);
 
 			defaultAction = AC_CAST;
 			usesTargeting = true;
@@ -379,7 +383,7 @@ public class EtherealChains extends Artifact {
 
 				curUser = hero;
 
-				if (charge < 1) {
+				if ((charge.compareTo(BigInteger.ONE) < 0)) {
 					GLog.i(Messages.get(this, "no_charge"));
 					usesTargeting = false;
 
@@ -425,7 +429,7 @@ public class EtherealChains extends Artifact {
 
 				while (partialCharge >= 1) {
 					partialCharge--;
-					charge++;
+					charge = charge.add(BigInteger.ONE);
 				}
 
 				updateQuickslot();

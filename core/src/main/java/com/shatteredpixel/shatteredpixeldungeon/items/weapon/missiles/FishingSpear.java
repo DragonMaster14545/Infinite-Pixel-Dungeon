@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Piranha;
@@ -40,9 +42,9 @@ public class FishingSpear extends MissileWeapon {
 	}
 	
 	@Override
-	public long proc(Char attacker, Char defender, long damage) {
+	public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 		if (defender instanceof Piranha){
-			damage = Math.max(damage, defender.HP/2);
+			damage = damage.max(defender.HP.divide(BigInteger.TWO));
 		}
 		return super.proc(attacker, defender, damage);
 	}

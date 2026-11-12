@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.treasurebags;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Perks;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -48,7 +50,7 @@ public class GambleBag extends TreasureBag {
     }
 
     @Override
-    public long value() {
-        return 185 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(185).multiply(quantity);
     }
 }

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.plants;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barkskin;
@@ -50,7 +54,7 @@ public class Earthroot extends Plant {
 
 		if (ch != null){
 			if (ch instanceof Hero && ((Hero) ch).isSubclass(HeroSubClass.WARDEN)){
-				Barkskin.conditionallyAppend(Dungeon.hero, Dungeon.hero.lvl + 5, 5);
+				Barkskin.conditionallyAppend(Dungeon.hero, BigInteger.valueOf(Dungeon.hero.lvl + 5), 5);
 			} else {
 				Buff.affect(ch, Armor.class).level(ch.HT);
 			}
@@ -77,7 +81,7 @@ public class Earthroot extends Plant {
 		private static final float STEP = 1f;
 		
 		private int pos;
-		private long level;
+		private BigInteger level = BigInteger.ZERO;
 
 		{
 			type = buffType.POSITIVE;
@@ -93,28 +97,28 @@ public class Earthroot extends Plant {
 			return true;
 		}
 		
-		private static long blocking(){
-			return (Dungeon.scalingDepth() + 5)/2;
+		private static BigInteger blocking(){
+			return (Dungeon.scalingDepth().add(BigInteger.valueOf(5))).divide(BigInteger.TWO);
 		}
 		
-		public long absorb( long damage ) {
+		public BigInteger absorb( BigInteger damage ) {
 			if (pos != target.pos){
 				detach();
 				return damage;
 			}
-			long block = Math.min( damage, blocking());
-			if (level <= block) {
+			BigInteger block = damage.min(blocking());
+			if ((level.compareTo(block) <= 0)) {
 				detach();
-				return damage - block;
+				return damage.subtract(block);
 			} else {
-				level -= block;
-				return damage - block;
+				level = level.subtract(block);
+				return damage.subtract(block);
 			}
 		}
 		
-		public void level( long value ) {
+		public void level( BigInteger value ) {
 			if (target != null) {
-				if (level < value) {
+				if ((level.compareTo(value) < 0)) {
 					level = value;
 				}
 				pos = target.pos;
@@ -128,12 +132,12 @@ public class Earthroot extends Plant {
 
 		@Override
 		public float iconFadePercent() {
-			return Math.max(0, (target.HT - level) / (float) target.HT);
+			return Big.dec(0).max(Big.div(Big.dec((target.HT.subtract(level))), Big.dec(target.HT.floatValue()))).floatValue();
 		}
 
 		@Override
 		public String iconTextDisplay() {
-			return Long.toString(level);
+			return level.toString();
 		}
 
 		@Override
@@ -148,14 +152,14 @@ public class Earthroot extends Plant {
 		public void storeInBundle( Bundle bundle ) {
 			super.storeInBundle( bundle );
 			bundle.put( POS, pos );
-			bundle.put( LEVEL, level );
+			Big.put(bundle, LEVEL, level);
 		}
 		
 		@Override
 		public void restoreFromBundle( Bundle bundle ) {
 			super.restoreFromBundle( bundle );
 			pos = bundle.getInt( POS );
-			level = bundle.getLong( LEVEL );
+			level = Big.getBig(bundle, LEVEL);
 		}
 	}
 }

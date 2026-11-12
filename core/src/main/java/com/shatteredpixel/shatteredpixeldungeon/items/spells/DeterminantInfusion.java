@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
@@ -52,7 +56,7 @@ public class DeterminantInfusion extends Spell {
 
     @Override
     protected void onCast(Hero hero) {
-        Buff.affect(hero, RageShield.class).set(hero.HT*1.5f);
+        Buff.affect(hero, RageShield.class).set(Big.dec(hero.HT).multiply(Big.dec(1.5f)).floatValue());
         curUser.sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
 
         for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
@@ -66,13 +70,13 @@ public class DeterminantInfusion extends Spell {
     }
 
     @Override
-    public long value() {
-        return (long)(60 * (quantity/(float) Recipe.OUT_QUANTITY));
+    public BigInteger value() {
+        return Big.trunc((Big.dec(60).multiply((Big.div(Big.dec(quantity), Big.dec((float) Recipe.OUT_QUANTITY))))));
     }
 
     @Override
-    public long energyVal() {
-        return (long)(12 * (quantity/(float) Recipe.OUT_QUANTITY));
+    public BigInteger energyVal() {
+        return Big.trunc((Big.dec(12).multiply((Big.div(Big.dec(quantity), Big.dec((float) Recipe.OUT_QUANTITY))))));
     }
 
     public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.VaultLink;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
@@ -94,7 +98,7 @@ public abstract class Recipe {
 	
 	public abstract boolean testIngredients(ArrayList<Item> ingredients);
 	
-	public abstract long cost(ArrayList<Item> ingredients);
+	public abstract BigInteger cost(ArrayList<Item> ingredients);
 	
 	public abstract Item brew(ArrayList<Item> ingredients);
 	
@@ -118,7 +122,7 @@ public abstract class Recipe {
 			ArrayList<Item> result = new ArrayList<>();
 			for (int i = 0; i < inputs.length; i++) {
 				Item ingredient = Reflection.newInstance(inputs[i]);
-				ingredient.quantity(inQuantity[i]);
+				ingredient.quantity(BigInteger.valueOf(inQuantity[i]));
 				result.add(ingredient);
 			}
 			return result;
@@ -133,7 +137,7 @@ public abstract class Recipe {
 				if (!ingredient.isIdentified()) return false;
 				for (int i = 0; i < inputs.length; i++){
 					if (ingredient.getClass() == inputs[i]){
-						needed[i] -= ingredient.quantity();
+						needed[i] -= Big.toLong(ingredient.quantity());
 						break;
 					}
 				}
@@ -148,8 +152,8 @@ public abstract class Recipe {
 			return true;
 		}
 		
-		public long cost(ArrayList<Item> ingredients){
-			return cost;
+		public BigInteger cost(ArrayList<Item> ingredients){
+			return BigInteger.valueOf(cost);
 		}
 		
 		@Override
@@ -161,12 +165,12 @@ public abstract class Recipe {
 			for (Item ingredient : ingredients){
 				for (int i = 0; i < inputs.length; i++) {
 					if (ingredient.getClass() == inputs[i] && needed[i] > 0) {
-						if (needed[i] <= ingredient.quantity()) {
-							ingredient.quantity(ingredient.quantity() - needed[i]);
+						if ((BigInteger.valueOf(needed[i]).compareTo(ingredient.quantity()) <= 0)) {
+							ingredient.quantity(ingredient.quantity().subtract(BigInteger.valueOf(needed[i])));
 							needed[i] = 0;
 						} else {
-							needed[i] -= ingredient.quantity();
-							ingredient.quantity(0);
+							needed[i] -= Big.toLong(ingredient.quantity());
+							ingredient.quantity(BigInteger.ZERO);
 						}
 					}
 				}
@@ -180,7 +184,7 @@ public abstract class Recipe {
 		public Item sampleOutput(ArrayList<Item> ingredients){
 			try {
 				Item result = Reflection.newInstance(output);
-				result.quantity(outQuantity);
+				result.quantity(BigInteger.valueOf(outQuantity));
 				return result;
 			} catch (Exception e) {
 				ShatteredPixelDungeon.reportException( e );

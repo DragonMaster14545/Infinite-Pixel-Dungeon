@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -52,20 +56,19 @@ public class Whip extends MeleeWeapon {
 	}
 
 	@Override
-	public long proc(Char attacker, Char defender, long damage) {
-		damage *= GameMath.gate(0.1f,1f - 0.1f*(Math.max(Dungeon.level.distance(attacker.pos, defender.pos), 0)), 1f);
+	public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
+		damage = Big.trunc(Big.dec(damage).multiply(Big.dec(GameMath.gate(0.1f,1f - 0.1f*(Math.max(Dungeon.level.distance(attacker.pos, defender.pos), 0)), 1f))));
 		return super.proc(attacker, defender, damage);
 	}
 
 	@Override
-	public long min(long lvl) {
-		return tier()+lvl/2;
+	public BigInteger min(BigInteger lvl) {
+		return BigInteger.valueOf(tier()).add(lvl.divide(BigInteger.TWO));
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  3L*(tier()) +    //16 base, down from 24
-				lvl*(tier()-1)/2;     //+4 per level, down from +5
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(3L*(tier())).add(lvl.multiply(BigInteger.valueOf((tier()-1))).divide(BigInteger.TWO));     //+4 per level, down from +5
 	}
 
 	public static class WhipReachBooster extends Buff {};
@@ -131,11 +134,11 @@ public class Whip extends MeleeWeapon {
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(min()), augment.damageFactor(max()));
 		} else {
-			return Messages.get(this, "typical_ability_desc", min(0), max(0));
+			return Messages.get(this, "typical_ability_desc", min(BigInteger.ZERO), max(BigInteger.ZERO));
 		}
 	}
 
-	public String upgradeAbilityStat(long level){
+	public String upgradeAbilityStat(BigInteger level){
 		return augment.damageFactor(min(level)) + "-" + augment.damageFactor(max(level));
 	}
 }

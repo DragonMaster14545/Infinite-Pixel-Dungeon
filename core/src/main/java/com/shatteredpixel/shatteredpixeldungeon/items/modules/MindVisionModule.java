@@ -29,6 +29,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.modules;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
@@ -69,7 +71,7 @@ public class MindVisionModule extends Module {
     }
 
     @Override
-    public long value() {
-        return 15000 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(15000).multiply(quantity);
     }
 }

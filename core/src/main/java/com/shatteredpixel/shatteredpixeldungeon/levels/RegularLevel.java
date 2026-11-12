@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -424,7 +428,7 @@ public abstract class RegularLevel extends Level {
 			}
 
 			if ((toDrop instanceof Artifact && Random.Int(2) == 0) ||
-					(toDrop.isUpgradable() && Random.Long(4 - toDrop.level()) == 0)){
+					(toDrop.isUpgradable() && Random.Long(Big.toLong(BigInteger.valueOf(4).subtract(toDrop.level()))) == 0)){
 
 				float mimicChance = 1/10f * MimicTooth.mimicChanceMultiplier();
 				if (Dungeon.depth > 1 && Random.Float() < mimicChance && findMob(cell) == null){
@@ -820,7 +824,7 @@ public abstract class RegularLevel extends Level {
 
         //There is magical fire (blocks items) or sacrificial fire (contains items) in it
 		for (Blob b : blobs.values()){
-            if (b.volume > 0) {
+            if ((b.volume.compareTo(BigInteger.ZERO) > 0)) {
                 if (b instanceof MagicalFireRoom.EternalFire) {
                     missedRooms.add(room(MagicalFireRoom.class));
                 } else if (b instanceof SacrificialFire) {

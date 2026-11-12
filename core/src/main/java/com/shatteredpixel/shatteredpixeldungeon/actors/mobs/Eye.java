@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -50,15 +54,15 @@ import com.watabou.utils.Random;
 
 public class Eye extends Mob {
 
-	public static long experience(){
-		return Dungeon.getCycleMultiplier(13);
+	public static BigInteger experience(){
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(13));
 	}
 
 	{
 		spriteClass = EyeSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(100);
-		defenseSkill = Dungeon.getCycleMultiplier(20);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(100));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(20));
 		viewDistance = Light.DISTANCE;
 		
 		EXP = experience();
@@ -75,18 +79,18 @@ public class Eye extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(20), Dungeon.getCycleMultiplier(30));
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.valueOf(20)), Dungeon.getCycleMultiplier(BigInteger.valueOf(30)));
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(30);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(30));
 	}
 	
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(10));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.TEN));
 	}
 	
 	private Ballistica beam;
@@ -157,8 +161,8 @@ public class Eye extends Mob {
 	}
 
 	@Override
-	public void damage(long dmg, Object src) {
-		if (beamCharged) dmg /= 4;
+	public void damage(BigInteger dmg, Object src) {
+		if (beamCharged) dmg = dmg.divide(BigInteger.valueOf(4));
 		super.damage(dmg, src);
 	}
 
@@ -197,9 +201,9 @@ public class Eye extends Mob {
 			}
 
 			if (hit( this, ch, true )) {
-                long dmg = Dungeon.NormalLongRange(30, 50);
+                BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(30), BigInteger.valueOf(50));
 				dmg = Dungeon.getCycleMultiplier(dmg);
-				dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
+				dmg = Big.round(Big.dec(dmg).multiply(Big.dec(AscensionChallenge.statModifier(this))));
                 ch.damage(dmg, new DeathGaze() );
 
 				if (Dungeon.level.heroFOV[pos]) {

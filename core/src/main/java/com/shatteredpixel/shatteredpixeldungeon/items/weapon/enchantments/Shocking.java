@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -44,13 +48,13 @@ public class Shocking extends Weapon.Enchantment {
 	private static ItemSprite.Glowing WHITE = new ItemSprite.Glowing( 0xFFFFFF, 0.5f );
 
 	@Override
-	public long proc( Weapon weapon, Char attacker, Char defender, long damage ) {
-		long level = Math.max( 0, weapon.buffedLvl() );
+	public BigInteger proc( Weapon weapon, Char attacker, Char defender, BigInteger damage ) {
+		BigInteger level = BigInteger.ZERO.max(weapon.buffedLvl());
 
 		// lvl 0 - 25%
 		// lvl 1 - 40%
 		// lvl 2 - 50%
-		float procChance = (level+1f)/(level+4f) * procChanceMultiplier(attacker);
+		float procChance = Big.div((Big.dec(level).add(Big.dec(1f))), (Big.dec(level).add(Big.dec(4f)))).multiply(Big.dec(procChanceMultiplier(attacker))).floatValue();
 		if (Random.Float() < procChance) {
 
 			float powerMulti = Math.max(1f, procChance);
@@ -63,7 +67,7 @@ public class Shocking extends Weapon.Enchantment {
 			affected.remove(defender); //defender isn't hurt by lightning
 			for (Char ch : affected) {
 				if (ch.alignment != attacker.alignment) {
-					ch.damage(Math.round(damage * 0.4f * powerMulti), this);
+					ch.damage(Big.round(Big.dec(damage).multiply(Big.dec(0.4f)).multiply(Big.dec(powerMulti))), this);
 				}
 			}
 

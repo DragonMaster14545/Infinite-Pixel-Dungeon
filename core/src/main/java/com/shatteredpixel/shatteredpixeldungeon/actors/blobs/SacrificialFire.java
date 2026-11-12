@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -71,9 +75,9 @@ public class SacrificialFire extends Blob {
 				cell = j + i* Dungeon.level.width();
 				if (Dungeon.level.insideMap(cell)) {
 					off[cell] = cur[cell];
-					volume += off[cell];
+					volume = volume.add(off[cell]);
 
-					if (off[cell] > 0){
+					if ((off[cell].compareTo(BigInteger.ZERO) > 0)){
 						for (int k : PathFinder.NEIGHBOURS9){
 							Char ch = Actor.findChar( cell+k );
 							if (ch != null){
@@ -84,7 +88,7 @@ public class SacrificialFire extends Blob {
 							}
 						}
 
-						if (off[cell] > 0 && Dungeon.level.visited[cell]) {
+						if ((off[cell].compareTo(BigInteger.ZERO) > 0) && Dungeon.level.visited[cell]) {
 
 							if (Dungeon.level.mobCount() == 0
 									&& bonusSpawns > 0) {
@@ -100,7 +104,7 @@ public class SacrificialFire extends Blob {
 
 		//a bit brittle, assumes only one tile of sacrificial fire can exist per floor
 		int max = 6 + Dungeon.depth * 4;
-		curEmitter.pour( SacrificialParticle.FACTORY, 0.01f + ((volume / (float)max) * 0.09f) );
+		curEmitter.pour( SacrificialParticle.FACTORY, Big.dec(0.01f).add(((Big.div(Big.dec(volume), Big.dec((float)max))).multiply(Big.dec(0.09f)))).floatValue() );
 	}
 
 	@Override
@@ -110,7 +114,7 @@ public class SacrificialFire extends Blob {
 
 		//a bit brittle, assumes only one tile of sacrificial fire can exist per floor
 		int max = 6 + Dungeon.depth * 4;
-		curEmitter.pour( SacrificialParticle.FACTORY, 0.01f + ((volume / (float)max) * 0.09f) );
+		curEmitter.pour( SacrificialParticle.FACTORY, Big.dec(0.01f).add(((Big.div(Big.dec(volume), Big.dec((float)max))).multiply(Big.dec(0.09f)))).floatValue() );
 	}
 
 	@Override
@@ -143,7 +147,7 @@ public class SacrificialFire extends Blob {
 
 		int firePos = -1;
 		for (int i : PathFinder.NEIGHBOURS9){
-			if (volume > 0 && cur[ch.pos+i] > 0){
+			if ((volume.compareTo(BigInteger.ZERO) > 0) && (cur[ch.pos+i].compareTo(BigInteger.ZERO) > 0)){
 				firePos = ch.pos+i;
 				break;
 			}
@@ -151,40 +155,40 @@ public class SacrificialFire extends Blob {
 
 		if (firePos != -1) {
 
-			long exp = 0;
+			BigInteger exp = BigInteger.ZERO;
 			if (ch instanceof Mob) {
 				//same rates as used in wand of corruption, except for swarms
 				if (ch instanceof Statue || ch instanceof Mimic){
-					exp = 1 + Dungeon.depth;
+					exp = BigInteger.valueOf(1 + Dungeon.depth);
 				} else if (ch instanceof Piranha || ch instanceof Bee) {
-					exp = 1 + Dungeon.depth/2;
+					exp = BigInteger.valueOf(1 + Dungeon.depth/2);
 				} else if (ch instanceof Wraith) {
-					exp = 1 + Dungeon.depth/3;
-				} else if (ch instanceof Swarm && ((Swarm) ch).EXP == 0){
+					exp = BigInteger.valueOf(1 + Dungeon.depth/3);
+				} else if (ch instanceof Swarm && (((Swarm) ch).EXP.compareTo(BigInteger.ZERO) == 0)){
 					//give 1 exp for child swarms, instead of 0
-					exp = 1;
-				} else if (((Mob) ch).EXP > 0) {
-					exp = 1 + ((Mob)ch).EXP;
+					exp = BigInteger.ONE;
+				} else if ((((Mob) ch).EXP.compareTo(BigInteger.ZERO) > 0)) {
+					exp = BigInteger.ONE.add(((Mob)ch).EXP);
 				}
-				exp *= Random.IntRange( 2, 3 );
+				exp = exp.multiply(BigInteger.valueOf(Random.IntRange( 2, 3 )));
 			} else if (ch instanceof Hero) {
-				exp = 1_000_000; //always enough to activate the reward, if you can somehow get it
+				exp = BigInteger.valueOf(1_000_000); //always enough to activate the reward, if you can somehow get it
 				Badges.validateDeathFromSacrifice();
 			}
 
-			if (exp > 0) {
+			if ((exp.compareTo(BigInteger.ZERO) > 0)) {
 
-				long volumeLeft = cur[firePos] - (int)Math.min(Integer.MAX_VALUE, exp);
-				if (volumeLeft > 0) {
-					cur[firePos] -= exp;
-					volume -= exp;
+				BigInteger volumeLeft = cur[firePos].subtract(BigInteger.valueOf(Big.toInt(BigInteger.valueOf(Integer.MAX_VALUE).min(exp))));
+				if ((volumeLeft.compareTo(BigInteger.ZERO) > 0)) {
+					cur[firePos] = cur[firePos].subtract(exp);
+					volume = volume.subtract(exp);
 					bonusSpawns++;
 					CellEmitter.get(firePos).burst( SacrificialParticle.FACTORY, 20 );
 					Sample.INSTANCE.play(Assets.Sounds.BURNING );
 					GLog.w( Messages.get(SacrificialFire.class, "worthy"));
 				} else {
 					clear(firePos);
-					if (volume <= 0) Notes.remove( landmark() );
+					if ((volume.compareTo(BigInteger.ZERO) <= 0)) Notes.remove( landmark() );
 
 					for (int i : PathFinder.NEIGHBOURS9){
 						CellEmitter.get(firePos+i).burst( SacrificialParticle.FACTORY, 20 );

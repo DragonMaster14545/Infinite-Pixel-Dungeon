@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -272,13 +274,13 @@ public class ShopRoom extends SpecialRoom {
 		}
 		w.enchant(null);
 		w.cursed = false;
-		w.level(0);
+		w.level(BigInteger.ZERO);
 		w.identify(false);
 		itemsToSpawn.add(w);
 
 		m.enchant(null);
 		m.cursed = false;
-		m.level(0);
+		m.level(BigInteger.ZERO);
 		m.identify(false);
 		itemsToSpawn.add(m);
 
@@ -301,24 +303,24 @@ public class ShopRoom extends SpecialRoom {
 			}
 		}
 		if (Dungeon.depth > 6) itemsToSpawn.add(new QualityBag());
-        if (Random.Int(5) == 0) itemsToSpawn.add(Generator.random(Generator.Category.TUBES).quantity(Random.IntRange(2, 5)));
+        if (Random.Int(5) == 0) itemsToSpawn.add(Generator.random(Generator.Category.TUBES).quantity(BigInteger.valueOf(Random.IntRange(2, 5))));
         if (Random.Int(25) == 0) itemsToSpawn.add(new PocketAlchemy());
 		if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_5)) itemsToSpawn.add(new Clayball());
-		itemsToSpawn.add( new Alchemize().quantity(Random.IntRange(2, 3)));
+		itemsToSpawn.add( new Alchemize().quantity(BigInteger.valueOf(Random.IntRange(2, 3))));
 
         if (Random.Float() < 0.25f) {
             switch (Dungeon.depth) {
                 case 6:
-                    itemsToSpawn.add(new CommonEmblem().quantity(Random.IntRange(2, 4)));
+                    itemsToSpawn.add(new CommonEmblem().quantity(BigInteger.valueOf(Random.IntRange(2, 4))));
                     break;
                 case 11:
-                    itemsToSpawn.add(new UncommonEmblem().quantity(Random.IntRange(2, 4)));
+                    itemsToSpawn.add(new UncommonEmblem().quantity(BigInteger.valueOf(Random.IntRange(2, 4))));
                     break;
                 case 16:
-                    itemsToSpawn.add(new RareEmblem().quantity(Random.IntRange(2, 4)));
+                    itemsToSpawn.add(new RareEmblem().quantity(BigInteger.valueOf(Random.IntRange(2, 4))));
                     break;
                 case 20: case 21:
-                    itemsToSpawn.add(new EpicEmblem().quantity(Random.IntRange(2, 4)));
+                    itemsToSpawn.add(new EpicEmblem().quantity(BigInteger.valueOf(Random.IntRange(2, 4))));
                     break;
             }
         }
@@ -418,13 +420,13 @@ public class ShopRoom extends SpecialRoom {
             case 1:
             case 2:
 				rare = Generator.random( Generator.Category.WAND );
-				rare.level( 0 );
+				rare.level( BigInteger.ZERO );
 				break;
 			case 3:
             case 4:
             case 5:
 				rare = Generator.random(Generator.Category.RING);
-				rare.level( 0 );
+				rare.level( BigInteger.ZERO );
 				break;
 			case 6:
             case 7:

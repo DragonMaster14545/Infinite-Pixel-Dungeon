@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
@@ -50,7 +52,7 @@ public class ScrollOfDetermination extends ExoticScroll {
 		identify();
 		readAnimation();
 
-		Buff.affect(curUser, RageShield.class).set(curUser.HT * 3f);
+		Buff.affect(curUser, RageShield.class).set(Big.dec(curUser.HT).multiply(Big.dec(3f)).floatValue());
 	}
 	
 }

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.quest;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArcaneArmor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -46,14 +50,14 @@ public class RustyShield extends Item {
     }
 
     @Override
-    public long value() {
-        return quantity * 100;
+    public BigInteger value() {
+        return quantity.multiply(BigInteger.valueOf(100));
     }
 
     @Override
     public void onHeroGainExp(float levelPercent, Hero hero) {
         ArcaneArmor arcaneArmor = Buff.affect(hero, ArcaneArmor.class);
         if (arcaneArmor != null)
-            arcaneArmor.set((long) (arcaneArmor.level() + hero.HT / 200 * levelPercent), 1);
+            arcaneArmor.set(Big.trunc((Big.dec(arcaneArmor.level()).add(Big.dec(hero.HT.divide(BigInteger.valueOf(200))).multiply(Big.dec(levelPercent))))), 1);
     }
 }

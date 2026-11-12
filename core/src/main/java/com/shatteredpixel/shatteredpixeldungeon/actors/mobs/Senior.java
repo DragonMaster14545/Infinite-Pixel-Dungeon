@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Pasty;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SeniorSprite;
@@ -46,8 +48,8 @@ public class Senior extends Monk {
 	}
 	
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(16), Dungeon.getCycleMultiplier(25) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(16)), Dungeon.getCycleMultiplier(BigInteger.valueOf(25)) );
 	}
 	
 }

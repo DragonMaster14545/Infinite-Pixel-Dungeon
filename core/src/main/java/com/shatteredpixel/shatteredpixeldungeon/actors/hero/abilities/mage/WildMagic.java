@@ -21,6 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.mage;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -74,7 +77,7 @@ public class WildMagic extends ArmorAbility {
 		float chargeUsePerShot = 0.5f * (float)Math.pow(0.67f, hero.pointsInTalent(Talent.CONSERVED_MAGIC));
 
 		for (Wand w : wands.toArray(new Wand[0])){
-			if (w.curCharges < 1 && w.partialCharge < chargeUsePerShot){
+			if ((w.curCharges.compareTo(BigInteger.ONE) < 0) && w.partialCharge < chargeUsePerShot){
 				wands.remove(w);
 			}
 		}
@@ -87,7 +90,7 @@ public class WildMagic extends ArmorAbility {
 			ArrayList<Wand> thirds = new ArrayList<>(wands);
 
 			for (Wand w : wands){
-				double totalCharge = w.curCharges + w.partialCharge;
+				double totalCharge = Big.dec(w.curCharges).add(Big.dec(w.partialCharge)).doubleValue();
 				if (totalCharge < 2*chargeUsePerShot){
 					seconds.remove(w);
 				}
@@ -215,7 +218,7 @@ public class WildMagic extends ArmorAbility {
 		cur.partialCharge -= 0.5f * (float)Math.pow(0.67f, hero.pointsInTalent(Talent.CONSERVED_MAGIC));
 		if (cur.partialCharge < 0) {
 			cur.partialCharge++;
-			cur.curCharges--;
+			cur.curCharges = cur.curCharges.subtract(BigInteger.ONE);
 		}
 		if (wildMagicActor != null){
 			wildMagicActor.next();

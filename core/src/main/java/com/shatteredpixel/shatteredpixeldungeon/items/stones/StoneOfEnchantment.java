@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Enchanting;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -79,13 +81,13 @@ public class StoneOfEnchantment extends InventoryStone {
 	}
 	
 	@Override
-	public long value() {
-		return 30 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(30).multiply(quantity);
 	}
 
 	@Override
-	public long energyVal() {
-		return 5 * quantity;
+	public BigInteger energyVal() {
+		return BigInteger.valueOf(5).multiply(quantity);
 	}
 
 }

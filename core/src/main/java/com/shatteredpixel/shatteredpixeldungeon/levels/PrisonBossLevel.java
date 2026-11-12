@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -694,8 +696,8 @@ public class PrisonBossLevel extends Level {
 				int x = i % 7;
 				int y = i / 7;
 				int cell = x+tenguCell.left+1 + (y+tenguCell.top+1)*width();
-				if (Blob.volumeAt(cell, StormCloud.class) == 0
-						&& Blob.volumeAt(cell, Regrowth.class) <= 9
+				if ((Blob.volumeAt(cell, StormCloud.class).compareTo(BigInteger.ZERO) == 0)
+						&& (Blob.volumeAt(cell, Regrowth.class).compareTo(BigInteger.valueOf(9)) <= 0)
 						&& Dungeon.level.plants.get(cell) == null
 						&& Actor.findChar(cell) == null) {
 					Level.set(cell, Terrain.SECRET_TRAP);

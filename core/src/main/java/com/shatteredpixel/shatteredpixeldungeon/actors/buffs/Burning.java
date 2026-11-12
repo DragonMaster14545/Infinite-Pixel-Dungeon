@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -102,7 +106,7 @@ public class Burning extends Buff implements Hero.Doom {
 		} else if (target.isAlive() && !target.isImmune(getClass())) {
 
 			acted = true;
-			long damage = Random.NormalLongRange( 1, 3 + Dungeon.scalingDepth()/4 );
+			BigInteger damage = Big.normalRange(BigInteger.ONE, BigInteger.valueOf(3).add(Dungeon.scalingDepth().divide(BigInteger.valueOf(4))));
 			Buff.detach( target, Chill.class);
 
 			if (target instanceof Hero
@@ -138,7 +142,7 @@ public class Burning extends Buff implements Hero.Doom {
 							}
 						}
 						if (toBurn instanceof GambleBag || toBurn instanceof BiggerGambleBag){
-							for (int i = 0; i < toBurn.quantity(); i++) {
+							for (int i = 0; (BigInteger.valueOf(i).compareTo(toBurn.quantity()) < 0); i++) {
 								Item bag = BurntBag.burningRoll();
 								if (!bag.collect(hero.belongings.backpack)) {
 									Dungeon.level.drop(bag, hero.pos).sprite.drop();
@@ -164,7 +168,7 @@ public class Burning extends Buff implements Hero.Doom {
 					target.sprite.emitter().burst( ElmoParticle.FACTORY, 6 );
 					((Thief)target).item = new ChargrilledMeat();
 				} else if (item instanceof GambleBag || item instanceof BiggerGambleBag){
-					for (int i = 0; i < item.quantity(); i++) {
+					for (int i = 0; (BigInteger.valueOf(i).compareTo(item.quantity()) < 0); i++) {
 						Item bag = BurntBag.burningRoll();
 						Dungeon.level.drop(bag, target.pos).sprite.drop();
 					}
@@ -177,8 +181,8 @@ public class Burning extends Buff implements Hero.Doom {
 			detach();
 		}
 		
-		if (Dungeon.level.flamable[target.pos] && Blob.volumeAt(target.pos, Fire.class) == 0) {
-			GameScene.add( Blob.seed( target.pos, 4, Fire.class ) );
+		if (Dungeon.level.flamable[target.pos] && (Blob.volumeAt(target.pos, Fire.class).compareTo(BigInteger.ZERO) == 0)) {
+			GameScene.add( Blob.seed( target.pos, BigInteger.valueOf(4), Fire.class ) );
 		}
 		
 		spend( TICK );
@@ -211,8 +215,8 @@ public class Burning extends Buff implements Hero.Doom {
 				if (Random.Float() < shieldChance%1) shieldGain++;
 				if (shieldCap > 0 && shieldGain > 0){
 					Barrier barrier = Buff.affect(ch, Barrier.class);
-					if (barrier.shielding() < shieldCap){
-						barrier.incShield(1);
+					if ((barrier.shielding().compareTo(BigInteger.valueOf(shieldCap)) < 0)){
+						barrier.incShield(BigInteger.ONE);
 					}
 				}
 			}

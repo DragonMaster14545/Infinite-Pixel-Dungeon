@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.blacksmith;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -68,17 +72,17 @@ public class FiringSnapper extends BlacksmithWeapon implements InternalKillsThre
     }
 
     @Override
-    public long min(long lvl) {
-        return super.min(lvl)/2;
+    public BigInteger min(BigInteger lvl) {
+        return super.min(lvl).divide(BigInteger.TWO);
     }
 
     @Override
-    public long max(long lvl) {
-        return (long) (super.max(lvl)/1.5d);
+    public BigInteger max(BigInteger lvl) {
+        return Big.trunc((Big.div(Big.dec(super.max(lvl)), Big.dec(1.5d))));
     }
 
     @Override
-    public long proc(Char attacker, Char defender, long damage) {
+    public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
         Ballistica path = new Ballistica(attacker.pos, defender.pos, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID);
         for (int cell: path.subPath(1, path.dist)){
             CellEmitter.center(cell).burst(BlastParticle.FACTORY, 10);
@@ -111,21 +115,21 @@ public class FiringSnapper extends BlacksmithWeapon implements InternalKillsThre
                         continue;
                     }
 
-                    long dmg = super.proc(attacker, ch, Math.round(damage*1.0f));
+                    BigInteger dmg = super.proc(attacker, ch, Big.round(Big.dec(damage).multiply(Big.dec(1.0f))));
 
                     //those not at the center of the blast take less damage
                     if (ch.pos != cell){
-                        dmg = Math.round(dmg*0.75f);
+                        dmg = Big.round(Big.dec(dmg).multiply(Big.dec(0.75f)));
                     }
 
-                    if (dmg > 0) {
+                    if ((dmg.compareTo(BigInteger.ZERO) > 0)) {
                         ch.damage(dmg, this);
                     }
                 }
             }
         }
 
-        return -1;
+        return BigInteger.valueOf(-1);
     }
 
     protected void duelistAbility(Hero hero, Integer target ){
@@ -135,7 +139,7 @@ public class FiringSnapper extends BlacksmithWeapon implements InternalKillsThre
         for (int i = 0; i < PathFinder.distance.length; i++) {
             if (PathFinder.distance[i] < Integer.MAX_VALUE) {
                 this.hitSound(0.85f);
-                GameScene.add(Blob.seed(i, 15, Fire.class));
+                GameScene.add(Blob.seed(i, BigInteger.valueOf(15), Fire.class));
                 //if (Dungeon.level.pit[i]) {
                 //    GameScene.add(Blob.seed(i, 1, FireKeeper.class));
                 //} else {
@@ -201,19 +205,19 @@ public class FiringSnapper extends BlacksmithWeapon implements InternalKillsThre
             for (int i = area.left; i < area.right; i++){
                 for (int j = area.top; j < area.bottom; j++){
                     cell = i + j*Dungeon.level.width();
-                    off[cell] = cur[cell] > 0 ? cur[cell] - 1 : 0;
+                    off[cell] = (cur[cell].compareTo(BigInteger.ZERO) > 0) ? cur[cell].subtract(BigInteger.ONE) : BigInteger.ZERO;
 
-                    if (freeze != null && freeze.volume > 0 && freeze.cur[cell] > 0){
+                    if (freeze != null && (freeze.volume.compareTo(BigInteger.ZERO) > 0) && (freeze.cur[cell].compareTo(BigInteger.ZERO) > 0)){
                         freeze.clear(cell);
-                        off[cell] = cur[cell] = 0;
+                        off[cell] = cur[cell] = BigInteger.ZERO;
                         continue;
                     }
 
-                    if (off[cell] > 0) {
+                    if ((off[cell].compareTo(BigInteger.ZERO) > 0)) {
 
-                        volume += off[cell];
+                        volume = volume.add(off[cell]);
 
-                        GameScene.add(Blob.seed(cell, 5, Fire.class));
+                        GameScene.add(Blob.seed(cell, BigInteger.valueOf(5), Fire.class));
                     }
                 }
             }

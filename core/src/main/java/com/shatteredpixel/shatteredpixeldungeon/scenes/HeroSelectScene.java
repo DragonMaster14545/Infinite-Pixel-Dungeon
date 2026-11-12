@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
@@ -647,9 +651,9 @@ public class HeroSelectScene extends PixelScene {
                 public void onClick() {
 					super.onClick();
 
-					long diff = (SPDSettings.lastDaily() + DAY) - Game.realTime;
-					if (diff > 24*HOUR){
-						ShatteredPixelDungeon.scene().addToFront(new WndMessage(Messages.get(HeroSelectScene.class, "daily_unavailable_long", (diff / DAY)+1)));
+					BigInteger diff = BigInteger.valueOf((SPDSettings.lastDaily() + DAY) - Game.realTime);
+					if ((diff.compareTo(BigInteger.valueOf(24*HOUR)) > 0)){
+						ShatteredPixelDungeon.scene().addToFront(new WndMessage(Messages.get(HeroSelectScene.class, "daily_unavailable_long", (diff.divide(BigInteger.valueOf(DAY))).add(BigInteger.ONE))));
 						return;
 					}
 
@@ -661,12 +665,12 @@ public class HeroSelectScene extends PixelScene {
 					}
 
 					Image icon = Icons.get(Icons.CALENDAR);
-					if (diff <= 0)  icon.hardlight(0.5f, 1f, 2f);
+					if ((diff.compareTo(BigInteger.ZERO) <= 0))  icon.hardlight(0.5f, 1f, 2f);
 					else            icon.hardlight(1f, 0.5f, 2f);
 					ShatteredPixelDungeon.scene().addToFront(new WndOptions(
 							icon,
 							Messages.get(HeroSelectScene.class, "daily"),
-							diff > 0 ?
+							(diff.compareTo(BigInteger.ZERO) > 0) ?
 								Messages.get(HeroSelectScene.class, "daily_repeat") :
 								Messages.get(HeroSelectScene.class, "daily_desc"),
 							Messages.get(HeroSelectScene.class, "daily_yes"),
@@ -674,14 +678,14 @@ public class HeroSelectScene extends PixelScene {
 						@Override
 						protected void onSelect(int index) {
 							if (index == 0){
-								if (diff <= 0) {
+								if ((diff.compareTo(BigInteger.ZERO) <= 0)) {
 									long time = Game.realTime - (Game.realTime % DAY);
 
 									//earliest possible daily for v2.3.2 is Jan 30 2024
 									//which is 19,752 days after Jan 1 1970
 									time = Math.max(time, 19_752 * DAY);
 
-									SPDSettings.lastDaily(time);
+									SPDSettings.lastDaily(BigInteger.valueOf(time));
 									Dungeon.dailyReplay = false;
 								} else {
 									Dungeon.dailyReplay = true;
@@ -711,13 +715,13 @@ public class HeroSelectScene extends PixelScene {
 					super.update();
 
 					if (Game.realTime > timeToUpdate && visible){
-						long diff = (SPDSettings.lastDaily() + DAY) - Game.realTime;
+						BigInteger diff = BigInteger.valueOf((SPDSettings.lastDaily() + DAY) - Game.realTime);
 
-						if (diff > 0){
-							if (diff > 30*HOUR){
+						if ((diff.compareTo(BigInteger.ZERO) > 0)){
+							if ((diff.compareTo(BigInteger.valueOf(30*HOUR)) > 0)){
 								text("30:00:00+");
 							} else {
-								text(dateFormat.format(new Date(diff)));
+								text(dateFormat.format(new Date(Big.toLong(diff))));
 							}
 							timeToUpdate = Game.realTime + SECOND;
 						} else {
@@ -745,9 +749,9 @@ public class HeroSelectScene extends PixelScene {
                 public void onClick() {
                     super.onClick();
 
-                    long diff = (SPDSettings.lastWeekly() + WEEK) - Game.realTime;
-                    if (diff > 7 * DAY){
-                        ShatteredPixelDungeon.scene().addToFront(new WndMessage(Messages.get(HeroSelectScene.class, "weekly_unavailable_long", (diff / WEEK)+7)));
+                    BigInteger diff = BigInteger.valueOf((SPDSettings.lastWeekly() + WEEK) - Game.realTime);
+                    if ((diff.compareTo(BigInteger.valueOf(7 * DAY)) > 0)){
+                        ShatteredPixelDungeon.scene().addToFront(new WndMessage(Messages.get(HeroSelectScene.class, "weekly_unavailable_long", (diff.divide(BigInteger.valueOf(WEEK))).add(BigInteger.valueOf(7)))));
                         return;
                     }
 
@@ -759,12 +763,12 @@ public class HeroSelectScene extends PixelScene {
                     }
 
                     Image icon = Icons.get(Icons.CALENDAR);
-                    if (diff <= 0)  icon.hardlight(1.5f, 1.5f, 0f);
+                    if ((diff.compareTo(BigInteger.ZERO) <= 0))  icon.hardlight(1.5f, 1.5f, 0f);
                     else            icon.hardlight(1f, 0.5f, 2f);
                     ShatteredPixelDungeon.scene().addToFront(new WndOptions(
                             icon,
                             Messages.get(HeroSelectScene.class, "weekly"),
-                            diff > 0 ?
+                            (diff.compareTo(BigInteger.ZERO) > 0) ?
                                     Messages.get(HeroSelectScene.class, "weekly_repeat") :
                                     Messages.get(HeroSelectScene.class, "weekly_desc"),
                             Messages.get(HeroSelectScene.class, "weekly_yes"),
@@ -772,14 +776,14 @@ public class HeroSelectScene extends PixelScene {
                         @Override
                         protected void onSelect(int index) {
                             if (index == 0){
-                                if (diff <= 0) {
+                                if ((diff.compareTo(BigInteger.ZERO) <= 0)) {
                                     long time = Game.realTime - (Game.realTime % WEEK);
 
                                     //earliest possible daily for v2.3.2 is Jan 30 2024
                                     //which is 19,752 days after Jan 1 1970
                                     time = Math.max(time, 2_821 * WEEK);
 
-                                    SPDSettings.lastWeekly(time);
+                                    SPDSettings.lastWeekly(BigInteger.valueOf(time));
                                     Dungeon.weeklyReplay = false;
                                 } else {
                                     Dungeon.weeklyReplay = true;
@@ -809,14 +813,14 @@ public class HeroSelectScene extends PixelScene {
                     super.update();
 
                     if (Game.realTime > timeToUpdate && visible){
-                        long diff = (SPDSettings.lastWeekly() + WEEK) - Game.realTime;
+                        BigInteger diff = BigInteger.valueOf((SPDSettings.lastWeekly() + WEEK) - Game.realTime);
 
-                        if (diff > 0){
-                            if (diff > 7*WEEK){
+                        if ((diff.compareTo(BigInteger.ZERO) > 0)){
+                            if ((diff.compareTo(BigInteger.valueOf(7*WEEK)) > 0)){
                                 text("7d 00:00:00+");
                             } else {
-                                long days = diff / DAY;
-                                String timeStr = dateFormat.format(new Date(diff % DAY));
+                                long days = Big.toLong(diff.divide(BigInteger.valueOf(DAY)));
+                                String timeStr = dateFormat.format(new Date(Big.toLong(diff.remainder(BigInteger.valueOf(DAY)))));
                                 text(days > 0 ? days + "d " + timeStr : timeStr);
                             }
                             timeToUpdate = Game.realTime + SECOND;

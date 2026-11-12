@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -80,7 +82,7 @@ public class WndTradeItem extends WndInfoItem {
 		}
 		final Shopkeeper finalShop = shop;
 
-		if (item.quantity() == 1 || (item instanceof MissileWeapon && item.isUpgradable())) {
+		if ((item.quantity().compareTo(BigInteger.ONE) == 0) || (item instanceof MissileWeapon && item.isUpgradable())) {
 
 			if (item instanceof MissileWeapon && ((MissileWeapon) item).extraThrownLeft){
 				RenderedTextBlock warn = PixelScene.renderTextBlock(Messages.get(WndUpgrade.class, "thrown_dust"), 6);
@@ -106,8 +108,8 @@ public class WndTradeItem extends WndInfoItem {
 
 		} else {
 
-			long priceAll= item.value();
-			RedButton btnSell1 = new RedButton( Messages.get(this, "sell_1", priceAll / item.quantity()) ) {
+			BigInteger priceAll= item.value();
+			RedButton btnSell1 = new RedButton( Messages.get(this, "sell_1", priceAll.divide(item.quantity())) ) {
 				@Override
                 public void onClick() {
 					sellOne( item, finalShop );
@@ -146,7 +148,7 @@ public class WndTradeItem extends WndInfoItem {
 
 		float pos = height;
 
-		final long price = Shopkeeper.sellPrice( item );
+		final BigInteger price = Shopkeeper.sellPrice( item );
 
 		RedButton btnBuy = new RedButton( Messages.get(this, "buy", price) ) {
 			@Override
@@ -159,7 +161,7 @@ public class WndTradeItem extends WndInfoItem {
 			btnBuy.textColor(0xf5eaa2);
 		btnBuy.setRect( 0, pos + GAP, width, BTN_HEIGHT );
 		btnBuy.icon(new ItemSprite(ItemSpriteSheet.GOLD));
-		btnBuy.enable( price <= Dungeon.gold );
+		btnBuy.enable( (price.compareTo(Dungeon.gold) <= 0) );
 		add( btnBuy );
 
 		pos = btnBuy.bottom();
@@ -229,7 +231,7 @@ public class WndTradeItem extends WndInfoItem {
             RedButton btnBuyquest = new RedButton(Messages.get(this, "quest_buy", chargesToUse, questionnaireEnergy.availableEnergy()), 6) {
                 @Override
                 public void onClick() {
-                    if (chargesToUse <= questionnaireEnergy.availableEnergy()){
+                    if ((BigInteger.valueOf(chargesToUse).compareTo(questionnaireEnergy.availableEnergy()) <= 0)){
                         questionnaireEnergy.obtainItem(item);
                         Hero hero = Dungeon.hero;
                         Item item = heap.pickUp();
@@ -280,7 +282,7 @@ public class WndTradeItem extends WndInfoItem {
 		item.detachAll( hero.belongings.backpack );
 
 		if (item instanceof MissileWeapon && item.isUpgradable()){
-			Buff.affect(hero, MissileWeapon.UpgradedSetTracker.class).levelThresholds.put(((MissileWeapon) item).setID, Long.MAX_VALUE);
+			Buff.affect(hero, MissileWeapon.UpgradedSetTracker.class).levelThresholds.put(((MissileWeapon) item).setID, BigInteger.valueOf(Long.MAX_VALUE));
 		}
 
 		//selling items in the sell interface doesn't spend time
@@ -309,7 +311,7 @@ public class WndTradeItem extends WndInfoItem {
 
 	public static void sellOne( Item item, Shopkeeper shop ) {
 		
-		if (item.quantity() <= 1) {
+		if ((item.quantity().compareTo(BigInteger.ONE) <= 0)) {
 			sell( item, shop );
 		} else {
 			
@@ -336,8 +338,8 @@ public class WndTradeItem extends WndInfoItem {
 		Item item = heap.pickUp();
 		if (item == null) return;
 		
-		long price = Shopkeeper.sellPrice( item );
-		Dungeon.gold -= price;
+		BigInteger price = Shopkeeper.sellPrice( item );
+		Dungeon.gold = Dungeon.gold.subtract(price);
 		Catalog.countUses(Gold.class, price);
 		item.wereOofed = false;
 

@@ -1,5 +1,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
@@ -32,17 +36,17 @@ public class EntrophicalCup extends Artifact {
 
         levelCap = 10;
 
-        charge = 0;
+        charge = BigInteger.ZERO;
         partialCharge = 0;
-        chargeCap = 0;
+        chargeCap = BigInteger.ZERO;
     }
 
-    public long maxShield() {
-        return level() <= 0 ? 0 : (SHIELD_BASE + (SHIELD_PER_LEVEL * level())) * getRarityMultiplier();
+    public BigInteger maxShield() {
+        return (level().compareTo(BigInteger.ZERO) <= 0) ? BigInteger.ZERO : (BigInteger.valueOf(SHIELD_BASE).add((BigInteger.valueOf(SHIELD_PER_LEVEL).multiply(level())))).multiply(getRarityMultiplier());
     }
 
     public float regenPerTurn() {
-        return level() <= 0 ? 0f : (REGEN_BASE + (REGEN_PER_LEVEL * level())) * getRarityMultiplier();
+        return ((level().compareTo(BigInteger.ZERO) <= 0) ? Big.dec(0f) : (Big.dec(REGEN_BASE).add((Big.dec(REGEN_PER_LEVEL).multiply(Big.dec(level()))))).multiply(Big.dec(getRarityMultiplier()))).floatValue();
     }
 
     private static Ankh findAnkh(Hero hero) {
@@ -53,7 +57,7 @@ public class EntrophicalCup extends Artifact {
     public ArrayList<String> actions(Hero hero ) {
         ArrayList<String> actions = super.actions( hero );
         if (isEquipped( hero ) && !cursed && hero.buff(MagicImmune.class) == null
-                && level() < levelCap && findAnkh(hero) != null) {
+                && (level().compareTo(BigInteger.valueOf(levelCap)) < 0) && findAnkh(hero) != null) {
                 actions.add(AC_SACRIFICE);
         }
         return actions;
@@ -69,7 +73,7 @@ public class EntrophicalCup extends Artifact {
         if (action.equals(AC_SACRIFICE)){
             if (!isEquipped(hero))              GLog.i( Messages.get(this, "need_to_equip"));
             else if (cursed)                    GLog.w( Messages.get(this, "cursed"));
-            else if (level() >= levelCap)       GLog.i( Messages.get(this, "max_level"));
+            else if ((level().compareTo(BigInteger.valueOf(levelCap)) >= 0))       GLog.i( Messages.get(this, "max_level"));
             else if (findAnkh(hero) == null)    GLog.w( Messages.get(this, "need_ankhs"));
             else {
                 GameScene.selectItem(sacrificeSelector);
@@ -106,21 +110,21 @@ public class EntrophicalCup extends Artifact {
 
     private void sacrifice(Hero hero, Ankh ankh) {
         if (!isEquipped(hero) || cursed || hero.buff(MagicImmune.class) != null) return;
-        if (level() >= levelCap) {
+        if ((level().compareTo(BigInteger.valueOf(levelCap)) >= 0)) {
             GLog.i(Messages.get(this, "max_level"));
             return;
         }
 
-        long gain = Math.min(ankh.isBlessed() ? 2 : 1, levelCap - level());
+        BigInteger gain = BigInteger.valueOf(ankh.isBlessed() ? 2 : 1).min(BigInteger.valueOf(levelCap).subtract(level()));
 
         ankh.detach(hero.belongings.backpack);
 
-        for (int i = 0; i < gain; i++) {
+        for (int i = 0; (BigInteger.valueOf(i).compareTo(gain) < 0); i++) {
             upgrade();
         }
 
         hero.sprite.operate(hero.pos);
-        hero.sprite.emitter().burst(ShadowParticle.UP, (int) Math.min(4 * gain, 40));
+        hero.sprite.emitter().burst(ShadowParticle.UP, Big.toInt(BigInteger.valueOf(4).multiply(gain).min(BigInteger.valueOf(40))));
         hero.spend(1f);
         hero.busy();
         GLog.p(Messages.get(this, "sacrificed", level()));
@@ -143,16 +147,16 @@ public class EntrophicalCup extends Artifact {
     }
 
     private void refillShield(Hero hero) {
-        long max = maxShield();
-        if (max <= 0) return;
+        BigInteger max = maxShield();
+        if ((max.compareTo(BigInteger.ZERO) <= 0)) return;
         EntropyShield shield = Buff.affect(hero, EntropyShield.class);
         shield.setShield(max);
         syncCharge(shield);
     }
 
     private void syncCharge(ShieldBuff shield) {
-        long cur = shield == null ? 0 : shield.shielding();
-        charge = (int) Math.min(cur, maxShield());
+        BigInteger cur = shield == null ? BigInteger.ZERO : shield.shielding();
+        charge = BigInteger.valueOf(Big.toInt(cur.min(maxShield())));
     }
 
     @Override
@@ -160,7 +164,7 @@ public class EntrophicalCup extends Artifact {
         if (super.doUnequip(hero, collect, single)) {
             EntropyShield shield = hero.buff(EntropyShield.class);
             if (shield != null) shield.detach();
-            charge = 0;
+            charge = BigInteger.ZERO;
             partialCharge = 0;
             return true;
         }
@@ -179,19 +183,19 @@ public class EntrophicalCup extends Artifact {
             Hero hero = target instanceof Hero ? (Hero) target : null;
 
             if (hero != null && !cursed && hero.buff(MagicImmune.class) == null
-                    && level() > 0 && hero.isAlive()) {
+                    && (level().compareTo(BigInteger.ZERO) > 0) && hero.isAlive()) {
 
                 chargeCap = maxShield();
                 EntropyShield shield = hero.buff(EntropyShield.class);
-                long cur = shield == null ? 0 : shield.shielding();
+                BigInteger cur = shield == null ? BigInteger.ZERO : shield.shielding();
 
-                if (cur < chargeCap) {
+                if ((cur.compareTo(chargeCap) < 0)) {
                     partialCharge += regenPerTurn();
-                    while (partialCharge >= 1f && cur < chargeCap) {
+                    while (partialCharge >= 1f && (cur.compareTo(chargeCap) < 0)) {
                         partialCharge -= 1f;
                         if (shield == null) shield = Buff.affect(hero, EntropyShield.class);
-                        shield.incShield(1);
-                        cur++;
+                        shield.incShield(BigInteger.ONE);
+                        cur = cur.add(BigInteger.ONE);
                     }
                 } else {
                     partialCharge = 0;
@@ -221,14 +225,14 @@ public class EntrophicalCup extends Artifact {
             desc += "\n\n";
             if (cursed) {
                 desc += Messages.get(this, "desc_cursed");
-            } else if (level() == 0) {
+            } else if ((level().compareTo(BigInteger.ZERO) == 0)) {
                 desc += Messages.get(this, "desc_empty");
             } else {
                 desc += Messages.get(this, "desc_active", maxShield(), regenPerTurn());
             }
         }
 
-        if (level() < levelCap) {
+        if ((level().compareTo(BigInteger.valueOf(levelCap)) < 0)) {
             desc += "\n\n" + Messages.get(this, "desc_sacrifice");
         } else {
             desc += "\n\n" + Messages.get(this, "desc_max");

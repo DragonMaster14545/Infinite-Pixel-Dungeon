@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -199,15 +201,15 @@ public class WndHero extends WndTabbed {
 			int strBonus = hero.STR() - hero.STR;
 			if (strBonus > 0)           statSlot( Messages.get(this, "str"), hero.STR + " + " + strBonus );
 			else if (strBonus < 0)      statSlot( Messages.get(this, "str"), hero.STR + " - " + -strBonus );
-			else                        statSlot( Messages.get(this, "str"), hero.STR() );
-			if (hero.shielding() > 0)   statSlot( Messages.get(this, "health"), hero.HP + "+" + hero.shielding() + "/" + hero.HT );
+			else                        statSlot( Messages.get(this, "str"), BigInteger.valueOf(hero.STR()) );
+			if ((hero.shielding().compareTo(BigInteger.ZERO) > 0))   statSlot( Messages.get(this, "health"), hero.HP + "+" + hero.shielding() + "/" + hero.HT );
 			else                        statSlot( Messages.get(this, "health"), (hero.HP) + "/" + hero.HT );
 			statSlot( Messages.get(this, "exp"), hero.exp + "/" + hero.maxExp() );
 
 			pos += GAP;
 
 			statSlot( Messages.get(this, "gold"), Statistics.goldCollected );
-			statSlot( Messages.get(this, "depth"), Statistics.deepestFloor );
+			statSlot( Messages.get(this, "depth"), BigInteger.valueOf(Statistics.deepestFloor) );
 			if (Dungeon.weekly) {
                 if (!Dungeon.weeklyReplay) {
                     statSlot("_Weekly For_", "_" + Dungeon.customSeedText + "_");
@@ -243,8 +245,8 @@ public class WndHero extends WndTabbed {
 			pos += GAP + txt.height();
 		}
 		
-		private void statSlot(String label, long value ) {
-			statSlot( label, Long.toString( value ) );
+		private void statSlot(String label, BigInteger value ) {
+			statSlot( label, value.toString() );
 		}
 		
 		public float height() {

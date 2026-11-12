@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -89,26 +93,26 @@ public class PsycheChest extends Item {
                 Messages.get(this, "desc3", neededExpTransmutation());
     }
 
-    public static long neededExp(){
-        long neededExp = 150 + ((150L ^ (Dungeon.cycle + 1)) * Dungeon.cycle);
+    public static BigInteger neededExp(){
+        BigInteger neededExp = BigInteger.valueOf(150 + ((150L ^ (Dungeon.cycle + 1)) * Dungeon.cycle));
         if (Dungeon.isChallenged(Challenges.NO_SCROLLS)){
-            neededExp *= 1.7f;
+            neededExp = Big.trunc(Big.dec(neededExp).multiply(Big.dec(1.7f)));
         }
         return neededExp;
     }
 
-    public static long neededExpTransmutation(){
-        long neededExp = 350 + ((350L ^ (Dungeon.cycle + 1)) * Dungeon.cycle);
+    public static BigInteger neededExpTransmutation(){
+        BigInteger neededExp = BigInteger.valueOf(350 + ((350L ^ (Dungeon.cycle + 1)) * Dungeon.cycle));
         if (Dungeon.isChallenged(Challenges.NO_SCROLLS)){
-            neededExp *= 2.5f;
+            neededExp = Big.trunc(Big.dec(neededExp).multiply(Big.dec(2.5f)));
         }
         return neededExp;
     }
 
-    public static long neededLevel(){
-        long neededLevel = 30 + ((30 ^ (Dungeon.cycle + 1)) * Dungeon.cycle);
+    public static BigInteger neededLevel(){
+        BigInteger neededLevel = BigInteger.valueOf(30 + ((30 ^ (Dungeon.cycle + 1)) * Dungeon.cycle));
         if (Dungeon.isChallenged(Challenges.NO_SCROLLS)){
-            neededLevel *= 0.8f;
+            neededLevel = Big.trunc(Big.dec(neededLevel).multiply(Big.dec(0.8f)));
         }
         return neededLevel;
     }
@@ -126,7 +130,7 @@ public class PsycheChest extends Item {
             hero.grinding = false;
             GLog.w( Messages.get(this, "deactivated") );
         }
-        if (action.contains(AC_RESET) && (hero.HP > hero.HT * 0.45d)){
+        if (action.contains(AC_RESET) && ((Big.dec(hero.HP).compareTo(Big.dec(hero.HT).multiply(Big.dec(0.45d))) > 0))){
             switch (Dungeon.depth){
                 case 2: case 3: case 4:
                     for (Mob m: Dungeon.level.mobs){
@@ -169,11 +173,11 @@ public class PsycheChest extends Item {
                 }
             }
             InterlevelScene.mode = InterlevelScene.Mode.RESET;
-            if (hero.HP > hero.HT * 0.45d) hero.HP -= Math.round(hero.HT * 0.45d);
+            if ((Big.dec(hero.HP).compareTo(Big.dec(hero.HT).multiply(Big.dec(0.45d))) > 0)) hero.HP = hero.HP.subtract(Big.round(Big.dec(hero.HT).multiply(Big.dec(0.45d))));
             //Dungeon.resetDamage *= 1.045d;
             Game.switchScene(InterlevelScene.class);
             Catalog.countUse(getClass());
-        } else if (action.contains(AC_RESET) && (hero.HP < Math.round(hero.HT * 0.45d))){
+        } else if (action.contains(AC_RESET) && ((hero.HP.compareTo(Big.round(Big.dec(hero.HT).multiply(Big.dec(0.45d)))) < 0))){
             GLog.w( Messages.get(this, "no_reset") );
         }
     }

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Shadows;
@@ -53,10 +55,10 @@ public class Foliage extends Blob {
 		for (int i = area.left; i < area.right; i++) {
 			for (int j = area.top; j < area.bottom; j++) {
 				cell = i + j*Dungeon.level.width();
-				if (cur[cell] > 0) {
+				if ((cur[cell].compareTo(BigInteger.ZERO) > 0)) {
 
 					off[cell] = cur[cell];
-					volume += off[cell];
+					volume = volume.add(off[cell]);
 
 					if (map[cell] == Terrain.EMBERS) {
 						map[cell] = Terrain.GRASS;
@@ -66,13 +68,13 @@ public class Foliage extends Blob {
 					seen = seen || Dungeon.level.visited[cell];
 
 				} else {
-					off[cell] = 0;
+					off[cell] = BigInteger.ZERO;
 				}
 			}
 		}
 		
 		Hero hero = Dungeon.hero;
-		if (hero.isAlive() && cur[hero.pos] > 0) {
+		if (hero.isAlive() && (cur[hero.pos].compareTo(BigInteger.ZERO) > 0)) {
 			Shadows s = Buff.affect( hero, Shadows.class );
 			if (s != null){
 				s.prolong();

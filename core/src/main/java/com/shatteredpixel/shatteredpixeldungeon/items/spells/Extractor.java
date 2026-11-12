@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -52,7 +56,7 @@ public class Extractor extends InventorySpell {
 
 	@Override
 	protected boolean usableOnItem(Item item) {
-		return item.isUpgradable() && !(item.level() <= 0);
+		return item.isUpgradable() && !((item.level().compareTo(BigInteger.ZERO) <= 0));
 	}
 
 	@Override
@@ -60,7 +64,7 @@ public class Extractor extends InventorySpell {
 
 		if (!(item instanceof MissileWeapon)) {
 			Dungeon.level.drop(new ScrollOfUpgrade().quantity(item.level()), curUser.pos).sprite.drop();
-			item.level(0);
+			item.level(BigInteger.ZERO);
 
 			GLog.p(Messages.get(this, "extracted"));
 			curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
@@ -70,13 +74,13 @@ public class Extractor extends InventorySpell {
 	}
 	
 	@Override
-	public long value() {
-		return (long)(60 * (quantity/(float) Recipe.OUT_QUANTITY));
+	public BigInteger value() {
+		return Big.trunc((Big.dec(60).multiply((Big.div(Big.dec(quantity), Big.dec((float) Recipe.OUT_QUANTITY))))));
 	}
 
 	@Override
-	public long energyVal() {
-		return (long)(12 * (quantity/(float) Recipe.OUT_QUANTITY));
+	public BigInteger energyVal() {
+		return Big.trunc((Big.dec(12).multiply((Big.div(Big.dec(quantity), Big.dec((float) Recipe.OUT_QUANTITY))))));
 	}
 	
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {

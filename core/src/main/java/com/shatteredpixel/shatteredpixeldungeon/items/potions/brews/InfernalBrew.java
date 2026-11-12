@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions.brews;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -52,13 +54,13 @@ public class InfernalBrew extends Brew {
 		int centerVolume = 120;
 		for (int i : PathFinder.NEIGHBOURS8){
 			if (!Dungeon.level.solid[cell+i]){
-				GameScene.add( Blob.seed( cell+i, 120, Inferno.class ) );
+				GameScene.add( Blob.seed( cell+i, BigInteger.valueOf(120), Inferno.class ) );
 			} else {
 				centerVolume += 120;
 			}
 		}
 		
-		GameScene.add( Blob.seed( cell, centerVolume, Inferno.class ) );
+		GameScene.add( Blob.seed( cell, BigInteger.valueOf(centerVolume), Inferno.class ) );
 	}
 
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {

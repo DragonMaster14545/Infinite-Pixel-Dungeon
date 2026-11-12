@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.duelist;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -150,14 +152,14 @@ public class Feint extends ArmorAbility {
 
 		{
 			spriteClass = AfterImageSprite.class;
-			defenseSkill = 0;
+			defenseSkill = BigInteger.ZERO;
 
 			properties.add(Property.IMMOVABLE);
 
 			alignment = Alignment.ALLY;
 			state = PASSIVE;
 
-			HP = HT = 1;
+			HP = HT = BigInteger.ONE;
 
 			//fades just before the hero's next action
 			actPriority = Actor.HERO_PRIO+1;
@@ -176,12 +178,12 @@ public class Feint extends ArmorAbility {
 		}
 
 		@Override
-		public void damage( long dmg, Object src ) {
+		public void damage( BigInteger dmg, Object src ) {
 
 		}
 
 		@Override
-		public long defenseSkill(Char enemy) {
+		public BigInteger defenseSkill(Char enemy) {
 			if (enemy.alignment == Alignment.ENEMY) {
 				if (enemy instanceof Mob) {
 					((Mob) enemy).clearEnemy();
@@ -199,7 +201,7 @@ public class Feint extends ArmorAbility {
 					Buff.prolong(Dungeon.hero, Talent.CounterAbilityTacker.class, 3f);
 				}
 			}
-			return 0;
+			return BigInteger.ZERO;
 		}
 
 		@Override

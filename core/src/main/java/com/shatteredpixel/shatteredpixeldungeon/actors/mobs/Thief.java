@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -46,10 +50,10 @@ public class Thief extends Mob {
 	{
 		spriteClass = ThiefSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(20);
-		defenseSkill = Dungeon.getCycleMultiplier(12);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(20));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(12));
 		
-		EXP = Dungeon.getCycleMultiplier(5);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(5));
 		maxLvl = 11;
 
 		loot = Random.oneOf(Generator.Category.RING, Generator.Category.ARTIFACT);
@@ -82,8 +86,8 @@ public class Thief extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return Random.NormalLongRange( Dungeon.getCycleMultiplier(1), Dungeon.getCycleMultiplier(10) );
+	public BigInteger damageRoll() {
+		return Big.normalRange(Dungeon.getCycleMultiplier(BigInteger.ONE), Dungeon.getCycleMultiplier(BigInteger.TEN));
 	}
 
 	@Override
@@ -116,17 +120,17 @@ public class Thief extends Mob {
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(12);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(12));
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(3));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(3)));
 	}
 
 	@Override
-	public long attackProc( Char enemy, long damage ) {
+	public BigInteger attackProc( Char enemy, BigInteger damage ) {
 		damage = super.attackProc( enemy, damage );
 		
 		if (alignment == Alignment.ENEMY && item == null
@@ -138,7 +142,7 @@ public class Thief extends Mob {
 	}
 
 	@Override
-	public long defenseProc(Char enemy, long damage) {
+	public BigInteger defenseProc(Char enemy, BigInteger damage) {
 		if (state == FLEEING) {
 			Dungeon.level.drop( new Gold(), pos ).sprite.drop();
 		}
@@ -150,7 +154,7 @@ public class Thief extends Mob {
 
 		Item toSteal = hero.belongings.randomUnequipped();
 
-		if (toSteal != null && !toSteal.unique && toSteal.level() < 1 ) {
+		if (toSteal != null && !toSteal.unique && (toSteal.level().compareTo(BigInteger.ONE) < 0)) {
 
 			GLog.w( Messages.get(Thief.class, "stole", toSteal.name()) );
 			if (!toSteal.stackable) {

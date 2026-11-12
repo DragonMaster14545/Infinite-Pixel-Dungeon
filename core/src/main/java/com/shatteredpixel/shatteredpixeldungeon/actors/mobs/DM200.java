@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -43,10 +45,10 @@ public class DM200 extends Mob {
 	{
 		spriteClass = DM200Sprite.class;
 
-		HP = HT = Dungeon.getCycleMultiplier(80);
-		defenseSkill = Dungeon.getCycleMultiplier(12);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(80));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(12));
 
-		EXP = Dungeon.getCycleMultiplier(9);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(9));
 		maxLvl = 17;
 
 		loot = Random.oneOf(Generator.Category.WEAPON, Generator.Category.ARMOR);
@@ -59,18 +61,18 @@ public class DM200 extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(10), Dungeon.getCycleMultiplier(25) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.TEN), Dungeon.getCycleMultiplier(BigInteger.valueOf(25)) );
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(20);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(20));
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(8));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(8)));
 	}
 
 	@Override
@@ -124,9 +126,9 @@ public class DM200 extends Mob {
 		Ballistica trajectory = new Ballistica(pos, enemy.pos, Ballistica.STOP_TARGET);
 
 		for (int i : trajectory.subPath(0, trajectory.dist)){
-			GameScene.add(Blob.seed(i, 20, ToxicGas.class));
+			GameScene.add(Blob.seed(i, BigInteger.valueOf(20), ToxicGas.class));
 		}
-		GameScene.add(Blob.seed(trajectory.collisionPos, 100, ToxicGas.class));
+		GameScene.add(Blob.seed(trajectory.collisionPos, BigInteger.valueOf(100), ToxicGas.class));
 
 	}
 

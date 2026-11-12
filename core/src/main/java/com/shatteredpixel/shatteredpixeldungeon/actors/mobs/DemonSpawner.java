@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -46,10 +48,10 @@ public class DemonSpawner extends Mob {
 	{
 		spriteClass = SpawnerSprite.class;
 
-		HP = HT = Dungeon.getCycleMultiplier(120);
-		defenseSkill = 0;
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(120));
+		defenseSkill = BigInteger.ZERO;
 
-		EXP = Dungeon.getCycleMultiplier(15);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(15));
 		maxLvl = 29;
 
 		state = PASSIVE;
@@ -64,8 +66,8 @@ public class DemonSpawner extends Mob {
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(12));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(12)));
 	}
 
 	@Override
@@ -133,13 +135,13 @@ public class DemonSpawner extends Mob {
 	}
 
 	@Override
-	public void damage(long dmg, Object src) {
-		if (dmg >= 20 + Dungeon.cycle * 300L && Dungeon.cycle < 2){
+	public void damage(BigInteger dmg, Object src) {
+		if ((dmg.compareTo(BigInteger.valueOf(20 + Dungeon.cycle * 300L)) >= 0) && Dungeon.cycle < 2){
 			//takes 20/21/22/23/24/25/26/27/28/29/30 dmg
 			// at   20/22/25/29/34/40/47/55/64/74/85 incoming dmg
-			dmg = 19 + Dungeon.cycle * 300L + (int)(Math.sqrt(8*(dmg - 19) + 1) - 1)/2;
+			dmg = BigInteger.valueOf(19 + Dungeon.cycle * 300L + (int)(Math.sqrt(BigInteger.valueOf(8).multiply((dmg.subtract(BigInteger.valueOf(19)))).add(BigInteger.ONE).doubleValue()) - 1)/2);
 		}
-		spawnCooldown -= dmg;
+		spawnCooldown -= dmg.floatValue();
 		super.damage(dmg, src);
 	}
 

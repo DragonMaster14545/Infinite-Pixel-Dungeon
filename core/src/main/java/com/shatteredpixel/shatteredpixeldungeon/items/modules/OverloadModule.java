@@ -29,6 +29,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.modules;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.OverloadBeacon;
@@ -53,7 +55,7 @@ public class OverloadModule extends Module {
     }
 
     @Override
-    public long value() {
-        return 12000 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(12000).multiply(quantity);
     }
 }

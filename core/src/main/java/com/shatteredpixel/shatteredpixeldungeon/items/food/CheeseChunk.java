@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -66,8 +68,8 @@ public class CheeseChunk extends Food {
 	}
 	
 	@Override
-	public long value() {
-		return 20 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(20).multiply(quantity);
 	}
 
 	public static class oneMeat extends Recipe.SimpleRecipe{

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -40,7 +42,7 @@ public class ToxicGas extends Blob implements Hero.Doom {
 	protected void evolve() {
 		super.evolve();
 
-		long damage = 1 + Dungeon.scalingDepth()/5;
+		BigInteger damage = BigInteger.ONE.add(Dungeon.scalingDepth().divide(BigInteger.valueOf(5)));
 
 		Char ch;
 		int cell;
@@ -48,7 +50,7 @@ public class ToxicGas extends Blob implements Hero.Doom {
 		for (int i = area.left; i < area.right; i++){
 			for (int j = area.top; j < area.bottom; j++){
 				cell = i + j*Dungeon.level.width();
-				if (cur[cell] > 0 && (ch = Actor.findChar( cell )) != null) {
+				if ((cur[cell].compareTo(BigInteger.ZERO) > 0) && (ch = Actor.findChar( cell )) != null) {
 					if (!ch.isImmune(this.getClass())) {
 
 						ch.damage(damage, this);

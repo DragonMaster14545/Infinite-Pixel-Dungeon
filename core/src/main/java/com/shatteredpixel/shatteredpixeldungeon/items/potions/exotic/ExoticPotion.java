@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Recipe;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.*;
@@ -102,14 +104,14 @@ public class ExoticPotion extends Potion {
 	
 	@Override
 	//20 gold more than its none-exotic equivalent
-	public long value() {
-		return (Reflection.newInstance(exoToReg.get(getClass())).value() + 20) * quantity;
+	public BigInteger value() {
+		return (Reflection.newInstance(exoToReg.get(getClass())).value().add(BigInteger.valueOf(20))).multiply(quantity);
 	}
 
 	@Override
 	//4 more energy than its none-exotic equivalent
-	public long energyVal() {
-		return (Reflection.newInstance(exoToReg.get(getClass())).energyVal() + 4) * quantity;
+	public BigInteger energyVal() {
+		return (Reflection.newInstance(exoToReg.get(getClass())).energyVal().add(BigInteger.valueOf(4))).multiply(quantity);
 	}
 
 	public static class PotionToExotic extends Recipe{
@@ -124,14 +126,14 @@ public class ExoticPotion extends Potion {
 		}
 		
 		@Override
-		public long cost(ArrayList<Item> ingredients) {
-			return 4;
+		public BigInteger cost(ArrayList<Item> ingredients) {
+			return BigInteger.valueOf(4);
 		}
 
 		@Override
 		public Item brew(ArrayList<Item> ingredients) {
 			for (Item i : ingredients){
-				i.quantity(i.quantity()-1);
+				i.quantity(i.quantity().subtract(BigInteger.ONE));
 			}
 
 			return Reflection.newInstance(regToExo.get(ingredients.get(0).getClass()));

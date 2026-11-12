@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Chill;
@@ -38,13 +42,13 @@ public class Chilling extends Weapon.Enchantment {
 	private static ItemSprite.Glowing TEAL = new ItemSprite.Glowing( 0x00FFFF );
 	
 	@Override
-	public long proc( Weapon weapon, Char attacker, Char defender, long damage ) {
-		long level = Math.max( 0, weapon.buffedLvl() );
+	public BigInteger proc( Weapon weapon, Char attacker, Char defender, BigInteger damage ) {
+		BigInteger level = BigInteger.ZERO.max(weapon.buffedLvl());
 
 		// lvl 0 - 25%
 		// lvl 1 - 40%
 		// lvl 2 - 50%
-		float procChance = (level+1f)/(level+4f) * procChanceMultiplier(attacker);
+		float procChance = Big.div((Big.dec(level).add(Big.dec(1f))), (Big.dec(level).add(Big.dec(4f)))).multiply(Big.dec(procChanceMultiplier(attacker))).floatValue();
 		if (Random.Float() < procChance) {
 
 			float powerMulti = Math.max(1f, procChance);

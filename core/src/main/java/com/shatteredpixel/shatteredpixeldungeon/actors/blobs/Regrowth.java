@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -41,19 +43,19 @@ public class Regrowth extends Blob {
 	protected void evolve() {
 		super.evolve();
 		
-		if (volume > 0) {
+		if ((volume.compareTo(BigInteger.ZERO) > 0)) {
 			int cell;
 			for (int i = area.left; i < area.right; i++) {
 				for (int j = area.top; j < area.bottom; j++) {
 					cell = i + j*Dungeon.level.width();
-					if (off[cell] > 0) {
+					if ((off[cell].compareTo(BigInteger.ZERO) > 0)) {
 						int c = Dungeon.level.map[cell];
 						int c1 = c;
 						if (c == Terrain.EMPTY || c == Terrain.EMBERS || c == Terrain.EMPTY_DECO) {
-							c1 = (cur[cell] > 9 && Actor.findChar( cell ) == null)
+							c1 = ((cur[cell].compareTo(BigInteger.valueOf(9)) > 0) && Actor.findChar( cell ) == null)
 									? Terrain.HIGH_GRASS : Terrain.GRASS;
 						} else if ((c == Terrain.GRASS || c == Terrain.FURROWED_GRASS)
-								&& cur[cell] > 9 && Dungeon.level.plants.get(cell) == null && Actor.findChar( cell ) == null ) {
+								&& (cur[cell].compareTo(BigInteger.valueOf(9)) > 0) && Dungeon.level.plants.get(cell) == null && Actor.findChar( cell ) == null) {
 							c1 = Terrain.HIGH_GRASS;
 						}
 
@@ -65,7 +67,7 @@ public class Regrowth extends Blob {
 						Char ch = Actor.findChar( cell );
 						if (ch != null
 								&& !ch.isImmune(this.getClass())
-								&& off[cell] > 1) {
+								&& (off[cell].compareTo(BigInteger.ONE) > 0)) {
 							Buff.prolong( ch, Roots.class, TICK );
 						}
 					}

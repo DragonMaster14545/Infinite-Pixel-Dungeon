@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -49,7 +51,7 @@ public class WndEnergizeItem extends WndInfoItem {
 
 		float pos = height;
 
-		if (item.quantity() == 1) {
+		if ((item.quantity().compareTo(BigInteger.ONE) == 0)) {
 
 			RedButton btnEnergize = new RedButton( Messages.get(this, "energize", item.energyVal()) ) {
 				@Override
@@ -66,8 +68,8 @@ public class WndEnergizeItem extends WndInfoItem {
 
 		} else {
 
-			long energyAll = item.energyVal();
-			RedButton btnEnergize1 = new RedButton( Messages.get(this, "energize_1", energyAll / item.quantity()) ) {
+			BigInteger energyAll = item.energyVal();
+			RedButton btnEnergize1 = new RedButton( Messages.get(this, "energize_1", energyAll.divide(item.quantity())) ) {
 				@Override
                 public void onClick() {
 					energizeOne( item );
@@ -118,7 +120,7 @@ public class WndEnergizeItem extends WndInfoItem {
 
 	public static void energizeOne( Item item ) {
 
-		if (item.quantity() <= 1) {
+		if ((item.quantity().compareTo(BigInteger.ONE) <= 0)) {
 			energizeAll( item );
 		} else {
 			energize(item.detach( Dungeon.hero.belongings.backpack ));
@@ -130,7 +132,7 @@ public class WndEnergizeItem extends WndInfoItem {
 
 		if (ShatteredPixelDungeon.scene() instanceof AlchemyScene){
 
-			Dungeon.energy += item.energyVal();
+			Dungeon.energy = Dungeon.energy.add(item.energyVal());
 			((AlchemyScene) ShatteredPixelDungeon.scene()).createEnergy();
 			if (!item.isIdentified()){
 				((AlchemyScene) ShatteredPixelDungeon.scene()).showIdentify(item);
@@ -165,7 +167,7 @@ public class WndEnergizeItem extends WndInfoItem {
 
 		@Override
 		public boolean itemSelectable(Item item) {
-			return item.energyVal() > 0;
+			return (item.energyVal().compareTo(BigInteger.ZERO) > 0);
 		}
 
 		@Override

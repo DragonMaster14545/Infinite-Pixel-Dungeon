@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Healing;
@@ -37,7 +41,7 @@ public class HealingDart extends TippedDart {
 	}
 	
 	@Override
-	public long proc(Char attacker, Char defender, long damage) {
+	public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 
 		//do nothing to the hero or enemies when processing charged shot
 		if (processingChargedShot && (defender == attacker || attacker.alignment != defender.alignment)){
@@ -46,10 +50,10 @@ public class HealingDart extends TippedDart {
 		
 		//heals 30 hp at base, scaling with enemy HT
 		PotionOfHealing.cure( defender );
-		Buff.affect( defender, Healing.class ).setHeal((long)(0.5f*defender.HT + 30), 0.25f, 0);
+		Buff.affect( defender, Healing.class ).setHeal(Big.trunc((Big.dec(0.5f).multiply(Big.dec(defender.HT)).add(Big.dec(30)))), 0.25f, BigInteger.ZERO);
 		
 		if (attacker.alignment == defender.alignment){
-			return 0;
+			return BigInteger.ZERO;
 		}
 		
 		return super.proc(attacker, defender, damage);

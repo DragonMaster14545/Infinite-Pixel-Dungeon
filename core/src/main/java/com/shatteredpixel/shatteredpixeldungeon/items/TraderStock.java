@@ -1,5 +1,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -22,23 +26,23 @@ public class TraderStock {
 	public static class Offer implements Bundlable {
 		public Item item;
 		public boolean sold;
-		public long gold;
-		public long energy;
+		public BigInteger gold = BigInteger.ZERO;
+		public BigInteger energy = BigInteger.ZERO;
 
 		@Override
 		public void storeInBundle( Bundle bundle ) {
 			bundle.put( "item", item );
 			bundle.put( "sold", sold );
-			bundle.put( "gold", gold );
-			bundle.put( "energy", energy );
+			Big.put(bundle, "gold", gold);
+			Big.put(bundle, "energy", energy);
 		}
 
 		@Override
 		public void restoreFromBundle( Bundle bundle ) {
 			item = (Item) bundle.get( "item" );
 			sold = bundle.getBoolean( "sold" );
-			gold = bundle.getLong( "gold" );
-			energy = bundle.getLong( "energy" );
+			gold = Big.getBig(bundle, "gold");
+			energy = Big.getBig(bundle, "energy");
 		}
 	}
 
@@ -91,12 +95,12 @@ public class TraderStock {
 		if ( FileUtils.fileExists( file ) ) {
 			try {
 				Bundle b = FileUtils.bundleFromFile( file );
-				if ( b.contains( SEED ) && b.getLong( SEED ) == cachedSeed ) {
+				if (b.contains( SEED ) && (Big.getBig(b, SEED).compareTo(BigInteger.valueOf(cachedSeed)) == 0)) {
 					Collection<Bundlable> loaded = b.getCollection( OFFERS_KEY );
 					for (Bundlable o : loaded) {
 						if ( o instanceof Offer && ( (Offer) o ).item != null ) offers.add( (Offer) o );
 					}
-					stockedAt = b.getLong( STOCKED_AT );
+					stockedAt = Big.toLong(Big.getBig(b, STOCKED_AT));
 				}
 			} catch (IOException ignored) {
 			}
@@ -135,9 +139,9 @@ public class TraderStock {
 			for (int i = 0; i < OFFERS; i++) {
 				Offer offer = new Offer();
 				offer.item = rollItem();
-				long value = Math.max( 1, offer.item.value() );
-				offer.gold = Math.max( 35, value * 5 );
-				offer.energy = Math.max( 5, offer.gold / 30 );
+				BigInteger value = BigInteger.ONE.max(offer.item.value());
+				offer.gold = BigInteger.valueOf(35).max(value.multiply(BigInteger.valueOf(5)));
+				offer.energy = BigInteger.valueOf(5).max(offer.gold.divide(BigInteger.valueOf(30)));
 				offers.add( offer );
 			}
 		} finally {
@@ -153,7 +157,7 @@ public class TraderStock {
 			Generator.Category cat = CATEGORIES[Random.chances( WEIGHTS )];
 			item = Generator.randomUsingDefaults( cat );
 			if ( item == null || item instanceof Gold ) continue;
-			if ( item.cursed || item.level() < 0 || item.value() <= 0 ) continue;
+			if (item.cursed || (item.level().compareTo(BigInteger.ZERO) < 0) || (item.value().compareTo(BigInteger.ZERO) <= 0)) continue;
 			break;
 		}
 		if ( item == null || item instanceof Gold ) item = new Food();
@@ -169,8 +173,8 @@ public class TraderStock {
 		Offer offer = list.get( index );
 		if ( offer.sold ) return "sold_out";
 
-		long cost = withEnergy ? offer.energy : offer.gold;
-		if ( ( withEnergy ? Dungeon.energy : Dungeon.gold ) < cost ) {
+		BigInteger cost = withEnergy ? offer.energy : offer.gold;
+		if ((( withEnergy ? Dungeon.energy : Dungeon.gold ).compareTo(cost) < 0)) {
 			return withEnergy ? "no_energy" : "no_gold";
 		}
 
@@ -178,9 +182,9 @@ public class TraderStock {
 		if ( !offer.item.collect( hero.belongings.backpack ) ) return "no_room";
 
 		if ( withEnergy ) {
-			Dungeon.energy -= cost;
+			Dungeon.energy = Dungeon.energy.subtract(cost);
 		} else {
-			Dungeon.gold -= cost;
+			Dungeon.gold = Dungeon.gold.subtract(cost);
 		}
 		offer.sold = true;
 		save();

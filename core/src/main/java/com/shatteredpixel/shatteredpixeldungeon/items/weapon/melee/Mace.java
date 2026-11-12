@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -54,15 +58,14 @@ public class Mace extends MeleeWeapon {
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  (5L*tier()) +    //15 base, down from 20
-				lvl*(tier()+2);   //+5
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf((5L*tier())).add(lvl.multiply(BigInteger.valueOf((tier()+2))));   //+5
 	}
 
     @Override
-    public long proc(Char attacker, Char defender, long damage) {
+    public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 	    if (attacker == Dungeon.hero && defender != null) {
-			WandOfDisintegration wand = ((WandOfDisintegration)(new WandOfDisintegration().upgrade(Math.round(level()*Math.pow(3, Dungeon.cycle)))));
+			WandOfDisintegration wand = ((WandOfDisintegration)(new WandOfDisintegration().upgrade((Big.round(Big.dec(level()).multiply(Big.dec(Math.pow(3, Dungeon.cycle))))))));
 			curUser = Dungeon.hero;
 	    	wand.fx(
 	    		new Ballistica(attacker.pos, defender.pos, Ballistica.STOP_SOLID),
@@ -85,26 +88,26 @@ public class Mace extends MeleeWeapon {
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
 		//+(4+1.5*lvl) damage, roughly +55% base dmg, +60% scaling
-		long dmgBoost = augment.damageFactor(5 + Math.round(1.5d*buffedLvl()));
+		BigInteger dmgBoost = augment.damageFactor(BigInteger.valueOf(5).add(Big.round(Big.dec(1.5d).multiply(Big.dec(buffedLvl())))));
 		Mace.heavyBlowAbility(hero, target, 1, dmgBoost, this);
 	}
 
 	@Override
 	public String abilityInfo() {
-		int dmgBoost = levelKnown ? 5 + Math.round(1.5f*buffedLvl()) : 5;
+		int dmgBoost = Big.toInt(levelKnown ? BigInteger.valueOf(5).add(Big.round(Big.dec(1.5f).multiply(Big.dec(buffedLvl())))) : BigInteger.valueOf(5));
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
+			return Messages.get(this, "ability_desc", augment.damageFactor(min().add(BigInteger.valueOf(dmgBoost))), augment.damageFactor(max().add(BigInteger.valueOf(dmgBoost))));
 		} else {
-			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);
+			return Messages.get(this, "typical_ability_desc", min(BigInteger.ZERO).add(BigInteger.valueOf(dmgBoost)), max(BigInteger.ZERO).add(BigInteger.valueOf(dmgBoost)));
 		}
 	}
 
-	public String upgradeAbilityStat(long level){
-		int dmgBoost = 5 + Math.round(1.5f*level);
-		return augment.damageFactor(min(level)+dmgBoost) + "-" + augment.damageFactor(max(level)+dmgBoost);
+	public String upgradeAbilityStat(BigInteger level){
+		int dmgBoost = Big.toInt(BigInteger.valueOf(5).add(Big.round(Big.dec(1.5f).multiply(Big.dec(level)))));
+		return augment.damageFactor(min(level).add(BigInteger.valueOf(dmgBoost))) + "-" + augment.damageFactor(max(level).add(BigInteger.valueOf(dmgBoost)));
 	}
 
-	public static void heavyBlowAbility(Hero hero, Integer target, float dmgMulti, long dmgBoost, MeleeWeapon wep){
+	public static void heavyBlowAbility(Hero hero, Integer target, float dmgMulti, BigInteger dmgBoost, MeleeWeapon wep){
 		if (target == null) {
 			return;
 		}
@@ -126,17 +129,17 @@ public class Mace extends MeleeWeapon {
 		//no bonus damage if attack isn't a surprise
 		if (enemy instanceof Mob && !((Mob) enemy).surprisedBy(hero)){
 			dmgMulti = Math.min(1, dmgMulti);
-			dmgBoost = 0;
+			dmgBoost = BigInteger.ZERO;
 		}
 
 		float finalDmgMulti = dmgMulti;
-		long finalDmgBoost = dmgBoost;
+		BigInteger finalDmgBoost = dmgBoost;
 		hero.sprite.attack(enemy.pos, new Callback() {
 			@Override
 			public void call() {
 				wep.beforeAbilityUsed(hero, enemy);
 				AttackIndicator.target(enemy);
-				if (hero.attack(enemy, finalDmgMulti, finalDmgBoost, Char.INFINITE_ACCURACY)) {
+				if (hero.attack(enemy, finalDmgMulti, finalDmgBoost.floatValue(), Char.INFINITE_ACCURACY)) {
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 					if (enemy.isAlive()){
 						Buff.affect(enemy, Daze.class, Daze.DURATION);

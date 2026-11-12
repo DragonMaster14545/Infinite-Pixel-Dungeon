@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -60,14 +64,13 @@ public class Greatsword extends MeleeWeapon {
 	}
 
     @Override
-    public long max(long lvl) {
-        return  6L*(tier()+1) +    //36
-                lvl*(tier()+2);   //+7
+    public BigInteger max(BigInteger lvl) {
+        return  BigInteger.valueOf(6L*(tier()+1)).add(lvl.multiply(BigInteger.valueOf((tier()+2))));   //+7
     }
 
     @Override
     public String statsInfo() {
-        return Messages.get(this, "stats_desc", 9 + Dungeon.escalatingDepth() * 3);
+        return Messages.get(this, "stats_desc", BigInteger.valueOf(9).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(3))));
     }
 
     @Override
@@ -139,14 +142,14 @@ public class Greatsword extends MeleeWeapon {
     @Override
     public String abilityInfo() {
         if (levelKnown){
-            return Messages.get(this, "ability_desc", augment.damageFactor(Math.round(min()*0.5d)), augment.damageFactor(Math.round(max()*0.5d)));
+            return Messages.get(this, "ability_desc", augment.damageFactor(Big.round(Big.dec(min()).multiply(Big.dec(0.5d)))), augment.damageFactor(Big.round(Big.dec(max()).multiply(Big.dec(0.5d)))));
         } else {
-            return Messages.get(this, "typical_ability_desc", augment.damageFactor(Math.round(min(0)*0.5d)), augment.damageFactor(Math.round(max(0)*0.5d)));
+            return Messages.get(this, "typical_ability_desc", augment.damageFactor(Big.round(Big.dec(min(BigInteger.ZERO)).multiply(Big.dec(0.5d)))), augment.damageFactor(Big.round(Big.dec(max(BigInteger.ZERO)).multiply(Big.dec(0.5d)))));
         }
     }
 
     @Override
-    public long proc(Char attacker, Char defender, long damage) {
+    public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
         if (Random.Float() >= 0.5f) {
             for (int i : PathFinder.NEIGHBOURS9) {
 
@@ -185,8 +188,8 @@ public class Greatsword extends MeleeWeapon {
         }
 
         public GuardianKnight() {
-            HP = HT = 9 + Dungeon.escalatingDepth() * 4;
-            defenseSkill = 4 + Dungeon.escalatingDepth();
+            HP = HT = BigInteger.valueOf(9).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(4)));
+            defenseSkill = BigInteger.valueOf(4).add(Dungeon.escalatingDepth());
         }
 
         public static class TickDebuff extends Buff {
@@ -211,12 +214,12 @@ public class Greatsword extends MeleeWeapon {
             @Override
             public boolean act() {
                 if (target.isAlive()) {
-                    float regen = 1f / (target.HT / 250f);
-                    if (target.HP > 0) {
+                    float regen = Big.div(Big.dec(1f), (Big.div(Big.dec(target.HT), Big.dec(250f)))).floatValue();
+                    if ((target.HP.compareTo(BigInteger.ZERO) > 0)) {
                         partialHP += regen;
                         if (partialHP >= 1){
-                            target.damage((long) partialHP, new Doom());
-                            partialHP -= (long)partialHP;
+                            target.damage(Big.of(partialHP), new Doom());
+                            partialHP -= Big.of(partialHP).doubleValue();
                         }
                     }
                     spend( TICK );
@@ -234,7 +237,7 @@ public class Greatsword extends MeleeWeapon {
         }
 
         @Override
-        public long drRoll() {
+        public BigInteger drRoll() {
             return Dungeon.escalatingDepth();
         }
     }

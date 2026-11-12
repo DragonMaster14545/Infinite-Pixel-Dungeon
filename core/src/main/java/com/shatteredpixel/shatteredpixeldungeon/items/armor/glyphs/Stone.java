@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -34,11 +38,11 @@ public class Stone extends Armor.Glyph {
 	private static ItemSprite.Glowing GREY = new ItemSprite.Glowing( 0x222222 );
 
 	@Override
-	public long proc(Armor armor, Char attacker, Char defender, long damage) {
+	public BigInteger proc(Armor armor, Char attacker, Char defender, BigInteger damage) {
 		
 		testing = true;
-		float evasion = defender.defenseSkill(attacker);
-		float accuracy = attacker.attackSkill(defender);
+		float evasion = defender.defenseSkill(attacker).floatValue();
+		float accuracy = attacker.attackSkill(defender).floatValue();
 		testing = false;
 
 		evasion *= genericProcChanceMultiplier(defender);
@@ -54,7 +58,7 @@ public class Stone extends Armor.Glyph {
 		// we clamp in case accuracy or evasion were negative
 		hitChance = GameMath.gate(0.25f, (1f + 3f*hitChance)/4f, 1f);
 		
-		damage = (long) Math.ceil(damage * hitChance);
+		damage = Big.trunc(Big.ceil(Big.dec(damage).multiply(Big.dec(hitChance))));
 		
 		return damage;
 	}

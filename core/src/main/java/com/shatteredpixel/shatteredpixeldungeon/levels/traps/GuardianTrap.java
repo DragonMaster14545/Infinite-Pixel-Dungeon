@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
@@ -59,7 +61,7 @@ public class GuardianTrap extends Trap {
 
 		Sample.INSTANCE.play( Assets.Sounds.ALERT );
 
-		for (int i = 0; i < Math.min(20, (scalingDepth() - 5)/5); i++){
+		for (int i = 0; (BigInteger.valueOf(i).compareTo(BigInteger.valueOf(20).min((scalingDepth().subtract(BigInteger.valueOf(5))).divide(BigInteger.valueOf(5)))) < 0); i++){
 			Guardian guardian = new Guardian();
 			guardian.createWeapon(false);
 			guardian.state = guardian.WANDERING;
@@ -77,7 +79,7 @@ public class GuardianTrap extends Trap {
 		{
 			spriteClass = GuardianSprite.class;
 
-			EXP = 0;
+			EXP = BigInteger.ZERO;
 			state = WANDERING;
 
 			levelGenStatue = false;
@@ -88,7 +90,7 @@ public class GuardianTrap extends Trap {
 			weapon = (MeleeWeapon) Generator.randomUsingDefaults(Generator.Category.WEAPON);
 			weapon.cursed = false;
 			weapon.enchant(null);
-			weapon.level(0);
+			weapon.level(BigInteger.ZERO);
 		}
 
 		@Override

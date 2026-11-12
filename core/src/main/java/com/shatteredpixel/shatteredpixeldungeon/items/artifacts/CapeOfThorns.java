@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -40,8 +44,8 @@ public class CapeOfThorns extends Artifact {
 
 		levelCap = 10;
 
-		charge = 0;
-		setChargeCap(100);
+		charge = BigInteger.ZERO;
+		setChargeCap(BigInteger.valueOf(100));
 		cooldown = 0;
 
 		defaultAction = "NONE"; //so it can be quickslotted
@@ -55,11 +59,11 @@ public class CapeOfThorns extends Artifact {
 	@Override
 	public void charge(Hero target, float amount) {
 		if (cooldown == 0) {
-			charge += Math.round(4*amount);
+			charge = charge.add(BigInteger.valueOf(Math.round(4*amount)));
 			updateQuickslot();
 		}
-		if (charge >= getChargeCap()){
-			target.buff(Thorns.class).proc(0, null, null);
+		if ((charge.compareTo(getChargeCap()) >= 0)){
+			target.buff(Thorns.class).proc(BigInteger.ZERO, null, null);
 		}
 	}
 	
@@ -92,28 +96,28 @@ public class CapeOfThorns extends Artifact {
 			return true;
 		}
 
-		public long proc(long damage, Char attacker, Char defender){
+		public BigInteger proc(BigInteger damage, Char attacker, Char defender){
 			if (cooldown == 0){
-				charge += damage*(0.5+level()*0.05);
-				if (charge >= getChargeCap()){
-					charge = 0;
-					cooldown = (int) (10+level());
+				charge = Big.trunc(Big.dec(charge).add(Big.dec(damage).multiply((Big.dec(0.5).add(Big.dec(level()).multiply(Big.dec(0.05)))))));
+				if ((charge.compareTo(getChargeCap()) >= 0)){
+					charge = BigInteger.ZERO;
+					cooldown = Big.toInt((BigInteger.TEN.add(level())));
 					GLog.p( Messages.get(this, "radiating") );
 				}
 			}
 
 			if (cooldown != 0){
-				long deflected = (Dungeon.NormalLongRange(0, damage)*getRarityMultiplier());
-				damage -= Math.min(damage, deflected);
+				BigInteger deflected = (Dungeon.NormalLongRange(BigInteger.ZERO, damage).multiply(getRarityMultiplier()));
+				damage = damage.subtract(damage.min(deflected));
 
 				if (attacker != null && Dungeon.level.adjacent(attacker.pos, defender.pos)) {
 					attacker.damage(deflected, this);
 				}
 
-				exp+= deflected;
+				exp = exp.add(deflected);
 
-				if (exp >= (level()+1)*5 && level() < levelCap){
-					exp -= (level()+1)*5;
+				if ((exp.compareTo((level().add(BigInteger.ONE)).multiply(BigInteger.valueOf(5))) >= 0) && (level().compareTo(BigInteger.valueOf(levelCap)) < 0)){
+					exp = exp.subtract((level().add(BigInteger.ONE)).multiply(BigInteger.valueOf(5)));
 					upgrade();
 					Catalog.countUse(CapeOfThorns.class);
 					GLog.p( Messages.get(this, "levelup") );
@@ -140,7 +144,7 @@ public class CapeOfThorns extends Artifact {
 		@Override
 		public void detach(){
 			cooldown = 0;
-			charge = 0;
+			charge = BigInteger.ZERO;
 			super.detach();
 		}
 

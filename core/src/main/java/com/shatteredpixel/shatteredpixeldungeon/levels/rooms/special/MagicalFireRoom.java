@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -68,7 +70,7 @@ public class MagicalFireRoom extends SpecialRoom {
 		if (door.x == left || door.x == right){
 			firePos.y = top+1;
 			while (firePos.y != bottom){
-				Blob.seed(level.pointToCell(firePos), 1, EternalFire.class, level);
+				Blob.seed(level.pointToCell(firePos), BigInteger.ONE, EternalFire.class, level);
 				Painter.set(level, firePos, Terrain.EMPTY_SP);
 				firePos.y++;
 			}
@@ -80,7 +82,7 @@ public class MagicalFireRoom extends SpecialRoom {
 		} else {
 			firePos.x = left+1;
 			while (firePos.x != right){
-				Blob.seed(level.pointToCell(firePos), 1, EternalFire.class, level);
+				Blob.seed(level.pointToCell(firePos), BigInteger.ONE, EternalFire.class, level);
 				Painter.set(level, firePos, Terrain.EMPTY_SP);
 				firePos.x++;
 			}
@@ -140,13 +142,13 @@ public class MagicalFireRoom extends SpecialRoom {
 
 		//disallow placing on special tiles or next to fire if fire is present.
 		//note that this is slightly brittle, assumes the fire is either all there or totally gone
-		if (fire != null && fire.volume > 0){
+		if (fire != null && (fire.volume.compareTo(BigInteger.ZERO) > 0)){
 			int cell = l.pointToCell(p);
 			if (l.map[cell] == Terrain.EMPTY_SP) return false;
 
-			if (fire.cur[cell] > 0)     return false;
+			if ((fire.cur[cell].compareTo(BigInteger.ZERO) > 0))     return false;
 			for (int i : PathFinder.NEIGHBOURS4){
-				if (fire.cur[cell+i] > 0)   return false;
+				if ((fire.cur[cell+i].compareTo(BigInteger.ZERO) > 0))   return false;
 			}
 		}
 
@@ -174,44 +176,44 @@ public class MagicalFireRoom extends SpecialRoom {
 				for (int j = area.top - 1; j <= area.bottom; j++){
 					cell = i + j*l.width();
 
-					if (cur[cell] > 0){
+					if ((cur[cell].compareTo(BigInteger.ZERO) > 0)){
 						//evaporates in the presence of water, frost, or blizzard
 						//this blob is not considered interchangeable with fire, so those blobs do not interact with it otherwise
 						//potion of purity can cleanse it though
 						if (l.water[cell]){
-							cur[cell] = 0;
+							cur[cell] = BigInteger.ZERO;
 							clearAll = true;
 						}
 						//overrides fire
-						if (fire != null && fire.volume > 0 && fire.cur[cell] > 0){
+						if (fire != null && (fire.volume.compareTo(BigInteger.ZERO) > 0) && (fire.cur[cell].compareTo(BigInteger.ZERO) > 0)){
 							fire.clear(cell);
 						}
 
 						//clears itself if there is frost/blizzard on or next to it
 						for (int k : PathFinder.NEIGHBOURS9) {
-							if (freeze != null && freeze.volume > 0 && freeze.cur[cell+k] > 0) {
+							if (freeze != null && (freeze.volume.compareTo(BigInteger.ZERO) > 0) && (freeze.cur[cell+k].compareTo(BigInteger.ZERO) > 0)) {
 								freeze.clear(cell);
-								cur[cell] = 0;
+								cur[cell] = BigInteger.ZERO;
 								clearAll = true;
 							}
-							if (bliz != null && bliz.volume > 0 && bliz.cur[cell+k] > 0) {
+							if (bliz != null && (bliz.volume.compareTo(BigInteger.ZERO) > 0) && (bliz.cur[cell+k].compareTo(BigInteger.ZERO) > 0)) {
 								bliz.clear(cell);
-								cur[cell] = 0;
+								cur[cell] = BigInteger.ZERO;
 								clearAll = true;
 							}
 						}
-						l.passable[cell] = cur[cell] == 0 && (Terrain.flags[l.map[cell]] & Terrain.PASSABLE) != 0;
+						l.passable[cell] = (cur[cell].compareTo(BigInteger.ZERO) == 0) && (Terrain.flags[l.map[cell]] & Terrain.PASSABLE) != 0;
 					}
 
-					if (cur[cell] > 0
-							|| cur[cell-1] > 0
-							|| cur[cell+1] > 0
-							|| cur[cell-Dungeon.level.width()] > 0
-							|| cur[cell+Dungeon.level.width()] > 0) {
+					if ((cur[cell].compareTo(BigInteger.ZERO) > 0)
+							|| (cur[cell-1].compareTo(BigInteger.ZERO) > 0)
+							|| (cur[cell+1].compareTo(BigInteger.ZERO) > 0)
+							|| (cur[cell-Dungeon.level.width()].compareTo(BigInteger.ZERO) > 0)
+							|| (cur[cell+Dungeon.level.width()].compareTo(BigInteger.ZERO) > 0)) {
 
 						//spread fire to nearby flammable cells
-						if (Dungeon.level.flamable[cell] && (fire == null || fire.volume == 0 || fire.cur[cell] == 0)){
-							GameScene.add(Blob.seed(cell, 4, Fire.class));
+						if (Dungeon.level.flamable[cell] && (fire == null || (fire.volume.compareTo(BigInteger.ZERO) == 0) || (fire.cur[cell].compareTo(BigInteger.ZERO) == 0))){
+							GameScene.add(Blob.seed(cell, BigInteger.valueOf(4), Fire.class));
 						}
 
 						//ignite adjacent chars
@@ -229,7 +231,7 @@ public class MagicalFireRoom extends SpecialRoom {
 					}
 
 					off[cell] = cur[cell];
-					volume += off[cell];
+					volume = volume.add(off[cell]);
 				}
 			}
 
@@ -241,14 +243,14 @@ public class MagicalFireRoom extends SpecialRoom {
 		}
 
 		@Override
-		public void seed(Level level, int cell, long amount) {
+		public void seed(Level level, int cell, BigInteger amount) {
 			super.seed(level, cell, amount);
-			level.passable[cell] = cur[cell] == 0 && (Terrain.flags[level.map[cell]] & Terrain.PASSABLE) != 0;
+			level.passable[cell] = (cur[cell].compareTo(BigInteger.ZERO) == 0) && (Terrain.flags[level.map[cell]] & Terrain.PASSABLE) != 0;
 		}
 
 		@Override
 		public void clear(int cell) {
-			if (volume > 0 && cur[cell] > 0) {
+			if ((volume.compareTo(BigInteger.ZERO) > 0) && (cur[cell].compareTo(BigInteger.ZERO) > 0)) {
 				fullyClear();
 			}
 		}
@@ -272,9 +274,9 @@ public class MagicalFireRoom extends SpecialRoom {
 
 		@Override
 		public void onBuildFlagMaps( Level l ) {
-			if (volume > 0){
+			if ((volume.compareTo(BigInteger.ZERO) > 0)){
 				for (int i=0; i < l.length(); i++) {
-					l.passable[i] = l.passable[i] && cur[i] == 0;
+					l.passable[i] = l.passable[i] && (cur[i].compareTo(BigInteger.ZERO) == 0);
 				}
 			}
 		}

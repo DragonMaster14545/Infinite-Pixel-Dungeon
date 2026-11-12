@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -44,21 +46,20 @@ public class Quarterstaff extends MeleeWeapon {
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  5L*(tier()+1) +    //15 base, down from 18
-				lvl*(tier()+2);   //+4
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(5L*(tier()+1)).add(lvl.multiply(BigInteger.valueOf((tier()+2))));   //+4
 	}
 
 	@Override
-	public long defenseFactor( Char owner ) {
-		return 2;	//2 extra defence
+	public BigInteger defenseFactor( Char owner ) {
+		return BigInteger.TWO;	//2 extra defence
 	}
 
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
 		beforeAbilityUsed(hero, null);
 		//1 turn less as using the ability is instant
-		Buff.prolong(hero, DefensiveStance.class, 3 + buffedLvl());
+		Buff.prolong(hero, DefensiveStance.class, BigInteger.valueOf(3).add(buffedLvl()).floatValue());
 		hero.sprite.operate(hero.pos);
 		hero.next();
 		afterAbilityUsed(hero);
@@ -67,15 +68,15 @@ public class Quarterstaff extends MeleeWeapon {
 	@Override
 	public String abilityInfo() {
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", 4+buffedLvl());
+			return Messages.get(this, "ability_desc", BigInteger.valueOf(4).add(buffedLvl()));
 		} else {
 			return Messages.get(this, "typical_ability_desc", 4);
 		}
 	}
 
 	@Override
-	public String upgradeAbilityStat(long level) {
-		return Long.toString(4+level);
+	public String upgradeAbilityStat(BigInteger level) {
+		return BigInteger.valueOf(4).add(level).toString();
 	}
 
 	public static class DefensiveStance extends FlavourBuff {

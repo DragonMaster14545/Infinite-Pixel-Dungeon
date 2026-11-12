@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -56,26 +60,26 @@ public class Kunai extends MissileWeapon {
 	}
 
     @Override
-    public long proc(Char attacker, Char defender, long damage) {
+    public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 	    if (defender instanceof Mob && ((Mob) defender).surprisedBy(attacker)){
-            Buff.affect(attacker, WeaponCharge.class, 15f).stack = (int) (level()*level() + 2);
+            Buff.affect(attacker, WeaponCharge.class, 15f).stack = Big.toInt((level().multiply(level()).add(BigInteger.TWO)));
         }
         return super.proc(attacker, defender, damage);
     }
 
     @Override
-	public long damageRoll(Char owner) {
+	public BigInteger damageRoll(Char owner) {
 		if (owner instanceof Hero) {
 			Hero hero = (Hero)owner;
 			if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
 				//deals 60% toward max to max on surprise, instead of min to max.
-				long diff = max() - min();
-				long damage = augment.damageFactor(Hero.heroDamageIntRange(
-						min() + Math.round(diff*0.6f),
+				BigInteger diff = max().subtract(min());
+				BigInteger damage = augment.damageFactor(Hero.heroDamageIntRange(
+						min().add(Big.round(Big.dec(diff).multiply(Big.dec(0.6f)))),
 						max()));
 				int exStr = hero.STR() - STRReq();
 				if (exStr > 0) {
-					damage += Hero.heroDamageIntRange(0, exStr);
+					damage = damage.add(Hero.heroDamageIntRange(BigInteger.ZERO, BigInteger.valueOf(exStr)));
 				}
 
 				return damage;

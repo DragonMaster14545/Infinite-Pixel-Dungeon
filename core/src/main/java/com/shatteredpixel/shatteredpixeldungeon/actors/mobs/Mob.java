@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -150,11 +154,11 @@ public abstract class Mob extends Char {
 	
 	protected int target = -1;
 	
-	public long defenseSkill = 0;
+	public BigInteger defenseSkill = BigInteger.ZERO;
 	
-	public long EXP = 1;
+	public BigInteger EXP = BigInteger.ONE;
 	public int maxLvl = Integer.MAX_VALUE;
-	public double bossMaxHPMulti = (Dungeon.escalatingDepth() * 0.025d) + bossMulti();
+	public double bossMaxHPMulti = (Big.dec(Dungeon.escalatingDepth()).multiply(Big.dec(0.025d))).add(Big.dec(bossMulti())).doubleValue();
 	
 	protected Char enemy;
 	protected int enemyID = -1; //used for save/restore
@@ -167,9 +171,9 @@ public abstract class Mob extends Char {
 	protected void onAdd(){
 		if (firstAdded) {
 			//modify health for ascension challenge if applicable, only on first add
-			double percent = HP / (double) HT;
-			HT = Math.round(HT * AscensionChallenge.statModifier(this));
-			HP = Math.round(HT * percent);
+			double percent = Big.div(Big.dec(HP), Big.dec(HT.doubleValue())).doubleValue();
+			HT = Big.round(Big.dec(HT).multiply(Big.dec(AscensionChallenge.statModifier(this))));
+			HP = Big.round(Big.dec(HT).multiply(Big.dec(percent)));
 			firstAdded = false;
 		}
 	}
@@ -706,18 +710,18 @@ public abstract class Mob extends Char {
 	}
 	
 	@Override
-	public long defenseSkill(Char enemy ) {
+	public BigInteger defenseSkill(Char enemy ) {
 		if ( !surprisedBy(enemy)
 				&& paralysed == 0
 				&& !(alignment == Alignment.ALLY && enemy == Dungeon.hero)) {
 			return this.defenseSkill;
 		} else {
-			return 0;
+			return BigInteger.ZERO;
 		}
 	}
 
 	@Override
-	public long defenseProc( Char enemy, long damage ) {
+	public BigInteger defenseProc( Char enemy, BigInteger damage ) {
 		
 		if (enemy instanceof Hero
 				&& ((Hero) enemy).belongings.attackingWeapon() instanceof MissileWeapon){
@@ -751,20 +755,20 @@ public abstract class Mob extends Char {
 		}
 
 		if (buff(SoulMark.class) != null) {
-			long restoration = Math.min(damage, HP+shielding());
+			BigInteger restoration = damage.min(HP.add(shielding()));
 			
 			//physical damage that doesn't come from the hero is less effective
 			if (enemy != Dungeon.hero){
-				restoration = Math.round(restoration * 0.4d*Dungeon.hero.pointsInTalent(Talent.SOUL_SIPHON)/3d);
+				restoration = Big.round(Big.div(Big.dec(restoration).multiply(Big.dec(0.4d)).multiply(Big.dec(Dungeon.hero.pointsInTalent(Talent.SOUL_SIPHON))), Big.dec(3d)));
 			}
-			if (restoration > 0) {
+			if ((restoration.compareTo(BigInteger.ZERO) > 0)) {
 				if (Dungeon.hero.subClass == HeroSubClass.WARLOCK)
-					Buff.affect(Dungeon.hero, Hunger.class).affectHunger(restoration*1.5f);
+					Buff.affect(Dungeon.hero, Hunger.class).affectHunger(Big.dec(restoration).multiply(Big.dec(1.5f)).floatValue());
 
-				if (Dungeon.hero.HP < Dungeon.hero.HT) {
-					long heal = (long)Math.ceil(restoration * 0.4d);
-					Dungeon.hero.HP = Math.min(Dungeon.hero.HT, Dungeon.hero.HP + heal);
-					Dungeon.hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(heal), FloatingText.HEALING);
+				if ((Dungeon.hero.HP.compareTo(Dungeon.hero.HT) < 0)) {
+					BigInteger heal = Big.trunc(Big.ceil(Big.dec(restoration).multiply(Big.dec(0.4d))));
+					Dungeon.hero.HP = Dungeon.hero.HT.min(Dungeon.hero.HP.add(heal));
+					Dungeon.hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, heal.toString(), FloatingText.HEALING);
 				}
 			}
 		}
@@ -777,13 +781,13 @@ public abstract class Mob extends Char {
 		return super.speed() * AscensionChallenge.enemySpeedModifier(this);
 	}
 
-	public long cycledDrRoll(){
-		return 0;
+	public BigInteger cycledDrRoll(){
+		return BigInteger.ZERO;
 	}
 
 	@Override
-	public long drRoll() {
-		return super.drRoll() + cycledDrRoll();
+	public BigInteger drRoll() {
+		return super.drRoll().add(cycledDrRoll());
 	}
 
 	public final boolean surprisedBy(Char enemy ){
@@ -819,7 +823,7 @@ public abstract class Mob extends Char {
 	}
 
 	@Override
-	public void damage( long dmg, Object src ) {
+	public void damage( BigInteger dmg, Object src ) {
 
 		if (!isInvulnerable(src.getClass())) {
 			if (state == SLEEPING) {
@@ -859,16 +863,16 @@ public abstract class Mob extends Char {
 
 				AscensionChallenge.processEnemyKill(this);
 
-				long exp = EXP;
+				BigInteger exp = EXP;
 				if (Dungeon.hero.buff(Bless.class) != null) {
-					exp *= 2;
+					exp = exp.multiply(BigInteger.TWO);
 				}
-				if (exp > 0) {
-					Dungeon.hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(exp), FloatingText.EXPERIENCE);
+				if ((exp.compareTo(BigInteger.ZERO) > 0)) {
+					Dungeon.hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, exp.toString(), FloatingText.EXPERIENCE);
 				}
 				Dungeon.hero.earnExp(exp, getClass());
 				if (Dungeon.hero.perks.contains(Perks.Perk.ADDITIONAL_MONEY)){
-					Dungeon.level.drop(new Gold(Dungeon.Long( 6 + Dungeon.escalatingDepth() * 2, 12 + Dungeon.escalatingDepth() * 4 )), pos).sprite.drop();
+					Dungeon.level.drop(new Gold(Dungeon.Long( BigInteger.valueOf(6).add(Dungeon.escalatingDepth().multiply(BigInteger.TWO)), BigInteger.valueOf(12).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(4))) )), pos).sprite.drop();
 				}
 				if (Dungeon.hero.buff(Overload.class) != null ||
 						this.buff(Overload.class) != null) {
@@ -891,32 +895,32 @@ public abstract class Mob extends Char {
 
 		if (cause == Chasm.class){
 			//50% chance to round up, 50% to round down
-			if (EXP % 2 == 1) EXP += Random.Int(2);
-			EXP /= 2;
+			if ((EXP.remainder(BigInteger.TWO).compareTo(BigInteger.ONE) == 0)) EXP = EXP.add(BigInteger.valueOf(Random.Int(2)));
+			EXP = EXP.divide(BigInteger.TWO);
 		}
 
         if (Dungeon.hero.buff(ScrollOfInsurgence.ChallengeInsurgence.class) != null){
-            EXP *= 2.5d;
+            EXP = Big.trunc(Big.dec(EXP).multiply(Big.dec(2.5d)));
         }
 
 		if (buff(Longsword.HolyExpEffect.class) != null){
-			EXP = Math.round(EXP * Math.pow(1.25f, buff(Longsword.HolyExpEffect.class).stacks));
+			EXP = Big.round(Big.dec(EXP).multiply(Big.dec(Math.pow(1.25f, buff(Longsword.HolyExpEffect.class).stacks))));
 		}
 
 		if (this.buff(Overload.class) != null) {
 			Dungeon.level.spawnMob(6);
 		}
 
-        if (Ring.getBuffedBonus(Dungeon.hero, RingOfExperience.Experience.class) > 0) {
-            EXP *= (long) RingOfExperience.experienceMultiplier(Dungeon.hero);
+        if ((Ring.getBuffedBonus(Dungeon.hero, RingOfExperience.Experience.class).compareTo(BigInteger.ZERO) > 0)) {
+            EXP = EXP.multiply(Big.of(RingOfExperience.experienceMultiplier(Dungeon.hero)));
         }
 
         if (Dungeon.hero.buff(ElixirOfDivineInspiration.DivineInspiration.class) != null) {
-            EXP = (long) (EXP * Math.pow(1.015f, Dungeon.hero.buff(ElixirOfDivineInspiration.DivineInspiration.class).stacks));
+            EXP = Big.trunc((Big.dec(EXP).multiply(Big.dec(Math.pow(1.015f, Dungeon.hero.buff(ElixirOfDivineInspiration.DivineInspiration.class).stacks)))));
         }
 
 		if (buff(DanceFloor.RewardBoost.class) != null) {
-			EXP *= 2;
+			EXP = EXP.multiply(BigInteger.TWO);
 		}
 
 		//TODO sturdy exp nullifier when reaching specific level.
@@ -937,8 +941,8 @@ public abstract class Mob extends Char {
 				}
 			}
 
-			if (PsycheChest.neededLevel() < Dungeon.hero.lvl) {
-				EXP = 0;
+			if ((PsycheChest.neededLevel().compareTo(BigInteger.valueOf(Dungeon.hero.lvl)) < 0)) {
+				EXP = BigInteger.ZERO;
 			}
 		}
 
@@ -1040,16 +1044,16 @@ public abstract class Mob extends Char {
 		if (Dungeon.hero.grinding && Dungeon.hero.heroClass == HeroClass.HUNTRESS && Random.Float() < 0.08f){
 			int quantity = Dungeon.IntRange(1, 3);
 			Dungeon.hero.sprite.showStatus( 0x44CCFF, "%+d", quantity );
-			Dungeon.energy += quantity;
+			Dungeon.energy = Dungeon.energy.add(BigInteger.valueOf(quantity));
 		}
 
 		if (buff(ArenaLevel.ArenaBuff.class) != null){
 			Item gold = new Gold().random();
-			gold.quantity(Math.round(gold.quantity()*0.65f));
+			gold.quantity(Big.round(Big.dec(gold.quantity()).multiply(Big.dec(0.65f))));
 			gold.doPickUp(Dungeon.hero, Dungeon.hero.pos, 0);
 
             Dungeon.level.drop(Generator.random(), pos).sprite.drop();
-            Dungeon.level.drop(RingOfWealth.genConsumableDrop(-5), pos).sprite.drop();
+            Dungeon.level.drop(RingOfWealth.genConsumableDrop(BigInteger.valueOf(-5)), pos).sprite.drop();
         }
 
         if (Dungeon.hero.buff(ScrollOfInsurgence.ChallengeInsurgence.class) != null && Random.Float() < 0.33f) {
@@ -1065,11 +1069,11 @@ public abstract class Mob extends Char {
 		}
 
 		//ring of wealth logic
-		if (Ring.getBuffedBonus(Dungeon.hero, RingOfWealth.Wealth.class) > 0) {
+		if ((Ring.getBuffedBonus(Dungeon.hero, RingOfWealth.Wealth.class).compareTo(BigInteger.ZERO) > 0)) {
 			int rolls = 1;
 			if (properties.contains(Property.BOSS)) rolls = 15;
 			else if (properties.contains(Property.MINIBOSS)) rolls = 5;
-			ArrayList<Item> bonus = RingOfWealth.tryForBonusDrop(Dungeon.hero, rolls);
+			ArrayList<Item> bonus = RingOfWealth.tryForBonusDrop(Dungeon.hero, BigInteger.valueOf(rolls));
 			if (bonus != null && !bonus.isEmpty()) {
 				for (Item b : bonus) Dungeon.level.drop(b, pos).sprite.drop();
 				RingOfWealth.showFlareForBonusDrop(sprite);
@@ -1136,10 +1140,10 @@ public abstract class Mob extends Char {
 		return false;
 	}
 
-    public long bossMulti() {
-        long multi = 0;
+    public BigInteger bossMulti() {
+        BigInteger multi = BigInteger.ZERO;
         if (Dungeon.hero != null) {
-            multi += Dungeon.hero.lvl;
+            multi = multi.add(BigInteger.valueOf(Dungeon.hero.lvl));
         }
         return multi;
     }

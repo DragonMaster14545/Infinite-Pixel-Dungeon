@@ -1,5 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -294,8 +296,8 @@ public class PrismBox extends Item {
 		int totalDials = dials.length;
 		int usedAttempts = attempts;
 
-		if (quantity > 1) {
-			quantity--;
+		if ((quantity.compareTo(BigInteger.ONE) > 0)) {
+			quantity = quantity.subtract(BigInteger.ONE);
 			freshPuzzle();
 			lastFloor = currentFloor();
 			updateQuickslot();
@@ -348,12 +350,12 @@ public class PrismBox extends Item {
 	}
 
 	@Override
-	public long value() {
-		return 15 * (difficulty.ordinal() + 1);
+	public BigInteger value() {
+		return BigInteger.valueOf(15 * (difficulty.ordinal() + 1));
 	}
 
 	@Override
-	public Item split(long amount) {
+	public Item split(BigInteger amount) {
 	    Item split = super.split(amount);
 	    if (split instanceof PrismBox) {
 	        PrismBox box = (PrismBox) split;

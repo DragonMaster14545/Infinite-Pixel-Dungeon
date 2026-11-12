@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -43,10 +45,10 @@ public class Monk extends Mob {
 	{
 		spriteClass = MonkSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(70);
-		defenseSkill = Dungeon.getCycleMultiplier(30);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(70));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(30));
 		
-		EXP = Dungeon.getCycleMultiplier(11);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(11));
 		maxLvl = 21;
 		
 		loot = new Food();
@@ -56,13 +58,13 @@ public class Monk extends Mob {
 	}
 	
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(12), Dungeon.getCycleMultiplier(25) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(12)), Dungeon.getCycleMultiplier(BigInteger.valueOf(25)) );
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(30);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(30));
 	}
 	
 	@Override
@@ -71,8 +73,8 @@ public class Monk extends Mob {
 	}
 	
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(2));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.TWO));
 	}
 	
 	@Override
@@ -108,9 +110,9 @@ public class Monk extends Mob {
 	}
 	
 	@Override
-	public long defenseSkill(Char enemy ) {
+	public BigInteger defenseSkill(Char enemy ) {
 		if (buff(Focus.class) != null && paralysed == 0 && state != SLEEPING){
-			return INFINITE_EVASION;
+			return BigInteger.valueOf(INFINITE_EVASION);
 		}
 		return super.defenseSkill( enemy );
 	}

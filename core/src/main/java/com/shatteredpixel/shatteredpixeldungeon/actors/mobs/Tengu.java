@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -90,9 +94,9 @@ public class Tengu extends Mob {
 	{
 		spriteClass = TenguSprite.class;
 		
-		HP = HT = (long) ((bossMaxHPMulti + 1) * (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? Dungeon.getCycleMultiplier(250) : Dungeon.getCycleMultiplier(200)));
-		EXP = Dungeon.getCycleMultiplier(20);
-		defenseSkill = Dungeon.getCycleMultiplier(15);
+		HP = HT = Big.trunc((Big.dec((bossMaxHPMulti + 1)).multiply(Big.dec((Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? Dungeon.getCycleMultiplier(BigInteger.valueOf(250)) : Dungeon.getCycleMultiplier(BigInteger.valueOf(200)))))));
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(20));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(15));
 		
 		HUNTING = new Hunting();
 
@@ -102,23 +106,23 @@ public class Tengu extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(6), Dungeon.getCycleMultiplier(12) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(6)), Dungeon.getCycleMultiplier(BigInteger.valueOf(12)) );
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
+	public BigInteger attackSkill(Char target ) {
 
 		if (Dungeon.level.adjacent(pos, target.pos)){
-			return Dungeon.getCycleMultiplier(10);
+			return Dungeon.getCycleMultiplier(BigInteger.TEN);
 		} else {
-			return Dungeon.getCycleMultiplier(20);
+			return Dungeon.getCycleMultiplier(BigInteger.valueOf(20));
 		}
 	}
 	
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(5));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(5)));
 	}
 
 	boolean loading = false;
@@ -133,36 +137,36 @@ public class Tengu extends Mob {
 	}
 
 	@Override
-	public void damage(long dmg, Object src) {
+	public void damage(BigInteger dmg, Object src) {
 		if (!Dungeon.level.mobs.contains(this)){
 			return;
 		}
 
 		PrisonBossLevel.State state = ((PrisonBossLevel)Dungeon.level).state();
 		
-		long hpBracket = HT / 8;
+		BigInteger hpBracket = HT.divide(BigInteger.valueOf(8));
 
-		int curbracket = (int)(HP / hpBracket);
+		int curbracket = Big.toInt((HP.divide(hpBracket)));
 
-		long beforeHitHP = HP;
+		BigInteger beforeHitHP = HP;
 		super.damage(dmg, src);
 
 		//cannot be hit through multiple brackets at a time
-		if (HP <= (curbracket-1)*hpBracket){
-			HP = (curbracket-1)*hpBracket + 1;
+		if ((HP.compareTo(BigInteger.valueOf((curbracket-1)).multiply(hpBracket)) <= 0)){
+			HP = BigInteger.valueOf((curbracket-1)).multiply(hpBracket).add(BigInteger.ONE);
 		}
 
-		int newBracket = (int)(HP / hpBracket);
-		dmg = beforeHitHP - HP;
+		int newBracket = Big.toInt((HP.divide(hpBracket)));
+		dmg = beforeHitHP.subtract(HP);
 
 		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
 		if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
-			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(2*dmg/3f);
-			else                                                    lock.addTime(dmg);
+			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(Big.div(Big.dec(BigInteger.TWO.multiply(dmg)), Big.dec(3f)).floatValue());
+			else                                                    lock.addTime(dmg.floatValue());
 		}
 
 		//phase 2 of the fight is over
-		if (HP == 0 && state == PrisonBossLevel.State.FIGHT_ARENA) {
+		if ((HP.compareTo(BigInteger.ZERO) == 0) && state == PrisonBossLevel.State.FIGHT_ARENA) {
 			//let full attack action complete first
 			Actor.add(new Actor() {
 
@@ -181,8 +185,8 @@ public class Tengu extends Mob {
 		}
 
 		//phase 1 of the fight is over
-		if (state == PrisonBossLevel.State.FIGHT_START && HP <= HT/2){
-			HP = (HT/2);
+		if (state == PrisonBossLevel.State.FIGHT_START && (HP.compareTo(HT.divide(BigInteger.TWO)) <= 0)){
+			HP = (HT.divide(BigInteger.TWO));
 			yell(Messages.get(this, "interesting"));
 			((PrisonBossLevel)Dungeon.level).progress();
 			BossHealthBar.bleed(true);
@@ -284,7 +288,7 @@ public class Tengu extends Mob {
 				if (level.heroFOV[newPos]) CellEmitter.get( newPos ).burst( Speck.factory( Speck.WOOL ), 6 );
 				Sample.INSTANCE.play( Assets.Sounds.PUFF );
 
-				float fill = 0.9f - 0.5f*((HP-(HT/2f))/(HT/2f));
+				float fill = Big.dec(0.9f).subtract(Big.dec(0.5f).multiply((Big.div((Big.dec(HP).subtract((Big.div(Big.dec(HT), Big.dec(2f))))), (Big.div(Big.dec(HT), Big.dec(2f))))))).floatValue();
 				level.placeTrapsInTenguCell(fill);
 				
 			//otherwise, jump in a larger possible area, as the room is bigger
@@ -341,8 +345,8 @@ public class Tengu extends Mob {
 		super.notice();
 		if (!BossHealthBar.isAssigned()) {
 			BossHealthBar.assignBoss(this);
-			if (HP <= HT/2) BossHealthBar.bleed(true);
-			if (HP == HT) {
+			if ((HP.compareTo(HT.divide(BigInteger.TWO)) <= 0)) BossHealthBar.bleed(true);
+			if ((HP.compareTo(HT) == 0)) {
 				yell(Messages.get(this, "notice_gotcha", Dungeon.hero.name()));
 				for (Char ch : Actor.chars()){
 					if (ch instanceof DriedRose.GhostHero){
@@ -387,7 +391,7 @@ public class Tengu extends Mob {
 		abilityCooldown = bundle.getInt( ABILITY_COOLDOWN );
 		
 		BossHealthBar.assignBoss(this);
-		if (HP <= HT/2) BossHealthBar.bleed(true);
+		if ((HP.compareTo(HT.divide(BigInteger.TWO)) <= 0)) BossHealthBar.bleed(true);
 	}
 	
 	//don't bother bundling this, as its purely cosmetic
@@ -454,7 +458,7 @@ public class Tengu extends Mob {
 	//expects to be called once per turn;
 	public boolean canUseAbility(){
 		
-		if (HP > HT/2) return false;
+		if ((HP.compareTo(HT.divide(BigInteger.TWO)) > 0)) return false;
 		
 		if (abilitiesUsed >= targetAbilityUses()){
 			return false;
@@ -635,10 +639,10 @@ public class Tengu extends Mob {
 					if (PathFinder.distance[cell] < Integer.MAX_VALUE) {
 						Char ch = Actor.findChar(cell);
 						if (ch != null && !(ch instanceof Tengu)) {
-							long dmg = Dungeon.NormalLongRange(5 + Dungeon.scalingDepth(), 10 + Dungeon.scalingDepth() * 2);
-							dmg -= ch.drRoll();
+							BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(5).add(Dungeon.scalingDepth()), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.TWO)));
+							dmg = dmg.subtract(ch.drRoll());
 
-							if (dmg > 0) {
+							if ((dmg.compareTo(BigInteger.ZERO) > 0)) {
 								ch.damage(dmg, Bomb.class);
 							}
 
@@ -785,7 +789,7 @@ public class Tengu extends Mob {
 
 			} else {
 				for (Integer c : curCells) {
-					if (FireBlob.volumeAt(c, FireBlob.class) > 0) spreadFromCell(c);
+					if ((FireBlob.volumeAt(c, FireBlob.class).compareTo(BigInteger.ZERO) > 0)) spreadFromCell(c);
 				}
 			}
 			
@@ -799,7 +803,7 @@ public class Tengu extends Mob {
 				curCells = new int[toCells.size()];
 				int i = 0;
 				for (Integer c : toCells){
-					GameScene.add(Blob.seed(c, 2, FireBlob.class));
+					GameScene.add(Blob.seed(c, BigInteger.TWO, FireBlob.class));
 					curCells[i] = c;
 					i++;
 				}
@@ -863,13 +867,13 @@ public class Tengu extends Mob {
 				for (int i = area.left; i < area.right; i++){
 					for (int j = area.top; j < area.bottom; j++){
 						cell = i + j* Dungeon.level.width();
-						off[cell] = (int)GameMath.gate(0, cur[cell] - 1, 1);
+						off[cell] = BigInteger.valueOf((int)GameMath.gate(0, cur[cell].subtract(BigInteger.ONE).floatValue(), 1));
 						
-						if (off[cell] > 0) {
-							volume += off[cell];
+						if ((off[cell].compareTo(BigInteger.ZERO) > 0)) {
+							volume = volume.add(off[cell]);
 						}
 						
-						if (cur[cell] > 0 && off[cell] == 0){
+						if ((cur[cell].compareTo(BigInteger.ZERO) > 0) && (off[cell].compareTo(BigInteger.ZERO) == 0)){
 
 							//similar to fire.burn(), but Tengu is immune, and hero loses score
 							Char ch = Actor.findChar( cell );
@@ -1016,10 +1020,10 @@ public class Tengu extends Mob {
 		}
 		
 		private void spreadblob(){
-			GameScene.add(Blob.seed(shockerPos, 1, ShockerBlob.class));
+			GameScene.add(Blob.seed(shockerPos, BigInteger.ONE, ShockerBlob.class));
 			for (int i = shockingOrdinals ? 0 : 1; i < PathFinder.CIRCLE8.length; i += 2){
 				if (!Dungeon.level.solid[shockerPos+PathFinder.CIRCLE8[i]]) {
-					GameScene.add(Blob.seed(shockerPos + PathFinder.CIRCLE8[i], 2, ShockerBlob.class));
+					GameScene.add(Blob.seed(shockerPos + PathFinder.CIRCLE8[i], BigInteger.TWO, ShockerBlob.class));
 				}
 			}
 		}
@@ -1057,19 +1061,19 @@ public class Tengu extends Mob {
 				for (int i = area.left; i < area.right; i++){
 					for (int j = area.top; j < area.bottom; j++){
 						cell = i + j* Dungeon.level.width();
-						off[cell] = cur[cell] > 0 ? cur[cell] - 1 : 0;
+						off[cell] = (cur[cell].compareTo(BigInteger.ZERO) > 0) ? cur[cell].subtract(BigInteger.ONE) : BigInteger.ZERO;
 						
-						if (off[cell] > 0) {
-							volume += off[cell];
+						if ((off[cell].compareTo(BigInteger.ZERO) > 0)) {
+							volume = volume.add(off[cell]);
 						}
 						
-						if (cur[cell] > 0 && off[cell] == 0){
+						if ((cur[cell].compareTo(BigInteger.ZERO) > 0) && (off[cell].compareTo(BigInteger.ZERO) == 0)){
 
 							shocked = true;
 
 							Char ch = Actor.findChar(cell);
 							if (ch != null && !(ch instanceof Tengu)){
-								ch.damage(2 + Dungeon.scalingDepth(), new Electricity());
+								ch.damage(BigInteger.TWO.add(Dungeon.scalingDepth()), new Electricity());
 								
 								if (ch == Dungeon.hero){
 									Statistics.qualifiedForBossChallengeBadge = false;

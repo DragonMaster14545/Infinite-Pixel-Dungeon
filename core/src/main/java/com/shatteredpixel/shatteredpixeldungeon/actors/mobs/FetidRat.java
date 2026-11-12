@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -42,10 +44,10 @@ public class FetidRat extends Rat {
 	{
 		spriteClass = FetidRatSprite.class;
 
-		HP = HT = Dungeon.getCycleMultiplier(40);
-		defenseSkill = Dungeon.getCycleMultiplier(5);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(40));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(5));
 
-		EXP = Dungeon.getCycleMultiplier(4);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(4));
 
 		WANDERING = new Wandering();
 		state = WANDERING;
@@ -55,17 +57,17 @@ public class FetidRat extends Rat {
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(12);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(12));
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(2));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.TWO));
 	}
 
 	@Override
-	public long attackProc( Char enemy, long damage ) {
+	public BigInteger attackProc( Char enemy, BigInteger damage ) {
 		damage = super.attackProc( enemy, damage );
 		if (Random.Int(3) == 0) {
 			Buff.affect(enemy, Ooze.class).set( Ooze.DURATION );
@@ -78,9 +80,9 @@ public class FetidRat extends Rat {
 	}
 
 	@Override
-	public long defenseProc( Char enemy, long damage ) {
+	public BigInteger defenseProc( Char enemy, BigInteger damage ) {
 
-		GameScene.add(Blob.seed(pos, 20, StenchGas.class));
+		GameScene.add(Blob.seed(pos, BigInteger.valueOf(20), StenchGas.class));
 
 		return super.defenseProc(enemy, damage);
 	}

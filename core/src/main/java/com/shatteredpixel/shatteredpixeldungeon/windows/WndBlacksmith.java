@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -187,7 +189,7 @@ public class WndBlacksmith extends Window {
 					@Override
 					protected void onSelect(int index) {
 						if (index == 0){
-							new Gold(Blacksmith.Quest.favor*cashOutModifier).doPickUp(Dungeon.hero, Dungeon.hero.pos);
+							new Gold(BigInteger.valueOf(Blacksmith.Quest.favor*cashOutModifier)).doPickUp(Dungeon.hero, Dungeon.hero.pos);
 							Blacksmith.Quest.favor = 0;
 							WndBlacksmith.this.hide();
 						}
@@ -275,7 +277,7 @@ public class WndBlacksmith extends Window {
 							second = btnItem1.item();
 						}
 					}
-					if (btnItem1.item().trueLevel() < btnItem2.item().trueLevel() && !(btnItem1.item() instanceof FishingRod)) {
+					if ((btnItem1.item().trueLevel().compareTo(btnItem2.item().trueLevel()) < 0) && !(btnItem1.item() instanceof FishingRod)) {
 						first = btnItem2.item();
 						second = btnItem1.item();
 					}
@@ -296,14 +298,14 @@ public class WndBlacksmith extends Window {
 						}
 					} else if (second instanceof MissileWeapon){
 						Buff.affect(Dungeon.hero, MissileWeapon.UpgradedSetTracker.class)
-								.levelThresholds.put(((MissileWeapon) second).setID, Long.MAX_VALUE);
+								.levelThresholds.put(((MissileWeapon) second).setID, BigInteger.valueOf(Long.MAX_VALUE));
 					}
-					if (first instanceof MissileWeapon && first.quantity() > 1){
-						first = first.split(1);
+					if (first instanceof MissileWeapon && (first.quantity().compareTo(BigInteger.ONE) > 0)){
+						first = first.split(BigInteger.ONE);
 					}
 
-					long level = first.trueLevel();
-					first.level(level+second.trueLevel()+1); //prevents on-upgrade effects like enchant/glyph removal
+					BigInteger level = first.trueLevel();
+					first.level(level.add(second.trueLevel()).add(BigInteger.ONE)); //prevents on-upgrade effects like enchant/glyph removal
 					if (first instanceof MissileWeapon && !Dungeon.hero.belongings.contains(first)) {
 						if (!first.collect()){
 							Dungeon.level.drop( first, Dungeon.hero.pos );
@@ -436,7 +438,7 @@ public class WndBlacksmith extends Window {
 			return item.isUpgradable()
 					&& item.isIdentified()
 					&& !item.cursed
-					&& item.level() > 0;
+					&& (item.level().compareTo(BigInteger.ZERO) > 0);
 		}
 
 		@Override
@@ -447,14 +449,14 @@ public class WndBlacksmith extends Window {
 				Blacksmith.Quest.upgrades++;
 
 				ScrollOfUpgrade upgrades = new ScrollOfUpgrade();
-				long trueLevel = item.trueLevel();
+				BigInteger trueLevel = item.trueLevel();
 				upgrades.quantity(trueLevel);
 				if (!upgrades.doPickUp(Dungeon.hero, Dungeon.hero.pos, 0f)) {
 					Dungeon.level.drop(upgrades, Dungeon.hero.pos).sprite.drop();
 				} else {
 					GLog.i(Messages.get(Hero.class, "you_now_have", upgrades.name()));
 				}
-				item.level(0);
+				item.level(BigInteger.ZERO);
 
 				WndBlacksmith.this.hide();
 

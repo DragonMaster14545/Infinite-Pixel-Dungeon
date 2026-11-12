@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bags;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.TenguBomb;
@@ -87,8 +89,8 @@ public class MagicalHolster extends Bag {
 	}
 	
 	@Override
-	public long value() {
-		return 60;
+	public BigInteger value() {
+		return BigInteger.valueOf(60);
 	}
 
 }

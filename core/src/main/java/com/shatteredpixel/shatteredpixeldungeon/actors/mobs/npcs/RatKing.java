@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -67,12 +69,12 @@ public class RatKing extends NPC {
 		
 		state = SLEEPING;
 
-		HP = HT = 2000;
+		HP = HT = BigInteger.valueOf(2000);
 	}
 	
 	@Override
-	public long defenseSkill(Char enemy ) {
-		return INFINITE_EVASION;
+	public BigInteger defenseSkill(Char enemy ) {
+		return BigInteger.valueOf(INFINITE_EVASION);
 	}
 	
 	@Override
@@ -86,7 +88,7 @@ public class RatKing extends NPC {
 	}
 
 	@Override
-	public void damage( long dmg, Object src ) {
+	public void damage( BigInteger dmg, Object src ) {
 		//do nothing
 	}
 

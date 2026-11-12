@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -54,7 +58,7 @@ public class Warmaster extends Weapon.Enchantment {
 	private static ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x000000 );
 
 	@Override
-	public long proc( Weapon weapon, Char attacker, Char defender, long damage ) {
+	public BigInteger proc( Weapon weapon, Char attacker, Char defender, BigInteger damage ) {
 		float procChance = 1/8f * procChanceMultiplier(attacker);
 
 		if (attacker.buff(WarmasterBuff.class) != null){
@@ -168,7 +172,7 @@ public class Warmaster extends Weapon.Enchantment {
 			if (!warmasterPositions.contains(target.pos)){
 				detach();
 				if (target instanceof Hero) {
-					target.damage((long) (target.HT * 0.3d), this );
+					target.damage(Big.trunc((Big.dec(target.HT).multiply(Big.dec(0.3d)))), this );
 				}
 			}
 

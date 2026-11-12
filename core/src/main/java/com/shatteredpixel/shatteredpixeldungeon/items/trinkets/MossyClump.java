@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -37,15 +41,15 @@ public class MossyClump extends Trinket {
 	}
 
 	@Override
-	protected long upgradeEnergyCost() {
+	protected BigInteger upgradeEnergyCost() {
 		//6 -> 15(21) -> 20(41) -> 25(66)
-		return 15+5*level();
+		return BigInteger.valueOf(15).add(BigInteger.valueOf(5).multiply(level()));
 	}
 
 	@Override
 	public String statsDesc() {
 		if (isIdentified()){
-			return Messages.get(this, "stats_desc", (int)(100*overrideNormalLevelChance((int)buffedLvl())));
+			return Messages.get(this, "stats_desc", (int)(100*overrideNormalLevelChance(Big.toInt(buffedLvl()))));
 		} else {
 			return Messages.get(this, "typical_stats_desc", (int)(100*overrideNormalLevelChance(0)));
 		}

@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -79,7 +83,7 @@ public abstract class TippedDart extends Dart {
 		if (action.equals( AC_CLEAN )){
 
 			String[] options;
-			if (quantity() > 1){
+			if ((quantity().compareTo(BigInteger.ONE) > 0)){
 				options = new String[]{
 						Messages.get(this, "clean_all"),
 						Messages.get(this, "clean_one"),
@@ -105,9 +109,9 @@ public abstract class TippedDart extends Dart {
 						hero.spend( 1f );
 						hero.busy();
 						hero.sprite.operate(hero.pos);
-					} else if (index == 1 && quantity() > 1){
+					} else if (index == 1 && (quantity().compareTo(BigInteger.ONE) > 0)){
 						detach(hero.belongings.backpack);
-						if (!new Dart().quantity(1).collect()) Dungeon.level.drop(new Dart().quantity(1), hero.pos).sprite.drop();
+						if (!new Dart().quantity(BigInteger.ONE).collect()) Dungeon.level.drop(new Dart().quantity(BigInteger.ONE), hero.pos).sprite.drop();
 
 						//reset durability if there are darts left in the stack
 						durability = MAX_DURABILITY;
@@ -133,7 +137,7 @@ public abstract class TippedDart extends Dart {
 		if (durability <= 0 && !spawnedForEffect){
 			//attempt to stick the dart to the enemy, just drop it if we can't.
 			Dart d = new Dart();
-			d.quantity(1);
+			d.quantity(BigInteger.ONE);
 			Catalog.countUse(getClass());
 			if (sticky && enemy != null && enemy.isAlive() && enemy.alignment != Char.Alignment.ALLY){
 				PinCushion p = Buff.affect(enemy, PinCushion.class);
@@ -151,13 +155,13 @@ public abstract class TippedDart extends Dart {
 
 	@Override
 	public Item merge(Item other) {
-		long total = quantity() + other.quantity();
+		BigInteger total = quantity().add(other.quantity());
 		super.merge(other);
-		long extra = total - quantity();
+		BigInteger extra = total.subtract(quantity());
 
 		//need to spawn waste tipped darts as regular darts
-		if (extra > 0){
-			lostDarts += extra;
+		if ((extra.compareTo(BigInteger.ZERO) > 0)){
+			lostDarts += Big.toLong(extra);
 		}
 		return this;
 	}
@@ -169,7 +173,7 @@ public abstract class TippedDart extends Dart {
 	}
 
 	@Override
-	public float durabilityPerUse(long level) {
+	public float durabilityPerUse(BigInteger level) {
 		float use = super.durabilityPerUse(level);
 
 		if (Dungeon.hero != null) {
@@ -204,7 +208,7 @@ public abstract class TippedDart extends Dart {
 
 		//grants 3+lvl extra uses with charged shot
 		if (bow != null && Dungeon.hero != null && Dungeon.hero.buff(Crossbow.ChargedShot.class) != null){
-			usages += 3 + bow.buffedLvl();
+			usages += BigInteger.valueOf(3).add(bow.buffedLvl()).floatValue();
 		}
 
 		//at 100 uses, items just last forever.
@@ -215,9 +219,9 @@ public abstract class TippedDart extends Dart {
 	}
 
 	@Override
-	public long value() {
+	public BigInteger value() {
 		//value of regular dart plus half of the seed
-		return Math.round(7.5f * quantity);
+		return Big.round(Big.dec(7.5f).multiply(Big.dec(quantity)));
 	}
 
 	public static final LinkedHashMap<Class<?extends Plant.Seed>, Class<?extends TippedDart>> types = new LinkedHashMap<>();
@@ -236,7 +240,7 @@ public abstract class TippedDart extends Dart {
 		types.put(Starflower.Seed.class,    HolyDart.class);
 	}
 
-	public static TippedDart getTipped( Plant.Seed s, long quantity ){
+	public static TippedDart getTipped( Plant.Seed s, BigInteger quantity ){
 		return (TippedDart) Reflection.newInstance(types.get(s.getClass())).quantity(quantity);
 	}
 
@@ -246,7 +250,7 @@ public abstract class TippedDart extends Dart {
 			s = (Plant.Seed) Generator.randomUsingDefaults(Generator.Category.SEED);
 		} while (!types.containsKey(s.getClass()));
 
-		return getTipped(s, quantity );
+		return getTipped(s, BigInteger.valueOf(quantity) );
 
 	}
 

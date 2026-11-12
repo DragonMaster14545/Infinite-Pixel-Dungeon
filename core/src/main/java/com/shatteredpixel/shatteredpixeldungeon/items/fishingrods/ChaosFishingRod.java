@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.fishingrods;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -36,7 +38,7 @@ public class ChaosFishingRod extends FishingRod{
     }
 
     @Override
-    public long value() {
-        return 50 * Dungeon.escalatingDepth() / 8;
+    public BigInteger value() {
+        return BigInteger.valueOf(50).multiply(Dungeon.escalatingDepth()).divide(BigInteger.valueOf(8));
     }
 }

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Utility;
@@ -125,7 +127,7 @@ Heap implements Bundlable {
 		if (haunted){
 			if (Wraith.spawnAt( pos ) == null) {
 				hero.sprite.emitter().burst( ShadowParticle.CURSE, 6 );
-				hero.damage( hero.HP / 2, this );
+				hero.damage( hero.HP.divide(BigInteger.TWO), this );
 				if (!hero.isAlive()){
 					Dungeon.fail(Wraith.class);
 					GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", Messages.get(Wraith.class, "name"))));
@@ -136,7 +138,7 @@ Heap implements Bundlable {
 
 
 		type = Type.HEAP;
-		ArrayList<Item> bonus = RingOfWealth.tryForBonusDrop(hero, 1);
+		ArrayList<Item> bonus = RingOfWealth.tryForBonusDrop(hero, BigInteger.ONE);
 		if (bonus != null && !bonus.isEmpty()) {
 			items.addAll(0, bonus);
 			RingOfWealth.showFlareForBonusDrop(sprite);
@@ -220,7 +222,7 @@ Heap implements Bundlable {
 
 		if (TippedDart.lostDarts > 0){
 			Dart d = new Dart();
-			d.quantity(TippedDart.lostDarts);
+			d.quantity(BigInteger.valueOf(TippedDart.lostDarts));
 			TippedDart.lostDarts = 0;
 			drop(d);
 		}
@@ -278,7 +280,7 @@ Heap implements Bundlable {
 					burnt = true;
 				}
 			} else if (item instanceof GambleBag || item instanceof BiggerGambleBag){
-				for (int i = 0; i < item.quantity(); i++){
+				for (int i = 0; (BigInteger.valueOf(i).compareTo(item.quantity()) < 0); i++){
 					drop(BurntBag.burningRoll());
 				}
 				items.remove(item);
@@ -539,13 +541,13 @@ Heap implements Bundlable {
 
 			} else subicon.visible = false;
 
-			if (i.quantity() > 1 && !isContainerType()) {
+			if ((i.quantity().compareTo(BigInteger.ONE) > 0) && !isContainerType()) {
 
 				quantityDisplay.visible = true;
 				quantityDisplay.scale.set(0.45f);
 
 
-				if (i.quantity > 100) {
+				if ((i.quantity.compareTo(BigInteger.valueOf(100)) > 0)) {
 					quantityDisplay.text("x100+");
 				} else {
 					quantityDisplay.text("x" + i.quantity());
@@ -581,21 +583,21 @@ Heap implements Bundlable {
 			}
 
 			//Code from ItemSlot
-			long trueLvl = i.trueLevel();
-			long buffedLvl = i.buffedLvl();
-			if ((trueLvl != 0 || buffedLvl != 0) && !isContainerType()) {
+			BigInteger trueLvl = i.trueLevel();
+			BigInteger buffedLvl = i.buffedLvl();
+			if (((trueLvl.compareTo(BigInteger.ZERO) != 0) || (buffedLvl.compareTo(BigInteger.ZERO) != 0)) && !isContainerType()) {
 
 				itemLvl.visible = i.isIdentified();
 				itemLvl.scale.set(0.45f);
 
-				if (trueLvl < 11 || buffedLvl < 11) {
+				if ((trueLvl.compareTo(BigInteger.valueOf(11)) < 0) || (buffedLvl.compareTo(BigInteger.valueOf(11)) < 0)) {
 					itemLvl.text(Messages.format(ItemSlot.TXT_LEVEL, buffedLvl));
 				} else {
 					itemLvl.text(">+10");
 				}
 				itemLvl.measure();
-				if (trueLvl == buffedLvl || buffedLvl <= 0) {
-					if (buffedLvl > 0) {
+				if ((trueLvl.compareTo(buffedLvl) == 0) || (buffedLvl.compareTo(BigInteger.ZERO) <= 0)) {
+					if ((buffedLvl.compareTo(BigInteger.ZERO) > 0)) {
 						if ((i instanceof Weapon && ((Weapon) i).curseInfusionBonus)
 								|| (i instanceof Armor && ((Armor) i).curseInfusionBonus)
 								|| (i instanceof Wand && ((Wand) i).curseInfusionBonus)) {
@@ -607,7 +609,7 @@ Heap implements Bundlable {
 						itemLvl.hardlight(ItemSlot.DEGRADED);
 					}
 				} else {
-					itemLvl.hardlight(buffedLvl > trueLvl ? ItemSlot.ENHANCED : ItemSlot.WARNING);
+					itemLvl.hardlight((buffedLvl.compareTo(trueLvl) > 0) ? ItemSlot.ENHANCED : ItemSlot.WARNING);
 				}
 
 				itemLvl.point(sprite.point());

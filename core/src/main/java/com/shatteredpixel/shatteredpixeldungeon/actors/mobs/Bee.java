@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -45,7 +49,7 @@ public class Bee extends Mob {
 		
 		viewDistance = 4;
 
-		EXP = 0;
+		EXP = BigInteger.ZERO;
 		
 		flying = true;
 		state = WANDERING;
@@ -54,7 +58,7 @@ public class Bee extends Mob {
 		intelligentAlly = true;
 	}
 
-	private long level;
+	private BigInteger level = BigInteger.ZERO;
 
 	//-1 refers to a pot that has gone missing.
 	private int potPos;
@@ -69,7 +73,7 @@ public class Bee extends Mob {
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );
-		bundle.put( LEVEL, level );
+		Big.put(bundle, LEVEL, level);
 		bundle.put( POTPOS, potPos );
 		bundle.put( POTHOLDER, potHolder );
 		bundle.put( ALIGMNENT, alignment);
@@ -78,7 +82,7 @@ public class Bee extends Mob {
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle( bundle );
-		spawn( bundle.getInt( LEVEL ) );
+		spawn( BigInteger.valueOf(bundle.getInt( LEVEL )) );
 		potPos = bundle.getInt( POTPOS );
 		potHolder = bundle.getInt( POTHOLDER );
 		if (bundle.contains(ALIGMNENT)) alignment = bundle.getEnum( ALIGMNENT, Alignment.class);
@@ -90,11 +94,11 @@ public class Bee extends Mob {
 		super.die(cause);
 	}
 
-	public void spawn( long level ) {
+	public void spawn( BigInteger level ) {
 		this.level = level;
 		
-		HT = (2 + level) * 4;
-		defenseSkill = 9 + level;
+		HT = (BigInteger.TWO.add(level)).multiply(BigInteger.valueOf(4));
+		defenseSkill = BigInteger.valueOf(9).add(level);
 	}
 
 	public void setPotInfo(int potPos, Char potHolder){
@@ -114,17 +118,17 @@ public class Bee extends Mob {
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
+	public BigInteger attackSkill(Char target ) {
 		return defenseSkill;
 	}
 	
 	@Override
-	public long damageRoll() {
-		return Random.NormalLongRange( HT / 10, HT / 4 );
+	public BigInteger damageRoll() {
+		return Big.normalRange(HT.divide(BigInteger.TEN), HT.divide(BigInteger.valueOf(4)));
 	}
 	
 	@Override
-	public long attackProc( Char enemy, long damage ) {
+	public BigInteger attackProc( Char enemy, BigInteger damage ) {
 		damage = super.attackProc( enemy, damage );
 		if (enemy instanceof Mob) {
 			((Mob)enemy).aggro( this );

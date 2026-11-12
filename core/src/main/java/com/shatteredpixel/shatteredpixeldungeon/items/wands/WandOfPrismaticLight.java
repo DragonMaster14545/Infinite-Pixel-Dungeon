@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -60,12 +64,12 @@ public class WandOfPrismaticLight extends DamageWand {
 		collisionProperties = Ballistica.MAGIC_BOLT;
 	}
 
-	public long min(long lvl){
-		return ((1+lvl)*getRarityMultiplier());
+	public BigInteger min(BigInteger lvl){
+		return ((BigInteger.ONE.add(lvl)).multiply(getRarityMultiplier()));
 	}
 
-	public long max(long lvl){
-		return ((5+3*lvl)*getRarityMultiplier());
+	public BigInteger max(BigInteger lvl){
+		return ((BigInteger.valueOf(5).add(BigInteger.valueOf(3).multiply(lvl))).multiply(getRarityMultiplier()));
 	}
 
 	@Override
@@ -74,9 +78,9 @@ public class WandOfPrismaticLight extends DamageWand {
 		
 		if (Dungeon.level.viewDistance < 6 ){
 			if (Dungeon.isChallenged(Challenges.DARKNESS)){
-				Buff.prolong( curUser, Light.class, 2f + buffedLvl());
+				Buff.prolong( curUser, Light.class, Big.dec(2f).add(Big.dec(buffedLvl())).floatValue());
 			} else {
-				Buff.prolong( curUser, Light.class, 10f+buffedLvl()*5);
+				Buff.prolong( curUser, Light.class, Big.dec(10f).add(Big.dec(buffedLvl().multiply(BigInteger.valueOf(5)))).floatValue());
 			}
 		}
 		
@@ -88,21 +92,21 @@ public class WandOfPrismaticLight extends DamageWand {
 	}
 
 	private void affectTarget(Char ch){
-		long dmg = damageRoll();
+		BigInteger dmg = damageRoll();
 
 		//three in (5+lvl) chance of failing
-		if (Dungeon.Long(0, 5+buffedLvl()) >= 3) {
-			Buff.prolong(ch, Blindness.class, 2f + (buffedLvl() * 0.333f));
+		if ((Dungeon.Long(BigInteger.ZERO, BigInteger.valueOf(5).add(buffedLvl())).compareTo(BigInteger.valueOf(3)) >= 0)) {
+			Buff.prolong(ch, Blindness.class, Big.dec(2f).add((Big.dec(buffedLvl()).multiply(Big.dec(0.333f)))).floatValue());
 			ch.sprite.emitter().burst(Speck.factory(Speck.LIGHT), 6 );
 		}
 
 		if (ch.properties().contains(Char.Property.DEMONIC) || ch.properties().contains(Char.Property.UNDEAD)){
-			ch.sprite.emitter().start( ShadowParticle.UP, 0.05f,  (int) Math.min(Math.sqrt(10 + buffedLvl()), 1000));
+			ch.sprite.emitter().start( ShadowParticle.UP, 0.05f,  (int) Math.min(Math.sqrt(BigInteger.TEN.add(buffedLvl()).doubleValue()), 1000));
 			Sample.INSTANCE.play(Assets.Sounds.BURNING);
 
-			ch.damage(Math.round(dmg*1.333f), this);
+			ch.damage(Big.round(Big.dec(dmg).multiply(Big.dec(1.333f))), this);
 		} else {
-			ch.sprite.centerEmitter().burst( RainbowParticle.BURST,  (int) Math.min(Math.sqrt(10 + buffedLvl()), 1000));
+			ch.sprite.centerEmitter().burst( RainbowParticle.BURST,  (int) Math.min(Math.sqrt(BigInteger.TEN.add(buffedLvl()).doubleValue()), 1000));
 
 			ch.damage(dmg, this);
 		}
@@ -142,16 +146,16 @@ public class WandOfPrismaticLight extends DamageWand {
 	}
 
 	@Override
-	public String upgradeStat2(long level) {
-		return Messages.decimalFormat("#", 100*(1-(3/(float)(5+level)))) + "%";
+	public String upgradeStat2(BigInteger level) {
+		return Messages.decimalFormat("#", 100*(1-(3/(BigInteger.valueOf(5).add(level)).floatValue()))) + "%";
 	}
 
 	@Override
-	public String upgradeStat3(long level) {
+	public String upgradeStat3(BigInteger level) {
 		if (Dungeon.isChallenged(Challenges.DARKNESS)){
-			return Long.toString(2 + level);
+			return BigInteger.TWO.add(level).toString();
 		} else {
-			return Long.toString(10 + 5*level);
+			return BigInteger.TEN.add(BigInteger.valueOf(5).multiply(level)).toString();
 		}
 	}
 
@@ -163,9 +167,9 @@ public class WandOfPrismaticLight extends DamageWand {
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
+	public void onHit(MagesStaff staff, Char attacker, Char defender, BigInteger damage) {
 		//cripples enemy
-		Buff.prolong( defender, Cripple.class, Math.round((1+staff.buffedLvl())*procChanceMultiplier(attacker)));
+		Buff.prolong( defender, Cripple.class, Big.round(Big.dec((BigInteger.ONE.add(staff.buffedLvl()))).multiply(Big.dec(procChanceMultiplier(attacker)))).floatValue());
 	}
 
 	@Override

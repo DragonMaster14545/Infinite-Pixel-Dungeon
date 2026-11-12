@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -99,7 +103,7 @@ public class SpiritBow extends Weapon {
 	};
 
 	@Override
-	public long proc(Char attacker, Char defender, long damage) {
+	public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 
 		if (attacker.buff(NaturesPower.naturesPowerTracker.class) != null && !sniperSpecial){
 
@@ -139,8 +143,8 @@ public class SpiritBow extends Weapon {
 		String info = super.info();
 
 		info += "\n\n" + Messages.get( SpiritBow.class, "stats",
-				Math.round(augment.damageFactor(min())),
-				Math.round(augment.damageFactor(max())),
+				augment.damageFactor(min()),
+				augment.damageFactor(max()),
 				STRReq());
 
 		if (STRReq() > Dungeon.hero.STR()) {
@@ -181,24 +185,20 @@ public class SpiritBow extends Weapon {
 	}
 
 	@Override
-	public int STRReq(long lvl) {
+	public int STRReq(BigInteger lvl) {
 		return STRReq(1, lvl); //tier 1
 	}
 
 	@Override
-	public long min(long lvl) {
-		long dmg = (1 + Dungeon.hero.lvl/5)
-				+ RingOfSharpshooting.levelDamageBonus(Dungeon.hero)
-				+ (curseInfusionBonus ? 1 + Dungeon.hero.lvl/30 : 0);
-		return Math.max(0, dmg);
+	public BigInteger min(BigInteger lvl) {
+		BigInteger dmg = BigInteger.valueOf((1 + Dungeon.hero.lvl/5)).add(RingOfSharpshooting.levelDamageBonus(Dungeon.hero)).add(BigInteger.valueOf((curseInfusionBonus ? 1 + Dungeon.hero.lvl/30 : 0)));
+		return BigInteger.ZERO.max(dmg);
 	}
 
 	@Override
-	public long max(long lvl) {
-		long dmg = (long) (6 + (Dungeon.hero.lvl/2.5f)
-                        + 2*RingOfSharpshooting.levelDamageBonus(Dungeon.hero)
-                        + (curseInfusionBonus ? 2 + Dungeon.hero.lvl/15 : 0));
-		return Math.max(0, dmg);
+	public BigInteger max(BigInteger lvl) {
+		BigInteger dmg = Big.trunc((Big.dec(6 + (Dungeon.hero.lvl/2.5f)).add(Big.dec(BigInteger.TWO.multiply(RingOfSharpshooting.levelDamageBonus(Dungeon.hero)))).add(Big.dec((curseInfusionBonus ? 2 + Dungeon.hero.lvl/15 : 0)))));
+		return BigInteger.ZERO.max(dmg);
 	}
 
 	@Override
@@ -209,32 +209,32 @@ public class SpiritBow extends Weapon {
 	private int targetPos;
 
 	@Override
-	public long damageRoll(Char owner) {
-		long damage = augment.damageFactor(super.damageRoll(owner));
+	public BigInteger damageRoll(Char owner) {
+		BigInteger damage = augment.damageFactor(super.damageRoll(owner));
 
 		if (owner instanceof Hero) {
 			int exStr = ((Hero)owner).STR() - STRReq();
 			if (exStr > 0) {
-				damage += Hero.heroDamageIntRange( 0, exStr );
+				damage = damage.add(Hero.heroDamageIntRange( BigInteger.ZERO, BigInteger.valueOf(exStr) ));
 			}
 		}
 
 		if (sniperSpecial){
-			damage = Math.round(damage * (1f + sniperSpecialBonusDamage));
+			damage = Big.round(Big.dec(damage).multiply(Big.dec((1f + sniperSpecialBonusDamage))));
 
 			switch (augment){
 				case NONE:
-					damage = Math.round(damage * 0.667f);
+					damage = Big.round(Big.dec(damage).multiply(Big.dec(0.667f)));
 					break;
 				case SPEED:
-					damage = Math.round(damage * 0.5f);
+					damage = Big.round(Big.dec(damage).multiply(Big.dec(0.5f)));
 					break;
 				case DAMAGE:
 					//as distance increases so does damage, capping at 3x:
 					//1.20x|1.35x|1.52x|1.71x|1.92x|2.16x|2.43x|2.74x|3.00x
 					int distance = Dungeon.level.distance(owner.pos, targetPos) - 1;
 					float multiplier = Math.min(3f, 1.2f * (float)Math.pow(1.125f, distance));
-					damage = Math.round(damage * multiplier);
+					damage = Big.round(Big.dec(damage).multiply(Big.dec(multiplier)));
 					break;
 			}
 		}
@@ -269,14 +269,14 @@ public class SpiritBow extends Weapon {
 	}
 
 	@Override
-	public long level() {
+	public BigInteger level() {
 		int level = Dungeon.hero == null ? 0 : Dungeon.hero.lvl/5;
 		if (curseInfusionBonus) level += 1 + level/6;
-		return level;
+		return BigInteger.valueOf(level);
 	}
 
 	@Override
-	public long buffedLvl() {
+	public BigInteger buffedLvl() {
 		//level isn't affected by buffs/debuffs
 		return level();
 	}
@@ -329,7 +329,7 @@ public class SpiritBow extends Weapon {
 		}
 
 		@Override
-		public long damageRoll(Char owner) {
+		public BigInteger damageRoll(Char owner) {
 			return SpiritBow.this.damageRoll(owner);
 		}
 
@@ -339,7 +339,7 @@ public class SpiritBow extends Weapon {
 		}
 
 		@Override
-		public long proc(Char attacker, Char defender, long damage) {
+		public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 			return SpiritBow.this.proc(attacker, defender, damage);
 		}
 
@@ -358,7 +358,7 @@ public class SpiritBow extends Weapon {
 		}
 
 		@Override
-		public int STRReq(long lvl) {
+		public int STRReq(BigInteger lvl) {
 			return SpiritBow.this.STRReq();
 		}
 
@@ -377,7 +377,7 @@ public class SpiritBow extends Weapon {
 		}
 
 		@Override
-		public Item split(long amount) {
+		public Item split(BigInteger amount) {
 			return null;
 		}
 

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bags;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.LiquidMetal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Waterskin;
@@ -53,8 +55,8 @@ public class PotionBandolier extends Bag {
 	}
 
 	@Override
-	public long value() {
-		return 40;
+	public BigInteger value() {
+		return BigInteger.valueOf(40);
 	}
 
 }

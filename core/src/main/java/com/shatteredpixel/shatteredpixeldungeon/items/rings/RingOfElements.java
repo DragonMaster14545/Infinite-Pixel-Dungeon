@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Electricity;
@@ -50,10 +52,10 @@ public class RingOfElements extends Ring {
 	public String statsInfo() {
 		if (isIdentified()){
 			String info = Messages.get(this, "stats",
-					Messages.decimalFormat("#.##", 100f * (1f - Math.max(Math.pow(0.955f, soloBuffedBonus()), 0.01f) )));
-			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)){
+					Messages.decimalFormat("#.##", 100f * (1f - Math.max(Math.pow(0.955f, soloBuffedBonus().doubleValue()), 0.01f))));
+			if (isEquipped(Dungeon.hero) && (soloBuffedBonus().compareTo(combinedBuffedBonus(Dungeon.hero)) != 0)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
-						Messages.decimalFormat("#.##", 100f * (1f - Math.max(Math.pow(0.955f, combinedBuffedBonus(Dungeon.hero)), 0.01f) )));
+						Messages.decimalFormat("#.##", 100f * (1f - Math.max(Math.pow(0.955f, combinedBuffedBonus(Dungeon.hero).doubleValue()), 0.01f))));
 			}
 			return info;
 		} else {
@@ -88,11 +90,11 @@ public class RingOfElements extends Ring {
 	}
 
 	public static float resist( Char target, Class effect ){
-		if (getBuffedBonus(target, Resistance.class) == 0) return 1f;
+		if ((getBuffedBonus(target, Resistance.class).compareTo(BigInteger.ZERO) == 0)) return 1f;
 
 		for (Class c : RESISTS){
 			if (c.isAssignableFrom(effect)){
-				return (float)Math.max(Math.pow(0.955f, getBuffedBonus(target, Resistance.class)), 0.01f);
+				return (float)Math.max(Math.pow(0.955f, getBuffedBonus(target, Resistance.class).doubleValue()), 0.01f);
 			}
 		}
 

@@ -24,12 +24,16 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.SparseArray;
 
 public class Statistics {
 
-	public static long goldCollected;
+	public static BigInteger goldCollected = BigInteger.ZERO;
 	public static int deepestFloor;
 	public static int highestAscent;
 	public static int enemiesSlain;
@@ -41,8 +45,8 @@ public class Statistics {
 	//These are used for score calculation
 	// some are built incrementally, most are assigned when full score is calculated
 	public static int progressScore;
-	public static long heldItemValue;
-	public static long treasureScore;
+	public static BigInteger heldItemValue = BigInteger.ZERO;
+	public static BigInteger treasureScore = BigInteger.ZERO;
 	public static SparseArray<Float> floorsExplored = new SparseArray<>();
 	public static int exploreScore;
 	public static int[] bossScores = new int[5];
@@ -53,10 +57,10 @@ public class Statistics {
 	public static float chalMultiplier;
 	public static float cycleMultiplier;
     public static float weeklyMultiplier;
-	public static long totalScore;
+	public static BigInteger totalScore = BigInteger.ZERO;
 
 	//used for hero unlock badges
-	public static long upgradesUsed;
+	public static BigInteger upgradesUsed = BigInteger.ZERO;
 	public static int sneakAttacks;
 	public static int thrownAttacks;
 
@@ -75,7 +79,7 @@ public class Statistics {
 	
 	public static void reset() {
 		
-		goldCollected	= 0;
+		goldCollected	= BigInteger.ZERO;
 		deepestFloor	= 0;
 		highestAscent	= 0;
 		enemiesSlain	= 0;
@@ -85,8 +89,8 @@ public class Statistics {
 		ankhsUsed		= 0;
 
 		progressScore   = 0;
-		heldItemValue   = 0;
-		treasureScore   = 0;
+		heldItemValue   = BigInteger.ZERO;
+		treasureScore   = BigInteger.ZERO;
 		floorsExplored  = new SparseArray<>();
 		exploreScore    = 0;
 		bossScores      = new int[5];
@@ -96,9 +100,9 @@ public class Statistics {
 		winMultiplier   = 1;
 		chalMultiplier  = 1;
         weeklyMultiplier= 1;
-		totalScore      = 0;
+		totalScore      = BigInteger.ZERO;
 		
-		upgradesUsed    = 0;
+		upgradesUsed    = BigInteger.ZERO;
 		sneakAttacks    = 0;
 		thrownAttacks   = 0;
 
@@ -157,7 +161,7 @@ public class Statistics {
 	private static final String ASCENDED		= "ascended";
 	
 	public static void storeInBundle( Bundle bundle ) {
-		bundle.put( GOLD,		goldCollected );
+		Big.put(bundle, GOLD, goldCollected);
 		bundle.put( DEEPEST,	deepestFloor );
 		bundle.put( HIGHEST,	highestAscent );
 		bundle.put( SLAIN,		enemiesSlain );
@@ -167,8 +171,8 @@ public class Statistics {
 		bundle.put( ANKHS,		ankhsUsed );
 
 		bundle.put( PROG_SCORE,  progressScore );
-		bundle.put( ITEM_VAL,    heldItemValue );
-		bundle.put( TRES_SCORE,  treasureScore );
+		Big.put(bundle, ITEM_VAL, heldItemValue);
+		Big.put(bundle, TRES_SCORE, treasureScore);
 		for (int i = 1; i < 26; i++){
 			if (floorsExplored.containsKey(i)){
 				bundle.put( FLR_EXPL+i, floorsExplored.get(i) );
@@ -183,9 +187,9 @@ public class Statistics {
 		bundle.put( CHAL_MULT,   chalMultiplier );
 		bundle.put( CYCLE_MULT,   cycleMultiplier );
         bundle.put( WEEKLY_MULT,   weeklyMultiplier );
-		bundle.put( TOTAL_SCORE, totalScore );
+		Big.put(bundle, TOTAL_SCORE, totalScore);
 		
-		bundle.put( UPGRADES,   upgradesUsed );
+		Big.put(bundle, UPGRADES, upgradesUsed);
 		bundle.put( SNEAKS,		sneakAttacks );
 		bundle.put( THROWN,     thrownAttacks);
 
@@ -203,7 +207,7 @@ public class Statistics {
 	}
 	
 	public static void restoreFromBundle( Bundle bundle ) {
-		goldCollected	= bundle.getLong( GOLD );
+		goldCollected	= Big.getBig(bundle, GOLD);
 		deepestFloor	= bundle.getInt( DEEPEST );
 		highestAscent   = bundle.getInt( HIGHEST );
 		enemiesSlain	= bundle.getInt( SLAIN );
@@ -213,8 +217,8 @@ public class Statistics {
 		ankhsUsed		= bundle.getInt( ANKHS );
 
 		progressScore   = bundle.getInt( PROG_SCORE );
-		heldItemValue   = bundle.getLong( ITEM_VAL );
-		treasureScore   = bundle.getLong( TRES_SCORE );
+		heldItemValue   = Big.getBig(bundle, ITEM_VAL);
+		treasureScore   = Big.getBig(bundle, TRES_SCORE);
 		floorsExplored.clear();
 		for (int i = 1; i < 26; i++){
 			if (bundle.contains( FLR_EXPL+i )){
@@ -235,9 +239,9 @@ public class Statistics {
 		chalMultiplier  = bundle.getFloat( CHAL_MULT );
 		cycleMultiplier = bundle.getFloat( CYCLE_MULT );
         weeklyMultiplier = bundle.getFloat( WEEKLY_MULT );
-		totalScore      = bundle.getLong( TOTAL_SCORE );
+		totalScore      = Big.getBig(bundle, TOTAL_SCORE);
 		
-		upgradesUsed    = bundle.getInt( UPGRADES );
+		upgradesUsed    = BigInteger.valueOf(bundle.getInt( UPGRADES ));
 		sneakAttacks    = bundle.getInt( SNEAKS );
 		thrownAttacks   = bundle.getInt( THROWN );
 
@@ -255,7 +259,7 @@ public class Statistics {
 	}
 	
 	public static void preview( GamesInProgress.Info info, Bundle bundle ){
-		info.goldCollected  = bundle.getLong( GOLD );
+		info.goldCollected  = Big.getBig(bundle, GOLD);
 		info.maxDepth       = bundle.getInt( DEEPEST );
 	}
 

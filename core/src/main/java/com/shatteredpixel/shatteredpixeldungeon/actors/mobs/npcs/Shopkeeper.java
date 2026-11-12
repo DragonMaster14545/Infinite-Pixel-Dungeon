@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -96,7 +100,7 @@ public class Shopkeeper extends NPC {
 	}
 	
 	@Override
-	public void damage( long dmg, Object src ) {
+	public void damage( BigInteger dmg, Object src ) {
         if (src instanceof Viscosity.DeferedDamage || src instanceof Clayball){
             Dungeon.level.drop(new KeyToTruth(), pos).sprite.drop();
             Badges.validateKey();
@@ -145,7 +149,7 @@ public class Shopkeeper extends NPC {
 					ArrayList<Blob> blobs = new ArrayList<>();
 					for (Class c : new BlobImmunity().immunities()){
 						Blob b = Dungeon.level.blobs.get(c);
-						if (b != null && b.volume > 0){
+						if (b != null && (b.volume.compareTo(BigInteger.ZERO) > 0)){
 							blobs.add(b);
 						}
 					}
@@ -157,7 +161,7 @@ public class Shopkeeper extends NPC {
 
 							boolean affected = false;
 							for (Blob blob : blobs) {
-								if (blob.cur[i] > 0) {
+								if ((blob.cur[i].compareTo(BigInteger.ZERO) > 0)) {
 									blob.clear(i);
 									affected = true;
 								}
@@ -220,9 +224,9 @@ public class Shopkeeper extends NPC {
 	}
 
 	//shopkeepers are greedy!
-	public static long sellPrice(Item item){
-		long i = item.value() * 5 * (Dungeon.escalatingDepth() / 5 + 1);
-		if (item.wereOofed) i *= 5;
+	public static BigInteger sellPrice(Item item){
+		BigInteger i = item.value().multiply(BigInteger.valueOf(5)).multiply((Dungeon.escalatingDepth().divide(BigInteger.valueOf(5)).add(BigInteger.ONE)));
+		if (item.wereOofed) i = i.multiply(BigInteger.valueOf(5));
 		return i;
 	}
 
@@ -231,7 +235,7 @@ public class Shopkeeper extends NPC {
 	}
 
 	public static boolean canSell(Item item){
-		if (item.value() <= 0)                                              return false;
+		if ((item.value().compareTo(BigInteger.ZERO) <= 0))                                              return false;
 		if (item.unique && !item.stackable)                                 return false;
 		if (item instanceof Armor && ((Armor) item).checkSeal() != null)    return false;
 		if (item.isEquipped(Dungeon.hero) && item.cursed)                   return false;
@@ -287,8 +291,8 @@ public class Shopkeeper extends NPC {
 						} else if (index > 1){
 							GLog.i(Messages.get(Shopkeeper.this, "buyback"));
 							Item returned = buybackItems.remove(index-2);
-							Dungeon.gold -= returned.value();
-							Statistics.goldCollected -= returned.value();
+							Dungeon.gold = Dungeon.gold.subtract(returned.value());
+							Statistics.goldCollected = Statistics.goldCollected.subtract(returned.value());
 							if (returned instanceof MissileWeapon && returned.isUpgradable()){
 								Dungeon.hero.buff(MissileWeapon.UpgradedSetTracker.class).levelThresholds.put(((MissileWeapon) returned).setID, returned.level());
 							}
@@ -301,7 +305,7 @@ public class Shopkeeper extends NPC {
 					@Override
 					protected boolean enabled(int index) {
 						if (index > 1){
-							return Dungeon.gold >= buybackItems.get(index-2).value();
+							return (Dungeon.gold.compareTo(buybackItems.get(index-2).value()) >= 0);
 						} else {
 							return super.enabled(index);
 						}

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -95,8 +97,8 @@ public class WndGameInProgress extends Window {
 		int strBonus = info.strBonus;
 		if (strBonus > 0)           statSlot( Messages.get(this, "str"), info.str + " + " + strBonus );
 		else if (strBonus < 0)      statSlot( Messages.get(this, "str"), info.str + " - " + -strBonus );
-		else                        statSlot( Messages.get(this, "str"), info.str );
-		if (info.shld > 0)  statSlot( Messages.get(this, "health"), info.hp + "+" + info.shld + "/" + info.ht );
+		else                        statSlot( Messages.get(this, "str"), BigInteger.valueOf(info.str) );
+		if ((info.shld.compareTo(BigInteger.ZERO) > 0))  statSlot( Messages.get(this, "health"), info.hp + "+" + info.shld + "/" + info.ht );
 		else                statSlot( Messages.get(this, "health"), (info.hp) + "/" + info.ht );
 		statSlot( Messages.get(this, "exp"), info.exp + "/" + Hero.maxExp(info.level) );
 		
@@ -105,7 +107,7 @@ public class WndGameInProgress extends Window {
 		if (info.cycle != 0){
 			statSlot(Messages.get(this, "depth"), (info.maxDepth) + " " + Messages.get(this, "cycle", info.cycle));
 		} else {
-			statSlot(Messages.get(this, "depth"), info.maxDepth);
+			statSlot(Messages.get(this, "depth"), BigInteger.valueOf(info.maxDepth));
 		}
 		if (info.weekly) {
             if (info.weeklyReplay) {
@@ -192,7 +194,7 @@ public class WndGameInProgress extends Window {
 		pos += GAP + txt.height();
 	}
 	
-	private void statSlot(String label, long value ) {
-		statSlot( label, Long.toString( value ) );
+	private void statSlot(String label, BigInteger value ) {
+		statSlot( label, value.toString() );
 	}
 }

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -45,14 +47,14 @@ public class Blizzard extends Blob {
 		for (int i = area.left; i < area.right; i++) {
 			for (int j = area.top; j < area.bottom; j++) {
 				cell = i + j * Dungeon.level.width();
-				if (cur[cell] > 0) {
+				if ((cur[cell].compareTo(BigInteger.ZERO) > 0)) {
 					
 					if (fire != null)   fire.clear(cell);
 					if (freeze != null) freeze.clear(cell);
 					
-					if (inf != null && inf.volume > 0 && inf.cur[cell] > 0){
+					if (inf != null && (inf.volume.compareTo(BigInteger.ZERO) > 0) && (inf.cur[cell].compareTo(BigInteger.ZERO) > 0)){
 						inf.clear(cell);
-						off[cell] = cur[cell] = 0;
+						off[cell] = cur[cell] = BigInteger.ZERO;
 						continue;
 					}
 					

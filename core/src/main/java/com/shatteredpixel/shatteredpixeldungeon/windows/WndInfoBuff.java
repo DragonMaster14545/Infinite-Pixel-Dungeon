@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
@@ -84,7 +86,7 @@ public class WndInfoBuff extends Window {
             RedButton btnRemoveBuffquest = new RedButton(Messages.get(this, "quest_remove_buff", chargesToUse, questionnaireEnergy.availableEnergy()), 6) {
                 @Override
                 public void onClick() {
-                    if (chargesToUse <= questionnaireEnergy.availableEnergy()){
+                    if ((BigInteger.valueOf(chargesToUse).compareTo(questionnaireEnergy.availableEnergy()) <= 0)){
                         questionnaireEnergy.removeBuff(buff);
                         hide();
                     } else {

@@ -29,6 +29,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.modules;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Healing;
@@ -50,14 +54,14 @@ public class HealerModule extends Module {
     public void execute( Hero hero, String action ) {
         super.execute(hero, action);
         if (action.equals(AC_USE)) {
-            Buff.affect(hero, Healing.class).setHeal((int) (4f * (hero.HT * level())), 0.1f, 0);
+            Buff.affect(hero, Healing.class).setHeal(BigInteger.valueOf(Big.toInt(((Big.dec(4f).multiply(Big.dec((hero.HT.multiply(level())))))).toBigInteger())), 0.1f, BigInteger.ZERO);
             detach(hero.belongings.backpack);
         }
     }
 
     @Override
-    public long value() {
-        return 1500 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(1500).multiply(quantity);
     }
 
 }

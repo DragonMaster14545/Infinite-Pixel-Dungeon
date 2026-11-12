@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -135,7 +137,7 @@ public class QuickRecipe extends Component {
 	public QuickRecipe(Recipe r, ArrayList<Item> inputs, final Item output) {
 		
 		ingredients = inputs;
-		long cost = r.cost(inputs);
+		BigInteger cost = r.cost(inputs);
 		boolean hasInputs = true;
 		this.inputs = new ArrayList<>();
 		for (final Item in : inputs) {
@@ -152,17 +154,17 @@ public class QuickRecipe extends Component {
 				}
 			};
 
-			long quantity = 0;
+			BigInteger quantity = BigInteger.ZERO;
 			if (Dungeon.hero != null) {
 				ArrayList<Item> similar = Dungeon.hero.belongings.getAllSimilar(in);
 				for (Item sim : similar) {
 					//if we are looking for a specific item, it must be IDed
 					if (sim.getClass() != in.getClass() || sim.isIdentified())
-						quantity += sim.quantity();
+						quantity = quantity.add(sim.quantity());
 				}
 			}
 			
-			if (quantity < in.quantity()) {
+			if ((quantity.compareTo(in.quantity()) < 0)) {
 				curr.sprite.alpha(0.3f);
 				hasInputs = false;
 			}
@@ -171,7 +173,7 @@ public class QuickRecipe extends Component {
 			this.inputs.add(curr);
 		}
 		
-		if (cost > 0) {
+		if ((cost.compareTo(BigInteger.ZERO) > 0)) {
 			arrow = new arrow(Icons.get(Icons.ARROW), cost);
 			arrow.hardlightText(0x44CCFF);
 		} else {
@@ -247,11 +249,11 @@ public class QuickRecipe extends Component {
 			super( icon );
 		}
 		
-		public arrow(Image icon, long count ){
+		public arrow(Image icon, BigInteger count ){
 			super( icon );
 			hotArea.blockLevel = PointerArea.NEVER_BLOCK;
 
-			text = new BitmapText( Long.toString(count), PixelScene.pixelFont);
+			text = new BitmapText( count.toString(), PixelScene.pixelFont);
 			text.measure();
 			add(text);
 		}
@@ -301,7 +303,7 @@ public class QuickRecipe extends Component {
 		ArrayList<QuickRecipe> result = new ArrayList<>();
 		switch (pageIdx){
 			case 0: default:
-				result.add(new QuickRecipe( new Potion.SeedToPotion(), new ArrayList<>(Arrays.asList(new Plant.Seed.PlaceHolder().quantity(3))), new WndBag.Placeholder(ItemSpriteSheet.POTION_HOLDER){
+				result.add(new QuickRecipe( new Potion.SeedToPotion(), new ArrayList<>(Arrays.asList(new Plant.Seed.PlaceHolder().quantity(BigInteger.valueOf(3)))), new WndBag.Placeholder(ItemSpriteSheet.POTION_HOLDER){
 					@Override
 					public String name() {
 						return Messages.get(Potion.SeedToPotion.class, "name");
@@ -412,7 +414,7 @@ public class QuickRecipe extends Component {
 				result.add(new QuickRecipe(new RespawnBooster.Recipe()));
 				if (!PixelScene.landscape()) result.add(null);
 				result.add(null);
-				result.add(new QuickRecipe(new Alchemize.Recipe(), new ArrayList<>(Arrays.asList(new Plant.Seed.PlaceHolder(), new Runestone.PlaceHolder())), new Alchemize().quantity(8)));
+				result.add(new QuickRecipe(new Alchemize.Recipe(), new ArrayList<>(Arrays.asList(new Plant.Seed.PlaceHolder(), new Runestone.PlaceHolder())), new Alchemize().quantity(BigInteger.valueOf(8))));
 				result.add(new QuickRecipe(new CurseInfusion.Recipe()));
 				result.add(new QuickRecipe(new Extractor.Recipe()));
 				result.add(new QuickRecipe(new Recycle.Recipe()));

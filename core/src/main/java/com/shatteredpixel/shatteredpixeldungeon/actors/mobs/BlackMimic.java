@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -90,9 +94,9 @@ public class BlackMimic extends Mob {
 
 		int powerLevel = Dungeon.hero != null ? Dungeon.hero.lvl : 0;
 
-		HP = HT = (long) ((bossMaxHPMulti + 1) * (900 + Math.round(powerLevel*32*Math.pow(7, Dungeon.cycle))));
-		EXP = Dungeon.getCycleMultiplier(2000);
-		defenseSkill = 20 + powerLevel / 3 * 2;
+		HP = HT = Big.of(((bossMaxHPMulti + 1) * (900 + Math.round(powerLevel*32*Math.pow(7, Dungeon.cycle)))));
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(2000));
+		defenseSkill = BigInteger.valueOf(20 + powerLevel / 3 * 2);
 
 		properties.add(Property.BOSS);
 		properties.add(Property.INORGANIC);
@@ -102,22 +106,18 @@ public class BlackMimic extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return Random.NormalLongRange(
-				Math.round(Dungeon.hero.lvl*4*Math.pow(7, Dungeon.cycle)),
-				Math.round(Dungeon.hero.lvl*32*Math.pow(7, Dungeon.cycle)) );
+	public BigInteger damageRoll() {
+		return Big.normalRange(BigInteger.valueOf(Math.round(Dungeon.hero.lvl*4*Math.pow(7, Dungeon.cycle))), BigInteger.valueOf(Math.round(Dungeon.hero.lvl*32*Math.pow(7, Dungeon.cycle))));
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return 30 + Math.round(Dungeon.hero.lvl * 1.25f);
+	public BigInteger attackSkill(Char target ) {
+		return BigInteger.valueOf(30 + Math.round(Dungeon.hero.lvl * 1.25f));
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Random.NormalLongRange(
-				Math.round(Dungeon.hero.lvl*0.8d*Math.pow(7, Dungeon.cycle)),
-				Math.round(Dungeon.hero.lvl*2.25d*Math.pow(7, Dungeon.cycle)));
+	public BigInteger cycledDrRoll() {
+		return Big.normalRange(BigInteger.valueOf(Math.round(Dungeon.hero.lvl*0.8d*Math.pow(7, Dungeon.cycle))), BigInteger.valueOf(Math.round(Dungeon.hero.lvl*2.25d*Math.pow(7, Dungeon.cycle))));
 	}
 
 	public int pylonsActivated = 0;
@@ -180,8 +180,8 @@ public class BlackMimic extends Mob {
 
 	@Override
 	protected boolean act() {
-		GameScene.add(Blob.seed(pos, 0, FallingRocks.class));
-		GameScene.add(Blob.seed(pos, 0, CorrosiveGas.class));
+		GameScene.add(Blob.seed(pos, BigInteger.ZERO, FallingRocks.class));
+		GameScene.add(Blob.seed(pos, BigInteger.ZERO, CorrosiveGas.class));
 
 
 		//ability logic only triggers if DM is not supercharged
@@ -379,7 +379,7 @@ public class BlackMimic extends Mob {
 		if (Dungeon.level.map[step] == Terrain.INACTIVE_TRAP && state == HUNTING) {
 
 			//don't gain energy from cells that are energized
-			if (BlackMimicLevel.PylonEnergy.volumeAt(pos, BlackMimicLevel.PylonEnergy.class) > 0){
+			if ((BlackMimicLevel.PylonEnergy.volumeAt(pos, BlackMimicLevel.PylonEnergy.class).compareTo(BigInteger.ZERO) > 0)){
 				return;
 			}
 
@@ -391,7 +391,7 @@ public class BlackMimic extends Mob {
 				sprite.emitter().start(SparkParticle.STATIC, 0.05f, 20);
 			}
 
-			Buff.affect(this, Barrier.class).setShield( 30 + (HT - HP)/10);
+			Buff.affect(this, Barrier.class).setShield( BigInteger.valueOf(30).add((HT.subtract(HP)).divide(BigInteger.TEN)));
 
 		}
 	}
@@ -436,16 +436,16 @@ public class BlackMimic extends Mob {
 			Ballistica trajectory = new Ballistica(pos, target.pos, Ballistica.STOP_TARGET);
 
 			for (int i : trajectory.subPath(0, trajectory.collisionPos)) {
-				GameScene.add(Blob.seed(i, 200, CorrosoGas.class).setStr(Dungeon.escalatingDepth() / 2));
+				GameScene.add(Blob.seed(i, BigInteger.valueOf(200), CorrosoGas.class).setStr(Dungeon.escalatingDepth().divide(BigInteger.TWO)));
 				gasVented += 20;
 			}
 
-			GameScene.add(Blob.seed(trajectory.collisionPos, 290, CorrosoGas.class).setStr(Dungeon.escalatingDepth() / 2));
+			GameScene.add(Blob.seed(trajectory.collisionPos, BigInteger.valueOf(290), CorrosoGas.class).setStr(Dungeon.escalatingDepth().divide(BigInteger.TWO)));
 
 			if (gasVented < 250) {
 				int toVentAround = (int) Math.ceil((250 - gasVented) / 8f);
 				for (int i : PathFinder.NEIGHBOURS8) {
-					GameScene.add(Blob.seed(trajectory.collisionPos + i, toVentAround, CorrosoGas.class).setStr(Dungeon.escalatingDepth() / 2));
+					GameScene.add(Blob.seed(trajectory.collisionPos + i, BigInteger.valueOf(toVentAround), CorrosoGas.class).setStr(Dungeon.escalatingDepth().divide(BigInteger.TWO)));
 				}
 			}
 		}
@@ -470,7 +470,7 @@ public class BlackMimic extends Mob {
 			if (Dungeon.level.adjacent(pos, target.pos)){
 				int oppositeAdjacent = target.pos + (target.pos - pos);
 				Ballistica trajectory = new Ballistica(target.pos, oppositeAdjacent, Ballistica.MAGIC_BOLT);
-				WandOfBlastWave.throwChar(target, trajectory, 2, false, true, getClass());
+				WandOfBlastWave.throwChar(target, trajectory, BigInteger.TWO, false, true, getClass());
 				if (target == Dungeon.hero){
 					Dungeon.hero.interrupt();
 				}
@@ -496,7 +496,7 @@ public class BlackMimic extends Mob {
 						safeCell = rockCenter + PathFinder.NEIGHBOURS8[Random.Int(8)];
 					} while (safeCell == pos
 							|| (Dungeon.level.solid[safeCell] && Random.Int(2) == 0)
-							|| (Blob.volumeAt(safeCell, BlackMimicLevel.PylonEnergy.class) > 0 && Random.Int(2) == 0));
+							|| ((Blob.volumeAt(safeCell, BlackMimicLevel.PylonEnergy.class).compareTo(BigInteger.ZERO) > 0) && Random.Int(2) == 0));
 
 					int start = rockCenter - Dungeon.level.width() * 3 - 3;
 					int pos;
@@ -510,7 +510,7 @@ public class BlackMimic extends Mob {
 							//add rock cell to pos, if it is not solid, and isn't the safecell
 							if (!Dungeon.level.solid[pos] && pos != safeCell && Random.Int(Dungeon.level.distance(rockCenter, pos)) == 0) {
 								//don't want to overly punish players with slow move or attack speed
-								GameScene.add(Blob.seed(pos, 1, FallingRocks.class));
+								GameScene.add(Blob.seed(pos, BigInteger.ONE, FallingRocks.class));
 							}
 							pos++;
 						}
@@ -527,10 +527,10 @@ public class BlackMimic extends Mob {
 	private boolean invulnWarned = false;
 
 	@Override
-	public void damage(long dmg, Object src) {
+	public void damage(BigInteger dmg, Object src) {
 		switch (pylonsActivated){
-			case 1: dmg *= 0.66d; break;
-			case 2: dmg *= 0.33d; break;
+			case 1: dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(0.66d))); break;
+			case 2: dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(0.33d))); break;
 		}
 		super.damage(dmg, src);
 		if (isInvulnerable(src.getClass())){
@@ -538,11 +538,11 @@ public class BlackMimic extends Mob {
 		}
 
 		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
-		if (lock != null && !isImmune(src.getClass())) lock.addTime(dmg);
+		if (lock != null && !isImmune(src.getClass())) lock.addTime(dmg.floatValue());
 
-		long threshold = HT/3 * (2- pylonsActivated);
+		BigInteger threshold = HT.divide(BigInteger.valueOf(3)).multiply(BigInteger.valueOf((2- pylonsActivated)));
 
-		if (HP < threshold){
+		if ((HP.compareTo(threshold) < 0)){
 			HP = threshold;
 			supercharge();
 		}
@@ -600,7 +600,7 @@ public class BlackMimic extends Mob {
 
 	@Override
 	public boolean isAlive() {
-		return HP > 0 || pylonsActivated < 2;
+		return (HP.compareTo(BigInteger.ZERO) > 0) || pylonsActivated < 2;
 	}
 
 	@Override
@@ -750,13 +750,13 @@ public class BlackMimic extends Mob {
 			for (int i = area.left; i < area.right; i++){
 				for (int j = area.top; j < area.bottom; j++){
 					cell = i + j* Dungeon.level.width();
-					off[cell] = cur[cell] > 0 ? cur[cell] - 1 : 0;
+					off[cell] = (cur[cell].compareTo(BigInteger.ZERO) > 0) ? cur[cell].subtract(BigInteger.ONE) : BigInteger.ZERO;
 
-					if (off[cell] > 0) {
-						volume += off[cell];
+					if ((off[cell].compareTo(BigInteger.ZERO) > 0)) {
+						volume = volume.add(off[cell]);
 					}
 
-					if (cur[cell] > 0 && off[cell] == 0){
+					if ((cur[cell].compareTo(BigInteger.ZERO) > 0) && (off[cell].compareTo(BigInteger.ZERO) == 0)){
 
 						CellEmitter.get( cell ).start( Speck.factory( Speck.ROCK ), 0.07f, 10 );
 
@@ -792,8 +792,8 @@ public class BlackMimic extends Mob {
 	}
 
 	public static class CorrosoGas extends CorrosiveGas{
-        public CorrosoGas setStr(long str){
-            if (str > strength) {
+        public CorrosoGas setStr(BigInteger str){
+            if ((str.compareTo(strength) > 0)) {
                 strength = str;
             }
             return this;

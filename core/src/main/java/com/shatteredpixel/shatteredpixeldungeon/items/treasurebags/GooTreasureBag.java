@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.treasurebags;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -49,8 +52,8 @@ public class GooTreasureBag extends TreasureBag{
     @Override
     protected ArrayList<Item> items() {
         ArrayList<Item> items = new ArrayList<>();
-        items.add(new GooBlob().quantity(Random.Int(2, 4)));
-        items.add(new Gold().quantity(Random.Long( 400 + Dungeon.escalatingDepth() * 60, 850 + Dungeon.escalatingDepth() * 85 )));
+        items.add(new GooBlob().quantity(BigInteger.valueOf(Random.Int(2, 4))));
+        items.add(new Gold().quantity(BigInteger.valueOf(Random.Long( Big.toLong(BigInteger.valueOf(400).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(60)))), Big.toLong(BigInteger.valueOf(850).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(85)))) ))));
         if (Dungeon.cycle > 0) {
             items.add(new RatSkull());
             for (int i = 0; i < 5; i++) items.add(Reflection.newInstance(ExoticPotion.exoToReg.get(Generator.randomUsingDefaults(Generator.Category.POTION).getClass())));

@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -57,7 +59,7 @@ public class SupplyRation extends Food {
 	protected void satisfy(Hero hero) {
 		super.satisfy(hero);
 
-		hero.HP = Math.min(hero.HP + 5, hero.HT);
+		hero.HP = hero.HP.add(BigInteger.valueOf(5)).min(hero.HT);
 		hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, "5", FloatingText.HEALING );
 
 		CloakOfShadows cloak = hero.belongings.getItem(CloakOfShadows.class);
@@ -68,8 +70,8 @@ public class SupplyRation extends Food {
 	}
 
 	@Override
-	public long value() {
-		return 10 * quantity;
+	public BigInteger value() {
+		return BigInteger.TEN.multiply(quantity);
 	}
 
 }

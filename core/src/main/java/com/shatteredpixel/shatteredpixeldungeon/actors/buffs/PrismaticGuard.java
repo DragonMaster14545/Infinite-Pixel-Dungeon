@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -74,7 +78,7 @@ public class PrismaticGuard extends Buff {
 			}
 			if (bestPos != -1) {
 				PrismaticImage pris = new PrismaticImage();
-				pris.duplicate(hero, (long)Math.floor(HP) );
+				pris.duplicate(hero, Big.of(Math.floor(HP)) );
 				pris.state = pris.HUNTING;
 				GameScene.add(pris, 1);
 				ScrollOfTeleportation.appear(pris, bestPos);
@@ -90,23 +94,23 @@ public class PrismaticGuard extends Buff {
 		}
 		
 		LockedFloor lock = target.buff(LockedFloor.class);
-		if (HP < maxHP() && Regeneration.regenOn()){
+		if ((Big.dec(HP).compareTo(Big.dec(maxHP())) < 0) && Regeneration.regenOn()){
 			HP += 0.1f;
 		}
 		
 		return true;
 	}
 	
-	public void set( long HP ){
-		this.HP = HP;
+	public void set( BigInteger HP ){
+		this.HP = HP.doubleValue();
 	}
 	
-	public long maxHP(){
+	public BigInteger maxHP(){
 		return maxHP((Hero)target);
 	}
 	
-	public static long maxHP( Hero hero ){
-		return 10 + (long)Math.floor(hero.lvl * 2.5d); //half of hero's HP
+	public static BigInteger maxHP( Hero hero ){
+		return BigInteger.TEN.add(Big.of(Math.floor(hero.lvl * 2.5d))); //half of hero's HP
 	}
 	
 	@Override
@@ -121,17 +125,17 @@ public class PrismaticGuard extends Buff {
 
 	@Override
 	public float iconFadePercent() {
-		return (float) (1f - HP/(double) maxHP());
+		return (float) (1f - HP/maxHP().doubleValue());
 	}
 
 	@Override
 	public String iconTextDisplay() {
-		return Long.toString((long) HP);
+		return Big.of(HP).toString();
 	}
 	
 	@Override
 	public String desc() {
-		return Messages.get(this, "desc", (long)HP, maxHP());
+		return Messages.get(this, "desc", Big.of(HP), maxHP());
 	}
 	
 	private static final String HEALTH = "hp";
@@ -145,6 +149,6 @@ public class PrismaticGuard extends Buff {
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
-		HP = bundle.getLong(HEALTH);
+		HP = Big.getBig(bundle, HEALTH).doubleValue();
 	}
 }

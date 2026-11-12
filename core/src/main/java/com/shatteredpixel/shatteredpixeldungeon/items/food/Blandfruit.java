@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -146,8 +148,8 @@ public class Blandfruit extends Food {
 	}
 
 	@Override
-	public long value() {
-		return 20 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(20).multiply(quantity);
 	}
 
 	public Item cook(Seed seed){
@@ -253,8 +255,8 @@ public class Blandfruit extends Food {
 			Blandfruit fruit = (Blandfruit) ingredients.get(0);
 			Seed seed = (Seed) ingredients.get(1);
 			
-			if (fruit.quantity() >= 1 && fruit.potionAttrib == null
-				&& seed.quantity() >= 1){
+			if ((fruit.quantity().compareTo(BigInteger.ONE) >= 0) && fruit.potionAttrib == null
+				&& (seed.quantity().compareTo(BigInteger.ONE) >= 0)){
 
 				return true;
 			}
@@ -263,16 +265,16 @@ public class Blandfruit extends Food {
 		}
 		
 		@Override
-		public long cost(ArrayList<Item> ingredients) {
-			return 2;
+		public BigInteger cost(ArrayList<Item> ingredients) {
+			return BigInteger.TWO;
 		}
 		
 		@Override
 		public Item brew(ArrayList<Item> ingredients) {
 			if (!testIngredients(ingredients)) return null;
 			
-			ingredients.get(0).quantity(ingredients.get(0).quantity() - 1);
-			ingredients.get(1).quantity(ingredients.get(1).quantity() - 1);
+			ingredients.get(0).quantity(ingredients.get(0).quantity().subtract(BigInteger.ONE));
+			ingredients.get(1).quantity(ingredients.get(1).quantity().subtract(BigInteger.ONE));
 			
 			
 			return new Blandfruit().cook((Seed) ingredients.get(1));

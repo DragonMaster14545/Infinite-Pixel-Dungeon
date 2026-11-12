@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -35,20 +39,20 @@ public class FungalSpinner extends Spinner {
 	{
 		spriteClass = FungalSpinnerSprite.class;
 
-		HP = HT = 40;
-		defenseSkill = 16;
+		HP = HT = BigInteger.valueOf(40);
+		defenseSkill = BigInteger.valueOf(16);
 
-		EXP = 7;
+		EXP = BigInteger.valueOf(7);
 		maxLvl = -2;
 	}
 
 	@Override
 	protected void applyWebToCell(int cell) {
-		GameScene.add(Blob.seed(cell, 40, Regrowth.class));
+		GameScene.add(Blob.seed(cell, BigInteger.valueOf(40), Regrowth.class));
 	}
 
 	@Override
-	public void damage(long dmg, Object src) {
+	public void damage(BigInteger dmg, Object src) {
 		int grassCells = 0;
 		for (int i : PathFinder.NEIGHBOURS9) {
 			if (Dungeon.level.map[pos+i] == Terrain.FURROWED_GRASS
@@ -57,13 +61,13 @@ public class FungalSpinner extends Spinner {
 			}
 		}
 		//first adjacent grass cell reduces damage taken by 30%, each one after reduces by another 10%
-		if (grassCells > 0) dmg = Math.round(dmg * (8-grassCells)/10f);
+		if (grassCells > 0) dmg = Big.round(Big.div(Big.dec(dmg.multiply(BigInteger.valueOf((8-grassCells)))), Big.dec(10f)));
 
 		super.damage(dmg, src);
 	}
 
 	@Override
-	public long attackProc(Char enemy, long damage) {
+	public BigInteger attackProc(Char enemy, BigInteger damage) {
 		return damage; //does not apply poison
 	}
 

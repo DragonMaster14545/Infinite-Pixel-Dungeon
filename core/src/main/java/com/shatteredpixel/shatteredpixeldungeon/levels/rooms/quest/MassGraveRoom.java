@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.quest;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Skeleton;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -82,8 +84,8 @@ public class MassGraveRoom extends SpecialRoom {
 		ArrayList<Item> items = new ArrayList<>();
 		//100% corpse dust, 2x100% 1 coin, 2x30% coins, 1x60% random item, 1x30% armor
 		items.add(new CorpseDust());
-		items.add(new Gold(1));
-		items.add(new Gold(1));
+		items.add(new Gold(BigInteger.ONE));
+		items.add(new Gold(BigInteger.ONE));
 		if (Random.Float() <= 0.3f) items.add(new Gold());
 		if (Random.Float() <= 0.3f) items.add(new Gold());
 		if (Random.Float() <= 0.6f) items.add(Generator.random());

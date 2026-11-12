@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -58,11 +60,11 @@ public class Succubus extends Mob {
 	{
 		spriteClass = SuccubusSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(80);
-		defenseSkill = Dungeon.getCycleMultiplier(25);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(80));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(25));
 		viewDistance = Light.DISTANCE;
 		
-		EXP = Dungeon.getCycleMultiplier(12);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(12));
 		maxLvl = 25;
 		
 		loot = Generator.Category.SCROLL;
@@ -72,26 +74,26 @@ public class Succubus extends Mob {
 	}
 	
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(25), Dungeon.getCycleMultiplier(30) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(25)), Dungeon.getCycleMultiplier(BigInteger.valueOf(30)) );
 	}
 	
 	@Override
-	public long attackProc( Char enemy, long damage ) {
+	public BigInteger attackProc( Char enemy, BigInteger damage ) {
 		damage = super.attackProc( enemy, damage );
 		
 		if (enemy.buff(Charm.class) != null ){
-			long shield = (HP - HT) + (5 + damage);
-			if (shield > 0){
+			BigInteger shield = (HP.subtract(HT)).add((BigInteger.valueOf(5).add(damage)));
+			if ((shield.compareTo(BigInteger.ZERO) > 0)){
 				HP = HT;
-				if (shield < 5){
-					sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(5-shield), FloatingText.HEALING);
+				if ((shield.compareTo(BigInteger.valueOf(5)) < 0)){
+					sprite.showStatusWithIcon(CharSprite.POSITIVE, BigInteger.valueOf(5).subtract(shield).toString(), FloatingText.HEALING);
 				}
 
 				Buff.affect(this, Barrier.class).setShield(shield);
-				sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(shield), FloatingText.SHIELDING);
+				sprite.showStatusWithIcon(CharSprite.POSITIVE, shield.toString(), FloatingText.SHIELDING);
 			} else {
-				HP += 5 + damage;
+				HP = HP.add(BigInteger.valueOf(5).add(damage));
 				sprite.showStatusWithIcon(CharSprite.POSITIVE, "5", FloatingText.HEALING);
 			}
 			if (Dungeon.level.heroFOV[pos]) {
@@ -163,13 +165,13 @@ public class Succubus extends Mob {
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(40);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(40));
 	}
 	
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(10));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.TEN));
 	}
 
 	@Override

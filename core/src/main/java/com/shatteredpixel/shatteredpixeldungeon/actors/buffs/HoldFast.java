@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -50,12 +52,12 @@ public class HoldFast extends Buff {
         return true;
     }
 
-    public long armorBonus(){
+    public BigInteger armorBonus(){
 		if (pos == target.pos && target instanceof Hero){
-			return Random.NormalIntRange(minArmor(), armor());
+			return BigInteger.valueOf(Random.NormalIntRange(minArmor(), armor()));
 		} else {
 			detach();
-			return 0;
+			return BigInteger.ZERO;
 		}
 	}
 

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -430,16 +434,16 @@ public static final String KEY_VICTORY_NAGGED= "victory_nagged";
 		return getString( KEY_CUSTOM_SEED, "", 20);
 	}
 
-	public static void lastDaily( long value ){
-		put( KEY_LAST_DAILY, value );
+	public static void lastDaily( BigInteger value ){
+		put( KEY_LAST_DAILY, Big.toInt(value) );
 	}
 
 	public static long lastDaily() {
 		return getLong( KEY_LAST_DAILY, 0);
 	}
 
-    public static void lastWeekly( long value ){
-        put( KEY_LAST_WEEKLY, value );
+    public static void lastWeekly( BigInteger value ){
+        put( KEY_LAST_WEEKLY, Big.toInt(value) );
     }
 
     public static long lastWeekly() {

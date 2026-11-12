@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -53,10 +57,10 @@ public class Necromancer extends Mob {
 	{
 		spriteClass = NecromancerSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(40);
-		defenseSkill = Dungeon.getCycleMultiplier(14);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(40));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(14));
 		
-		EXP = Dungeon.getCycleMultiplier(7);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(7));
 		maxLvl = 14;
 		
 		loot = new PotionOfHealing();
@@ -95,8 +99,8 @@ public class Necromancer extends Mob {
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(5));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(5)));
 	}
 	
 	@Override
@@ -171,15 +175,15 @@ public class Necromancer extends Mob {
 		}
 		
 		//heal skeleton first
-		if (mySkeleton.HP < mySkeleton.HT){
+		if ((mySkeleton.HP.compareTo(mySkeleton.HT) < 0)){
 
 			if (sprite.visible || mySkeleton.sprite.visible) {
 				sprite.parent.add(new Beam.HealthRay(sprite.center(), mySkeleton.sprite.center()));
 			}
 			
-			mySkeleton.HP = Math.min(mySkeleton.HP + mySkeleton.HT/5 + Dungeon.cycle * 20L, mySkeleton.HT);
+			mySkeleton.HP = mySkeleton.HP.add(mySkeleton.HT.divide(BigInteger.valueOf(5))).add(BigInteger.valueOf(Dungeon.cycle * 20L)).min(mySkeleton.HT);
 			if (mySkeleton.sprite.visible) {
-				mySkeleton.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString( mySkeleton.HT/5 ), FloatingText.HEALING );
+				mySkeleton.sprite.showStatusWithIcon( CharSprite.POSITIVE, mySkeleton.HT.divide(BigInteger.valueOf(5)).toString(), FloatingText.HEALING );
 			}
 			
 		//otherwise give it adrenaline
@@ -228,7 +232,7 @@ public class Necromancer extends Mob {
 
 				Char blocker = Actor.findChar(summoningPos);
 				if (blocker.alignment != alignment){
-					blocker.damage( (long) (Math.pow(Dungeon.NormalLongRange(2, 10), Dungeon.cycle+1)), new SummoningBlockDamage() );
+					blocker.damage( Big.of((Math.pow(Dungeon.NormalLongRange(BigInteger.TWO, BigInteger.TEN).doubleValue(), Dungeon.cycle+1))), new SummoningBlockDamage() );
 					if (blocker == Dungeon.hero && !blocker.isAlive()){
 						Badges.validateDeathFromEnemyMagic();
 						Dungeon.fail(this);
@@ -362,7 +366,7 @@ if (enemySeen){
 				} else {
 					
 					//zap skeleton
-					if (mySkeleton.HP < mySkeleton.HT || mySkeleton.buff(Adrenaline.class) == null) {
+					if ((mySkeleton.HP.compareTo(mySkeleton.HT) < 0) || mySkeleton.buff(Adrenaline.class) == null) {
 						if (sprite != null && sprite.visible){
 							sprite.zap(mySkeleton.pos);
 							return false;
@@ -393,7 +397,7 @@ if (enemySeen){
 			maxLvl = -5;
 			
 			//20/25 health to start
-			HP = Dungeon.getCycleMultiplier(20);
+			HP = Dungeon.getCycleMultiplier(BigInteger.valueOf(20));
 		}
 
 		@Override

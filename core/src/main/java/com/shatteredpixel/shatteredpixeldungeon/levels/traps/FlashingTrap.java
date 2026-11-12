@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -52,8 +54,8 @@ public class FlashingTrap extends Trap {
 		Char c = Actor.findChar( pos );
 		
 		if (c != null) {
-			long damage = Math.max( 0,  (4 + scalingDepth()/2) - c.drRoll()/2 );
-			Buff.affect( c, Bleeding.class ).set( damage );
+			BigInteger damage = BigInteger.ZERO.max((BigInteger.valueOf(4).add(scalingDepth().divide(BigInteger.TWO))).subtract(c.drRoll().divide(BigInteger.TWO)));
+			Buff.affect( c, Bleeding.class ).set( damage.doubleValue() );
 			Buff.prolong( c, Blindness.class, Blindness.DURATION );
 			Buff.prolong( c, Cripple.class, Cripple.DURATION*2f );
 			

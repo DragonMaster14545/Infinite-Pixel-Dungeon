@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -273,9 +277,9 @@ public class ItemSlot extends Button {
 		} else if (item instanceof Weapon || item instanceof Armor) {
 
 			if (item.levelKnown){
-				long str = item instanceof Weapon ? ((Weapon)item).STRReq() : ((Armor)item).STRReq();
+				BigInteger str = item instanceof Weapon ? BigInteger.valueOf(((Weapon)item).STRReq()) : ((Armor)item).STRReq();
 				extra.text( Messages.format( TXT_STRENGTH, str ) );
-				if (Dungeon.hero != null && str > Dungeon.hero.STR()) {
+				if (Dungeon.hero != null && (str.compareTo(BigInteger.valueOf(Dungeon.hero.STR())) > 0)) {
 					extra.hardlight( DEGRADED );
 				} else if (item instanceof Weapon && ((Weapon) item).masteryPotionBonus){
 					extra.hardlight( MASTERED );
@@ -285,7 +289,7 @@ public class ItemSlot extends Button {
 					extra.resetColor();
 				}
 			} else {
-				long str = item instanceof Weapon ? ((Weapon)item).STRReq(0) : ((Armor)item).STRReq(0);
+				BigInteger str = item instanceof Weapon ? BigInteger.valueOf(((Weapon)item).STRReq(BigInteger.ZERO)) : ((Armor)item).STRReq(BigInteger.ZERO);
 				extra.text( Messages.format( TXT_TYPICAL_STR, str ) );
 				extra.hardlight( WARNING );
 			}
@@ -297,19 +301,19 @@ public class ItemSlot extends Button {
 
 		}
 
-		long trueLvl = item.visiblyUpgraded();
-		long buffedLvl = item.buffedVisiblyUpgraded();
+		BigInteger trueLvl = item.visiblyUpgraded();
+		BigInteger buffedLvl = item.buffedVisiblyUpgraded();
 
-		if (trueLvl != 0 || buffedLvl != 0) {
+		if ((trueLvl.compareTo(BigInteger.ZERO) != 0) || (buffedLvl.compareTo(BigInteger.ZERO) != 0)) {
 			level.text( Messages.format( TXT_LEVEL, buffedLvl ) );
 			level.measure();
 			if (level.width > width - (margin.left + margin.right) * 1.25f){
-				level.scale.set(PixelScene.align(1f - 0.015f*(63 - Long.numberOfLeadingZeros(buffedLvl))));
+				level.scale.set(PixelScene.align(1f - 0.015f*(63 - Long.numberOfLeadingZeros(Big.toLong(buffedLvl)))));
 			} else {
 				level.scale.set(1f);
 			}
-			if (trueLvl == buffedLvl || buffedLvl <= 0) {
-				if (buffedLvl > 0){
+			if ((trueLvl.compareTo(buffedLvl) == 0) || (buffedLvl.compareTo(BigInteger.ZERO) <= 0)) {
+				if ((buffedLvl.compareTo(BigInteger.ZERO) > 0)){
 					if ((item instanceof Weapon && ((Weapon) item).curseInfusionBonus)
 						|| (item instanceof Armor && ((Armor) item).curseInfusionBonus)
 							|| (item instanceof Wand && ((Wand) item).curseInfusionBonus)){
@@ -321,7 +325,7 @@ public class ItemSlot extends Button {
 					level.hardlight( DEGRADED );
 				}
 			} else {
-				level.hardlight(buffedLvl > trueLvl ? ENHANCED : WARNING);
+				level.hardlight((buffedLvl.compareTo(trueLvl) > 0) ? ENHANCED : WARNING);
 			}
 		} else {
 			level.text( null );

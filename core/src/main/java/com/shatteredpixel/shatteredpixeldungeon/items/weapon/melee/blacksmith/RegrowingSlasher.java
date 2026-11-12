@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.blacksmith;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -59,8 +61,8 @@ public class RegrowingSlasher extends BlacksmithWeapon implements InternalKillsT
     static final Class<Plant>[] helpfulPlants = new Class[]{Earthroot.class, Mageroyal.class, Starflower.class, Sungrass.class};
 
     @Override
-    public long proc(Char attacker, Char defender, long damage) {
-        long heal = Math.max(1, attacker.HT / 125);
+    public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
+        BigInteger heal = BigInteger.ONE.max(attacker.HT.divide(BigInteger.valueOf(125)));
         ArrayList<Char> affected = new ArrayList<>();
         for (Char ch: Actor.chars()){
             if (ch.alignment == attacker.alignment){
@@ -68,16 +70,16 @@ public class RegrowingSlasher extends BlacksmithWeapon implements InternalKillsT
             }
         }
         for (Char ch: affected){
-            long previousLife = ch.HP;
-            ch.HP = Math.min(ch.HP + heal, ch.HT);
+            BigInteger previousLife = ch.HP;
+            ch.HP = ch.HP.add(heal).min(ch.HT);
             if (attacker.fieldOfView[ch.pos]) {
                 ch.sprite.emitter().burst(LeafParticle.GENERAL, 4);
-                if (previousLife != ch.HP)
-                    ch.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(heal), FloatingText.HEALING);
+                if ((previousLife.compareTo(ch.HP) != 0))
+                    ch.sprite.showStatusWithIcon(CharSprite.POSITIVE, heal.toString(), FloatingText.HEALING);
                 else {
-                    if (Barkskin.currentLevel(attacker) != heal)
-                        attacker.sprite.showStatus(0x8e6629, Long.toString(heal*5));
-                    Buff.affect(attacker, Barkskin.class).set(heal*5, affected.size());
+                    if ((Barkskin.currentLevel(attacker).compareTo(heal) != 0))
+                        attacker.sprite.showStatus(0x8e6629, heal.multiply(BigInteger.valueOf(5)).toString());
+                    Buff.affect(attacker, Barkskin.class).set(heal.multiply(BigInteger.valueOf(5)), affected.size());
                 }
             }
         }
@@ -102,8 +104,8 @@ public class RegrowingSlasher extends BlacksmithWeapon implements InternalKillsT
     }
 
     @Override
-    public long defenseFactor( Char owner ) {
-        return 8;	//4 extra defence
+    public BigInteger defenseFactor( Char owner ) {
+        return BigInteger.valueOf(8);	//4 extra defence
     }
 
     @Override
@@ -118,15 +120,15 @@ public class RegrowingSlasher extends BlacksmithWeapon implements InternalKillsT
             }
             for (Char ch: affected){
                 if (hero.fieldOfView[ch.pos]) {
-                    ch.damage(ch.HT*2, hero);
+                    ch.damage(ch.HT.multiply(BigInteger.TWO), hero);
                     if (!ch.isAlive()){
                         CellEmitter.get( ch.pos ).burst(LeafParticle.GENERAL, 20);
                         CellEmitter.get( ch.pos ).burst( Speck.factory( Speck.STEAM ), 10 );
 
-                        hero.HP = Math.min(hero.HP + hero.HT / 10, hero.HT);
+                        hero.HP = hero.HP.add(hero.HT.divide(BigInteger.TEN)).min(hero.HT);
                         hero.sprite.emitter().burst(Speck.factory(Speck.HEALING), 10);
                         hero.sprite.emitter().burst(LeafParticle.GENERAL, 8);
-                        hero.sprite.showStatus(CharSprite.POSITIVE, Long.toString(hero.HT / 10));
+                        hero.sprite.showStatus(CharSprite.POSITIVE, hero.HT.divide(BigInteger.TEN).toString());
 
                         RegrowthSpirit w = new RegrowthSpirit();
                         w.adjustStats( Dungeon.scalingDepth() );
@@ -149,7 +151,7 @@ public class RegrowingSlasher extends BlacksmithWeapon implements InternalKillsT
     public static class RegrowthSpirit extends TormentedSpirit {
 
         {
-            HP = HT = 3;
+            HP = HT = BigInteger.valueOf(3);
 
             spriteClass = RegrowthSpiritSprite.class;
 
@@ -157,9 +159,9 @@ public class RegrowingSlasher extends BlacksmithWeapon implements InternalKillsT
         }
 
         @Override
-        public void damage(long dmg, Object src) {
+        public void damage(BigInteger dmg, Object src) {
             if (src instanceof Char)
-                super.damage(1, src);
+                super.damage(BigInteger.ONE, src);
         }
 
         @Override

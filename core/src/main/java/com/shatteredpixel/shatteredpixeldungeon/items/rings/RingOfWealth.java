@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -69,10 +73,10 @@ public class RingOfWealth extends Ring {
 	public String statsInfo() {
 		if (isIdentified()){
 			String info = Messages.get(this, "stats",
-					Messages.decimalFormat("#.##", 100f * (Math.pow(1.20f, soloBuffedBonus()) - 1f)));
-			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)){
+					Messages.decimalFormat("#.##", 100f * (Math.pow(1.20f, soloBuffedBonus().doubleValue()) - 1f)));
+			if (isEquipped(Dungeon.hero) && (soloBuffedBonus().compareTo(combinedBuffedBonus(Dungeon.hero)) != 0)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
-						Messages.decimalFormat("#.##", 100f * (Math.pow(1.20f, combinedBuffedBonus(Dungeon.hero)) - 1f)));
+						Messages.decimalFormat("#.##", 100f * (Math.pow(1.20f, combinedBuffedBonus(Dungeon.hero).doubleValue()) - 1f)));
 			}
 			return info;
 		} else {
@@ -80,9 +84,9 @@ public class RingOfWealth extends Ring {
 		}
 	}
 
-	public String upgradeStat1(long level){
-		if (cursed && cursedKnown) level = Math.min(-1, level-3);
-		return Messages.decimalFormat("#.##", 100f * (Math.pow(1.2f, level+1)-1f)) + "%";
+	public String upgradeStat1(BigInteger level){
+		if (cursed && cursedKnown) level = BigInteger.valueOf(-1).min(level.subtract(BigInteger.valueOf(3)));
+		return Messages.decimalFormat("#.##", 100f * (Math.pow(1.2f, level.add(BigInteger.ONE).doubleValue())-1f)) + "%";
 	}
 
 	private static final String TRIES_TO_DROP = "tries_to_drop";
@@ -108,15 +112,15 @@ public class RingOfWealth extends Ring {
 	}
 
 	public static float dropChanceMultiplier( Char target ){
-		return (float)Math.pow(1.20, getBuffedBonus(target, Wealth.class));
+		return (float)Math.pow(1.20, getBuffedBonus(target, Wealth.class).doubleValue());
 	}
 
-	public static ArrayList<Item> tryForBonusDrop(Char target, long tries ){
-		long bonus = getBuffedBonus(target, Wealth.class);
+	public static ArrayList<Item> tryForBonusDrop(Char target, BigInteger tries ){
+		BigInteger bonus = getBuffedBonus(target, Wealth.class);
 		System.out.println(bonus);
 		System.out.println(tries);
 
-		if (bonus <= 0) return null;
+		if ((bonus.compareTo(BigInteger.ZERO) <= 0)) return null;
 
 		HashSet<Wealth> buffs = target.buffs(Wealth.class);
 		float triesToDrop = Float.MIN_VALUE;
@@ -139,7 +143,7 @@ public class RingOfWealth extends Ring {
 		//now handle reward logic
 		ArrayList<Item> drops = new ArrayList<>();
 
-		triesToDrop -= tries;
+		triesToDrop -= tries.floatValue();
 		while ( triesToDrop <= 0 ){
 			if (dropsToEquip <= 0){
 				int equipBonus = 0;
@@ -148,10 +152,10 @@ public class RingOfWealth extends Ring {
 				//This is to prevent using an upgraded wealth to farm another upgraded wealth and
 				//using the two to get substantially more upgrade value than intended
 				for (Wealth w : target.buffs(Wealth.class)){
-					if (w.buffedLvl() > equipBonus){
-						equipBonus = ((int) w.buffedLvl()) + Math.min(equipBonus, 2);
+					if ((w.buffedLvl().compareTo(BigInteger.valueOf(equipBonus)) > 0)){
+						equipBonus = (Big.toInt(w.buffedLvl())) + Math.min(equipBonus, 2);
 					} else {
-						equipBonus += Math.min(w.buffedLvl(), 2);
+						equipBonus += Big.toLong(w.buffedLvl().min(BigInteger.TWO));
 					}
 				}
 
@@ -164,7 +168,7 @@ public class RingOfWealth extends Ring {
 			} else {
 				Item i;
 				do {
-					i = genConsumableDrop(bonus - 1);
+					i = genConsumableDrop(bonus.subtract(BigInteger.ONE));
 				} while (Challenges.isItemBlocked(i));
 				drops.add(i);
 				dropsToEquip--;
@@ -207,14 +211,14 @@ public class RingOfWealth extends Ring {
 		latestDropTier = 0;
 	}
 
-	public static Item genConsumableDrop(long level) {
+	public static Item genConsumableDrop(BigInteger level) {
 		float roll = Random.Float();
 		//60% chance - 4% per level. Starting from +15: 0%
-		if (roll < (0.6f - 0.04f * level)) {
+		if ((Big.dec(roll).compareTo((Big.dec(0.6f).subtract(Big.dec(0.04f).multiply(Big.dec(level))))) < 0)) {
 			latestDropTier = 1;
 			return genLowValueConsumable();
 			//30% chance + 2% per level. Starting from +15: 60%-2%*(lvl-15)
-		} else if (roll < (0.9f - 0.02f * level)) {
+		} else if ((Big.dec(roll).compareTo((Big.dec(0.9f).subtract(Big.dec(0.02f).multiply(Big.dec(level))))) < 0)) {
 			latestDropTier = 2;
 			return genMidValueConsumable();
 			//10% chance + 2% per level. Starting from +15: 40%+2%*(lvl-15)
@@ -228,7 +232,7 @@ public class RingOfWealth extends Ring {
 		switch (Random.Int(4)){
 			case 0: default:
 				Item i = new Gold().random();
-				return i.quantity(i.quantity()/2);
+				return i.quantity(i.quantity().divide(BigInteger.TWO));
 			case 1:
 				return Generator.randomUsingDefaults(Generator.Category.STONE);
 			case 2:
@@ -242,7 +246,7 @@ public class RingOfWealth extends Ring {
 		switch (Random.Int(6)){
 			case 0: default:
 				Item i = genLowValueConsumable();
-				return i.quantity(i.quantity()*2);
+				return i.quantity(i.quantity().multiply(BigInteger.TWO));
 			case 1:
 				i = Generator.randomUsingDefaults(Generator.Category.POTION);
 				if (!(i instanceof ExoticPotion)) {
@@ -273,7 +277,7 @@ public class RingOfWealth extends Ring {
 				if (i instanceof Bomb){
 					return new Bomb.DoubleBomb();
 				} else {
-					return i.quantity(i.quantity()*2);
+					return i.quantity(i.quantity().multiply(BigInteger.TWO));
 				}
 			case 1:
 				return new StoneOfEnchantment();
@@ -311,13 +315,13 @@ public class RingOfWealth extends Ring {
 		//minimum level is 1/2/3/4/5/6 when ring level is 1/3/5/7/9/11
 		if (result.isUpgradable()){
 			int minLevel = (level+1)/2;
-			if (result.level() < minLevel){
-				result.level(minLevel);
+			if ((result.level().compareTo(BigInteger.valueOf(minLevel)) < 0)){
+				result.level(BigInteger.valueOf(minLevel));
 			}
 		}
 		result.cursed = false;
 		result.cursedKnown = true;
-		if (result.level() >= 2) {
+		if ((result.level().compareTo(BigInteger.TWO) >= 0)) {
 			latestDropTier = 4;
 		} else {
 			latestDropTier = 3;

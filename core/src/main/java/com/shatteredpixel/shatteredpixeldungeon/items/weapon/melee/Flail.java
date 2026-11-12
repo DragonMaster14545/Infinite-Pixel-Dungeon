@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -52,18 +54,17 @@ public class Flail extends MeleeWeapon {
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  Math.round(8d*(tier()+1)) +        //40 base, up from 30
-				lvl*Math.round(2d*(tier()+1));  //+10 per level, up from +6
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(Math.round(8d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf(Math.round(2d*(tier()+1)))));  //+10 per level, up from +6
 	}
 
-	private static long spinBoost = 0;
+	private static BigInteger spinBoost = BigInteger.ZERO;
 
 	@Override
-	public long damageRoll(Char owner) {
-		long dmg = super.damageRoll(owner) + spinBoost;
-		if (spinBoost > 0) Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
-		spinBoost = 0;
+	public BigInteger damageRoll(Char owner) {
+		BigInteger dmg = super.damageRoll(owner).add(spinBoost);
+		if ((spinBoost.compareTo(BigInteger.ZERO) > 0)) Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
+		spinBoost = BigInteger.ZERO;
 		return dmg;
 	}
 
@@ -86,10 +87,10 @@ public class Flail extends MeleeWeapon {
 			spin.detach();
 			//+(8+2*lvl) damage per spin, roughly +40% base damage, +45% scaling
 			// so +120% base dmg, +135% scaling at 3 spins
-			spinBoost = spin.spins * augment.damageFactor(8 + 2*buffedLvl());
+			spinBoost = BigInteger.valueOf(spin.spins).multiply(augment.damageFactor(BigInteger.valueOf(8).add(BigInteger.TWO.multiply(buffedLvl()))));
 			return Float.POSITIVE_INFINITY;
 		} else {
-			spinBoost = 0;
+			spinBoost = BigInteger.ZERO;
 			return super.accuracyFactor(owner, target);
 		}
 	}
@@ -129,7 +130,7 @@ public class Flail extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		long dmgBoost = levelKnown ? 8 + 2*buffedLvl() : 8;
+		BigInteger dmgBoost = levelKnown ? BigInteger.valueOf(8).add(BigInteger.TWO.multiply(buffedLvl())) : BigInteger.valueOf(8);
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(dmgBoost));
 		} else {
@@ -137,8 +138,8 @@ public class Flail extends MeleeWeapon {
 		}
 	}
 
-	public String upgradeAbilityStat(long level){
-		return "+" + augment.damageFactor(8 + 2*level);
+	public String upgradeAbilityStat(BigInteger level){
+		return "+" + augment.damageFactor(BigInteger.valueOf(8).add(BigInteger.TWO.multiply(level)));
 	}
 
 	public static class SpinAbilityTracker extends FlavourBuff {

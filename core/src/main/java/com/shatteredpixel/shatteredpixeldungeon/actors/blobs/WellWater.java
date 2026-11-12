@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -46,7 +48,7 @@ public abstract class WellWater extends Blob {
 				cell = j + i* Dungeon.level.width();
 				if (Dungeon.level.insideMap(cell)) {
 					off[cell] = cur[cell];
-					volume += off[cell];
+					volume = volume.add(off[cell]);
 				}
 			}
 		}
@@ -70,9 +72,9 @@ public abstract class WellWater extends Blob {
 				
 				if (newItem == oldItem) {
 
-				} else if (oldItem.quantity() > 1) {
+				} else if ((oldItem.quantity().compareTo(BigInteger.ONE) > 0)) {
 
-					oldItem.quantity( oldItem.quantity() - 1 );
+					oldItem.quantity( oldItem.quantity().subtract(BigInteger.ONE) );
 					heap.drop( newItem );
 					
 				} else {
@@ -114,20 +116,20 @@ public abstract class WellWater extends Blob {
 		for (Class<?>waterClass : waters) {
 			WellWater water = (WellWater)Dungeon.level.blobs.get( waterClass );
 			if (water != null &&
-				water.volume > 0 &&
-				water.cur[cell] > 0 &&
+				(water.volume.compareTo(BigInteger.ZERO) > 0) &&
+				(water.cur[cell].compareTo(BigInteger.ZERO) > 0) &&
 				water.affect( cell )) {
 				
 				Level.set( cell, Terrain.EMPTY_WELL );
 				GameScene.updateMap( cell );
 
 				if (water.landmark() != null) {
-					if (water.volume <= 0) {
+					if ((water.volume.compareTo(BigInteger.ZERO) <= 0)) {
 						Notes.remove(water.landmark());
 					} else {
 						boolean removing = true;
 						for (int i = 0; i < water.cur.length; i++){
-							if (water.cur[i] > 0 && Dungeon.level.visited[i]){
+							if ((water.cur[i].compareTo(BigInteger.ZERO) > 0) && Dungeon.level.visited[i]){
 								removing = false;
 								break;
 							}

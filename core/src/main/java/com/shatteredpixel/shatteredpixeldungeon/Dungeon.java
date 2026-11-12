@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
@@ -241,7 +245,7 @@ public class Dungeon {
 	//keeps track of what levels the game should try to load instead of creating fresh
 	public static ArrayList<Integer> generatedLevels = new ArrayList<>();
 
-	public static long gold;
+	public static BigInteger gold = BigInteger.ZERO;
 	public static final int MAY_CYCLE = Integer.MAX_VALUE - 1;
 	public static int cycle;
 
@@ -252,7 +256,7 @@ public class Dungeon {
 
 	public static double fireDamage;
 	public static int luck;
-	public static long energy;
+	public static BigInteger energy = BigInteger.ZERO;
 	public static double resetDamage;
 
 	public static HashSet<Integer> chapters;
@@ -331,14 +335,14 @@ public class Dungeon {
 		generatedLevels.clear();
 		oofedItems.clear();
 
-		gold = 0L;
+		gold = BigInteger.ZERO;
 		cycle = 0;
 		Bbat.level = 1;
 		respawn_timer = 75;
 		additionalMobs = 0;
 		fireDamage = 1d;
 		luck = 1;
-		energy = 0L;
+		energy = BigInteger.ZERO;
 		resetDamage = 1d;
 
 		droppedItems = new SparseArray<>();
@@ -389,30 +393,35 @@ public class Dungeon {
         Badges.validateCycleReached();
     }
 
-	public static long escalatingDepth(){
+	public static BigInteger escalatingDepth(){
 		return escalatingDepth(Dungeon.depth);
 	}
 
 
-	public static long getCycleMultiplier( long baseValue ) {
-        long modifier = 0;
+	public static BigInteger getCycleMultiplier( BigInteger baseValue ) {
+        BigInteger modifier = BigInteger.ZERO;
         if (Dungeon.hero != null) {
-            modifier = Math.min((long) Math.pow(1.0045, hero.lvl), 30);
+            modifier = Big.of(Math.pow(1.0045, hero.lvl)).min(BigInteger.valueOf(30));
         }
-		return baseValue*((long)(Math.pow(cycle+modifier+1.3,cycle*1.25)));
+		java.math.BigDecimal base = Big.dec(BigInteger.valueOf(cycle).add(modifier)).add(Big.dec(1.3));
+		double exp = cycle * 1.25;
+		int whole = (int) Math.floor(exp);
+		double frac = exp - whole;
+		java.math.BigDecimal factor = base.pow(whole, Big.MC).multiply(Big.dec(Math.pow(base.doubleValue(), frac)), Big.MC);
+		return baseValue.multiply(factor.toBigInteger());
 	}
 
-	public static int saveParse(long value) {
-		if (value > Integer.MAX_VALUE) {
+	public static int saveParse(BigInteger value) {
+		if ((value.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0)) {
 			return Integer.MAX_VALUE;
 		} else {
-			return (int) value;
+			return Big.toInt(value);
 		}
 	}
 
     //as we don't increase depth when cycling, we will return virtual depth difficulty
-    public static long escalatingDepth(int depth){
-		return getCycleMultiplier(depth);
+    public static BigInteger escalatingDepth(int depth){
+		return getCycleMultiplier(BigInteger.valueOf(depth));
     }
 
 	public static boolean isChallenged(Challenges challenge) {
@@ -583,10 +592,10 @@ public class Dungeon {
 			for (int i = 0; i < lookAhead; i ++) {
 				Random.Long(); //we don't care about these values, just need to go through them
 			}
-			long result = Random.Long();
+			BigInteger result = BigInteger.valueOf(Random.Long());
 
 		Random.popGenerator();
-		return result;
+		return Big.toLong(result);
 	}
 	
 	public static boolean shopOnLevel() {
@@ -603,7 +612,7 @@ public class Dungeon {
 
 	//value used for scaling of damage values and other effects.
 	//is usually the dungeon depth, but can be set to 26 when ascending
-	public static long scalingDepth(){
+	public static BigInteger scalingDepth(){
 		if (Dungeon.hero != null && Dungeon.hero.buff(AscensionChallenge.class) != null){
 			return escalatingDepth(26);
 		} else {
@@ -858,8 +867,8 @@ public class Dungeon {
 			bundle.put( DEPTH, depth );
 			bundle.put( BRANCH, branch );
 
-			bundle.put( GOLD, gold );
-			bundle.put( ENERGY, energy );
+			Big.put(bundle, GOLD, gold);
+			Big.put(bundle, ENERGY, energy);
 			bundle.put( CYCLE, cycle);
 			bundle.put( RESPAWN_TIMER, respawn_timer);
 			bundle.put( ADDMOBS, additionalMobs);
@@ -966,7 +975,7 @@ public class Dungeon {
 
 		version = bundle.getInt( VERSION );
 
-		seed = bundle.contains( SEED ) ? bundle.getLong( SEED ) : DungeonSeed.randomSeed();
+		seed = Big.toLong(bundle.contains( SEED ) ? Big.getBig(bundle, SEED) : BigInteger.valueOf(DungeonSeed.randomSeed()));
 		customSeedText = bundle.getString( CUSTOM_SEED );
 		daily = bundle.getBoolean( DAILY );
         weekly = bundle.getBoolean( WEEKLY );
@@ -1046,8 +1055,8 @@ public class Dungeon {
 		depth = bundle.getInt( DEPTH );
 		branch = bundle.getInt( BRANCH );
 
-		gold = bundle.getLong( GOLD );
-		energy = bundle.getLong( ENERGY );
+		gold = Big.getBig(bundle, GOLD);
+		energy = Big.getBig(bundle, ENERGY);
 
 		cycle = bundle.getInt( CYCLE);
 		respawn_timer = bundle.getFloat(RESPAWN_TIMER);
@@ -1140,13 +1149,13 @@ public class Dungeon {
 			info.challenges = newChallenges;
 		}
 		info.cycle = bundle.getInt( CYCLE );
-		info.seed = bundle.getLong( SEED );
+		info.seed = Big.toLong(Big.getBig(bundle, SEED));
 		info.customSeed = bundle.getString( CUSTOM_SEED );
         info.weekly = bundle.getBoolean( WEEKLY );
         info.weeklyReplay = bundle.getBoolean( WEEKLY_REPLAY );
 		info.daily = bundle.getBoolean( DAILY );
 		info.dailyReplay = bundle.getBoolean( DAILY_REPLAY );
-        info.lastPlayed = bundle.getLong( LAST_PLAYED );
+        info.lastPlayed = Big.toLong(Big.getBig(bundle, LAST_PLAYED));
 
 		Hero.preview( info, bundle.getBundle( HERO ) );
 		Statistics.preview( info, bundle );
@@ -1426,32 +1435,32 @@ public class Dungeon {
 		return highest;
 	}
 
-	public static long Long(long min, long max){
-		if (luckApplies()) return Random.Long(min, max);
-		long highest = Random.Long(min, max);
+	public static BigInteger Long(BigInteger min, BigInteger max){
+		if (luckApplies()) return BigInteger.valueOf(Random.Long(Big.toLong(min), Big.toLong(max)));
+		BigInteger highest = BigInteger.valueOf(Random.Long(Big.toLong(min), Big.toLong(max)));
 		for (int i = 1; i < luck; i++){
-			long roll = Random.Long(min, max);
-			if (roll > highest) highest = roll;
+			BigInteger roll = BigInteger.valueOf(Random.Long(Big.toLong(min), Big.toLong(max)));
+			if ((roll.compareTo(highest) > 0)) highest = roll;
 		}
 		return highest;
 	}
 
-	public static long LongRange(long min, long max){
-		if (luckApplies()) return Random.LongRange(min, max);
-		long highest = Random.LongRange(min, max);
+	public static BigInteger LongRange(BigInteger min, BigInteger max){
+		if (luckApplies()) return Big.range(min, max);
+		BigInteger highest = Big.range(min, max);
 		for (int i = 1; i < luck; i++){
-			long roll = Random.LongRange(min, max);
-			if (roll > highest) highest = roll;
+			BigInteger roll = Big.range(min, max);
+			if ((roll.compareTo(highest) > 0)) highest = roll;
 		}
 		return highest;
 	}
 
-	public static long NormalLongRange(long min, long max){
-		if (luckApplies()) return Random.NormalLongRange(min, max);
-		long highest = Random.NormalLongRange(min, max);
+	public static BigInteger NormalLongRange(BigInteger min, BigInteger max){
+		if (luckApplies()) return Big.normalRange(min, max);
+		BigInteger highest = Big.normalRange(min, max);
 		for (int i = 1; i < luck; i++){
-			long roll = Random.NormalLongRange(min, max);
-			if (roll > highest) highest = roll;
+			BigInteger roll = Big.normalRange(min, max);
+			if ((roll.compareTo(highest) > 0)) highest = roll;
 		}
 		return highest;
 	}

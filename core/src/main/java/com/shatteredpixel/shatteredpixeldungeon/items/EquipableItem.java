@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -107,7 +109,7 @@ public abstract class EquipableItem extends Item {
 	public void cast( final Hero user, int dst ) {
 
 		if (isEquipped( user )) {
-			if (quantity == 1 && !this.doUnequip( user, false, false )) {
+			if ((quantity.compareTo(BigInteger.ONE) == 0) && !this.doUnequip( user, false, false )) {
 				return;
 			}
 		}

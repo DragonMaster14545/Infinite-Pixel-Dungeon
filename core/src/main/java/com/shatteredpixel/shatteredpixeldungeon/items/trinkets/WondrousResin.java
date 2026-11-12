@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -31,17 +35,17 @@ public class WondrousResin extends Trinket {
 	}
 
 	@Override
-	protected long upgradeEnergyCost() {
+	protected BigInteger upgradeEnergyCost() {
 		//6 -> 10(16) -> 15(31) -> 20(51)
-		return 10+5*level();
+		return BigInteger.TEN.add(BigInteger.valueOf(5).multiply(level()));
 	}
 
 	@Override
 	public String statsDesc() {
 		if (isIdentified()){
 			return Messages.get(this, "stats_desc",
-					Messages.decimalFormat("#.##", 100*positiveCurseEffectChance((int)buffedLvl())),
-					Messages.decimalFormat("#.##", 100*extraCurseEffectChance((int)buffedLvl())));
+					Messages.decimalFormat("#.##", 100*positiveCurseEffectChance(Big.toInt(buffedLvl()))),
+					Messages.decimalFormat("#.##", 100*extraCurseEffectChance(Big.toInt(buffedLvl()))));
 		} else {
 			return Messages.get(this, "typical_stats_desc",
 					Messages.decimalFormat("#.##", 100*positiveCurseEffectChance(0)),

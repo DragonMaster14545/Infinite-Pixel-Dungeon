@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -165,7 +167,7 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 	}
 	
 	@Override
-	public long value() {
-		return isKnown() ? 30 * quantity : super.value();
+	public BigInteger value() {
+		return isKnown() ? BigInteger.valueOf(30).multiply(quantity) : super.value();
 	}
 }

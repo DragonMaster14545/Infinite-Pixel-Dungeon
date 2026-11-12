@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -38,28 +40,27 @@ public class Greatshield extends MeleeWeapon {
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  Math.round(3d*(tier()+1)) +     //18 base, down from 36
-				lvl*(tier()-1);                   //+4 per level, down from +7
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(Math.round(3d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf((tier()-1))));                   //+4 per level, down from +7
 	}
 
 	@Override
-	public long defenseFactor( Char owner ) {
+	public BigInteger defenseFactor( Char owner ) {
 		return DRMax();
 	}
 
-	public long DRMax(){
+	public BigInteger DRMax(){
 		return DRMax(buffedLvl());
 	}
 
 	//6 extra defence, plus 2 per level
-	public long DRMax(long lvl){
-		return (tier()+1)+(tier()-2)*lvl;
+	public BigInteger DRMax(BigInteger lvl){
+		return BigInteger.valueOf((tier()+1)).add(BigInteger.valueOf((tier()-2)).multiply(lvl));
 	}
 	
 	public String statsInfo(){
 		if (isIdentified()){
-			return Messages.get(this, "stats_desc", (tier()+1)+(tier()-2)*buffedLvl());
+			return Messages.get(this, "stats_desc", BigInteger.valueOf((tier()+1)).add(BigInteger.valueOf((tier()-2)).multiply(buffedLvl())));
 		} else {
 			return Messages.get(this, "typical_stats_desc", (tier()+1));
 		}
@@ -67,20 +68,20 @@ public class Greatshield extends MeleeWeapon {
 
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
-		RoundShield.guardAbility(hero, 3+buffedLvl()/300, this);
+		RoundShield.guardAbility(hero, BigInteger.valueOf(3).add(buffedLvl().divide(BigInteger.valueOf(300))), this);
 	}
 
 	@Override
 	public String abilityInfo() {
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", 3+buffedLvl()/300);
+			return Messages.get(this, "ability_desc", BigInteger.valueOf(3).add(buffedLvl().divide(BigInteger.valueOf(300))));
 		} else {
 			return Messages.get(this, "typical_ability_desc", 3);
 		}
 	}
 
 	@Override
-	public String upgradeAbilityStat(long level) {
-		return Long.toString(3 + level);
+	public String upgradeAbilityStat(BigInteger level) {
+		return BigInteger.valueOf(3).add(level).toString();
 	}
 }

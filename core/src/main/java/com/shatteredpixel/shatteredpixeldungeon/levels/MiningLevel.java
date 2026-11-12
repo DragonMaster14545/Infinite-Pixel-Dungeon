@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -246,14 +248,14 @@ public class MiningLevel extends CavesLevel {
 
 			String warnText;
 			DarkGold gold = hero.belongings.getItem(DarkGold.class);
-			long goldAmount = gold == null ? 0 : gold.quantity();
-			if (goldAmount < 10){
+			BigInteger goldAmount = gold == null ? BigInteger.ZERO : gold.quantity();
+			if ((goldAmount.compareTo(BigInteger.TEN) < 0)){
 				warnText = Messages.get(Blacksmith.class, "exit_warn_none");
-			} else if (goldAmount < 20){
+			} else if ((goldAmount.compareTo(BigInteger.valueOf(20)) < 0)){
 				warnText = Messages.get(Blacksmith.class, "exit_warn_low");
-			} else if (goldAmount < 30){
+			} else if ((goldAmount.compareTo(BigInteger.valueOf(30)) < 0)){
 				warnText = Messages.get(Blacksmith.class, "exit_warn_med");
-			} else if (goldAmount < 40){
+			} else if ((goldAmount.compareTo(BigInteger.valueOf(40)) < 0)){
 				warnText = Messages.get(Blacksmith.class, "exit_warn_high");
 			} else {
 				warnText = Messages.get(Blacksmith.class, "exit_warn_full");

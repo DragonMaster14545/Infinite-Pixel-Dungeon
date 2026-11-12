@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -74,7 +76,7 @@ public class WandOfUnstable extends Wand {
     }
 
     @Override
-    public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
+    public void onHit(MagesStaff staff, Char attacker, Char defender, BigInteger damage) {
         wand = Reflection.newInstance(Random.element(wands));
         if (wand != null) {
             wand.level(level());

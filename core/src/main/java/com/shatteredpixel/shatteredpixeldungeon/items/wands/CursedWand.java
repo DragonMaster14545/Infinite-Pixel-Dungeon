@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -137,7 +141,7 @@ public class CursedWand {
 
 	public static void tryForWandProc( Char target, Item origin ){
 		if (target != null && target != Dungeon.hero && origin instanceof Wand){
-			Wand.wandProc(target, origin.buffedLvl(), 1);
+			Wand.wandProc(target, origin.buffedLvl(), BigInteger.ONE);
 		}
 	}
 
@@ -242,7 +246,7 @@ public class CursedWand {
 			if (Actor.findChar(bolt.collisionPos) == null){
 				Dungeon.level.pressCell(bolt.collisionPos);
 			}
-			GameScene.add( Blob.seed(bolt.collisionPos, 30, Regrowth.class));
+			GameScene.add( Blob.seed(bolt.collisionPos, BigInteger.valueOf(30), Regrowth.class));
 			tryForWandProc(Actor.findChar(bolt.collisionPos), origin);
 			return true;
 		}
@@ -289,13 +293,13 @@ public class CursedWand {
 			}
 			switch (Random.Int(3)) {
 				case 0: default:
-					GameScene.add( Blob.seed( bolt.collisionPos, 800, ConfusionGas.class ) );
+					GameScene.add( Blob.seed( bolt.collisionPos, BigInteger.valueOf(800), ConfusionGas.class ) );
 					return true;
 				case 1:
-					GameScene.add( Blob.seed( bolt.collisionPos, 500, ToxicGas.class ) );
+					GameScene.add( Blob.seed( bolt.collisionPos, BigInteger.valueOf(500), ToxicGas.class ) );
 					return true;
 				case 2:
-					GameScene.add( Blob.seed( bolt.collisionPos, 200, ParalyticGas.class ) );
+					GameScene.add( Blob.seed( bolt.collisionPos, BigInteger.valueOf(200), ParalyticGas.class ) );
 					return true;
 			}
 		}
@@ -374,9 +378,9 @@ public class CursedWand {
 				wand = (Wand)Generator.randomUsingDefaults(Generator.Category.WAND);
 			}
 			if (origin instanceof Wand){
-				wand.upgrade(origin.level());
+				wand.upgrade((origin.level()));
 			} else {
-				wand.upgrade(Dungeon.scalingDepth()/5);
+				wand.upgrade((Dungeon.scalingDepth().divide(BigInteger.valueOf(5))));
 			}
 			wand.levelKnown = false;
 			wand.onZap(bolt);
@@ -477,7 +481,7 @@ public class CursedWand {
 		public boolean effect(Item origin, Char user, Ballistica bolt, boolean positiveOnly) {
 			final Char target = Actor.findChar( bolt.collisionPos );
 			if (target != null) {
-				long damage = Dungeon.scalingDepth() * 2;
+				BigInteger damage = Dungeon.scalingDepth().multiply(BigInteger.TWO);
 				Char toHeal, toDamage;
 
 				//can only harm target if positive only
@@ -488,9 +492,9 @@ public class CursedWand {
 					toHeal = target;
 					toDamage = user;
 				}
-				toHeal.HP = Math.min(toHeal.HT, toHeal.HP + damage/2);
+				toHeal.HP = toHeal.HT.min(toHeal.HP.add(damage.divide(BigInteger.TWO)));
 				toHeal.sprite.emitter().burst(Speck.factory(Speck.HEALING), 3);
-				toHeal.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString(damage), FloatingText.HEALING );
+				toHeal.sprite.showStatusWithIcon( CharSprite.POSITIVE, damage.toString(), FloatingText.HEALING );
 
 				toDamage.damage(damage, new CursedWand());
 				toDamage.sprite.emitter().start(ShadowParticle.UP, 0.05f, 10);
@@ -578,7 +582,7 @@ public class CursedWand {
 				//does not harm allies if positive only
 				if (ch.alignment != Char.Alignment.ALLY || !positiveOnly){
 					//shocking dart damage and a little stun
-					ch.damage(Dungeon.NormalLongRange(5 + Dungeon.scalingDepth() / 4, 10 + Dungeon.scalingDepth() / 4), new Electricity());
+					ch.damage(Dungeon.NormalLongRange(BigInteger.valueOf(5).add(Dungeon.scalingDepth().divide(BigInteger.valueOf(4))), BigInteger.TEN.add(Dungeon.scalingDepth().divide(BigInteger.valueOf(4)))), new Electricity());
 					if (ch.isAlive()) {
 						Buff.affect(ch, Paralysis.class, Paralysis.DURATION / 2f);
 					} else if (ch == Dungeon.hero){
@@ -818,11 +822,11 @@ public class CursedWand {
 						Char ch = Actor.findChar(i);
 						Burning burning = Buff.affect(ch, Burning.class);
 						burning.reignite(ch);
-						long dmg = Dungeon.NormalLongRange(5 + Dungeon.scalingDepth(), 10 + Dungeon.scalingDepth()*2);
+						BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(5).add(Dungeon.scalingDepth()), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.TWO)));
 						ch.damage(dmg, burning);
 					}
 					if (Dungeon.level.flamable[i]){
-						GameScene.add(Blob.seed(i, 4, Fire.class));
+						GameScene.add(Blob.seed(i, BigInteger.valueOf(4), Fire.class));
 					}
 
 				}
@@ -898,7 +902,7 @@ public class CursedWand {
 					continue;
 				} else {
 
-					long dmg = Dungeon.NormalLongRange(5 + Dungeon.scalingDepth(), 10 + Dungeon.scalingDepth()*2);
+					BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(5).add(Dungeon.scalingDepth()), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.TWO)));
 					switch (Random.Int(5)){
 						case 0: default:
 							Burning burning = Buff.affect(ch, Burning.class);
@@ -913,7 +917,7 @@ public class CursedWand {
 							break;
 						case 2:
 							Poison poison = Buff.affect(ch, Poison.class);
-							poison.set(3 + Dungeon.scalingDepth() / 2);
+							poison.set(BigInteger.valueOf(3).add(Dungeon.scalingDepth().divide(BigInteger.TWO)).doubleValue());
 							ch.damage(dmg, poison);
 							ch.sprite.emitter().burst(PoisonParticle.SPLASH, 20);
 							break;
@@ -1028,7 +1032,7 @@ public class CursedWand {
 		@Override
 		public boolean effect(Item origin, Char user, Ballistica bolt, boolean positiveOnly) {
 			for (int i = 0; i < Dungeon.level.length(); i++){
-				GameScene.add( Blob.seed(i, 15, Regrowth.class));
+				GameScene.add( Blob.seed(i, BigInteger.valueOf(15), Regrowth.class));
 			}
 
 			new Flare(8, 32).color(0xFFFF66, true).show(user.sprite, 2f);
@@ -1038,7 +1042,7 @@ public class CursedWand {
 			if (!positiveOnly) {
 				GLog.w(Messages.get(CursedWand.class, "fire"));
 				do {
-					GameScene.add(Blob.seed(Dungeon.level.randomDestination(null), 10, Fire.class));
+					GameScene.add(Blob.seed(Dungeon.level.randomDestination(null), BigInteger.TEN, Fire.class));
 				} while (Random.Int(5) != 0);
 			}
 			return true;
@@ -1082,7 +1086,7 @@ public class CursedWand {
 				do {
 					reward = Generator.randomUsingDefaults(Random.oneOf(Generator.Category.WEAPON, Generator.Category.ARMOR,
 							Generator.Category.RING, Generator.Category.WAND));
-				} while (reward.level() < 1);
+				} while ((reward.level().compareTo(BigInteger.ONE) < 0));
 				mimic.items.add(reward);
 			}
 

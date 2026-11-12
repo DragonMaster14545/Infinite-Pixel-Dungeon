@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bags;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
@@ -64,8 +66,8 @@ public class CheeseCheest extends Bag {
 	}
 
 	@Override
-	public long value() {
-		return 650 * (Dungeon.cycle + 1);
+	public BigInteger value() {
+		return BigInteger.valueOf(650 * (Dungeon.cycle + 1));
 	}
 
 }

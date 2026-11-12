@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -42,9 +46,8 @@ public class Glaive extends MeleeWeapon {
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  Math.round(9d*(tier()+1)) +    //54 base, up from 36
-				lvl*Math.round(2d*(tier()+1)); //+12 per level, up from +7
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(Math.round(9d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf(Math.round(2d*(tier()+1))))); //+12 per level, up from +7
 	}
 
 	@Override
@@ -55,22 +58,22 @@ public class Glaive extends MeleeWeapon {
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
 		//+(12+2.5*lvl) damage, roughly +55% base damage, +55% scaling
-		long dmgBoost = augment.damageFactor(12 + Math.round(2.5f*buffedLvl()));
+		BigInteger dmgBoost = augment.damageFactor(BigInteger.valueOf(12).add(Big.round(Big.dec(2.5f).multiply(Big.dec(buffedLvl())))));
 		Spear.spikeAbility(hero, target, 1, dmgBoost, this);
 	}
 
-	public String upgradeAbilityStat(long level){
-		int dmgBoost = 12 + Math.round(2.5f*level);
-		return augment.damageFactor(min(level)+dmgBoost) + "-" + augment.damageFactor(max(level)+dmgBoost);
+	public String upgradeAbilityStat(BigInteger level){
+		int dmgBoost = Big.toInt(BigInteger.valueOf(12).add(Big.round(Big.dec(2.5f).multiply(Big.dec(level)))));
+		return augment.damageFactor(min(level).add(BigInteger.valueOf(dmgBoost))) + "-" + augment.damageFactor(max(level).add(BigInteger.valueOf(dmgBoost)));
 	}
 
 	@Override
 	public String abilityInfo() {
-		long dmgBoost = levelKnown ? 12 + Math.round(2.5f*buffedLvl()) : 12;
+		BigInteger dmgBoost = levelKnown ? BigInteger.valueOf(12).add(Big.round(Big.dec(2.5f).multiply(Big.dec(buffedLvl())))) : BigInteger.valueOf(12);
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
+			return Messages.get(this, "ability_desc", augment.damageFactor(min().add(dmgBoost)), augment.damageFactor(max().add(dmgBoost)));
 		} else {
-			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);
+			return Messages.get(this, "typical_ability_desc", min(BigInteger.ZERO).add(dmgBoost), max(BigInteger.ZERO).add(dmgBoost));
 		}
 	}
 

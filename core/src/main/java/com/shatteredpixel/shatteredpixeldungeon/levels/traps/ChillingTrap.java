@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -49,7 +51,7 @@ public class ChillingTrap extends Trap{
 		
 		for( int i : PathFinder.NEIGHBOURS9) {
 			if (!Dungeon.level.solid[pos + i]) {
-				GameScene.add(Blob.seed(pos + i, 10, Freezing.class));
+				GameScene.add(Blob.seed(pos + i, BigInteger.TEN, Freezing.class));
 			}
 		}
 	}

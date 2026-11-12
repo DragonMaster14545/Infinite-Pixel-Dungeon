@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
@@ -38,7 +40,7 @@ public class Wayward extends Weapon.Enchantment {
 	private static ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x000000 );
 
 	@Override
-	public long proc( Weapon weapon, Char attacker, Char defender, long damage ) {
+	public BigInteger proc( Weapon weapon, Char attacker, Char defender, BigInteger damage ) {
 		float procChance = 1/4f * procChanceMultiplier(attacker);
 
 		if (attacker.buff(WaywardBuff.class) != null){

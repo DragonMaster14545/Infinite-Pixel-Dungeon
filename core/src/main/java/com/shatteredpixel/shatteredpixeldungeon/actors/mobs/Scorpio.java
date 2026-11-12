@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -44,11 +46,11 @@ public class Scorpio extends Mob {
 	{
 		spriteClass = ScorpioSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(110);
-		defenseSkill = Dungeon.getCycleMultiplier(24);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(110));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(24));
 		viewDistance = Light.DISTANCE;
 		
-		EXP = Dungeon.getCycleMultiplier(14);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(14));
 		maxLvl = 27;
 		
 		loot = Generator.Category.POTION;
@@ -58,18 +60,18 @@ public class Scorpio extends Mob {
 	}
 	
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(30), Dungeon.getCycleMultiplier(40) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(30)), Dungeon.getCycleMultiplier(BigInteger.valueOf(40)) );
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(36);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(36));
 	}
 	
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(16));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(16)));
 	}
 	
 	@Override
@@ -79,7 +81,7 @@ public class Scorpio extends Mob {
 	}
 	
 	@Override
-	public long attackProc( Char enemy, long damage ) {
+	public BigInteger attackProc( Char enemy, BigInteger damage ) {
 		damage = super.attackProc( enemy, damage );
 		if (Random.Int( 2 ) == 0) {
 			Buff.prolong( enemy, Cripple.class, Cripple.DURATION );

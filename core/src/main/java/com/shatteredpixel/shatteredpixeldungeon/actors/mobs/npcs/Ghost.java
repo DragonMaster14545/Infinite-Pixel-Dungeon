@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -98,8 +102,8 @@ public class Ghost extends NPC {
 	}
 
 	@Override
-	public long defenseSkill(Char enemy ) {
-		return INFINITE_EVASION;
+	public BigInteger defenseSkill(Char enemy ) {
+		return BigInteger.valueOf(INFINITE_EVASION);
 	}
 	
 	@Override
@@ -113,7 +117,7 @@ public class Ghost extends NPC {
 	}
 
 	@Override
-	public void damage( long dmg, Object src ) {
+	public void damage( BigInteger dmg, Object src ) {
 		//do nothing
 	}
 
@@ -333,25 +337,25 @@ public class Ghost extends NPC {
 				weapon = (Weapon) Generator.random(Generator.wepTiers[wepTier - 1]);
 
 				//clear weapon's starting properties
-				weapon.level(0);
+				weapon.level(BigInteger.ZERO);
 				weapon.enchant(null);
 				weapon.cursed = false;
 
 				//50%:+0, 30%:+1, 15%:+2, 5%:+3
 				float itemLevelRoll = Dungeon.Float();
-				long itemLevel;
+				BigInteger itemLevel;
 				if (itemLevelRoll < 0.5f){
-					itemLevel = 0;
+					itemLevel = BigInteger.ZERO;
 				} else if (itemLevelRoll < 0.8f){
-					itemLevel = 1;
+					itemLevel = BigInteger.ONE;
 				} else if (itemLevelRoll < 0.95f){
-					itemLevel = 2;
+					itemLevel = BigInteger.TWO;
 				} else {
-					itemLevel = 3;
+					itemLevel = BigInteger.valueOf(3);
 				}
-                itemLevel += Dungeon.getCycleMultiplier(2);
-				weapon.upgrade(itemLevel);
-				armor.upgrade(itemLevel);
+                itemLevel = itemLevel.add(Dungeon.getCycleMultiplier(BigInteger.TWO));
+				weapon.upgrade((itemLevel));
+				armor.upgrade((itemLevel));
                 ((MeleeWeapon)weapon).tier += Dungeon.cycle * 5;
                 armor.tier += Dungeon.cycle * 5;
 

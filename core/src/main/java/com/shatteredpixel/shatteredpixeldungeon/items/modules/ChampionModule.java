@@ -29,6 +29,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.modules;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
@@ -80,8 +82,8 @@ public class ChampionModule extends Module {
 
 
     @Override
-    public long value() {
-        return 100000 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(100000).multiply(quantity);
     }
 
 }

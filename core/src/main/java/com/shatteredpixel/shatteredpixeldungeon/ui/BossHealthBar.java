@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
@@ -168,13 +172,13 @@ public class BossHealthBar extends Component {
 				}
 			} else {
 
-				long health = boss.HP;
-				long shield = boss.shielding();
-				long max = boss.HT;
+				BigInteger health = boss.HP;
+				BigInteger shield = boss.shielding();
+				BigInteger max = boss.HT;
 
-				hp.scale.x = (float) Math.max( 0, (health-shield)/(double)max);
-				shieldedHP.scale.x = (float) (health/(double)max);
-				rawShielding.scale.x = (float) (shield/(double)max);
+				hp.scale.x = Big.dec(0).max(Big.div(Big.dec((health.subtract(shield))), Big.dec(max.doubleValue()))).floatValue();
+				shieldedHP.scale.x = (Big.div(Big.dec(health), Big.dec(max.doubleValue()))).floatValue();
+				rawShielding.scale.x = (Big.div(Big.dec(shield), Big.dec(max.doubleValue()))).floatValue();
 
 				if (bleeding != blood.on){
 					if (bleeding)   skull.tint( 0xcc0000, 0.6f );
@@ -182,7 +186,7 @@ public class BossHealthBar extends Component {
 					blood.on = bleeding;
 				}
 
-				if (shield <= 0){
+				if ((shield.compareTo(BigInteger.ZERO) <= 0)){
 					hpText.text(health + "/" + max);
 				} else {
 					hpText.text(health + "+" + shield +  "/" + max);

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
@@ -46,7 +48,7 @@ public class PinCushion extends Buff {
 				item.merge(projectile);
 				if (TippedDart.lostDarts > 0){
 					Dart d = new Dart();
-					d.quantity(TippedDart.lostDarts);
+					d.quantity(BigInteger.valueOf(TippedDart.lostDarts));
 					TippedDart.lostDarts = 0;
 					stick(d);
 				}

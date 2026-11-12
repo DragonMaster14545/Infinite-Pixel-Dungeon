@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.mage;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -119,13 +123,13 @@ public class WarpBeacon extends ArmorAbility {
 
 							if (existing != null && existing != hero){
 								if (hero.hasTalent(Talent.TELEFRAG)){
-									long heroHP = hero.HP + hero.shielding();
-									long heroDmg = 5 * hero.pointsInTalent(Talent.TELEFRAG);
-									hero.damage(Math.min(heroDmg, heroHP-1), WarpBeacon.this);
+									BigInteger heroHP = hero.HP.add(hero.shielding());
+									BigInteger heroDmg = BigInteger.valueOf(5 * hero.pointsInTalent(Talent.TELEFRAG));
+									hero.damage(heroDmg.min(heroHP.subtract(BigInteger.ONE)), WarpBeacon.this);
 
-									long damage = Hero.heroDamageIntRange(10*hero.pointsInTalent(Talent.TELEFRAG), 15*hero.pointsInTalent(Talent.TELEFRAG));
+									BigInteger damage = Hero.heroDamageIntRange(BigInteger.valueOf(10*hero.pointsInTalent(Talent.TELEFRAG)), BigInteger.valueOf(15*hero.pointsInTalent(Talent.TELEFRAG)));
 									existing.sprite.flash();
-									existing.sprite.bloodBurstA(existing.sprite.center(), (int) Math.min(Integer.MAX_VALUE, damage));
+									existing.sprite.bloodBurstA(existing.sprite.center(), Big.toInt(BigInteger.valueOf(Integer.MAX_VALUE).min(damage)));
 									existing.damage(damage, WarpBeacon.this);
 
 									Sample.INSTANCE.play(Assets.Sounds.HIT_CRUSH);

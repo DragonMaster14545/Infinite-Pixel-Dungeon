@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.painters;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DarkGold;
@@ -43,10 +45,10 @@ public class MiningLevelPainter extends CavesPainter {
 		return 3;
 	}
 
-	private long goldToAdd = 0;
+	private BigInteger goldToAdd = BigInteger.ZERO;
 
 	public RegularPainter setGold(int amount){
-		goldToAdd = amount;
+		goldToAdd = BigInteger.valueOf(amount);
 		return this;
 	}
 
@@ -55,12 +57,12 @@ public class MiningLevelPainter extends CavesPainter {
 		//we start by counting all the gold purposefully made by rooms
 		for (int i = 0; i < level.length(); i++){
 			if (level.map[i] == Terrain.WALL_DECO) {
-				goldToAdd--;
+				goldToAdd = goldToAdd.subtract(BigInteger.ONE);
 			}
 		}
 		for (Heap h : level.heaps.valueList()){
 			for (Item i : h.items){
-				if (i instanceof DarkGold) goldToAdd -= i.quantity();
+				if (i instanceof DarkGold) goldToAdd = goldToAdd.subtract(i.quantity());
 			}
 		}
 
@@ -75,7 +77,7 @@ public class MiningLevelPainter extends CavesPainter {
 				for (Point p : r.getPoints()){
 					int i = level.pointToCell(p);
 
-					if (level.insideMap(i) && goldToAdd > 0 && map[i] == Terrain.WALL){
+					if (level.insideMap(i) && (goldToAdd.compareTo(BigInteger.ZERO) > 0) && map[i] == Terrain.WALL){
 
 						for (int j : PathFinder.NEIGHBOURS4){
 							if (level.insideMap(i+j) && map[i+j] != Terrain.WALL){
@@ -86,23 +88,23 @@ public class MiningLevelPainter extends CavesPainter {
 					}
 				}
 
-				if (goldToAdd > 0 && !goldPosCandidates.isEmpty()){
+				if ((goldToAdd.compareTo(BigInteger.ZERO) > 0) && !goldPosCandidates.isEmpty()){
 					int pos = Random.element(goldPosCandidates);
 
 					map[pos] = Terrain.WALL_DECO;
-					goldToAdd--;
+					goldToAdd = goldToAdd.subtract(BigInteger.ONE);
 
-					if (goldToAdd > 0){
+					if ((goldToAdd.compareTo(BigInteger.ZERO) > 0)){
 						int i = PathFinder.NEIGHBOURS4[Random.Int(4)];
 						if (level.insideMap(pos+i) && map[pos+i] == Terrain.WALL){
 							map[pos+i] = Terrain.WALL_DECO;
-							goldToAdd--;
+							goldToAdd = goldToAdd.subtract(BigInteger.ONE);
 						}
 						if (Random.Int(2) == 0){
 							i = PathFinder.NEIGHBOURS4[Random.Int(4)];
 							if (level.insideMap(pos+i) && map[pos+i] == Terrain.WALL){
 								map[pos+i] = Terrain.WALL_DECO;
-								goldToAdd--;
+								goldToAdd = goldToAdd.subtract(BigInteger.ONE);
 							}
 						}
 					}
@@ -110,7 +112,7 @@ public class MiningLevelPainter extends CavesPainter {
 				}
 
 			}
-		} while (goldToAdd > 0);
+		} while ((goldToAdd.compareTo(BigInteger.ZERO) > 0));
 
 	}
 

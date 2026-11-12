@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
@@ -32,9 +36,9 @@ public class ThirteenLeafClover extends Trinket {
 	}
 
 	@Override
-	protected long upgradeEnergyCost() {
+	protected BigInteger upgradeEnergyCost() {
 		//6 -> 5(11) -> 7(18) -> 8(26)
-		return Math.round(5+1.67f*level());
+		return Big.round(Big.dec(5).add(Big.dec(1.67f).multiply(Big.dec(level()))));
 	}
 
 	@Override
@@ -42,24 +46,24 @@ public class ThirteenLeafClover extends Trinket {
 		if (isIdentified()){
 			return Messages.get(this, "stats_desc", (int)(100*combatDistributionInverseChance(buffedLvl())));
 		} else {
-			return Messages.get(this, "typical_stats_desc", (int)(100*combatDistributionInverseChance(0)));
+			return Messages.get(this, "typical_stats_desc", (int)(100*combatDistributionInverseChance(BigInteger.ZERO)));
 		}
 	}
 
 	public static float combatDistributionInverseChance(){
-		return combatDistributionInverseChance(trinketLevel(ThirteenLeafClover.class));
+		return combatDistributionInverseChance(BigInteger.valueOf(trinketLevel(ThirteenLeafClover.class)));
 	}
 
-	public static float combatDistributionInverseChance( long level ){
-		if (level <= -1){
+	public static float combatDistributionInverseChance( BigInteger level ){
+		if ((level.compareTo(BigInteger.valueOf(-1)) <= 0)){
 			return 0;
 		} else {
-			return 0.25f + 0.25f*level;
+			return Big.dec(0.25f).add(Big.dec(0.25f).multiply(Big.dec(level))).floatValue();
 		}
 	}
 
-	public static long invCombatRoll( long min, long max){
-		return Random.InvNormalLongRange( min, max );
+	public static BigInteger invCombatRoll( BigInteger min, BigInteger max){
+		return Big.invNormalRange(min, max);
 	}
 
 }

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -35,7 +37,7 @@ public class LootIndicator extends Tag {
 	private ItemSlot slot;
 	
 	private Item lastItem = null;
-	private long lastQuantity = 0;
+	private BigInteger lastQuantity = BigInteger.ZERO;
 	
 	public LootIndicator() {
 		super( 0x185898 );
@@ -101,7 +103,7 @@ public class LootIndicator extends Tag {
 					heap.type == Heap.Type.SKELETON ? ItemSlot.SKELETON :
 					heap.type == Heap.Type.REMAINS ? ItemSlot.REMAINS :
 					heap.peek();
-				if (item != null && (item != lastItem || item.quantity() != lastQuantity)) {
+				if (item != null && (item != lastItem || (item.quantity().compareTo(lastQuantity) != 0))) {
 					lastItem = item;
 					lastQuantity = item.quantity();
 					

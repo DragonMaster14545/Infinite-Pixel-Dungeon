@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -114,8 +116,8 @@ public class Stylus extends Item {
 	}
 	
 	@Override
-	public long value() {
-		return 30 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(30).multiply(quantity);
 	}
 
 	private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {

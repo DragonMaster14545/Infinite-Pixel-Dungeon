@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -41,9 +43,8 @@ public class Shortsword extends MeleeWeapon {
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  6L*(tier()+1) +    //18
-				lvl*(tier()+2);   //+4
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(6L*(tier()+1)).add(lvl.multiply(BigInteger.valueOf((tier()+2))));   //+4
 	}
 
 	@Override
@@ -63,22 +64,22 @@ public class Shortsword extends MeleeWeapon {
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
 		//+(4+lvl) damage, roughly +50% base dmg, +50% scaling
-		long dmgBoost = augment.damageFactor(4 + buffedLvl());
+		BigInteger dmgBoost = augment.damageFactor(BigInteger.valueOf(4).add(buffedLvl()));
 		Sword.cleaveAbility(hero, target, 1, dmgBoost, this);
 	}
 
 	@Override
 	public String abilityInfo() {
-		long dmgBoost = levelKnown ? 4 + buffedLvl() : 4;
+		BigInteger dmgBoost = levelKnown ? BigInteger.valueOf(4).add(buffedLvl()) : BigInteger.valueOf(4);
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
+			return Messages.get(this, "ability_desc", augment.damageFactor(min().add(dmgBoost)), augment.damageFactor(max().add(dmgBoost)));
 		} else {
-			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);
+			return Messages.get(this, "typical_ability_desc", min(BigInteger.ZERO).add(dmgBoost), max(BigInteger.ZERO).add(dmgBoost));
 		}
 	}
 
-	public String upgradeAbilityStat(long level){
-		long dmgBoost = 4 + level;
-		return augment.damageFactor(min(level)+dmgBoost) + "-" + augment.damageFactor(max(level)+dmgBoost);
+	public String upgradeAbilityStat(BigInteger level){
+		BigInteger dmgBoost = BigInteger.valueOf(4).add(level);
+		return augment.damageFactor(min(level).add(dmgBoost)) + "-" + augment.damageFactor(max(level).add(dmgBoost));
 	}
 }

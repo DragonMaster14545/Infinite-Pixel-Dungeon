@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
@@ -48,8 +51,8 @@ public class PotionOfShielding extends ExoticPotion {
 			PotionOfHealing.pharmacophobiaProc(hero);
 		} else {
 			//~75% of a potion of healing
-			Buff.affect(hero, Barrier.class).setShield((int) (0.6f * hero.HT + 10));
-			hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString((int) (0.6f * hero.HT + 10)), FloatingText.SHIELDING );
+			Buff.affect(hero, Barrier.class).setShield(BigInteger.valueOf(Big.toInt(((Big.dec(0.6f).multiply(Big.dec(hero.HT)).add(Big.dec(10)))).toBigInteger())));
+			hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(Big.toInt(((Big.dec(0.6f).multiply(Big.dec(hero.HT)).add(Big.dec(10)))).toBigInteger())), FloatingText.SHIELDING );
 		}
 	}
 }

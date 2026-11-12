@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -38,14 +40,14 @@ public class RotDart extends TippedDart {
 	}
 	
 	@Override
-	public long proc(Char attacker, Char defender, long damage) {
+	public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 
 		//when processing charged shot, only corrode enemies
 		if (processingChargedShot && attacker.alignment == defender.alignment) {
 			//do nothing
 		} else if (defender.properties().contains(Char.Property.BOSS)
 				|| defender.properties().contains(Char.Property.MINIBOSS)){
-			Buff.affect(defender, Corrosion.class).set(5f, Dungeon.scalingDepth()/3);
+			Buff.affect(defender, Corrosion.class).set(5f, Dungeon.scalingDepth().divide(BigInteger.valueOf(3)));
 		} else {
 			Buff.affect(defender, Corrosion.class).set(10f, Dungeon.scalingDepth());
 		}
@@ -54,7 +56,7 @@ public class RotDart extends TippedDart {
 	}
 
 	@Override
-	public float durabilityPerUse(long level) {
+	public float durabilityPerUse(BigInteger level) {
 		return MAX_DURABILITY/5f; //always 5 uses
 	}
 }

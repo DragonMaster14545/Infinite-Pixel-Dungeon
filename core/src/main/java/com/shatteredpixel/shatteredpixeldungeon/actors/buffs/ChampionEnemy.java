@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -151,7 +153,7 @@ public abstract class ChampionEnemy extends Buff {
 			if (target.flying || !Dungeon.level.pit[target.pos]) {
 				for (int i : PathFinder.NEIGHBOURS9) {
 					if (!Dungeon.level.solid[target.pos + i] && !Dungeon.level.water[target.pos + i]) {
-						GameScene.add(Blob.seed(target.pos + i, 2, Fire.class));
+						GameScene.add(Blob.seed(target.pos + i, BigInteger.TWO, Fire.class));
 					}
 				}
 			}
@@ -373,7 +375,7 @@ public abstract class ChampionEnemy extends Buff {
             if (target.flying || !Dungeon.level.pit[target.pos]) {
                 for (int i : PathFinder.NEIGHBOURS9) {
                     if (!Dungeon.level.solid[target.pos + i]) {
-                        GameScene.add(Blob.seed(target.pos + i, 2, Blizzard.class));
+                        GameScene.add(Blob.seed(target.pos + i, BigInteger.TWO, Blizzard.class));
                     }
                 }
             }

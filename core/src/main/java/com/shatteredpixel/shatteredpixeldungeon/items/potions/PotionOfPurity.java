@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -62,7 +64,7 @@ public class PotionOfPurity extends Potion {
 		ArrayList<Blob> blobs = new ArrayList<>();
 		for (Class c : affectedBlobs){
 			Blob b = Dungeon.level.blobs.get(c);
-			if (b != null && b.volume > 0){
+			if (b != null && (b.volume.compareTo(BigInteger.ZERO) > 0)){
 				blobs.add(b);
 			}
 		}
@@ -101,7 +103,7 @@ public class PotionOfPurity extends Potion {
 	}
 	
 	@Override
-	public long value() {
-		return isKnown() ? 40 * quantity : super.value();
+	public BigInteger value() {
+		return isKnown() ? BigInteger.valueOf(40).multiply(quantity) : super.value();
 	}
 }

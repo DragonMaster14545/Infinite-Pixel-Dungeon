@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -92,14 +94,14 @@ public class Ooze extends Buff {
 			detach();
 		} else if (target.isAlive()) {
 
-			if (Dungeon.scalingDepth() > 5) {
-				target.damage(1 + Dungeon.scalingDepth() / 5, this);
+			if ((Dungeon.scalingDepth().compareTo(BigInteger.valueOf(5)) > 0)) {
+				target.damage(BigInteger.ONE.add(Dungeon.scalingDepth().divide(BigInteger.valueOf(5))), this);
 				acted = true;
-			} else if (Dungeon.scalingDepth() == 5){
-				target.damage(1, this); //1 dmg per turn vs Goo
+			} else if ((Dungeon.scalingDepth().compareTo(BigInteger.valueOf(5)) == 0)){
+				target.damage(BigInteger.ONE, this); //1 dmg per turn vs Goo
 				acted = true;
 			} else if (Random.Int(2) == 0) {
-				target.damage(1, this); //0.5 dmg per turn in sewers
+				target.damage(BigInteger.ONE, this); //0.5 dmg per turn in sewers
 				acted = true;
 			}
 

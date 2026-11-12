@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.effects;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
@@ -48,14 +50,14 @@ public class BlobEmitter extends Emitter {
 	@Override
 	protected void emit( int index ) {
 		
-		if (blob.volume <= 0) {
+		if ((blob.volume.compareTo(BigInteger.ZERO) <= 0)) {
 			return;
 		}
 
 		if (blob.area.isEmpty())
 			blob.setupArea();
 		
-		long[] map = blob.cur;
+		BigInteger[] map = blob.cur;
 		float size = DungeonTilemap.SIZE;
 
 		int cell;
@@ -64,7 +66,7 @@ public class BlobEmitter extends Emitter {
 				cell = i + j*Dungeon.level.width();
 				if (cell < Dungeon.level.heroFOV.length
 						&& (Dungeon.level.heroFOV[cell] || blob.alwaysVisible)
-						&& map[cell] > 0) {
+						&& (map[cell].compareTo(BigInteger.ZERO) > 0)) {
 					float x = (i + Random.Float(bound.left, bound.right)) * size;
 					float y = (j + Random.Float(bound.top, bound.bottom)) * size;
 					factory.emit(this, index, x, y);

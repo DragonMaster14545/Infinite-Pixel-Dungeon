@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.journal;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
 import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
@@ -228,7 +231,7 @@ public enum Catalog {
 	//tracks whether an item has been collected while identified
 	private final LinkedHashMap<Class<?>, Boolean> seen = new LinkedHashMap<>();
 	//tracks upgrades spent for equipment, uses for consumables
-	private final LinkedHashMap<Class<?>, Long> useCount = new LinkedHashMap<>();
+	private final LinkedHashMap<Class<?>, BigInteger> useCount = new LinkedHashMap<>();
 	
 	public Collection<Class<?>> items(){
 		return seen.keySet();
@@ -238,7 +241,7 @@ public enum Catalog {
 	private void addItems( Class<?>... items){
 		for (Class<?> item : items){
 			seen.put(item, false);
-			useCount.put(item, 0L);
+			useCount.put(item, BigInteger.ZERO);
 		}
 	}
 
@@ -433,25 +436,25 @@ public enum Catalog {
 		Badges.validateCatalogBadges();
 	}
 
-	public static long useCount(Class<?> cls){
+	public static BigInteger useCount(Class<?> cls){
 		for (Catalog cat : values()) {
 			if (cat.useCount.containsKey(cls)) {
 				return cat.useCount.get(cls);
 			}
 		}
-		return 0;
+		return BigInteger.ZERO;
 	}
 
 	public static void countUse(Class<?> cls){
-		countUses(cls, 1);
+		countUses(cls, BigInteger.ONE);
 	}
 
-	public static void countUses(Class<?> cls, long uses){
+	public static void countUses(Class<?> cls, BigInteger uses){
 		for (Catalog cat : values()) {
-			if (cat.useCount.containsKey(cls) && cat.useCount.get(cls) != Long.MAX_VALUE) {
-				cat.useCount.put(cls, cat.useCount.get(cls)+uses);
-				if (cat.useCount.get(cls) < -1_000_000_000){ //to catch cases of overflow
-					cat.useCount.put(cls, Long.MAX_VALUE);
+			if (cat.useCount.containsKey(cls) && (cat.useCount.get(cls).compareTo(BigInteger.valueOf(Long.MAX_VALUE)) != 0)) {
+				cat.useCount.put(cls, cat.useCount.get(cls).add(uses));
+				if ((cat.useCount.get(cls).compareTo(BigInteger.valueOf(-1_000_000_000)) < 0)){ //to catch cases of overflow
+					cat.useCount.put(cls, BigInteger.valueOf(Long.MAX_VALUE));
 				}
 				Journal.saveNeeded = true;
 			}
@@ -466,11 +469,11 @@ public enum Catalog {
 
 		ArrayList<Class<?>> classes = new ArrayList<>();
 		ArrayList<Boolean> seen = new ArrayList<>();
-		ArrayList<Long> uses = new ArrayList<>();
+		ArrayList<BigInteger> uses = new ArrayList<>();
 		
 		for (Catalog cat : values()) {
 			for (Class<?> item : cat.items()) {
-				if (cat.seen.get(item) || cat.useCount.get(item) > 0){
+				if (cat.seen.get(item) || (cat.useCount.get(item).compareTo(BigInteger.ZERO) > 0)){
 					classes.add(item);
 					seen.add(cat.seen.get(item));
 					uses.add(cat.useCount.get(item));
@@ -480,7 +483,7 @@ public enum Catalog {
 
 		Class<?>[] storeCls = new Class[classes.size()];
 		boolean[] storeSeen = new boolean[seen.size()];
-		long[] storeUses = new long[uses.size()];
+		BigInteger[] storeUses = Big.newArray(uses.size());
 
 		for (int i = 0; i < storeCls.length; i++){
 			storeCls[i] = classes.get(i);
@@ -490,7 +493,7 @@ public enum Catalog {
 		
 		bundle.put( CATALOG_CLASSES, storeCls );
 		bundle.put( CATALOG_SEEN, storeSeen );
-		bundle.put( CATALOG_USES, storeUses );
+		Big.putArray(bundle, CATALOG_USES, storeUses);
 		
 	}
 
@@ -522,7 +525,7 @@ public enum Catalog {
 		if (bundle.contains(CATALOG_CLASSES)){
 			Class<?>[] classes = bundle.getClassArray(CATALOG_CLASSES);
 			boolean[] seen = bundle.getBooleanArray(CATALOG_SEEN);
-			long[] uses = bundle.getLongArray(CATALOG_USES);
+			BigInteger[] uses = Big.getBigArray(bundle, CATALOG_USES);
 
 			for (int i = 0; i < classes.length; i++){
 				for (Catalog cat : values()) {

@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.CounterBuff;
@@ -63,8 +65,8 @@ public class Berry extends Food {
 	}
 
 	@Override
-	public long value() {
-		return 5 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(5).multiply(quantity);
 	}
 
 	public static class SeedCounter extends CounterBuff{{revivePersists = true;}};

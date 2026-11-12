@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -97,7 +100,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		count++;
 		comboTime = 5f;
 
-		if (!enemy.isAlive() || (enemy.buff(Corruption.class) != null && enemy.HP == enemy.HT)){
+		if (!enemy.isAlive() || (enemy.buff(Corruption.class) != null && (enemy.HP.compareTo(enemy.HT) == 0))){
 			if (((Hero)target).subClass == HeroSubClass.GLADIATOR)
 				comboTime = Math.max(comboTime, 50);
 		}
@@ -364,7 +367,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 				dmgMulti = 0;
 				break;
 			case SLAM:
-				dmgBonus = Math.round(target.drRoll() * count / 5f);
+				dmgBonus = Big.toInt(Big.round(Big.div(Big.dec(target.drRoll().multiply(BigInteger.valueOf(count))), Big.dec(5f))));
 				break;
 			case CRUSH:
 				dmgMulti = 0.25f * count;
@@ -396,7 +399,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 						}
 					}
 					if (enemy.pos == oldPos) {
-						WandOfBlastWave.throwChar(enemy, trajectory, dist, true, false, hero);
+						WandOfBlastWave.throwChar(enemy, trajectory, BigInteger.valueOf(dist), true, false, hero);
 					}
 					break;
 				case PARRY:
@@ -408,15 +411,15 @@ public class Combo extends Buff implements ActionIndicator.Action {
 					for (Char ch : Actor.chars()) {
 						if (ch != enemy && ch.alignment == Char.Alignment.ENEMY
 								&& PathFinder.distance[ch.pos] < Integer.MAX_VALUE) {
-							int aoeHit = Math.round(target.damageRoll() * 0.25f * count);
+							int aoeHit = Big.toInt(Big.round(Big.dec(target.damageRoll()).multiply(Big.dec(0.25f)).multiply(Big.dec(count))));
 							aoeHit /= 2;
-							aoeHit -= ch.drRoll();
+							aoeHit -= Big.toLong(ch.drRoll());
 							if (ch.buff(Vulnerable.class) != null) aoeHit *= 1.33f;
 							if (ch instanceof DwarfKing){
 								//change damage type for DK so that crush AOE doesn't count for DK's challenge badge
-								ch.damage(aoeHit, this);
+								ch.damage(BigInteger.valueOf(aoeHit), this);
 							} else {
-								ch.damage(aoeHit, target);
+								ch.damage(BigInteger.valueOf(aoeHit), target);
 							}
 							ch.sprite.bloodBurstA(target.sprite.center(), aoeHit);
 							ch.sprite.flash();
@@ -424,8 +427,8 @@ public class Combo extends Buff implements ActionIndicator.Action {
 							if (!ch.isAlive()) {
 								if (hero.hasTalent(Talent.LETHAL_DEFENSE) && hero.buff(BrokenSeal.WarriorShield.class) != null) {
 									BrokenSeal.WarriorShield shield = hero.buff(BrokenSeal.WarriorShield.class);
-									int shieldAmt = Math.round(shield.maxShield() * hero.pointsInTalent(Talent.LETHAL_DEFENSE) / 3f);
-									shield.supercharge(shieldAmt);
+									int shieldAmt = Big.toInt(Big.round(Big.div(Big.dec(shield.maxShield().multiply(BigInteger.valueOf(hero.pointsInTalent(Talent.LETHAL_DEFENSE)))), Big.dec(3f))));
+									shield.supercharge(BigInteger.valueOf(shieldAmt));
 									hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldAmt), FloatingText.SHIELDING);
 								}
 							}
@@ -481,8 +484,8 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		if (!enemy.isAlive() || (!wasAlly && enemy.alignment == target.alignment)) {
 			if (hero.hasTalent(Talent.LETHAL_DEFENSE) && hero.buff(BrokenSeal.WarriorShield.class) != null){
 				BrokenSeal.WarriorShield shield = hero.buff(BrokenSeal.WarriorShield.class);
-				int shieldAmt = Math.round(shield.maxShield() * hero.pointsInTalent(Talent.LETHAL_DEFENSE) / 3f);
-				shield.supercharge(shieldAmt);
+				int shieldAmt = Big.toInt(Big.round(Big.div(Big.dec(shield.maxShield().multiply(BigInteger.valueOf(hero.pointsInTalent(Talent.LETHAL_DEFENSE)))), Big.dec(3f))));
+				shield.supercharge(BigInteger.valueOf(shieldAmt));
 				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldAmt), FloatingText.SHIELDING);
 			}
 		}

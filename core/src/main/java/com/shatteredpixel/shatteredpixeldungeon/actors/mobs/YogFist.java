@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -65,13 +69,13 @@ import com.watabou.utils.Random;
 public abstract class YogFist extends Mob {
 
 	{
-		HP = HT = (long) ((bossMaxHPMulti + 1) * (Dungeon.getCycleMultiplier(300)));
-		defenseSkill = Dungeon.getCycleMultiplier(20);
+		HP = HT = Big.trunc((Big.dec((bossMaxHPMulti + 1)).multiply(Big.dec((Dungeon.getCycleMultiplier(BigInteger.valueOf(300)))))));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(20));
 
 		viewDistance = Light.DISTANCE;
 
 		//for doomed resistance
-		EXP = Dungeon.getCycleMultiplier(25);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(25));
 		maxLvl = -2;
 
 		state = HUNTING;
@@ -146,15 +150,15 @@ public abstract class YogFist extends Mob {
 	}
 
 	@Override
-	public void damage(long dmg, Object src) {
-		long preHP = HP;
+	public void damage(BigInteger dmg, Object src) {
+		BigInteger preHP = HP;
 		super.damage(dmg, src);
-		long dmgTaken = preHP - HP;
+		BigInteger dmgTaken = preHP.subtract(HP);
 
 		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
-		if (dmgTaken > 0 && lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
-			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmgTaken/4f);
-			else                                                    lock.addTime(dmgTaken/2f);
+		if ((dmgTaken.compareTo(BigInteger.ZERO) > 0) && lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
+			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(Big.div(Big.dec(dmgTaken), Big.dec(4f)).floatValue());
+			else                                                    lock.addTime(Big.div(Big.dec(dmgTaken), Big.dec(2f)).floatValue());
 		}
 	}
 
@@ -176,18 +180,18 @@ public abstract class YogFist extends Mob {
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(36);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(36));
 	}
 
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(18), Dungeon.getCycleMultiplier(36) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(18)), Dungeon.getCycleMultiplier(BigInteger.valueOf(36)) );
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(15));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(15)));
 	}
 
 	{
@@ -245,9 +249,9 @@ public abstract class YogFist extends Mob {
 			}
 
 			for (int i : PathFinder.NEIGHBOURS9) {
-				long vol = Fire.volumeAt(pos+i, Fire.class);
-				if (vol < 4 && !Dungeon.level.water[pos + i] && !Dungeon.level.solid[pos + i]){
-					GameScene.add( Blob.seed( pos + i, 4 - vol, Fire.class ) );
+				BigInteger vol = Fire.volumeAt(pos+i, Fire.class);
+				if ((vol.compareTo(BigInteger.valueOf(4)) < 0) && !Dungeon.level.water[pos + i] && !Dungeon.level.solid[pos + i]){
+					GameScene.add( Blob.seed( pos + i, BigInteger.valueOf(4).subtract(vol), Fire.class ) );
 				}
 			}
 
@@ -268,9 +272,9 @@ public abstract class YogFist extends Mob {
 
 			for (int i : PathFinder.NEIGHBOURS9){
 				if (!Dungeon.level.water[enemy.pos+i] && !Dungeon.level.solid[enemy.pos+i]){
-					long vol = Fire.volumeAt(enemy.pos+i, Fire.class);
-					if (vol < 4){
-						GameScene.add( Blob.seed( enemy.pos + i, 4 - vol, Fire.class ) );
+					BigInteger vol = Fire.volumeAt(enemy.pos+i, Fire.class);
+					if ((vol.compareTo(BigInteger.valueOf(4)) < 0)){
+						GameScene.add( Blob.seed( enemy.pos + i, BigInteger.valueOf(4).subtract(vol), Fire.class ) );
 					}
 				}
 			}
@@ -323,7 +327,7 @@ public abstract class YogFist extends Mob {
 		}
 
 		@Override
-		public void damage(long dmg, Object src) {
+		public void damage(BigInteger dmg, Object src) {
 			int grassCells = 0;
 			for (int i : PathFinder.NEIGHBOURS9) {
 				if (Dungeon.level.map[pos+i] == Terrain.FURROWED_GRASS
@@ -331,7 +335,7 @@ public abstract class YogFist extends Mob {
 					grassCells++;
 				}
 			}
-			if (grassCells > 0) dmg = Math.round(dmg * (6-grassCells)/6f);
+			if (grassCells > 0) dmg = Big.round(Big.div(Big.dec(dmg.multiply(BigInteger.valueOf((6-grassCells)))), Big.dec(6f)));
 
 			//can be ignited, but takes no damage from burning
 			if (src.getClass() == Burning.class){
@@ -392,23 +396,23 @@ public abstract class YogFist extends Mob {
 		@Override
 		protected boolean act() {
 			//ensures toxic gas acts at the appropriate time when added
-			GameScene.add(Blob.seed(pos, 0, ToxicGas.class));
+			GameScene.add(Blob.seed(pos, BigInteger.ZERO, ToxicGas.class));
 
-			if (Dungeon.level.water[pos] && HP < HT) {
-				sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(HT/50), FloatingText.HEALING);
-				HP = Math.min(HT, HP + HT/50);
+			if (Dungeon.level.water[pos] && (HP.compareTo(HT) < 0)) {
+				sprite.showStatusWithIcon(CharSprite.POSITIVE, HT.divide(BigInteger.valueOf(50)).toString(), FloatingText.HEALING);
+				HP = HT.min(HP.add(HT.divide(BigInteger.valueOf(50))));
 			}
 
 			return super.act();
 		}
 
 		@Override
-		public void damage(long dmg, Object src) {
+		public void damage(BigInteger dmg, Object src) {
 			if (!isInvulnerable(src.getClass())
 					&& !(src instanceof Bleeding)
 					&& buff(Sickle.HarvestBleedTracker.class) == null){
-				dmg = Math.round( dmg * resist( src.getClass() ));
-				if (dmg < 0){
+				dmg = Big.round(Big.dec(dmg).multiply(Big.dec(resist( src.getClass() ))));
+				if ((dmg.compareTo(BigInteger.ZERO) < 0)){
 					return;
 				}
 				Bleeding b = buff(Bleeding.class);
@@ -416,7 +420,7 @@ public abstract class YogFist extends Mob {
 					b = new Bleeding();
 				}
 				b.announced = false;
-				b.set(dmg*1.2f);
+				b.set(Big.dec(dmg).multiply(Big.dec(1.2f)).doubleValue());
 				b.attachTo(this);
 				sprite.showStatus(CharSprite.WARNING, Messages.titleCase(b.name()) + " " + (int)b.level());
 			} else{
@@ -427,11 +431,11 @@ public abstract class YogFist extends Mob {
 		@Override
 		protected void zap() {
 			spend( 1f );
-			GameScene.add(Blob.seed(enemy.pos, 100, ToxicGas.class));
+			GameScene.add(Blob.seed(enemy.pos, BigInteger.valueOf(100), ToxicGas.class));
 		}
 
 		@Override
-		public long attackProc( Char enemy, long damage ) {
+		public BigInteger attackProc( Char enemy, BigInteger damage ) {
 			damage = super.attackProc( enemy, damage );
 
 			if (Random.Int( 2 ) == 0) {
@@ -458,15 +462,15 @@ public abstract class YogFist extends Mob {
 		}
 
 		@Override
-		public long damageRoll() {
-			return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(22), Dungeon.getCycleMultiplier(44) );
+		public BigInteger damageRoll() {
+			return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(22)), Dungeon.getCycleMultiplier(BigInteger.valueOf(44)) );
 		}
 
 		@Override
-		public void damage(long dmg, Object src) {
+		public void damage(BigInteger dmg, Object src) {
 			if (!isInvulnerable(src.getClass()) && !(src instanceof Viscosity.DeferedDamage)){
-				dmg = Math.round( dmg * resist( src.getClass() ));
-				if (dmg >= 0) {
+				dmg = Big.round(Big.dec(dmg).multiply(Big.dec(resist( src.getClass() ))));
+				if ((dmg.compareTo(BigInteger.ZERO) >= 0)) {
 					Buff.affect(this, Viscosity.DeferedDamage.class).prolong(dmg);
 					sprite.showStatus(CharSprite.WARNING, Messages.get(Viscosity.class, "deferred", dmg));
 				}
@@ -509,7 +513,7 @@ public abstract class YogFist extends Mob {
 			Char enemy = this.enemy;
 			if (hit( this, enemy, true )) {
 
-                long dmg = Dungeon.NormalLongRange(10, 20);
+                BigInteger dmg = Dungeon.NormalLongRange(BigInteger.TEN, BigInteger.valueOf(20));
 				dmg = Dungeon.getCycleMultiplier(dmg);
                 enemy.damage(dmg, new LightBeam() );
 				Buff.prolong( enemy, Blindness.class, Blindness.DURATION/2f );
@@ -528,11 +532,11 @@ public abstract class YogFist extends Mob {
 		}
 
 		@Override
-		public void damage(long dmg, Object src) {
-			long beforeHP = HP;
+		public void damage(BigInteger dmg, Object src) {
+			BigInteger beforeHP = HP;
 			super.damage(dmg, src);
-			if (isAlive() && beforeHP > HT/2 && HP < HT/2){
-				HP = HT/2;
+			if (isAlive() && (beforeHP.compareTo(HT.divide(BigInteger.TWO)) > 0) && (HP.compareTo(HT.divide(BigInteger.TWO)) < 0)){
+				HP = HT.divide(BigInteger.TWO);
 				Buff.prolong( Dungeon.hero, Blindness.class, Blindness.DURATION*1.5f );
 				int i;
 				do {
@@ -577,7 +581,7 @@ public abstract class YogFist extends Mob {
 			Char enemy = this.enemy;
 			if (hit( this, enemy, true )) {
 
-                long dmg = Dungeon.NormalLongRange(10, 20);
+                BigInteger dmg = Dungeon.NormalLongRange(BigInteger.TEN, BigInteger.valueOf(20));
 				dmg = Dungeon.getCycleMultiplier(dmg);
                 enemy.damage(dmg, new DarkBolt() );
 
@@ -600,11 +604,11 @@ public abstract class YogFist extends Mob {
 		}
 
 		@Override
-		public void damage(long dmg, Object src) {
-			long beforeHP = HP;
+		public void damage(BigInteger dmg, Object src) {
+			BigInteger beforeHP = HP;
 			super.damage(dmg, src);
-			if (isAlive() && beforeHP > HT/2 && HP < HT/2){
-				HP = HT/2;
+			if (isAlive() && (beforeHP.compareTo(HT.divide(BigInteger.TWO)) > 0) && (HP.compareTo(HT.divide(BigInteger.TWO)) < 0)){
+				HP = HT.divide(BigInteger.TWO);
 				Light l = Dungeon.hero.buff(Light.class);
 				if (l != null){
 					l.detach();

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -389,7 +391,7 @@ public class CavesBossLevel extends Level {
 
 		for( int i = (mainArena.top-1)*width; i <length; i++){
 			if (map[i] == Terrain.INACTIVE_TRAP || map[i] == Terrain.WATER || map[i] == Terrain.CUSTOM_DECO){
-				GameScene.add(Blob.seed(i, 1, PylonEnergy.class));
+				GameScene.add(Blob.seed(i, BigInteger.ONE, PylonEnergy.class));
 			}
 		}
 
@@ -841,19 +843,19 @@ public class CavesBossLevel extends Level {
 					off[cell] = cur[cell];
 
 					//instantly spreads to water cells
-					if (off[cell] == 0 && Dungeon.level.water[cell]){
-						off[cell]++;
+					if ((off[cell].compareTo(BigInteger.ZERO) == 0) && Dungeon.level.water[cell]){
+						off[cell] = off[cell].add(BigInteger.ONE);
 					}
 
-					volume += off[cell];
+					volume = volume.add(off[cell]);
 
-					if (off[cell] > 0){
+					if ((off[cell].compareTo(BigInteger.ZERO) > 0)){
 
 						Char ch = Actor.findChar(cell);
 						if (ch != null && !(ch instanceof DM300) && !ch.flying) {
 							Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );
 							ch.damage(
-									Random.NormalIntRange(6, 12) + Dungeon.escalatingDepth()*2, new Electricity());
+									BigInteger.valueOf(Random.NormalIntRange(6, 12)).add(Dungeon.escalatingDepth().multiply(BigInteger.TWO)), new Electricity());
 							ch.sprite.flash();
 
 							if (ch == Dungeon.hero){

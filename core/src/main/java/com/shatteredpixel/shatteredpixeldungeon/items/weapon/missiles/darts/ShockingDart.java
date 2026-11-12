@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -43,11 +45,11 @@ public class ShockingDart extends TippedDart {
 	}
 	
 	@Override
-	public long proc(Char attacker, Char defender, long damage) {
+	public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 
 		//when processing charged shot, only shock enemies
 		if (!processingChargedShot || attacker.alignment != defender.alignment) {
-			defender.damage(Dungeon.NormalLongRange(5 + Dungeon.scalingDepth() / 4, 10 + Dungeon.scalingDepth() / 4), new Electricity());
+			defender.damage(Dungeon.NormalLongRange(BigInteger.valueOf(5).add(Dungeon.scalingDepth().divide(BigInteger.valueOf(4))), BigInteger.TEN.add(Dungeon.scalingDepth().divide(BigInteger.valueOf(4)))), new Electricity());
 
 			CharSprite s = defender.sprite;
 			if (s != null && s.parent != null) {

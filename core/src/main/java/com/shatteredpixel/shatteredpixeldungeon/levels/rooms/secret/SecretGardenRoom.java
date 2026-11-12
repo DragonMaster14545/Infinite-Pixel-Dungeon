@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Foliage;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfRegrowth;
@@ -67,7 +69,7 @@ public class SecretGardenRoom extends SecretRoom {
 		}
 		for (int i=top + 1; i < bottom; i++) {
 			for (int j=left + 1; j < right; j++) {
-				light.seed( level, j + level.width() * i, 1 );
+				light.seed( level, j + level.width() * i, BigInteger.ONE );
 			}
 		}
 		level.blobs.put( Foliage.class, light );

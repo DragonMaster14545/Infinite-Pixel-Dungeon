@@ -25,6 +25,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Perks;
@@ -74,7 +78,7 @@ public class FishingHook extends Ring {
 	public static int dropsToRare = Integer.MIN_VALUE;
     public static int dropsToBag = Integer.MIN_VALUE;
     public static int pitycounter = 0;
-	public static long level = 0;
+	public static BigInteger level = BigInteger.ZERO;
 
 	public static ArrayList<Item> tryForBonusDrop(int tries){
 
@@ -100,17 +104,17 @@ public class FishingHook extends Ring {
             } else if ( dropsToRare <= 0 ){
 				Item i;
 				do {
-					i = genEquipmentDrop(level - 1);
+					i = genEquipmentDrop(level.subtract(BigInteger.ONE));
 				} while (Challenges.isItemBlocked(i));
 				drops.add(i);
                 dropsToRare = Dungeon.NormalIntRange(40, 100);
 			} else {
 				Item i;
 				do {
-					i = genConsumableDrop(level - 1);
+					i = genConsumableDrop(level.subtract(BigInteger.ONE));
 				} while (Challenges.isItemBlocked(i));
-				i.quantity(i.quantity()*2);
-				if (Dungeon.hero.perks.contains(Perks.Perk.FISHING_PRO) && Random.Int(4) == 0) i.quantity(i.quantity()*2);
+				i.quantity(i.quantity().multiply(BigInteger.TWO));
+				if (Dungeon.hero.perks.contains(Perks.Perk.FISHING_PRO) && Random.Int(4) == 0) i.quantity(i.quantity().multiply(BigInteger.TWO));
 				drops.add(i);
 				dropsToRare--;
                 dropsToBag--;
@@ -170,10 +174,10 @@ public class FishingHook extends Ring {
         }
     }
     
-	public static Item genConsumableDrop(long level) {
+	public static Item genConsumableDrop(BigInteger level) {
 		float roll = Dungeon.Float();
 		//60% chance - 4% per level. Starting from +15: 0%
-		if (roll < (0.6f - 0.04f * level)) {
+		if ((Big.dec(roll).compareTo((Big.dec(0.6f).subtract(Big.dec(0.04f).multiply(Big.dec(level))))) < 0)) {
 			latestDropTier = 1;
 			return genLowValueConsumable();
 			//30% chance + 2% per level. Starting from +15: 60%-2%*(lvl-15)
@@ -208,7 +212,7 @@ public class FishingHook extends Ring {
 		switch (Random.Int(7)){
 			case 0: default:
 				Item i = genLowValueConsumable();
-				return i.quantity(i.quantity()*2);
+				return i.quantity(i.quantity().multiply(BigInteger.TWO));
 			case 1:
 				i = Generator.randomUsingDefaults(Generator.Category.POTION);
 				if (!(i instanceof ExoticPotion)) {
@@ -239,7 +243,7 @@ public class FishingHook extends Ring {
 				if (i instanceof Bomb){
 					return new Bomb.DoubleBomb();
 				} else {
-					return i.quantity(i.quantity()*2);
+					return i.quantity(i.quantity().multiply(BigInteger.TWO));
 				}
 			case 1:
 				return new StoneOfEnchantment();
@@ -261,9 +265,9 @@ public class FishingHook extends Ring {
                 if (i instanceof Bomb){
                     return new Bomb.DoubleBomb();
                 } else if (i instanceof ShurikenOfShadows) {
-					return i.quantity(3);
+					return i.quantity(BigInteger.valueOf(3));
                 } else {
-					return i.quantity(i.quantity()*2);
+					return i.quantity(i.quantity().multiply(BigInteger.TWO));
 				}
             case 1:
                 return new IdealBag();
@@ -283,7 +287,7 @@ public class FishingHook extends Ring {
         switch (Random.Int(3)){
             case 0: default:
                 Item i = genCommonBag();
-                return i.quantity(i.quantity()*2);
+                return i.quantity(i.quantity().multiply(BigInteger.TWO));
             case 1:
                 return new UncommonTreasureBag();
         }
@@ -293,7 +297,7 @@ public class FishingHook extends Ring {
         switch (Random.Int(3)){
             case 0: default:
                 Item i = genUncommonBag();
-                return i.quantity(i.quantity()*2);
+                return i.quantity(i.quantity().multiply(BigInteger.TWO));
             case 1:
                 return new RareTreasureBag();
         }
@@ -303,7 +307,7 @@ public class FishingHook extends Ring {
         switch (Random.Int(4)){
             case 0: default:
                 Item i = genRareBag();
-                return i.quantity(i.quantity()*2);
+                return i.quantity(i.quantity().multiply(BigInteger.TWO));
             case 1:
                 return new EpicTreasureBag();
         }
@@ -318,26 +322,26 @@ public class FishingHook extends Ring {
             switch (Random.Int(5)){
                 case 0: default:
                     Item i = genEpicBag();
-                    return i.quantity(i.quantity()*2);
+                    return i.quantity(i.quantity().multiply(BigInteger.TWO));
                 case 1:
                     return new LegendaryTreasureBag();
             }
         }
     }
 
-	private static Item genEquipmentDrop(long level ){
+	private static Item genEquipmentDrop(BigInteger level ){
 		Item result;
 		int floorset = (Dungeon.depth)/5;
 		switch (Random.Int(5)){
 			default: case 0: case 1:
 				MeleeWeapon w = Generator.randomWeapon(floorset, true);
-				if (!w.hasGoodEnchant() && Dungeon.Int(10) < level)      w.enchant();
+				if (!w.hasGoodEnchant() && (BigInteger.valueOf(Dungeon.Int(10)).compareTo(level) < 0))      w.enchant();
 				else if (w.hasCurseEnchant())                           w.enchant(null);
 				result = w;
 				break;
 			case 2:
 				Armor a = Generator.randomArmor(floorset);
-				if (!a.hasGoodGlyph() && Dungeon.Int(10) < level)        a.inscribe();
+				if (!a.hasGoodGlyph() && (BigInteger.valueOf(Dungeon.Int(10)).compareTo(level) < 0))        a.inscribe();
 				else if (a.hasCurseGlyph())                             a.inscribe(null);
 				result = a;
 				break;
@@ -350,13 +354,13 @@ public class FishingHook extends Ring {
 		}
 		//minimum level of sqrt(ringLvl)
 		if (result.isUpgradable()){
-			if (result.level() < Math.floor(level / Math.pow(36, (Dungeon.cycle+1)))){
-				result.level((long)Math.floor(level / Math.pow(36, (Dungeon.cycle+1))));
+			if ((Big.dec(result.level()).compareTo(Big.floor(Big.div(Big.dec(level), Big.dec(Math.pow(36, (Dungeon.cycle+1)))))) < 0)){
+				result.level(Big.trunc(Big.floor(Big.div(Big.dec(level), Big.dec(Math.pow(36, (Dungeon.cycle+1)))))));
 			}
 		}
 		result.cursed = false;
 		result.cursedKnown = true;
-		if (result.level() >= 2) {
+		if ((result.level().compareTo(BigInteger.TWO) >= 0)) {
 			latestDropTier = 4;
 		} else {
 			latestDropTier = 3;
@@ -374,14 +378,14 @@ public class FishingHook extends Ring {
 		bundle.put(TRIES_TO_DROP, triesToDrop);
 		bundle.put(DROPS_TO_RARE, dropsToRare);
         bundle.put(DROPS_TO_BAG, dropsToBag);
-		bundle.put(LEVEL, level);
+		Big.put(bundle, LEVEL, level);
 	}
 
 	public static void restore(Bundle bundle) {
 		triesToDrop = bundle.getFloat(TRIES_TO_DROP);
 		dropsToRare = bundle.getInt(DROPS_TO_RARE);
         dropsToBag = bundle.getInt(DROPS_TO_BAG);
-		level = bundle.getInt(LEVEL);
+		level = BigInteger.valueOf(bundle.getInt(LEVEL));
 	}
 
 }

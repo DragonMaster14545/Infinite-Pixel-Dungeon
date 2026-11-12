@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -53,15 +55,15 @@ public class ShardOfOblivion extends Trinket {
 	public static final String AC_IDENTIFY = "IDENTIFY";
 
 	@Override
-	protected long upgradeEnergyCost() {
+	protected BigInteger upgradeEnergyCost() {
 		//6 -> 8(14) -> 10(24) -> 12(36)
-		return 6+2*level();
+		return BigInteger.valueOf(6).add(BigInteger.TWO.multiply(level()));
 	}
 
 	@Override
 	public String statsDesc() {
 		if (isIdentified()){
-			return Messages.get(this, "stats_desc", buffedLvl()+1);
+			return Messages.get(this, "stats_desc", buffedLvl().add(BigInteger.ONE));
 		} else {
 			return Messages.get(this, "stats_desc", 1);
 		}

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -72,12 +74,12 @@ public class ToxicImbue extends Buff {
 			int centerVolume = 6;
 			for (int i : PathFinder.NEIGHBOURS8) {
 				if (!Dungeon.level.solid[target.pos + i]) {
-					GameScene.add(Blob.seed(target.pos + i, 6, ToxicGas.class));
+					GameScene.add(Blob.seed(target.pos + i, BigInteger.valueOf(6), ToxicGas.class));
 				} else {
 					centerVolume += 6;
 				}
 			}
-			GameScene.add(Blob.seed(target.pos, centerVolume, ToxicGas.class));
+			GameScene.add(Blob.seed(target.pos, BigInteger.valueOf(centerVolume), ToxicGas.class));
 		}
 
 		spend(TICK);

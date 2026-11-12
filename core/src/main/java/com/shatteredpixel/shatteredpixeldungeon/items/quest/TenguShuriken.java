@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.quest;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -43,9 +47,8 @@ public class TenguShuriken extends MissileWeapon {
     }
 
     @Override
-    public long max(long lvl) {
-        return  10 * tier +                      //8 base, down from 10
-                (tier == 1 ? 2*lvl : tier*lvl); //scaling unchanged
+    public BigInteger max(BigInteger lvl) {
+        return  BigInteger.valueOf(10 * tier).add((tier == 1 ? BigInteger.TWO.multiply(lvl) : BigInteger.valueOf(tier).multiply(lvl))); //scaling unchanged
     }
 
     @Override
@@ -54,8 +57,8 @@ public class TenguShuriken extends MissileWeapon {
     }
 
     @Override
-    public long proc(Char attacker, Char defender, long damage) {
-        Buff.affect(defender, Sai.DefenseDebuff.class, 5f).stack = (int) (max() / 3);
+    public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
+        Buff.affect(defender, Sai.DefenseDebuff.class, 5f).stack = Big.toInt((max().divide(BigInteger.valueOf(3))));
         return super.proc(attacker, defender, damage);
     }
 }

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -48,7 +50,7 @@ public class Piranha extends Mob {
 
 		baseSpeed = 2f;
 		
-		EXP = 0;
+		EXP = BigInteger.ZERO;
 		
 		loot = MysteryMeat.class;
 		lootChance = 1f;
@@ -64,8 +66,8 @@ public class Piranha extends Mob {
 	public Piranha() {
 		super();
 		
-		HP = HT = 10 + Dungeon.escalatingDepth() * 5;
-		defenseSkill = 10 + Dungeon.escalatingDepth() * 2;
+		HP = HT = BigInteger.TEN.add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(5)));
+		defenseSkill = BigInteger.TEN.add(Dungeon.escalatingDepth().multiply(BigInteger.TWO));
 	}
 	
 	@Override
@@ -83,18 +85,18 @@ public class Piranha extends Mob {
 	}
 	
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.escalatingDepth(), 4 + Dungeon.escalatingDepth() * 2 );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.escalatingDepth(), BigInteger.valueOf(4).add(Dungeon.escalatingDepth().multiply(BigInteger.TWO)) );
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
-		return 20 + Dungeon.escalatingDepth() * 2;
+	public BigInteger attackSkill(Char target ) {
+		return BigInteger.valueOf(20).add(Dungeon.escalatingDepth().multiply(BigInteger.TWO));
 	}
 	
 	@Override
-	public long drRoll() {
-		return super.drRoll() + Dungeon.NormalLongRange(0, Dungeon.escalatingDepth());
+	public BigInteger drRoll() {
+		return super.drRoll().add(Dungeon.NormalLongRange(BigInteger.ZERO, Dungeon.escalatingDepth()));
 	}
 
 	@Override

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.plants;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -51,7 +55,7 @@ public class Sungrass extends Plant {
 		
 		if (ch != null){
 			if (ch instanceof Hero && ((Hero) ch).isSubclass(HeroSubClass.WARDEN)) {
-				Buff.affect(ch, Healing.class).setHeal(ch.HT, 0, 1);
+				Buff.affect(ch, Healing.class).setHeal(ch.HT, 0, BigInteger.ONE);
 			} else {
 				Buff.affect(ch, Health.class).boost(ch.HT);
 			}
@@ -78,7 +82,7 @@ public class Sungrass extends Plant {
 		
 		private int pos;
 		private double partialHeal;
-		private long level;
+		private BigInteger level = BigInteger.ZERO;
 
 		{
 			type = buffType.POSITIVE;
@@ -92,19 +96,19 @@ public class Sungrass extends Plant {
 			}
 			
 			//for the hero, full heal takes ~50/93/111/120 turns at levels 1/10/20/30
-			partialHeal += (40 + target.HT)/150f;
+			partialHeal += Big.div(Big.dec((BigInteger.valueOf(40).add(target.HT))), Big.dec(150f)).doubleValue();
 			
 			if (partialHeal > 1){
-				long healThisTurn = (long) partialHeal;
-				partialHeal -= healThisTurn;
-				level -= healThisTurn;
+				BigInteger healThisTurn = Big.of(partialHeal);
+				partialHeal -= healThisTurn.doubleValue();
+				level = level.subtract(healThisTurn);
 
-				if (target.HP < target.HT) {
+				if ((target.HP.compareTo(target.HT) < 0)) {
 
-					target.HP += healThisTurn;
-					target.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(healThisTurn), FloatingText.HEALING);
+					target.HP = target.HP.add(healThisTurn);
+					target.sprite.showStatusWithIcon(CharSprite.POSITIVE, healThisTurn.toString(), FloatingText.HEALING);
 
-					if (target.HP >= target.HT) {
+					if ((target.HP.compareTo(target.HT) >= 0)) {
 						target.HP = target.HT;
 						if (target instanceof Hero) {
 							((Hero) target).resting = false;
@@ -113,7 +117,7 @@ public class Sungrass extends Plant {
 				}
 			}
 			
-			if (level <= 0) {
+			if ((level.compareTo(BigInteger.ZERO) <= 0)) {
 				detach();
 				if (target instanceof Hero){
 					((Hero)target).resting = false;
@@ -123,9 +127,9 @@ public class Sungrass extends Plant {
 			return true;
 		}
 
-		public void boost( long amount ){
+		public void boost( BigInteger amount ){
 			if (target != null) {
-				level += amount;
+				level = level.add(amount);
 				pos = target.pos;
 			}
 		}
@@ -137,12 +141,12 @@ public class Sungrass extends Plant {
 
 		@Override
 		public float iconFadePercent() {
-			return Math.max(0, (target.HT - level) / (float)target.HT);
+			return Big.dec(0).max(Big.div(Big.dec((target.HT.subtract(level))), Big.dec(target.HT.floatValue()))).floatValue();
 		}
 
 		@Override
 		public String iconTextDisplay() {
-			return Long.toString(level);
+			return level.toString();
 		}
 
 		@Override
@@ -159,7 +163,7 @@ public class Sungrass extends Plant {
 			super.storeInBundle( bundle );
 			bundle.put( POS, pos );
 			bundle.put( PARTIAL, partialHeal);
-			bundle.put( LEVEL, level);
+			Big.put(bundle, LEVEL, level);
 		}
 		
 		@Override
@@ -167,7 +171,7 @@ public class Sungrass extends Plant {
 			super.restoreFromBundle( bundle );
 			pos = bundle.getInt( POS );
 			partialHeal = bundle.getDouble( PARTIAL );
-			level = bundle.getLong( LEVEL );
+			level = Big.getBig(bundle, LEVEL);
 
 		}
 	}

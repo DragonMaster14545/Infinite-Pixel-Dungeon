@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
@@ -90,8 +92,8 @@ public class BrokenSeal extends Item {
 		this.glyph = glyph;
 	}
 
-	public long maxShield( int armTier, long armLvl ){
-		return armTier + armLvl + Dungeon.hero.pointsInTalent(Talent.IRON_WILL);
+	public BigInteger maxShield( int armTier, BigInteger armLvl ){
+		return BigInteger.valueOf(armTier).add(armLvl).add(BigInteger.valueOf(Dungeon.hero.pointsInTalent(Talent.IRON_WILL)));
 	}
 
 	@Override
@@ -137,7 +139,7 @@ public class BrokenSeal extends Item {
 	@Override
 	//scroll of upgrade can be used directly once, same as upgrading armor the seal is affixed to then removing it.
 	public boolean isUpgradable() {
-		return level() == 0;
+		return (level().compareTo(BigInteger.ZERO) == 0);
 	}
 
 	protected static WndBag.ItemSelector armorSelector = new WndBag.ItemSelector() {
@@ -220,7 +222,7 @@ public class BrokenSeal extends Item {
 
 		@Override
 		public synchronized boolean act() {
-			if (Regeneration.regenOn() && shielding() < maxShield()) {
+			if (Regeneration.regenOn() && (shielding().compareTo(maxShield()) < 0)) {
 				partialShield += 1/30f;
 				if (Dungeon.hero.heroClass == HeroClass.WARRIOR){
 					partialShield += 1/30f;
@@ -232,7 +234,7 @@ public class BrokenSeal extends Item {
 				partialShield--;
 			}
 			
-			if (shielding() <= 0 && maxShield() <= 0){
+			if ((shielding().compareTo(BigInteger.ZERO) <= 0) && (maxShield().compareTo(BigInteger.ZERO) <= 0)){
 				detach();
 			}
 			
@@ -240,8 +242,8 @@ public class BrokenSeal extends Item {
 			return true;
 		}
 		
-		public synchronized void supercharge(long maxShield){
-			if (maxShield > shielding()){
+		public synchronized void supercharge(BigInteger maxShield){
+			if ((maxShield.compareTo(shielding()) > 0)){
 				setShield(maxShield);
 			}
 		}
@@ -250,29 +252,29 @@ public class BrokenSeal extends Item {
 			armor = arm;
 		}
 
-		public synchronized long maxShield() {
+		public synchronized BigInteger maxShield() {
 			//metamorphed iron will logic
 			if (((Hero)target).heroClass != HeroClass.WARRIOR && ((Hero) target).hasTalent(Talent.IRON_WILL)){
-				return ((Hero) target).pointsInTalent(Talent.IRON_WILL);
+				return BigInteger.valueOf(((Hero) target).pointsInTalent(Talent.IRON_WILL));
 			}
 
 			if (armor != null && armor.isEquipped((Hero)target) && armor.checkSeal() != null) {
 				return armor.checkSeal().maxShield(armor.tier, armor.level());
 			} else {
-				return 0;
+				return BigInteger.ZERO;
 			}
 		}
 		
 		@Override
 		//logic edited slightly as buff should not detach
-		public long absorbDamage(long dmg) {
-			if (shielding() <= 0) return dmg;
+		public BigInteger absorbDamage(BigInteger dmg) {
+			if ((shielding().compareTo(BigInteger.ZERO) <= 0)) return dmg;
 
-			if (shielding() >= dmg){
+			if ((shielding().compareTo(dmg) >= 0)){
 				decShield(dmg);
-				dmg = 0;
+				dmg = BigInteger.ZERO;
 			} else {
-				dmg -= shielding();
+				dmg = dmg.subtract(shielding());
 				decShield(shielding());
 			}
 			return dmg;

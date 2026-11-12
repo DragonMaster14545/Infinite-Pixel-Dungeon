@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -33,7 +35,7 @@ public class Obfuscation extends Armor.Glyph {
 	private static ItemSprite.Glowing GREY = new ItemSprite.Glowing( 0x888888 );
 
 	@Override
-	public long proc(Armor armor, Char attacker, Char defender, long damage) {
+	public BigInteger proc(Armor armor, Char attacker, Char defender, BigInteger damage) {
 		//no proc effect, see armor.stealthfactor for effect.
 		return damage;
 	}

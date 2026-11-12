@@ -1,5 +1,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.ShulkerBox;
@@ -41,8 +45,8 @@ public class WndShulkerBox extends Window {
         }
         WndBag.INSTANCE = this;
 
-		final long capacity = box.capacity();
-		final long pages = Math.max(1, (capacity + PAGE_SIZE - 1) / PAGE_SIZE);
+		final BigInteger capacity = box.capacity();
+		final long pages = Big.toLong(BigInteger.ONE.max((capacity.add(BigInteger.valueOf(PAGE_SIZE)).subtract(BigInteger.ONE)).divide(BigInteger.valueOf(PAGE_SIZE))));
 		int usedPages = Math.max(1, (box.contents().size() + PAGE_SIZE - 1) / PAGE_SIZE);
 		this.page = Math.max(0, Math.min(page, Math.min(pages, usedPages) - 1));
 

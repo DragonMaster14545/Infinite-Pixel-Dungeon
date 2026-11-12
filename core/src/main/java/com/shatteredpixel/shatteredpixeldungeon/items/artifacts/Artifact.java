@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -46,17 +50,17 @@ public class Artifact extends KindofMisc {
 	//level is used internally to track upgrades to artifacts, size/logic varies per artifact.
 	//already inherited from item superclass
 	//exp is used to count progress towards levels for some artifacts
-	protected long exp = 0;
+	protected BigInteger exp = BigInteger.ZERO;
 	//levelCap is the artifact's maximum level
 	protected int levelCap = 0;
 
 	//the current artifact charge
-	protected long charge = 0;
+	protected BigInteger charge = BigInteger.ZERO;
 	//the build towards next charge, usually rolls over at 1.
 	//better to keep charge as an int and use a separate float than casting.
 	protected double partialCharge = 0;
 	//the maximum charge, varies per artifact, not all artifacts use this.
-	public long chargeCap = 0;
+	public BigInteger chargeCap = BigInteger.ZERO;
 
 	//used by some artifacts to keep track of duration of effects or cooldowns to use.
 	protected int cooldown = 0;
@@ -120,28 +124,28 @@ public class Artifact extends KindofMisc {
 
 	@Override
 	public boolean isUpgradable() {
-        return level() >= levelCap;
+        return (level().compareTo(BigInteger.valueOf(levelCap)) >= 0);
     }
 
 	@Override
-	public long visiblyUpgraded() {
-		return levelKnown ? Math.round((level()*10)/(float)levelCap): 0;
+	public BigInteger visiblyUpgraded() {
+		return levelKnown ? Big.round(Big.div(Big.dec((level().multiply(BigInteger.TEN))), Big.dec((float)levelCap))): BigInteger.ZERO;
 	}
 
 	@Override
-	public long buffedVisiblyUpgraded() {
+	public BigInteger buffedVisiblyUpgraded() {
 		return visiblyUpgraded();
 	}
 
 	@Override
-	public long buffedLvl() {
+	public BigInteger buffedLvl() {
 		//level isn't affected by buffs/debuffs
 		return level();
 	}
 
 	//transfers upgrades from another artifact, transfer level will equal the displayed level
 	public void transferUpgrade(int transferLvl) {
-		upgrade(Math.round((transferLvl*levelCap)/10f));
+		upgrade(BigInteger.valueOf(Math.round((transferLvl*levelCap)/10f)));
 	}
 
 	@Override
@@ -171,16 +175,16 @@ public class Artifact extends KindofMisc {
 			return Messages.format( "%d", cooldown );
 
 		//display as percent
-		if (getChargeCap() == 100)
+		if ((getChargeCap().compareTo(BigInteger.valueOf(100)) == 0))
 			return Messages.format( "%d%%", charge );
 
 		//display as #/#
-		if (getChargeCap() > 0)
+		if ((getChargeCap().compareTo(BigInteger.ZERO) > 0))
 			return Messages.format( "%d/%d", charge, getChargeCap());
 
 		//if there's no cap -
 		//- but there is charge anyway, display that charge
-		if (charge != 0)
+		if ((charge.compareTo(BigInteger.ZERO) != 0))
 			return Messages.format( "%d", charge );
 
 		//otherwise, if there's no charge, return null.
@@ -199,17 +203,17 @@ public class Artifact extends KindofMisc {
 	}
 
 	@Override
-	public long value() {
-		int price = 100;
-		if (level() > 0)
-			price += 20*visiblyUpgraded();
+	public BigInteger value() {
+		BigInteger price = BigInteger.valueOf(100);
+		if ((level().compareTo(BigInteger.ZERO) > 0))
+			price = price.add((BigInteger.valueOf(20).multiply(visiblyUpgraded())));
 		if (cursed && cursedKnown) {
-			price /= 2;
+			price = price.divide(BigInteger.TWO);
 		}
-		if (price < 1) {
-			price = 1;
+		if ((price.compareTo(BigInteger.ONE) < 0)) {
+			price = BigInteger.ONE;
 		}
-		return price;
+		return (price);
 	}
 
 
@@ -223,11 +227,11 @@ public class Artifact extends KindofMisc {
 		//do nothing by default;
 	}
 
-	public long getChargeCap() {
-		return chargeCap*getRarityMultiplier();
+	public BigInteger getChargeCap() {
+		return chargeCap.multiply(getRarityMultiplier());
 	}
 
-	public void setChargeCap(long chargeCap) {
+	public void setChargeCap(BigInteger chargeCap) {
 		this.chargeCap = chargeCap;
 	}
 
@@ -245,7 +249,7 @@ public class Artifact extends KindofMisc {
 			return false;
 		}
 
-		public long itemLevel() {
+		public BigInteger itemLevel() {
 			return level();
 		}
 
@@ -266,16 +270,16 @@ public class Artifact extends KindofMisc {
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle(bundle);
-		bundle.put( EXP , exp );
-		bundle.put( CHARGE , charge );
+		Big.put(bundle, EXP, exp);
+		Big.put(bundle, CHARGE, charge);
 		bundle.put( PARTIALCHARGE , partialCharge );
 	}
 
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle(bundle);
-		exp = bundle.getInt( EXP );
-		charge = bundle.getLong( CHARGE );
+		exp = BigInteger.valueOf(bundle.getInt( EXP ));
+		charge = Big.getBig(bundle, CHARGE);
 		partialCharge = bundle.getFloat( PARTIALCHARGE );
 	}
 }

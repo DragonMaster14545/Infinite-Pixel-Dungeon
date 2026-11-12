@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -71,10 +75,10 @@ public class YogDzewa extends Mob {
 	{
 		spriteClass = YogSprite.class;
 
-		HP = HT = (long) ((bossMaxHPMulti + 1) * (Dungeon.getCycleMultiplier(1000)));
-		defenseSkill = 0;
+		HP = HT = Big.trunc((Big.dec((bossMaxHPMulti + 1)).multiply(Big.dec((Dungeon.getCycleMultiplier(BigInteger.valueOf(1000)))))));
+		defenseSkill = BigInteger.ZERO;
 
-		EXP = Dungeon.getCycleMultiplier(50);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(50));
 
 		//so that allies can attack it. States are never actually used.
 		state = HUNTING;
@@ -97,7 +101,7 @@ public class YogDzewa extends Mob {
 	private static final int MIN_SUMMON_CD = 10;
 	private static final int MAX_SUMMON_CD = 15;
 
-	public long takenDamage;
+	public BigInteger takenDamage = BigInteger.ZERO;
 
 	private static Class getPairedFist(Class fist){
 		if (fist == YogFist.BurningFist.class) return YogFist.SoiledFist.class;
@@ -158,15 +162,15 @@ public class YogDzewa extends Mob {
 	private ArrayList<Integer> targetedCells = new ArrayList<>();
 
 	@Override
-	public long attackSkill(Char target) {
-		return INFINITE_ACCURACY;
+	public BigInteger attackSkill(Char target) {
+		return BigInteger.valueOf(INFINITE_ACCURACY);
 	}
 
-	public long phaseLife(int phase){
+	public BigInteger phaseLife(int phase){
 		if (phase == 4)
-			return HT/10;
+			return HT.divide(BigInteger.TEN);
 		else
-			return HT - HT/10*3*phase;
+			return HT.subtract(HT.divide(BigInteger.TEN).multiply(BigInteger.valueOf(3)).multiply(BigInteger.valueOf(phase)));
 	}
 
 	@Override
@@ -197,12 +201,12 @@ public class YogDzewa extends Mob {
 			}
 		}
 
-		long healingTarget = Dungeon.hero.HT / 15;
+		BigInteger healingTarget = Dungeon.hero.HT.divide(BigInteger.valueOf(15));
 		if (YogFist.isNearYog(Dungeon.hero.pos))
-			healingTarget *= 2;
+			healingTarget = healingTarget.multiply(BigInteger.TWO);
 
-		if (takenDamage >= healingTarget && Dungeon.level.heroFOV[pos]){
-			takenDamage -= healingTarget;
+		if ((takenDamage.compareTo(healingTarget) >= 0) && Dungeon.level.heroFOV[pos]){
+			takenDamage = takenDamage.subtract(healingTarget);
 			Dungeon.hero.damage(healingTarget, new Eye.DeathGaze());
 			stealLife(Dungeon.hero, healingTarget);
 		}
@@ -243,10 +247,10 @@ public class YogDzewa extends Mob {
 					}
 
 					if (hit( this, ch, true )) {
-						long dmg = Dungeon.NormalLongRange(20, 30);
+						BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(20), BigInteger.valueOf(30));
 						dmg = Dungeon.getCycleMultiplier(dmg);
 						if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)) {
-							ch.damage(dmg*25000L, new Eye.DeathGaze());
+							ch.damage(dmg.multiply(BigInteger.valueOf(25000L)), new Eye.DeathGaze());
 						} else {
 							ch.damage(dmg, new Eye.DeathGaze());
 						}
@@ -268,9 +272,9 @@ public class YogDzewa extends Mob {
 
 			if (abilityCooldown <= 0){
 
-				long beams = 1 + (HT - HP)/(HT / 5 * 2);
+				BigInteger beams = BigInteger.ONE.add((HT.subtract(HP)).divide((HT.divide(BigInteger.valueOf(5)).multiply(BigInteger.TWO))));
 				HashSet<Integer> affectedCells = new HashSet<>();
-				for (int i = 0; i < beams; i++){
+				for (int i = 0; (BigInteger.valueOf(i).compareTo(beams) < 0); i++){
 
 					int targetPos = Dungeon.hero.pos;
 					if (i != 0){
@@ -409,7 +413,7 @@ public class YogDzewa extends Mob {
 	}
 
 	private void phaseTransition(){
-		if (phase < 4 && HP <= phaseLife(phase)){
+		if (phase < 4 && (HP.compareTo(phaseLife(phase)) <= 0)){
 
 			phase++;
 
@@ -434,17 +438,17 @@ public class YogDzewa extends Mob {
 	}
 
 	@Override
-	public void damage( long dmg, Object src ) {
-		long preHP = HP;
+	public void damage( BigInteger dmg, Object src ) {
+		BigInteger preHP = HP;
 		super.damage( dmg, src );
 
 		if (phase == 0 || findFist() != null) return;
 
-		HP = Math.max(HP, phaseLife(phase));
-		long dmgTaken = preHP - HP;
-		takenDamage += dmgTaken / 1.5f;
+		HP = HP.max(phaseLife(phase));
+		BigInteger dmgTaken = preHP.subtract(HP);
+		takenDamage = Big.trunc(Big.dec(takenDamage).add(Big.div(Big.dec(dmgTaken), Big.dec(1.5f))));
 
-		if (dmgTaken > 0) {
+		if ((dmgTaken.compareTo(BigInteger.ZERO) > 0)) {
 			abilityCooldown -= Dungeon.cycle + 1;
 			summonCooldown -= Dungeon.cycle + 1;
 		}
@@ -453,8 +457,8 @@ public class YogDzewa extends Mob {
 
 		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
 		if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
-			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmgTaken/3f);
-			else                                                    lock.addTime(dmgTaken/2f);
+			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(Big.div(Big.dec(dmgTaken), Big.dec(3f)).floatValue());
+			else                                                    lock.addTime(Big.div(Big.dec(dmgTaken), Big.dec(2f)).floatValue());
 		}
 
 	}
@@ -536,18 +540,18 @@ public class YogDzewa extends Mob {
 		}
 	}
 
-	public void stealLife(Char target, long amount){
+	public void stealLife(Char target, BigInteger amount){
 		phaseTransition();
 
-		long healCap = phaseLife(phase-1);
-		if (HP + amount > healCap)
-			amount -= HP + amount - healCap;
-		if (amount <= 0)
+		BigInteger healCap = phaseLife(phase-1);
+		if ((HP.add(amount).compareTo(healCap) > 0))
+			amount = amount.subtract(HP.add(amount).subtract(healCap));
+		if ((amount.compareTo(BigInteger.ZERO) <= 0))
 			return;
 
 		sprite.parent.add(new Beam.HealthRay(sprite.center(), DungeonTilemap.raisedTileCenterToWorld(target.pos)));
 
-		HP += amount;
+		HP = HP.add(amount);
 
 		if (sprite.visible){
 			sprite.showStatus(CharSprite.POSITIVE, "+%dHP", amount);
@@ -645,7 +649,7 @@ public class YogDzewa extends Mob {
 
 		bundle.put(ABILITY_CD, abilityCooldown);
 		bundle.put(SUMMON_CD, summonCooldown);
-		bundle.put(TAKEN_DMG, takenDamage);
+		Big.put(bundle, TAKEN_DMG, takenDamage);
 
 		bundle.put(FIST_SUMMONS, fistSummons.toArray(new Class[0]));
 		bundle.put(CHALLENGE_SUMMONS, challengeSummons.toArray(new Class[0]));
@@ -682,7 +686,7 @@ public class YogDzewa extends Mob {
 		}
 
 		if (bundle.contains(TAKEN_DMG))
-			takenDamage = bundle.getLong(TAKEN_DMG);
+			takenDamage = Big.getBig(bundle, TAKEN_DMG);
 	}
 
 	public static class Larva extends Mob {
@@ -690,11 +694,11 @@ public class YogDzewa extends Mob {
 		{
 			spriteClass = LarvaSprite.class;
 
-			HP = HT = Dungeon.getCycleMultiplier(20);
-			defenseSkill = Dungeon.getCycleMultiplier(12);
+			HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(20));
+			defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(12));
 			viewDistance = Light.DISTANCE;
 
-			EXP = Dungeon.getCycleMultiplier(5);
+			EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(5));
 			maxLvl = -2;
 
 			properties.add(Property.DEMONIC);
@@ -702,25 +706,25 @@ public class YogDzewa extends Mob {
 		}
 
 		@Override
-		public long attackSkill(Char target ) {
-			return Dungeon.getCycleMultiplier(30);
+		public BigInteger attackSkill(Char target ) {
+			return Dungeon.getCycleMultiplier(BigInteger.valueOf(30));
 		}
 
 		@Override
-		public long damageRoll() {
-			return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(15), Dungeon.getCycleMultiplier(25) );
+		public BigInteger damageRoll() {
+			return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(15)), Dungeon.getCycleMultiplier(BigInteger.valueOf(25)) );
 		}
 
 		@Override
-		public long cycledDrRoll() {
-			return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(4));
+		public BigInteger cycledDrRoll() {
+			return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(4)));
 		}
 
 		@Override
-		public long attackProc(Char enemy, long damage) {
+		public BigInteger attackProc(Char enemy, BigInteger damage) {
 			for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()){
 				if (mob instanceof YogDzewa && mob.isAlive()){
-					((YogDzewa) mob).stealLife(enemy, damage / 2);
+					((YogDzewa) mob).stealLife(enemy, damage.divide(BigInteger.TWO));
 				}
 			}
 			return super.attackProc(enemy, damage);
@@ -735,10 +739,10 @@ public class YogDzewa extends Mob {
 		}
 
 		@Override
-		public long attackProc(Char enemy, long damage) {
+		public BigInteger attackProc(Char enemy, BigInteger damage) {
 			for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()){
 				if (mob instanceof YogDzewa && mob.isAlive()){
-					((YogDzewa) mob).stealLife(enemy, damage / 2);
+					((YogDzewa) mob).stealLife(enemy, damage.divide(BigInteger.TWO));
 				}
 			}
 			return super.attackProc(enemy, damage);
@@ -751,10 +755,10 @@ public class YogDzewa extends Mob {
 		}
 
 		@Override
-		public long attackProc(Char enemy, long damage) {
+		public BigInteger attackProc(Char enemy, BigInteger damage) {
 			for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()){
 				if (mob instanceof YogDzewa && mob.isAlive()){
-					((YogDzewa) mob).stealLife(enemy, damage / 2);
+					((YogDzewa) mob).stealLife(enemy, damage.divide(BigInteger.TWO));
 				}
 			}
 			return super.attackProc(enemy, damage);
@@ -767,10 +771,10 @@ public class YogDzewa extends Mob {
 		}
 
 		@Override
-		public long attackProc(Char enemy, long damage) {
+		public BigInteger attackProc(Char enemy, BigInteger damage) {
 			for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()){
 				if (mob instanceof YogDzewa && mob.isAlive()){
-					((YogDzewa) mob).stealLife(enemy, damage / 2);
+					((YogDzewa) mob).stealLife(enemy, damage.divide(BigInteger.TWO));
 				}
 			}
 			return super.attackProc(enemy, damage);

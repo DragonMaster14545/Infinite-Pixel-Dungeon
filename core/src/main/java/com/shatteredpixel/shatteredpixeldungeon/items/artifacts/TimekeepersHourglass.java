@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -60,9 +64,9 @@ public class TimekeepersHourglass extends Artifact {
 
 		levelCap = 5;
 
-		charge = 5+level();
+		charge = BigInteger.valueOf(5).add(level());
 		partialCharge = 0;
-		setChargeCap(5+level());
+		setChargeCap(BigInteger.valueOf(5).add(level()));
 
 		defaultAction = AC_ACTIVATE;
 	}
@@ -78,7 +82,7 @@ public class TimekeepersHourglass extends Artifact {
 		if (isEquipped( hero )
 				&& !cursed
 				&& hero.buff(MagicImmune.class) == null
-				&& (charge > 0 || activeBuff != null)) {
+				&& ((charge.compareTo(BigInteger.ZERO) > 0) || activeBuff != null)) {
 			actions.add(AC_ACTIVATE);
 		}
 		return actions;
@@ -100,7 +104,7 @@ public class TimekeepersHourglass extends Artifact {
 					activeBuff.detach();
 					GLog.i( Messages.get(this, "deactivate") );
 				}
-			} else if (charge <= 0)         GLog.i( Messages.get(this, "no_charge") );
+			} else if ((charge.compareTo(BigInteger.ZERO) <= 0))         GLog.i( Messages.get(this, "no_charge") );
 			else if (cursed)                GLog.i( Messages.get(this, "cursed") );
 			else GameScene.show(
 						new WndOptions(new ItemSprite(this),
@@ -127,7 +131,7 @@ public class TimekeepersHourglass extends Artifact {
 									activeBuff = new timeFreeze();
 									Talent.onArtifactUsed(Dungeon.hero);
 									activeBuff.attachTo(Dungeon.hero);
-									charge--;
+									charge = charge.subtract(BigInteger.ONE);
 									((timeFreeze)activeBuff).processTime(0f);
 								}
 							}
@@ -162,14 +166,14 @@ public class TimekeepersHourglass extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (charge < getChargeCap() && !cursed && target.buff(MagicImmune.class) == null){
+		if ((charge.compareTo(getChargeCap()) < 0) && !cursed && target.buff(MagicImmune.class) == null){
 			partialCharge += 0.25f*amount;
-			partialCharge *= getRarityMultiplier();
+			partialCharge *= getRarityMultiplier().doubleValue();
 			while (partialCharge >= 1){
 				partialCharge--;
-				charge++;
+				charge = charge.add(BigInteger.ONE);
 			}
-			if (charge >= getChargeCap()){
+			if ((charge.compareTo(getChargeCap()) >= 0)){
 				partialCharge = 0;
 			}
 			updateQuickslot();
@@ -178,10 +182,10 @@ public class TimekeepersHourglass extends Artifact {
 
 	@Override
 	public Item upgrade() {
-		setChargeCap(5+level());
+		setChargeCap(BigInteger.valueOf(5).add(level()));
 
 		//for artifact transmutation.
-		while (level()+1 > sandBags)
+		while ((level().add(BigInteger.ONE).compareTo(BigInteger.valueOf(sandBags)) > 0))
 			sandBags ++;
 
 		return super.upgrade();
@@ -193,7 +197,7 @@ public class TimekeepersHourglass extends Artifact {
 
 		if (isEquipped( Dungeon.hero )){
 			if (!cursed) {
-				if (level() < levelCap )
+				if ((level().compareTo(BigInteger.valueOf(levelCap)) < 0))
 					desc += "\n\n" + Messages.get(this, "desc_hint");
 
 			} else
@@ -237,20 +241,20 @@ public class TimekeepersHourglass extends Artifact {
 		@Override
 		public boolean act() {
 
-			if (charge < getChargeCap()
+			if ((charge.compareTo(getChargeCap()) < 0)
 					&& !cursed
 					&& target.buff(MagicImmune.class) == null
 					&& Regeneration.regenOn()) {
 				//90 turns to charge at full, 60 turns to charge at 0/10
-				float chargeGain = 1 / (90f - (getChargeCap() - charge)*3f);
+				float chargeGain = Big.div(Big.dec(1), (Big.dec(90f).subtract(Big.dec((getChargeCap().subtract(charge))).multiply(Big.dec(3f))))).floatValue();
 				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
 				partialCharge += chargeGain;
 
 				while (partialCharge >= 1) {
 					partialCharge --;
-					charge ++;
+					charge = charge.add(BigInteger.ONE);
 
-					if (charge == getChargeCap()){
+					if ((charge.compareTo(getChargeCap()) == 0)){
 						partialCharge = 0;
 					}
 				}
@@ -279,17 +283,17 @@ public class TimekeepersHourglass extends Artifact {
 
 				Invisibility.dispel();
 
-				long usedCharge = Math.min(charge, 2);
+				BigInteger usedCharge = charge.min(BigInteger.TWO);
 				//buffs always act last, so the stasis buff should end a turn early.
-				spend(5*usedCharge);
+				spend(BigInteger.valueOf(5).multiply(usedCharge).floatValue());
 
 				//shouldn't punish the player for going into stasis frequently
 				Hunger hunger = Buff.affect(target, Hunger.class);
 				if (hunger != null && !hunger.isStarving()) {
-					hunger.satisfy(5 * usedCharge);
+					hunger.satisfy(BigInteger.valueOf(5).multiply(usedCharge).floatValue());
 				}
 
-				charge -= usedCharge;
+				charge = charge.subtract(usedCharge);
 
 				target.invisible++;
 				target.paralysed++;
@@ -345,13 +349,13 @@ public class TimekeepersHourglass extends Artifact {
 			//use 1/1,000 to account for rounding errors
 			while (turnsToCost < -0.001f){
 				turnsToCost += 2f;
-				charge --;
+				charge = charge.subtract(BigInteger.ONE);
 			}
 
 			updateQuickslot();
 
-			if (charge < 0 || charge == 0 && turnsToCost <= 0){
-				charge = 0;
+			if ((charge.compareTo(BigInteger.ZERO) < 0) || (charge.compareTo(BigInteger.ZERO) == 0) && turnsToCost <= 0){
+				charge = BigInteger.ZERO;
 				detach();
 			}
 
@@ -480,9 +484,9 @@ public class TimekeepersHourglass extends Artifact {
 			TimekeepersHourglass hourglass = hero.belongings.getItem( TimekeepersHourglass.class );
 			if (hourglass != null && !hourglass.cursed) {
 				hourglass.upgrade();
-				Catalog.countUses(hourglass.getClass(), 2);
+				Catalog.countUses(hourglass.getClass(), BigInteger.TWO);
 				Sample.INSTANCE.play( Assets.Sounds.DEWDROP );
-				if (hourglass.level() == hourglass.levelCap)
+				if ((hourglass.level().compareTo(BigInteger.valueOf(hourglass.levelCap)) == 0))
 					GLog.p( Messages.get(this, "maxlevel") );
 				else
 					GLog.i( Messages.get(this, "levelup") );
@@ -496,8 +500,8 @@ public class TimekeepersHourglass extends Artifact {
 		}
 
 		@Override
-		public long value() {
-			return 30;
+		public BigInteger value() {
+			return BigInteger.valueOf(30);
 		}
 
 		@Override

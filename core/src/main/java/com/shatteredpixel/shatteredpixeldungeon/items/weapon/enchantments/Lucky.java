@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -39,13 +43,13 @@ public class Lucky extends Weapon.Enchantment {
 	private static ItemSprite.Glowing GREEN = new ItemSprite.Glowing( 0x00FF00 );
 	
 	@Override
-	public long proc( Weapon weapon, Char attacker, Char defender, long damage ) {
-		long level = Math.max( 0, weapon.buffedLvl() );
+	public BigInteger proc( Weapon weapon, Char attacker, Char defender, BigInteger damage ) {
+		BigInteger level = BigInteger.ZERO.max(weapon.buffedLvl());
 
 		// lvl 0 - 10%
 		// lvl 1 ~ 12%
 		// lvl 2 ~ 14%
-		float procChance = (level+4f)/(level+40f) * procChanceMultiplier(attacker);
+		float procChance = Big.div((Big.dec(level).add(Big.dec(4f))), (Big.dec(level).add(Big.dec(40f)))).multiply(Big.dec(procChanceMultiplier(attacker))).floatValue();
 		if (Random.Float() < procChance){
 
 			float powerMulti = Math.max(1f, procChance);
@@ -67,7 +71,7 @@ public class Lucky extends Weapon.Enchantment {
 	
 	public static Item genLoot(){
 		//80% common, 20% uncommon, 0% rare
-		return RingOfWealth.genConsumableDrop(-5);
+		return RingOfWealth.genConsumableDrop(BigInteger.valueOf(-5));
 	}
 
 	public static void showFlare( Visual vis ){
@@ -92,7 +96,7 @@ public class Lucky extends Weapon.Enchantment {
 
 		public Item genLoot(){
 			detach();
-			return RingOfWealth.genConsumableDrop(ringLevel);
+			return RingOfWealth.genConsumableDrop(BigInteger.valueOf(ringLevel));
 		}
 	}
 	

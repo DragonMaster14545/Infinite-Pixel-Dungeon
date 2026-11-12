@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -179,14 +181,14 @@ public class SmokeBomb extends ArmorAbility {
 
 		{
 			spriteClass = NinjaLogSprite.class;
-			defenseSkill = 0;
+			defenseSkill = BigInteger.ZERO;
 
 			properties.add(Property.INORGANIC); //wood is organic, but this is accurate for game logic
 
 			alignment = Alignment.ALLY;
 
-			HT = 80;
-			if (Dungeon.hero != null) HT *= Dungeon.hero.pointsInTalent(Talent.BODY_REPLACEMENT);
+			HT = BigInteger.valueOf(80);
+			if (Dungeon.hero != null) HT = HT.multiply(BigInteger.valueOf(Dungeon.hero.pointsInTalent(Talent.BODY_REPLACEMENT)));
 			HP = HT;
 		}
 
@@ -194,12 +196,12 @@ public class SmokeBomb extends ArmorAbility {
 		protected int drScaling = 5;
 
 		@Override
-		public long drRoll() {
-			long dr = super.drRoll();
+		public BigInteger drRoll() {
+			BigInteger dr = super.drRoll();
 
-			dr += Dungeon.NormalLongRange(Dungeon.hero.pointsInTalent(Talent.BODY_REPLACEMENT),
-					3*Dungeon.hero.pointsInTalent(Talent.BODY_REPLACEMENT));
-			dr += Dungeon.NormalLongRange(4, 12);
+			dr = dr.add(Dungeon.NormalLongRange(BigInteger.valueOf(Dungeon.hero.pointsInTalent(Talent.BODY_REPLACEMENT)),
+					BigInteger.valueOf(3*Dungeon.hero.pointsInTalent(Talent.BODY_REPLACEMENT))));
+			dr = dr.add(Dungeon.NormalLongRange(BigInteger.valueOf(4), BigInteger.valueOf(12)));
 
 			return dr;
 		}

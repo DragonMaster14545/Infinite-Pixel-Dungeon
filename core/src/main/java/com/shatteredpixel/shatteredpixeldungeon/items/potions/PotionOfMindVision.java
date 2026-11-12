@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
@@ -54,7 +56,7 @@ public class PotionOfMindVision extends Potion {
 	}
 	
 	@Override
-	public long value() {
-		return isKnown() ? 30 * quantity : super.value();
+	public BigInteger value() {
+		return isKnown() ? BigInteger.valueOf(30).multiply(quantity) : super.value();
 	}
 }

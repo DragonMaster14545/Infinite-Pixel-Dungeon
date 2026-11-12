@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.WaterOfAwareness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.WaterOfHealth;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.WellWater;
@@ -55,7 +57,7 @@ public class MagicWellRoom extends SpecialRoom {
 			(Class<? extends WellWater>)Random.element( WATERS );
 			
 		
-		WellWater.seed(c.x + level.width() * c.y, 1, waterClass, level);
+		WellWater.seed(c.x + level.width() * c.y, BigInteger.ONE, waterClass, level);
 		
 		entrance().set( Door.Type.REGULAR );
 	}

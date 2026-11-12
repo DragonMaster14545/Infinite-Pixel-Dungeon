@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -47,28 +49,27 @@ public class RoundShield extends MeleeWeapon {
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  Math.round(3.5d*(tier()+1)) +     //14 base, down from 24
-				lvl*(tier());                   //+3 per level, down from +5
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(Math.round(3.5d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf((tier()))));                   //+3 per level, down from +5
 	}
 
 	@Override
-	public long defenseFactor( Char owner ) {
+	public BigInteger defenseFactor( Char owner ) {
 		return DRMax();
 	}
 
-	public long DRMax(){
+	public BigInteger DRMax(){
 		return DRMax(buffedLvl());
 	}
 
 	//4 extra defence, plus 1 per level
-	public long DRMax(long lvl){
-		return (tier()+1)+(tier()-1)*lvl;
+	public BigInteger DRMax(BigInteger lvl){
+		return BigInteger.valueOf((tier()+1)).add(BigInteger.valueOf((tier()-1)).multiply(lvl));
 	}
 	
 	public String statsInfo(){
 		if (isIdentified()){
-			return Messages.get(this, "stats_desc", (tier()+1)+(tier()-1)*buffedLvl());
+			return Messages.get(this, "stats_desc", BigInteger.valueOf((tier()+1)).add(BigInteger.valueOf((tier()-1)).multiply(buffedLvl())));
 		} else {
 			return Messages.get(this, "typical_stats_desc", (tier()+1));
 		}
@@ -76,26 +77,26 @@ public class RoundShield extends MeleeWeapon {
 
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
-		RoundShield.guardAbility(hero, 5+buffedLvl()/200, this);
+		RoundShield.guardAbility(hero, BigInteger.valueOf(5).add(buffedLvl().divide(BigInteger.valueOf(200))), this);
 	}
 
 	@Override
 	public String abilityInfo() {
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", 5+buffedLvl()/200);
+			return Messages.get(this, "ability_desc", BigInteger.valueOf(5).add(buffedLvl().divide(BigInteger.valueOf(200))));
 		} else {
 			return Messages.get(this, "typical_ability_desc", 5);
 		}
 	}
 
 	@Override
-	public String upgradeAbilityStat(long level) {
-		return Long.toString(5 + level);
+	public String upgradeAbilityStat(BigInteger level) {
+		return BigInteger.valueOf(5).add(level).toString();
 	}
 
-	public static void guardAbility(Hero hero, long duration, MeleeWeapon wep){
+	public static void guardAbility(Hero hero, BigInteger duration, MeleeWeapon wep){
 		wep.beforeAbilityUsed(hero, null);
-		Buff.prolong(hero, GuardTracker.class, duration).hasBlocked = false;
+		Buff.prolong(hero, GuardTracker.class, duration.floatValue()).hasBlocked = false;
 		hero.sprite.operate(hero.pos);
 		hero.spendAndNext(Actor.TICK);
 		wep.afterAbilityUsed(hero);

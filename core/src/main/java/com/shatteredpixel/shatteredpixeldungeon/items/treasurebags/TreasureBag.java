@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.treasurebags;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -59,8 +61,8 @@ public abstract class TreasureBag extends Item {
     }
 
     @Override
-    public long value() {
-        return quantity * 3000;
+    public BigInteger value() {
+        return quantity.multiply(BigInteger.valueOf(3000));
     }
 
     protected abstract ArrayList<Item> items();

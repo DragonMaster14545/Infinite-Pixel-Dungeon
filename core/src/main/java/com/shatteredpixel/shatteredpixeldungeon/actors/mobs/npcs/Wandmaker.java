@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -90,12 +94,12 @@ public class Wandmaker extends NPC {
 	}
 	
 	@Override
-	public long defenseSkill(Char enemy ) {
-		return INFINITE_EVASION;
+	public BigInteger defenseSkill(Char enemy ) {
+		return BigInteger.valueOf(INFINITE_EVASION);
 	}
 
 	@Override
-	public void damage( long dmg, Object src ) {
+	public void damage( BigInteger dmg, Object src ) {
 		//do nothing
 	}
 
@@ -382,7 +386,7 @@ public class Wandmaker extends NPC {
 				given = false;
 				wand1 = (Wand) Generator.random(Generator.Category.WAND);
 				wand1.cursed = false;
-				wand1.upgrade(Dungeon.getCycleMultiplier(2));
+				wand1.upgrade((Dungeon.getCycleMultiplier(BigInteger.TWO)));
 				wand2 = (Wand) Generator.random(Generator.Category.WAND);
 				ArrayList<Item> toUndo = new ArrayList<>();
 				while (wand2.getClass() == wand1.getClass()) {
@@ -393,7 +397,7 @@ public class Wandmaker extends NPC {
 					Generator.undoDrop(i);
 				}
 				wand2.cursed = false;
-				wand2.upgrade(Dungeon.getCycleMultiplier(2));
+				wand2.upgrade((Dungeon.getCycleMultiplier(BigInteger.TWO)));
 
 			}
 		}
@@ -457,12 +461,12 @@ public class Wandmaker extends NPC {
 
 				//or hero is in the ritual room and all 4 candles are with them
 				if (((RegularLevel) Dungeon.level).room(Dungeon.hero.pos) instanceof RitualSiteRoom) {
-					long candles = 0;
+					BigInteger candles = BigInteger.ZERO;
 					if (Dungeon.hero.belongings.getItem(CeremonialCandle.class) != null){
-						candles += Dungeon.hero.belongings.getItem(CeremonialCandle.class).quantity();
+						candles = candles.add(Dungeon.hero.belongings.getItem(CeremonialCandle.class).quantity());
 					}
 
-					if (candles >= 4){
+					if ((candles.compareTo(BigInteger.valueOf(4)) >= 0)){
 						return true;
 					}
 
@@ -470,13 +474,13 @@ public class Wandmaker extends NPC {
 						if (((RegularLevel) Dungeon.level).room(h.pos) instanceof RitualSiteRoom){
 							for (Item i : h.items){
 								if (i instanceof CeremonialCandle){
-									candles += i.quantity();
+									candles = candles.add(i.quantity());
 								}
 							}
 						}
 					}
 
-					if (candles >= 4){
+					if ((candles.compareTo(BigInteger.valueOf(4)) >= 0)){
 						return true;
 					}
 

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.treasurebags;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Perks;
@@ -47,7 +49,7 @@ public class BiggerGambleBag extends TreasureBag {
         if (Dungeon.hero.perks.contains(Perks.Perk.MORE_BAG)) amount *= 1.5f;
         for(int i = 0; i < amount; i++) items.add(Generator.random());
         for (Item item: items){
-            if (item.stackable && Random.Float() < 0.33f) item.quantity(item.quantity()+1);
+            if (item.stackable && Random.Float() < 0.33f) item.quantity(item.quantity().add(BigInteger.ONE));
         }
 
         if ((Badges.isUnlocked( Badges.Badge.WAND_QUEST_6 ) && !Badges.isUnlocked( Badges.Badge.KIT_UNLOCKED )) && Random.Int(4) == 0)
@@ -56,7 +58,7 @@ public class BiggerGambleBag extends TreasureBag {
     }
 
     @Override
-    public long value() {
-        return 385 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(385).multiply(quantity);
     }
 }

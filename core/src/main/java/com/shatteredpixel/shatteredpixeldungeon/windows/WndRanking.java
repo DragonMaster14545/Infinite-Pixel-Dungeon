@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -280,7 +282,7 @@ public class WndRanking extends WndTabbed {
 						});
 					}
 				};
-				if (DungeonSeed.convertFromText(SPDSettings.customSeed()) == Dungeon.seed){
+				if ((DungeonSeed.convertFromText(SPDSettings.customSeed()) == Dungeon.seed)){
 					icon.hardlight(1f, 1.5f, 0.67f);
 				}
 				btnSeed.icon(icon);

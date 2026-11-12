@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions.brews;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -58,13 +60,13 @@ public abstract class Brew extends Potion {
 	}
 
 	@Override
-	public long value() {
-		return quantity * 60;
+	public BigInteger value() {
+		return quantity.multiply(BigInteger.valueOf(60));
 	}
 
 	@Override
-	public long energyVal() {
-		return quantity * 12;
+	public BigInteger energyVal() {
+		return quantity.multiply(BigInteger.valueOf(12));
 	}
 
 }

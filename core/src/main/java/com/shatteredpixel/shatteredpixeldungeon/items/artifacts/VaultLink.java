@@ -1,5 +1,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -39,50 +43,50 @@ public class VaultLink extends Artifact {
 		image = ItemSpriteSheet.VAULT_LINK;
 
 		levelCap = 10;
-		exp = 0;
-		charge = 0;
-		chargeCap = 0;
+		exp = BigInteger.ZERO;
+		charge = BigInteger.ZERO;
+		chargeCap = BigInteger.ZERO;
 
 		defaultAction = AC_OPEN;
 		unique = true;
 	}
 
-	public static final long[] SHOP_LEVELS = {0, 5, 10, 20, 35, 50, 75, 100};
+	public static final BigInteger[] SHOP_LEVELS = {BigInteger.ZERO, BigInteger.valueOf(5), BigInteger.TEN, BigInteger.valueOf(20), BigInteger.valueOf(35), BigInteger.valueOf(50), BigInteger.valueOf(75), BigInteger.valueOf(100)};
 
-	public static final long[] SLOT_PACKS = {1, 5, 10, 25, 50, 100, 150, 200};
+	public static final BigInteger[] SLOT_PACKS = {BigInteger.ONE, BigInteger.valueOf(5), BigInteger.TEN, BigInteger.valueOf(25), BigInteger.valueOf(50), BigInteger.valueOf(100), BigInteger.valueOf(150), BigInteger.valueOf(200)};
 
-	public long extraSlots() {
+	public BigInteger extraSlots() {
 		return VaultStore.extraSlots();
 	}
 
-	public long packSize(long pack) {
-		return Math.max(0, Math.min(pack, 10000 - VaultStore.extraSlots()));
+	public BigInteger packSize(BigInteger pack) {
+		return BigInteger.ZERO.max(pack.min(BigInteger.valueOf(10000).subtract(VaultStore.extraSlots())));
 	}
 
-	public long slotGoldPrice(long pack) {
-		long n = VaultStore.extraSlots();
-		long c = packSize(pack);
-		return c * 2500 + 250 * (n * c + c * (c - 1) / 2);
+	public BigInteger slotGoldPrice(BigInteger pack) {
+		long n = Big.toLong(VaultStore.extraSlots());
+		long c = Big.toLong(packSize(pack));
+		return BigInteger.valueOf(c * 2500 + 250 * (n * c + c * (c - 1) / 2));
 	}
 
-	public long slotEnergyPrice(long pack) {
-		return Math.max(60, slotGoldPrice(pack) / 5);
+	public BigInteger slotEnergyPrice(BigInteger pack) {
+		return BigInteger.valueOf(60).max(slotGoldPrice(pack).divide(BigInteger.valueOf(5)));
 	}
 
-	public String buySlots(Hero hero, long pack, boolean withEnergy) {
+	public String buySlots(Hero hero, BigInteger pack, boolean withEnergy) {
 		if (cursed) return "cursed";
 		if (hero == null || !hero.isAlive()) return "shop_failed";
 
-		long count = packSize(pack);
-		if (count <= 0) return "shop_slots_max";
+		BigInteger count = packSize(pack);
+		if ((count.compareTo(BigInteger.ZERO) <= 0)) return "shop_slots_max";
 
-		long cost = withEnergy ? slotEnergyPrice(pack) : slotGoldPrice(pack);
-		if ((withEnergy ? Dungeon.energy : Dungeon.gold) < cost) {
+		BigInteger cost = withEnergy ? slotEnergyPrice(pack) : slotGoldPrice(pack);
+		if (((withEnergy ? Dungeon.energy : Dungeon.gold).compareTo(cost) < 0)) {
 			return withEnergy ? "shop_no_energy" : "shop_no_gold";
 		}
 
-		long before = VaultStore.extraSlots();
-		VaultStore.setExtraSlots(before + count);
+		BigInteger before = VaultStore.extraSlots();
+		VaultStore.setExtraSlots(before.add(count));
 		if (!VaultStore.save()) {
 			VaultStore.setExtraSlots(before);
 			return "write_failed";
@@ -107,48 +111,48 @@ public class VaultLink extends Artifact {
 		return bought;
 	}
 
-	public long inflationPercent() {
-		return Math.min(1000, 5 * bought);
+	public BigInteger inflationPercent() {
+		return BigInteger.valueOf(Math.min(1000, 5 * bought));
 	}
 
-	private long basePrice(long level) {
-		return (long) (2500 + 500 * level + Math.pow(25, 2));
+	private BigInteger basePrice(BigInteger level) {
+		return Big.trunc((Big.dec(BigInteger.valueOf(2500).add(BigInteger.valueOf(500).multiply(level))).add(Big.dec(Math.pow(25, 2)))));
 	}
 
-	private long inflate(long price) {
-		return Math.max(1, price * (100 + inflationPercent()) / 100);
+	private BigInteger inflate(BigInteger price) {
+		return BigInteger.ONE.max(price.multiply((BigInteger.valueOf(100).add(inflationPercent()))).divide(BigInteger.valueOf(100)));
 	}
 
-	public long goldPrice(long level) {
+	public BigInteger goldPrice(BigInteger level) {
 		return inflate(basePrice(level));
 	}
 
-	public long energyPrice(long level) {
-		return inflate(Math.max(60, basePrice(level) / 5));
+	public BigInteger energyPrice(BigInteger level) {
+		return inflate(BigInteger.valueOf(60).max(basePrice(level).divide(BigInteger.valueOf(5))));
 	}
 
-	private void pay(boolean withEnergy, long cost) {
-		if (withEnergy) Dungeon.energy -= cost;
-		else Dungeon.gold -= cost;
+	private void pay(boolean withEnergy, BigInteger cost) {
+		if (withEnergy) Dungeon.energy = Dungeon.energy.subtract(cost);
+		else Dungeon.gold = Dungeon.gold.subtract(cost);
 	}
 
-	private void refund(boolean withEnergy, long cost) {
-		if (withEnergy) Dungeon.energy += cost;
-		else Dungeon.gold += cost;
+	private void refund(boolean withEnergy, BigInteger cost) {
+		if (withEnergy) Dungeon.energy = Dungeon.energy.add(cost);
+		else Dungeon.gold = Dungeon.gold.add(cost);
 	}
 
-	public String buy(Hero hero, long level, boolean withEnergy) {
+	public String buy(Hero hero, BigInteger level, boolean withEnergy) {
 		if (cursed) return "cursed";
 		if (hero == null || !hero.isAlive()) return "shop_failed";
 
-		level = Math.max(0, Math.min(level, ShulkerBox.MAX_LEVEL));
-		long cost = withEnergy ? energyPrice(level) : goldPrice(level);
-		if ((withEnergy ? Dungeon.energy : Dungeon.gold) < cost) {
+		level = BigInteger.ZERO.max(level.min(BigInteger.valueOf(ShulkerBox.MAX_LEVEL)));
+		BigInteger cost = withEnergy ? energyPrice(level) : goldPrice(level);
+		if (((withEnergy ? Dungeon.energy : Dungeon.gold).compareTo(cost) < 0)) {
 			return withEnergy ? "shop_no_energy" : "shop_no_gold";
 		}
 
 		ShulkerBox box = new ShulkerBox();
-		box.level((int) level);
+		box.level(BigInteger.valueOf(Big.toInt(level)));
 
 		if (box.collect(hero.belongings.backpack)) {
 			pay(withEnergy, cost);
@@ -158,7 +162,7 @@ public class VaultLink extends Artifact {
 			return null;
 		}
 
-		if (VaultStore.boxes().size() >= slots()) return "shop_no_room";
+		if ((BigInteger.valueOf(VaultStore.boxes().size()).compareTo(slots()) >= 0)) return "shop_no_room";
 
 		VaultStore.boxes().add(box);
 		if (!VaultStore.save()) {
@@ -195,9 +199,9 @@ public class VaultLink extends Artifact {
 		bought = bundle.getInt(BOUGHT);
 	}
 
-	public long slots() {
-		long normal = BASE_SLOTS + SLOTS_PER_LEVEL * level();
-		return Math.max(1, Math.round(normal * VaultStore.capacityPercent() / 100f)) + VaultStore.extraSlots();
+	public BigInteger slots() {
+		BigInteger normal = BigInteger.valueOf(BASE_SLOTS).add(BigInteger.valueOf(SLOTS_PER_LEVEL).multiply(level()));
+		return BigInteger.ONE.max(Big.round(Big.div(Big.dec(normal.multiply(BigInteger.valueOf(VaultStore.capacityPercent()))), Big.dec(100f)))).add(VaultStore.extraSlots());
 	}
 
 	@Override
@@ -240,7 +244,7 @@ public class VaultLink extends Artifact {
 
 	public String refusal(Hero hero, Item item) {
 		if (!(item instanceof ShulkerBox)) return "not_box";
-		if (VaultStore.boxes().size() >= slots()) return "full";
+		if ((BigInteger.valueOf(VaultStore.boxes().size()).compareTo(slots()) >= 0)) return "full";
 		for (Item inside : ((ShulkerBox) item).contents()) {
 			if (inside.unique || inside instanceof Key || inside instanceof Amulet) return "has_unique";
 		}
@@ -432,8 +436,8 @@ public class VaultLink extends Artifact {
 	}
 
 	@Override
-	public long value() {
-		return 0;
+	public BigInteger value() {
+		return BigInteger.ZERO;
 	}
 
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe {
@@ -448,7 +452,7 @@ public class VaultLink extends Artifact {
 			if (Badges.isUnlocked(Badges.Badge.KIT_UNLOCKED)) kit = true;
 
 			for (Item ingredient : ingredients){
-				if (ingredient.quantity() > 0) {
+				if ((ingredient.quantity().compareTo(BigInteger.ZERO) > 0)) {
 					if (ingredient instanceof ShulkerBox) {
 						shulker = true;
 					} else if (ingredient instanceof ScrollOfUpgrade) {
@@ -463,8 +467,8 @@ public class VaultLink extends Artifact {
 		}
 
 		@Override
-		public long cost(ArrayList<Item> ingredients) {
-			return 1;
+		public BigInteger cost(ArrayList<Item> ingredients) {
+			return BigInteger.ONE;
 		}
 
 		@Override
@@ -472,7 +476,7 @@ public class VaultLink extends Artifact {
 			if (!testIngredients(ingredients)) return null;
 
 			for (Item ingredient : ingredients){
-				ingredient.quantity(ingredient.quantity() - 1);
+				ingredient.quantity(ingredient.quantity().subtract(BigInteger.ONE));
 			}
 
 			return sampleOutput(null);

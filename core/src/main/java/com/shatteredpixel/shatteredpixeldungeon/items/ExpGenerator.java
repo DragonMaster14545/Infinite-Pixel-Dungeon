@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -66,22 +70,22 @@ public class ExpGenerator extends Item {
     }
 
     @Override
-    public long level() {
-        return super.level() + 1;
+    public BigInteger level() {
+        return super.level().add(BigInteger.ONE);
     }
 
     @Override
-    public long visiblyUpgraded() {
+    public BigInteger visiblyUpgraded() {
         return super.level();
     }
 
     @Override
-    public long value() {
-        return 120 * quantity * level();
+    public BigInteger value() {
+        return BigInteger.valueOf(120).multiply(quantity).multiply(level());
     }
 
     @Override
     public String desc() {
-        return Messages.get(this, "desc", Math.round((Dungeon.escalatingDepth()/5) * (1.5f * level())));
+        return Messages.get(this, "desc", Big.round(Big.dec((Dungeon.escalatingDepth().divide(BigInteger.valueOf(5)))).multiply((Big.dec(1.5f).multiply(Big.dec(level()))))));
     }
 }

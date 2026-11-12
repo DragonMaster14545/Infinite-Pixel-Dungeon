@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -145,8 +147,8 @@ public class SpiritHawk extends ArmorAbility {
 		{
 			spriteClass = HawkSprite.class;
 
-			HP = HT = 10;
-			defenseSkill = 60;
+			HP = HT = BigInteger.TEN;
+			defenseSkill = BigInteger.valueOf(60);
 
 			flying = true;
 			if (Dungeon.hero != null) {
@@ -163,30 +165,30 @@ public class SpiritHawk extends ArmorAbility {
 		}
 
 		@Override
-		public long attackSkill(Char target) {
-			return 60;
+		public BigInteger attackSkill(Char target) {
+			return BigInteger.valueOf(60);
 		}
 
 		private int dodgesUsed = 0;
 		private float timeRemaining = 100f;
 
 		@Override
-		public long defenseSkill(Char enemy) {
+		public BigInteger defenseSkill(Char enemy) {
 			if (Dungeon.hero.hasTalent(Talent.SWIFT_SPIRIT) &&
 					dodgesUsed < 2*Dungeon.hero.pointsInTalent(Talent.SWIFT_SPIRIT)) {
 				dodgesUsed++;
-				return Char.INFINITE_EVASION;
+				return BigInteger.valueOf(Char.INFINITE_EVASION);
 			}
 			return super.defenseSkill(enemy);
 		}
 
 		@Override
-		public long damageRoll() {
-			return Dungeon.NormalLongRange(5, 10);
+		public BigInteger damageRoll() {
+			return Dungeon.NormalLongRange(BigInteger.valueOf(5), BigInteger.TEN);
 		}
 
 		@Override
-		public long attackProc(Char enemy, long damage) {
+		public BigInteger attackProc(Char enemy, BigInteger damage) {
 			damage = super.attackProc( enemy, damage );
 			switch (Dungeon.hero.pointsInTalent(Talent.GO_FOR_THE_EYES)){
 				case 1:

@@ -29,6 +29,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.modules;
 
+
+import java.math.BigInteger;
 import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.branch;
 import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.depth;
 import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.hero;
@@ -137,7 +139,7 @@ public class DimensionalRiftModule extends Module {
     }
 
     @Override
-    public long value() {
-        return 750 * quantity * Dungeon.depth * hero.lvl;
+    public BigInteger value() {
+        return BigInteger.valueOf(750).multiply(quantity).multiply(BigInteger.valueOf(Dungeon.depth)).multiply(BigInteger.valueOf(hero.lvl));
     }
 }

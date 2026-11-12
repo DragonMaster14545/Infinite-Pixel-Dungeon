@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -48,18 +52,16 @@ public class Gloves extends MeleeWeapon {
 	}
 
 	@Override
-	public long max(long lvl) {
+	public BigInteger max(BigInteger lvl) {
 		if (Dungeon.hero != null && Dungeon.hero.buff(AttackBuff.class) != null){
-			return  (long)(3d*(tier()+1)) +    //6 base, down from 10
-					lvl*tier() + Dungeon.hero.buff(AttackBuff.class).stack;
+			return  Big.of((3d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf(tier()))).add(BigInteger.valueOf(Dungeon.hero.buff(AttackBuff.class).stack));
 		}
-		return  Math.round(2.5d*(tier()+1)) +     //5 base, down from 10
-				lvl*Math.round(0.5d*(tier()+1));  //+1 per level, down from +2
+		return  BigInteger.valueOf(Math.round(2.5d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf(Math.round(0.5d*(tier()+1)))));  //+1 per level, down from +2
 	}
 
 	@Override
-	public long proc(Char attacker, Char defender, long damage) {
-		if (damage == 0) Buff.affect(attacker, AttackBuff.class, 2f).stack++;
+	public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
+		if ((damage.compareTo(BigInteger.ZERO) == 0)) Buff.affect(attacker, AttackBuff.class, 2f).stack++;
 		return super.proc(attacker, defender, damage);
 	}
 
@@ -95,22 +97,22 @@ public class Gloves extends MeleeWeapon {
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
 		//+(2+0.5*lvl) damage, roughly +67% base damage, +50% scaling
-		long dmgBoost = augment.damageFactor(2 + Math.round(0.5d*buffedLvl()));
+		BigInteger dmgBoost = augment.damageFactor(BigInteger.TWO.add(Big.round(Big.dec(0.5d).multiply(Big.dec(buffedLvl())))));
 		Sai.comboStrikeAbility(hero, target, 0, dmgBoost, this);
 	}
 
 	@Override
 	public String abilityInfo() {
-		int dmgBoost = levelKnown ? 2 + Math.round(0.5f*buffedLvl()) : 2;
+		int dmgBoost = Big.toInt(levelKnown ? BigInteger.TWO.add(Big.round(Big.dec(0.5f).multiply(Big.dec(buffedLvl())))) : BigInteger.TWO);
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", augment.damageFactor(dmgBoost));
+			return Messages.get(this, "ability_desc", augment.damageFactor(BigInteger.valueOf(dmgBoost)));
 		} else {
-			return Messages.get(this, "typical_ability_desc", augment.damageFactor(dmgBoost));
+			return Messages.get(this, "typical_ability_desc", augment.damageFactor(BigInteger.valueOf(dmgBoost)));
 		}
 	}
 
-	public String upgradeAbilityStat(long level){
-		return "+" + augment.damageFactor(2 + Math.round(0.5f*level));
+	public String upgradeAbilityStat(BigInteger level){
+		return "+" + augment.damageFactor(BigInteger.TWO.add(Big.round(Big.dec(0.5f).multiply(Big.dec(level)))));
 	}
 
 }

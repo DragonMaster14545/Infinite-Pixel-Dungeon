@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
@@ -178,14 +182,14 @@ public enum Talent {
 			//barrier every 2/1 turns, to a max of 3/5
 			if (((Hero)target).hasTalent(Talent.PROTECTIVE_SHADOWS) && target.invisible > 0){
 				Barrier barrier = Buff.affect(target, Barrier.class);
-				if (barrier.shielding() < 1 + 2*((Hero)target).pointsInTalent(Talent.PROTECTIVE_SHADOWS)) {
+				if ((barrier.shielding().compareTo(BigInteger.valueOf(1 + 2*((Hero)target).pointsInTalent(Talent.PROTECTIVE_SHADOWS))) < 0)) {
 					barrierInc += 0.5f * ((Hero) target).pointsInTalent(Talent.PROTECTIVE_SHADOWS);
 				}
 				if (barrierInc >= 1){
 					barrierInc = 0;
-					barrier.incShield(1);
+					barrier.incShield(BigInteger.ONE);
 				} else {
-					barrier.incShield(0); //resets barrier decay
+					barrier.incShield(BigInteger.ZERO); //resets barrier decay
 				}
 			} else {
 				detach();
@@ -571,15 +575,15 @@ public enum Talent {
 				BrokenSeal.WarriorShield shield = hero.buff(BrokenSeal.WarriorShield.class);
 				if (shield != null) {
 					// 50/75% of total shield
-					int shieldToGive = Math.round(factor * shield.maxShield() * 0.25f * (1 + hero.pointsInTalent(LIQUID_WILLPOWER)));
+					int shieldToGive = Big.toInt(Big.round(Big.dec(factor).multiply(Big.dec(shield.maxShield())).multiply(Big.dec(0.25f)).multiply(Big.dec((1 + hero.pointsInTalent(LIQUID_WILLPOWER))))));
 					hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
-					shield.supercharge(shieldToGive);
+					shield.supercharge(BigInteger.valueOf(shieldToGive));
 				}
 			} else {
 				// 5/7.5% of max HP
-				int shieldToGive = Math.round( factor * hero.HT * (0.025f * (1+hero.pointsInTalent(LIQUID_WILLPOWER))));
+				int shieldToGive = Big.toInt(Big.round(Big.dec(factor).multiply(Big.dec(hero.HT)).multiply(Big.dec((0.025f * (1+hero.pointsInTalent(LIQUID_WILLPOWER)))))));
 				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
-				Buff.affect(hero, Barrier.class).setShield(shieldToGive);
+				Buff.affect(hero, Barrier.class).setShield(BigInteger.valueOf(shieldToGive));
 			}
 		}
 		if (hero.hasTalent(LIQUID_NATURE)){
@@ -695,23 +699,23 @@ public enum Talent {
 		//currently no talents that trigger here, it wasn't a very popular trigger =(
 	}
 
-	public static long onAttackProc( Hero hero, Char enemy, long dmg ){
+	public static BigInteger onAttackProc( Hero hero, Char enemy, BigInteger dmg ){
 
 		if (hero.hasTalent(Talent.PROVOKED_ANGER)
 			&& hero.buff(ProvokedAngerTracker.class) != null){
-			dmg += 1 + hero.pointsInTalent(Talent.PROVOKED_ANGER);
+			dmg = dmg.add(BigInteger.valueOf(1 + hero.pointsInTalent(Talent.PROVOKED_ANGER)));
 			hero.buff(ProvokedAngerTracker.class).detach();
 		}
 
 		if (hero.hasTalent(Talent.LINGERING_MAGIC)
 				&& hero.buff(LingeringMagicTracker.class) != null){
-			dmg += Random.IntRange(hero.pointsInTalent(Talent.LINGERING_MAGIC) , 2);
+			dmg = dmg.add(BigInteger.valueOf(Random.IntRange(hero.pointsInTalent(Talent.LINGERING_MAGIC) , 2)));
 			hero.buff(LingeringMagicTracker.class).detach();
 		}
 		if (hero.hasTalent(Talent.SUCKER_PUNCH)
 				&& enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)
 				&& enemy.buff(SuckerPunchTracker.class) == null){
-			dmg += Random.IntRange(hero.pointsInTalent(Talent.SUCKER_PUNCH) , 2);
+			dmg = dmg.add(BigInteger.valueOf(Random.IntRange(hero.pointsInTalent(Talent.SUCKER_PUNCH) , 2)));
 			Buff.affect(enemy, SuckerPunchTracker.class);
 		}
 
@@ -720,7 +724,7 @@ public enum Talent {
 				Buff.prolong(hero, FollowupStrikeTracker.class, 5f).object = enemy.id();
 			} else if (hero.buff(FollowupStrikeTracker.class) != null
 					&& hero.buff(FollowupStrikeTracker.class).object == enemy.id()){
-				dmg += 1 + hero.pointsInTalent(FOLLOWUP_STRIKE);
+				dmg = dmg.add(BigInteger.valueOf(1 + hero.pointsInTalent(FOLLOWUP_STRIKE)));
 				hero.buff(FollowupStrikeTracker.class).detach();
 			}
 		}
@@ -728,7 +732,7 @@ public enum Talent {
 		if (hero.buff(Talent.SpiritBladesTracker.class) != null
 				&& Random.Int(10) < 3*hero.pointsInTalent(Talent.SPIRIT_BLADES)){
 			SpiritBow bow = hero.belongings.getItem(SpiritBow.class);
-			if (bow != null) dmg = (int) bow.proc( hero, enemy, dmg );
+			if (bow != null) dmg = BigInteger.valueOf(Big.toInt(bow.proc( hero, enemy, dmg )));
 			hero.buff(Talent.SpiritBladesTracker.class).detach();
 		}
 
@@ -736,7 +740,7 @@ public enum Talent {
 			if (hero.buff(PatientStrikeTracker.class) != null
 					&& !(hero.belongings.attackingWeapon() instanceof MissileWeapon)){
 				hero.buff(PatientStrikeTracker.class).detach();
-				dmg += Random.IntRange(hero.pointsInTalent(Talent.PATIENT_STRIKE), 2);
+				dmg = dmg.add(BigInteger.valueOf(Random.IntRange(hero.pointsInTalent(Talent.PATIENT_STRIKE), 2)));
 			}
 		}
 
@@ -747,7 +751,7 @@ public enum Talent {
 				}
 			} else if (hero.buff(DeadlyFollowupTracker.class) != null
 					&& hero.buff(DeadlyFollowupTracker.class).object == enemy.id()){
-				dmg = Math.round(dmg * (1.0f + .1f*hero.pointsInTalent(DEADLY_FOLLOWUP)));
+				dmg = Big.round(Big.dec(dmg).multiply(Big.dec((1.0f + .1f*hero.pointsInTalent(DEADLY_FOLLOWUP)))));
 			}
 		}
 

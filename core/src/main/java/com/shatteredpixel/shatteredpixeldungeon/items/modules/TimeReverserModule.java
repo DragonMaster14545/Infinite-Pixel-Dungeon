@@ -29,6 +29,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.modules;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -62,7 +64,7 @@ public class TimeReverserModule extends Module {
     }
 
     @Override
-    public long value() {
-        return 12000 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(12000).multiply(quantity);
     }
 }

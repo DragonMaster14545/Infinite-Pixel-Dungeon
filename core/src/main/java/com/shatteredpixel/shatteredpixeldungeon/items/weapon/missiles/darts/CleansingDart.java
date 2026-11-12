@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -38,13 +40,13 @@ public class CleansingDart extends TippedDart {
 	}
 	
 	@Override
-	public long proc(Char attacker, final Char defender, long damage) {
+	public BigInteger proc(Char attacker, final Char defender, BigInteger damage) {
 
 		if (processingChargedShot && defender == attacker) {
 			//do nothing to the hero when processing charged shot
 		} else if (attacker.alignment == defender.alignment){
 			PotionOfCleansing.cleanse(defender, PotionOfCleansing.Cleanse.DURATION*2f);
-			return 0;
+			return BigInteger.ZERO;
 		} else {
 			for (Buff b : defender.buffs()){
 				if (!(b instanceof ChampionEnemy)

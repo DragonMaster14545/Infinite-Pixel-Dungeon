@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
@@ -38,15 +42,15 @@ public class Scorching extends Weapon.Enchantment {
 	private static ItemSprite.Glowing COLOR = new ItemSprite.Glowing( 0xf58442 );
 
 	@Override
-	public long proc(Weapon weapon, Char attacker, Char defender, long damage) {
-		long level = Math.max( 0, weapon.buffedLvl() );
+	public BigInteger proc(Weapon weapon, Char attacker, Char defender, BigInteger damage) {
+		BigInteger level = BigInteger.ZERO.max(weapon.buffedLvl());
 
-		float procChance = (level+1f)/(level+3f) * procChanceMultiplier(attacker);
+		float procChance = Big.div((Big.dec(level).add(Big.dec(1f))), (Big.dec(level).add(Big.dec(3f)))).multiply(Big.dec(procChanceMultiplier(attacker))).floatValue();
 		float powerMulti = Math.min(2f, procChance);
 
-		if (damage > defender.HT * 0.07d && !(damage > defender.HT)) {
-			defender.damage((long) (damage * powerMulti), this);
-			defender.sprite.emitter().burst( FlameParticle.FACTORY, (int) Math.min(10, Math.sqrt(level + 1)));
+		if ((Big.dec(damage).compareTo(Big.dec(defender.HT).multiply(Big.dec(0.07d))) > 0) && !((damage.compareTo(defender.HT) > 0))) {
+			defender.damage(Big.trunc((Big.dec(damage).multiply(Big.dec(powerMulti)))), this);
+			defender.sprite.emitter().burst( FlameParticle.FACTORY, (int) Math.min(10, Math.sqrt(level.add(BigInteger.ONE).doubleValue())));
 		}
 
 		return damage;

@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
@@ -39,10 +42,10 @@ public abstract class Blob extends Actor {
 		actPriority = BLOB_PRIO;
 	}
 	
-	public long volume = 0;
+	public BigInteger volume = BigInteger.ZERO;
 	
-	public long[] cur;
-	protected long[] off;
+	public BigInteger[] cur;
+	protected BigInteger[] off;
 	
 	public BlobEmitter emitter;
 
@@ -58,31 +61,31 @@ public abstract class Blob extends Actor {
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );
 		
-		if (volume > 0) {
+		if ((volume.compareTo(BigInteger.ZERO) > 0)) {
 		
 			int start;
 			for (start=0; start < Dungeon.level.length(); start++) {
-				if (cur[start] > 0) {
+				if ((cur[start].compareTo(BigInteger.ZERO) > 0)) {
 					break;
 				}
 			}
 			int end;
 			for (end=Dungeon.level.length()-1; end > start; end--) {
-				if (cur[end] > 0) {
+				if ((cur[end].compareTo(BigInteger.ZERO) > 0)) {
 					break;
 				}
 			}
 			
 			bundle.put( START, start );
 			bundle.put( LENGTH, cur.length );
-			bundle.put( CUR, trim( start, end + 1 ) );
+			Big.putArray(bundle, CUR, trim( start, end + 1 ));
 			
 		}
 	}
 	
-	private long[] trim( int start, int end ) {
+	private BigInteger[] trim( int start, int end ) {
 		int len = end - start;
-		long[] copy = new long[len];
+		BigInteger[] copy = Big.newArray(len);
 		System.arraycopy( cur, start, copy, 0, len );
 		return copy;
 	}
@@ -94,14 +97,14 @@ public abstract class Blob extends Actor {
 
 		if (bundle.contains( CUR )) {
 
-			cur = new long[bundle.getInt(LENGTH)];
-			off = new long[cur.length];
+			cur = Big.newArray(bundle.getInt(LENGTH));
+			off = Big.newArray(cur.length);
 
 			int[] data = bundle.getIntArray(CUR);
 			int start = bundle.getInt(START);
 			for (int i = 0; i < data.length; i++) {
-				cur[i + start] = data[i];
-				volume += data[i];
+				cur[i + start] = BigInteger.valueOf(data[i]);
+				volume = volume.add(BigInteger.valueOf(data[i]));
 			}
 
 		}
@@ -112,15 +115,15 @@ public abstract class Blob extends Actor {
 		
 		spend( TICK );
 		
-		if (volume > 0) {
+		if ((volume.compareTo(BigInteger.ZERO) > 0)) {
 
 			if (area.isEmpty())
 				setupArea();
 
-			volume = 0;
+			volume = BigInteger.ZERO;
 
 			evolve();
-			long[] tmp = off;
+			BigInteger[] tmp = off;
 			off = cur;
 			cur = tmp;
 			
@@ -137,7 +140,7 @@ public abstract class Blob extends Actor {
 
 	public void setupArea(){
 		for (int cell=0; cell < cur.length; cell++) {
-			if (cur[cell] != 0){
+			if ((cur[cell].compareTo(BigInteger.ZERO) != 0)){
 				area.union(cell%Dungeon.level.width(), cell/Dungeon.level.width());
 			}
 		}
@@ -158,29 +161,29 @@ public abstract class Blob extends Actor {
 					if (!blocking[cell]) {
 
 						int count = 1;
-						long sum = cur[cell];
+						BigInteger sum = cur[cell];
 
 						if (j > area.left && !blocking[cell-1]) {
-							sum += cur[cell-1];
+							sum = sum.add(cur[cell-1]);
 							count++;
 						}
 						if (j < area.right && !blocking[cell+1]) {
-							sum += cur[cell+1];
+							sum = sum.add(cur[cell+1]);
 							count++;
 						}
 						if (i > area.top && !blocking[cell-Dungeon.level.width()]) {
-							sum += cur[cell-Dungeon.level.width()];
+							sum = sum.add(cur[cell-Dungeon.level.width()]);
 							count++;
 						}
 						if (i < area.bottom && !blocking[cell+Dungeon.level.width()]) {
-							sum += cur[cell+Dungeon.level.width()];
+							sum = sum.add(cur[cell+Dungeon.level.width()]);
 							count++;
 						}
 
-						long value = sum >= count ? (sum / count) - 1 : 0;
+						BigInteger value = (sum.compareTo(BigInteger.valueOf(count)) >= 0) ? (sum.divide(BigInteger.valueOf(count))).subtract(BigInteger.ONE) : BigInteger.ZERO;
 						off[cell] = value;
 
-						if (value > 0){
+						if ((value.compareTo(BigInteger.ZERO) > 0)){
 							if (i < area.top)
 								area.top = i;
 							else if (i >= area.bottom)
@@ -191,36 +194,36 @@ public abstract class Blob extends Actor {
 								area.right = j+1;
 						}
 
-						volume += value;
+						volume = volume.add(value);
 					} else {
-						off[cell] = 0;
+						off[cell] = BigInteger.ZERO;
 					}
 				}
 			}
 		}
 	}
 
-	public void seed( Level level, int cell, long amount ) {
-		if (cur == null) cur = new long[level.length()];
-		if (off == null) off = new long[cur.length];
+	public void seed( Level level, int cell, BigInteger amount ) {
+		if (cur == null) cur = Big.newArray(level.length());
+		if (off == null) off = Big.newArray(cur.length);
 
-		cur[cell] += amount;
-		volume += amount;
+		cur[cell] = cur[cell].add(amount);
+		volume = volume.add(amount);
 
 		area.union(cell%level.width(), cell/level.width());
 	}
 
     public void clear(int cell ) {
-		if (volume == 0) return;
-		volume -= cur[cell];
-		cur[cell] = 0;
+		if ((volume.compareTo(BigInteger.ZERO) == 0)) return;
+		volume = volume.subtract(cur[cell]);
+		cur[cell] = BigInteger.ZERO;
 	}
 
 	public void fullyClear(){
-		volume = 0;
+		volume = BigInteger.ZERO;
 		area.setEmpty();
-		cur = new long[Dungeon.level.length()];
-		off = new long[Dungeon.level.length()];
+		cur = Big.newArray(Dungeon.level.length());
+		off = Big.newArray(Dungeon.level.length());
 	}
 
 	public void onBuildFlagMaps( Level l ){
@@ -237,12 +240,12 @@ public abstract class Blob extends Actor {
 		return null;
 	}
 	
-	public static<T extends Blob> T seed( int cell, long amount, Class<T> type ) {
+	public static<T extends Blob> T seed( int cell, BigInteger amount, Class<T> type ) {
 		return seed(cell, amount, type, Dungeon.level);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static<T extends Blob> T seed( int cell, long amount, Class<T> type, Level level ) {
+	public static<T extends Blob> T seed( int cell, BigInteger amount, Class<T> type, Level level ) {
 		
 		T gas = (T)level.blobs.get( type );
 		
@@ -262,10 +265,10 @@ public abstract class Blob extends Actor {
 		return gas;
 	}
 
-	public static long volumeAt( int cell, Class<? extends Blob> type){
+	public static BigInteger volumeAt( int cell, Class<? extends Blob> type){
 		Blob gas = Dungeon.level.blobs.get( type );
-		if (gas == null || gas.volume == 0) {
-			return 0;
+		if (gas == null || (gas.volume.compareTo(BigInteger.ZERO) == 0)) {
+			return BigInteger.ZERO;
 		} else {
 			return gas.cur[cell];
 		}

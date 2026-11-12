@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -141,27 +145,27 @@ public class WandOfCorruption extends Wand {
 				Statistics.qualifiedForBossChallengeBadge = false;
 			}
 
-			double corruptingPower = (3 + buffedLvl()/3d)*(1+ Dungeon.hero.lvl/150f)*getRarityMultiplier();
+			double corruptingPower = (Big.dec(3).add(Big.div(Big.dec(buffedLvl()), Big.dec(3d)))).multiply(Big.dec((1+ Dungeon.hero.lvl/150f))).multiply(Big.dec(getRarityMultiplier())).doubleValue();
 			
 			//base enemy resistance is usually based on their exp, but in special cases it is based on other criteria
 			double enemyResist;
 			if (ch instanceof Mimic || ch instanceof Statue){
-				enemyResist = 1 + Dungeon.escalatingDepth();
+				enemyResist = BigInteger.ONE.add(Dungeon.escalatingDepth()).doubleValue();
 			} else if (ch instanceof Piranha || ch instanceof Bee) {
-				enemyResist = 1 + Dungeon.escalatingDepth()/2f;
+				enemyResist = Big.dec(1).add(Big.div(Big.dec(Dungeon.escalatingDepth()), Big.dec(2f))).doubleValue();
 			} else if (ch instanceof Wraith) {
 				//divide by 5 as wraiths are always at full HP and are therefore ~5x harder to corrupt
-				enemyResist = (1f + Dungeon.scalingDepth()/4f) / 5f;
+				enemyResist = Big.div((Big.dec(1f).add(Big.div(Big.dec(Dungeon.scalingDepth()), Big.dec(4f)))), Big.dec(5f)).doubleValue();
 			} else if (ch instanceof Swarm){
 				//child swarms don't give exp, so we force this here.
-				enemyResist = 1 + AscensionChallenge.AscensionCorruptResist(enemy);
+				enemyResist = BigInteger.ONE.add(AscensionChallenge.AscensionCorruptResist(enemy)).doubleValue();
 				if (enemyResist == 1) enemyResist = 1 + 3;
 			} else {
-				enemyResist = 1 + AscensionChallenge.AscensionCorruptResist(enemy);
+				enemyResist = BigInteger.ONE.add(AscensionChallenge.AscensionCorruptResist(enemy)).doubleValue();
 			}
 			
 			//100% health: 5x resist   75%: 3.25x resist   50%: 2x resist   25%: 1.25x resist
-			enemyResist *= 1 + 4*Math.pow(enemy.HP/(float)enemy.HT, 2);
+			enemyResist *= 1 + 4*Math.pow(Big.div(Big.dec(enemy.HP), Big.dec(enemy.HT.floatValue())).doubleValue(), 2);
 			
 			//debuffs placed on the enemy reduce their resistance
 			for (Buff buff : enemy.buffs()){
@@ -213,7 +217,7 @@ public class WandOfCorruption extends Wand {
 		Class<?extends FlavourBuff> debuffCls = (Class<? extends FlavourBuff>) Dungeon.chances(debuffs);
 		
 		if (debuffCls != null){
-			Buff.append(enemy, debuffCls, 6 + buffedLvl()*3);
+			Buff.append(enemy, debuffCls, BigInteger.valueOf(6).add(buffedLvl().multiply(BigInteger.valueOf(3))).floatValue());
 		} else {
 			//if no debuff can be applied (all are present), then go up one tier
 			if (category == MINOR_DEBUFFS)          debuffEnemy( enemy, MAJOR_DEBUFFS);
@@ -238,29 +242,29 @@ public class WandOfCorruption extends Wand {
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
-		long level = Math.max( 0, buffedLvl() );
+	public void onHit(MagesStaff staff, Char attacker, Char defender, BigInteger damage) {
+		BigInteger level = BigInteger.ZERO.max(buffedLvl());
 
 		// lvl 0 - 16%
 		// lvl 1 - 28.5%
 		// lvl 2 - 37.5%
-		float procChance = (level+1f)/(level+6f) * procChanceMultiplier(attacker);
+		float procChance = Big.div((Big.dec(level).add(Big.dec(1f))), (Big.dec(level).add(Big.dec(6f)))).multiply(Big.dec(procChanceMultiplier(attacker))).floatValue();
 		if (Dungeon.Float() < procChance) {
 
 			float powerMulti = Math.max(1f, procChance);
 
-			Buff.prolong( defender, Amok.class, Math.round((4+level*2) * powerMulti));
+			Buff.prolong( defender, Amok.class, Big.round(Big.dec((BigInteger.valueOf(4).add(level.multiply(BigInteger.TWO)))).multiply(Big.dec(powerMulti))).floatValue());
 		}
 	}
 
 	@Override
-	public String upgradeStat1(long level) {
-		return Messages.decimalFormat("#.##", 3f + level/3f);
+	public String upgradeStat1(BigInteger level) {
+		return Messages.decimalFormat("#.##", Big.dec(3f).add(Big.div(Big.dec(level), Big.dec(3f))).doubleValue());
 	}
 
 	@Override
-	public String upgradeStat2(long level) {
-		return Long.toString(6 + 3*level);
+	public String upgradeStat2(BigInteger level) {
+		return BigInteger.valueOf(6).add(BigInteger.valueOf(3).multiply(level)).toString();
 	}
 
 	@Override

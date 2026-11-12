@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -45,7 +49,7 @@ public class Viscosity extends Glyph {
 	private static ItemSprite.Glowing PURPLE = new ItemSprite.Glowing( 0x8844CC );
 	
 	@Override
-	public long proc( Armor armor, Char attacker, Char defender, long damage ) {
+	public BigInteger proc( Armor armor, Char attacker, Char defender, BigInteger damage ) {
 
 		//we use a tracker so that this glyph can apply after armor
 		Buff.affect(defender, ViscosityTracker.class).level = armor.buffedLvl();
@@ -65,35 +69,35 @@ public class Viscosity extends Glyph {
 			actPriority = Actor.VFX_PRIO;
 		}
 
-		private long level = 0;
+		private BigInteger level = BigInteger.ZERO;
 
-		public long deferDamage(long dmg){
+		public BigInteger deferDamage(BigInteger dmg){
 			//account for icon stomach (just skip the glyph)
 			if (target.buff(Talent.WarriorFoodImmunity.class) != null){
 				return dmg;
 			}
 
-			long level = Math.max( 0, this.level );
+			BigInteger level = BigInteger.ZERO.max(this.level);
 
-			float percent = (level+1)/(float)(level+6);
+			float percent = Big.div(Big.dec((level.add(BigInteger.ONE))), Big.dec((level.add(BigInteger.valueOf(6))).floatValue())).floatValue();
 			percent *= genericProcChanceMultiplier(target);
 
-			long amount;
+			BigInteger amount;
 			if (percent > 1f){
-				dmg = Math.round(dmg / percent);
+				dmg = Big.round(Big.div(Big.dec(dmg), Big.dec(percent)));
 				amount = dmg;
 			} else {
-				amount = (long)Math.ceil(dmg * percent);
+				amount = Big.trunc(Big.ceil(Big.dec(dmg).multiply(Big.dec(percent))));
 			}
 
-			if (amount > 0){
+			if ((amount.compareTo(BigInteger.ZERO) > 0)){
 				DeferedDamage deferred = Buff.affect( target, DeferedDamage.class );
 				deferred.prolong( amount );
 
 				target.sprite.showStatus( CharSprite.WARNING, Messages.get(Viscosity.class, "deferred", amount) );
 			}
 
-			return dmg - amount;
+			return dmg.subtract(amount);
 		}
 
 		@Override
@@ -109,29 +113,29 @@ public class Viscosity extends Glyph {
 			type = buffType.NEGATIVE;
 		}
 
-        public long damage = 0;
+        public BigInteger damage = BigInteger.ZERO;
 		
 		private static final String DAMAGE	= "damage";
 		
 		@Override
 		public void storeInBundle( Bundle bundle ) {
 			super.storeInBundle( bundle );
-			bundle.put( DAMAGE, damage );
+			Big.put(bundle, DAMAGE, damage);
 			
 		}
 		
 		@Override
 		public void restoreFromBundle( Bundle bundle ) {
 			super.restoreFromBundle( bundle );
-			damage = bundle.getLong( DAMAGE );
+			damage = Big.getBig(bundle, DAMAGE);
 		}
 		
-		public void prolong( long damage ) {
-			if (this.damage == 0){
+		public void prolong( BigInteger damage ) {
+			if ((this.damage.compareTo(BigInteger.ZERO) == 0)){
 				//wait 1 turn before damaging if this is freshly applied
 				postpone(TICK);
 			}
-			this.damage += damage;
+			this.damage = this.damage.add(damage);
 		}
 		
 		@Override
@@ -141,7 +145,7 @@ public class Viscosity extends Glyph {
 
 		@Override
 		public String iconTextDisplay() {
-			return Long.toString(damage);
+			return damage.toString();
 		}
 
 
@@ -149,7 +153,7 @@ public class Viscosity extends Glyph {
 		public boolean act() {
 			if (target.isAlive()) {
 
-				long damageThisTick = Math.max(1, damage/10);
+				BigInteger damageThisTick = BigInteger.ONE.max(damage.divide(BigInteger.TEN));
 				target.damage( damageThisTick, this );
 				if (target == Dungeon.hero && !target.isAlive()) {
 
@@ -160,8 +164,8 @@ public class Viscosity extends Glyph {
 				}
 				spend( TICK );
 
-				damage -= damageThisTick;
-				if (damage <= 0) {
+				damage = damage.subtract(damageThisTick);
+				if ((damage.compareTo(BigInteger.ZERO) <= 0)) {
 					detach();
 				}
 				

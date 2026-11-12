@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -169,38 +173,38 @@ public class SurfaceScene extends PixelScene {
 		CharSprite allySprite = null;
 		
 		//picks the highest between ghost's weapon, armor, and rose level/2
-		long roseLevel = 0;
+		BigInteger roseLevel = BigInteger.ZERO;
 		DriedRose rose = Dungeon.hero.belongings.getItem(DriedRose.class);
 		if (rose != null){
-			roseLevel = rose.level()/2;
+			roseLevel = rose.level().divide(BigInteger.TWO);
 			if (rose.ghostWeapon() != null){
-				roseLevel = Math.max(roseLevel, rose.ghostWeapon().level());
+				roseLevel = roseLevel.max(rose.ghostWeapon().level());
 			}
 			if (rose.ghostArmor() != null){
-				roseLevel = Math.max(roseLevel, rose.ghostArmor().level());
+				roseLevel = roseLevel.max(rose.ghostArmor().level());
 			}
 		}
 		
-		long earthLevel = Dungeon.hero.belongings.getItem(WandOfLivingEarth.class) == null ? 0 : Dungeon.hero.belongings.getItem(WandOfLivingEarth.class).level();
-		long wardLevel = Dungeon.hero.belongings.getItem(WandOfWarding.class) == null ? 0 : Dungeon.hero.belongings.getItem(WandOfWarding.class).level();
+		BigInteger earthLevel = Dungeon.hero.belongings.getItem(WandOfLivingEarth.class) == null ? BigInteger.ZERO : Dungeon.hero.belongings.getItem(WandOfLivingEarth.class).level();
+		BigInteger wardLevel = Dungeon.hero.belongings.getItem(WandOfWarding.class) == null ? BigInteger.ZERO : Dungeon.hero.belongings.getItem(WandOfWarding.class).level();
 		
 		MagesStaff staff = Dungeon.hero.belongings.getItem(MagesStaff.class);
 		if (staff != null){
 			if (staff.wandClass() == WandOfLivingEarth.class){
-				earthLevel = Math.max(earthLevel, staff.level());
+				earthLevel = earthLevel.max(staff.level());
 			} else if (staff.wandClass() == WandOfWarding.class){
-				wardLevel = Math.max(wardLevel, staff.level());
+				wardLevel = wardLevel.max(staff.level());
 			}
 		}
 		
-		if (roseLevel >= 3 && roseLevel >= earthLevel && roseLevel >= wardLevel){
+		if ((roseLevel.compareTo(BigInteger.valueOf(3)) >= 0) && (roseLevel.compareTo(earthLevel) >= 0) && (roseLevel.compareTo(wardLevel) >= 0)){
 			allySprite = new GhostSprite();
 			if (dayTime) allySprite.alpha(0.4f);
-		} else if (earthLevel >= 3 && earthLevel >= wardLevel){
+		} else if ((earthLevel.compareTo(BigInteger.valueOf(3)) >= 0) && (earthLevel.compareTo(wardLevel) >= 0)){
 			allySprite = new EarthGuardianSprite();
-		} else if (wardLevel >= 3){
+		} else if ((wardLevel.compareTo(BigInteger.valueOf(3)) >= 0)){
 			allySprite = new WardSprite();
-			((WardSprite) allySprite).updateTier((int) Math.min(wardLevel+2, 6));
+			((WardSprite) allySprite).updateTier(Big.toInt(wardLevel.add(BigInteger.TWO).min(BigInteger.valueOf(6))));
 		}
 		
 		if (allySprite != null){

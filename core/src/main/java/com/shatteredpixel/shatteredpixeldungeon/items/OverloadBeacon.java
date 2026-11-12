@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
@@ -93,8 +95,8 @@ public class OverloadBeacon extends Item {
     }
 
     @Override
-    public long value() {
-        return 125 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(125).multiply(quantity);
     }
 
     public static class TemporaryOverload extends FlavourBuff {

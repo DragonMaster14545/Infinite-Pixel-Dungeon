@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.plants;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -49,7 +51,7 @@ public class Rotberry extends Plant {
 		if (ch instanceof Hero && ((Hero) ch).isSubclass(HeroSubClass.WARDEN)){
 			Buff.affect(ch, AdrenalineSurge.class).reset(1, AdrenalineSurge.DURATION);
 		} else {
-			GameScene.add( Blob.seed( pos, 100, ToxicGas.class ) );
+			GameScene.add( Blob.seed( pos, BigInteger.valueOf(100), ToxicGas.class ) );
 		}
 	}
 	
@@ -75,13 +77,13 @@ public class Rotberry extends Plant {
 		}
 		
 		@Override
-		public long value() {
-			return 30 * quantity;
+		public BigInteger value() {
+			return BigInteger.valueOf(30).multiply(quantity);
 		}
 
 		@Override
-		public long energyVal() {
-			return 3 * quantity;
+		public BigInteger energyVal() {
+			return BigInteger.valueOf(3).multiply(quantity);
 		}
 	}
 }

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -37,10 +41,10 @@ public class Vampiric extends Weapon.Enchantment {
 	private static ItemSprite.Glowing RED = new ItemSprite.Glowing( 0x660022 );
 	
 	@Override
-	public long proc( Weapon weapon, Char attacker, Char defender, long damage ) {
+	public BigInteger proc( Weapon weapon, Char attacker, Char defender, BigInteger damage ) {
 		
 		//chance to heal scales from 10%-60% based on missing HP
-		double missingPercent = (attacker.HT - attacker.HP) / (double)attacker.HT;
+		double missingPercent = Big.div(Big.dec((attacker.HT.subtract(attacker.HP))), Big.dec(attacker.HT.doubleValue())).doubleValue();
 		double healChance = 0.1f + .5f*missingPercent;
 
 		healChance *= procChanceMultiplier(attacker);
@@ -50,13 +54,13 @@ public class Vampiric extends Weapon.Enchantment {
 			double powerMulti = Math.max(1f, healChance);
 			
 			//heals for 200% of damage dealt
-			long healAmt = Math.round(damage * 2f * powerMulti);
-			healAmt = Math.min( healAmt, attacker.HT - attacker.HP );
+			BigInteger healAmt = Big.round(Big.dec(damage).multiply(Big.dec(2f)).multiply(Big.dec(powerMulti)));
+			healAmt = healAmt.min(attacker.HT.subtract(attacker.HP));
 			
-			if (healAmt > 0 && attacker.isAlive()) {
+			if ((healAmt.compareTo(BigInteger.ZERO) > 0) && attacker.isAlive()) {
 				
-				attacker.HP += healAmt;
-				attacker.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString( healAmt ), FloatingText.HEALING );
+				attacker.HP = attacker.HP.add(healAmt);
+				attacker.sprite.showStatusWithIcon( CharSprite.POSITIVE, healAmt.toString(), FloatingText.HEALING );
 				
 			}
 		}

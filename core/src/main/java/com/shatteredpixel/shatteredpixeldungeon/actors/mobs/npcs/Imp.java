@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -84,12 +88,12 @@ public class Imp extends NPC {
 	}
 	
 	@Override
-	public long defenseSkill(Char enemy ) {
-		return INFINITE_EVASION;
+	public BigInteger defenseSkill(Char enemy ) {
+		return BigInteger.valueOf(INFINITE_EVASION);
 	}
 
 	@Override
-	public void damage( long dmg, Object src ) {
+	public void damage( BigInteger dmg, Object src ) {
 		//do nothing
 	}
 
@@ -115,7 +119,7 @@ public class Imp extends NPC {
 		if (Quest.given) {
 			
 			DwarfToken tokens = Dungeon.hero.belongings.getItem( DwarfToken.class );
-			if (tokens != null && (tokens.quantity() >= 5 || (!Quest.alternative && tokens.quantity() >= 4))) {
+			if (tokens != null && ((tokens.quantity().compareTo(BigInteger.valueOf(5)) >= 0) || (!Quest.alternative && (tokens.quantity().compareTo(BigInteger.valueOf(4)) >= 0)))) {
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
@@ -255,7 +259,7 @@ public class Imp extends NPC {
 				do {
 					reward = (Ring)Generator.random( Generator.Category.RING );
 				} while (reward.cursed);
-				reward.upgrade( Dungeon.getCycleMultiplier(2) );
+				reward.upgrade( (Dungeon.getCycleMultiplier(BigInteger.TWO)) );
 				reward.cursed = true;
 				PsycheChest.questDepth = -1;
 			}

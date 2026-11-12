@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -47,7 +51,7 @@ public class Trihit extends Weapon.Enchantment {
 	private static ItemSprite.Glowing COLOR = new ItemSprite.Glowing( 0x03fcec );
 
 	@Override
-	public long proc( Weapon weapon, Char attacker, Char defender, long damage ) {
+	public BigInteger proc( Weapon weapon, Char attacker, Char defender, BigInteger damage ) {
         int[] targets = new int[2];
         int direction = -1;
         int direction1 = -1, direction2 = -1;
@@ -94,7 +98,7 @@ public class Trihit extends Weapon.Enchantment {
                     Char ch = Actor.findChar(pos);
                     assert ch != null;
                     if (ch.alignment != attacker.alignment){
-                        long dmg = Math.round(damage*0.6f);
+                        BigInteger dmg = Big.round(Big.dec(damage).multiply(Big.dec(0.6f)));
                         Sample.INSTANCE.play(Assets.Sounds.HIT_STAB, 1f, 0.75f);
                         ch.damage(dmg, this);
                     }

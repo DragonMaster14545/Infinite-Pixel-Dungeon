@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -125,11 +129,9 @@ public class RunicBlade extends MeleeWeapon {
     //equal to tier 4 in damage at +5
 
     @Override
-    public long max(long lvl) {
-        long i = 5L * (tier()) +                    //20 base, down from 30
-                lvl * (tier()+1); //+5 per level, up from +6
-        if (!charged) i = 6L * (tier()) +
-                lvl * (tier() + 2L);
+    public BigInteger max(BigInteger lvl) {
+        BigInteger i = BigInteger.valueOf(5L * (tier())).add(lvl.multiply(BigInteger.valueOf((tier()+1))));
+        if (!charged) i = BigInteger.valueOf(6L * (tier())).add(lvl.multiply(BigInteger.valueOf((tier() + 2L))));
         return i;
     }
 
@@ -217,7 +219,7 @@ public class RunicBlade extends MeleeWeapon {
                                                 Char enemy = Actor.findChar( cell );
                                                 if (enemy != null && enemy != curUser) {
                                                     if (Char.hit(curUser, enemy, true)) {
-                                                        long dmg = (curBlade.damageRoll(curUser)*2);
+                                                        BigInteger dmg = (curBlade.damageRoll(curUser).multiply(BigInteger.TWO));
                                                         enemy.damage(dmg, curBlade);
                                                         if (curUser.isSubclass(HeroSubClass.GLADIATOR)) Buff.affect( curUser, Combo.class ).hit( enemy );
                                                         curBlade.proc(curUser, enemy, dmg);
@@ -359,7 +361,7 @@ public class RunicBlade extends MeleeWeapon {
 
 		//we apply here because of projecting
 		RunicSlashTracker tracker = Buff.affect(hero, RunicSlashTracker.class);
-		tracker.boost = 3f + 0.50f*buffedLvl();
+		tracker.boost = Big.dec(3f).add(Big.dec(0.50f).multiply(Big.dec(buffedLvl()))).floatValue();
 		hero.belongings.abilityWeapon = this;
 		if (!hero.canAttack(enemy)){
 			GLog.w(Messages.get(this, "ability_target_range"));
@@ -392,15 +394,15 @@ public class RunicBlade extends MeleeWeapon {
 	@Override
 	public String abilityInfo() {
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", 300+50*buffedLvl());
+			return Messages.get(this, "ability_desc", BigInteger.valueOf(300).add(BigInteger.valueOf(50).multiply(buffedLvl())));
 		} else {
 			return Messages.get(this, "typical_ability_desc", 300);
 		}
 	}
 
 	@Override
-	public String upgradeAbilityStat(long level) {
-		return "+" + (300+50*level) + "%";
+	public String upgradeAbilityStat(BigInteger level) {
+		return "+" + (BigInteger.valueOf(300).add(BigInteger.valueOf(50).multiply(level))) + "%";
 	}
 
 

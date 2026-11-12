@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.SeasonalTasks;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -71,9 +73,9 @@ public abstract class AllyBuff extends Buff{
 
 			AscensionChallenge.processEnemyKill(enemy);
 
-			long exp = hero.lvl <= enemy.maxLvl ? enemy.EXP : 0;
-			if (exp > 0) {
-				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(exp), FloatingText.EXPERIENCE);
+			BigInteger exp = hero.lvl <= enemy.maxLvl ? enemy.EXP : BigInteger.ZERO;
+			if ((exp.compareTo(BigInteger.ZERO) > 0)) {
+				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, exp.toString(), FloatingText.EXPERIENCE);
 			}
 			hero.earnExp(exp, enemy.getClass());
 

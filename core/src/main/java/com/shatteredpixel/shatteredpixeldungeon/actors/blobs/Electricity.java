@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -60,7 +64,7 @@ public class Electricity extends Blob {
 			for (int j = area.top-1; j <= area.bottom; j++) {
 				cell = i + j*Dungeon.level.width();
 				
-				if (cur[cell] > 0) {
+				if ((cur[cell].compareTo(BigInteger.ZERO) > 0)) {
 					spreadFromCell(cell, cur[cell]);
 				}
 			}
@@ -70,14 +74,14 @@ public class Electricity extends Blob {
 		for (int i = area.left-1; i <= area.right; i++) {
 			for (int j = area.top-1; j <= area.bottom; j++) {
 				cell = i + j*Dungeon.level.width();
-				if (cur[cell] > 0) {
+				if ((cur[cell].compareTo(BigInteger.ZERO) > 0)) {
 					Char ch = Actor.findChar( cell );
 					if (ch != null && !ch.isImmune(this.getClass())) {
 						if (ch.buff(Paralysis.class) == null){
-							Buff.prolong( ch, Paralysis.class, cur[cell]);
+							Buff.prolong( ch, Paralysis.class, cur[cell].floatValue());
 						}
-						if (cur[cell] % 2 == 1) {
-							ch.damage(Math.round(Dungeon.Float(2 + Dungeon.scalingDepth() / 5f)), this);
+						if ((cur[cell].remainder(BigInteger.TWO).compareTo(BigInteger.ONE) == 0)) {
+							ch.damage(BigInteger.valueOf(Math.round(Dungeon.Float(Big.dec(2).add(Big.div(Big.dec(Dungeon.scalingDepth()), Big.dec(5f))).floatValue()))), this);
 							if (!ch.isAlive() && ch == Dungeon.hero){
 								Dungeon.fail( this );
 								GLog.n( Messages.get(this, "ondeath") );
@@ -97,24 +101,24 @@ public class Electricity extends Blob {
 						}
 					}
 					
-					off[cell] = cur[cell] - 1;
-					volume += off[cell];
+					off[cell] = cur[cell].subtract(BigInteger.ONE);
+					volume = volume.add(off[cell]);
 				} else {
-					off[cell] = 0;
+					off[cell] = BigInteger.ZERO;
 				}
 			}
 		}
 		
 	}
 	
-	private void spreadFromCell( int cell, long power ){
-		if (cur[cell] == 0) {
+	private void spreadFromCell( int cell, BigInteger power ){
+		if ((cur[cell].compareTo(BigInteger.ZERO) == 0)) {
 			area.union(cell % Dungeon.level.width(), cell / Dungeon.level.width());
 		}
-		cur[cell] = Math.max(cur[cell], power);
+		cur[cell] = cur[cell].max(power);
 		
 		for (int c : PathFinder.NEIGHBOURS4){
-			if (water[cell + c] && cur[cell + c] < power){
+			if (water[cell + c] && (cur[cell + c].compareTo(power) < 0)){
 				spreadFromCell(cell + c, power);
 			}
 		}

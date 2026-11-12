@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -65,12 +69,12 @@ public class WandOfEarthblast extends DamageWand {
 		collisionProperties = Ballistica.STOP_TARGET;
 	}
 
-	public long min(long lvl){
-		return ((6+lvl*3) * ((chargesPerCast()))*getRarityMultiplier());
+	public BigInteger min(BigInteger lvl){
+		return ((BigInteger.valueOf(6).add(lvl.multiply(BigInteger.valueOf(3)))).multiply(((chargesPerCast()))).multiply(getRarityMultiplier()));
 	}
 
-	public long max(long lvl){
-		return ((30+6*lvl) * ((chargesPerCast()))*getRarityMultiplier());
+	public BigInteger max(BigInteger lvl){
+		return ((BigInteger.valueOf(30).add(BigInteger.valueOf(6).multiply(lvl))).multiply(((chargesPerCast()))).multiply(getRarityMultiplier()));
 	}
 
 	ConeAOE cone;
@@ -106,19 +110,19 @@ public class WandOfEarthblast extends DamageWand {
 			}
 		}
 		for (Char ch : affectedChars){
-			long dmg = damageRoll();
+			BigInteger dmg = damageRoll();
 			switch (Dungeon.level.distance(ch.pos, Dungeon.hero.pos)){
-				case 0: case 1: case 2: dmg *= 1.00d;
-				case 3: case 4: dmg *= 0.66d; break;
-				case 5: case 6: dmg *= 0.33d; break;
-				case 7: case 8: dmg *= 0.16d; break;
-				case 9: case 10: case 11: dmg *= 0.1d; break;
-				case 12: default: dmg *= 0.04d; break;
+				case 0: case 1: case 2: dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(1.00d)));
+				case 3: case 4: dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(0.66d))); break;
+				case 5: case 6: dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(0.33d))); break;
+				case 7: case 8: dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(0.16d))); break;
+				case 9: case 10: case 11: dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(0.1d))); break;
+				case 12: default: dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(0.04d))); break;
 			}
 			wandProc(ch, chargesPerCast());
-			ch.damage(Math.round(dmg), this);
+			ch.damage(dmg, this);
 			if (ch.isAlive()) {
-				Buff.affect(ch, Paralysis.class, Paralysis.DURATION * chargesPerCast());
+				Buff.affect(ch, Paralysis.class, Big.dec(Paralysis.DURATION).multiply(Big.dec(chargesPerCast())).floatValue());
 			}
 		}
 		Sample.INSTANCE.play(Assets.Sounds.ROCKS);
@@ -126,7 +130,7 @@ public class WandOfEarthblast extends DamageWand {
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
+	public void onHit(MagesStaff staff, Char attacker, Char defender, BigInteger damage) {
 		//acts like stunning enchantment
 		new EarthBlastOnHit().proc( staff, attacker, defender, damage);
 	}
@@ -143,13 +147,13 @@ public class WandOfEarthblast extends DamageWand {
 		}
 
 		@Override
-		public long proc(Weapon weapon, Char attacker, Char defender, long damage ) {
-			long level = Math.max( 0, weapon.buffedLvl() );
+		public BigInteger proc(Weapon weapon, Char attacker, Char defender, BigInteger damage ) {
+			BigInteger level = BigInteger.ZERO.max(weapon.buffedLvl());
 
 			// lvl 0 - 14%
 			// lvl 1 - 19%
 			// lvl 2 - 22%
-			float procChance = (level/2f+1f)/(level+7f) * procChanceMultiplier(attacker);
+			float procChance = Big.div((Big.div(Big.dec(level), Big.dec(2f)).add(Big.dec(1f))), (Big.dec(level).add(Big.dec(7f)))).multiply(Big.dec(procChanceMultiplier(attacker))).floatValue();
 			if (Random.Float() < procChance) {
 				float powerMulti = Math.max(1f, procChance);
 				Buff.affect(defender, Paralysis.class, 2 * powerMulti);
@@ -170,7 +174,7 @@ public class WandOfEarthblast extends DamageWand {
         }
         Ballistica b = new Ballistica(Dungeon.hero.pos, target, Ballistica.WONT_STOP);
         ConeAOE tempCone = new ConeAOE( b,
-                Math.min(b.dist, 3 + (chargesPerCast()-1)),
+                BigInteger.valueOf(b.dist).min(BigInteger.valueOf(3).add((chargesPerCast().subtract(BigInteger.ONE)))).floatValue(),
                 90,
                 collisionProperties);
         return Arrays.asList(tempCone.cells.toArray(new Integer[0]));
@@ -181,8 +185,8 @@ public class WandOfEarthblast extends DamageWand {
 		//need to perform flame spread logic here so we can determine what cells to put flames in.
 
 		// unlimited distance
-		long d = 3 + (chargesPerCast()-1);
-		long dist = Math.min(bolt.dist, d);
+		long d = Big.toLong(BigInteger.valueOf(3).add((chargesPerCast().subtract(BigInteger.ONE))));
+		BigInteger dist = BigInteger.valueOf(Math.min(bolt.dist, d));
 
 		cone = new ConeAOE(bolt, d, 90, collisionProperties );
 
@@ -200,24 +204,24 @@ public class WandOfEarthblast extends DamageWand {
 		MagicMissile.boltFromChar( curUser.sprite.parent,
 				MagicMissile.EARTHBLAST,
 				curUser.sprite,
-				bolt.path.get((int) (dist/2)),
+				bolt.path.get(Big.toInt((dist.divide(BigInteger.TWO)))),
 				callback );
 		Sample.INSTANCE.play( Assets.Sounds.ZAP );
 		Sample.INSTANCE.play( Assets.Sounds.ROCKS );
 	}
 
 	@Override
-	protected long chargesPerCast() {
+	protected BigInteger chargesPerCast() {
 		//consumes 30% of current charges, rounded up, with a minimum of one.
-		return Math.max(1, (long)Math.ceil(curCharges*0.3d));
+		return BigInteger.ONE.max(Big.trunc(Big.ceil(Big.dec(curCharges).multiply(Big.dec(0.3d)))));
 	}
 
 	@Override
 	public String statsDesc() {
 		if (levelKnown)
-			return Messages.get(this, "stats_desc", chargesPerCast(), Math.round(min()), Math.round(max())) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, getMaxCharges());
+			return Messages.get(this, "stats_desc", chargesPerCast(), min(), max()) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, getMaxCharges());
 		else
-			return Messages.get(this, "stats_desc", chargesPerCast(), min(0), max(0));
+			return Messages.get(this, "stats_desc", chargesPerCast(), min(BigInteger.ZERO), max(BigInteger.ZERO));
 	}
 
 	@Override
@@ -245,7 +249,7 @@ public class WandOfEarthblast extends DamageWand {
 			if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_6)) truth = true;
 
 			for (Item ingredient : ingredients){
-				if (ingredient.quantity() > 0) {
+				if ((ingredient.quantity().compareTo(BigInteger.ZERO) > 0)) {
 					if (ingredient instanceof WandOfFireblast) {
 						fire = true;
 					} else if (ingredient instanceof WandOfLivingEarth) {
@@ -260,8 +264,8 @@ public class WandOfEarthblast extends DamageWand {
 		}
 
 		@Override
-		public long cost(ArrayList<Item> ingredients) {
-			return 1;
+		public BigInteger cost(ArrayList<Item> ingredients) {
+			return BigInteger.ONE;
 		}
 
 		@Override
@@ -269,7 +273,7 @@ public class WandOfEarthblast extends DamageWand {
 			if (!testIngredients(ingredients)) return null;
 
 			for (Item ingredient : ingredients){
-				ingredient.quantity(ingredient.quantity() - 1);
+				ingredient.quantity(ingredient.quantity().subtract(BigInteger.ONE));
 			}
 
 			return sampleOutput(null);

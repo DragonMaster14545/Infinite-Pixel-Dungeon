@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
@@ -44,18 +48,18 @@ public class Blooming extends Weapon.Enchantment {
 	private static ItemSprite.Glowing DARK_GREEN = new ItemSprite.Glowing( 0x008800 );
 	
 	@Override
-	public long proc(Weapon weapon, Char attacker, Char defender, long damage) {
-		long level = Math.max( 0, weapon.buffedLvl() );
+	public BigInteger proc(Weapon weapon, Char attacker, Char defender, BigInteger damage) {
+		BigInteger level = BigInteger.ZERO.max(weapon.buffedLvl());
 
 		// lvl 0 - 33%
 		// lvl 1 - 50%
 		// lvl 2 - 60%
-		float procChance = (level+1f)/(level+3f) * procChanceMultiplier(attacker);
+		float procChance = Big.div((Big.dec(level).add(Big.dec(1f))), (Big.dec(level).add(Big.dec(3f)))).multiply(Big.dec(procChanceMultiplier(attacker))).floatValue();
 		if (Random.Float() < procChance) {
 
 			float powerMulti = Math.max(1f, procChance);
 
-			float plants = (1f + 0.1f*level) * powerMulti;
+			float plants = (Big.dec(1f).add(Big.dec(0.1f).multiply(Big.dec(level)))).multiply(Big.dec(powerMulti)).floatValue();
 			if (Random.Float() < plants%1){
 				plants = (float)Math.ceil(plants);
 			} else {

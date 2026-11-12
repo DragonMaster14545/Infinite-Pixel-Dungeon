@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -31,15 +35,15 @@ public class ParchmentScrap extends Trinket {
 	}
 
 	@Override
-	protected long upgradeEnergyCost() {
+	protected BigInteger upgradeEnergyCost() {
 		//6 -> 10(16) -> 15(31) -> 20(51)
-		return 10+5*level();
+		return BigInteger.TEN.add(BigInteger.valueOf(5).multiply(level()));
 	}
 
 	@Override
 	public String statsDesc() {
 		if (isIdentified()){
-			return Messages.get(this, "stats_desc", (int)enchantChanceMultiplier((int)buffedLvl()), Messages.decimalFormat("#.##", curseChanceMultiplier((int)buffedLvl())));
+			return Messages.get(this, "stats_desc", (int)enchantChanceMultiplier(Big.toInt(buffedLvl())), Messages.decimalFormat("#.##", curseChanceMultiplier(Big.toInt(buffedLvl()))));
 		} else {
 			return Messages.get(this, "typical_stats_desc", (int)enchantChanceMultiplier(0), Messages.decimalFormat("#.##", curseChanceMultiplier(0)));
 		}

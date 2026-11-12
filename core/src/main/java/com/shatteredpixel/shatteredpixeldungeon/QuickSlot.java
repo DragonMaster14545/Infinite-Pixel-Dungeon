@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
@@ -73,11 +75,11 @@ public class QuickSlot {
 	}
 
 	public Boolean isPlaceholder(int slot){
-		return getItem(slot) != null && getItem(slot).quantity() == 0;
+		return getItem(slot) != null && (getItem(slot).quantity().compareTo(BigInteger.ZERO) == 0);
 	}
 
 	public Boolean isNonePlaceholder(int slot){
-		return getItem(slot) != null && getItem(slot).quantity() > 0;
+		return getItem(slot) != null && (getItem(slot).quantity().compareTo(BigInteger.ZERO) > 0);
 	}
 
 	public void clearItem(Item item){

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -154,8 +156,8 @@ public class Honeypot extends Item {
 	}
 	
 	@Override
-	public long value() {
-		return 30 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(30).multiply(quantity);
 	}
 
 	//The bee's broken 'home', all this item does is let its bee know where it is, and who owns it (if anyone).
@@ -223,7 +225,7 @@ public class Honeypot extends Item {
 			for (Char c : Actor.chars()){
 				if (c instanceof Bee && ((Bee) c).potPos() == potPos){
 					bees.add((Bee) c);
-					if (bees.size() >= quantity) {
+					if ((BigInteger.valueOf(bees.size()).compareTo(quantity) >= 0)) {
 						break;
 					}
 				}
@@ -238,7 +240,7 @@ public class Honeypot extends Item {
 			for (Char c : Actor.chars()){
 				if (c instanceof Bee && ((Bee) c).potHolderID() == potHolder.id()){
 					bees.add((Bee) c);
-					if (bees.size() >= quantity) {
+					if ((BigInteger.valueOf(bees.size()).compareTo(quantity) >= 0)) {
 						break;
 					}
 				}
@@ -258,8 +260,8 @@ public class Honeypot extends Item {
 		}
 		
 		@Override
-		public long value() {
-			return 5 * quantity;
+		public BigInteger value() {
+			return BigInteger.valueOf(5).multiply(quantity);
 		}
 	}
 }

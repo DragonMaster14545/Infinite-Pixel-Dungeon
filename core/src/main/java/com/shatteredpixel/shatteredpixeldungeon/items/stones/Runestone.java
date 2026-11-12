@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
@@ -65,13 +67,13 @@ public abstract class Runestone extends Item {
 	}
 	
 	@Override
-	public long value() {
-		return 15 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(15).multiply(quantity);
 	}
 
 	@Override
-	public long energyVal() {
-		return 3 * quantity;
+	public BigInteger energyVal() {
+		return BigInteger.valueOf(3).multiply(quantity);
 	}
 
 	public static class PlaceHolder extends Runestone {

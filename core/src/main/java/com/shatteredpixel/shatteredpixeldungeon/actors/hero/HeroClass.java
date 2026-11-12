@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.Ratmogrify;
@@ -120,12 +122,12 @@ public enum HeroClass {
 
            i = new PotionOfHealing();
            i.identify();
-           i.quantity(itemQ);
+           i.quantity(BigInteger.valueOf(itemQ));
            i.collect();
 
            i = new ScrollOfUpgrade();
            i.identify();
-           i.quantity(itemQ);
+           i.quantity(BigInteger.valueOf(itemQ));
            i.collect();
        }
 
@@ -252,7 +254,7 @@ public enum HeroClass {
 		hero.belongings.weapon.activate(hero);
 
 		ThrowingSpike spikes = new ThrowingSpike();
-		spikes.quantity(2).identify().collect(); //set quantity is 3, but Duelist starts with 2
+		spikes.quantity(BigInteger.TWO).identify().collect(); //set quantity is 3, but Duelist starts with 2
 
 		Dungeon.quickslot.setSlot(0, hero.belongings.weapon);
 		Dungeon.quickslot.setSlot(1, spikes);

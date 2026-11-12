@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
@@ -264,9 +268,9 @@ public class Hero extends Char {
 	public float awareness;
 	
 	public int lvl = 1;
-	public long exp = 0;
-	public long totalExp = 0;
-    public long totalExp_Transmutation = 0;
+	public BigInteger exp = BigInteger.ZERO;
+	public BigInteger totalExp = BigInteger.ZERO;
+    public BigInteger totalExp_Transmutation = BigInteger.ZERO;
 
 	public boolean grinding = false;
 
@@ -308,7 +312,7 @@ public class Hero extends Char {
 	public Hero() {
 		super();
 
-		HP = HT = 20;
+		HP = HT = BigInteger.valueOf(20);
 		STR = STARTING_STR;
 		
 		belongings = new Belongings( this );
@@ -317,24 +321,24 @@ public class Hero extends Char {
 	}
 	
 	public void updateHT( boolean boostHP ){
-		long curHT = HT;
+		BigInteger curHT = HT;
 		
-		HT = 20 + 5L*(lvl-1) + HTBoost;
-		HT += RingOfMight.HTMultiplier(this);
+		HT = BigInteger.valueOf(20 + 5L*(lvl-1) + HTBoost);
+		HT = HT.add(BigInteger.valueOf(RingOfMight.HTMultiplier(this)));
 		
 		if (buff(ElixirOfMight.HTBoost.class) != null){
-			HT += buff(ElixirOfMight.HTBoost.class).boost();
+			HT = HT.add(BigInteger.valueOf(buff(ElixirOfMight.HTBoost.class).boost()));
 		}
 
 		double extender = HealthModule.multi;
 		if (extender >= 1) {
-			HT += (long) (25 * extender);
+			HT = HT.add(Big.of((25 * extender)));
 		}
 		
 		if (boostHP){
-			HP += Math.max(HT - curHT, 0);
+			HP = HP.add(HT.subtract(curHT).max(BigInteger.ZERO));
 		}
-		HP = Math.min(HP, HT);
+		HP = HP.min(HT);
 	}
 
 	public int STR() {
@@ -389,9 +393,9 @@ public class Hero extends Char {
 		bundle.put( STRENGTH, STR );
 		
 		bundle.put( LEVEL, lvl );
-		bundle.put( EXPERIENCE, exp );
-		bundle.put(TOTAL_EXPERIENCE, totalExp);
-        bundle.put(TOTAL_EXPERIENCE_TRANSMUTATION, totalExp_Transmutation);
+		Big.put(bundle, EXPERIENCE, exp);
+		Big.put(bundle, TOTAL_EXPERIENCE, totalExp);
+        Big.put(bundle, TOTAL_EXPERIENCE_TRANSMUTATION, totalExp_Transmutation);
 
 		bundle.put( HTBOOST, HTBoost );
 
@@ -409,7 +413,7 @@ public class Hero extends Char {
 	public void restoreFromBundle( Bundle bundle ) {
 
 		lvl = bundle.getInt( LEVEL );
-		exp = bundle.getLong( EXPERIENCE );
+		exp = Big.getBig(bundle, EXPERIENCE);
 
 		HTBoost = bundle.getInt(HTBOOST);
 
@@ -427,8 +431,8 @@ public class Hero extends Char {
 		
 		STR = bundle.getInt( STRENGTH );
 
-		totalExp = bundle.getLong(TOTAL_EXPERIENCE);
-        totalExp_Transmutation = bundle.getLong(TOTAL_EXPERIENCE_TRANSMUTATION);
+		totalExp = Big.getBig(bundle, TOTAL_EXPERIENCE);
+        totalExp_Transmutation = Big.getBig(bundle, TOTAL_EXPERIENCE_TRANSMUTATION);
 		grinding = bundle.getBoolean(GRINDING);
 
 
@@ -441,10 +445,10 @@ public class Hero extends Char {
 	public static void preview( GamesInProgress.Info info, Bundle bundle ) {
 		info.level = bundle.getInt( LEVEL );
 		info.str = bundle.getInt( STRENGTH );
-		info.exp = bundle.getLong( EXPERIENCE );
-		info.hp = bundle.getLong( Char.TAG_HP );
-		info.ht = bundle.getLong( Char.TAG_HT );
-		info.shld = bundle.getLong( Char.TAG_SHLD );
+		info.exp = Big.getBig(bundle, EXPERIENCE);
+		info.hp = Big.getBig(bundle, Char.TAG_HP);
+		info.ht = Big.getBig(bundle, Char.TAG_HT);
+		info.shld = Big.getBig(bundle, Char.TAG_SHLD);
 		info.heroClass = bundle.getEnum( CLASS, HeroClass.class );
 		info.subClass = bundle.getEnum( SUBCLASS, HeroSubClass.class );
         info.customHeroName = bundle.getString(CUSTOM_NAME);
@@ -528,7 +532,7 @@ public class Hero extends Char {
 	public void hitSound(float pitch) {
 		if (!RingOfForce.fightingUnarmed(this)) {
 			belongings.attackingWeapon().hitSound(pitch);
-		} else if (RingOfForce.getBuffedBonus(this, RingOfForce.Force.class) > 0) {
+		} else if ((RingOfForce.getBuffedBonus(this, RingOfForce.Force.class).compareTo(BigInteger.ZERO) > 0)) {
 			//pitch deepens by 2.5% (additive) per point of strength, down to 75%
 			super.hitSound( pitch * GameMath.gate( 0.75f, 1.25f - 0.025f*STR(), 1f) );
 		} else {
@@ -538,7 +542,7 @@ public class Hero extends Char {
 
 	@Override
 	public boolean blockSound(float pitch) {
-		if ( belongings.weapon() != null && belongings.weapon().defenseFactor(this) >= 4 ){
+		if (belongings.weapon() != null && (belongings.weapon().defenseFactor(this).compareTo(BigInteger.valueOf(4)) >= 0)){
 			Sample.INSTANCE.play( Assets.Sounds.HIT_PARRY, 1, pitch);
 			return true;
 		}
@@ -602,7 +606,7 @@ public class Hero extends Char {
         return result;
     }
 	@Override
-	public long attackSkill(Char target ) {
+	public BigInteger attackSkill(Char target ) {
 		KindOfWeapon wep = belongings.attackingWeapon();
 		
 		float accuracy = 1;
@@ -658,23 +662,23 @@ public class Hero extends Char {
 		}
 
 		if (!RingOfForce.fightingUnarmed(this)) {
-			return  Math.max(1, Math.round(attackSkill * accuracy * wep.accuracyFactor( this, target )));
+			return  BigInteger.valueOf(Math.max(1, Math.round(attackSkill * accuracy * wep.accuracyFactor( this, target ))));
 		} else {
-			return Math.max(1, Math.round(attackSkill * accuracy));
+			return BigInteger.valueOf(Math.max(1, Math.round(attackSkill * accuracy)));
 		}
 	}
 	
 	@Override
-	public long defenseSkill(Char enemy ) {
+	public BigInteger defenseSkill(Char enemy ) {
 
 		if (buff(Combo.ParryTracker.class) != null){
 			if (canAttack(enemy) && !isCharmedBy(enemy)){
 				Buff.affect(this, Combo.RiposteTracker.class).enemy = enemy;
 			}
-			return INFINITE_EVASION;
+			return BigInteger.valueOf(INFINITE_EVASION);
 		}
 if (buff(RoundShield.GuardTracker.class) != null){
-			return INFINITE_EVASION;
+			return BigInteger.valueOf(INFINITE_EVASION);
 		}
 
 		float evasion = defenseSkill;
@@ -685,7 +689,7 @@ if (buff(RoundShield.GuardTracker.class) != null){
 			if (pointsInTalent(Talent.LIQUID_AGILITY) == 1){
 				evasion *= 3f;
 			} else if (pointsInTalent(Talent.LIQUID_AGILITY) == 2){
-				return INFINITE_EVASION;
+				return BigInteger.valueOf(INFINITE_EVASION);
 			}
 		}
 
@@ -702,7 +706,7 @@ if (buff(RoundShield.GuardTracker.class) != null){
 
             //stone specifically overrides to 0 always, guaranteed hit
             if (belongings.armor().hasGlyph(Stone.class, this) && !Stone.testingEvasion()){
-                return 0;
+                return BigInteger.ZERO;
             }
 		}
 		if (perks.contains(Perks.Perk.PROTEIN_INFUSION)){
@@ -710,7 +714,7 @@ if (buff(RoundShield.GuardTracker.class) != null){
 			evasion *= 1f + 0.5f*((Hunger.STARVING - hunger)/Hunger.STARVING);
 		}
 
-        return Math.max(1, Math.round(evasion));
+        return BigInteger.valueOf(Math.max(1, Math.round(evasion)));
 	}
 
 	@Override
@@ -743,45 +747,45 @@ if (buff(RoundShield.GuardTracker.class) != null){
 	}
 
 	@Override
-	public long drRoll() {
-		long dr = super.drRoll();
+	public BigInteger drRoll() {
+		BigInteger dr = super.drRoll();
 
 		if (belongings.armor() != null) {
-			long armDr = Dungeon.NormalLongRange( belongings.armor().DRMin(), belongings.armor().DRMax());
-			if (STR() < belongings.armor().STRReq()){
-				armDr -= 2*(belongings.armor().STRReq() - STR());
+			BigInteger armDr = Dungeon.NormalLongRange( belongings.armor().DRMin(), belongings.armor().DRMax());
+			if ((BigInteger.valueOf(STR()).compareTo(belongings.armor().STRReq()) < 0)){
+				armDr = armDr.subtract(BigInteger.TWO.multiply((belongings.armor().STRReq().subtract(BigInteger.valueOf(STR())))));
 			}
-			if (belongings.armor().masteryPotionBonus) armDr*=1.2f;
-			if (armDr > 0) dr += armDr;
+			if (belongings.armor().masteryPotionBonus) armDr = Big.trunc(Big.dec(armDr).multiply(Big.dec(1.2f)));
+			if ((armDr.compareTo(BigInteger.ZERO) > 0)) dr = dr.add(armDr);
 		}
 		if (belongings.weapon() != null && !RingOfForce.fightingUnarmed(this))  {
-			long wepDr = Dungeon.NormalLongRange( 0 , belongings.weapon().defenseFactor( this ) );
+			BigInteger wepDr = Dungeon.NormalLongRange( BigInteger.ZERO , belongings.weapon().defenseFactor( this ) );
 			if (STR() < ((Weapon)belongings.weapon()).STRReq()){
-				wepDr -= 2*(((Weapon)belongings.weapon()).STRReq() - STR());
+				wepDr = wepDr.subtract(BigInteger.valueOf(2*(((Weapon)belongings.weapon()).STRReq() - STR())));
 			}
-			if (wepDr > 0) dr += wepDr;
+			if ((wepDr.compareTo(BigInteger.ZERO) > 0)) dr = dr.add(wepDr);
 		}
 		Barkskin bark = buff(Barkskin.class);
-		if (bark != null)               dr += Dungeon.NormalLongRange( 0 , bark.level() );
+		if (bark != null)               dr = dr.add(Dungeon.NormalLongRange( BigInteger.ZERO , bark.level() ));
 
 		if (buff(HoldFast.class) != null){
-			dr += Dungeon.NormalLongRange(HoldFast.minArmor(), HoldFast.armor());
+			dr = dr.add(Dungeon.NormalLongRange(BigInteger.valueOf(HoldFast.minArmor()), BigInteger.valueOf(HoldFast.armor())));
 		}
 		
 		return dr;
 	}
 	
 	@Override
-	public long damageRoll() {
+	public BigInteger damageRoll() {
 		KindOfWeapon wep = belongings.attackingWeapon();
-		long dmg;
+		BigInteger dmg;
 
 		if (!RingOfForce.fightingUnarmed(this)) {
 			dmg = wep.damageRoll( this );
 
-			if (!(wep instanceof MissileWeapon)) dmg += RingOfForce.armedDamageBonus(this);
+			if (!(wep instanceof MissileWeapon)) dmg = dmg.add(RingOfForce.armedDamageBonus(this));
 			else if (buff(Preparation.class) != null){
-				dmg = Math.round(dmg*0.65d);
+				dmg = Big.round(Big.dec(dmg).multiply(Big.dec(0.65d)));
 			}
 
 		} else {
@@ -793,7 +797,7 @@ if (buff(RoundShield.GuardTracker.class) != null){
 
 		PhysicalEmpower emp = buff(PhysicalEmpower.class);
 		if (emp != null){
-			dmg += emp.dmgBoost;
+			dmg = dmg.add(BigInteger.valueOf(emp.dmgBoost));
 			emp.left--;
 			if (emp.left <= 0) {
 				emp.detach();
@@ -803,17 +807,17 @@ if (buff(RoundShield.GuardTracker.class) != null){
 
 		if (heroClass == HeroClass.DUELIST
 				&& (buff(Recharging.class) != null || buff(ArtifactRecharge.class) != null)){
-			dmg = Math.round(dmg * 1.08f);
+			dmg = Big.round(Big.dec(dmg).multiply(Big.dec(1.08f)));
 		}
 
         //dmg *= (long) RingOfValor.damageMultiplier( this );
 
-		if (dmg < 0) dmg = 0;
+		if ((dmg.compareTo(BigInteger.ZERO) < 0)) dmg = BigInteger.ZERO;
 		return dmg;
 	}
 
 	//damage rolls that come from the hero can have their RNG influenced
-	public static long heroDamageIntRange(long min, long max ){
+	public static BigInteger heroDamageIntRange(BigInteger min, BigInteger max ){
 		if (Random.Float() < ThirteenLeafClover.combatDistributionInverseChance()){
 			return ThirteenLeafClover.invCombatRoll(min, max);
 		} else {
@@ -1049,7 +1053,7 @@ if (buff(RoundShield.GuardTracker.class) != null){
 		}
 		
 		if( isSubclass(HeroSubClass.WARDEN) && Dungeon.level.map[pos] == Terrain.FURROWED_GRASS){
-			Buff.affect(this, Barkskin.class).set( lvl + 5, 1 );
+			Buff.affect(this, Barkskin.class).set( BigInteger.valueOf(lvl + 5), 1 );
 		}
 		
 		return actResult;
@@ -1220,12 +1224,12 @@ if (buff(RoundShield.GuardTracker.class) != null){
 							|| item instanceof DriedRose.Petal
 							|| item instanceof Key
 							|| item instanceof Guidebook
-							|| item.quantity() == 0) {
+							|| (item.quantity().compareTo(BigInteger.ZERO) == 0)) {
 						//Do Nothing
 					} else if (item instanceof DarkGold) {
 						DarkGold existing = belongings.getItem(DarkGold.class);
 						if (existing != null){
-							if (existing.quantity() >= 40) {
+							if ((existing.quantity().compareTo(BigInteger.valueOf(40)) >= 0)) {
 								GLog.p(Messages.get(DarkGold.class, "you_now_have", existing.quantity()));
 							} else {
 								GLog.i(Messages.get(DarkGold.class, "you_now_have", existing.quantity()));
@@ -1293,8 +1297,8 @@ if (buff(RoundShield.GuardTracker.class) != null){
 			Heap heap = Dungeon.level.heaps.get( dst );
 			if (heap != null && (heap.type != Type.HEAP && !heap.type.forSale())) {
 				
-				if ((heap.type == Type.LOCKED_CHEST && Notes.keyCount(new GoldenKey(Dungeon.depth)) < 1)
-					|| (heap.type == Type.CRYSTAL_CHEST && Notes.keyCount(new CrystalKey(Dungeon.depth)) < 1)){
+				if ((heap.type == Type.LOCKED_CHEST && (Notes.keyCount(new GoldenKey(Dungeon.depth)).compareTo(BigInteger.ONE) < 0))
+					|| (heap.type == Type.CRYSTAL_CHEST && (Notes.keyCount(new CrystalKey(Dungeon.depth)).compareTo(BigInteger.ONE) < 0))){
 
 						GLog.w( Messages.get(this, "locked_chest") );
 						ready();
@@ -1342,7 +1346,7 @@ if (buff(RoundShield.GuardTracker.class) != null){
 			int door = Dungeon.level.map[doorCell];
 			
 			if (door == Terrain.LOCKED_DOOR
-					&& Notes.keyCount(new IronKey(Dungeon.depth)) > 0) {
+					&& (Notes.keyCount(new IronKey(Dungeon.depth)).compareTo(BigInteger.ZERO) > 0)) {
 				
 				hasKey = true;
 
@@ -1358,12 +1362,12 @@ if (buff(RoundShield.GuardTracker.class) != null){
                 }
 
 			} else if (door == Terrain.CRYSTAL_DOOR
-					&& Notes.keyCount(new CrystalKey(Dungeon.depth)) > 0) {
+					&& (Notes.keyCount(new CrystalKey(Dungeon.depth)).compareTo(BigInteger.ZERO) > 0)) {
 
 				hasKey = true;
 
 			} else if (door == Terrain.LOCKED_EXIT
-					&& Notes.keyCount(new WornKey(Dungeon.depth)) > 0) {
+					&& (Notes.keyCount(new WornKey(Dungeon.depth)).compareTo(BigInteger.ZERO) > 0)) {
 
 				hasKey = true;
 				
@@ -1417,8 +1421,8 @@ if (buff(RoundShield.GuardTracker.class) != null){
 							DarkGold gold = new DarkGold();
 							if (gold.doPickUp( Dungeon.hero )) {
 								DarkGold existing = Dungeon.hero.belongings.getItem(DarkGold.class);
-								if (existing != null && existing.quantity()%5 == 0){
-									if (existing.quantity() >= 40) {
+								if (existing != null && (existing.quantity().remainder(BigInteger.valueOf(5)).compareTo(BigInteger.ZERO) == 0)){
+									if ((existing.quantity().compareTo(BigInteger.valueOf(40)) >= 0)) {
 										GLog.p(Messages.get(DarkGold.class, "you_now_have", existing.quantity()));
 									} else {
 										GLog.i(Messages.get(DarkGold.class, "you_now_have", existing.quantity()));
@@ -1553,8 +1557,8 @@ if (buff(RoundShield.GuardTracker.class) != null){
 			if (heroClass != HeroClass.DUELIST
 					&& hasTalent(Talent.AGGRESSIVE_BARRIER)
 					&& buff(Talent.AggressiveBarrierCooldown.class) == null
-					&& (HP / (float)HT) < 0.20f*(1+pointsInTalent(Talent.AGGRESSIVE_BARRIER))){
-				Buff.affect(this, Barrier.class).setShield(3);
+					&& ((Big.div(Big.dec(HP), Big.dec(HT.floatValue()))).compareTo(Big.dec(0.20f*(1+pointsInTalent(Talent.AGGRESSIVE_BARRIER)))) < 0)){
+				Buff.affect(this, Barrier.class).setShield(BigInteger.valueOf(3));
 				sprite.showStatusWithIcon(CharSprite.POSITIVE, "3", FloatingText.SHIELDING);
 				Buff.affect(this, Talent.AggressiveBarrierCooldown.class, 50f);
 
@@ -1599,7 +1603,7 @@ if (buff(RoundShield.GuardTracker.class) != null){
 	}
 	
 	@Override
-	public long attackProc( final Char enemy, long damage ) {
+	public BigInteger attackProc( final Char enemy, BigInteger damage ) {
 		damage = super.attackProc( enemy, damage );
 
 		KindOfWeapon wep;
@@ -1629,7 +1633,7 @@ if (buff(RoundShield.GuardTracker.class) != null){
 					@Override
 					protected boolean act() {
 						if (enemy.isAlive()) {
-							int bonusTurns = hasTalent(Talent.SHARED_UPGRADES) ? (int) wep.buffedLvl() : 0;
+							int bonusTurns = hasTalent(Talent.SHARED_UPGRADES) ? Big.toInt(wep.buffedLvl()) : 0;
 							Buff.prolong(Hero.this, SnipersMark.class, SnipersMark.DURATION + bonusTurns).set(enemy.id(), bonusTurns);
 						}
 						Actor.remove(this);
@@ -1643,9 +1647,9 @@ if (buff(RoundShield.GuardTracker.class) != null){
 	}
 	
 	@Override
-	public long defenseProc( Char enemy, long damage ) {
+	public BigInteger defenseProc( Char enemy, BigInteger damage ) {
 		
-		if (damage > 0 && isSubclass(HeroSubClass.BERSERKER)){
+		if ((damage.compareTo(BigInteger.ZERO) > 0) && isSubclass(HeroSubClass.BERSERKER)){
 			Berserk berserk = Buff.affect(this, Berserk.class);
 			berserk.damage(damage);
 		}
@@ -1673,7 +1677,7 @@ if (buff(RoundShield.GuardTracker.class) != null){
 	}
 	
 	@Override
-	public void damage( long dmg, Object src ) {
+	public void damage( BigInteger dmg, Object src ) {
 		if (buff(TimekeepersHourglass.timeStasis.class) != null
 				|| buff(TimeStasis.class) != null) {
 			return;
@@ -1694,15 +1698,15 @@ if (buff(RoundShield.GuardTracker.class) != null){
 		if (!(src instanceof Char)){
 			//reduce damage here if it isn't coming from a character (if it is we already reduced it)
 			if (endure != null){
-				dmg = Math.round(endure.adjustDamageTaken(dmg));
+				dmg = BigInteger.valueOf(Math.round(endure.adjustDamageTaken(dmg.doubleValue())));
 			}
 			//the same also applies to challenge scroll damage reduction
 			if (buff(ScrollOfChallenge.ChallengeArena.class) != null){
-				dmg *= 0.67f;
+				dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(0.67f)));
 			}
 			//and to monk meditate damage reduction
 			if (buff(MonkEnergy.MonkAbility.Meditate.MeditateResistance.class) != null){
-				dmg *= 0.2f;
+				dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(0.2f)));
 			}
 		}
 
@@ -1712,48 +1716,48 @@ if (buff(RoundShield.GuardTracker.class) != null){
 		}
 
 		if (buff(GleamingStaff.GuardTracker.class) != null){
-			dmg *= 3;
+			dmg = dmg.multiply(BigInteger.valueOf(3));
 		}
 
-		dmg = (int)Math.ceil(dmg * RingOfTenacity.damageMultiplier( this ));
+		dmg = BigInteger.valueOf(Big.toInt((Big.ceil(Big.dec(dmg).multiply(Big.dec(RingOfTenacity.damageMultiplier( this ))))).toBigInteger()));
 
 		//TODO improve this when I have proper damage source logic
 		if (belongings.armor() != null && belongings.armor().hasGlyph(AntiMagic.class, this)
 				&& AntiMagic.RESISTS.contains(src.getClass())){
-			dmg -= AntiMagic.drRoll(this, belongings.armor().buffedLvl());
-			dmg = Math.max(dmg, 0);
+			dmg = dmg.subtract(AntiMagic.drRoll(this, belongings.armor().buffedLvl()));
+			dmg = dmg.max(BigInteger.ZERO);
 		}
 
 		if ((belongings.weapon() instanceof Greatshield || belongings.weapon() instanceof RoundShield) &&
 				AntiMagic.RESISTS.contains(src.getClass())){
 			shieldDamage(dmg);
-			dmg *= 0.75;
+			dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(0.75)));
 		}
 
 		if (buff(Talent.WarriorFoodImmunity.class) != null){
-			dmg = Math.round(dmg*0.00f);
+			dmg = Big.round(Big.dec(dmg).multiply(Big.dec(0.00f)));
 		}
 
-		if (perks.contains(Perks.Perk.NO_ONESHOTS) && dmg >= HT && HP == HT){
-			dmg /= 2;
+		if (perks.contains(Perks.Perk.NO_ONESHOTS) && (dmg.compareTo(HT) >= 0) && (HP.compareTo(HT) == 0)){
+			dmg = dmg.divide(BigInteger.TWO);
 		}
 
-		long preHP = HP + shielding();
-		if (src instanceof Hunger) preHP -= shielding();
+		BigInteger preHP = HP.add(shielding());
+		if (src instanceof Hunger) preHP = preHP.subtract(shielding());
 		super.damage( dmg, src );
-		long postHP = HP + shielding();
-		if (src instanceof Hunger) postHP -= shielding();
-		long effectiveDamage = preHP - postHP;
+		BigInteger postHP = HP.add(shielding());
+		if (src instanceof Hunger) postHP = postHP.subtract(shielding());
+		BigInteger effectiveDamage = preHP.subtract(postHP);
 
-		if (effectiveDamage <= 0) return;
+		if ((effectiveDamage.compareTo(BigInteger.ZERO) <= 0)) return;
 
 		if (buff(Challenge.DuelParticipant.class) != null){
 			buff(Challenge.DuelParticipant.class).addDamage(effectiveDamage);
 		}
 
 		//flash red when hit for serious damage.
-		float percentDMG = effectiveDamage / (float)preHP; //percent of current HP that was taken
-		float percentHP = 1 - ((HT - postHP) / (float)HT); //percent health after damage was taken
+		float percentDMG = Big.div(Big.dec(effectiveDamage), Big.dec(preHP.floatValue())).floatValue(); //percent of current HP that was taken
+		float percentHP = Big.dec(1).subtract((Big.div(Big.dec((HT.subtract(postHP))), Big.dec(HT.floatValue())))).floatValue(); //percent health after damage was taken
 		// The flash intensity increases primarily based on damage taken and secondarily on missing HP.
 		float flashIntensity = 0.25f * (percentDMG * percentDMG) / percentHP;
 		//if the intensity is very low don't flash at all
@@ -1773,10 +1777,10 @@ if (buff(RoundShield.GuardTracker.class) != null){
 		}
 	}
 
-	private void shieldDamage(long dmg) {
+	private void shieldDamage(BigInteger dmg) {
 		ConeAOE aoe = arrangeBlast(pos, sprite, MagicMissile.BEACON);
 		PathFinder.buildDistanceMap( pos, BArray.not( Dungeon.level.solid, null ), 2 );
-		long finalDmg = dmg;
+		BigInteger finalDmg = dmg;
 		((MagicMissile)sprite.parent.recycle( MagicMissile.class )).reset(
 				MagicMissile.INVISI,
 				sprite,
@@ -1786,9 +1790,9 @@ if (buff(RoundShield.GuardTracker.class) != null){
 						if (PathFinder.distance[i] < Integer.MAX_VALUE) {
 							Char ch = Actor.findChar(i);
 							if (ch != null && ch.alignment != alignment && ch != Dungeon.hero) {
-								int retaliationDamage = (int) (finalDmg *1.5f);
+								int retaliationDamage = Big.toInt(((Big.dec(finalDmg).multiply(Big.dec(1.5f)))).toBigInteger());
 								if (belongings.weapon() instanceof Greatshield) retaliationDamage*=2;
-								ch.damage(retaliationDamage, Hero.this);
+								ch.damage(BigInteger.valueOf(retaliationDamage), Hero.this);
 								Sample.INSTANCE.play(Assets.Sounds.HIT_MAGIC);
 								CellEmitter.center(pos).burst(MagicMissile.SlowParticle.FACTORY, 10);
 							}
@@ -1861,14 +1865,14 @@ if (buff(RoundShield.GuardTracker.class) != null){
 
 		//we also scan for blob landmarks here
 		for (Blob b : Dungeon.level.blobs.values().toArray(new Blob[0])){
-			if (b.volume > 0 && b.landmark() != null && !Notes.contains(b.landmark())){
+			if ((b.volume.compareTo(BigInteger.ZERO) > 0) && b.landmark() != null && !Notes.contains(b.landmark())){
 				int cell;
 				boolean found = false;
 				//if a single cell within the blob is visible, we add the landmark
 				for (int i=b.area.top; i < b.area.bottom; i++) {
 					for (int j = b.area.left; j < b.area.right; j++) {
 						cell = j + i* Dungeon.level.width();
-						if (fieldOfView[cell] && b.cur[cell] > 0) {
+						if (fieldOfView[cell] && (b.cur[cell].compareTo(BigInteger.ZERO) > 0)) {
 							Notes.add( b.landmark() );
 							found = true;
 							break;
@@ -2081,7 +2085,7 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 				break;
 			case FOR_ARENA_SALE:
 			case FOR_SALE:
-				curAction = heap.size() == 1 && heap.peek().value() > 0 ?
+				curAction = heap.size() == 1 && (heap.peek().value().compareTo(BigInteger.ZERO) > 0) ?
 					new HeroAction.Buy( cell ) :
 					new HeroAction.PickUp( cell );
 				break;
@@ -2116,12 +2120,12 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 		return true;
 	}
 	
-	public void earnExp( long exp, Class source ) {
+	public void earnExp( BigInteger exp, Class source ) {
 
-		this.exp += exp;
-		this.totalExp += exp;
-        this.totalExp_Transmutation += exp;
-		float percent = exp/(float)maxExp();
+		this.exp = this.exp.add(exp);
+		this.totalExp = this.totalExp.add(exp);
+        this.totalExp_Transmutation = this.totalExp_Transmutation.add(exp);
+		float percent = Big.div(Big.dec(exp), Big.dec(maxExp().floatValue())).floatValue();
 
 		EtherealChains.chainsRecharge chains = buff(EtherealChains.chainsRecharge.class);
 		if (chains != null) chains.gainExp(percent);
@@ -2161,18 +2165,18 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 			}
 		}
 
-		long neededExp = PsycheChest.neededExp();
+		BigInteger neededExp = PsycheChest.neededExp();
 
-        if (totalExp >= neededExp && grinding){
+        if ((totalExp.compareTo(neededExp) >= 0) && grinding){
 			int souCount = 0;
 
-            while (totalExp >= neededExp ) {
-                totalExp -= neededExp;
+            while ((totalExp.compareTo(neededExp) >= 0)) {
+                totalExp = totalExp.subtract(neededExp);
                 souCount++;
             }
 
 			ScrollOfUpgrade sou = new ScrollOfUpgrade();
-			sou.quantity(souCount);
+			sou.quantity(BigInteger.valueOf(souCount));
 
 			if (!sou.collect()){
 				Dungeon.level.drop(sou, pos);
@@ -2182,18 +2186,18 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 			}
         }
 
-        long neededExpTransmutation = PsycheChest.neededExpTransmutation();
+        BigInteger neededExpTransmutation = PsycheChest.neededExpTransmutation();
 
-        if (totalExp_Transmutation >= neededExpTransmutation && grinding){
+        if ((totalExp_Transmutation.compareTo(neededExpTransmutation) >= 0) && grinding){
             int souCount = 0;
 
-            while (totalExp_Transmutation >= neededExpTransmutation ) {
-                totalExp_Transmutation -= neededExpTransmutation;
+            while ((totalExp_Transmutation.compareTo(neededExpTransmutation) >= 0)) {
+                totalExp_Transmutation = totalExp_Transmutation.subtract(neededExpTransmutation);
                 souCount++;
             }
 
             ScrollOfTransmutation sou = new ScrollOfTransmutation();
-            sou.quantity(souCount);
+            sou.quantity(BigInteger.valueOf(souCount));
 
             if (!sou.collect()){
                 Dungeon.level.drop(sou, pos);
@@ -2204,8 +2208,8 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
         }
 
 		boolean levelUp = false;
-		while (this.exp >= maxExp()) {
-			this.exp -= maxExp();
+		while ((this.exp.compareTo(maxExp()) >= 0)) {
+			this.exp = this.exp.subtract(maxExp());
             lvl++;
             levelUp = true;
 
@@ -2237,19 +2241,19 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 	}
 
 	public static void getExp(int value){
-		Dungeon.hero.earnExp(value, null);
+		Dungeon.hero.earnExp(BigInteger.valueOf(value), null);
 	}
 
-	public long maxExp() {
+	public BigInteger maxExp() {
 		return maxExp( lvl );
 	}
 	
-	public static long maxExp( int lvl ){
+	public static BigInteger maxExp( int lvl ){
 		HeroClass heroClass = Dungeon.hero == null ? GamesInProgress.selectedClass: Dungeon.hero.heroClass;
 		if (Dungeon.isChallenged(Challenges.FOR_THE_WORTHY)) {
-            return (long) ((20 + lvl * 20L) * 1.5d);
+            return Big.of(((20 + lvl * 20L) * 1.5d));
         } else {
-            return 20 + lvl * 20L;
+            return BigInteger.valueOf(20 + lvl * 20L);
         }
 	}
 	
@@ -2454,7 +2458,7 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 	@Override
 	public boolean isAlive() {
 		
-		if (HP <= 0){
+		if ((HP.compareTo(BigInteger.ZERO) <= 0)){
 			if (berserk == null) berserk = buff(Berserk.class);
 			return berserk != null && berserk.berserking();
 		} else {
@@ -2776,8 +2780,8 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 								if (ch != null && ch.alignment != alignment){
 									Ballistica trajectory = new Ballistica(ch.pos, ch.pos+i, Ballistica.MAGIC_BOLT);
 									if (trajectory.collisionPos != pos+i && !ch.properties().contains(Property.BOSS)) ch.spend(TIME_TO_SEARCH);
-									ch.damage(1 + Dungeon.escalatingDepth() / 5, new WandOfBlastWave());
-									WandOfBlastWave.throwChar(ch, trajectory, 1, false, false, getClass());
+									ch.damage(BigInteger.ONE.add(Dungeon.escalatingDepth().divide(BigInteger.valueOf(5))), new WandOfBlastWave());
+									WandOfBlastWave.throwChar(ch, trajectory, BigInteger.ONE, false, false, getClass());
 								}
 							}
 							spendAndNext(TIME_TO_SEARCH);

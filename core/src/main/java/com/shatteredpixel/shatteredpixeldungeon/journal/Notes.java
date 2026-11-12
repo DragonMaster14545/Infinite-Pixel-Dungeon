@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.journal;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Foliage;
@@ -84,7 +86,7 @@ public class Notes {
 
 		public Visual secondIcon() { return null; }
 
-		public long quantity() { return 1; }
+		public BigInteger quantity() { return BigInteger.ONE; }
 
 		protected abstract int order();
 
@@ -302,8 +304,8 @@ public class Notes {
 
 		@Override
 		public Visual secondIcon() {
-			if (quantity() > 1){
-				BitmapText text = new BitmapText(Long.toString(quantity()), PixelScene.pixelFont);
+			if ((quantity().compareTo(BigInteger.ONE) > 0)){
+				BitmapText text = new BitmapText(quantity().toString(), PixelScene.pixelFont);
 				text.measure();
 				return text;
 			} else {
@@ -330,11 +332,11 @@ public class Notes {
 			return 1000 + Generator.Category.order(key);
 		}
 
-		public long quantity(){
+		public BigInteger quantity(){
 			return key.quantity();
 		}
 		
-		public void quantity(long num){
+		public void quantity(BigInteger num){
 			key.quantity(num);
 		}
 		
@@ -556,7 +558,7 @@ public class Notes {
 			return result;
 		} else {
 			k = (KeyRecord) records.get(records.indexOf(k));
-			k.quantity(k.quantity() + key.quantity());
+			k.quantity(k.quantity().add(key.quantity()));
 			return true;
 		}
 	}
@@ -566,8 +568,8 @@ public class Notes {
 		if (records.contains(k)){
 			Catalog.countUses(key.getClass(), key.quantity());
 			k = (KeyRecord) records.get(records.indexOf(k));
-			k.quantity(k.quantity() - key.quantity());
-			if (k.quantity() <= 0){
+			k.quantity(k.quantity().subtract(key.quantity()));
+			if ((k.quantity().compareTo(BigInteger.ZERO) <= 0)){
 				records.remove(k);
 			}
 			return true;
@@ -575,13 +577,13 @@ public class Notes {
 		return false;
 	}
 	
-	public static long keyCount(Key key ){
+	public static BigInteger keyCount(Key key ){
 		KeyRecord k = new KeyRecord( key );
 		if (records.contains(k)){
 			k = (KeyRecord) records.get(records.indexOf(k));
 			return k.quantity();
 		} else {
-			return 0;
+			return BigInteger.ZERO;
 		}
 	}
 

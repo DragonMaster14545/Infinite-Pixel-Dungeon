@@ -29,6 +29,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.modules;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
@@ -50,15 +52,15 @@ public class GoldModule extends Module {
     public void execute( Hero hero, String action ) {
         super.execute(hero, action);
         if (action.equals(AC_USE)) {
-            long quantity = Dungeon.LongRange(1000 * Dungeon.escalatingDepth(), 2500 * Dungeon.escalatingDepth());
-            Dungeon.gold += quantity;
-            hero.sprite.showStatusWithIcon(CharSprite.NEUTRAL, Long.toString(quantity), FloatingText.GOLD);
+            BigInteger quantity = Dungeon.LongRange(BigInteger.valueOf(1000).multiply(Dungeon.escalatingDepth()), BigInteger.valueOf(2500).multiply(Dungeon.escalatingDepth()));
+            Dungeon.gold = Dungeon.gold.add(quantity);
+            hero.sprite.showStatusWithIcon(CharSprite.NEUTRAL, quantity.toString(), FloatingText.GOLD);
             detach(hero.belongings.backpack);
         }
     }
 
     @Override
-    public long value() {
-        return 250 * quantity * Dungeon.escalatingDepth();
+    public BigInteger value() {
+        return BigInteger.valueOf(250).multiply(quantity).multiply(Dungeon.escalatingDepth());
     }
 }

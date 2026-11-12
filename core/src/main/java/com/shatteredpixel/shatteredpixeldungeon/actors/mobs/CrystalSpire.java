@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -60,10 +64,10 @@ public class CrystalSpire extends Mob {
 
 	{
 		//this translates to roughly 33/27/23/20/18/16 pickaxe hits at +0/1/2/3/4/5
-		HP = HT = Dungeon.getCycleMultiplier(500);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(500));
 		spriteClass = CrystalSpireSprite.class;
 
-		EXP = 20;
+		EXP = BigInteger.valueOf(20);
 
 		//acts after other mobs, which makes baiting crystal guardians more consistent
 		actPriority = MOB_PRIO-1;
@@ -124,11 +128,11 @@ public class CrystalSpire extends Mob {
 				Char ch = Actor.findChar(i);
 
 				if (ch != null && !(ch instanceof CrystalWisp || ch instanceof CrystalSpire)){
-					long dmg = Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(12), Dungeon.getCycleMultiplier(30));
+					BigInteger dmg = Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.valueOf(12)), Dungeon.getCycleMultiplier(BigInteger.valueOf(30)));
 
 					//guardians are hit harder by the attack
 					if (ch instanceof CrystalGuardian) {
-						dmg *= 1.5f; //18-27 damage
+						dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(1.5f))); //18-27 damage
 						Buff.prolong(ch, Cripple.class, 30f);
                     } else if (ch == Dungeon.hero){
                         Statistics.questScores[2] -= 100;
@@ -218,10 +222,10 @@ public class CrystalSpire extends Mob {
 		aoeCells.addAll(spreadDiamondAOE(aoeCells));
 		targetedCells.add(new ArrayList<>(aoeCells));
 
-		if (HP < 2*HT/3f){
+		if ((Big.dec(HP).compareTo(Big.div(Big.dec(BigInteger.TWO.multiply(HT)), Big.dec(3f))) < 0)){
 			aoeCells.addAll(spreadDiamondAOE(aoeCells));
 			targetedCells.add(new ArrayList<>(aoeCells));
-			if (HP < HT/3f) {
+			if ((Big.dec(HP).compareTo(Big.div(Big.dec(HT), Big.dec(3f))) < 0)) {
 				aoeCells.addAll(spreadDiamondAOE(aoeCells));
 				targetedCells.add(aoeCells);
 			}
@@ -255,10 +259,10 @@ public class CrystalSpire extends Mob {
 		}
 
 		targetedCells.add(new ArrayList<>(lineCells));
-		if (HP < 2*HT/3f){
+		if ((Big.dec(HP).compareTo(Big.div(Big.dec(BigInteger.TWO.multiply(HT)), Big.dec(3f))) < 0)){
 			lineCells.addAll(spreadDiamondAOE(lineCells));
 			targetedCells.add(new ArrayList<>(lineCells));
-			if (HP < HT/3f) {;
+			if ((Big.dec(HP).compareTo(Big.div(Big.dec(HT), Big.dec(3f))) < 0)) {;
 				lineCells.addAll(spreadDiamondAOE(lineCells));
 				targetedCells.add(lineCells);
 			}
@@ -289,9 +293,9 @@ public class CrystalSpire extends Mob {
 	}
 
 	@Override
-	public void damage(long dmg, Object src) {
+	public void damage(BigInteger dmg, Object src) {
 		if (!(src instanceof Pickaxe) ){
-			dmg = 0;
+			dmg = BigInteger.ZERO;
 		}
 		super.damage(dmg, src);
 	}
@@ -322,16 +326,16 @@ public class CrystalSpire extends Mob {
 				public void call() {
 					//does its own special damage calculation that's only influenced by pickaxe level and augment
 					//we pretend the spire is the owner here so that properties like hero str or or other equipment do not factor in
-					long dmg = p.damageRoll(CrystalSpire.this);
+					BigInteger dmg = p.damageRoll(CrystalSpire.this);
 
-					dmg = Math.min(dmg, HT / 10);
+					dmg = dmg.min(HT.divide(BigInteger.TEN));
 
 					damage(dmg, p);
-					abilityCooldown -= dmg/10f;
+					abilityCooldown -= Big.div(Big.dec(dmg), Big.dec(10f)).floatValue();
 					sprite.bloodBurstA(Dungeon.hero.sprite.center(), dmg);
 					sprite.flash();
 
-					BossHealthBar.bleed(HP <= HT/3);
+					BossHealthBar.bleed((HP.compareTo(HT.divide(BigInteger.valueOf(3))) <= 0));
 
 					if (isAlive()) {
 						Sample.INSTANCE.play(Assets.Sounds.SHATTER, 1f, Random.Float(1.15f, 1.25f));

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -53,13 +55,13 @@ public class PotionOfShroudingFog extends ExoticPotion {
 		int centerVolume = 180;
 		for (int i : PathFinder.NEIGHBOURS8){
 			if (!Dungeon.level.solid[cell+i]){
-				GameScene.add( Blob.seed( cell+i, 180, SmokeScreen.class ) );
+				GameScene.add( Blob.seed( cell+i, BigInteger.valueOf(180), SmokeScreen.class ) );
 			} else {
 				centerVolume += 180;
 			}
 		}
 
-		GameScene.add( Blob.seed( cell, centerVolume, SmokeScreen.class ) );
+		GameScene.add( Blob.seed( cell, BigInteger.valueOf(centerVolume), SmokeScreen.class ) );
 	}
 	
 }

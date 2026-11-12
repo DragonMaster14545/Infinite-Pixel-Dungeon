@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -52,7 +54,7 @@ public class PotionOfFrost extends Potion {
 		for (int offset : PathFinder.NEIGHBOURS9){
 			if (!Dungeon.level.solid[cell+offset]) {
 				
-				GameScene.add(Blob.seed(cell + offset, 10, Freezing.class));
+				GameScene.add(Blob.seed(cell + offset, BigInteger.TEN, Freezing.class));
 				
 			}
 		}
@@ -60,7 +62,7 @@ public class PotionOfFrost extends Potion {
 	}
 	
 	@Override
-	public long value() {
-		return isKnown() ? 30 * quantity : super.value();
+	public BigInteger value() {
+		return isKnown() ? BigInteger.valueOf(30).multiply(quantity) : super.value();
 	}
 }

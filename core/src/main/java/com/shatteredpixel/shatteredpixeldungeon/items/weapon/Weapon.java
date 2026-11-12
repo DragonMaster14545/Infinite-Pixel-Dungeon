@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon;
 
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -115,8 +117,8 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 			delayFactor = dly;
 		}
 
-		public long damageFactor(long dmg){
-            return Math.round(dmg * damageFactor);
+		public BigInteger damageFactor(BigInteger dmg){
+            return Big.round(Big.dec(dmg).multiply(Big.dec(damageFactor)));
 		}
 
 		public float delayFactor(float dly){
@@ -138,8 +140,8 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 	public boolean masteryPotionBonus = false;
     public int internalHits = 0;
 
-	public static float hardenBoost(long upgrades){
-		return 0.0002f * upgrades;
+	public static float hardenBoost(BigInteger upgrades){
+		return Big.dec(0.0002f).multiply(Big.dec(upgrades)).floatValue();
 	}
 
 	protected Weapon(){
@@ -151,7 +153,7 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 	}
 
 	@Override
-	public long proc( Char attacker, Char defender, long damage ) {
+	public BigInteger proc( Char attacker, Char defender, BigInteger damage ) {
 		
 		if (enchantment != null && attacker.buff(MagicImmune.class) == null) {
 			damage = enchantment.proc( this, attacker, defender, damage );
@@ -184,7 +186,7 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 		}
 
 		if (attacker == Dungeon.hero && attacker.buff(RingOfScorch.Scorch.class) != null) {
-			defender.damage(Math.round(Dungeon.hero.damageRoll() * RingOfScorch.scorchDamageMultiplier( Dungeon.hero )), new Burning());
+			defender.damage(Big.round(Big.dec(Dungeon.hero.damageRoll()).multiply(Big.dec(RingOfScorch.scorchDamageMultiplier( Dungeon.hero )))), new Burning());
 		}
 
 		return damage;
@@ -330,19 +332,19 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 		return STRReq(level());
 	}
 
-	public abstract int STRReq(long lvl);
+	public abstract int STRReq(BigInteger lvl);
 
-	protected static int STRReq(int tier, long lvl){
-		lvl = Math.max(0, lvl);
+	protected static int STRReq(int tier, BigInteger lvl){
+		lvl = BigInteger.ZERO.max(lvl);
 
 		//strength req decreases at +1,+3,+6,+10,etc.
-		return (8 + tier * 2) - (int)(Math.sqrt(8 * lvl + 1) - 1)/2;
+		return (8 + tier * 2) - (int)(Math.sqrt(BigInteger.valueOf(8).multiply(lvl).add(BigInteger.ONE).doubleValue()) - 1)/2;
 	}
 
 	@Override
-	public long level() {
-		long level = super.level();
-		if (curseInfusionBonus) level += 1 + level/6;
+	public BigInteger level() {
+		BigInteger level = super.level();
+		if (curseInfusionBonus) level = level.add(BigInteger.ONE.add(level.divide(BigInteger.valueOf(6))));
 		return level;
 	}
 
@@ -411,7 +413,7 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
 				n++;
 			}
 		}
-		level(n);
+		level(BigInteger.valueOf(n));
 
 //we use a separate RNG here so that variance due to things like parchment scrap
 		//does not affect levelgen
@@ -540,7 +542,7 @@ abstract public class Weapon extends KindOfWeapon implements EquipableItem.Tiera
             return curses;
         }
 			
-		public abstract long proc( Weapon weapon, Char attacker, Char defender, long damage );
+		public abstract BigInteger proc( Weapon weapon, Char attacker, Char defender, BigInteger damage );
 
 		protected float procChanceMultiplier( Char attacker ){
 			return genericProcChanceMultiplier( attacker );

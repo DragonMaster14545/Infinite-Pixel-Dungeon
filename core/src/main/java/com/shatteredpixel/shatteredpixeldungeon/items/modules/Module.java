@@ -29,6 +29,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.modules;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -51,7 +53,7 @@ public class Module extends Item {
 
     }
 
-    public Module( long value ) {
+    public Module( BigInteger value ) {
         this.quantity = value;
     }
 
@@ -72,8 +74,8 @@ public class Module extends Item {
     }
 
     @Override
-    public long level(){
-        return level;
+    public BigInteger level(){
+        return BigInteger.valueOf(level);
     }
 
 
@@ -88,42 +90,42 @@ public class Module extends Item {
     }
 
     @Override
-    public long value() {
-        return 75000 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(75000).multiply(quantity);
     }
 
     @Override
     public Item random() {
-        quantity = (Dungeon.LongRange( 2, 4 ));
+        quantity = (Dungeon.LongRange( BigInteger.TWO, BigInteger.valueOf(4) ));
         return this;
     }
 
     public Item random(long x){
         switch (Random.Int(1, 11)) {
             case 0:
-                return new ChampionModule().quantity(x);
+                return new ChampionModule().quantity(BigInteger.valueOf(x));
             case 1:
-                return new DimensionalRiftModule().quantity(x);
+                return new DimensionalRiftModule().quantity(BigInteger.valueOf(x));
             case 2:
-                return new GoldModule().quantity(x);
+                return new GoldModule().quantity(BigInteger.valueOf(x));
             case 3:
-                return new HasteModule().quantity(x);
+                return new HasteModule().quantity(BigInteger.valueOf(x));
             case 4:
-                return new ItemModule().quantity(x);
+                return new ItemModule().quantity(BigInteger.valueOf(x));
             case 5:
-                return new MindVisionModule().quantity(x);
+                return new MindVisionModule().quantity(BigInteger.valueOf(x));
             case 6:
-                return new PotionModule().quantity(x);
+                return new PotionModule().quantity(BigInteger.valueOf(x));
             case 7:
-                return new ScrollModule().quantity(x);
+                return new ScrollModule().quantity(BigInteger.valueOf(x));
             case 8:
-                return new PurityModule().quantity(x);
+                return new PurityModule().quantity(BigInteger.valueOf(x));
             case 9:
-                return new TimeReverserModule().quantity(x);
+                return new TimeReverserModule().quantity(BigInteger.valueOf(x));
             case 10:
-                return new HealthModule().quantity(x);
+                return new HealthModule().quantity(BigInteger.valueOf(x));
             case 11: default:
-                return new LuckModule().quantity(x);
+                return new LuckModule().quantity(BigInteger.valueOf(x));
         }
     }
 

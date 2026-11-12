@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -40,8 +42,7 @@ public class ThrowingHammer extends MissileWeapon {
 	}
 	
 	@Override
-	public long max(long lvl) {
-		return  7L * tier() +                  //20 base, down from 25
-				(tier()*2L) * lvl;               //scaling unchanged
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(7L * tier()).add(BigInteger.valueOf((tier()*2L)).multiply(lvl));               //scaling unchanged
 	}
 }

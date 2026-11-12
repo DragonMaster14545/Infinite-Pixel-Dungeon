@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.treasurebags;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
@@ -51,10 +54,10 @@ public class TenguTreasureBag extends TreasureBag {
             items.add(new TengusMask());
             Dungeon.LimitedDrops.TOME_OF_MASTERY.drop();
         }
-        items.add(new Gold().quantity(Random.Long( 625 + Dungeon.escalatingDepth() * 96, 1100 + Dungeon.escalatingDepth() * 130 )));
-        items.add(new Shuriken().upgrade(1).quantity(Random.Int(2, 10)));
+        items.add(new Gold().quantity(BigInteger.valueOf(Random.Long( Big.toLong(BigInteger.valueOf(625).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(96)))), Big.toLong(BigInteger.valueOf(1100).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(130)))) ))));
+        items.add(new Shuriken().upgrade(BigInteger.ONE).quantity(BigInteger.valueOf(Random.Int(2, 10))));
         if (Dungeon.cycle > 0){
-            items.add(new TenguShuriken().random().quantity(Random.Int(1, 3)));
+            items.add(new TenguShuriken().random().quantity(BigInteger.valueOf(Random.Int(1, 3))));
             for (int i = 0; i < 8; i++) items.add(Generator.randomUsingDefaults(Generator.Category.MISSILE));
             for (int i = 0; i < 2; i++) items.add(Generator.randomUsingDefaults(Generator.Category.WEAPON));
         }

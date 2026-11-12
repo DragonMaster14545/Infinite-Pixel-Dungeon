@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
@@ -120,9 +124,9 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 		}
 	}
 	
-	public int evasionBonus(long heroLvl, long excessArmorStr ){
+	public int evasionBonus(BigInteger heroLvl, BigInteger excessArmorStr ){
 		if (freerunTurns > 0) {
-			return (int) (heroLvl/2 + excessArmorStr*Dungeon.hero.pointsInTalent(Talent.EVASIVE_ARMOR));
+			return Big.toInt((heroLvl.divide(BigInteger.TWO).add(excessArmorStr.multiply(BigInteger.valueOf(Dungeon.hero.pointsInTalent(Talent.EVASIVE_ARMOR))))));
 		} else {
 			return 0;
 		}

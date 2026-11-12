@@ -1,5 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.modules;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -41,7 +43,7 @@ public class PotionModule extends Module {
     }
 
     @Override
-    public long value() {
-        return 75 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(75).multiply(quantity);
     }
 }

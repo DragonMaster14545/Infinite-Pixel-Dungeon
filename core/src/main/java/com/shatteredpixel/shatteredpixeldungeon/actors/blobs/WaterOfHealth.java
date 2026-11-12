@@ -68,7 +68,7 @@ public class WaterOfHealth extends WellWater {
 		} else {
 			hero.HP = hero.HT;
 			hero.sprite.emitter().start(Speck.factory(Speck.HEALING), 0.4f, 4);
-			hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(hero.HT), FloatingText.HEALING);
+			hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, hero.HT.toString(), FloatingText.HEALING);
 		}
 		
 		CellEmitter.get( hero.pos ).start( ShaftParticle.FACTORY, 0.2f, 3 );

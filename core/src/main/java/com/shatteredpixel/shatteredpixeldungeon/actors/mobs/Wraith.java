@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -44,13 +48,13 @@ public class Wraith extends Mob {
 
 	private static final float SPAWN_DELAY	= 2f;
 	
-	protected long level;
+	protected BigInteger level = BigInteger.ZERO;
 	
 	{
 		spriteClass = WraithSprite.class;
 		
-		HP = HT = 1;
-		EXP = 0;
+		HP = HT = BigInteger.ONE;
+		EXP = BigInteger.ZERO;
 
 		maxLvl = -2;
 		
@@ -65,29 +69,29 @@ public class Wraith extends Mob {
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );
-		bundle.put( LEVEL, level );
+		Big.put(bundle, LEVEL, level);
 	}
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle( bundle );
-		level = bundle.getInt( LEVEL );
+		level = BigInteger.valueOf(bundle.getInt( LEVEL ));
 		adjustStats( level );
 	}
 	
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( 1 + level/2, 2 + level );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( BigInteger.ONE.add(level.divide(BigInteger.TWO)), BigInteger.TWO.add(level) );
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
-		return 10 + level;
+	public BigInteger attackSkill(Char target ) {
+		return BigInteger.TEN.add(level);
 	}
 	
-	public void adjustStats( long level ) {
+	public void adjustStats( BigInteger level ) {
 		this.level = level;
-		defenseSkill = attackSkill( null ) * 5;
+		defenseSkill = attackSkill( null ).multiply(BigInteger.valueOf(5));
 		enemySeen = true;
 	}
 

@@ -1,5 +1,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -48,17 +52,16 @@ public class SearingSlasher extends MeleeWeapon {
     }
 
     @Override
-    public long max(long lvl) {
-        return  Math.round(4.5d*(tier+1)) +    //22 base
-                lvl*Math.round(0.9d*(tier+1));  //+4-5 per level
+    public BigInteger max(BigInteger lvl) {
+        return  BigInteger.valueOf(Math.round(4.5d*(tier+1))).add(lvl.multiply(BigInteger.valueOf(Math.round(0.9d*(tier+1)))));  //+4-5 per level
     }
 
     @Override
-    public long proc(Char attacker, Char defender, long damage) {
+    public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 
-        defender.damage(Math.round(Dungeon.hero.damageRoll() * 0.05d), new Burning());
-        defender.damage(Math.round(Dungeon.hero.damageRoll() * 0.05d), new Chill());
-        defender.damage(Math.round(Dungeon.hero.damageRoll() * 0.05d), new Electricity());
+        defender.damage(Big.round(Big.dec(Dungeon.hero.damageRoll()).multiply(Big.dec(0.05d))), new Burning());
+        defender.damage(Big.round(Big.dec(Dungeon.hero.damageRoll()).multiply(Big.dec(0.05d))), new Chill());
+        defender.damage(Big.round(Big.dec(Dungeon.hero.damageRoll()).multiply(Big.dec(0.05d))), new Electricity());
 
         return super.proc(attacker, defender, damage);
     }
@@ -70,26 +73,26 @@ public class SearingSlasher extends MeleeWeapon {
 
     @Override
     protected void duelistAbility(Hero hero, Integer target) {
-        long dmgBoost = augment.damageFactor(6 + buffedLvl());
-        SearingSlasher.searingDashAbility(hero, target, 1, dmgBoost, this);
+        BigInteger dmgBoost = augment.damageFactor(BigInteger.valueOf(6).add(buffedLvl()));
+        SearingSlasher.searingDashAbility(hero, target, BigInteger.ONE, dmgBoost, this);
     }
 
     @Override
     public String abilityInfo() {
-        long dmgBoost = levelKnown ? 6 + buffedLvl() : 6;
+        BigInteger dmgBoost = levelKnown ? BigInteger.valueOf(6).add(buffedLvl()) : BigInteger.valueOf(6);
         if (levelKnown){
-            return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
+            return Messages.get(this, "ability_desc", augment.damageFactor(min().add(dmgBoost)), augment.damageFactor(max().add(dmgBoost)));
         } else {
-            return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);
+            return Messages.get(this, "typical_ability_desc", min(BigInteger.ZERO).add(dmgBoost), max(BigInteger.ZERO).add(dmgBoost));
         }
     }
 
     public String upgradeAbilityStat(int level){
         int dmgBoost = 6 + level;
-        return augment.damageFactor(min(level)+dmgBoost) + "-" + augment.damageFactor(max(level)+dmgBoost);
+        return augment.damageFactor(min(BigInteger.valueOf(level)).add(BigInteger.valueOf(dmgBoost))) + "-" + augment.damageFactor(max(BigInteger.valueOf(level)).add(BigInteger.valueOf(dmgBoost)));
     }
 
-    public static void searingDashAbility(Hero hero, Integer target, long dmgMulti, long dmgBoost, MeleeWeapon wep){
+    public static void searingDashAbility(Hero hero, Integer target, BigInteger dmgMulti, BigInteger dmgBoost, MeleeWeapon wep){
         if (target == null) {
             return;
         }
@@ -131,7 +134,7 @@ public class SearingSlasher extends MeleeWeapon {
                 boolean hitAnything = false;
                 for (Char enemy : struck) {
                     AttackIndicator.target(enemy);
-                    if (hero.attack(enemy, dmgMulti, dmgBoost, Char.INFINITE_ACCURACY)) {
+                    if (hero.attack(enemy, dmgMulti.floatValue(), dmgBoost.floatValue(), Char.INFINITE_ACCURACY)) {
                         hitAnything = true;
                         CellEmitter.get(enemy.pos).burst(FlameParticle.FACTORY, 2);
                         if (enemy.isAlive()) {
@@ -145,7 +148,7 @@ public class SearingSlasher extends MeleeWeapon {
                 //physically move the hero to the far end of the dash - reuses the
                 //same push mechanism Spear/WandOfBlastWave use to move a char
                 //along a Ballistica, just aimed at the hero instead of a target
-                WandOfBlastWave.throwChar(hero, dash, endIdx, true, false, hero);
+                WandOfBlastWave.throwChar(hero, dash, BigInteger.valueOf(endIdx), true, false, hero);
 
                 Sample.INSTANCE.play(hitAnything ? Assets.Sounds.HIT_STRONG : Assets.Sounds.MISS);
 

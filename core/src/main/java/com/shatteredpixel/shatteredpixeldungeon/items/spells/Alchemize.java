@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -63,14 +67,14 @@ public class Alchemize extends Spell {
 	}
 	
 	@Override
-	public long value() {
+	public BigInteger value() {
 		//lower value, as it's very cheap to make (and also sold at shops)
-		return (int)(20 * (quantity/(float)Recipe.OUT_QUANTITY));
+		return BigInteger.valueOf(Big.toInt(((Big.dec(20).multiply((Big.div(Big.dec(quantity), Big.dec((float)Recipe.OUT_QUANTITY)))))).toBigInteger()));
 	}
 
 	@Override
-	public long energyVal() {
-		return (int)(4 * (quantity/(float)Recipe.OUT_QUANTITY));
+	public BigInteger energyVal() {
+		return BigInteger.valueOf(Big.toInt(((Big.dec(4).multiply((Big.div(Big.dec(quantity), Big.dec((float)Recipe.OUT_QUANTITY)))))).toBigInteger()));
 	}
 
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe {
@@ -93,20 +97,20 @@ public class Alchemize extends Spell {
 		}
 
 		@Override
-		public long cost(ArrayList<Item> ingredients) {
-			return 2;
+		public BigInteger cost(ArrayList<Item> ingredients) {
+			return BigInteger.TWO;
 		}
 
 		@Override
 		public Item brew(ArrayList<Item> ingredients) {
-			ingredients.get(0).quantity(ingredients.get(0).quantity()-1);
-			ingredients.get(1).quantity(ingredients.get(1).quantity()-1);
+			ingredients.get(0).quantity(ingredients.get(0).quantity().subtract(BigInteger.ONE));
+			ingredients.get(1).quantity(ingredients.get(1).quantity().subtract(BigInteger.ONE));
 			return sampleOutput(null);
 		}
 
 		@Override
 		public Item sampleOutput(ArrayList<Item> ingredients) {
-			return new Alchemize().quantity(OUT_QUANTITY);
+			return new Alchemize().quantity(BigInteger.valueOf(OUT_QUANTITY));
 		}
 	}
 
@@ -119,7 +123,7 @@ public class Alchemize extends Spell {
 		@Override
 		public boolean itemSelectable(Item item) {
 			return !(item instanceof Alchemize)
-					&& (Shopkeeper.canSell(item) || item.energyVal() > 0);
+					&& (Shopkeeper.canSell(item) || (item.energyVal().compareTo(BigInteger.ZERO) > 0));
 		}
 
 		@Override
@@ -149,7 +153,7 @@ public class Alchemize extends Spell {
 			float pos = height;
 
 			if (Shopkeeper.canSell(item)) {
-				if (item.quantity() == 1) {
+				if ((item.quantity().compareTo(BigInteger.ONE) == 0)) {
 
 					RedButton btnSell = new RedButton(Messages.get(this, "sell", item.value())) {
 						@Override
@@ -167,8 +171,8 @@ public class Alchemize extends Spell {
 
 				} else {
 
-					long priceAll = item.value();
-					RedButton btnSell1 = new RedButton(Messages.get(this, "sell_1", priceAll / item.quantity())) {
+					BigInteger priceAll = item.value();
+					RedButton btnSell1 = new RedButton(Messages.get(this, "sell_1", priceAll.divide(item.quantity()))) {
 						@Override
                         public void onClick() {
 							WndTradeItem.sellOne(item);
@@ -196,8 +200,8 @@ public class Alchemize extends Spell {
 				}
 			}
 
-			if (item.energyVal() > 0) {
-				if (item.quantity() == 1) {
+			if ((item.energyVal().compareTo(BigInteger.ZERO) > 0)) {
+				if ((item.quantity().compareTo(BigInteger.ONE) == 0)) {
 
 					RedButton btnEnergize = new RedButton(Messages.get(this, "energize", item.energyVal())) {
 						@Override
@@ -215,8 +219,8 @@ public class Alchemize extends Spell {
 
 				} else {
 
-					long energyAll = item.energyVal();
-					RedButton btnEnergize1 = new RedButton(Messages.get(this, "energize_1", energyAll / item.quantity())) {
+					BigInteger energyAll = item.energyVal();
+					RedButton btnEnergize1 = new RedButton(Messages.get(this, "energize_1", energyAll.divide(item.quantity()))) {
 						@Override
                         public void onClick() {
 							WndEnergizeItem.energizeOne(item);
@@ -250,7 +254,7 @@ public class Alchemize extends Spell {
 
 		private void consumeAlchemize(){
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
-			if (curItem.quantity() <= 1){
+			if ((curItem.quantity().compareTo(BigInteger.ONE) <= 0)){
 				curItem.detachAll(Dungeon.hero.belongings.backpack);
 				if (owner != null) {
 					owner.hide();

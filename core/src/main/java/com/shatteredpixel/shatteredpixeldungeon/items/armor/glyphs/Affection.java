@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
@@ -39,14 +43,14 @@ public class Affection extends Glyph {
 	private static ItemSprite.Glowing PINK = new ItemSprite.Glowing( 0xFF4488 );
 	
 	@Override
-	public long proc( Armor armor, Char attacker, Char defender, long damage) {
+	public BigInteger proc( Armor armor, Char attacker, Char defender, BigInteger damage) {
 
-		long level = Math.max(0, armor.buffedLvl());
+		BigInteger level = BigInteger.ZERO.max(armor.buffedLvl());
 		
 		// lvl 0 - 15%
 		// lvl 1 ~ 19%
 		// lvl 2 ~ 23%
-		float procChance = (level+3f)/(level+20f) * procChanceMultiplier(defender);
+		float procChance = Big.div((Big.dec(level).add(Big.dec(3f))), (Big.dec(level).add(Big.dec(20f)))).multiply(Big.dec(procChanceMultiplier(defender))).floatValue();
 		if (Random.Float() < procChance) {
 
 			float powerMulti = Math.max(1f, procChance);

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.quest;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -186,7 +188,7 @@ public class CorpseDust extends Item {
         private int hitCount = 0;
 
         @Override
-        public long attackProc(Char enemy, long damage) {
+        public BigInteger attackProc(Char enemy, BigInteger damage) {
             if (enemy == Dungeon.hero){
                 hitCount++;
                 //first hit from each wraith is free, max of -200 point penalty per wraith

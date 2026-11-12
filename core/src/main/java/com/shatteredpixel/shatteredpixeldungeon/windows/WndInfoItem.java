@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -91,9 +93,9 @@ public class WndInfoItem extends Window {
 	private void fillFields( Item item ) {
 		
 		int color = TITLE_COLOR;
-		if (item.levelKnown && item.level() > 0) {
+		if (item.levelKnown && (item.level().compareTo(BigInteger.ZERO) > 0)) {
 			color = ItemSlot.UPGRADED;
-		} else if (item.levelKnown && item.level() < 0) {
+		} else if (item.levelKnown && (item.level().compareTo(BigInteger.ZERO) < 0)) {
 			color = ItemSlot.DEGRADED;
 		} else if (!item.customName.isEmpty()) {
 			color = BLUE;

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -189,16 +193,16 @@ public class Bomb extends Item {
 					continue;
 				}
 
-				long dmg = Dungeon.NormalLongRange(5 + Dungeon.scalingDepth(), 10 + Dungeon.scalingDepth()*2);
+				BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(5).add(Dungeon.scalingDepth()), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.TWO)));
 
 				//those not at the center of the blast take less damage
 				if (ch.pos != cell){
-					dmg = Math.round(dmg*0.67f);
+					dmg = Big.round(Big.dec(dmg).multiply(Big.dec(0.67f)));
 				}
 
-				dmg -= ch.drRoll();
+				dmg = dmg.subtract(ch.drRoll());
 
-				if (dmg > 0) {
+				if ((dmg.compareTo(BigInteger.ZERO) > 0)) {
 					ch.damage(dmg, this);
 				}
 				
@@ -217,20 +221,20 @@ public class Bomb extends Item {
 		}
 	}
 
-	public static long damageRoll() {
-		long dmg = (Dungeon.NormalLongRange(minDamage(), maxDamage()));
+	public static BigInteger damageRoll() {
+		BigInteger dmg = (Dungeon.NormalLongRange(minDamage(), maxDamage()));
 		if (Dungeon.hero.heroClass == HeroClass.ROGUE){
-			dmg *= 2.5f;
+			dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(2.5f)));
 		}
 		return dmg;
 	}
 
-	public static long maxDamage() {
-		return Math.round((10 + Dungeon.scalingDepth() * 2)*Dungeon.fireDamage);
+	public static BigInteger maxDamage() {
+		return Big.round(Big.dec((BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.TWO)))).multiply(Big.dec(Dungeon.fireDamage)));
 	}
 
-	public static long minDamage() {
-		return Math.round((5 + Dungeon.scalingDepth())*Dungeon.fireDamage);
+	public static BigInteger minDamage() {
+		return Big.round(Big.dec((BigInteger.valueOf(5).add(Dungeon.scalingDepth()))).multiply(Big.dec(Dungeon.fireDamage)));
 	}
 
 	@Override
@@ -259,8 +263,8 @@ public class Bomb extends Item {
 	}
 
 	@Override
-	public long value() {
-		return 20 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(20).multiply(quantity);
 	}
 	
 	@Override
@@ -351,7 +355,7 @@ public class Bomb extends Item {
 		@Override
 		public boolean doPickUp(Hero hero, int pos, float time) {
 			Bomb bomb = new Bomb();
-			bomb.quantity(2);
+			bomb.quantity(BigInteger.TWO);
 			if (bomb.doPickUp(hero, pos, time)) {
 				//isaaaaac.... (don't bother doing this when not in english)
 				if (SPDSettings.language() == Languages.ENGLISH)
@@ -422,13 +426,13 @@ public class Bomb extends Item {
 		}
 		
 		@Override
-		public long cost(ArrayList<Item> ingredients) {
+		public BigInteger cost(ArrayList<Item> ingredients) {
 			for (Item i : ingredients){
 				if (validIngredients.containsKey(i.getClass())){
-					return (bombCosts.get(validIngredients.get(i.getClass())));
+					return BigInteger.valueOf(bombCosts.get(validIngredients.get(i.getClass())));
 				}
 			}
-			return 0;
+			return BigInteger.ZERO;
 		}
 		
 		@Override
@@ -436,7 +440,7 @@ public class Bomb extends Item {
 			Item result = null;
 			
 			for (Item i : ingredients){
-				i.quantity(i.quantity()-1);
+				i.quantity(i.quantity().subtract(BigInteger.ONE));
 				if (validIngredients.containsKey(i.getClass())){
 					result = Reflection.newInstance(validIngredients.get(i.getClass()));
 				}

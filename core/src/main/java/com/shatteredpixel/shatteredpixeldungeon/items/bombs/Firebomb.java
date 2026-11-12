@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -50,9 +52,9 @@ public class Firebomb extends Bomb {
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
 				if (Dungeon.level.pit[i])
-					GameScene.add(Blob.seed(i, 2, Fire.class));
+					GameScene.add(Blob.seed(i, BigInteger.TWO, Fire.class));
 				else
-					GameScene.add(Blob.seed(i, 10, Fire.class));
+					GameScene.add(Blob.seed(i, BigInteger.TEN, Fire.class));
 				CellEmitter.get(i).burst(FlameParticle.FACTORY, 5);
 			}
 		}
@@ -60,8 +62,8 @@ public class Firebomb extends Bomb {
 	}
 	
 	@Override
-	public long value() {
+	public BigInteger value() {
 		//prices of ingredients
-		return quantity * (20 + 30);
+		return quantity.multiply(BigInteger.valueOf((20 + 30)));
 	}
 }

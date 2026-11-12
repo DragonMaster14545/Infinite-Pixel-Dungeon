@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -86,7 +88,7 @@ public class GooSprite extends MobSprite {
 	@Override
 	public void link(Char ch) {
 		super.link(ch);
-		if (ch.HP*2 <= ch.HT)
+		if ((ch.HP.multiply(BigInteger.TWO).compareTo(ch.HT) <= 0))
 			spray(true);
 	}
 

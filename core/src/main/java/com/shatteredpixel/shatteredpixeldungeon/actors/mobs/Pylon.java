@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -65,7 +69,7 @@ public class Pylon extends Mob {
 	{
 		spriteClass = PylonSprite.class;
 
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? Dungeon.getCycleMultiplier(80) : Dungeon.getCycleMultiplier(50);
+		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? Dungeon.getCycleMultiplier(BigInteger.valueOf(80)) : Dungeon.getCycleMultiplier(BigInteger.valueOf(50));
 
 		maxLvl = -2;
 
@@ -112,7 +116,7 @@ public class Pylon extends Mob {
 
 		if (Random.Float() < 0.5f && Dungeon.depth > 26){
 			List<Class<? extends Blob>> blobs = Arrays.asList(ToxicGas.class, ConfusionGas.class, Blizzard.class, Inferno.class, Electricity.class, Web.class);
-			GameScene.add(Blob.seed(pos, 500, Random.element(blobs)));
+			GameScene.add(Blob.seed(pos, BigInteger.valueOf(500), Random.element(blobs)));
 		}
 
 		if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
@@ -154,7 +158,7 @@ public class Pylon extends Mob {
 	private void shockChar( Char ch ){
 		if (ch != null && !(ch instanceof DM300)){
 			ch.sprite.flash();
-			ch.damage(Dungeon.NormalLongRange(10, 20) + Dungeon.cycle * 60L, new Electricity());
+			ch.damage(Dungeon.NormalLongRange(BigInteger.TEN, BigInteger.valueOf(20)).add(BigInteger.valueOf(Dungeon.cycle * 60L)), new Electricity());
 
 			if (ch == Dungeon.hero) {
 				Statistics.qualifiedForBossChallengeBadge = false;
@@ -215,16 +219,16 @@ public class Pylon extends Mob {
 	}
 
 	@Override
-	public void damage(long dmg, Object src) {
-		if (dmg >= 15 + Dungeon.cycle * 60L && Dungeon.cycle < 2){
+	public void damage(BigInteger dmg, Object src) {
+		if ((dmg.compareTo(BigInteger.valueOf(15 + Dungeon.cycle * 60L)) >= 0) && Dungeon.cycle < 2){
 			//takes 15/16/17/18/19/20 dmg at 15/17/20/24/29/36 incoming dmg
-			dmg = 14 + Dungeon.cycle * 60L + (int)(Math.sqrt(8*(dmg - 14) + 1) - 1)/2;
+			dmg = BigInteger.valueOf(14 + Dungeon.cycle * 60L + (int)(Math.sqrt(BigInteger.valueOf(8).multiply((dmg.subtract(BigInteger.valueOf(14)))).add(BigInteger.ONE).doubleValue()) - 1)/2);
 		}
 
 		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
 		if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
-			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmg/2f);
-			else                                                    lock.addTime(dmg);
+			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(Big.div(Big.dec(dmg), Big.dec(2f)).floatValue());
+			else                                                    lock.addTime(dmg.floatValue());
 		}
 		super.damage(dmg, src);
 	}

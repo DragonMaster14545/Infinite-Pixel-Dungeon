@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -223,18 +225,18 @@ abstract public class KindOfWeapon extends EquipableItem {
 		}
 	}
 
-	public long min(){
-		return (min(buffedLvl())*getRarityMultiplier());
+	public BigInteger min(){
+		return (min(buffedLvl()).multiply(getRarityMultiplier()));
 	}
 
-	public long max(){
-		return (max(buffedLvl())*getRarityMultiplier());
+	public BigInteger max(){
+		return (max(buffedLvl()).multiply(getRarityMultiplier()));
 	}
 
-	abstract public long min(long lvl);
-	abstract public long max(long lvl);
+	abstract public BigInteger min(BigInteger lvl);
+	abstract public BigInteger max(BigInteger lvl);
 
-	public long damageRoll( Char owner ) {
+	public BigInteger damageRoll( Char owner ) {
 		if (owner instanceof Hero){
 			return (Hero.heroDamageIntRange(min(), max()));
 		} else {
@@ -270,11 +272,11 @@ abstract public class KindOfWeapon extends EquipableItem {
 		}
 	}
 
-	public long defenseFactor( Char owner ) {
-		return 0;
+	public BigInteger defenseFactor( Char owner ) {
+		return BigInteger.ZERO;
 	}
 	
-	public long proc( Char attacker, Char defender, long damage ) {
+	public BigInteger proc( Char attacker, Char defender, BigInteger damage ) {
 		return damage;
 	}
 

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -52,13 +56,13 @@ public class Collective extends Weapon.Enchantment {
         private static ItemSprite.Glowing WHITE = new ItemSprite.Glowing( 0xFFFFFF, 0.2f );
 
         @Override
-        public long proc( Weapon weapon, Char attacker, Char defender, long damage ) {
-                long level = Math.max( 0, weapon.buffedLvl() );
+        public BigInteger proc( Weapon weapon, Char attacker, Char defender, BigInteger damage ) {
+                BigInteger level = BigInteger.ZERO.max(weapon.buffedLvl());
 
                 // lvl 0 - 12.5%
                 // lvl 1 - 20%
                 // lvl 2 - 27.27%
-                damage *= Buff.affect(attacker, MultiApplier.class).getMulti();
+                damage = Big.trunc(Big.dec(damage).multiply(Big.dec(Buff.affect(attacker, MultiApplier.class).getMulti())));
                 Buff.affect(attacker, MultiApplier.class).applyMulti();
 
                 return damage;

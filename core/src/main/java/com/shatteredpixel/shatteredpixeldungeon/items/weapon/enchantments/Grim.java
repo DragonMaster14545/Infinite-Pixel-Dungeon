@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -37,16 +41,16 @@ public class Grim extends Weapon.Enchantment {
 	private static ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x000000 );
 	
 	@Override
-	public long proc( Weapon weapon, Char attacker, Char defender, long damage ) {
+	public BigInteger proc( Weapon weapon, Char attacker, Char defender, BigInteger damage ) {
 
 		if (defender.isImmune(Grim.class)) {
 			return damage;
 		}
 
-		long level = Math.max( 0, weapon.buffedLvl() );
+		BigInteger level = BigInteger.ZERO.max(weapon.buffedLvl());
 
 		//scales from 0 - 50% based on how low hp the enemy is, plus 0-5% per level
-		float maxChance = 0.5f + .05f*level;
+		float maxChance = Big.dec(0.5f).add(Big.dec(.05f).multiply(Big.dec(level))).floatValue();
 		maxChance *= procChanceMultiplier(attacker);
 
 		//we defer logic using an actor here so we can know the true final damage

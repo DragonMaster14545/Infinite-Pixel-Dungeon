@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -50,21 +52,21 @@ public class Web extends Blob {
 		for (int i = area.left; i < area.right; i++){
 			for (int j = area.top; j < area.bottom; j++){
 				cell = i + j*l.width();
-				off[cell] = cur[cell] > 0 ? cur[cell] - 1 : 0;
+				off[cell] = (cur[cell].compareTo(BigInteger.ZERO) > 0) ? cur[cell].subtract(BigInteger.ONE) : BigInteger.ZERO;
 
-				volume += off[cell];
+				volume = volume.add(off[cell]);
 
-				l.solid[cell] = off[cell] > 0 || (Terrain.flags[l.map[cell]] & Terrain.SOLID) != 0;
-				l.flamable[cell] = off[cell] > 0 || (Terrain.flags[l.map[cell]] & Terrain.FLAMABLE) != 0;
+				l.solid[cell] = (off[cell].compareTo(BigInteger.ZERO) > 0) || (Terrain.flags[l.map[cell]] & Terrain.SOLID) != 0;
+				l.flamable[cell] = (off[cell].compareTo(BigInteger.ZERO) > 0) || (Terrain.flags[l.map[cell]] & Terrain.FLAMABLE) != 0;
 			}
 		}
 	}
 
 	@Override
-	public void seed(Level level, int cell, long amount) {
+	public void seed(Level level, int cell, BigInteger amount) {
 		super.seed(level, cell, amount);
-		level.solid[cell] = cur[cell] > 0 || (Terrain.flags[level.map[cell]] & Terrain.SOLID) != 0;
-		level.flamable[cell] = cur[cell] > 0 || (Terrain.flags[level.map[cell]] & Terrain.FLAMABLE) != 0;
+		level.solid[cell] = (cur[cell].compareTo(BigInteger.ZERO) > 0) || (Terrain.flags[level.map[cell]] & Terrain.SOLID) != 0;
+		level.flamable[cell] = (cur[cell].compareTo(BigInteger.ZERO) > 0) || (Terrain.flags[level.map[cell]] & Terrain.FLAMABLE) != 0;
 	}
 
 	//affects characters as they step on it. See Level.OccupyCell and Level.PressCell
@@ -84,8 +86,8 @@ public class Web extends Blob {
 		super.clear(cell);
 		if (cur == null) return;
 		Level l = Dungeon.level;
-		l.solid[cell] = cur[cell] > 0 || (Terrain.flags[l.map[cell]] & Terrain.SOLID) != 0;
-		l.flamable[cell] = cur[cell] > 0 || (Terrain.flags[l.map[cell]] & Terrain.FLAMABLE) != 0;
+		l.solid[cell] = (cur[cell].compareTo(BigInteger.ZERO) > 0) || (Terrain.flags[l.map[cell]] & Terrain.SOLID) != 0;
+		l.flamable[cell] = (cur[cell].compareTo(BigInteger.ZERO) > 0) || (Terrain.flags[l.map[cell]] & Terrain.FLAMABLE) != 0;
 	}
 
 	@Override
@@ -96,10 +98,10 @@ public class Web extends Blob {
 
 	@Override
 	public void onBuildFlagMaps(Level l) {
-		if (volume > 0){
+		if ((volume.compareTo(BigInteger.ZERO) > 0)){
 			for (int i=0; i < l.length(); i++) {
-				l.solid[i] = l.solid[i] || cur[i] > 0;
-				l.flamable[i] = l.flamable[i] || cur[i] > 0;
+				l.solid[i] = l.solid[i] || (cur[i].compareTo(BigInteger.ZERO) > 0);
+				l.flamable[i] = l.flamable[i] || (cur[i].compareTo(BigInteger.ZERO) > 0);
 			}
 		}
 	}

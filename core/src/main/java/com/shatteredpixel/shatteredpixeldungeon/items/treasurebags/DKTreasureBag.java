@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.treasurebags;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.AquaBrew;
@@ -48,7 +51,7 @@ public class DKTreasureBag extends TreasureBag {
             items.add(new KingsCrown());
             Dungeon.LimitedDrops.ARMOR_KIT.drop();
         }
-        items.add(new Gold().quantity(Random.Long( 1500 + Dungeon.escalatingDepth() * 175, 2000 + Dungeon.escalatingDepth() * 233 )));
+        items.add(new Gold().quantity(BigInteger.valueOf(Random.Long( Big.toLong(BigInteger.valueOf(1500).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(175)))), Big.toLong(BigInteger.valueOf(2000).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(233)))) ))));
         items.add(Generator.randomUsingDefaults(Generator.Category.ARTIFACT));
         items.add(Generator.randomUsingDefaults(Generator.Category.WEAPON));
         items.add(Generator.randomUsingDefaults(Generator.Category.ARMOR));
@@ -59,13 +62,13 @@ public class DKTreasureBag extends TreasureBag {
                 Dungeon.LimitedDrops.DK_DROPS.drop();
             }
             for (int i = 0; i < 15; i++) items.add(Generator.random());
-            items.add(new Recycle().quantity(50));
-            items.add(new AquaBrew().quantity(50));
-            items.add(new UnstableSpell().quantity(50));
-            items.add(new UnstableBrew().quantity(50));
+            items.add(new Recycle().quantity(BigInteger.valueOf(50)));
+            items.add(new AquaBrew().quantity(BigInteger.valueOf(50)));
+            items.add(new UnstableSpell().quantity(BigInteger.valueOf(50)));
+            items.add(new UnstableBrew().quantity(BigInteger.valueOf(50)));
         }
         if (Dungeon.cycle > 1){
-            items.add(new OverloadBeacon().quantity(2));
+            items.add(new OverloadBeacon().quantity(BigInteger.TWO));
             for (int i = 0; i < 3; i++) items.addAll(new BiggerGambleBag().items());
         }
         return items;

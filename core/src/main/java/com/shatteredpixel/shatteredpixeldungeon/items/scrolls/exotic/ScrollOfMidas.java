@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -59,10 +61,10 @@ public class ScrollOfMidas extends ExoticScroll {
 				if (!mob.properties().contains(Char.Property.BOSS)
 						&& !mob.properties().contains(Char.Property.MINIBOSS) && !(mob instanceof Hook)){
 
-					mob.EXP = 0;
+					mob.EXP = BigInteger.ZERO;
 					mob.alignment = ALLY;
 					Gold gold = (Gold) new Gold().random();
-					gold.quantity(gold.quantity()*Random.Int(7, 20));
+					gold.quantity(gold.quantity().multiply(BigInteger.valueOf(Random.Int(7, 20))));
 					Dungeon.level.drop(gold, mob.pos).sprite.drop();
 					
 					mob.destroy();

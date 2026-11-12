@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.mage;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -187,7 +191,7 @@ public class ElementalBlast extends ArmorAbility {
 							//*** Wand of Lightning ***
 							if (finalWandCls == WandOfLightning.class){
 								if (Dungeon.level.water[cell]){
-									GameScene.add( Blob.seed( cell, 4, Electricity.class ) );
+									GameScene.add( Blob.seed( cell, BigInteger.valueOf(4), Electricity.class ) );
 								}
 
 							//*** Wand of Fireblast ***
@@ -200,7 +204,7 @@ public class ElementalBlast extends ArmorAbility {
 									freeze.clear(cell);
 								}
 								if (Dungeon.level.flamable[cell]){
-									GameScene.add( Blob.seed( cell, 4, Fire.class ) );
+									GameScene.add( Blob.seed( cell, BigInteger.valueOf(4), Fire.class ) );
 								}
 
 							//*** Wand of Frost ***
@@ -271,11 +275,9 @@ public class ElementalBlast extends ArmorAbility {
 
 							//### Deal damage ###
 							Char mob = Actor.findChar(cell);
-							long damage = Math.round(Hero.heroDamageIntRange(15, 25)
-									* effectMulti
-									* damageFactors.get(finalWandCls));
+							BigInteger damage = Big.round(Big.dec(Hero.heroDamageIntRange(BigInteger.valueOf(15), BigInteger.valueOf(25))).multiply(Big.dec(effectMulti)).multiply(Big.dec(damageFactors.get(finalWandCls))));
 
-							if (mob != null && damage > 0 && mob.alignment != Char.Alignment.ALLY){
+							if (mob != null && (damage.compareTo(BigInteger.ZERO) > 0) && mob.alignment != Char.Alignment.ALLY){
 								mob.damage(damage, Reflection.newInstance(finalWandCls));
 								charsHit++;
 							}
@@ -297,7 +299,7 @@ public class ElementalBlast extends ArmorAbility {
 								//*** Wand of Corrosion ***
 								} else if (finalWandCls == WandOfCorrosion.class){
 									if (mob.isAlive() && mob.alignment != Char.Alignment.ALLY) {
-										Buff.affect( mob, Corrosion.class ).set(4, Math.round(6*effectMulti));
+										Buff.affect( mob, Corrosion.class ).set(4, BigInteger.valueOf(Math.round(6*effectMulti)));
 										charsHit++;
 									}
 
@@ -309,7 +311,7 @@ public class ElementalBlast extends ArmorAbility {
 										knockback *= effectMulti;
 										WandOfBlastWave.throwChar(mob,
 												new Ballistica(mob.pos, aim.collisionPos, Ballistica.MAGIC_BOLT),
-												knockback,
+												BigInteger.valueOf(knockback),
 												true,
 												true,
 												ElementalBlast.this);
@@ -331,30 +333,30 @@ public class ElementalBlast extends ArmorAbility {
 								//*** Wand of Warding ***
 								} else if (finalWandCls == WandOfWarding.class){
 									if (mob instanceof WandOfWarding.Ward){
-										((WandOfWarding.Ward) mob).wandHeal(0, effectMulti);
+										((WandOfWarding.Ward) mob).wandHeal(BigInteger.ZERO, effectMulti);
 										charsHit++;
 									}
 
 								//*** Wand of Transfusion ***
 								} else if (finalWandCls == WandOfTransfusion.class){
 									if(mob.alignment == Char.Alignment.ALLY || mob.buff(Charm.class) != null){
-										long healing = Math.round(10*effectMulti);
-										long shielding = (mob.HP + healing) - mob.HT;
-										if (shielding > 0){
-											healing -= shielding;
+										BigInteger healing = BigInteger.valueOf(Math.round(10*effectMulti));
+										BigInteger shielding = (mob.HP.add(healing)).subtract(mob.HT);
+										if ((shielding.compareTo(BigInteger.ZERO) > 0)){
+											healing = healing.subtract(shielding);
 											Buff.affect(mob, Barrier.class).setShield(shielding);
 										} else {
-											shielding = 0;
+											shielding = BigInteger.ZERO;
 										}
-										mob.HP += healing;
+										mob.HP = mob.HP.add(healing);
 
 										mob.sprite.emitter().burst(Speck.factory(Speck.HEALING), 4);
 
-										if (healing > 0) {
-											mob.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(healing), FloatingText.HEALING);
+										if ((healing.compareTo(BigInteger.ZERO) > 0)) {
+											mob.sprite.showStatusWithIcon(CharSprite.POSITIVE, healing.toString(), FloatingText.HEALING);
 										}
-										if (shielding > 0){
-											mob.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(shielding), FloatingText.SHIELDING);
+										if ((shielding.compareTo(BigInteger.ZERO) > 0)){
+											mob.sprite.showStatusWithIcon(CharSprite.POSITIVE, shielding.toString(), FloatingText.SHIELDING);
 										}
 									} else {
 										if (!mob.properties().contains(Char.Property.UNDEAD)) {
@@ -363,7 +365,7 @@ public class ElementalBlast extends ArmorAbility {
 											charm.ignoreHeroAllies = true;
 											mob.sprite.centerEmitter().start(Speck.factory(Speck.HEART), 0.2f, 3);
 										} else {
-											damage = Math.round(Hero.heroDamageIntRange(15, 25) * effectMulti);
+											damage = Big.round(Big.dec(Hero.heroDamageIntRange(BigInteger.valueOf(15), BigInteger.valueOf(25))).multiply(Big.dec(effectMulti)));
 											mob.damage(damage, Reflection.newInstance(finalWandCls));
 											mob.sprite.emitter().start(ShadowParticle.UP, 0.05f, 10);
 										}
@@ -404,7 +406,7 @@ public class ElementalBlast extends ArmorAbility {
 						} else if (finalWandCls == WandOfLivingEarth.class && charsHit > 0){
 							for (Mob m : Dungeon.level.mobs){
 								if (m instanceof WandOfLivingEarth.EarthGuardian){
-									((WandOfLivingEarth.EarthGuardian) m).setInfo(hero, 0, Math.round(effectMulti*charsHit*5));
+									((WandOfLivingEarth.EarthGuardian) m).setInfo(hero, BigInteger.ZERO, BigInteger.valueOf(Math.round(effectMulti*charsHit*5)));
 									m.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + charsHit);
 									break;
 								}
@@ -426,7 +428,7 @@ public class ElementalBlast extends ArmorAbility {
 						if (charsHit > 0 && hero.hasTalent(Talent.REACTIVE_BARRIER)){
 							int shielding = Math.round(charsHit*2.5f*hero.pointsInTalent(Talent.REACTIVE_BARRIER));
 							hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shielding), FloatingText.SHIELDING);
-							Buff.affect(hero, Barrier.class).setShield(shielding);
+							Buff.affect(hero, Barrier.class).setShield(BigInteger.valueOf(shielding));
 						}
 
 						hero.spendAndNext(Actor.TICK);

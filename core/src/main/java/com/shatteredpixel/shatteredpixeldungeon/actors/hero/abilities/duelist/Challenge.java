@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.duelist;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -200,7 +204,7 @@ public class Challenge extends ArmorAbility {
 		public static float DURATION = 10f;
 
 		private int left = (int)DURATION;
-		private long takenDmg = 0;
+		private BigInteger takenDmg = BigInteger.ZERO;
 
 		@Override
 		public int icon() {
@@ -217,8 +221,8 @@ public class Challenge extends ArmorAbility {
 			return Integer.toString(left);
 		}
 
-		public void addDamage(long dmg){
-			takenDmg += dmg;
+		public void addDamage(BigInteger dmg){
+			takenDmg = takenDmg.add(dmg);
 		}
 
 		@Override
@@ -256,19 +260,19 @@ public class Challenge extends ArmorAbility {
 					if (Dungeon.hero.hasTalent(Talent.INVIGORATING_VICTORY)){
 						DuelParticipant heroBuff = Dungeon.hero.buff(DuelParticipant.class);
 
-						long hpToHeal = 0;
+						BigInteger hpToHeal = BigInteger.ZERO;
 						if (heroBuff != null){
 							hpToHeal = heroBuff.takenDmg;
 						}
 
 						//heals for 30%/50%/65%/75% of taken damage plus 5/10/15/20 bonus, based on talent points
-						hpToHeal = Math.round(hpToHeal * (1f - Math.pow(0.707f, Dungeon.hero.pointsInTalent(Talent.INVIGORATING_VICTORY))));
-						hpToHeal += 5L*Dungeon.hero.pointsInTalent(Talent.INVIGORATING_VICTORY);
-						hpToHeal = Math.min(hpToHeal, Dungeon.hero.HT - Dungeon.hero.HP);
-						if (hpToHeal > 0){
-							Dungeon.hero.HP += hpToHeal;
+						hpToHeal = Big.round(Big.dec(hpToHeal).multiply(Big.dec((1f - Math.pow(0.707f, Dungeon.hero.pointsInTalent(Talent.INVIGORATING_VICTORY))))));
+						hpToHeal = hpToHeal.add(BigInteger.valueOf(5L*Dungeon.hero.pointsInTalent(Talent.INVIGORATING_VICTORY)));
+						hpToHeal = hpToHeal.min(Dungeon.hero.HT.subtract(Dungeon.hero.HP));
+						if ((hpToHeal.compareTo(BigInteger.ZERO) > 0)){
+							Dungeon.hero.HP = Dungeon.hero.HP.add(hpToHeal);
 							Dungeon.hero.sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.33f, 6 );
-							Dungeon.hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString(hpToHeal), FloatingText.HEALING );
+							Dungeon.hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, hpToHeal.toString(), FloatingText.HEALING );
 						}
 					}
 				}
@@ -305,14 +309,14 @@ public class Challenge extends ArmorAbility {
 		public void storeInBundle(Bundle bundle) {
 			super.storeInBundle(bundle);
 			bundle.put(LEFT, left);
-			bundle.put(TAKEN_DMG, takenDmg);
+			Big.put(bundle, TAKEN_DMG, takenDmg);
 		}
 
 		@Override
 		public void restoreFromBundle(Bundle bundle) {
 			super.restoreFromBundle(bundle);
 			left = bundle.getInt(LEFT);
-			takenDmg = bundle.getLong(TAKEN_DMG);
+			takenDmg = Big.getBig(bundle, TAKEN_DMG);
 		}
 	}
 

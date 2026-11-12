@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -66,7 +70,7 @@ public class Raritize extends InventorySpell {
 		talentChance = 1/(float) Recipe.OUT_QUANTITY;
 	}
 
-	protected double chanceBoost() { return 1d + level(); }
+	protected double chanceBoost() { return Big.dec(1d).add(Big.dec(level())).doubleValue(); }
 
 	private static Rarity nextRarity( Rarity current ) {
 		if (current == null) return null;
@@ -126,17 +130,17 @@ public class Raritize extends InventorySpell {
 	@Override
 	public String desc() {
 		return Messages.get(this, "desc") + "\n\n" + Messages.get(this, "desc_chance")
-				+ (level() > 0 ? "\n\n" + Messages.get(this, "desc_boost", chanceBoost()) : "");
+				+ ((level().compareTo(BigInteger.ZERO) > 0) ? "\n\n" + Messages.get(this, "desc_boost", chanceBoost()) : "");
 	}
 	
 	@Override
-	public long value() {
-		return (long)(60 * (quantity/(float) Recipe.OUT_QUANTITY));
+	public BigInteger value() {
+		return Big.trunc((Big.dec(60).multiply((Big.div(Big.dec(quantity), Big.dec((float) Recipe.OUT_QUANTITY))))));
 	}
 
 	@Override
-	public long energyVal() {
-		return (long)(12 * (quantity/(float) Recipe.OUT_QUANTITY));
+	public BigInteger energyVal() {
+		return Big.trunc((Big.dec(12).multiply((Big.div(Big.dec(quantity), Big.dec((float) Recipe.OUT_QUANTITY))))));
 	}
 	
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
@@ -163,14 +167,14 @@ public class Raritize extends InventorySpell {
 	}
 
 	@Override
-	public long visiblyUpgraded() { return level(); }
+	public BigInteger visiblyUpgraded() { return level(); }
 
 	@Override
-	public long buffedVisiblyUpgraded() { return level(); }
+	public BigInteger buffedVisiblyUpgraded() { return level(); }
 
 	@Override
 	public boolean isSimilar( Item item ) {
-		return super.isSimilar( item ) && item.level() == level();
+		return super.isSimilar( item ) && (item.level().compareTo(level()) == 0);
 	}
 
 	public static class MergeRecipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe {
@@ -179,24 +183,24 @@ public class Raritize extends InventorySpell {
 		public boolean testIngredients( ArrayList<Item> ingredients ) {
 			if (ingredients == null || ingredients.size() != 2) return false;
 			if (!(ingredients.get( 0 ) instanceof Raritize) || !(ingredients.get( 1 ) instanceof Raritize)) return false;
-			return ingredients.get( 0 ).level() == ingredients.get( 1 ).level()
-					&& ingredients.get( 0 ).level() < MAX_LEVEL;
+			return (ingredients.get( 0 ).level().compareTo(ingredients.get( 1 ).level()) == 0)
+					&& (ingredients.get( 0 ).level().compareTo(BigInteger.valueOf(MAX_LEVEL)) < 0);
 		}
 
 		@Override
-		public long cost( ArrayList<Item> ingredients ) {
-			return 5 + ingredients.get( 0 ).level() * 5;
+		public BigInteger cost( ArrayList<Item> ingredients ) {
+			return BigInteger.valueOf(5).add(ingredients.get( 0 ).level().multiply(BigInteger.valueOf(5)));
 		}
 
 		@Override
 		public Item brew( ArrayList<Item> ingredients ) {
 			if (!testIngredients( ingredients )) return null;
-			long level = ingredients.get( 0 ).level();
+			BigInteger level = ingredients.get( 0 ).level();
 			for (Item ingredient : ingredients) {
-				ingredient.quantity( ingredient.quantity() - 1 );
+				ingredient.quantity( ingredient.quantity().subtract(BigInteger.ONE) );
 			}
 			Raritize result = new Raritize();
-			result.level( level + 1 );
+			result.level( level.add(BigInteger.ONE) );
 			result.identify();
 			return result;
 		}
@@ -205,7 +209,7 @@ public class Raritize extends InventorySpell {
 		public Item sampleOutput( ArrayList<Item> ingredients ) {
 			if (!testIngredients( ingredients )) return null;
 			Raritize result = new Raritize();
-			result.level( ingredients.get( 0 ).level() + 1 );
+			result.level( ingredients.get( 0 ).level().add(BigInteger.ONE) );
 			result.identify();
 			return result;
 		}

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret;
 
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -65,7 +67,7 @@ public class SecretHoardRoom extends SecretRoom {
 				goldPos = level.pointToCell(random());
 			} while (level.heaps.get(goldPos) != null);
 			Item gold = new Gold().random();
-			gold.quantity(Math.round(gold.quantity() * goldRatio));
+			gold.quantity(Big.round(Big.dec(gold.quantity()).multiply(Big.dec(goldRatio))));
 			level.drop(gold, goldPos);
 		}
 		

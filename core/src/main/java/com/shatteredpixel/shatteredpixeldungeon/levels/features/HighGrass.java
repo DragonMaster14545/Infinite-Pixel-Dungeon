@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.features;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -78,16 +82,16 @@ public class HighGrass {
 				Level.set(pos, Terrain.GRASS);
 			}
 			
-			long naturalismLevel = 0;
+			BigInteger naturalismLevel = BigInteger.ZERO;
 			
 			if (ch != null) {
 				SandalsOfNature.Naturalism naturalism = ch.buff( SandalsOfNature.Naturalism.class );
 				if (naturalism != null) {
 					if (!naturalism.isCursed()) {
-						naturalismLevel = naturalism.itemLevel() + 1;
+						naturalismLevel = naturalism.itemLevel().add(BigInteger.ONE);
 						naturalism.charge();
 					} else {
-						naturalismLevel = -1;
+						naturalismLevel = BigInteger.valueOf(-1);
 					}
 				}
 
@@ -125,12 +129,12 @@ public class HighGrass {
 			if (Dungeon.level instanceof MiningLevel
 					&& Blacksmith.Quest.Type() == Blacksmith.Quest.FUNGI
 					&& Random.Int(3) != 0){
-				naturalismLevel = -1;
+				naturalismLevel = BigInteger.valueOf(-1);
 			}
 			
-			if (naturalismLevel >= 0) {
+			if ((naturalismLevel.compareTo(BigInteger.ZERO) >= 0)) {
 				// Seed, scales from 1/25 to 1/9
-				float lootChance = 1/(25f - naturalismLevel*4f);
+				float lootChance = Big.div(Big.dec(1), (Big.dec(25f).subtract(Big.dec(naturalismLevel).multiply(Big.dec(4f))))).floatValue();
 
 				// absolute max drop rate is ~1/6.5 with footwear of nature, ~1/18 without
 				lootChance *= PetrifiedSeed.grassLootMultiplier();
@@ -144,7 +148,7 @@ public class HighGrass {
 				}
 				
 				// Dew, scales from 1/6 to 1/4
-				lootChance = 1/(6f -naturalismLevel/2f);
+				lootChance = Big.div(Big.dec(1), (Big.dec(6f).subtract(Big.div(Big.dec(naturalismLevel), Big.dec(2f))))).floatValue();
 
 				//grassy levels spawn half as much dew
 				if (Dungeon.level != null && Dungeon.level.feeling == Level.Feeling.GRASS){

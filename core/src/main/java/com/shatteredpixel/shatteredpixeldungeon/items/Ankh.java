@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -131,7 +133,7 @@ public class Ankh extends Item {
 	}
 	
 	@Override
-	public long value() {
-		return 50 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(50).multiply(quantity);
 	}
 }

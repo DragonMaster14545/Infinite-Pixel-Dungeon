@@ -1,5 +1,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -94,25 +98,25 @@ public class ShulkerBox extends Item {
         return contents.isEmpty();
     }
 
-	public long capacity() {
-		return BASE_CAPACITY + CAPACITY_PER_LEVEL * level();
+	public BigInteger capacity() {
+		return BigInteger.valueOf(BASE_CAPACITY).add(BigInteger.valueOf(CAPACITY_PER_LEVEL).multiply(level()));
 	}
 
-	public long maxItemLevel() {
+	public BigInteger maxItemLevel() {
 		return scaledLimit();
 	}
 
-	public long maxQuantity() {
+	public BigInteger maxQuantity() {
 		return scaledLimit();
 	}
 
-	private long scaledLimit() {
-		long normal = BASE_LIMIT + LIMIT_PER_LEVEL * level();
-		return Math.max(1, Math.round(normal * VaultStore.limitPercent() / 100f));
+	private BigInteger scaledLimit() {
+		BigInteger normal = BigInteger.valueOf(BASE_LIMIT).add(BigInteger.valueOf(LIMIT_PER_LEVEL).multiply(level()));
+		return BigInteger.ONE.max(Big.round(Big.div(Big.dec(normal.multiply(BigInteger.valueOf(VaultStore.limitPercent()))), Big.dec(100f))));
 	}
 
-	private long quantityRoomFor(Item item) {
-		long existing = 0;
+	private BigInteger quantityRoomFor(Item item) {
+		BigInteger existing = BigInteger.ZERO;
 		if (item.stackable) {
 			for (Item i : contents) {
 				if (item.isSimilar(i)) {
@@ -121,11 +125,11 @@ public class ShulkerBox extends Item {
 				}
 			}
 		}
-		return Math.max(0, maxQuantity() - existing);
+		return BigInteger.ZERO.max(maxQuantity().subtract(existing));
 	}
 
     private boolean hasRoomFor(Item item) {
-        if (contents.size() < capacity()) return true;
+        if ((BigInteger.valueOf(contents.size()).compareTo(capacity()) < 0)) return true;
         if (item.stackable) {
             for (Item i : contents) {
                 if (item.isSimilar(i)) return true;
@@ -164,19 +168,19 @@ public class ShulkerBox extends Item {
             return;
         }
 
-        if (item.level() > maxItemLevel()) {
+        if ((item.level().compareTo(maxItemLevel()) > 0)) {
 			GLog.w(Messages.get(this, "level_limit", maxItemLevel()));
 			return;
 		}
 
-		long room = quantityRoomFor(item);
-		if (room <= 0) {
+		BigInteger room = quantityRoomFor(item);
+		if ((room.compareTo(BigInteger.ZERO) <= 0)) {
 			GLog.w(Messages.get(this, "stack_limit", maxQuantity()));
 			return;
 		}
 
 		Item toStore = item;
-		if (item.quantity() > room) {
+		if ((item.quantity().compareTo(room) > 0)) {
 			Item part = item.split(room);
 			if (part == null) {
 				GLog.w(Messages.get(this, "stack_limit", maxQuantity()));
@@ -359,7 +363,7 @@ public class ShulkerBox extends Item {
             if (ga != gb) return ga - gb;
             int c = a.name().compareToIgnoreCase(b.name());
             if (c != 0) return c;
-            return Long.compare(b.level(), a.level());
+            return Long.compare(Big.toLong(b.level()), Big.toLong(a.level()));
         });
         for (int i = 0; i < rest.size(); i++) {
             contents.set(p + i, rest.get(i));
@@ -492,12 +496,12 @@ public class ShulkerBox extends Item {
 
     @Override
     public boolean isUpgradable() {
-        return level() < MAX_LEVEL;
+        return (level().compareTo(BigInteger.valueOf(MAX_LEVEL)) < 0);
 	}
 
 	@Override
 	public Item upgrade() {
-		if (level() >= MAX_LEVEL) return this;
+		if ((level().compareTo(BigInteger.valueOf(MAX_LEVEL)) >= 0)) return this;
 		super.upgrade();
 		levelKnown = true;
 		GLog.p(Messages.get(this, "upgraded", capacity()));
@@ -515,9 +519,9 @@ public class ShulkerBox extends Item {
     }
 
     @Override
-    public long value() {
-        long total = 420L + 40L * level();
-        for (Item i : contents) total += i.value();
+    public BigInteger value() {
+        BigInteger total = BigInteger.valueOf(420L).add(BigInteger.valueOf(40L).multiply(level()));
+        for (Item i : contents) total = total.add(i.value());
         return total;
     }
 
@@ -561,7 +565,7 @@ public class ShulkerBox extends Item {
     public void restoreFromBundle(Bundle bundle) {
         super.restoreFromBundle(bundle);
         if (bundle.contains(BOX_ID)) {
-            boxId = bundle.getLong(BOX_ID);
+            boxId = Big.toLong(Big.getBig(bundle, BOX_ID));
         }
         contents.clear();
         for (Bundlable b : bundle.getCollection(CONTENTS)) {
@@ -570,7 +574,7 @@ public class ShulkerBox extends Item {
         pinned = bundle.contains(PINNED) ? Math.max(0, Math.min(bundle.getInt(PINNED), contents.size())) : 0;
 		levelKnown = true;
 		cursedKnown = true;
-		if (level() > MAX_LEVEL) level(MAX_LEVEL);
+		if ((level().compareTo(BigInteger.valueOf(MAX_LEVEL)) > 0)) level(BigInteger.valueOf(MAX_LEVEL));
         if (bundle.contains(CUSTOM_COLOR)) {
             customColor = bundle.getBoolean(CUSTOM_COLOR);
             color = bundle.getInt(COLOR);

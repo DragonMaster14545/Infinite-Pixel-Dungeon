@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -85,8 +87,8 @@ public class Crossbow extends MeleeWeapon {
 	}
 
 	@Override
-	public long proc(Char attacker, Char defender, long damage) {
-		long dmg = super.proc(attacker, defender, damage);
+	public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
+		BigInteger dmg = super.proc(attacker, defender, damage);
 
 		//stronger elastic effect
 		if (attacker.buff(ChargedShot.class) != null && !(curItem instanceof Dart)){
@@ -97,7 +99,7 @@ public class Crossbow extends MeleeWeapon {
 			//knock them back along that ballistica
 			WandOfBlastWave.throwChar(defender,
 					trajectory,
-					3,
+					BigInteger.valueOf(3),
 					true,
 					true,
 					this);
@@ -107,9 +109,8 @@ public class Crossbow extends MeleeWeapon {
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  5L*(tier()+1) +    //25 base, down from 30
-				lvl*(tier()+1);     //+5 per level, down from +6
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(5L*(tier()+1)).add(lvl.multiply(BigInteger.valueOf((tier()+1))));     //+5 per level, down from +6
 	}
 
 	@Override
@@ -129,15 +130,15 @@ public class Crossbow extends MeleeWeapon {
 	@Override
 	public String abilityInfo() {
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", 3+buffedLvl(), 3+buffedLvl());
+			return Messages.get(this, "ability_desc", BigInteger.valueOf(3).add(buffedLvl()), BigInteger.valueOf(3).add(buffedLvl()));
 		} else {
 			return Messages.get(this, "typical_ability_desc", 3, 3);
 		}
 	}
 
 	@Override
-	public String upgradeAbilityStat(long level) {
-		return Long.toString(3 + level);
+	public String upgradeAbilityStat(BigInteger level) {
+		return BigInteger.valueOf(3).add(level).toString();
 	}
 
 	public static class ChargedShot extends Buff{

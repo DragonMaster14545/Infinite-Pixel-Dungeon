@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -71,12 +75,12 @@ public class ShrapnelBomb extends Bomb {
 		
 		for (Char ch : affected){
 			//regular bomb damage, which falls off at a rate of 5% per tile of distance
-			long damage = Math.round(Dungeon.NormalLongRange( Dungeon.scalingDepth()+5, 10 + Dungeon.scalingDepth() * 2 ));
+			BigInteger damage = Dungeon.NormalLongRange( Dungeon.scalingDepth().add(BigInteger.valueOf(5)), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.TWO)) );
 			if (Dungeon.hero.heroClass == HeroClass.ROGUE){
-				damage *= 2.5f;
+				damage = Big.trunc(Big.dec(damage).multiply(Big.dec(2.5f)));
 			}
-			damage = Math.round(damage * (1f - .05f*Dungeon.level.distance(cell, ch.pos)));
-			damage -= ch.drRoll();
+			damage = Big.round(Big.dec(damage).multiply(Big.dec((1f - .05f*Dungeon.level.distance(cell, ch.pos)))));
+			damage = damage.subtract(ch.drRoll());
 			ch.damage(damage, this);
 			if (ch == Dungeon.hero && !ch.isAlive()) {
 				Dungeon.fail(this);
@@ -85,8 +89,8 @@ public class ShrapnelBomb extends Bomb {
 	}
 	
 	@Override
-	public long value() {
+	public BigInteger value() {
 		//prices of ingredients
-		return quantity * (20 + 50);
+		return quantity.multiply(BigInteger.valueOf((20 + 50)));
 	}
 }

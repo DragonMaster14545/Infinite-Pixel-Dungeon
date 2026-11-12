@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.blacksmith;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -35,15 +39,13 @@ public abstract class BlacksmithWeapon extends MeleeWeapon {
     }
 
     @Override
-    public long min(long lvl) {
-        return  (tier()+Dungeon.cycle*7L)*2 +  //base
-                lvl*2;    //level scaling
+    public BigInteger min(BigInteger lvl) {
+        return  BigInteger.valueOf((tier()+Dungeon.cycle*7L)*2).add(lvl.multiply(BigInteger.TWO));    //level scaling
     }
 
     @Override
-    public long max(long lvl) {
-        return  7*(tier()+1+Dungeon.cycle*5L) +    //base
-                lvl*(tier()+1+Dungeon.cycle*5L);   //level scaling
+    public BigInteger max(BigInteger lvl) {
+        return  BigInteger.valueOf(7*(tier()+1+Dungeon.cycle*5L)).add(lvl.multiply(BigInteger.valueOf((tier()+1+Dungeon.cycle*5L))));   //level scaling
     }
 
     @Override
@@ -52,7 +54,7 @@ public abstract class BlacksmithWeapon extends MeleeWeapon {
     }
 
     @Override
-    public long value() {
-        return Math.round(super.value()*2.2f);
+    public BigInteger value() {
+        return Big.round(Big.dec(super.value()).multiply(Big.dec(2.2f)));
     }
 }

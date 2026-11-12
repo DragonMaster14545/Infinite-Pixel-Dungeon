@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -179,7 +183,7 @@ public class AscensionChallenge extends Buff {
 		BuffIndicator.refreshHero();
 	}
 
-	public static long AscensionCorruptResist(Mob m){
+	public static BigInteger AscensionCorruptResist(Mob m){
 		//default to just using their EXP value if no ascent challenge is happening
 		if (Dungeon.hero.buff(AscensionChallenge.class) == null){
 			return m.EXP;
@@ -188,14 +192,14 @@ public class AscensionChallenge extends Buff {
 		if (m instanceof Ratmogrify.TransmogRat){
 			m = ((Ratmogrify.TransmogRat) m).getOriginal();
 		}
-		long xp = m.EXP;
+		BigInteger xp = m.EXP;
 		for (Class<?extends Mob> cls : modifiers.keySet()){
 			if (cls.isAssignableFrom(m.getClass())){
-				xp = Math.max(Eye.experience(), m.EXP); //same exp as an eye
+				xp = Eye.experience().max(m.EXP); //same exp as an eye
 			}
 		}
-		if (m instanceof RipperDemon) xp *= 0.75f;
-		if (m instanceof Ghoul) xp *= 0.5f;
+		if (m instanceof RipperDemon) xp = Big.trunc(Big.dec(xp).multiply(Big.dec(0.75f)));
+		if (m instanceof Ghoul) xp = Big.trunc(Big.dec(xp).multiply(Big.dec(0.5f)));
 
 		return xp;
 	}
@@ -214,7 +218,7 @@ public class AscensionChallenge extends Buff {
 			justAscended = true;
 			if (Dungeon.bossLevel()){
 				Dungeon.hero.buff(Hunger.class).satisfy(Hunger.STARVING);
-				Buff.affect(Dungeon.hero, Healing.class).setHeal(Dungeon.hero.HT, 0, 20);
+				Buff.affect(Dungeon.hero, Healing.class).setHeal(Dungeon.hero.HT, 0, BigInteger.valueOf(20));
 			} else {
 				stacks += 2f;
 
@@ -280,7 +284,7 @@ public class AscensionChallenge extends Buff {
 		if (stacks >= 8 && !Dungeon.bossLevel()){
 			damageInc += (stacks-4)/4f;
 			if (damageInc >= 1){
-				target.damage((int)damageInc, this);
+				target.damage(BigInteger.valueOf((int)damageInc), this);
 				damageInc -= (int)damageInc;
 
 				if (target == Dungeon.hero && !target.isAlive()){

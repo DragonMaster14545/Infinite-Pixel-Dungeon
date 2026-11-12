@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.blacksmith;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -66,17 +70,17 @@ public class StarlightSmasher extends BlacksmithWeapon implements InternalKillsT
     public boolean starlight_power = false;
 
     @Override
-    public long min(long lvl) {
-        return Math.round(super.min(lvl)*8.5f);
+    public BigInteger min(BigInteger lvl) {
+        return Big.round(Big.dec(super.min(lvl)).multiply(Big.dec(8.5f)));
     }
 
     @Override
-    public long max(long lvl) {
-        return super.max(lvl)*8;
+    public BigInteger max(BigInteger lvl) {
+        return super.max(lvl).multiply(BigInteger.valueOf(8));
     }
 
     @Override
-    public long proc(Char attacker, Char defender, long damage) {
+    public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
         attacker.sprite.centerEmitter().start( Speck.factory( Speck.STAR ), 0.05f, 10 );
         Buff.affect(attacker, Paralysis.class, Random.Int(1, 3)
                 * (Math.round((1f/(1d + (speedMultiplier(attacker) - 1d) * 0.75f))*100))/100f);
@@ -163,10 +167,10 @@ public class StarlightSmasher extends BlacksmithWeapon implements InternalKillsT
                                                     if (target != null && target.isAlive() && target.alignment != curUser.alignment){
                                                         target.sprite.burst(0xBAFFFF,  25);
 
-                                                        int dmg = Math.round(damageRoll(curUser)*0.85f);
+                                                        int dmg = Big.toInt(Big.round(Big.dec(damageRoll(curUser)).multiply(Big.dec(0.85f))));
 
                                                         if (dmg > 0){
-                                                            target.damage(dmg, new WandOfMagicMissile());
+                                                            target.damage(BigInteger.valueOf(dmg), new WandOfMagicMissile());
                                                             Buff.affect(target, Blindness.class, delay+2f);
                                                         }
                                                     }
@@ -289,10 +293,10 @@ public class StarlightSmasher extends BlacksmithWeapon implements InternalKillsT
                                                 if (starlight_check){
                                                     targetCh.sprite.burst(0xBAFFFF,  15);
 
-                                                    int dmg = Math.round(damageRoll(curUser)*0.25f);
+                                                    int dmg = Big.toInt(Big.round(Big.dec(damageRoll(curUser)).multiply(Big.dec(0.25f))));
 
                                                     if (dmg > 0){
-                                                        targetCh.damage(dmg, new WandOfMagicMissile());
+                                                        targetCh.damage(BigInteger.valueOf(dmg), new WandOfMagicMissile());
                                                     }
                                                 }
                                             }

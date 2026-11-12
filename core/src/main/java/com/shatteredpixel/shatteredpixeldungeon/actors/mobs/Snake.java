@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -38,10 +42,10 @@ public class Snake extends Mob {
 	{
 		spriteClass = SnakeSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(4);
-		defenseSkill = Dungeon.getCycleMultiplier(25);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(4));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(25));
 		
-		EXP = Dungeon.getCycleMultiplier(2);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.TWO);
 		maxLvl = 7;
 		
 		loot = Generator.Category.SEED;
@@ -49,13 +53,13 @@ public class Snake extends Mob {
 	}
 	
 	@Override
-	public long damageRoll() {
-		return Random.NormalLongRange( Dungeon.getCycleMultiplier(1), Dungeon.getCycleMultiplier(4) );
+	public BigInteger damageRoll() {
+		return Big.normalRange(Dungeon.getCycleMultiplier(BigInteger.ONE), Dungeon.getCycleMultiplier(BigInteger.valueOf(4)));
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
-	    return Dungeon.getCycleMultiplier(10);
+	public BigInteger attackSkill(Char target ) {
+	    return Dungeon.getCycleMultiplier(BigInteger.TEN);
 	}
 
 	private static int dodges = 0;

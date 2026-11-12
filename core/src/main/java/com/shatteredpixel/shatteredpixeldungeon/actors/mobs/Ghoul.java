@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -51,10 +55,10 @@ public class Ghoul extends Mob {
 	{
 		spriteClass = GhoulSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(45);
-		defenseSkill = Dungeon.getCycleMultiplier(20);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(45));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(20));
 		
-		EXP = Dungeon.getCycleMultiplier(5);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(5));
 		maxLvl = 20;
 		
 		SLEEPING = new Sleeping();
@@ -68,18 +72,18 @@ public class Ghoul extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(16), Dungeon.getCycleMultiplier(22) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(16)), Dungeon.getCycleMultiplier(BigInteger.valueOf(22)) );
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(24);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(24));
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(4));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(4)));
 	}
 
 	@Override
@@ -292,14 +296,14 @@ public class Ghoul extends Mob {
 						return true;
 					}
 				}
-				ghoul.HP = Math.round(ghoul.HT/10f);
+				ghoul.HP = Big.round(Big.div(Big.dec(ghoul.HT), Big.dec(10f)));
 				ghoul.beingLifeLinked = false;
 				Actor.add(ghoul);
 				ghoul.timeToNow();
 				Dungeon.level.mobs.add(ghoul);
 				Dungeon.level.occupyCell( ghoul );
 				ghoul.sprite.idle();
-				ghoul.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Math.round(ghoul.HT/10f)), FloatingText.HEALING);
+				ghoul.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Big.toInt(Big.round(Big.div(Big.dec(ghoul.HT), Big.dec(10f))))), FloatingText.HEALING);
 				super.detach();
 				return true;
 			}

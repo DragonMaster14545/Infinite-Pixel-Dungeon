@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
@@ -65,7 +67,7 @@ public class BlackPsycheChest extends Item {
     public ArrayList<String> actions(Hero hero ) {
         ArrayList<String> actions = super.actions(hero);
         actions.add(AC_ACCESS);
-        if (Dungeon.hero.lvl >= PsycheChest.neededLevel()) actions.add(AC_RESET);
+        if ((BigInteger.valueOf(Dungeon.hero.lvl).compareTo(PsycheChest.neededLevel()) >= 0)) actions.add(AC_RESET);
         return actions;
     }
 
@@ -78,7 +80,7 @@ public class BlackPsycheChest extends Item {
             InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
             Game.switchScene( InterlevelScene.class );
         }
-        if (action.equals(AC_RESET) && Dungeon.hero.lvl >= PsycheChest.neededLevel()){
+        if (action.equals(AC_RESET) && (BigInteger.valueOf(Dungeon.hero.lvl).compareTo(PsycheChest.neededLevel()) >= 0)){
             Dungeon.goForNewCycle();
         }
 

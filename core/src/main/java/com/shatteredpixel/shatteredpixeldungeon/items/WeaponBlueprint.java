@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -37,17 +41,17 @@ import java.util.ArrayList;
 public class WeaponBlueprint extends BlueprintRecipe {
 
     private Class<? extends Weapon> weaponClass;
-    private long weaponLevel;
+    private BigInteger weaponLevel = BigInteger.ZERO;
 
     public WeaponBlueprint(){
         super();
     }
 
     public WeaponBlueprint ( Class<? extends Weapon> weaponClass ) {
-        this(weaponClass, 0);
+        this(weaponClass, BigInteger.ZERO);
     }
 
-    public WeaponBlueprint( Class<? extends Weapon> weaponClass, long weaponLevel ){
+    public WeaponBlueprint( Class<? extends Weapon> weaponClass, BigInteger weaponLevel ){
         this();
         applyWeaponClass( weaponClass );
         this.weaponLevel = weaponLevel;
@@ -102,7 +106,7 @@ public class WeaponBlueprint extends BlueprintRecipe {
         if (weaponClass != null){
             bundle.put( WEAPON_CLASS, weaponClass.getName() );
         }
-        bundle.put(WEAPON_LEVEL, weaponLevel);
+        Big.put(bundle, WEAPON_LEVEL, weaponLevel);
     }
 
     @Override
@@ -116,19 +120,19 @@ public class WeaponBlueprint extends BlueprintRecipe {
                 weaponClass = null;
             }
         }
-        weaponLevel = bundle.getLong( WEAPON_LEVEL );
+        weaponLevel = Big.getBig(bundle, WEAPON_LEVEL);
     }
 
     public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe {
 
-        private static final long COST = 20;
+        private static final BigInteger COST = BigInteger.valueOf(20);
 
         private static Weapon weaponIn( ArrayList<Item> ingredients ){
             if (ingredients.size() != 1) return null;
             Item item = ingredients.get(0);
             if (!(item instanceof Weapon)) return null;
             if (!item.isIdentified() || item.cursed) return null;
-            if (item.quantity() != 1) return null;
+            if ((item.quantity().compareTo(BigInteger.ONE) != 0)) return null;
             return (Weapon) item;
         }
 
@@ -138,7 +142,7 @@ public class WeaponBlueprint extends BlueprintRecipe {
         }
 
         @Override
-        public long cost( ArrayList<Item> ingredients ) {
+        public BigInteger cost( ArrayList<Item> ingredients ) {
             return COST;
         }
 
@@ -147,7 +151,7 @@ public class WeaponBlueprint extends BlueprintRecipe {
             Weapon weapon = weaponIn( ingredients );
             if (weapon == null) return null;
 
-            weapon.quantity( 0 );
+            weapon.quantity( BigInteger.ZERO );
 
             return new WeaponBlueprint( weapon.getClass() );
         }

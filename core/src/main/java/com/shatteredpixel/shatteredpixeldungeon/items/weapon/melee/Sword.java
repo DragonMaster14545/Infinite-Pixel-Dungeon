@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -51,9 +53,8 @@ public class Sword extends MeleeWeapon {
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  6L*(tier()+1) +    //24
-				lvl*(tier()+2);   //+5
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(6L*(tier()+1)).add(lvl.multiply(BigInteger.valueOf((tier()+2))));   //+5
 	}
 
 	@Override
@@ -73,26 +74,26 @@ public class Sword extends MeleeWeapon {
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
 		//+(5+lvl) damage, roughly +45% base dmg, +40% scaling
-		long dmgBoost = augment.damageFactor(5 + buffedLvl());
+		BigInteger dmgBoost = augment.damageFactor(BigInteger.valueOf(5).add(buffedLvl()));
 		Sword.cleaveAbility(hero, target, 1, dmgBoost, this);
 	}
 
 	@Override
 	public String abilityInfo() {
-		long dmgBoost = levelKnown ? 5 + buffedLvl() : 5;
+		BigInteger dmgBoost = levelKnown ? BigInteger.valueOf(5).add(buffedLvl()) : BigInteger.valueOf(5);
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
+			return Messages.get(this, "ability_desc", augment.damageFactor(min().add(dmgBoost)), augment.damageFactor(max().add(dmgBoost)));
 		} else {
-			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);
+			return Messages.get(this, "typical_ability_desc", min(BigInteger.ZERO).add(dmgBoost), max(BigInteger.ZERO).add(dmgBoost));
 		}
 	}
 
-	public String upgradeAbilityStat(long level){
-		long dmgBoost = 5 + level;
-		return augment.damageFactor(min(level)+dmgBoost) + "-" + augment.damageFactor(max(level)+dmgBoost);
+	public String upgradeAbilityStat(BigInteger level){
+		BigInteger dmgBoost = BigInteger.valueOf(5).add(level);
+		return augment.damageFactor(min(level).add(dmgBoost)) + "-" + augment.damageFactor(max(level).add(dmgBoost));
 	}
 
-	public static void cleaveAbility(Hero hero, Integer target, float dmgMulti, long dmgBoost, MeleeWeapon wep){
+	public static void cleaveAbility(Hero hero, Integer target, float dmgMulti, BigInteger dmgBoost, MeleeWeapon wep){
 		if (target == null) {
 			return;
 		}
@@ -116,7 +117,7 @@ public class Sword extends MeleeWeapon {
 			public void call() {
 				wep.beforeAbilityUsed(hero, enemy);
 				AttackIndicator.target(enemy);
-				if (hero.attack(enemy, dmgMulti, dmgBoost, Char.INFINITE_ACCURACY)){
+				if (hero.attack(enemy, dmgMulti, dmgBoost.floatValue(), Char.INFINITE_ACCURACY)){
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 				}
 

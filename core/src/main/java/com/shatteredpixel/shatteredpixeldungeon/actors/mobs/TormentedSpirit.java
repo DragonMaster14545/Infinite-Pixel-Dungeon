@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -43,14 +47,14 @@ public class TormentedSpirit extends Wraith {
 
 	//50% more damage scaling than regular wraiths
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( 1 + Math.round(1.5f*level)/2, 2 + Math.round(1.5f*level) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( BigInteger.ONE.add(Big.round(Big.dec(1.5f).multiply(Big.dec(level))).divide(BigInteger.TWO)), BigInteger.TWO.add(Big.round(Big.dec(1.5f).multiply(Big.dec(level)))) );
 	}
 
 	//50% more accuracy (and by extension evasion) scaling than regular wraiths
 	@Override
-	public long attackSkill(Char target ) {
-		return 10 + Math.round(1.5f*level);
+	public BigInteger attackSkill(Char target ) {
+		return BigInteger.TEN.add(Big.round(Big.dec(1.5f).multiply(Big.dec(level))));
 	}
 
 	public void cleanse(){
@@ -69,7 +73,7 @@ public class TormentedSpirit extends Wraith {
 		prize.cursed = false;
 		prize.cursedKnown = true;
 
-		if (prize.level() == 0 && Random.Int(2) == 0){
+		if ((prize.level().compareTo(BigInteger.ZERO) == 0) && Random.Int(2) == 0){
 			prize.upgrade();
 		}
 

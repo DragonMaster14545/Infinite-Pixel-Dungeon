@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.quest;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -45,12 +47,12 @@ public class MetalShard extends Item {
 	}
 	
 	@Override
-	public long value() {
-		return quantity * 50;
+	public BigInteger value() {
+		return quantity.multiply(BigInteger.valueOf(50));
 	}
 
 	@Override
-	public long energyVal() {
-		return quantity * 3;
+	public BigInteger energyVal() {
+		return quantity.multiply(BigInteger.valueOf(3));
 	}
 }

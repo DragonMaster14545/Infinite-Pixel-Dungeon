@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -60,12 +64,12 @@ public class WandOfBlastWave extends DamageWand {
 		collisionProperties = Ballistica.PROJECTILE;
 	}
 
-	public long min(long lvl){
-		return ((1+lvl)*getRarityMultiplier());
+	public BigInteger min(BigInteger lvl){
+		return ((BigInteger.ONE.add(lvl)).multiply(getRarityMultiplier()));
 	}
 
-	public long max(long lvl){
-		return ((3+3*lvl)*getRarityMultiplier());
+	public BigInteger max(BigInteger lvl){
+		return ((BigInteger.valueOf(3).add(BigInteger.valueOf(3).multiply(lvl))).multiply(getRarityMultiplier()));
 	}
 
 	@Override
@@ -90,8 +94,8 @@ public class WandOfBlastWave extends DamageWand {
 
 				if (ch.pos == bolt.collisionPos + i) {
 					Ballistica trajectory = new Ballistica(ch.pos, ch.pos + i, Ballistica.MAGIC_BOLT);
-					int strength = 1 + Math.round(buffedLvl() / 2f);
-					throwChar(ch, trajectory, strength, false, true, this);
+					int strength = Big.toInt(BigInteger.ONE.add(Big.round(Big.div(Big.dec(buffedLvl()), Big.dec(2f)))));
+					throwChar(ch, trajectory, BigInteger.valueOf(strength), false, true, this);
 				}
 
 			}
@@ -105,20 +109,20 @@ public class WandOfBlastWave extends DamageWand {
 
 			if (bolt.path.size() > bolt.dist+1 && ch.pos == bolt.collisionPos) {
 				Ballistica trajectory = new Ballistica(ch.pos, bolt.path.get(bolt.dist + 1), Ballistica.MAGIC_BOLT);
-				long strength = buffedLvl() + 3;
+				BigInteger strength = buffedLvl().add(BigInteger.valueOf(3));
 				throwChar(ch, trajectory, strength, false, true, this);
 			}
 		}
 
 	}
 
-	public static void throwChar(final Char ch, final Ballistica trajectory, long power,
+	public static void throwChar(final Char ch, final Ballistica trajectory, BigInteger power,
 	                             boolean closeDoors, boolean collideDmg, Object cause){
 		if (ch.properties().contains(Char.Property.BOSS)) {
-			power = (power+1)/2;
+			power = (power.add(BigInteger.ONE)).divide(BigInteger.TWO);
 		}
 
-		int dist = (int) Math.min(trajectory.dist, power);
+		int dist = Big.toInt(BigInteger.valueOf(trajectory.dist).min(power));
 
 		boolean collided = dist == trajectory.dist;
 
@@ -162,7 +166,7 @@ public class WandOfBlastWave extends DamageWand {
 				int oldPos = ch.pos;
 				ch.pos = newPos;
 				if (finalCollided && ch.isActive()) {
-					ch.damage(Dungeon.NormalLongRange(finalDist, 2*finalDist), new Knockback());
+					ch.damage(Dungeon.NormalLongRange(BigInteger.valueOf(finalDist), BigInteger.valueOf(2*finalDist)), new Knockback());
 					if (ch.isActive()) {
 						Paralysis.prolong(ch, Paralysis.class, 1 + finalDist/2f);
 					} else if (ch == Dungeon.hero){
@@ -187,7 +191,7 @@ public class WandOfBlastWave extends DamageWand {
 	public static class Knockback{}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
+	public void onHit(MagesStaff staff, Char attacker, Char defender, BigInteger damage) {
 
 		Talent.EmpoweredStrikeTracker tracker = attacker.buff(Talent.EmpoweredStrikeTracker.class);
 
@@ -222,8 +226,8 @@ public class WandOfBlastWave extends DamageWand {
 	}
 
 	@Override
-	public String upgradeStat2(long level) {
-		return Long.toString(3 + level);
+	public String upgradeStat2(BigInteger level) {
+		return BigInteger.valueOf(3).add(level).toString();
 	}
 
 	@Override

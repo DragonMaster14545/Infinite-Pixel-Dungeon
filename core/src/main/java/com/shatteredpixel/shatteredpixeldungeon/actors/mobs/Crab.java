@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
@@ -34,11 +36,11 @@ public class Crab extends Mob {
 	{
 		spriteClass = CrabSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(15);
-		defenseSkill = Dungeon.getCycleMultiplier(5);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(15));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(5));
 		baseSpeed = 2f;
 		
-		EXP = Dungeon.getCycleMultiplier(4);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(4));
 		maxLvl = 9;
 		
 		loot = new MysteryMeat();
@@ -46,17 +48,17 @@ public class Crab extends Mob {
 	}
 	
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(1), Dungeon.getCycleMultiplier(7) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.ONE), Dungeon.getCycleMultiplier(BigInteger.valueOf(7)) );
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(12);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(12));
 	}
 	
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(4));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(4)));
 	}
 }

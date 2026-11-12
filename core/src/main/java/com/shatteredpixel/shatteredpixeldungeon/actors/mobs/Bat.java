@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
@@ -37,11 +39,11 @@ public class Bat extends Mob {
 	{
 		spriteClass = BatSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(30);
-		defenseSkill = Dungeon.getCycleMultiplier(15);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(30));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(15));
 		baseSpeed = 2f;
 		
-		EXP = Dungeon.getCycleMultiplier(7);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(7));
 		maxLvl = 15;
 		
 		flying = true;
@@ -51,18 +53,18 @@ public class Bat extends Mob {
 	}
 	
 	@Override
-	public long damageRoll() {
-		return Dungeon.getCycleMultiplier(Dungeon.NormalLongRange( 5, 18 ));
+	public BigInteger damageRoll() {
+		return Dungeon.getCycleMultiplier(Dungeon.NormalLongRange( BigInteger.valueOf(5), BigInteger.valueOf(18) ));
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
-        return Dungeon.getCycleMultiplier(16);
+	public BigInteger attackSkill(Char target ) {
+        return Dungeon.getCycleMultiplier(BigInteger.valueOf(16));
 	}
 	
 	@Override
-	public long cycledDrRoll() {
-        return Dungeon.getCycleMultiplier(Dungeon.NormalLongRange(0,4));
+	public BigInteger cycledDrRoll() {
+        return Dungeon.getCycleMultiplier(Dungeon.NormalLongRange(BigInteger.ZERO,BigInteger.valueOf(4)));
 	}
 
     @Override
@@ -72,13 +74,13 @@ public class Bat extends Mob {
     }
 
 	@Override
-	public long attackProc( Char enemy, long damage ) {
+	public BigInteger attackProc( Char enemy, BigInteger damage ) {
 		damage = super.attackProc( enemy, damage );
-		long reg = Math.min( damage - 4 - Dungeon.cycle * 60L, HT - HP );
+		BigInteger reg = damage.subtract(BigInteger.valueOf(4)).subtract(BigInteger.valueOf(Dungeon.cycle * 60L)).min(HT.subtract(HP));
 		
-		if (reg > 0) {
-			HP += reg;
-			sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(reg), FloatingText.HEALING);
+		if ((reg.compareTo(BigInteger.ZERO) > 0)) {
+			HP = HP.add(reg);
+			sprite.showStatusWithIcon(CharSprite.POSITIVE, reg.toString(), FloatingText.HEALING);
 		}
 		
 		return damage;

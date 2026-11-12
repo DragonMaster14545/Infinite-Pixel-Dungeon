@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -62,7 +64,7 @@ public abstract class CrystalSpireSprite extends MobSprite {
 	public void updateIdle(){
 		float hpPercent = 1f;
 		if (ch != null){
-			hpPercent = ch.HP/(float)ch.HT;
+			hpPercent = Big.div(Big.dec(ch.HP), Big.dec(ch.HT.floatValue())).floatValue();
 		}
 
 		TextureFilm frames = new TextureFilm( texture, 24, 41 );

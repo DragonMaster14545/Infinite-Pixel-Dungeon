@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
@@ -114,8 +116,8 @@ public abstract class Trap implements Bundlable {
 	//returns the depth value the trap should use for determining its power
 	//If the trap is part of the level, it should use the true depth
 	//If it's not part of the level (e.g. effect from reclaim trap), use scaling depth
-	protected long scalingDepth(){
-		return (reclaimed || Dungeon.level.traps.get(pos) != this) ? Dungeon.scalingDepth() : Dungeon.depth;
+	protected BigInteger scalingDepth(){
+		return (reclaimed || Dungeon.level.traps.get(pos) != this) ? Dungeon.scalingDepth() : BigInteger.valueOf(Dungeon.depth);
 	}
 
 	public String name(){

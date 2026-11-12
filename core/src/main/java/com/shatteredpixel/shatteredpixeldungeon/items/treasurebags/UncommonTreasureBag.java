@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.treasurebags;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Perks;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -45,14 +47,14 @@ public class UncommonTreasureBag extends TreasureBag {
         if (Dungeon.hero.perks.contains(Perks.Perk.MORE_BAG)) amount *= 1.5f;
         for(int i = 0; i < amount; i++) items.add(Generator.random());
         for (Item item: items){
-            if (item.stackable && Random.Float() < 0.33f) item.quantity(item.quantity()+1);
-            if (item.isUpgradable() && Random.Float() < 0.33f) item.upgrade(1);
+            if (item.stackable && Random.Float() < 0.33f) item.quantity(item.quantity().add(BigInteger.ONE));
+            if (item.isUpgradable() && Random.Float() < 0.33f) item.upgrade(BigInteger.ONE);
         }
         return items;
     }
 
     @Override
-    public long value() {
-        return 300 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(300).multiply(quantity);
     }
 }

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -52,13 +56,13 @@ public class Interfered extends Weapon.Enchantment {
 	private static ItemSprite.Glowing WHITE = new ItemSprite.Glowing( 0xFFFFFF, 0.2f );
 
 	@Override
-	public long proc( Weapon weapon, Char attacker, Char defender, long damage ) {
-		long level = Math.max( 0, weapon.buffedLvl() );
+	public BigInteger proc( Weapon weapon, Char attacker, Char defender, BigInteger damage ) {
+		BigInteger level = BigInteger.ZERO.max(weapon.buffedLvl());
 
 		// lvl 0 - 12.5%
 		// lvl 1 - 20%
 		// lvl 2 - 27.27%
-		float procChance = (level+1f)/(level+8f) * procChanceMultiplier(attacker);
+		float procChance = Big.div((Big.dec(level).add(Big.dec(1f))), (Big.dec(level).add(Big.dec(8f)))).multiply(Big.dec(procChanceMultiplier(attacker))).floatValue();
 		if (Random.Float() < procChance) {
 
 			double powerMulti = Math.max(0.9d, procChance);
@@ -85,9 +89,9 @@ public class Interfered extends Weapon.Enchantment {
 		@Override
 		public boolean act() {
 
-			target.damage(Math.round(Dungeon.hero.damageRoll() * (0.1d + multi)), new Burning());
-			target.damage(Math.round(Dungeon.hero.damageRoll() * (0.1d + multi)), new Chill());
-			target.damage(Math.round(Dungeon.hero.damageRoll() * (0.1d + multi)), new Electricity());
+			target.damage(Big.round(Big.dec(Dungeon.hero.damageRoll()).multiply(Big.dec((0.1d + multi)))), new Burning());
+			target.damage(Big.round(Big.dec(Dungeon.hero.damageRoll()).multiply(Big.dec((0.1d + multi)))), new Chill());
+			target.damage(Big.round(Big.dec(Dungeon.hero.damageRoll()).multiply(Big.dec((0.1d + multi)))), new Electricity());
 
 			detach();
 			return true;

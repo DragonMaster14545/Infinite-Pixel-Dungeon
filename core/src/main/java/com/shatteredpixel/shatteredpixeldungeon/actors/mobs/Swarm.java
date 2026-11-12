@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -47,10 +49,10 @@ public class Swarm extends Mob {
 	{
 		spriteClass = SwarmSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(50);
-		defenseSkill = Dungeon.getCycleMultiplier(5);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(50));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(5));
 
-		EXP = Dungeon.getCycleMultiplier(3);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(3));
 		maxLvl = 9;
 		
 		flying = true;
@@ -75,7 +77,7 @@ public class Swarm extends Mob {
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle( bundle );
 		generation = bundle.getInt( GENERATION );
-		if (generation > 0) EXP = 0;
+		if (generation > 0) EXP = BigInteger.ZERO;
 	}
 
 	@Override
@@ -85,14 +87,14 @@ public class Swarm extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(1), Dungeon.getCycleMultiplier(4) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.ONE), Dungeon.getCycleMultiplier(BigInteger.valueOf(4)) );
 	}
 	
 	@Override
-	public long defenseProc( Char enemy, long damage ) {
+	public BigInteger defenseProc( Char enemy, BigInteger damage ) {
 
-		if (HP >= damage + 2) {
+		if ((HP.compareTo(damage.add(BigInteger.TWO)) >= 0)) {
 			ArrayList<Integer> candidates = new ArrayList<>();
 			
 			int[] neighbours = {pos + 1, pos - 1, pos + Dungeon.level.width(), pos - Dungeon.level.width()};
@@ -112,12 +114,12 @@ public class Swarm extends Mob {
 				clone.state = clone.HUNTING;
 				GameScene.add( clone, SPLIT_DELAY ); //we add before assigning HP due to ascension
 
-				clone.HP = (HP - damage) / 2;
+				clone.HP = (HP.subtract(damage)).divide(BigInteger.TWO);
 				Actor.add( new Pushing( clone, pos, clone.pos ) );
 
 				Dungeon.level.occupyCell(clone);
 
-				HP -= clone.HP;
+				HP = HP.subtract(clone.HP);
 			}
 		}
 		
@@ -125,14 +127,14 @@ public class Swarm extends Mob {
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(10);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.TEN);
 	}
 	
 	private Swarm split() {
 		Swarm clone = new Swarm();
 		clone.generation = generation + 1;
-		clone.EXP = 0;
+		clone.EXP = BigInteger.ZERO;
 		if (buff( Burning.class ) != null) {
 			Buff.affect( clone, Burning.class ).reignite( clone );
 		}

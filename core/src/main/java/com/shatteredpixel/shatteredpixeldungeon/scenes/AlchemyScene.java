@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
@@ -630,23 +632,23 @@ public class AlchemyScene extends PixelScene {
 
 			Recipe recipe = recipes.get(i);
 
-			long cost = recipe.cost(ingredients);
+			BigInteger cost = recipe.cost(ingredients);
 
 			outputs[i].visible = true;
 			outputs[i].setRect(outputs[0].left(), top, BTN_SIZE, BTN_SIZE);
 			outputs[i].item(recipe.sampleOutput(ingredients));
 			top += BTN_SIZE+gap;
 
-			long availableEnergy = Dungeon.energy;
+			BigInteger availableEnergy = Dungeon.energy;
 			if (toolkit != null){
-				availableEnergy += toolkit.availableEnergy();
+				availableEnergy = availableEnergy.add(toolkit.availableEnergy());
 			}
 
 			combines[i].visible = true;
 			combines[i].setRect(combines[0].left(), outputs[i].top()+5, 30, 20);
-			combines[i].enable(cost <= availableEnergy, cost);
+			combines[i].enable((cost.compareTo(availableEnergy) <= 0), cost);
 
-			if (cost > availableEnergy && recipe instanceof TrinketCatalyst.Recipe){
+			if ((cost.compareTo(availableEnergy) > 0) && recipe instanceof TrinketCatalyst.Recipe){
 				promptToAddEnergy = true;
 			}
 
@@ -678,12 +680,12 @@ public class AlchemyScene extends PixelScene {
 		Item result = null;
 		
 		if (recipe != null){
-			long cost = recipe.cost(ingredients);
+			BigInteger cost = recipe.cost(ingredients);
 			if (toolkit != null){
-				cost = toolkit.consumeEnergy(cost);
+				cost = BigInteger.valueOf(toolkit.consumeEnergy(cost));
 			}
 			Catalog.countUses(EnergyCrystal.class, cost);
-			Dungeon.energy -= cost;
+			Dungeon.energy = Dungeon.energy.subtract(cost);
 
 			String energyText = Messages.get(AlchemyScene.class, "energy") + " " + Dungeon.energy;
 			if (toolkit != null){
@@ -742,7 +744,7 @@ public class AlchemyScene extends PixelScene {
 		smokeEmitter.burst(Speck.factory( Speck.WOOL ), 10 );
 		Sample.INSTANCE.play( Assets.Sounds.PUFF );
 
-		long resultQuantity = result.quantity();
+		BigInteger resultQuantity = result.quantity();
 		if (!result.collect()){
 			Dungeon.level.drop(result, Dungeon.hero.pos);
 		}
@@ -760,7 +762,7 @@ public class AlchemyScene extends PixelScene {
 			for (int i = 0; i < inputs.length; i++) {
 				if (inputs[i] != null && inputs[i].item() != null) {
 					Item item = inputs[i].item();
-					if (item.quantity() <= 0) {
+					if ((item.quantity().compareTo(BigInteger.ZERO) <= 0)) {
 						inputs[i].item(null);
 					} else {
 						inputs[i].slot.updateText();
@@ -780,9 +782,9 @@ public class AlchemyScene extends PixelScene {
 		
 		int curslot = 0;
 		for (Item finding : toFind){
-			long needed = finding.quantity();
+			BigInteger needed = finding.quantity();
 			ArrayList<Item> found = inventory.getAllSimilar(finding);
-			while (!found.isEmpty() && needed > 0){
+			while (!found.isEmpty() && (needed.compareTo(BigInteger.ZERO) > 0)){
 				Item detached;
 				if (finding instanceof LiquidMetal || finding instanceof MissileWeapon) {
 					detached = found.get(0).detachAll(inventory.backpack);
@@ -791,7 +793,7 @@ public class AlchemyScene extends PixelScene {
 				}
 				inputs[curslot].item(detached);
 				curslot++;
-				needed -= detached.quantity();
+				needed = needed.subtract(detached.quantity());
 				if (detached == found.get(0)) {
 					found.remove(0);
 				}
@@ -1092,10 +1094,10 @@ public void showIdentify(Item item){
 		}
 
 		public void enable( boolean enabled ){
-			enable(enabled, 0);
+			enable(enabled, BigInteger.ZERO);
 		}
 
-		public void enable(boolean enabled, long cost ){
+		public void enable(boolean enabled, BigInteger cost ){
 			button.enable(enabled);
 			if (enabled) {
 				button.icon().tint(1, 1, 0, 1);
@@ -1107,7 +1109,7 @@ public void showIdentify(Item item){
 				costText.hardlight(0xFF0000);
 			}
 
-			if (cost == 0){
+			if ((cost.compareTo(BigInteger.ZERO) == 0)){
 				costText.visible = false;
 			} else {
 				costText.visible = true;

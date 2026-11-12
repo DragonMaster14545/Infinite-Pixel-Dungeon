@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.treasurebags;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
@@ -50,8 +53,8 @@ public class DM300TreasureBag extends TreasureBag {
     @Override
     protected ArrayList<Item> items() {
         ArrayList<Item> items = new ArrayList<>();
-        items.add(new MetalShard().quantity(Random.Int(2, 4)));
-        items.add(new Gold().quantity(Random.Long( 1000 + Dungeon.escalatingDepth() * 140, 1600 + Dungeon.escalatingDepth() * 165 )));
+        items.add(new MetalShard().quantity(BigInteger.valueOf(Random.Int(2, 4))));
+        items.add(new Gold().quantity(BigInteger.valueOf(Random.Long( Big.toLong(BigInteger.valueOf(1000).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(140)))), Big.toLong(BigInteger.valueOf(1600).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(165)))) ))));
         items.add(Generator.randomUsingDefaults(Generator.Category.ARMOR).random());
         if (Dungeon.cycle > 0){
             if (!Dungeon.LimitedDrops.DM_DROPS.dropped()){
@@ -65,11 +68,11 @@ public class DM300TreasureBag extends TreasureBag {
             for (int i = 0; i < 20; i++) items.add(Generator.randomUsingDefaults(Generator.Category.SCROLL).random());
             for (int i = 0; i < 20; i++) items.add(Reflection.newInstance(ExoticPotion.exoToReg.get(Generator.randomUsingDefaults(Generator.Category.SCROLL).getClass())));
             items.add(Generator.randomUsingDefaults(Generator.Category.FOOD));
-            items.add(new ReclaimTrap().quantity(10));
-            items.add(new CurseInfusion().quantity(10));
+            items.add(new ReclaimTrap().quantity(BigInteger.TEN));
+            items.add(new CurseInfusion().quantity(BigInteger.TEN));
         }
         if (Dungeon.cycle > 1){
-            items.add(new MetalShard().quantity(Random.Int(5, 15)));
+            items.add(new MetalShard().quantity(BigInteger.valueOf(Random.Int(5, 15))));
             for (int i = 0; i < 50; i++) items.add(Generator.random(Bomb.class));
         }
         return items;

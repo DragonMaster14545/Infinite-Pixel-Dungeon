@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -37,7 +41,7 @@ public class ArcaneArmor extends Buff {
 		type = buffType.POSITIVE;
 	}
 	
-	private long level = 0;
+	private BigInteger level = BigInteger.ZERO;
 	private int interval = 1;
 	
 	@Override
@@ -45,7 +49,7 @@ public class ArcaneArmor extends Buff {
 		if (target.isAlive()) {
 			
 			spend( interval );
-			if (--level <= 0) {
+			if (((level = level.subtract(BigInteger.ONE)).compareTo(BigInteger.ZERO) <= 0)) {
 				detach();
 			}
 			
@@ -58,13 +62,13 @@ public class ArcaneArmor extends Buff {
 		return true;
 	}
 	
-	public long level() {
+	public BigInteger level() {
 		return level;
 	}
 	
-	public void set( long value, int time ) {
+	public void set( BigInteger value, int time ) {
 		//decide whether to override, preferring high value + low interval
-		if (Math.sqrt(interval)*level < Math.sqrt(time)*value) {
+		if ((Big.dec(Math.sqrt(interval)).multiply(Big.dec(level)).compareTo(Big.dec(Math.sqrt(time)).multiply(Big.dec(value))) < 0)) {
 			level = value;
 			interval = time;
 			spend(time - cooldown() - 1);
@@ -85,14 +89,14 @@ public class ArcaneArmor extends Buff {
 	public float iconFadePercent() {
 		if (target instanceof Hero){
 			float max = ((Hero) target).lvl/2 + 5;
-			return (max-level)/max;
+			return Big.div((Big.dec(max).subtract(Big.dec(level))), Big.dec(max)).floatValue();
 		}
 		return 0;
 	}
 
 	@Override
 	public String iconTextDisplay() {
-		return Long.toString(level);
+		return level.toString();
 	}
 	
 	@Override
@@ -107,13 +111,13 @@ public class ArcaneArmor extends Buff {
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );
 		bundle.put( INTERVAL, interval );
-		bundle.put( LEVEL, level );
+		Big.put(bundle, LEVEL, level);
 	}
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle( bundle );
 		interval = bundle.getInt( INTERVAL );
-		level = bundle.getLong( LEVEL );
+		level = Big.getBig(bundle, LEVEL);
 	}
 }

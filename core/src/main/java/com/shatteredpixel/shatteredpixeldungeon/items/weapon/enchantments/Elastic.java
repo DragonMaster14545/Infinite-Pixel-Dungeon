@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
@@ -38,13 +42,13 @@ public class Elastic extends Weapon.Enchantment {
 	private static ItemSprite.Glowing PINK = new ItemSprite.Glowing( 0xFF00FF );
 	
 	@Override
-	public long proc(Weapon weapon, Char attacker, Char defender, long damage ) {
-		long level = Math.max( 0, weapon.buffedLvl() );
+	public BigInteger proc(Weapon weapon, Char attacker, Char defender, BigInteger damage ) {
+		BigInteger level = BigInteger.ZERO.max(weapon.buffedLvl());
 
 		// lvl 0 - 20%
 		// lvl 1 - 33%
 		// lvl 2 - 43%
-		float procChance = (level+1f)/(level+5f) * procChanceMultiplier(attacker);
+		float procChance = Big.div((Big.dec(level).add(Big.dec(1f))), (Big.dec(level).add(Big.dec(5f)))).multiply(Big.dec(procChanceMultiplier(attacker))).floatValue();
 		if (Random.Float() < procChance) {
 
 			float powerMulti = Math.max(1f, procChance);
@@ -56,7 +60,7 @@ public class Elastic extends Weapon.Enchantment {
 			//knock them back along that ballistica
 			WandOfBlastWave.throwChar(defender,
 					trajectory,
-					Math.round(2 * powerMulti),
+					BigInteger.valueOf(Math.round(2 * powerMulti)),
 					!(weapon instanceof MissileWeapon || weapon instanceof SpiritBow),
 					true,
 					this);

@@ -47,7 +47,7 @@ public class Alchemy extends Blob {
 				if (Dungeon.level.insideMap(cell)) {
 					off[cell] = cur[cell];
 
-					volume += off[cell];
+					volume = volume.add(off[cell]);
 				}
 			}
 		}

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -41,9 +45,9 @@ public class Trident extends MissileWeapon {
 	}
 
     @Override
-    public long proc(Char attacker, Char defender, long damage) {
+    public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
         Gold gold = (Gold) new Gold().random();
-        gold.quantity(Math.round (gold.quantity()* Dungeon.Float(0.2f, 0.7f)));
+        gold.quantity(Big.round(Big.dec(gold.quantity()).multiply(Big.dec(Dungeon.Float(0.2f, 0.7f)))));
         Dungeon.level.drop(gold, defender.pos).sprite.drop();
         return super.proc(attacker, defender, damage);
     }

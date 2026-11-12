@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
@@ -37,19 +39,19 @@ public class Albino extends Rat {
 	{
 		spriteClass = AlbinoSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(15);
-		EXP = Dungeon.getCycleMultiplier(2);
-        defenseSkill = Dungeon.getCycleMultiplier(10)-10;
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(15));
+		EXP = Dungeon.getCycleMultiplier(BigInteger.TWO);
+        defenseSkill = Dungeon.getCycleMultiplier(BigInteger.TEN).subtract(BigInteger.TEN);
 		
 		loot = new MysteryMeat();
 		lootChance = 1f;
 	}
 	
 	@Override
-	public long attackProc( Char enemy, long damage ) {
+	public BigInteger attackProc( Char enemy, BigInteger damage ) {
 		damage = super.attackProc( enemy, damage );
-		if (damage > 0 && Random.Int( 2 ) == 0) {
-			Buff.affect( enemy, Bleeding.class ).set( damage );
+		if ((damage.compareTo(BigInteger.ZERO) > 0) && Random.Int( 2 ) == 0) {
+			Buff.affect( enemy, Bleeding.class ).set( damage.doubleValue() );
 		}
 		
 		return damage;

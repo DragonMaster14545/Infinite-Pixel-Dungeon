@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
@@ -76,8 +79,8 @@ public enum Rankings {
     public Record latestWeekly;
 	public Record latestDailyReplay = null; //not stored, only meant to be temp
     public Record latestWeeklyReplay = null; //not stored, only meant to be temp
-	public LinkedHashMap<Long, Long> dailyScoreHistory = new LinkedHashMap<>();
-    public LinkedHashMap<Long, Long> weeklyScoreHistory = new LinkedHashMap<>();
+	public LinkedHashMap<Long, BigInteger> dailyScoreHistory = new LinkedHashMap<>();
+    public LinkedHashMap<Long, BigInteger> weeklyScoreHistory = new LinkedHashMap<>();
 
 	public void submit( boolean win, Object cause ) {
 		BattlePass.onRunEnd();
@@ -183,20 +186,20 @@ public enum Rankings {
 		save();
 	}
 
-	private long score(boolean win ) {
-		return (Statistics.goldCollected + Dungeon.hero.lvl * (win ? 26 : Dungeon.depth ) * 100) * (win ? 2 : 1);
+	private BigInteger score(boolean win ) {
+		return (Statistics.goldCollected.add(BigInteger.valueOf(Dungeon.hero.lvl * (win ? 26 : Dungeon.depth ) * 100))).multiply(BigInteger.valueOf((win ? 2 : 1)));
 	}
 
 	//assumes a ranking is loaded, or game is ending
-	public long calculateScore(){
+	public BigInteger calculateScore(){
 
 		if (Dungeon.initialVersion > 453){
 			Statistics.progressScore = Dungeon.hero.lvl * Statistics.deepestFloor * 25;
 			Statistics.progressScore = Math.min(Statistics.progressScore, 600_000);
 
-			if (Statistics.heldItemValue == 0) {
+			if ((Statistics.heldItemValue.compareTo(BigInteger.ZERO) == 0)) {
 				for (Item i : Dungeon.hero.belongings) {
-					Statistics.heldItemValue += i.value();
+					Statistics.heldItemValue = Statistics.heldItemValue.add(i.value());
 					if (i instanceof CorpseDust && Statistics.deepestFloor >= 10){
 						// in case player kept the corpse dust, for a necromancer run
                         //we also override the score here, ignoring penalties
@@ -204,8 +207,8 @@ public enum Rankings {
 					}
 				}
 			}
-			Statistics.treasureScore = (Statistics.goldCollected + Statistics.heldItemValue) / 1000;
-			Statistics.treasureScore = Math.min(Statistics.treasureScore, 1_000_000);
+			Statistics.treasureScore = (Statistics.goldCollected.add(Statistics.heldItemValue)).divide(BigInteger.valueOf(1000));
+			Statistics.treasureScore = Statistics.treasureScore.min(BigInteger.valueOf(1_000_000));
 
 			Statistics.exploreScore = 0;
 			int scorePerFloor = Statistics.floorsExplored.size * 50;
@@ -233,7 +236,7 @@ public enum Rankings {
 		//win multiplier is a simple 2x if run was a win, challenge multi is the same as 1.3.0
 		} else {
 			Statistics.progressScore = Dungeon.hero.lvl * Statistics.deepestFloor * 100;
-			Statistics.treasureScore = Math.min(Statistics.goldCollected, 30_000);
+			Statistics.treasureScore = Statistics.goldCollected.min(BigInteger.valueOf(30_000));
 
 			Statistics.exploreScore = Statistics.totalBossScore = Statistics.totalQuestScore = 0;
 
@@ -246,10 +249,9 @@ public enum Rankings {
 		Statistics.cycleMultiplier = Math.max(1, 2 * (float)Math.pow(10, Dungeon.cycle-1));
 		Statistics.cycleMultiplier = Math.round(Statistics.cycleMultiplier*20f)/20f;
 
-		Statistics.totalScore = Statistics.progressScore + Statistics.treasureScore + Statistics.exploreScore
-					+ Statistics.totalBossScore + Statistics.totalQuestScore;
+		Statistics.totalScore = BigInteger.valueOf(Statistics.progressScore).add(Statistics.treasureScore).add(BigInteger.valueOf(Statistics.exploreScore)).add(BigInteger.valueOf(Statistics.totalBossScore)).add(BigInteger.valueOf(Statistics.totalQuestScore));
 
-		Statistics.totalScore *= (long) (Statistics.winMultiplier * Statistics.chalMultiplier * Statistics.cycleMultiplier * Statistics.weeklyMultiplier);
+		Statistics.totalScore = Statistics.totalScore.multiply(Big.of((Statistics.winMultiplier * Statistics.chalMultiplier * Statistics.cycleMultiplier * Statistics.weeklyMultiplier)));
 
 		return Statistics.totalScore;
 	}
@@ -379,7 +381,7 @@ public enum Rankings {
 		}
 
         if (rec.gameData.contains(SEED)){
-            Dungeon.seed = rec.gameData.getLong(SEED);
+            Dungeon.seed = Big.toLong(Big.getBig(rec.gameData, SEED));
             Dungeon.customSeedText = rec.gameData.getString(CUSTOM_SEED);
             Dungeon.daily = rec.gameData.getBoolean(DAILY);
             Dungeon.dailyReplay = rec.gameData.getBoolean(DAILY_REPLAY);
@@ -418,9 +420,9 @@ public enum Rankings {
         bundle.put(LATEST_WEEKLY, latestWeekly);
 
 		long[] dates = new long[dailyScoreHistory.size()];
-		long[] scores = new long[dailyScoreHistory.size()];
+		BigInteger[] scores = Big.newArray(dailyScoreHistory.size());
         long[] weekly_dates = new long[weeklyScoreHistory.size()];
-        long[] weekly_scores = new long[weeklyScoreHistory.size()];
+        BigInteger[] weekly_scores = Big.newArray(weeklyScoreHistory.size());
 		int i = 0;
         int j = 0;
 		for (Long l : dailyScoreHistory.keySet()){
@@ -434,9 +436,9 @@ public enum Rankings {
             j++;
         }
 		bundle.put(DAILY_HISTORY_DATES, dates);
-		bundle.put(DAILY_HISTORY_SCORES, scores);
+		Big.putArray(bundle, DAILY_HISTORY_SCORES, scores);
         bundle.put(WEEKLY_HISTORY_DATES, weekly_dates);
-        bundle.put(WEEKLY_HISTORY_SCORES, weekly_scores);
+        Big.putArray(bundle, WEEKLY_HISTORY_SCORES, weekly_scores);
 
 		try {
 			FileUtils.bundleToFile( RANKINGS_FILE, bundle);
@@ -480,7 +482,7 @@ public enum Rankings {
 				latestDaily = (Record) bundle.get(LATEST_DAILY);
 
 				dailyScoreHistory.clear();
-				long[] scores = bundle.getLongArray(DAILY_HISTORY_SCORES);
+				BigInteger[] scores = Big.getBigArray(bundle, DAILY_HISTORY_SCORES);
 				int i = 0;
 				long latestDate = 0;
 				for (long date : bundle.getLongArray(DAILY_HISTORY_DATES)){
@@ -489,7 +491,7 @@ public enum Rankings {
 					i++;
 				}
 				if (latestDate > SPDSettings.lastDaily()){
-					SPDSettings.lastDaily(latestDate);
+					SPDSettings.lastDaily(BigInteger.valueOf(latestDate));
 				}
 			}
 
@@ -497,7 +499,7 @@ public enum Rankings {
                 latestWeekly = (Record) bundle.get(LATEST_WEEKLY);
 
                 weeklyScoreHistory.clear();
-                long[] scores = bundle.getLongArray(WEEKLY_HISTORY_SCORES);
+                BigInteger[] scores = Big.getBigArray(bundle, WEEKLY_HISTORY_SCORES);
                 int j = 0;
                 long latestDate = 0;
                 for (long date : bundle.getLongArray(WEEKLY_HISTORY_DATES)){
@@ -506,7 +508,7 @@ public enum Rankings {
                     j++;
                 }
                 if (latestDate > SPDSettings.lastWeekly()){
-                    SPDSettings.lastWeekly(latestDate);
+                    SPDSettings.lastWeekly(BigInteger.valueOf(latestDate));
                 }
             }
 
@@ -546,7 +548,7 @@ public enum Rankings {
 		public String gameID;
 
 		//Note this is for summary purposes, visible score should be re-calculated from game data
-		public long score;
+		public BigInteger score = BigInteger.ZERO;
 
 		public String customSeed;
 		public boolean daily;
@@ -584,7 +586,7 @@ public enum Rankings {
 			}
 			
 			win		    = bundle.getBoolean( WIN );
-			score	    = bundle.getLong( SCORE );
+			score	    = Big.getBig(bundle, SCORE);
 			customSeed  = bundle.getString( SEED );
 			daily       = bundle.getBoolean( DAILY );
             weekly       = bundle.getBoolean( WEEKLY );
@@ -615,7 +617,7 @@ public enum Rankings {
 			if (cause != null) bundle.put( CAUSE, cause );
 
 			bundle.put( WIN, win );
-			bundle.put( SCORE, score );
+			Big.put(bundle, SCORE, score);
 			bundle.put( SEED, customSeed );
 			bundle.put( DAILY, daily );
             bundle.put( WEEKLY, weekly );
@@ -644,7 +646,7 @@ public enum Rankings {
 				return -1;
 			}
 
-			int result = (int)Math.signum( rhs.score - lhs.score );
+			int result = (int)Math.signum( rhs.score.subtract(lhs.score).floatValue() );
 			if (result == 0) {
 				return (int)Math.signum( rhs.gameID.hashCode() - lhs.gameID.hashCode());
 			} else {

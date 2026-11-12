@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -514,9 +516,9 @@ public class KillEvolution extends Buff implements ActionIndicator.Action {
 
                 hero.sprite.emitter().start(Speck.factory(Speck.UP), 0.01f, 2);
                 if (Buff.affect(Dungeon.hero, KillEvolution.class).abilitiesEmpowered(Dungeon.hero)) {
-                    hero.belongings.weapon.upgrade(2);
+                    hero.belongings.weapon.upgrade(BigInteger.TWO);
                     if (hero.belongings.secondWep != null) {
-                        hero.belongings.secondWep.upgrade(2);
+                        hero.belongings.secondWep.upgrade(BigInteger.TWO);
                     }
                 } else {
                     hero.belongings.weapon.upgrade();

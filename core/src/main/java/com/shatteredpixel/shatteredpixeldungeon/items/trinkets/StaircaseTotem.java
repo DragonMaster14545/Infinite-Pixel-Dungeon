@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -31,21 +35,21 @@ public class StaircaseTotem extends Trinket {
 	}
 
 	@Override
-	protected long upgradeEnergyCost() {
+	protected BigInteger upgradeEnergyCost() {
 		//15 -> 17(32) -> 19(51) -> 21(72)
-		return 15+2*level();
+		return BigInteger.valueOf(15).add(BigInteger.TWO.multiply(level()));
 	}
 
     @Override
-    public long maxUpgrade() {
-        return 4;
+    public BigInteger maxUpgrade() {
+        return BigInteger.valueOf(4);
     }
 
 	@Override
 	public String statsDesc() {
 		if (isIdentified()){
-			return Messages.get(this, "stats_desc", Messages.decimalFormat("#.##", 100*(additionalRoomMulti((int)buffedLvl())-1)),
-                    Messages.decimalFormat("#.##", 100*(additionalMobMulti((int)buffedLvl())-1)));
+			return Messages.get(this, "stats_desc", Messages.decimalFormat("#.##", 100*(additionalRoomMulti(Big.toInt(buffedLvl()))-1)),
+                    Messages.decimalFormat("#.##", 100*(additionalMobMulti(Big.toInt(buffedLvl()))-1)));
 		} else {
 			return Messages.get(this, "typical_stats_desc", Messages.decimalFormat("#.##", 100*(additionalRoomMulti(0)-1)),
                     Messages.decimalFormat("#.##", 100*(additionalMobMulti(0)-1)));

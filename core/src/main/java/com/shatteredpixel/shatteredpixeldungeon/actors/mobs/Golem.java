@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -46,10 +48,10 @@ public class Golem extends Mob {
 	{
 		spriteClass = GolemSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(120);
-		defenseSkill = Dungeon.getCycleMultiplier(15);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(120));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(15));
 		
-		EXP = Dungeon.getCycleMultiplier(12);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(12));
 		maxLvl = 22;
 
 		loot = Random.oneOf(Generator.Category.WEAPON, Generator.Category.ARMOR);
@@ -63,18 +65,18 @@ public class Golem extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(25), Dungeon.getCycleMultiplier(30) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(25)), Dungeon.getCycleMultiplier(BigInteger.valueOf(30)) );
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(28);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(28));
 	}
 	
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(12));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(12)));
 	}
 
 	@Override

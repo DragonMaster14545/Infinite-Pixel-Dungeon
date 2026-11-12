@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -97,10 +99,10 @@ public class CrystalMimic extends Mimic {
 
 	//does not deal bonus damage, steals instead. See attackProc
 	@Override
-	public long damageRoll() {
+	public BigInteger damageRoll() {
 		if (alignment == Alignment.NEUTRAL) {
 			alignment = Alignment.ENEMY;
-			long dmg = super.damageRoll();
+			BigInteger dmg = super.damageRoll();
 			alignment = Alignment.NEUTRAL;
 			return dmg;
 		} else {
@@ -127,7 +129,7 @@ public class CrystalMimic extends Mimic {
 	}
 
 	@Override
-	public long attackProc(Char enemy, long damage) {
+	public BigInteger attackProc(Char enemy, BigInteger damage) {
 		if (alignment == Alignment.NEUTRAL && enemy == Dungeon.hero){
 			steal( Dungeon.hero );
 
@@ -154,9 +156,9 @@ public class CrystalMimic extends Mimic {
 		Item item;
 		do {
 			item = hero.belongings.randomUnequipped();
-		} while (tries-- > 0 && (item == null || item.unique || item.level() > 0));
+		} while (tries-- > 0 && (item == null || item.unique || (item.level().compareTo(BigInteger.ZERO) > 0)));
 
-		if (item != null && !item.unique && item.level() < 1 ) {
+		if (item != null && !item.unique && (item.level().compareTo(BigInteger.ONE) < 0)) {
 
 			GLog.w( Messages.get(this, "ate", item.name()) );
 			if (!item.stackable) {

@@ -1,5 +1,8 @@
 package com.shatteredpixel.shatteredpixeldungeon;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
@@ -16,12 +19,12 @@ public class SeasonalTasks {
 
     public static class Task {
         public final Type type;
-        public final long target;
-        public long progress;
+        public final BigInteger target;
+        public BigInteger progress = BigInteger.ZERO;
         public boolean completed;
         public boolean claimed;
 
-        Task( Type type, long target ){
+        Task( Type type, BigInteger target ){
             this.type = type;
             this.target = target;
         }
@@ -60,17 +63,17 @@ public class SeasonalTasks {
 
         for (int i = 0; i < Math.min( TASK_COUNT, pool.size() ); i++){
             Type type = pool.get(i);
-            long target;
+            BigInteger target;
             switch (type){
-                case REACH_DEPTH:    target = 25; break;
-                case SLAY_ENEMIES:   target = 100 + (long)(Math.random()*500); break;
-                case COMPLETE_RUNS:  target = 3 + (long)(Math.random()*10); break;
-                case DRINK_POTIONS:  target = 15 + (long)(Math.random()*50); break;
-                case READ_SCROLLS:   target = 15 + (long)(Math.random()*100); break;
-                case COLLECT_GOLD:   target = 200000 + (long)(Math.random()*300000); break;
-                case DIE_TIMES:      target = 2 + (long)(Math.random()*3); break;
-                case IDENTIFY_ITEMS: target = 30 + (long)(Math.random()*70); break;
-                default: target = 1; break;
+                case REACH_DEPTH:    target = BigInteger.valueOf(25); break;
+                case SLAY_ENEMIES:   target = BigInteger.valueOf(100).add(Big.of((Math.random()*500))); break;
+                case COMPLETE_RUNS:  target = BigInteger.valueOf(3).add(Big.of((Math.random()*10))); break;
+                case DRINK_POTIONS:  target = BigInteger.valueOf(15).add(Big.of((Math.random()*50))); break;
+                case READ_SCROLLS:   target = BigInteger.valueOf(15).add(Big.of((Math.random()*100))); break;
+                case COLLECT_GOLD:   target = BigInteger.valueOf(200000).add(Big.of((Math.random()*300000))); break;
+                case DIE_TIMES:      target = BigInteger.TWO.add(Big.of((Math.random()*3))); break;
+                case IDENTIFY_ITEMS: target = BigInteger.valueOf(30).add(Big.of((Math.random()*70))); break;
+                default: target = BigInteger.ONE; break;
             }
             tasks.add( new Task( type, target ) );
         }
@@ -81,11 +84,11 @@ public class SeasonalTasks {
         return null;
     }
 
-    private static void progress( Type type, long amount ){
+    private static void progress( Type type, BigInteger amount ){
         Task t = find( type );
         if (t == null || t.completed) return;
-        t.progress = Math.min( t.target, t.progress + amount );
-        if (t.progress >= t.target){
+        t.progress = t.target.min(t.progress.add(amount));
+        if ((t.progress.compareTo(t.target) >= 0)){
             t.completed = true;
             GLog.p( Messages.get( SeasonalTasks.class, "task_ready", t.description() ) );
         }
@@ -95,7 +98,7 @@ public class SeasonalTasks {
         if (t == null || !t.completed || t.claimed) return false;
         t.claimed = true;
         BattlePass.totalXP += XP_PER_TASK;
-        Dungeon.gold += GOLD_PER_TASK;
+        Dungeon.gold = Dungeon.gold.add(BigInteger.valueOf(GOLD_PER_TASK));
         checkAllClaimed();
         BattlePass.saveGlobal();
         return true;
@@ -107,29 +110,29 @@ public class SeasonalTasks {
 
         allBonusClaimed = true;
         BattlePass.totalXP += ALL_DONE_XP_BONUS;
-        Dungeon.gold += ALL_DONE_GOLD_BONUS;
+        Dungeon.gold = Dungeon.gold.add(BigInteger.valueOf(ALL_DONE_GOLD_BONUS));
         GLog.p( Messages.get( SeasonalTasks.class, "all_done", ALL_DONE_XP_BONUS, ALL_DONE_GOLD_BONUS ) );
     }
 
 
     public static void onDepthReached( int depth ){
         Task t = find( Type.REACH_DEPTH );
-        if (t != null && !t.completed && depth >= t.target){
+        if (t != null && !t.completed && (BigInteger.valueOf(depth).compareTo(t.target) >= 0)){
             t.progress = t.target;
             t.completed = true;
             GLog.p( Messages.get( SeasonalTasks.class, "task_ready", t.description() ) );
         }
     }
 
-    public static void onRunCompleted(){ progress( Type.COMPLETE_RUNS, 1 ); }
-    public static void onEnemySlain(){ progress( Type.SLAY_ENEMIES, 1 ); }
-    public static void onPotionDrunk(){ progress( Type.DRINK_POTIONS, 1 ); }
-    public static void onScrollRead(){ progress( Type.READ_SCROLLS, 1 ); }
-    public static void onGoldCollected( long amount ){ progress( Type.COLLECT_GOLD, amount ); }
-    public static void onItemIdentified(){ progress( Type.IDENTIFY_ITEMS, 1 ); }
+    public static void onRunCompleted(){ progress( Type.COMPLETE_RUNS, BigInteger.ONE ); }
+    public static void onEnemySlain(){ progress( Type.SLAY_ENEMIES, BigInteger.ONE ); }
+    public static void onPotionDrunk(){ progress( Type.DRINK_POTIONS, BigInteger.ONE ); }
+    public static void onScrollRead(){ progress( Type.READ_SCROLLS, BigInteger.ONE ); }
+    public static void onGoldCollected( BigInteger amount ){ progress( Type.COLLECT_GOLD, amount ); }
+    public static void onItemIdentified(){ progress( Type.IDENTIFY_ITEMS, BigInteger.ONE ); }
 
     public static void onHeroDied(){
-        progress( Type.DIE_TIMES, 1 );
+        progress( Type.DIE_TIMES, BigInteger.ONE );
         onRunCompleted();
     }
 
@@ -143,8 +146,8 @@ public class SeasonalTasks {
 
     public static void storeInBundle( Bundle bundle ){
         String[] types = new String[tasks.size()];
-        long[] targets = new long[tasks.size()];
-        long[] progress = new long[tasks.size()];
+        BigInteger[] targets = Big.newArray(tasks.size());
+        BigInteger[] progress = Big.newArray(tasks.size());
         boolean[] completed = new boolean[tasks.size()];
         boolean[] claimed = new boolean[tasks.size()];
 
@@ -158,8 +161,8 @@ public class SeasonalTasks {
         }
 
         bundle.put( TASK_TYPES, types );
-        bundle.put( TASK_TARGETS, targets );
-        bundle.put( TASK_PROGRESS, progress );
+        Big.putArray(bundle, TASK_TARGETS, targets);
+        Big.putArray(bundle, TASK_PROGRESS, progress);
         bundle.put( TASK_COMPLETED, completed );
         bundle.put( TASK_CLAIMED, claimed );
         bundle.put( ALL_CLAIMED, allBonusClaimed );
@@ -169,8 +172,8 @@ public class SeasonalTasks {
         tasks = new ArrayList<>();
         if (bundle.contains( TASK_TYPES )){
             String[] types = bundle.getStringArray( TASK_TYPES );
-            long[] targets = bundle.getLongArray( TASK_TARGETS );
-            long[] progress = bundle.getLongArray( TASK_PROGRESS );
+            BigInteger[] targets = Big.getBigArray(bundle, TASK_TARGETS);
+            BigInteger[] progress = Big.getBigArray(bundle, TASK_PROGRESS);
             boolean[] completed = bundle.getBooleanArray( TASK_COMPLETED );
             boolean[] claimed = bundle.contains( TASK_CLAIMED )
                     ? bundle.getBooleanArray( TASK_CLAIMED ) : new boolean[types.length];

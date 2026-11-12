@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -60,15 +64,15 @@ public class ChaoticCenser extends Trinket {
 	}
 
 	@Override
-	protected long upgradeEnergyCost() {
+	protected BigInteger upgradeEnergyCost() {
 		//6 -> 8(14) -> 10(24) -> 12(36)
-		return 6+2*level();
+		return BigInteger.valueOf(6).add(BigInteger.TWO.multiply(level()));
 	}
 
 	@Override
 	public String statsDesc() {
 		if (isIdentified()){
-			return Messages.get(this, "stats_desc", averageTurnsUntilGas((int)buffedLvl()));
+			return Messages.get(this, "stats_desc", averageTurnsUntilGas(Big.toInt(buffedLvl())));
 		} else {
 			return Messages.get(this, "stats_desc", averageTurnsUntilGas(0));
 		}
@@ -260,7 +264,7 @@ public class ChaoticCenser extends Trinket {
 		if (!candidateCells.isEmpty()) {
 			Integer targetCell = Random.chances(candidateCells);
 			if (targetCell != null) {
-				GameScene.add(Blob.seed(targetCell, (int) gasQuantity, gasToSpawn));
+				GameScene.add(Blob.seed(targetCell, BigInteger.valueOf((int) gasQuantity), gasToSpawn));
 				MagicMissile.boltFromChar(Dungeon.hero.sprite.parent, MISSILE_VFX.get(gasToSpawn), Dungeon.hero.sprite, targetCell, null);
 				return true;
 			}

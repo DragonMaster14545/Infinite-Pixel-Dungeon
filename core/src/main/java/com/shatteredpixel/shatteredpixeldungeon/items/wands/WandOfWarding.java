@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -93,7 +97,7 @@ public class WandOfWarding extends Wand {
 		for (Buff buff : curUser.buffs()){
 			if (buff instanceof Wand.Charger){
 				if (((Charger) buff).wand() instanceof WandOfWarding){
-					maxWardEnergy += 2 + ((Charger) buff).wand().level();
+					maxWardEnergy += Big.toLong(BigInteger.TWO.add(((Charger) buff).wand().level()));
 				}
 			}
 		}
@@ -176,13 +180,13 @@ public class WandOfWarding extends Wand {
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
-		long level = Math.max( 0, staff.buffedLvl() );
+	public void onHit(MagesStaff staff, Char attacker, Char defender, BigInteger damage) {
+		BigInteger level = BigInteger.ZERO.max(staff.buffedLvl());
 
 		// lvl 0 - 20%
 		// lvl 1 - 33%
 		// lvl 2 - 43%
-		float procChance = (level+1f)/(level+5f) * procChanceMultiplier(attacker);
+		float procChance = Big.div((Big.dec(level).add(Big.dec(1f))), (Big.dec(level).add(Big.dec(5f)))).multiply(Big.dec(procChanceMultiplier(attacker))).floatValue();
 		if (Random.Float() < procChance) {
 
 			float powerMulti = Math.max(1f, procChance);
@@ -209,25 +213,25 @@ public class WandOfWarding extends Wand {
 	@Override
 	public String statsDesc() {
 		if (levelKnown)
-			return Messages.get(this, "stats_desc", level()+2) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, getMaxCharges());
+			return Messages.get(this, "stats_desc", level().add(BigInteger.TWO)) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, getMaxCharges());
 		else
 			return Messages.get(this, "stats_desc", 2);
 	}
 
 	@Override
-	public String upgradeStat1(long level) {
-		return 2+level + "-" + (8+4*level);
+	public String upgradeStat1(BigInteger level) {
+		return BigInteger.TWO.add(level) + "-" + (BigInteger.valueOf(8).add(BigInteger.valueOf(4).multiply(level)));
 	}
 
 	@Override
-	public String upgradeStat2(long level) {
-		return Long.toString(level+2);
+	public String upgradeStat2(BigInteger level) {
+		return level.add(BigInteger.TWO).toString();
 	}
 
 	public static class Ward extends NPC {
 
 		public int tier = 1;
-		private long wandLevel = 1;
+		private BigInteger wandLevel = BigInteger.ONE;
 
 		public int totalZaps = 0;
 
@@ -248,8 +252,8 @@ public class WandOfWarding extends Wand {
 			return Messages.get(this, "name_" + tier );
 		}
 
-		public void upgrade(long wandLevel ){
-			if (this.wandLevel < wandLevel){
+		public void upgrade(BigInteger wandLevel ){
+			if ((this.wandLevel.compareTo(wandLevel) < 0)){
 				this.wandLevel = wandLevel;
 			}
 
@@ -257,16 +261,16 @@ public class WandOfWarding extends Wand {
 				case 1: case 2: default:
 					break; //do nothing
 				case 3:
-					HT = 35;
-					HP = 15 + (5-totalZaps)*4;
+					HT = BigInteger.valueOf(35);
+					HP = BigInteger.valueOf(15 + (5-totalZaps)*4);
 					break;
 				case 4:
-					HT = 54;
-					HP += 19;
+					HT = BigInteger.valueOf(54);
+					HP = HP.add(BigInteger.valueOf(19));
 					break;
 				case 5:
-					HT = 84;
-					HP += 30;
+					HT = BigInteger.valueOf(84);
+					HP = HP.add(BigInteger.valueOf(30));
 					break;
 				case 6:
 					wandHeal(wandLevel);
@@ -292,12 +296,12 @@ public class WandOfWarding extends Wand {
 		//this class is used so that wards and sentries can have two entries in the Bestiary
 		public static class WardSentry extends Ward{};
 
-		public void wandHeal( long wandLevel ){
+		public void wandHeal( BigInteger wandLevel ){
 			wandHeal( wandLevel, 1f );
 		}
 
-		public void wandHeal( long wandLevel, float healFactor ){
-			if (this.wandLevel < wandLevel){
+		public void wandHeal( BigInteger wandLevel, float healFactor ){
+			if ((this.wandLevel.compareTo(wandLevel) < 0)){
 				this.wandLevel = wandLevel;
 			}
 
@@ -316,24 +320,24 @@ public class WandOfWarding extends Wand {
 					break;
 			}
 
-			HP = Math.min(HT, HP+heal);
+			HP = HT.min(HP.add(BigInteger.valueOf(heal)));
 			if (sprite != null) sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(heal), FloatingText.HEALING);
 
 		}
 
 		@Override
-		public long defenseSkill(Char enemy) {
+		public BigInteger defenseSkill(Char enemy) {
 			if (tier > 3){
-				defenseSkill = 4 + Dungeon.scalingDepth();
+				defenseSkill = BigInteger.valueOf(4).add(Dungeon.scalingDepth());
 			}
 			return super.defenseSkill(enemy);
 		}
 
 		@Override
-		public long drRoll() {
-			long dr = super.drRoll();
+		public BigInteger drRoll() {
+			BigInteger dr = super.drRoll();
 			if (tier > 3){
-				return dr + Math.round(Dungeon.NormalLongRange(0, 3 + Dungeon.scalingDepth()/2) / (7f - tier));
+				return dr.add(Big.round(Big.div(Big.dec(Dungeon.NormalLongRange(BigInteger.ZERO, BigInteger.valueOf(3).add(Dungeon.scalingDepth().divide(BigInteger.TWO)))), Big.dec((7f - tier)))));
 			} else {
 				return dr;
 			}
@@ -360,11 +364,11 @@ public class WandOfWarding extends Wand {
 			spend( 1f );
 
 			//always hits
-			long dmg = Hero.heroDamageIntRange( 2 + wandLevel, 8 + 4*wandLevel );
+			BigInteger dmg = Hero.heroDamageIntRange( BigInteger.TWO.add(wandLevel), BigInteger.valueOf(8).add(BigInteger.valueOf(4).multiply(wandLevel)) );
 			Char enemy = this.enemy;
 			enemy.damage( dmg, this );
 			if (enemy.isAlive()){
-				Wand.wandProc(enemy, wandLevel, 1);
+				Wand.wandProc(enemy, wandLevel, BigInteger.ONE);
 			}
 
 			if (!enemy.isAlive() && enemy == Dungeon.hero) {
@@ -381,13 +385,13 @@ public class WandOfWarding extends Wand {
 					}
 					break;
 				case 4:
-					damage(5, this);
+					damage(BigInteger.valueOf(5), this);
 					break;
 				case 5:
-					damage(6, this);
+					damage(BigInteger.valueOf(6), this);
 					break;
 				case 6:
-					damage(7, this);
+					damage(BigInteger.valueOf(7), this);
 					break;
 			}
 		}
@@ -468,7 +472,7 @@ public class WandOfWarding extends Wand {
 					return Messages.get(this, "desc_generic_sentry");
 				}
 			} else {
-				return Messages.get(this, "desc_" + tier, 2 + wandLevel, 8 + 4 * wandLevel, tier);
+				return Messages.get(this, "desc_" + tier, BigInteger.TWO.add(wandLevel), BigInteger.valueOf(8).add(BigInteger.valueOf(4).multiply(wandLevel)), tier);
 			}
 		}
 		
@@ -488,7 +492,7 @@ public class WandOfWarding extends Wand {
 		public void storeInBundle(Bundle bundle) {
 			super.storeInBundle(bundle);
 			bundle.put(TIER, tier);
-			bundle.put(WAND_LEVEL, wandLevel);
+			Big.put(bundle, WAND_LEVEL, wandLevel);
 			bundle.put(TOTAL_ZAPS, totalZaps);
 		}
 
@@ -497,7 +501,7 @@ public class WandOfWarding extends Wand {
 			super.restoreFromBundle(bundle);
 			tier = bundle.getInt(TIER);
 			viewDistance = 3 + tier;
-			wandLevel = bundle.getInt(WAND_LEVEL);
+			wandLevel = BigInteger.valueOf(bundle.getInt(WAND_LEVEL));
 			totalZaps = bundle.getInt(TOTAL_ZAPS);
 		}
 	}

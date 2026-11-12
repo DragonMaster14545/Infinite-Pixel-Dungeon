@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barkskin;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
@@ -50,8 +52,8 @@ public class FrozenCarpaccio extends Food {
 		effect(hero);
 	}
 	
-	public long value() {
-		return 10 * quantity;
+	public BigInteger value() {
+		return BigInteger.TEN.multiply(quantity);
 	}
 
 	public static void effect(Hero hero){
@@ -62,7 +64,7 @@ public class FrozenCarpaccio extends Food {
 				break;
 			case 1:
 				GLog.i( Messages.get(FrozenCarpaccio.class, "hard") );
-				Barkskin.conditionallyAppend( hero, hero.HT / 4, 1 );
+				Barkskin.conditionallyAppend( hero, hero.HT.divide(BigInteger.valueOf(4)), 1 );
 				break;
 			case 2:
 				GLog.i( Messages.get(FrozenCarpaccio.class, "refresh") );
@@ -70,8 +72,8 @@ public class FrozenCarpaccio extends Food {
 				break;
 			case 3:
 				GLog.i( Messages.get(FrozenCarpaccio.class, "better") );
-				hero.HP = Math.min( hero.HP + hero.HT / 4, hero.HT );
-				hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString(hero.HT / 4), FloatingText.HEALING );
+				hero.HP = hero.HP.add(hero.HT.divide(BigInteger.valueOf(4))).min(hero.HT);
+				hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, hero.HT.divide(BigInteger.valueOf(4)).toString(), FloatingText.HEALING );
 				break;
 		}
 	}

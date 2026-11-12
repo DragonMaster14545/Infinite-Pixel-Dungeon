@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -95,8 +99,8 @@ public class DriedRose extends Artifact {
 
 		levelCap = 10;
 
-		charge = 100;
-		setChargeCap(100);
+		charge = BigInteger.valueOf(100);
+		setChargeCap(BigInteger.valueOf(100));
 
 		defaultAction = AC_SUMMON;
 	}
@@ -117,8 +121,8 @@ public class DriedRose extends Artifact {
 	public static final String AC_OUTFIT = "OUTFIT";
 
 	@Override
-	public long getChargeCap() {
-		return 100;
+	public BigInteger getChargeCap() {
+		return BigInteger.valueOf(100);
 	}
 
 	@Override
@@ -128,7 +132,7 @@ public class DriedRose extends Artifact {
 			return actions;
 		}
 		if (isEquipped( hero )
-				&& charge == getChargeCap()
+				&& (charge.compareTo(getChargeCap()) == 0)
 				&& !cursed
 				&& hero.buff(MagicImmune.class) == null
 				&& ghostID == 0) {
@@ -165,7 +169,7 @@ public class DriedRose extends Artifact {
 			if (!Ghost.Quest.completed())   GameScene.show(new WndUseItem(null, this));
 			else if (ghost != null)         GLog.i( Messages.get(this, "spawned") );
 			else if (!isEquipped( hero ))   GLog.i( Messages.get(Artifact.class, "need_to_equip") );
-			else if (charge != getChargeCap())   GLog.i( Messages.get(this, "no_charge") );
+			else if ((charge.compareTo(getChargeCap()) != 0))   GLog.i( Messages.get(this, "no_charge") );
 			else if (cursed)                GLog.i( Messages.get(this, "cursed") );
 			else {
 				ArrayList<Integer> spawnPoints = new ArrayList<>();
@@ -206,7 +210,7 @@ public class DriedRose extends Artifact {
 
 					Invisibility.dispel(hero);
 					Talent.onArtifactUsed(hero);
-					charge = 0;
+					charge = BigInteger.ZERO;
 					partialCharge = 0;
 					updateQuickslot();
 
@@ -230,8 +234,8 @@ public class DriedRose extends Artifact {
 		}
 	}
 	
-	public long ghostStrength(){
-		return (long) ((13 + level()/2f)*getRarityMultiplier());
+	public BigInteger ghostStrength(){
+		return Big.trunc(((Big.dec(13).add(Big.div(Big.dec(level()), Big.dec(2f)))).multiply(Big.dec(getRarityMultiplier()))));
 	}
 
 	@Override
@@ -246,7 +250,7 @@ public class DriedRose extends Artifact {
 		if (isEquipped( Dungeon.hero )){
 			if (!cursed){
 
-				if (level() < levelCap)
+				if ((level().compareTo(BigInteger.valueOf(levelCap)) < 0))
 					desc+= "\n\n" + Messages.get(this, "desc_hint");
 
 			} else {
@@ -273,12 +277,12 @@ public class DriedRose extends Artifact {
 	}
 	
 	@Override
-	public long value() {
+	public BigInteger value() {
 		if (weapon != null){
-			return -1;
+			return BigInteger.valueOf(-1);
 		}
 		if (armor != null){
-			return -1;
+			return BigInteger.valueOf(-1);
 		}
 		return super.value();
 	}
@@ -301,7 +305,7 @@ public class DriedRose extends Artifact {
 		if (ghost == null){
 			return super.status();
 		} else {
-			return ((ghost.HP*100) / ghost.HT) + "%";
+			return ((ghost.HP.multiply(BigInteger.valueOf(100))).divide(ghost.HT)) + "%";
 		}
 	}
 	
@@ -315,22 +319,22 @@ public class DriedRose extends Artifact {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
 
 		if (ghost == null){
-			if (charge < getChargeCap()) {
+			if ((charge.compareTo(getChargeCap()) < 0)) {
 				partialCharge += 4*amount;
 				while (partialCharge >= 1f){
-					charge++;
+					charge = charge.add(BigInteger.ONE);
 					partialCharge--;
 				}
-				if (charge >= getChargeCap()) {
+				if ((charge.compareTo(getChargeCap()) >= 0)) {
 					charge = getChargeCap();
 					partialCharge = 0;
 					GLog.p(Messages.get(DriedRose.class, "charged"));
 				}
 				updateQuickslot();
 			}
-		} else if (ghost.HP < ghost.HT) {
-			int heal = Math.round((1 + level()/3f)*amount);
-			ghost.HP = Math.min( ghost.HT, ghost.HP + heal);
+		} else if ((ghost.HP.compareTo(ghost.HT) < 0)) {
+			int heal = Big.toInt(Big.round((Big.dec(1).add(Big.div(Big.dec(level()), Big.dec(3f)))).multiply(Big.dec(amount))));
+			ghost.HP = ghost.HT.min(ghost.HP.add(BigInteger.valueOf(heal)));
 			ghost.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(heal), FloatingText.HEALING);
 			updateQuickslot();
 		}
@@ -338,13 +342,13 @@ public class DriedRose extends Artifact {
 	
 	@Override
 	public Item upgrade() {
-		if (level() >= 9)
+		if ((level().compareTo(BigInteger.valueOf(9)) >= 0))
 			image = ItemSpriteSheet.ARTIFACT_ROSE3;
-		else if (level() >= 4)
+		else if ((level().compareTo(BigInteger.valueOf(4)) >= 0))
 			image = ItemSpriteSheet.ARTIFACT_ROSE2;
 
 		//For upgrade transferring via well of transmutation
-		droppedPetals = (int) Math.max( level(), droppedPetals );
+		droppedPetals = Big.toInt(level().max(BigInteger.valueOf(droppedPetals)));
 		
 		if (ghost != null){
 			ghost.updateRose();
@@ -419,12 +423,12 @@ public class DriedRose extends Artifact {
 			if (ghost != null && !cursed && target.buff(MagicImmune.class) == null){
 				
 				//heals to full over 500 turns
-				if (ghost.HP < ghost.HT && Regeneration.regenOn()) {
-					partialCharge += (ghost.HT / 500f) * RingOfEnergy.artifactChargeMultiplier(target);
+				if ((ghost.HP.compareTo(ghost.HT) < 0) && Regeneration.regenOn()) {
+					partialCharge += (Big.div(Big.dec(ghost.HT), Big.dec(500f))).multiply(Big.dec(RingOfEnergy.artifactChargeMultiplier(target))).doubleValue();
 					updateQuickslot();
 					
 					while (partialCharge > 1) {
-						ghost.HP++;
+						ghost.HP = ghost.HP.add(BigInteger.ONE);
 						partialCharge--;
 					}
 				} else {
@@ -434,16 +438,16 @@ public class DriedRose extends Artifact {
 				return true;
 			}
 			
-			if (charge < getChargeCap()
+			if ((charge.compareTo(getChargeCap()) < 0)
 					&& !cursed
 					&& target.buff(MagicImmune.class) == null
 					&& Regeneration.regenOn()) {
 				//500 turns to a full charge
 				partialCharge += (1/5f * RingOfEnergy.artifactChargeMultiplier(target));
 				while (partialCharge > 1){
-					charge++;
+					charge = charge.add(BigInteger.ONE);
 					partialCharge--;
-					if (charge == getChargeCap()){
+					if ((charge.compareTo(getChargeCap()) == 0)){
 						partialCharge = 0f;
 						GLog.p( Messages.get(DriedRose.class, "charged") );
 					}
@@ -507,7 +511,7 @@ public class DriedRose extends Artifact {
 			if (rose == null){
 				GLog.w( Messages.get(this, "no_rose") );
 				return false;
-			} if ( rose.level() >= rose.levelCap ){
+			} if ((rose.level().compareTo(BigInteger.valueOf(rose.levelCap)) >= 0)){
 				GLog.i( Messages.get(this, "no_room") );
 				hero.spendAndNext(TIME_TO_PICK_UP);
 				return true;
@@ -515,7 +519,7 @@ public class DriedRose extends Artifact {
 
 				rose.upgrade();
 				Catalog.countUse(rose.getClass());
-				if (rose.level() == rose.levelCap) {
+				if ((rose.level().compareTo(BigInteger.valueOf(rose.levelCap)) == 0)) {
 					GLog.p( Messages.get(this, "maxlevel") );
 				} else
 					GLog.i( Messages.get(this, "levelup") );
@@ -590,9 +594,9 @@ public class DriedRose extends Artifact {
 			}
 			
 			//same dodge as the hero
-			defenseSkill = (Dungeon.hero.lvl+4);
+			defenseSkill = BigInteger.valueOf((Dungeon.hero.lvl+4));
 			if (rose == null) return;
-			HT = (int) (20 + 8*rose.level());
+			HT = BigInteger.valueOf(Big.toInt((BigInteger.valueOf(20).add(BigInteger.valueOf(8).multiply(rose.level())))));
 		}
 
         public Weapon weapon(){
@@ -606,7 +610,7 @@ public class DriedRose extends Artifact {
 			if (rose == null
 					|| !rose.isEquipped(Dungeon.hero)
 					|| Dungeon.hero.buff(MagicImmune.class) != null){
-				damage(1, new NoRoseDamage());
+				damage(BigInteger.ONE, new NoRoseDamage());
 			}
 			
 			if (!isAlive()) {
@@ -618,7 +622,7 @@ public class DriedRose extends Artifact {
 		public static class NoRoseDamage{}
 
 		@Override
-		public long attackSkill(Char target) {
+		public BigInteger attackSkill(Char target) {
 			
 			//same accuracy as the hero.
 			int acc = Dungeon.hero.lvl + 9;
@@ -627,7 +631,7 @@ public class DriedRose extends Artifact {
                 acc *= weapon().accuracyFactor( this, target );
             }
 			
-			return acc;
+			return BigInteger.valueOf(acc);
 		}
 		
 		@Override
@@ -645,19 +649,19 @@ public class DriedRose extends Artifact {
 		}
 		
 		@Override
-		public long damageRoll() {
+		public BigInteger damageRoll() {
 			int dmg = 0;
             if (weapon() != null){
-                dmg += weapon().damageRoll(this);
+                dmg += Big.toLong(weapon().damageRoll(this));
 			} else {
-				dmg += Dungeon.NormalLongRange(0, 5);
+				dmg += Big.toLong(Dungeon.NormalLongRange(BigInteger.ZERO, BigInteger.valueOf(5)));
 			}
 			
-			return dmg;
+			return BigInteger.valueOf(dmg);
 		}
 		
 		@Override
-		public long attackProc(Char enemy, long damage) {
+		public BigInteger attackProc(Char enemy, BigInteger damage) {
 			damage = super.attackProc(enemy, damage);
             if (weapon() != null) {
                 damage = weapon().proc(this, enemy, damage);
@@ -670,7 +674,7 @@ public class DriedRose extends Artifact {
 		}
 		
 		@Override
-		public long defenseProc(Char enemy, long damage) {
+		public BigInteger defenseProc(Char enemy, BigInteger damage) {
             if (armor() != null) {
                 damage = armor().proc( enemy, this, damage );
 			}
@@ -678,12 +682,12 @@ public class DriedRose extends Artifact {
 		}
 		
 		@Override
-		public void damage(long dmg, Object src) {
+		public void damage(BigInteger dmg, Object src) {
 			//TODO improve this when I have proper damage source logic
 			if (rose != null && rose.armor != null && rose.armor.hasGlyph(AntiMagic.class, this)
 					&& AntiMagic.RESISTS.contains(src.getClass())){
-				dmg -= AntiMagic.drRoll(this, rose.armor.buffedLvl());
-				dmg = Math.max(dmg, 0);
+				dmg = dmg.subtract(AntiMagic.drRoll(this, rose.armor.buffedLvl()));
+				dmg = dmg.max(BigInteger.ZERO);
 			}
 			
 			super.damage( dmg, src );
@@ -711,11 +715,11 @@ public class DriedRose extends Artifact {
 		}
 		
 		@Override
-		public long defenseSkill(Char enemy) {
-			long defense = super.defenseSkill(enemy);
+		public BigInteger defenseSkill(Char enemy) {
+			BigInteger defense = super.defenseSkill(enemy);
 
-            if (defense != 0 && armor() != null ){
-                defense = Math.round(armor().evasionFactor( this, defense ));
+            if ((defense.compareTo(BigInteger.ZERO) != 0) && armor() != null){
+                defense = BigInteger.valueOf(Math.round(armor().evasionFactor( this, defense.floatValue() )));
 			}
 			
 			return defense;
@@ -733,13 +737,13 @@ public class DriedRose extends Artifact {
 		}
 		
 		@Override
-		public long drRoll() {
-			long dr = super.drRoll();
+		public BigInteger drRoll() {
+			BigInteger dr = super.drRoll();
             if (armor() != null){
-                dr += Random.NormalLongRange( armor().DRMin(), armor().DRMax());
+                dr = dr.add(Big.normalRange(armor().DRMin(), armor().DRMax()));
             }
             if (weapon() != null){
-                dr += Random.NormalLongRange( 0, weapon().defenseFactor( this ));
+                dr = dr.add(Big.normalRange(BigInteger.ZERO, weapon().defenseFactor( this )));
             }
 			return dr;
 		}
@@ -807,7 +811,7 @@ public class DriedRose extends Artifact {
 			updateRose();
 			if (rose != null) {
 				rose.ghost = null;
-				rose.charge = 0;
+				rose.charge = BigInteger.ZERO;
 				rose.partialCharge = 0;
 				rose.ghostID = -1;
 			}
@@ -969,7 +973,7 @@ public class DriedRose extends Artifact {
 								} else if (item.cursed) {
 									GLog.w( Messages.get(WndGhostHero.class, "cant_cursed"));
 									hide();
-								} else if (((MeleeWeapon)item).STRReq() > rose.ghostStrength()) {
+								} else if ((BigInteger.valueOf(((MeleeWeapon)item).STRReq()).compareTo(rose.ghostStrength()) > 0)) {
 									GLog.w( Messages.get(WndGhostHero.class, "cant_strength"));
 									hide();
 								} else {
@@ -1044,7 +1048,7 @@ public class DriedRose extends Artifact {
 								} else if (item.cursed) {
 									GLog.w( Messages.get(WndGhostHero.class, "cant_cursed"));
 									hide();
-								} else if (((Armor)item).STRReq() > rose.ghostStrength()) {
+								} else if ((((Armor)item).STRReq().compareTo(rose.ghostStrength()) > 0)) {
 									GLog.w( Messages.get(WndGhostHero.class, "cant_strength"));
 									hide();
 								} else {

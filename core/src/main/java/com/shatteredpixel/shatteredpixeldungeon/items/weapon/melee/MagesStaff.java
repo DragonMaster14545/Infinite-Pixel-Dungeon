@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -88,9 +92,8 @@ public class MagesStaff extends MeleeWeapon {
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  Math.round(3d*(tier()+1)) +   //6 base damage, down from 10
-				lvl*(tier()+1);               //scaling unaffected
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(Math.round(3d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf((tier()+1))));               //scaling unaffected
 	}
 
 	public MagesStaff(Wand wand){
@@ -104,7 +107,7 @@ public class MagesStaff extends MeleeWeapon {
 
 	@Override
 	public String defaultAction() {
-		if (wand.curCharges > 0){
+		if ((wand.curCharges.compareTo(BigInteger.ZERO) > 0)){
 			return AC_ZAP;
 		} else {
 			return super.defaultAction();
@@ -118,16 +121,16 @@ public class MagesStaff extends MeleeWeapon {
 
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
-		Rapier.lungeAbility(hero, target, 1,3 + level(), this);
+		Rapier.lungeAbility(hero, target, 1,BigInteger.valueOf(3).add(level()), this);
 	}
 
 	@Override
 	public String abilityInfo() {
-		long dmgBoost = levelKnown ? 3+buffedLvl() : 3;
+		BigInteger dmgBoost = levelKnown ? BigInteger.valueOf(3).add(buffedLvl()) : BigInteger.valueOf(3);
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
+			return Messages.get(this, "ability_desc", augment.damageFactor(min().add(dmgBoost)), augment.damageFactor(max().add(dmgBoost)));
 		} else {
-			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);
+			return Messages.get(this, "typical_ability_desc", min(BigInteger.ZERO).add(dmgBoost), max(BigInteger.ZERO).add(dmgBoost));
 		}
 	}
 
@@ -135,7 +138,7 @@ public class MagesStaff extends MeleeWeapon {
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = super.actions( hero );
 		actions.add(AC_IMBUE);
-		if (wand!= null && wand.curCharges > 0) {
+		if (wand!= null && (wand.curCharges.compareTo(BigInteger.ZERO) > 0)) {
 			actions.add( AC_ZAP );
 			if (wand instanceof WandOfTerraforming) {
 				actions.add( AC_CHANGE_TERRAIN );
@@ -193,16 +196,16 @@ public class MagesStaff extends MeleeWeapon {
 	}
 
 	@Override
-	public long buffedVisiblyUpgraded() {
+	public BigInteger buffedVisiblyUpgraded() {
 		if (wand != null){
-			return Math.max(super.buffedVisiblyUpgraded(), wand.buffedVisiblyUpgraded());
+			return super.buffedVisiblyUpgraded().max(wand.buffedVisiblyUpgraded());
 		} else {
 			return super.buffedVisiblyUpgraded();
 		}
 	}
 
 	@Override
-	public long proc(Char attacker, Char defender, long damage) {
+	public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 		if (attacker instanceof Hero && ((Hero) attacker).hasTalent(Talent.MYSTICAL_CHARGE)){
 			Hero hero = (Hero) attacker;
 			ArtifactRecharge.chargeArtifacts(hero, 2f);
@@ -210,12 +213,12 @@ public class MagesStaff extends MeleeWeapon {
 
 		Talent.EmpoweredStrikeTracker empoweredStrike = attacker.buff(Talent.EmpoweredStrikeTracker.class);
 		if (empoweredStrike != null){
-			damage = Math.round( damage * (1f + Dungeon.hero.pointsInTalent(Talent.EMPOWERED_STRIKE)/6f));
+			damage = Big.round(Big.dec(damage).multiply(Big.dec((1f + Dungeon.hero.pointsInTalent(Talent.EMPOWERED_STRIKE)/6f))));
 		}
 
 		if (wand != null &&
 				attacker instanceof Hero && ((Hero)attacker).isSubclass(HeroSubClass.BATTLEMAGE)) {
-			if (wand.curCharges < wand.getMaxCharges()) wand.partialCharge += 0.5f;
+			if ((wand.curCharges.compareTo(wand.getMaxCharges()) < 0)) wand.partialCharge += 0.5f;
 			ScrollOfRecharging.charge((Hero)attacker);
 			wand.onHit(this, attacker, defender, damage);
 		}
@@ -259,13 +262,13 @@ public class MagesStaff extends MeleeWeapon {
 
 	public Item imbueWand(Wand wand, Char owner){
 
-		long oldStaffcharges = this.wand != null ? this.wand.curCharges : 0;
+		BigInteger oldStaffcharges = this.wand != null ? this.wand.curCharges : BigInteger.ZERO;
 
 		if (owner == Dungeon.hero && Dungeon.hero.hasTalent(Talent.WAND_PRESERVATION)){
 			Talent.WandPreservationCounter counter = Buff.affect(Dungeon.hero, Talent.WandPreservationCounter.class);
 			if (counter.count() == 0){
 				counter.countUp(1);
-				this.wand.level(0);
+				this.wand.level(BigInteger.ZERO);
 				if (!this.wand.collect()) {
 					Dungeon.level.drop(this.wand, owner.pos);
 				}
@@ -280,15 +283,15 @@ public class MagesStaff extends MeleeWeapon {
 		wand.updateLevel();
 
 		//syncs the level of the two items.
-		long targetLevel = Math.max(this.trueLevel(), wand.trueLevel());
+		BigInteger targetLevel = this.trueLevel().max(wand.trueLevel());
 
 		//if the staff's level is being overridden by the wand, preserve 1 upgrade
-		if (wand.trueLevel() >= this.trueLevel() && this.trueLevel() > 0) targetLevel++;
+		if ((wand.trueLevel().compareTo(this.trueLevel()) >= 0) && (this.trueLevel().compareTo(BigInteger.ZERO) > 0)) targetLevel = targetLevel.add(BigInteger.ONE);
 		
 		level(targetLevel);
 		this.wand = wand;
 		updateWand(false);
-		wand.curCharges = Math.min(wand.getMaxCharges(), wand.curCharges+oldStaffcharges);
+		wand.curCharges = wand.getMaxCharges().min(wand.curCharges.add(oldStaffcharges));
 		if (owner != null){
 			applyWandChargeBuff(owner);
  		} else if (Dungeon.hero.belongings.contains(this)){
@@ -365,11 +368,11 @@ public class MagesStaff extends MeleeWeapon {
 	
 	public void updateWand(boolean levelled){
 		if (wand != null) {
-			long curCharges = wand.curCharges;
+			BigInteger curCharges = wand.curCharges;
 			wand.level(level());
 			//gives the wand one additional max charge
-			wand.setMaxCharges(Math.round(wand.getMaxCharges() * 1.33d));
-			wand.curCharges = Math.min(curCharges + (levelled ? 1 : 0), wand.getMaxCharges());
+			wand.setMaxCharges(Big.round(Big.dec(wand.getMaxCharges()).multiply(Big.dec(1.33d))));
+			wand.curCharges = curCharges.add(BigInteger.valueOf((levelled ? 1 : 0))).min(wand.getMaxCharges());
 			updateQuickslot();
 		}
 	}
@@ -423,13 +426,13 @@ public class MagesStaff extends MeleeWeapon {
 		super.restoreFromBundle(bundle);
 		wand = (Wand) bundle.get(WAND);
 		if (wand != null) {
-            wand.setMaxCharges(Math.round(wand.getMaxCharges() * 1.33f));
+            wand.setMaxCharges(Big.round(Big.dec(wand.getMaxCharges()).multiply(Big.dec(1.33f))));
 		}
 	}
 
 	@Override
-	public long value() {
-		return 0;
+	public BigInteger value() {
+		return BigInteger.ZERO;
 	}
 	
 	@Override
@@ -486,10 +489,10 @@ public class MagesStaff extends MeleeWeapon {
 				if (wand == null){
 					applyWand((Wand)item);
 				} else {
-					long newLevel;
-					long itemLevel = item.trueLevel();
-					if (itemLevel >= trueLevel()){
-						if (trueLevel() > 0)    newLevel = itemLevel + 1;
+					BigInteger newLevel;
+					BigInteger itemLevel = item.trueLevel();
+					if ((itemLevel.compareTo(trueLevel()) >= 0)){
+						if ((trueLevel().compareTo(BigInteger.ZERO) > 0))    newLevel = itemLevel.add(BigInteger.ONE);
 						else                    newLevel = itemLevel;
 					} else {
 						newLevel = trueLevel();

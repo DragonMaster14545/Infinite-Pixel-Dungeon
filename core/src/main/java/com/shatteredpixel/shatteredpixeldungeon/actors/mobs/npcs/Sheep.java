@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -54,7 +56,7 @@ public class Sheep extends NPC {
 			Bestiary.setSeen(getClass());
 		}
 		if (initialized) {
-			HP = 0;
+			HP = BigInteger.ZERO;
 
 			destroy();
 			sprite.die();
@@ -67,12 +69,12 @@ public class Sheep extends NPC {
 	}
 
 	@Override
-	public long defenseSkill(Char enemy) {
-		return INFINITE_EVASION;
+	public BigInteger defenseSkill(Char enemy) {
+		return BigInteger.valueOf(INFINITE_EVASION);
 	}
 
 	@Override
-	public void damage( long dmg, Object src ) {
+	public void damage( BigInteger dmg, Object src ) {
 		//do nothing
 	}
 

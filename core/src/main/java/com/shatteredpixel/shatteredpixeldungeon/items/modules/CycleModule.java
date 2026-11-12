@@ -29,6 +29,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.modules;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Adrenaline;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -58,7 +60,7 @@ public class CycleModule extends Module {
     }
 
     @Override
-    public long value() {
-        return 25000 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(25000).multiply(quantity);
     }
 }

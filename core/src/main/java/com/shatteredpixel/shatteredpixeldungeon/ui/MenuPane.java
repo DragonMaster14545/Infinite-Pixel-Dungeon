@@ -21,6 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
@@ -297,10 +300,10 @@ public class MenuPane extends Component {
 
 		public void updateKeyDisplay() {
 			keyIcon.updateKeys();
-			keyIcon.visible = keyIcon.keyCount() > 0;
+			keyIcon.visible = (keyIcon.keyCount().compareTo(BigInteger.ZERO) > 0);
 			journalIcon.visible = !keyIcon.visible;
-			if (keyIcon.keyCount() > 0) {
-				bg.brightness(.8f - (Math.min(6, keyIcon.keyCount()) / 20f));
+			if ((keyIcon.keyCount().compareTo(BigInteger.ZERO) > 0)) {
+				bg.brightness(Big.dec(.8f).subtract((Big.div(Big.dec(BigInteger.valueOf(6).min(keyIcon.keyCount())), Big.dec(20f)))).floatValue());
 			} else {
 				bg.resetColor();
 			}
@@ -314,8 +317,8 @@ public class MenuPane extends Component {
 
 		@Override
 		protected void onPointerUp() {
-			if (keyIcon.keyCount() > 0) {
-				bg.brightness(.8f - (Math.min(6, keyIcon.keyCount()) / 20f));
+			if ((keyIcon.keyCount().compareTo(BigInteger.ZERO) > 0)) {
+				bg.brightness(Big.dec(.8f).subtract((Big.div(Big.dec(BigInteger.valueOf(6).min(keyIcon.keyCount())), Big.dec(20f)))).floatValue());
 			} else {
 				bg.resetColor();
 			}

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
@@ -234,22 +238,22 @@ public class StatusPane extends Component {
 	
 	private static final int[] warningColors = new int[]{0x660000, 0xCC0000, 0x660000};
 
-	private long oldHP = 0;
-	private long oldShield = 0;
-	private long oldMax = 0;
+	private BigInteger oldHP = BigInteger.ZERO;
+	private BigInteger oldShield = BigInteger.ZERO;
+	private BigInteger oldMax = BigInteger.ZERO;
 
 	@Override
 	public void update() {
 		super.update();
 		
-		long health = Dungeon.hero.HP;
-		long shield = Dungeon.hero.shielding();
-		long max = Dungeon.hero.HT;
+		BigInteger health = Dungeon.hero.HP;
+		BigInteger shield = Dungeon.hero.shielding();
+		BigInteger max = Dungeon.hero.HT;
 
 		if (!Dungeon.hero.isAlive()) {
 			avatar.tint(0x000000, 0.5f);
-		} else if ((health/(float)max) <= 0.3f) {
-			warning += Game.elapsed * 5f *(0.4f - (health/(float)max));
+		} else if (((Big.div(Big.dec(health), Big.dec(max.floatValue()))).compareTo(Big.dec(0.3f)) <= 0)) {
+			warning += Big.dec(Game.elapsed * 5f).multiply((Big.dec(0.4f).subtract((Big.div(Big.dec(health), Big.dec(max.floatValue())))))).floatValue();
 			warning %= 1f;
 			avatar.tint(ColorMath.interpolate(warning, warningColors), 0.5f );
 		} else if (talentBlink > 0.33f){ //stops early so it doesn't end in the middle of a blink
@@ -259,17 +263,17 @@ public class StatusPane extends Component {
 			avatar.resetColor();
 		}
 
-		hp.scale.x = Math.max( 0, (health-shield)/(float)max);
-		shieldedHP.scale.x = health/(float)max;
+		hp.scale.x = Big.dec(0).max(Big.div(Big.dec((health.subtract(shield))), Big.dec(max.floatValue()))).floatValue();
+		shieldedHP.scale.x = Big.div(Big.dec(health), Big.dec(max.floatValue())).floatValue();
 
-		if (shield > health) {
-			rawShielding.scale.x = Math.min(1, shield / (float) max);
+		if ((shield.compareTo(health) > 0)) {
+			rawShielding.scale.x = Big.dec(1).min(Big.div(Big.dec(shield), Big.dec(max.floatValue()))).floatValue();
 		} else {
 			rawShielding.scale.x = 0;
 		}
 
-		if (oldHP != health || oldShield != shield || oldMax != max){
-			if (shield <= 0) {
+		if ((oldHP.compareTo(health) != 0) || (oldShield.compareTo(shield) != 0) || (oldMax.compareTo(max) != 0)){
+			if ((shield.compareTo(BigInteger.ZERO) <= 0)) {
 				hpText.text(health + "/" + max);
 			} else {
 				hpText.text(health + "+" + shield + "/" + max);
@@ -280,7 +284,7 @@ public class StatusPane extends Component {
 		}
 
 		if (large) {
-			exp.scale.x = (128 / exp.width) * Dungeon.hero.exp / Dungeon.hero.maxExp();
+			exp.scale.x = Big.div(Big.dec((128 / exp.width)).multiply(Big.dec(Dungeon.hero.exp)), Big.dec(Dungeon.hero.maxExp())).floatValue();
 
 			hpText.measure();
 			hpText.x = hp.x + (128 - hpText.width())/2f;
@@ -290,7 +294,7 @@ public class StatusPane extends Component {
 			expText.x = hp.x + (128 - expText.width())/2f;
 
 		} else {
-			exp.scale.x = (width / exp.width) * Dungeon.hero.exp / Dungeon.hero.maxExp();
+			exp.scale.x = Big.div(Big.dec((width / exp.width)).multiply(Big.dec(Dungeon.hero.exp)), Big.dec(Dungeon.hero.maxExp())).floatValue();
 		}
 
 		if (Dungeon.hero.lvl != lastLvl) {

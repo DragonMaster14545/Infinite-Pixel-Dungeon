@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
@@ -68,9 +72,9 @@ public class Regeneration extends Buff {
 				if (regenBuff.isCursed()) {
 					regen *= 1.5f;
 				} else {
-					if (regenBuff.itemLevel() < 11)
-						regen -= regenBuff.itemLevel()*0.9f;
-					else regen = 1 / (3 * Math.pow(regenBuff.itemLevel() - 1, 2) / 243);
+					if ((regenBuff.itemLevel().compareTo(BigInteger.valueOf(11)) < 0))
+						regen -= Big.dec(regenBuff.itemLevel()).multiply(Big.dec(0.9f)).doubleValue();
+					else regen = 1 / (3 * Math.pow(regenBuff.itemLevel().subtract(BigInteger.ONE).doubleValue(), 2) / 243);
 					regen /= RingOfEnergy.artifactChargeMultiplier(target);
 				}
 			}
@@ -92,13 +96,13 @@ public class Regeneration extends Buff {
 				return true;
 			}
 
-			if (target.HP < regencap() && !((Hero)target).isStarving()) {
+			if ((target.HP.compareTo(regencap()) < 0) && !((Hero)target).isStarving()) {
 				if (regenOn()) {
 					partialHP += regen;
 					if (partialHP >= 1){
-						target.HP = Math.min(target.HP + (long)partialHP, target.HT);
-						partialHP -= (long)partialHP;
-						if (target.HP == regencap()) {
+						target.HP = target.HP.add(Big.of(partialHP)).min(target.HT);
+						partialHP -= Big.of(partialHP).doubleValue();
+						if ((target.HP.compareTo(regencap()) == 0)) {
 							((Hero) target).resting = false;
 						}
 					}
@@ -116,7 +120,7 @@ public class Regeneration extends Buff {
 		return true;
 	}
 	
-	public long regencap(){
+	public BigInteger regencap(){
 		return target.HT;
 	}
 

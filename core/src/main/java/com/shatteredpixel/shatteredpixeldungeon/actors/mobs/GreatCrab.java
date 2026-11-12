@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -44,16 +46,16 @@ public class GreatCrab extends Crab {
 	{
 		spriteClass = GreatCrabSprite.class;
 
-		HP = HT = Dungeon.getCycleMultiplier(50);
-		defenseSkill = Dungeon.getCycleMultiplier(0); //see damage()
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(50));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.ZERO); //see damage()
 		baseSpeed = 1f;
 
-		EXP = Dungeon.getCycleMultiplier(6);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(6));
 
 		WANDERING = new Wandering();
 		state = WANDERING;
 
-		loot = new MysteryMeat().quantity(2);
+		loot = new MysteryMeat().quantity(BigInteger.TWO);
 		lootChance = 1f;
 
 		properties.add(Property.MINIBOSS);
@@ -75,7 +77,7 @@ public class GreatCrab extends Crab {
 	}
 
 	@Override
-	public void damage( long dmg, Object src ){
+	public void damage( BigInteger dmg, Object src ){
 		//crab blocks all wand damage from the hero if it sees them.
 		//Direct damage is negated, but add-on effects and environmental effects go through as normal.
 		if (enemySeen
@@ -94,7 +96,7 @@ public class GreatCrab extends Crab {
 	}
 
 	@Override
-	public long defenseSkill(Char enemy ) {
+	public BigInteger defenseSkill(Char enemy ) {
 		//crab blocks all melee attacks from its current target
 		if (enemySeen
 				&& state != SLEEPING
@@ -108,7 +110,7 @@ public class GreatCrab extends Crab {
             if (enemy == Dungeon.hero){
                 Statistics.questScores[0] -= 50;
             }
-			return INFINITE_EVASION;
+			return BigInteger.valueOf(INFINITE_EVASION);
 		}
 		return super.defenseSkill( enemy );
 	}

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -94,12 +98,12 @@ public class WandOfRegrowth extends Wand {
 		ArrayList<Integer> cells = new ArrayList<>(cone.cells);
 
 		float furrowedChance = 0;
-		if (totChrgUsed >= chargeLimit(Dungeon.hero.lvl)){
+		if (totChrgUsed >= chargeLimit(BigInteger.valueOf(Dungeon.hero.lvl))){
 			furrowedChance = (chargesOverLimit+1)/5f;
 		}
 
-		long chrgUsed = chargesPerCast();
-		int grassToPlace = Math.round((3.67f+buffedLvl()/3f)*chrgUsed);
+		BigInteger chrgUsed = chargesPerCast();
+		int grassToPlace = Big.toInt(Big.round((Big.dec(3.67f).add(Big.div(Big.dec(buffedLvl()), Big.dec(3f)))).multiply(Big.dec(chrgUsed))));
 
 		//ignore cells which can't have anything grow in them.
 		for (Iterator<Integer> i = cells.iterator(); i.hasNext();) {
@@ -123,14 +127,14 @@ public class WandOfRegrowth extends Wand {
 						Statistics.qualifiedForBossChallengeBadge = false;
 					}
 					wandProc(ch, chargesPerCast());
-					Buff.prolong( ch, Roots.class, 4f * chrgUsed );
+					Buff.prolong( ch, Roots.class, Big.dec(4f).multiply(Big.dec(chrgUsed)).floatValue() );
 				}
 			}
 		}
 
 		Random.shuffle(cells);
 
-		if (chargesPerCast() >= 3){
+		if ((chargesPerCast().compareTo(BigInteger.valueOf(3)) >= 0)){
 			Lotus l = new Lotus();
 			l.setLevel(buffedLvl());
 			if (cells.contains(target) && Actor.findChar(target) == null){
@@ -167,13 +171,13 @@ public class WandOfRegrowth extends Wand {
 		}
 
 		if (!cells.isEmpty() && Random.Float() > furrowedChance &&
-				(Random.Int(6) < chrgUsed)){ // 16%/33%/50% chance to spawn a seed pod or dewcatcher
+				((BigInteger.valueOf(Random.Int(6)).compareTo(chrgUsed) < 0))){ // 16%/33%/50% chance to spawn a seed pod or dewcatcher
 			int cell = cells.remove(0);
 			Dungeon.level.plant( Dungeon.Int(2) == 0 ? new Seedpod.Seed() : new Dewcatcher.Seed(), cell);
 		}
 
 		if (!cells.isEmpty() && Random.Float() > furrowedChance &&
-				(Random.Int(3) < chrgUsed)){ // 33%/66%/100% chance to spawn a plant
+				((BigInteger.valueOf(Random.Int(3)).compareTo(chrgUsed) < 0))){ // 33%/66%/100% chance to spawn a plant
 			int cell = cells.remove(0);
 			Dungeon.level.plant((Plant.Seed) Generator.randomUsingDefaults(Generator.Category.SEED), cell);
 		}
@@ -192,36 +196,36 @@ public class WandOfRegrowth extends Wand {
 			grassToPlace--;
 		}
 
-		if (totChrgUsed < chargeLimit(Dungeon.hero.lvl)) {
+		if (totChrgUsed < chargeLimit(BigInteger.valueOf(Dungeon.hero.lvl))) {
 			chargesOverLimit = 0;
-			totChrgUsed += chrgUsed;
-			if (totChrgUsed > chargeLimit(Dungeon.hero.lvl)){
-				chargesOverLimit = totChrgUsed - chargeLimit(Dungeon.hero.lvl);
-				totChrgUsed = chargeLimit(Dungeon.hero.lvl);
+			totChrgUsed += Big.toLong(chrgUsed);
+			if (totChrgUsed > chargeLimit(BigInteger.valueOf(Dungeon.hero.lvl))){
+				chargesOverLimit = totChrgUsed - chargeLimit(BigInteger.valueOf(Dungeon.hero.lvl));
+				totChrgUsed = chargeLimit(BigInteger.valueOf(Dungeon.hero.lvl));
 			}
 		} else {
-			chargesOverLimit += chrgUsed;
+			chargesOverLimit += Big.toLong(chrgUsed);
 		}
 
 	}
 
-	private int chargeLimit(long heroLvl ){
+	private int chargeLimit(BigInteger heroLvl ){
 		return chargeLimit(  heroLvl, level() );
 	}
 
-	private int chargeLimit(long heroLvl, long wndLvl ){
-		if (wndLvl >= 10){
+	private int chargeLimit(BigInteger heroLvl, BigInteger wndLvl ){
+		if ((wndLvl.compareTo(BigInteger.TEN) >= 0)){
 			return Integer.MAX_VALUE;
 		} else {
 			//20 charges at base, plus:
 			//2/3.1/4.2/5.5/6.8/8.4/10.4/13.2/18.0/30.8/inf. charges per hero level, at wand level:
 			//0/1  /2  /3  /4  /5  /6   /7   /8   /9   /10
-			return Math.round(20 + heroLvl * (2+wndLvl) * (1f + (wndLvl/(50 - 5*wndLvl))));
+			return Big.toInt(Big.round(Big.dec(20).add(Big.dec(heroLvl.multiply((BigInteger.TWO.add(wndLvl)))).multiply((Big.dec(1f).add(Big.dec((wndLvl.divide((BigInteger.valueOf(50).subtract(BigInteger.valueOf(5).multiply(wndLvl))))))))))));
 		}
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
+	public void onHit(MagesStaff staff, Char attacker, Char defender, BigInteger damage) {
 		//like pre-nerf vampiric enchantment, except with herbal healing buff, only in grass
 		boolean grass = false;
 		int terr = Dungeon.level.map[attacker.pos];
@@ -234,14 +238,14 @@ public class WandOfRegrowth extends Wand {
 		}
 
 		if (grass) {
-			long level = Math.max(0, staff.buffedLvl());
+			BigInteger level = BigInteger.ZERO.max(staff.buffedLvl());
 
 			// lvl 0 - 16%
 			// lvl 1 - 21%
 			// lvl 2 - 25%
-			int healing = Math.round(damage * (level + 2f) / (level + 6f) / 2f);
+			int healing = Big.toInt(Big.round(Big.div(Big.div(Big.dec(damage).multiply((Big.dec(level).add(Big.dec(2f)))), (Big.dec(level).add(Big.dec(6f)))), Big.dec(2f))));
 			healing = Math.round(healing * procChanceMultiplier(attacker));
-			Buff.affect(attacker, Sungrass.Health.class).boost(healing);
+			Buff.affect(attacker, Sungrass.Health.class).boost(BigInteger.valueOf(healing));
 		}
 
 	}
@@ -252,11 +256,11 @@ public class WandOfRegrowth extends Wand {
             return super.aimTiles(target);
         }
         Ballistica b = new Ballistica(Dungeon.hero.pos, target, Ballistica.WONT_STOP);
-        long maxDist = 2 + 2*chargesPerCast();
+        BigInteger maxDist = BigInteger.TWO.add(BigInteger.TWO.multiply(chargesPerCast()));
 
         ConeAOE tempCone = new ConeAOE( b,
-                maxDist,
-                20 + 10*chargesPerCast(),
+                maxDist.floatValue(),
+                BigInteger.valueOf(20).add(BigInteger.TEN.multiply(chargesPerCast())).floatValue(),
                 Ballistica.STOP_SOLID | Ballistica.STOP_TARGET);
         return Arrays.asList(tempCone.cells.toArray(new Integer[0]));
     }
@@ -264,11 +268,11 @@ public class WandOfRegrowth extends Wand {
 	public void fx(Ballistica bolt, Callback callback) {
 
 		// 4/6/8 distance
-		int maxDist = (int) (2 + 2*chargesPerCast());
+		int maxDist = Big.toInt((BigInteger.TWO.add(BigInteger.TWO.multiply(chargesPerCast()))));
 
 		cone = new ConeAOE( bolt,
 				maxDist,
-				20 + 10*chargesPerCast(),
+				BigInteger.valueOf(20).add(BigInteger.TEN.multiply(chargesPerCast())).floatValue(),
 				Ballistica.STOP_SOLID | Ballistica.STOP_TARGET);
 
 		//cast to cells at the tip, rather than all cells, better performance.
@@ -295,36 +299,36 @@ public class WandOfRegrowth extends Wand {
 	}
 
 	@Override
-	protected long chargesPerCast() {
+	protected BigInteger chargesPerCast() {
 		if (cursed ||
 				(charger != null && charger.target == null && charger.target.buff(WildMagic.WildMagicTracker.class) != null)){
-			return 1;
+			return BigInteger.ONE;
 		}
 		//consumes 30% of current charges, rounded up, with a min of 1 and a max of 3.
-		return (long) GameMath.gate(1, (long)Math.ceil(curCharges*0.3d), 3);
+		return Big.of(GameMath.gate(1, Big.trunc(Big.ceil(Big.dec(curCharges).multiply(Big.dec(0.3d)))).floatValue(), 3));
 	}
 
 	@Override
 	public String statsDesc() {
 		String desc = Messages.get(this, "stats_desc", chargesPerCast()) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, getMaxCharges());
 		if (isIdentified()){
-			int chargeLeft = chargeLimit(Dungeon.hero.lvl) - totChrgUsed;
+			int chargeLeft = chargeLimit(BigInteger.valueOf(Dungeon.hero.lvl)) - totChrgUsed;
 			if (chargeLeft < 10000) desc += " " + Messages.get(this, "degradation", Math.max(chargeLeft, 0));
 		}
 		return desc;
 	}
 
 	@Override
-	public String upgradeStat1(long level) {
-		return Messages.decimalFormat("#.##", 3 + (2+level)/3f);
+	public String upgradeStat1(BigInteger level) {
+		return Messages.decimalFormat("#.##", Big.dec(3).add(Big.div(Big.dec((BigInteger.TWO.add(level))), Big.dec(3f))).doubleValue());
 	}
 
 	@Override
-	public String upgradeStat2(long level) {
-		if (level >= 10){
+	public String upgradeStat2(BigInteger level) {
+		if ((level.compareTo(BigInteger.TEN) >= 0)){
 			return "∞";
 		} else {
-			return Long.toString(chargeLimit(Dungeon.hero.lvl, level));
+			return Long.toString(chargeLimit(BigInteger.valueOf(Dungeon.hero.lvl), level));
 		}
 	}
 
@@ -446,19 +450,19 @@ public class WandOfRegrowth extends Wand {
 			viewDistance = 1;
 		}
 
-		private long wandLvl = 0;
+		private BigInteger wandLvl = BigInteger.ZERO;
 
-		private void setLevel( long lvl ){
+		private void setLevel( BigInteger lvl ){
 			wandLvl = lvl;
-			HP = HT = (25 + 3*lvl);
+			HP = HT = (BigInteger.valueOf(25).add(BigInteger.valueOf(3).multiply(lvl)));
 		}
 
 		public boolean inRange(int pos){
-			return Dungeon.level.trueDistance(this.pos, pos) <= wandLvl;
+			return (Big.dec(Dungeon.level.trueDistance(this.pos, pos)).compareTo(Big.dec(wandLvl)) <= 0);
 		}
 
 		public float seedPreservation(){
-			return Math.min( 1f, 0.40f + 0.04f*wandLvl );
+			return Big.dec(1f).min(Big.dec(0.40f).add(Big.dec(0.04f).multiply(Big.dec(wandLvl)))).floatValue();
 		}
 
 		@Override
@@ -470,7 +474,7 @@ public class WandOfRegrowth extends Wand {
 		protected boolean act() {
 			super.act();
 
-			if (--HP <= 0){
+			if (((HP = HP.subtract(BigInteger.ONE)).compareTo(BigInteger.ZERO) <= 0)){
 				destroy();
 				sprite.die();
 			}
@@ -479,7 +483,7 @@ public class WandOfRegrowth extends Wand {
 		}
 
 		@Override
-		public void damage( long dmg, Object src ) {
+		public void damage( BigInteger dmg, Object src ) {
 			//do nothing
 		}
 
@@ -519,13 +523,13 @@ public class WandOfRegrowth extends Wand {
 		@Override
 		public void storeInBundle(Bundle bundle) {
 			super.storeInBundle(bundle);
-			bundle.put(WAND_LVL, wandLvl);
+			Big.put(bundle, WAND_LVL, wandLvl);
 		}
 
 		@Override
 		public void restoreFromBundle(Bundle bundle) {
 			super.restoreFromBundle(bundle);
-			wandLvl = bundle.getInt(WAND_LVL);
+			wandLvl = BigInteger.valueOf(bundle.getInt(WAND_LVL));
 		}
 	}
 

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
@@ -37,14 +41,14 @@ public class Repulsion extends Armor.Glyph {
 	private static ItemSprite.Glowing WHITE = new ItemSprite.Glowing( 0xFFFFFF );
 	
 	@Override
-	public long proc( Armor armor, Char attacker, Char defender, long damage) {
+	public BigInteger proc( Armor armor, Char attacker, Char defender, BigInteger damage) {
 
-		long level = Math.max( 0, armor.buffedLvl() );
+		BigInteger level = BigInteger.ZERO.max(armor.buffedLvl());
 
 		// lvl 0 - 20%
 		// lvl 1 - 33%
 		// lvl 2 - 43%
-		float procChance = (level+1f)/(level+5f) * procChanceMultiplier(defender);
+		float procChance = Big.div((Big.dec(level).add(Big.dec(1f))), (Big.dec(level).add(Big.dec(5f)))).multiply(Big.dec(procChanceMultiplier(defender))).floatValue();
 		if (Dungeon.level.adjacent(attacker.pos, defender.pos) && Random.Float() < procChance){
 
 			float powerMulti = Math.max(1f, procChance);
@@ -53,7 +57,7 @@ public class Repulsion extends Armor.Glyph {
 			Ballistica trajectory = new Ballistica(attacker.pos, oppositeHero, Ballistica.MAGIC_BOLT);
 			WandOfBlastWave.throwChar(attacker,
 					trajectory,
-					Math.round(2 * powerMulti),
+					BigInteger.valueOf(Math.round(2 * powerMulti)),
 					true,
 					true,
 					this);

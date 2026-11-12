@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -50,12 +54,12 @@ public class WandOfFrost extends DamageWand {
 		image = ItemSpriteSheet.WAND_FROST;
 	}
 
-	public long min(long lvl){
-		return ((2+lvl)*getRarityMultiplier());
+	public BigInteger min(BigInteger lvl){
+		return ((BigInteger.TWO.add(lvl)).multiply(getRarityMultiplier()));
 	}
 
-	public long max(long lvl){
-		return ((8+5*lvl)*getRarityMultiplier());
+	public BigInteger max(BigInteger lvl){
+		return ((BigInteger.valueOf(8).add(BigInteger.valueOf(5).multiply(lvl))).multiply(getRarityMultiplier()));
 	}
 
 	@Override
@@ -67,12 +71,12 @@ public class WandOfFrost extends DamageWand {
 		}
 
 		Fire fire = (Fire) Dungeon.level.blobs.get(Fire.class);
-		if (fire != null && fire.volume > 0) {
+		if (fire != null && (fire.volume.compareTo(BigInteger.ZERO) > 0)) {
 			fire.clear( bolt.collisionPos );
 		}
 
 		MagicalFireRoom.EternalFire eternalFire = (MagicalFireRoom.EternalFire)Dungeon.level.blobs.get(MagicalFireRoom.EternalFire.class);
-		if (eternalFire != null && eternalFire.volume > 0) {
+		if (eternalFire != null && (eternalFire.volume.compareTo(BigInteger.ZERO) > 0)) {
 			eternalFire.clear( bolt.collisionPos );
 			//bolt ends 1 tile short of fire, so check next tile too
 			if (bolt.path.size() > bolt.dist+1){
@@ -84,7 +88,7 @@ public class WandOfFrost extends DamageWand {
 		Char ch = Actor.findChar(bolt.collisionPos);
 		if (ch != null){
 
-			long damage = damageRoll();
+			BigInteger damage = damageRoll();
 
 			if (ch.buff(Frost.class) != null){
 				return; //do nothing, can't affect a frozen target
@@ -92,9 +96,9 @@ public class WandOfFrost extends DamageWand {
 			if (ch.buff(Chill.class) != null){
 				//6.67% less damage per turn of chill remaining, to a max of 10 turns (50% dmg)
 				float chillturns = Math.min(10, ch.buff(Chill.class).cooldown());
-				damage = Math.round(damage * Math.pow(0.9333f, chillturns));
+				damage = Big.round(Big.dec(damage).multiply(Big.dec(Math.pow(0.9333f, chillturns))));
 			} else {
-				ch.sprite.burst( 0xFF99CCFF, (int) Math.min(Math.sqrt(2 + buffedLvl() / 2f), 1000));
+				ch.sprite.burst( 0xFF99CCFF, (int) Math.min(Math.sqrt(Big.dec(2).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue()), 1000));
 			}
 
 			wandProc(ch, chargesPerCast());
@@ -103,9 +107,9 @@ public class WandOfFrost extends DamageWand {
 
 			if (ch.isAlive()){
 				if (Dungeon.level.water[ch.pos])
-					Buff.affect(ch, Chill.class, 4+buffedLvl());
+					Buff.affect(ch, Chill.class, BigInteger.valueOf(4).add(buffedLvl()).floatValue());
 				else
-					Buff.affect(ch, Chill.class, 2+buffedLvl());
+					Buff.affect(ch, Chill.class, BigInteger.TWO.add(buffedLvl()).floatValue());
 			}
 		} else {
 			Dungeon.level.pressCell(bolt.collisionPos);
@@ -113,8 +117,8 @@ public class WandOfFrost extends DamageWand {
 	}
 
 	@Override
-	public String upgradeStat2(long level) {
-		return Long.toString(2 + level);
+	public String upgradeStat2(BigInteger level) {
+		return BigInteger.TWO.add(level).toString();
 	}
 
 	@Override
@@ -128,7 +132,7 @@ public class WandOfFrost extends DamageWand {
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
+	public void onHit(MagesStaff staff, Char attacker, Char defender, BigInteger damage) {
 		Chill chill = defender.buff(Chill.class);
 
 		if (chill != null) {

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.blacksmith;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -57,31 +61,31 @@ public class GleamingStaff extends BlacksmithWeapon implements InternalKillsThre
     public int counter = 0;
 
     @Override
-    public long min(long lvl) {
-        return Math.round(super.min(lvl)*0.6f);
+    public BigInteger min(BigInteger lvl) {
+        return Big.round(Big.dec(super.min(lvl)).multiply(Big.dec(0.6f)));
     }
 
     @Override
-    public long max(long lvl) {
-        return Math.round(super.max(lvl)*0.75f);
+    public BigInteger max(BigInteger lvl) {
+        return Big.round(Big.dec(super.max(lvl)).multiply(Big.dec(0.75f)));
     }
 
     @Override
-    public long defenseFactor( Char owner ) {
-        long defense = tier + Dungeon.cycle * 7 + (buffedLvl() * (1 + Dungeon.cycle));
+    public BigInteger defenseFactor( Char owner ) {
+        BigInteger defense = BigInteger.valueOf(tier + Dungeon.cycle * 7).add((buffedLvl().multiply(BigInteger.valueOf((1 + Dungeon.cycle)))));
         if (owner.buff(GuardTracker.class) != null)
-            return defense * 2;
+            return defense.multiply(BigInteger.TWO);
         return defense;	//2 extra defence
     }
 
     public String statsInfo(){
-        return Messages.get(this, "stats_desc", tier+Dungeon.cycle*7 + (buffedLvl()*(1+Dungeon.cycle)), COMBO_COUNT-1);
+        return Messages.get(this, "stats_desc", BigInteger.valueOf(tier+Dungeon.cycle*7).add((buffedLvl().multiply(BigInteger.valueOf((1+Dungeon.cycle))))), COMBO_COUNT-1);
     }
 
     private static final int COMBO_COUNT = 16;
 
     @Override
-    public long proc(Char attacker, Char defender, long damage) {
+    public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
         counter++;
         Sample.INSTANCE.play( Assets.Sounds.GOLD, 2f, 1f + 3.5f * ((COMBO_COUNT * 1f - counter) / (COMBO_COUNT * 1f))  );
         if (counter >= COMBO_COUNT){

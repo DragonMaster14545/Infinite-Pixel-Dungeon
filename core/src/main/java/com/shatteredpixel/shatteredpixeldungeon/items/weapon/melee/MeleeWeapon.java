@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -219,9 +223,9 @@ public class MeleeWeapon extends Weapon {
 
 		if (hero.heroClass == HeroClass.DUELIST
 				&& hero.hasTalent(Talent.AGGRESSIVE_BARRIER)
-				&& (hero.HP / (float)hero.HT) <= 0.5f){
+				&& ((Big.div(Big.dec(hero.HP), Big.dec(hero.HT.floatValue()))).compareTo(Big.dec(0.5f)) <= 0)){
 			int shieldAmt = 1 + 2*hero.pointsInTalent(Talent.AGGRESSIVE_BARRIER);
-			Buff.affect(hero, Barrier.class).setShield(shieldAmt);
+			Buff.affect(hero, Barrier.class).setShield(BigInteger.valueOf(shieldAmt));
 			hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldAmt), FloatingText.SHIELDING);
 		}
 
@@ -271,7 +275,7 @@ public class MeleeWeapon extends Weapon {
 
 	public static void onAbilityKill( Hero hero, Char killed ){
 		if (hero.heroClass == HeroClass.DUELIST){
-			hero.HP = Math.min(hero.HP + hero.lvl, hero.HT);
+			hero.HP = hero.HP.add(BigInteger.valueOf(hero.lvl)).min(hero.HT);
 			hero.sprite.emitter().burst(Speck.factory(Speck.HEALING), 3);
 		}
 		if (hero.hasTalent(Talent.LETHAL_HASTE)){
@@ -289,18 +293,16 @@ public class MeleeWeapon extends Weapon {
 	}
 
 	@Override
-	public long min(long lvl) {
-		return  tier()*2L +  //base
-				lvl*2;    //level scaling
+	public BigInteger min(BigInteger lvl) {
+		return  BigInteger.valueOf(tier()*2L).add(lvl.multiply(BigInteger.TWO));    //level scaling
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  5L*(tier()+1) +    //base
-				lvl*(tier()+1);   //level scaling
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(5L*(tier()+1)).add(lvl.multiply(BigInteger.valueOf((tier()+1))));   //level scaling
 	}
 
-	public int STRReq(long lvl){
+	public int STRReq(BigInteger lvl){
 		int req = STRReq(tier, lvl);
 		if (masteryPotionBonus){
 			req -= 2;
@@ -309,7 +311,7 @@ public class MeleeWeapon extends Weapon {
 	}
 private static boolean evaluatingTwinUpgrades = false;
 	@Override
-	public long buffedLvl() {
+	public BigInteger buffedLvl() {
 		if (!evaluatingTwinUpgrades && Dungeon.hero != null && isEquipped(Dungeon.hero) && Dungeon.hero.subClass == HeroSubClass.CHAMPION){
 			KindOfWeapon other = null;
 			if (Dungeon.hero.belongings.weapon() != this) other = Dungeon.hero.belongings.weapon();
@@ -317,12 +319,12 @@ private static boolean evaluatingTwinUpgrades = false;
 
 			if (other instanceof MeleeWeapon) {
 				evaluatingTwinUpgrades = true;
-				long otherLevel = other.buffedLvl();
+				BigInteger otherLevel = other.buffedLvl();
 				evaluatingTwinUpgrades = false;
 
 				//weaker weapon needs to be 2/1/0 tiers lower, based on talent level
 				if ((tier) <= ((MeleeWeapon) other).tier
-						&& otherLevel > super.buffedLvl()) {
+						&& (otherLevel.compareTo(super.buffedLvl()) > 0)) {
 					return otherLevel;
 				}
 
@@ -332,28 +334,28 @@ private static boolean evaluatingTwinUpgrades = false;
 	}
 
 	@Override
-	public long damageRoll(Char owner) {
-		long damage = augment.damageFactor(super.damageRoll( owner ));
+	public BigInteger damageRoll(Char owner) {
+		BigInteger damage = augment.damageFactor(super.damageRoll( owner ));
 
 		if (owner instanceof Hero) {
 			int exStr = ((Hero)owner).STR() - STRReq();
 			if (exStr > 0) {
-				damage += Hero.heroDamageIntRange( 0, exStr );
+				damage = damage.add(Hero.heroDamageIntRange( BigInteger.ZERO, BigInteger.valueOf(exStr) ));
 			}
 		}
-		if (masteryPotionBonus) damage*=1.2d;
+		if (masteryPotionBonus) damage = Big.trunc(Big.dec(damage).multiply(Big.dec(1.2d)));
 
 		return damage;
 	}
 
 	@Override
-	public long min() {
-		return Math.round(super.min()*(1d + (enchantHardened ? Weapon.hardenBoost(buffedLvl()) : 0d)));
+	public BigInteger min() {
+		return Big.round(Big.dec(super.min()).multiply(Big.dec((1d + (enchantHardened ? Weapon.hardenBoost(buffedLvl()) : 0d)))));
 	}
 
 	@Override
-	public long max() {
-		return Math.round(super.max()*(1d + (enchantHardened ? Weapon.hardenBoost(buffedLvl()) : 0d)));
+	public BigInteger max() {
+		return Big.round(Big.dec(super.max()).multiply(Big.dec((1d + (enchantHardened ? Weapon.hardenBoost(buffedLvl()) : 0d)))));
 	}
 
 	@Override
@@ -371,8 +373,8 @@ private static boolean evaluatingTwinUpgrades = false;
 				}
 			}
 		} else {
-			info += "\n\n" + Messages.get(MeleeWeapon.class, "stats_unknown", tier, min(0), max(0), STRReq(0));
-			if (Dungeon.hero != null && STRReq(0) > Dungeon.hero.STR()) {
+			info += "\n\n" + Messages.get(MeleeWeapon.class, "stats_unknown", tier, min(BigInteger.ZERO), max(BigInteger.ZERO), STRReq(BigInteger.ZERO));
+			if (Dungeon.hero != null && STRReq(BigInteger.ZERO) > Dungeon.hero.STR()) {
 				info += " " + Messages.get(MeleeWeapon.class, "probably_too_heavy");
 			}
 		}
@@ -435,7 +437,7 @@ private static boolean evaluatingTwinUpgrades = false;
 		return Messages.get(this, "ability_desc");
 	}
 
-	public String upgradeAbilityStat(long level){
+	public String upgradeAbilityStat(BigInteger level){
 		return null;
 	}
 
@@ -451,21 +453,21 @@ private static boolean evaluatingTwinUpgrades = false;
 	}
 
 	@Override
-	public long value() {
-		int price = 20 * tier;
+	public BigInteger value() {
+		BigInteger price = BigInteger.valueOf(20 * tier);
 		if (hasGoodEnchant()) {
-			price *= 1.5;
+			price = Big.trunc(Big.dec(price).multiply(Big.dec(1.5)));
 		}
 		if (cursedKnown && (cursed || hasCurseEnchant())) {
-			price /= 2;
+			price = price.divide(BigInteger.TWO);
 		}
-		if (levelKnown && level() > 0) {
-			price *= (level() + 1);
+		if (levelKnown && (level().compareTo(BigInteger.ZERO) > 0)) {
+			price = price.multiply(((level().add(BigInteger.ONE))));
 		}
-		if (price < 1) {
-			price = 1;
+		if ((price.compareTo(BigInteger.ONE) < 0)) {
+			price = BigInteger.ONE;
 		}
-		return price;
+		return (price);
 	}
     private static final String TIER = "tier";
     @Override

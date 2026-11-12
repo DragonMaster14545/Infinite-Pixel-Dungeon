@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -39,10 +41,10 @@ public class CrystalWisp extends Mob{
 	{
 		spriteClass = CrystalWispSprite.class;
 
-		HP = HT = Dungeon.getCycleMultiplier(30);
-		defenseSkill = Dungeon.getCycleMultiplier(16);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(30));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(16));
 
-		EXP = Dungeon.getCycleMultiplier(7);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(7));
 		maxLvl = -2;
 
 		flying = true;
@@ -74,18 +76,18 @@ public class CrystalWisp extends Mob{
 	}
 
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(5), Dungeon.getCycleMultiplier(10) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(5)), Dungeon.getCycleMultiplier(BigInteger.TEN) );
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(18);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(18));
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(4));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(4)));
 	}
 
 	@Override
@@ -129,7 +131,7 @@ public class CrystalWisp extends Mob{
 		Char enemy = this.enemy;
 		if (hit( this, enemy, true )) {
 
-			long dmg = Random.NormalIntRange( 5, 10 );
+			BigInteger dmg = BigInteger.valueOf(Random.NormalIntRange( 5, 10 ));
 			dmg = Dungeon.getCycleMultiplier(dmg);
 			enemy.damage( dmg, new LightBeam() );
 

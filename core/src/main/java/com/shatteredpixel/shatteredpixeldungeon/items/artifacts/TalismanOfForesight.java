@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -55,12 +58,12 @@ public class TalismanOfForesight extends Artifact {
 	{
 		image = ItemSpriteSheet.ARTIFACT_TALISMAN;
 
-		exp = 0;
+		exp = BigInteger.ZERO;
 		levelCap = 10;
 
-		charge = 0;
+		charge = BigInteger.ZERO;
 		partialCharge = 0;
-		setChargeCap(100);
+		setChargeCap(BigInteger.valueOf(100));
 
 		defaultAction = AC_SCRY;
 	}
@@ -86,7 +89,7 @@ public class TalismanOfForesight extends Artifact {
 
 		if (action.equals(AC_SCRY)){
 			if (!isEquipped(hero))  GLog.i( Messages.get(Artifact.class, "need_to_equip") );
-			else if (charge < 5)    GLog.i( Messages.get(this, "low_charge") );
+			else if ((charge.compareTo(BigInteger.valueOf(5)) < 0))    GLog.i( Messages.get(this, "low_charge") );
 			else                    GameScene.selectCell(scry);
 		}
 	}
@@ -99,14 +102,14 @@ public class TalismanOfForesight extends Artifact {
 	@Override
 	public void charge(Hero target, float amount) {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
-		if (charge < getChargeCap()){
+		if ((charge.compareTo(getChargeCap()) < 0)){
 			partialCharge += 2*amount;
-			partialCharge *= getRarityMultiplier();
+			partialCharge *= getRarityMultiplier().doubleValue();
 			while (partialCharge >= 1f){
-				charge++;
+				charge = charge.add(BigInteger.ONE);
 				partialCharge--;
 			}
-			if (charge >= getChargeCap()) {
+			if ((charge.compareTo(getChargeCap()) >= 0)) {
 				charge = getChargeCap();
 				partialCharge = 0;
 				GLog.p( Messages.get(TalismanOfForesight.class, "full_charge") );
@@ -132,7 +135,7 @@ public class TalismanOfForesight extends Artifact {
 	}
 
 	private float maxDist(){
-		return Math.min(5 + 2*level(), (charge-3)/1.08f);
+		return Big.dec(BigInteger.valueOf(5).add(BigInteger.TWO.multiply(level()))).min(Big.div(Big.dec((charge.subtract(BigInteger.valueOf(3)))), Big.dec(1.08f))).floatValue();
 	}
 
 	private CellSelector.Listener scry = new CellSelector.Listener(){
@@ -188,7 +191,7 @@ public class TalismanOfForesight extends Artifact {
 
 					Char ch = Actor.findChar(cell);
 					if (ch != null && ch.alignment != Char.Alignment.NEUTRAL && ch.alignment != curUser.alignment){
-						Buff.append(curUser, CharAwareness.class, 5 + 2*level()).charID = ch.id();
+						Buff.append(curUser, CharAwareness.class, BigInteger.valueOf(5).add(BigInteger.TWO.multiply(level())).floatValue()).charID = ch.id();
 
 						if (!curUser.fieldOfView[ch.pos]){
 							earnedExp += 10;
@@ -197,7 +200,7 @@ public class TalismanOfForesight extends Artifact {
 
 					Heap h = Dungeon.level.heaps.get(cell);
 					if (h != null){
-						Buff.append(curUser, HeapAwareness.class, 5 + 2*level()).pos = h.pos;
+						Buff.append(curUser, HeapAwareness.class, BigInteger.valueOf(5).add(BigInteger.TWO.multiply(level())).floatValue()).pos = h.pos;
 
 						if (!h.seen){
 							earnedExp += 10;
@@ -206,9 +209,9 @@ public class TalismanOfForesight extends Artifact {
 
 				}
 
-				exp += earnedExp;
-				if (exp >= 100 + 50*level() && level() < levelCap) {
-					exp -= 100 + 50*level();
+				exp = exp.add(BigInteger.valueOf(earnedExp));
+				if ((exp.compareTo(BigInteger.valueOf(100).add(BigInteger.valueOf(50).multiply(level()))) >= 0) && (level().compareTo(BigInteger.valueOf(levelCap)) < 0)) {
+					exp = exp.subtract(BigInteger.valueOf(100).add(BigInteger.valueOf(50).multiply(level())));
 					upgrade();
 					Catalog.countUse(TalismanOfForesight.class);
 					GLog.p( Messages.get(TalismanOfForesight.class, "levelup") );
@@ -216,14 +219,14 @@ public class TalismanOfForesight extends Artifact {
 				updateQuickslot();
 
 				//5 charge at 2 tiles, up to 30 charge at 25 tiles
-				charge -= 3 + dist*1.08f;
+				charge = Big.trunc(Big.dec(charge).subtract(Big.dec(3 + dist*1.08f)));
 				partialCharge -= (dist*1.08f)%1f;
-				if (partialCharge < 0 && charge > 0){
+				if (partialCharge < 0 && (charge.compareTo(BigInteger.ZERO) > 0)){
 					partialCharge ++;
-					charge --;
+					charge = charge.subtract(BigInteger.ONE);
 				}
-				while (charge < 0){
-					charge++;
+				while ((charge.compareTo(BigInteger.ZERO) < 0)){
+					charge = charge.add(BigInteger.ONE);
 					partialCharge--;
 				}
 				Invisibility.dispel(curUser);
@@ -272,19 +275,19 @@ public class TalismanOfForesight extends Artifact {
 
 			checkAwareness();
 
-			if (charge < getChargeCap()
+			if ((charge.compareTo(getChargeCap()) < 0)
 					&& !cursed
 					&& target.buff(MagicImmune.class) == null
 					&& Regeneration.regenOn()) {
 				//fully charges in 2000 turns at +0, scaling to 1000 turns at +10.
-				float chargeGain = (0.05f+(level()*0.005f));
+				float chargeGain = (Big.dec(0.05f).add((Big.dec(level()).multiply(Big.dec(0.005f))))).floatValue();
 				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
 				partialCharge += chargeGain;
 
 				while (partialCharge >= 1){
 					partialCharge--;
-					charge++;
-					if (charge >= getChargeCap()) {
+					charge = charge.add(BigInteger.ONE);
+					if ((charge.compareTo(getChargeCap()) >= 0)) {
 						partialCharge = 0;
 						GLog.p(Messages.get(TalismanOfForesight.class, "full_charge"));
 					}
@@ -349,7 +352,7 @@ public class TalismanOfForesight extends Artifact {
 
 		public void charge(int boost){
 			if (!cursed && target.buff(MagicImmune.class) == null) {
-				charge = Math.min((charge + boost), getChargeCap());
+				charge = (charge.add(BigInteger.valueOf(boost))).min(getChargeCap());
 				updateQuickslot();
 			}
 		}

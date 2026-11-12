@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -121,16 +124,16 @@ public class RageShield extends Buff {
             }
 
             for (Char ch : affected){
-                if (left > 0 && ch.alignment != target.alignment && target.HP < target.HT) {
+                if (left > 0 && ch.alignment != target.alignment && (target.HP.compareTo(target.HT) < 0)) {
                     target.sprite.parent.add(new Beam.HealthRay(target.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(ch.pos)));
-                    float drain = ch.HT / 40f + 1;
+                    float drain = Big.div(Big.dec(ch.HT), Big.dec(40f)).add(Big.dec(1)).floatValue();
                     if (Dungeon.level.adjacent(target.pos, ch.pos)){
-                        drain = ch.HT / 8f + 1;
+                        drain = Big.div(Big.dec(ch.HT), Big.dec(8f)).add(Big.dec(1)).floatValue();
                     }
-                    ch.damage(Math.round(drain), this);
+                    ch.damage(BigInteger.valueOf(Math.round(drain)), this);
                     left -= drain;
                     Buff.prolong(ch, Amok.class, 2f);
-                    target.HP = Math.min(target.HP + Math.round(drain), target.HT);
+                    target.HP = target.HP.add(BigInteger.valueOf(Math.round(drain))).min(target.HT);
                     target.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(Math.round(drain)), FloatingText.HEALING);
                     if (left <= 0){
                         detach();

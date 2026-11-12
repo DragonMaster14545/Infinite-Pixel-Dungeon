@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -64,19 +68,19 @@ public class WandOfFireblast extends DamageWand {
 	}
 
 	//1/2/3 base damage with 1/2/3 scaling based on charges used
-	public long min(long lvl){
-		return ((1+lvl) * chargesPerCast() *getRarityMultiplier());
+	public BigInteger min(BigInteger lvl){
+		return ((BigInteger.ONE.add(lvl)).multiply(chargesPerCast()).multiply(getRarityMultiplier()));
 	}
 
 	//2/8/18 base damage with 2/4/6 scaling based on charges used
-	public long max(long lvl){
-		switch ((int) chargesPerCast()){
+	public BigInteger max(BigInteger lvl){
+		switch (Big.toInt(chargesPerCast())){
 			case 1: default:
-				return ((2 + 2*lvl)*getRarityMultiplier());
+				return ((BigInteger.TWO.add(BigInteger.TWO.multiply(lvl))).multiply(getRarityMultiplier()));
 			case 2:
-				return ((2*(4 + 2*lvl))*getRarityMultiplier());
+				return ((BigInteger.TWO.multiply((BigInteger.valueOf(4).add(BigInteger.TWO.multiply(lvl))))).multiply(getRarityMultiplier()));
 			case 3:
-				return ((3*(6+2*lvl))*getRarityMultiplier());
+				return ((BigInteger.valueOf(3).multiply((BigInteger.valueOf(6).add(BigInteger.TWO.multiply(lvl))))).multiply(getRarityMultiplier()));
 		}
 	}
 
@@ -109,7 +113,7 @@ public class WandOfFireblast extends DamageWand {
 					Dungeon.level.heaps.get(cell).burn();
 				}
 			} else {
-				GameScene.add( Blob.seed( cell, (int) Math.min(Integer.MAX_VALUE-1, 1+chargesPerCast()), Fire.class ) );
+				GameScene.add( Blob.seed( cell, BigInteger.valueOf(Big.toInt(BigInteger.valueOf(Integer.MAX_VALUE-1).min(BigInteger.ONE.add(chargesPerCast())))), Fire.class ) );
 			}
 
 			Char ch = Actor.findChar( cell );
@@ -129,18 +133,18 @@ public class WandOfFireblast extends DamageWand {
 			for (int i : PathFinder.NEIGHBOURS8){
 				if (Dungeon.level.trueDistance(cell+i, bolt.collisionPos) < Dungeon.level.trueDistance(cell, bolt.collisionPos)
 						&& Dungeon.level.flamable[cell+i]
-						&& Fire.volumeAt(cell+i, Fire.class) == 0){
-					GameScene.add( Blob.seed( cell+i, (int) Math.min(Integer.MAX_VALUE-1, 1+chargesPerCast()), Fire.class ) );
+						&& (Fire.volumeAt(cell+i, Fire.class).compareTo(BigInteger.ZERO) == 0)){
+					GameScene.add( Blob.seed( cell+i, BigInteger.valueOf(Big.toInt(BigInteger.valueOf(Integer.MAX_VALUE-1).min(BigInteger.ONE.add(chargesPerCast())))), Fire.class ) );
 				}
 			}
 		}
 
 		for ( Char ch : affectedChars ){
 			wandProc(ch, chargesPerCast());
-			ch.damage(Math.round(damageRoll()*Dungeon.fireDamage), this);
+			ch.damage(Big.round(Big.dec(damageRoll()).multiply(Big.dec(Dungeon.fireDamage))), this);
 			if (ch.isAlive()) {
 				Buff.affect(ch, Burning.class).reignite(ch);
-				switch ((int) chargesPerCast()) {
+				switch (Big.toInt(chargesPerCast())) {
 					case 1:
 						break; //no effects
 					case 2:
@@ -155,7 +159,7 @@ public class WandOfFireblast extends DamageWand {
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
+	public void onHit(MagesStaff staff, Char attacker, Char defender, BigInteger damage) {
 		//acts like blazing enchantment
 		new FireBlastOnHit().proc( staff, attacker, defender, damage);
 	}
@@ -174,8 +178,8 @@ public class WandOfFireblast extends DamageWand {
         }
         Ballistica b = new Ballistica(Dungeon.hero.pos, target, Ballistica.WONT_STOP);
         ConeAOE tempCone = new ConeAOE( b,
-                3 + 2*chargesPerCast(),
-                30 + 20*chargesPerCast(),
+                BigInteger.valueOf(3).add(BigInteger.TWO.multiply(chargesPerCast())).floatValue(),
+                BigInteger.valueOf(30).add(BigInteger.valueOf(20).multiply(chargesPerCast())).floatValue(),
                 Ballistica.STOP_TARGET | Ballistica.STOP_SOLID | Ballistica.IGNORE_SOFT_SOLID);
         return Arrays.asList(tempCone.cells.toArray(new Integer[0]));
     }
@@ -185,11 +189,11 @@ public class WandOfFireblast extends DamageWand {
 		//need to perform flame spread logic here so we can determine what cells to put flames in.
 
 		// 5/7/9 distance
-		int maxDist = (int) (3 + 2*chargesPerCast());
+		int maxDist = Big.toInt((BigInteger.valueOf(3).add(BigInteger.TWO.multiply(chargesPerCast()))));
 
 		cone = new ConeAOE( bolt,
 				maxDist,
-				30 + 20*chargesPerCast(),
+				BigInteger.valueOf(30).add(BigInteger.valueOf(20).multiply(chargesPerCast())).floatValue(),
 				Ballistica.STOP_TARGET | Ballistica.STOP_SOLID | Ballistica.IGNORE_SOFT_SOLID);
 
 		//cast to cells at the tip, rather than all cells, better performance.
@@ -217,36 +221,36 @@ public class WandOfFireblast extends DamageWand {
 	}
 
 	@Override
-	protected long chargesPerCast() {
+	protected BigInteger chargesPerCast() {
 		if (cursed ||
 				(charger != null && charger.target == null && charger.target.buff(WildMagic.WildMagicTracker.class) != null)){
-			return 1;
+			return BigInteger.ONE;
 		}
 		//consumes 30% of current charges, rounded up, with a min of 1 and a max of 3.
-		return (long) GameMath.gate(1, (long)Math.ceil(curCharges*0.3d), 3);
+		return Big.of(GameMath.gate(1, Big.trunc(Big.ceil(Big.dec(curCharges).multiply(Big.dec(0.3d)))).floatValue(), 3));
 	}
 
 	@Override
 	public String statsDesc() {
 		if (levelKnown)
-			return Messages.get(this, "stats_desc", chargesPerCast(), Math.round(min()*Dungeon.fireDamage), Math.round(max()*Dungeon.fireDamage)) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, getMaxCharges());
+			return Messages.get(this, "stats_desc", chargesPerCast(), Big.round(Big.dec(min()).multiply(Big.dec(Dungeon.fireDamage))), Big.round(Big.dec(max()).multiply(Big.dec(Dungeon.fireDamage)))) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, getMaxCharges());
 		else
-			return Messages.get(this, "stats_desc", chargesPerCast(), min(0), max(0));
+			return Messages.get(this, "stats_desc", chargesPerCast(), min(BigInteger.ZERO), max(BigInteger.ZERO));
 	}
 
 	@Override
-	public String upgradeStat1(long level) {
-		return (1+level) + "-" + (2+2*level);
+	public String upgradeStat1(BigInteger level) {
+		return (BigInteger.ONE.add(level)) + "-" + (BigInteger.TWO.add(BigInteger.TWO.multiply(level)));
 	}
 
 	@Override
-	public String upgradeStat2(long level) {
-		return (2+2*level) + "-" + 2*(4+2*level);
+	public String upgradeStat2(BigInteger level) {
+		return (BigInteger.TWO.add(BigInteger.TWO.multiply(level))) + "-" + BigInteger.TWO.multiply((BigInteger.valueOf(4).add(BigInteger.TWO.multiply(level))));
 	}
 
 	@Override
-	public String upgradeStat3(long level) {
-		return (3+3*level) + "-" + 3*(6+2*level);
+	public String upgradeStat3(BigInteger level) {
+		return (BigInteger.valueOf(3).add(BigInteger.valueOf(3).multiply(level))) + "-" + BigInteger.valueOf(3).multiply((BigInteger.valueOf(6).add(BigInteger.TWO.multiply(level))));
 	}
 
 	@Override

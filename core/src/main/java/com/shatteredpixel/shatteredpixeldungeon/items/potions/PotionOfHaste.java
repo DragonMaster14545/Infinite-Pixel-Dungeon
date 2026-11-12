@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -48,7 +50,7 @@ public class PotionOfHaste extends Potion {
 	}
 	
 	@Override
-	public long value() {
-		return isKnown() ? 40 * quantity : super.value();
+	public BigInteger value() {
+		return isKnown() ? BigInteger.valueOf(40).multiply(quantity) : super.value();
 	}
 }

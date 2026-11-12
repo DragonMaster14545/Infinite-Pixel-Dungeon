@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -50,7 +52,7 @@ public class StormTrap extends Trap {
 		PathFinder.buildDistanceMap( pos, BArray.not( Dungeon.level.solid, null ), 2 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-				GameScene.add(Blob.seed(i, 20, Electricity.class));
+				GameScene.add(Blob.seed(i, BigInteger.valueOf(20), Electricity.class));
 			}
 		}
 	}

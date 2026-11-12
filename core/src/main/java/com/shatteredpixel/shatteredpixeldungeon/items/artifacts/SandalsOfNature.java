@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -65,8 +68,8 @@ public class SandalsOfNature extends Artifact {
 
 		levelCap = 3;
 
-		charge = 0;
-		setChargeCap(100);
+		charge = BigInteger.ZERO;
+		setChargeCap(BigInteger.valueOf(100));
 
 		defaultAction = AC_ROOT;
 	}
@@ -121,7 +124,7 @@ public class SandalsOfNature extends Artifact {
 		if (isEquipped( hero )
 				&& !cursed
 				&& curSeedEffect != null
-				&& charge >= seedChargeReqs.get(curSeedEffect)) {
+				&& (charge.compareTo(BigInteger.valueOf(seedChargeReqs.get(curSeedEffect))) >= 0)) {
 			actions.add(AC_ROOT);
 		}
 		return actions;
@@ -141,7 +144,7 @@ public class SandalsOfNature extends Artifact {
 
 			if (!isEquipped( hero ))                                GLog.i( Messages.get(Artifact.class, "need_to_equip") );
 			else if (curSeedEffect == null)                         GLog.i( Messages.get(this, "no_effect") );
-			else if (charge < seedChargeReqs.get(curSeedEffect))    GLog.i( Messages.get(this, "low_charge") );
+			else if ((charge.compareTo(BigInteger.valueOf(seedChargeReqs.get(curSeedEffect))) < 0))    GLog.i( Messages.get(this, "low_charge") );
 			else {
 				GameScene.selectCell(cellSelector);
 			}
@@ -156,14 +159,14 @@ public class SandalsOfNature extends Artifact {
 	@Override
 	public void charge(Hero target, float amount) {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
-		if (charge < getChargeCap()) {
+		if ((charge.compareTo(getChargeCap()) < 0)) {
 			partialCharge += 2*amount;
-			partialCharge *= getRarityMultiplier();
+			partialCharge *= getRarityMultiplier().doubleValue();
 			while (partialCharge >= 1f){
-				charge++;
+				charge = charge.add(BigInteger.ONE);
 				partialCharge--;
 			}
-			if (charge >= getChargeCap()) {
+			if ((charge.compareTo(getChargeCap()) >= 0)) {
 				charge = getChargeCap();
 				partialCharge = 0;
 			}
@@ -181,13 +184,13 @@ public class SandalsOfNature extends Artifact {
 
 	@Override
 	public String name() {
-		if (level() == 0)   return super.name();
-		else                return Messages.get(this, "name_" + Math.min(3, level()));
+		if ((level().compareTo(BigInteger.ZERO) == 0))   return super.name();
+		else                return Messages.get(this, "name_" + BigInteger.valueOf(3).min(level()));
 	}
 
 	@Override
 	public String desc() {
-		String desc = Messages.get(this, "desc_" + (Math.min(level()+1, 4)));
+		String desc = Messages.get(this, "desc_" + (level().add(BigInteger.ONE).min(BigInteger.valueOf(4))));
 
 		if ( isEquipped ( Dungeon.hero ) ) {
 			desc += "\n\n";
@@ -215,17 +218,17 @@ public class SandalsOfNature extends Artifact {
 
 	@Override
 	public Item upgrade() {
-		if (level() < 0)        image = ItemSpriteSheet.ARTIFACT_SANDALS;
-		else if (level() == 0)  image = ItemSpriteSheet.ARTIFACT_SHOES;
-		else if (level() == 1)  image = ItemSpriteSheet.ARTIFACT_BOOTS;
-		else if (level() >= 2)  image = ItemSpriteSheet.ARTIFACT_GREAVES;
+		if ((level().compareTo(BigInteger.ZERO) < 0))        image = ItemSpriteSheet.ARTIFACT_SANDALS;
+		else if ((level().compareTo(BigInteger.ZERO) == 0))  image = ItemSpriteSheet.ARTIFACT_SHOES;
+		else if ((level().compareTo(BigInteger.ONE) == 0))  image = ItemSpriteSheet.ARTIFACT_BOOTS;
+		else if ((level().compareTo(BigInteger.TWO) >= 0))  image = ItemSpriteSheet.ARTIFACT_GREAVES;
 		return super.upgrade();
 	}
 
 	public boolean canUseSeed(Item item){
 		return item instanceof Plant.Seed
 				&& !seeds.contains(item.getClass())
-				&& (level() < 3 || curSeedEffect != item.getClass());
+				&& ((level().compareTo(BigInteger.valueOf(3)) < 0) || curSeedEffect != item.getClass());
 	}
 
 	private static final String SEEDS = "seeds";
@@ -246,24 +249,24 @@ public class SandalsOfNature extends Artifact {
 		}
 		curSeedEffect = bundle.getClass(CUR_SEED_EFFECT);
 
-		if (level() == 1)  image = ItemSpriteSheet.ARTIFACT_SHOES;
-		else if (level() == 2)  image = ItemSpriteSheet.ARTIFACT_BOOTS;
-		else if (level() >= 3)  image = ItemSpriteSheet.ARTIFACT_GREAVES;
+		if ((level().compareTo(BigInteger.ONE) == 0))  image = ItemSpriteSheet.ARTIFACT_SHOES;
+		else if ((level().compareTo(BigInteger.TWO) == 0))  image = ItemSpriteSheet.ARTIFACT_BOOTS;
+		else if ((level().compareTo(BigInteger.valueOf(3)) >= 0))  image = ItemSpriteSheet.ARTIFACT_GREAVES;
 	}
 
 	public class Naturalism extends ArtifactBuff{
 		public void charge() {
 			if (cursed || target.buff(MagicImmune.class) != null) return;
-			if (charge < getChargeCap()){
+			if ((charge.compareTo(getChargeCap()) < 0)){
 				//0.5 charge per grass at +0, up to 1 at +10
-				float chargeGain = (3f + level())/6f;
+				float chargeGain = Big.div((Big.dec(3f).add(Big.dec(level()))), Big.dec(6f)).floatValue();
 				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
 				partialCharge += Math.max(0, chargeGain);
 				while (partialCharge >= 1){
-					charge++;
+					charge = charge.add(BigInteger.ONE);
 					partialCharge--;
 				}
-				charge = Math.min(charge, getChargeCap());
+				charge = charge.min(getChargeCap());
 				updateQuickslot();
 			}
 		}
@@ -289,7 +292,7 @@ public class SandalsOfNature extends Artifact {
 		@Override
 		public void onSelect( Item item ) {
 			if (item != null && item instanceof Plant.Seed) {
-				if (level() < 3) seeds.add(0, item.getClass());
+				if ((level().compareTo(BigInteger.valueOf(3)) < 0)) seeds.add(0, item.getClass());
 				curSeedEffect = item.getClass();
 
 				Hero hero = Dungeon.hero;
@@ -297,11 +300,11 @@ public class SandalsOfNature extends Artifact {
 				Sample.INSTANCE.play( Assets.Sounds.PLANT );
 				hero.busy();
 				hero.spend( Actor.TICK );
-				if (seeds.size() >= 3+(level()*3)){
+				if ((BigInteger.valueOf(seeds.size()).compareTo(BigInteger.valueOf(3).add((level().multiply(BigInteger.valueOf(3))))) >= 0)){
 					seeds.clear();
 					upgrade();
 
-					if (level() >= 1 && level() <= 3) {
+					if ((level().compareTo(BigInteger.ONE) >= 0) && (level().compareTo(BigInteger.valueOf(3)) <= 0)) {
 						GLog.p( Messages.get(SandalsOfNature.class, "levelup") );
 					}
 
@@ -336,7 +339,7 @@ public class SandalsOfNature extends Artifact {
 					Sample.INSTANCE.play(Assets.Sounds.PLANT);
 					Sample.INSTANCE.playDelayed(Assets.Sounds.TRAMPLE, 0.25f, 1, Random.Float( 0.96f, 1.05f ) );
 
-					charge -= seedChargeReqs.get(curSeedEffect);
+					charge = charge.subtract(BigInteger.valueOf(seedChargeReqs.get(curSeedEffect)));
 					Talent.onArtifactUsed(Dungeon.hero);
 					updateQuickslot();
 					curUser.spendAndNext(1f);

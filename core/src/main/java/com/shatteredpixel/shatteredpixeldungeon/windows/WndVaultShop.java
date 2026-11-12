@@ -1,5 +1,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.ShulkerBox;
@@ -47,8 +51,8 @@ public class WndVaultShop extends Window {
 		}
 		WndBag.INSTANCE = this;
 
-		final long[] levels = VaultLink.SHOP_LEVELS;
-		final long[] packs = VaultLink.SLOT_PACKS;
+		final BigInteger[] levels = VaultLink.SHOP_LEVELS;
+		final BigInteger[] packs = VaultLink.SLOT_PACKS;
 		final int rows = levels.length + packs.length;
 		goldBtn = new RedButton[rows];
 		energyBtn = new RedButton[rows];
@@ -103,9 +107,9 @@ public class WndVaultShop extends Window {
 			ItemSprite icon;
 			String rowText;
 			if (!slotRow) {
-				final long level = Math.min(levels[i], ShulkerBox.MAX_LEVEL);
+				final BigInteger level = levels[i].min(BigInteger.valueOf(ShulkerBox.MAX_LEVEL));
 				ShulkerBox preview = new ShulkerBox();
-				preview.level((int) level);
+				preview.level(BigInteger.valueOf(Big.toInt(level)));
 				icon = new ItemSprite(preview);
 				rowText = Messages.get(WndVaultShop.class, "row",
 						level, preview.capacity(), preview.maxItemLevel(), preview.maxQuantity());
@@ -183,40 +187,40 @@ public class WndVaultShop extends Window {
 
 	private void refresh() {
 		title.text(Messages.get(WndVaultShop.class, "title", VaultStore.boxes().size(), link.slots()));
-		gold.text(Messages.get(WndVaultShop.class, "gold", fmt(Dungeon.gold)));
-		energy.text(Messages.get(WndVaultShop.class, "energy", fmt(Dungeon.energy)));
+		gold.text(Messages.get(WndVaultShop.class, "gold", fmt(Big.toLong(Dungeon.gold))));
+		energy.text(Messages.get(WndVaultShop.class, "energy", fmt(Big.toLong(Dungeon.energy))));
 		note.text(Messages.get(WndVaultShop.class, "note", link.inflationPercent()));
 
-		long[] levels = VaultLink.SHOP_LEVELS;
+		BigInteger[] levels = VaultLink.SHOP_LEVELS;
 		for (int i = 0; i < levels.length; i++) {
-			long level = Math.min(levels[i], ShulkerBox.MAX_LEVEL);
-			setRow(i, link.goldPrice(level), link.energyPrice(level));
+			BigInteger level = levels[i].min(BigInteger.valueOf(ShulkerBox.MAX_LEVEL));
+			setRow(i, Big.toLong(link.goldPrice(level)), Big.toLong(link.energyPrice(level)));
 		}
 
-		long[] packs = VaultLink.SLOT_PACKS;
+		BigInteger[] packs = VaultLink.SLOT_PACKS;
 		for (int p = 0; p < packs.length; p++) {
 			int i = levels.length + p;
-			long count = link.packSize(packs[p]);
+			BigInteger count = link.packSize(packs[p]);
 			RenderedTextBlock t = slotText[p];
-			t.text(Messages.get(WndVaultShop.class, "slots_row", Math.max(count, packs[p]), link.extraSlots(), link.slots()));
+			t.text(Messages.get(WndVaultShop.class, "slots_row", count.max(packs[p]), link.extraSlots(), link.slots()));
 			t.setPos(ICON + 2, i * ROW_H + (ICON - t.height()) / 2f);
 			PixelScene.align(t);
-			if (count <= 0) {
+			if ((count.compareTo(BigInteger.ZERO) <= 0)) {
 				goldBtn[i].text(Messages.get(WndVaultShop.class, "slots_max"));
 				goldBtn[i].enable(false);
 				energyBtn[i].text(Messages.get(WndVaultShop.class, "slots_max"));
 				energyBtn[i].enable(false);
 			} else {
-				setRow(i, link.slotGoldPrice(packs[p]), link.slotEnergyPrice(packs[p]));
+				setRow(i, Big.toLong(link.slotGoldPrice(packs[p])), Big.toLong(link.slotEnergyPrice(packs[p])));
 			}
 		}
 	}
 
 	private void setRow(int i, long g, long e) {
 		goldBtn[i].text(Messages.get(WndVaultShop.class, "buy_gold", fmt(g)));
-		goldBtn[i].enable(Dungeon.gold >= g);
+		goldBtn[i].enable((Dungeon.gold.compareTo(BigInteger.valueOf(g)) >= 0));
 		energyBtn[i].text(Messages.get(WndVaultShop.class, "buy_energy", fmt(e)));
-		energyBtn[i].enable(Dungeon.energy >= e);
+		energyBtn[i].enable((Dungeon.energy.compareTo(BigInteger.valueOf(e)) >= 0));
 	}
 
 	@Override

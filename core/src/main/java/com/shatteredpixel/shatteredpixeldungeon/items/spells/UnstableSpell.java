@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -113,13 +115,13 @@ public class UnstableSpell extends Spell {
 
 	//lower values, as it's cheaper to make
 	@Override
-	public long value() {
-		return 40 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(40).multiply(quantity);
 	}
 
 	@Override
-	public long energyVal() {
-		return 8 * quantity;
+	public BigInteger energyVal() {
+		return BigInteger.valueOf(8).multiply(quantity);
 	}
 
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe {
@@ -143,15 +145,15 @@ public class UnstableSpell extends Spell {
 		}
 		
 		@Override
-		public long cost(ArrayList<Item> ingredients) {
-			return 1;
+		public BigInteger cost(ArrayList<Item> ingredients) {
+			return BigInteger.ONE;
 		}
 
 		@Override
 		public Item brew(ArrayList<Item> ingredients) {
 
 			for (Item i : ingredients){
-				i.quantity(i.quantity()-1);
+				i.quantity(i.quantity().subtract(BigInteger.ONE));
 			}
 
 			return sampleOutput(null);

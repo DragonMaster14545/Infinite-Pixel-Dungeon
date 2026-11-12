@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -35,11 +37,11 @@ public class ChargrilledMeat extends Food {
 	}
 	
 	@Override
-	public long value() {
-		return 8 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(8).multiply(quantity);
 	}
 	
-	public static Food cook( long quantity ) {
+	public static Food cook( BigInteger quantity ) {
 		ChargrilledMeat result = new ChargrilledMeat();
 		result.quantity = quantity;
 		return result;

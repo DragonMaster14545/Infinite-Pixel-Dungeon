@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -271,8 +273,8 @@ abstract public class ClassArmor extends Armor {
 								} else if (checkSeal() != null){
 									//automates the process of detaching the seal manually
 									// and re-affixing it to the new armor
-									if (seal.level() > 0){
-										long newLevel = trueLevel() + 1;
+									if ((seal.level().compareTo(BigInteger.ZERO) > 0)){
+										BigInteger newLevel = trueLevel().add(BigInteger.ONE);
 										level(newLevel);
 										Badges.validateItemLevelAquired(ClassArmor.this);
 									}
@@ -333,8 +335,8 @@ abstract public class ClassArmor extends Armor {
 	}
 
 	@Override
-	public long value() {
-		return 0;
+	public BigInteger value() {
+		return BigInteger.ZERO;
 	}
 
 	public class Charger extends Buff {

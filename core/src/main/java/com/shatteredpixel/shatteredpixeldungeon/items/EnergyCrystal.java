@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -40,10 +42,10 @@ public class EnergyCrystal extends Item {
 	}
 
 	public EnergyCrystal() {
-		this( 1 );
+		this( BigInteger.ONE );
 	}
 
-	public EnergyCrystal( long value ) {
+	public EnergyCrystal( BigInteger value ) {
 		this.quantity = value;
 	}
 
@@ -57,11 +59,11 @@ public class EnergyCrystal extends Item {
 
 		Catalog.setSeen(getClass());
 
-		Dungeon.energy += quantity;
+		Dungeon.energy = Dungeon.energy.add(quantity);
 		//TODO track energy collected maybe? We do already track recipes crafted though..
 
 		GameScene.pickUp( this, pos );
-		hero.sprite.showStatusWithIcon( 0x44CCFF, Long.toString(quantity), FloatingText.ENERGY );
+		hero.sprite.showStatusWithIcon( 0x44CCFF, quantity.toString(), FloatingText.ENERGY );
 		hero.spendAndNext( TIME_TO_PICK_UP );
 
 		Sample.INSTANCE.play( Assets.Sounds.ITEM );

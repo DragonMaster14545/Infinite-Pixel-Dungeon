@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -86,8 +88,8 @@ public class ArcaneResin extends Item {
 	}
 
 	@Override
-	public long value() {
-		return 30*quantity();
+	public BigInteger value() {
+		return BigInteger.valueOf(30).multiply(quantity());
 	}
 
 	private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
@@ -112,27 +114,27 @@ public class ArcaneResin extends Item {
 			if (item != null && item instanceof Wand) {
 				Wand w = (Wand)item;
 
-				if (w.level() >= 3){
+				if ((w.level().compareTo(BigInteger.valueOf(3)) >= 0)){
 					GLog.w(Messages.get(ArcaneResin.class, "level_too_high"));
 					return;
 				}
 
-				long resinToUse = w.level()+1;
+				BigInteger resinToUse = w.level().add(BigInteger.ONE);
 
-				if (quantity() < resinToUse){
+				if ((quantity().compareTo(resinToUse) < 0)){
 					GLog.w(Messages.get(ArcaneResin.class, "not_enough"));
 
 				} else {
 
 					Catalog.countUses(ArcaneResin.class, resinToUse);
-					if (resinToUse < quantity()){
-						quantity(quantity()-resinToUse);
+					if ((resinToUse.compareTo(quantity()) < 0)){
+						quantity(quantity().subtract(resinToUse));
 					} else {
 						detachAll(Dungeon.hero.belongings.backpack);
 					}
 
 					w.resinBonus++;
-					w.curCharges++;
+					w.curCharges = w.curCharges.add(BigInteger.ONE);
 					w.updateLevel();
 					Item.updateQuickslot();
 
@@ -158,15 +160,15 @@ public class ArcaneResin extends Item {
 		}
 
 		@Override
-		public long cost(ArrayList<Item> ingredients) {
-			return 5;
+		public BigInteger cost(ArrayList<Item> ingredients) {
+			return BigInteger.valueOf(5);
 		}
 
 		@Override
 		public Item brew(ArrayList<Item> ingredients) {
 			Item result = sampleOutput(ingredients);
 
-			ingredients.get(0).quantity(0);
+			ingredients.get(0).quantity(BigInteger.ZERO);
 
 			return result;
 		}
@@ -174,12 +176,12 @@ public class ArcaneResin extends Item {
 		@Override
 		public Item sampleOutput(ArrayList<Item> ingredients) {
 			Wand w = (Wand)ingredients.get(0);
-			long level = w.level() - w.resinBonus;
+			BigInteger level = w.level().subtract(BigInteger.valueOf(w.resinBonus));
 
-			Item output = new ArcaneResin().quantity(2*(level+1));
+			Item output = new ArcaneResin().quantity(BigInteger.TWO.multiply((level.add(BigInteger.ONE))));
 
 			if (Dungeon.hero.heroClass != HeroClass.MAGE && Dungeon.hero.hasTalent(Talent.WAND_PRESERVATION)){
-				output.quantity(output.quantity() + Dungeon.hero.pointsInTalent(Talent.WAND_PRESERVATION));
+				output.quantity(output.quantity().add(BigInteger.valueOf(Dungeon.hero.pointsInTalent(Talent.WAND_PRESERVATION))));
 			}
 
 			return output;

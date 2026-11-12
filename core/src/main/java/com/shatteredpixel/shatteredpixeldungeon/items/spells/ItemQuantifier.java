@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -61,7 +65,7 @@ public class ItemQuantifier extends InventorySpell {
 
 	@Override
 	protected boolean usableOnItem(Item item) {
-		return item.quantity() > 1;
+		return (item.quantity().compareTo(BigInteger.ONE) > 0);
 	}
 
 	@Override
@@ -70,23 +74,23 @@ public class ItemQuantifier extends InventorySpell {
 		if (!(item instanceof ItemQuantifier)) {
 			if (item.unique) {
 				if (Random.Float() < 0.25f) {
-					item.quantity(item.quantity() + 2);
+					item.quantity(item.quantity().add(BigInteger.TWO));
 					GLog.p(Messages.get(this, "quantified_unique", item.quantity()));
 					curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
 					increaseCost += Random.Double(0.75d);
 				} else {
-					item.quantity(item.quantity() - 1);
+					item.quantity(item.quantity().subtract(BigInteger.ONE));
 					GLog.p(Messages.get(this, "false_quantify_unique", item.quantity()));
 					curUser.sprite.emitter().start(Speck.factory(Speck.CONFUSION), 0.2f, 10);
 				}
 			} else {
 				if (Random.Float() < 0.75f) {
-					item.quantity(item.quantity() + 3);
+					item.quantity(item.quantity().add(BigInteger.valueOf(3)));
 					GLog.p(Messages.get(this, "quantified", item.quantity()));
 					curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
 					increaseCost += Random.Double(0.25d);
 				} else {
-					item.quantity(item.quantity() - 1);
+					item.quantity(item.quantity().subtract(BigInteger.ONE));
 					GLog.p(Messages.get(this, "false_quantify", item.quantity()));
 					curUser.sprite.emitter().start(Speck.factory(Speck.CONFUSION), 0.2f, 10);
 				}
@@ -99,13 +103,13 @@ public class ItemQuantifier extends InventorySpell {
 	}
 	
 	@Override
-	public long value() {
-		return (long)(60 * (quantity/(float) Recipe.OUT_QUANTITY));
+	public BigInteger value() {
+		return Big.trunc((Big.dec(60).multiply((Big.div(Big.dec(quantity), Big.dec((float) Recipe.OUT_QUANTITY))))));
 	}
 
 	@Override
-	public long energyVal() {
-		return (long)(12 * (quantity/(float) Recipe.OUT_QUANTITY));
+	public BigInteger energyVal() {
+		return Big.trunc((Big.dec(12).multiply((Big.div(Big.dec(quantity), Big.dec((float) Recipe.OUT_QUANTITY))))));
 	}
 
 	private static final String MULTIPLIER = "multiplier_item";
@@ -135,11 +139,11 @@ public class ItemQuantifier extends InventorySpell {
 		}
 
 		@Override
-		public long cost( ArrayList<Item> ingredients ) {
+		public BigInteger cost( ArrayList<Item> ingredients ) {
 			if (Dungeon.hero == null || !Dungeon.hero.isAlive()) {
-				return 150;
+				return BigInteger.valueOf(150);
 			} else {
-				return (long) (150 * increaseCost());
+				return Big.of((150 * increaseCost()));
 			}
 		}
 		

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -64,7 +66,7 @@ public class ScrollOfLullaby extends Scroll {
 	}
 	
 	@Override
-	public long value() {
-		return isKnown() ? 40 * quantity : super.value();
+	public BigInteger value() {
+		return isKnown() ? BigInteger.valueOf(40).multiply(quantity) : super.value();
 	}
 }

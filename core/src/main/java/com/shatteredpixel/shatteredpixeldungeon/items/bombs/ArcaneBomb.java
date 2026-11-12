@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -53,7 +57,7 @@ public class ArcaneBomb extends Bomb {
 			PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );
 			for (int i = 0; i < PathFinder.distance.length; i++) {
 				if (PathFinder.distance[i] < Integer.MAX_VALUE)
-					GameScene.add(Blob.seed(i, 3, GooWarn.class));
+					GameScene.add(Blob.seed(i, BigInteger.valueOf(3), GooWarn.class));
 			}
 		}
 	}
@@ -84,12 +88,12 @@ public class ArcaneBomb extends Bomb {
 		
 		for (Char ch : affected){
 			// 100%/83%/67% bomb damage based on distance, but pierces armor.
-			long damage = Math.round(Dungeon.NormalLongRange( Dungeon.scalingDepth()+5, 10 + Dungeon.scalingDepth() * 2 ));
+			BigInteger damage = Dungeon.NormalLongRange( Dungeon.scalingDepth().add(BigInteger.valueOf(5)), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.TWO)) );
 			float multiplier = 1f - (.16667f*Dungeon.level.distance(cell, ch.pos));
 			if (Dungeon.hero.heroClass == HeroClass.ROGUE){
-				damage *= 2.5f;
+				damage = Big.trunc(Big.dec(damage).multiply(Big.dec(2.5f)));
 			}
-			ch.damage(Math.round(damage*multiplier), this);
+			ch.damage(Big.round(Big.dec(damage).multiply(Big.dec(multiplier))), this);
 			if (ch == Dungeon.hero && !ch.isAlive()){
 				Badges.validateDeathFromFriendlyMagic();
 				Dungeon.fail(this);
@@ -98,8 +102,8 @@ public class ArcaneBomb extends Bomb {
 	}
 	
 	@Override
-	public long value() {
+	public BigInteger value() {
 		//prices of ingredients
-		return quantity * (20 + 30);
+		return quantity.multiply(BigInteger.valueOf((20 + 30)));
 	}
 }

@@ -1,5 +1,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.ShulkerBox;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -35,7 +39,7 @@ public class WndShulkerInspect extends Window {
 		this.box = box;
 
 		final ArrayList<Item> items = box.contents();
-		final long pages = Math.max(1, (box.capacity() + PAGE_SIZE - 1) / PAGE_SIZE);
+		final long pages = Big.toLong(BigInteger.ONE.max((box.capacity().add(BigInteger.valueOf(PAGE_SIZE)).subtract(BigInteger.ONE)).divide(BigInteger.valueOf(PAGE_SIZE))));
 		this.page = Math.max(0, Math.min(page, pages - 1));
 		int nav = pages > 1 ? NAV_HEIGHT + 2 : 0;
 
@@ -124,8 +128,8 @@ public class WndShulkerInspect extends Window {
 		}
 
 		//footer: how much everything inside is worth
-		long total = 0;
-		for (Item item : items) total += item.value();
+		BigInteger total = BigInteger.ZERO;
+		for (Item item : items) total = total.add(item.value());
 		RenderedTextBlock footer = PixelScene.renderTextBlock(
 				items.isEmpty() ? Messages.get(box, "inspect_empty") : Messages.get(box, "inspect_total", total), 6);
 		footer.maxWidth(windowWidth - 2);

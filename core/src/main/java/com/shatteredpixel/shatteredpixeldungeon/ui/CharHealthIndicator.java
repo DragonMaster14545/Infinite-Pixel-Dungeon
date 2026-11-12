@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -55,7 +57,7 @@ public class CharHealthIndicator extends HealthBar {
 			x = sprite.x + sprite.width()/6f;
 			y = sprite.y - 2;
 			level( target );
-			visible = target.HP < target.HT || target.shielding() > 0;
+			visible = (target.HP.compareTo(target.HT) < 0) || (target.shielding().compareTo(BigInteger.ZERO) > 0);
 		} else {
 			visible = false;
 		}

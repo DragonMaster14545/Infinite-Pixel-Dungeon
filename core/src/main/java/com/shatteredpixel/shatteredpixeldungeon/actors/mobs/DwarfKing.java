@@ -22,6 +22,10 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -81,9 +85,9 @@ public class DwarfKing extends Mob {
 	{
 		spriteClass = KingSprite.class;
 
-		HP = HT = Dungeon.getCycleMultiplier(75) * theSubjectConstant();
-		EXP = Dungeon.getCycleMultiplier(40);
-		defenseSkill = Dungeon.getCycleMultiplier(22);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(75)).multiply(BigInteger.valueOf(theSubjectConstant()));
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(40));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(22));
 
 		properties.add(Property.BOSS);
 		properties.add(Property.UNDEAD);
@@ -94,18 +98,18 @@ public class DwarfKing extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(15), Dungeon.getCycleMultiplier(25) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(15)), Dungeon.getCycleMultiplier(BigInteger.valueOf(25)) );
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(26);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(26));
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(10));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.TEN));
 	}
 
 	private int phase = 1;
@@ -216,7 +220,7 @@ public class DwarfKing extends Mob {
 					spend(3 * TICK);
 					summonsMade += 2;
 					return true;
-				} else if (shielding() <= (HT - (HT / theSubjectConstant())*6) && summonsMade < 12){
+				} else if ((shielding().compareTo((HT.subtract((HT.divide(BigInteger.valueOf(theSubjectConstant()))).multiply(BigInteger.valueOf(6))))) <= 0) && summonsMade < 12){
 					if (summonsMade == 6) {
 						sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
 						Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
@@ -232,7 +236,7 @@ public class DwarfKing extends Mob {
 					summonsMade += 3;
 					spend(3*TICK);
 					return true;
-				} else if (shielding() <= (HT - (HT / theSubjectConstant())*12) && summonsMade < 18) {
+				} else if ((shielding().compareTo((HT.subtract((HT.divide(BigInteger.valueOf(theSubjectConstant()))).multiply(BigInteger.valueOf(12))))) <= 0) && summonsMade < 18) {
 					if (summonsMade == 12) {
 						sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
 						Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
@@ -266,7 +270,7 @@ public class DwarfKing extends Mob {
 					spend(3 * TICK);
 					summonsMade++;
 					return true;
-				} else if (shielding() <= (HT - (HT / theSubjectConstant()) * 4) && summonsMade < 8) {
+				} else if ((shielding().compareTo((HT.subtract((HT.divide(BigInteger.valueOf(theSubjectConstant()))).multiply(BigInteger.valueOf(4))))) <= 0) && summonsMade < 8) {
 					if (summonsMade == 4) {
 						sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
 						Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
@@ -280,7 +284,7 @@ public class DwarfKing extends Mob {
 					summonsMade++;
 					spend(TICK);
 					return true;
-				} else if (shielding() <= (HT - (HT / theSubjectConstant()) * 8) && summonsMade < 12) {
+				} else if ((shielding().compareTo((HT.subtract((HT.divide(BigInteger.valueOf(theSubjectConstant()))).multiply(BigInteger.valueOf(8))))) <= 0) && summonsMade < 12) {
 					sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
 					Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
 					yell(Messages.get(this, "wave_3"));
@@ -455,7 +459,7 @@ public class DwarfKing extends Mob {
 	}
 
 	@Override
-	public void damage(long dmg, Object src) {
+	public void damage(BigInteger dmg, Object src) {
 		//hero counts as unarmed if they aren't attacking with a weapon and aren't benefiting from force
 		if (src == Dungeon.hero && (!RingOfForce.fightingUnarmed(Dungeon.hero) || Dungeon.hero.buff(RingOfForce.Force.class) != null)){
 			Statistics.qualifiedForBossChallengeBadge = false;
@@ -470,7 +474,7 @@ public class DwarfKing extends Mob {
 			super.damage(dmg, src);
 			return;
 		} else if (phase == 3 && !(src instanceof Viscosity.DeferedDamage)){
-			if (dmg >= 0) {
+			if ((dmg.compareTo(BigInteger.ZERO) >= 0)) {
 				Viscosity.DeferedDamage deferred = Buff.affect( this, Viscosity.DeferedDamage.class );
 				deferred.prolong( dmg );
 
@@ -478,23 +482,23 @@ public class DwarfKing extends Mob {
 			}
 			return;
 		}
-		long preHP = HP;
+		BigInteger preHP = HP;
 		super.damage(dmg, src);
 
 		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
 		if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
-			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmg/5f);
-			else                                                    lock.addTime(dmg/3f);
+			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(Big.div(Big.dec(dmg), Big.dec(5f)).floatValue());
+			else                                                    lock.addTime(Big.div(Big.dec(dmg), Big.dec(3f)).floatValue());
 		}
 
 		if (phase == 1) {
-			long dmgTaken = preHP - HP;
+			BigInteger dmgTaken = preHP.subtract(HP);
 			if (Dungeon.cycle == 0) {
-				abilityCooldown -= dmgTaken / 8f;
-				summonCooldown -= dmgTaken / 8f;
+				abilityCooldown -= Big.div(Big.dec(dmgTaken), Big.dec(8f)).floatValue();
+				summonCooldown -= Big.div(Big.dec(dmgTaken), Big.dec(8f)).floatValue();
 			}
-			if (HP <= HT / 6) {
-				HP = HT / 6;
+			if ((HP.compareTo(HT.divide(BigInteger.valueOf(6))) <= 0)) {
+				HP = HT.divide(BigInteger.valueOf(6));
 				sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "invulnerable"));
 				ScrollOfTeleportation.appear(this, CityBossLevel.throne);
 				properties.add(Property.IMMOVABLE);
@@ -511,7 +515,7 @@ public class DwarfKing extends Mob {
 //					}
 //				}
 			}
-		} else if (phase == 2 && shielding() == 0) {
+		} else if (phase == 2 && (shielding().compareTo(BigInteger.ZERO) == 0)) {
 			properties.remove(Property.IMMOVABLE);
 			phase = 3;
 			summonsMade = 1; //monk/warlock on 3rd summon
@@ -530,7 +534,7 @@ public class DwarfKing extends Mob {
 					});
 				}
 			});
-		} else if (phase == 3 && preHP > HT /15 && HP < HT / 15){
+		} else if (phase == 3 && (preHP.compareTo(HT.divide(BigInteger.valueOf(15))) > 0) && (HP.compareTo(HT.divide(BigInteger.valueOf(15))) < 0)){
 			yell( Messages.get(this, "losing") );
 		}
 	}
@@ -710,12 +714,12 @@ public class DwarfKing extends Mob {
 					}
 				} else {
 					Char ch = Actor.findChar(pos);
-					ch.damage(Dungeon.NormalLongRange(20, 40) + Dungeon.escalatingDepth(), this);
+					ch.damage(Dungeon.NormalLongRange(BigInteger.valueOf(20), BigInteger.valueOf(40)).add(Dungeon.escalatingDepth()), this);
 					if (((DwarfKing)target).phase == 2){
 						if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
-							target.damage(target.HT/18, new KingDamager());
+							target.damage(target.HT.divide(BigInteger.valueOf(18)), new KingDamager());
 						} else {
-							target.damage(target.HT/12, new KingDamager());
+							target.damage(target.HT.divide(BigInteger.valueOf(12)), new KingDamager());
 						}
 					}
 					if (!ch.isAlive() && ch == Dungeon.hero) {
@@ -788,7 +792,7 @@ public class DwarfKing extends Mob {
 			super.detach();
 			for (Mob m : Dungeon.level.mobs){
 				if (m instanceof DwarfKing){
-					long damage = m.HT / (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 18 : 12);
+					BigInteger damage = m.HT.divide(BigInteger.valueOf((Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 18 : 12)));
 					m.damage(damage, this);
 				}
 			}

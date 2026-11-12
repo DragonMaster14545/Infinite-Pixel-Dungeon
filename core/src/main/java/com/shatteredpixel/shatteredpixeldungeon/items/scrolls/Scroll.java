@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SeasonalTasks;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -275,13 +277,13 @@ public abstract class Scroll extends Item {
 	}
 	
 	@Override
-	public long value() {
-		return 30 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(30).multiply(quantity);
 	}
 
 	@Override
-	public long energyVal() {
-		return 6 * quantity;
+	public BigInteger energyVal() {
+		return BigInteger.valueOf(6).multiply(quantity);
 	}
 
 	public static class PlaceHolder extends Scroll {
@@ -336,8 +338,8 @@ public abstract class Scroll extends Item {
 		}
 		
 		@Override
-		public long cost(ArrayList<Item> ingredients) {
-			return 0;
+		public BigInteger cost(ArrayList<Item> ingredients) {
+			return BigInteger.ZERO;
 		}
 		
 		@Override
@@ -346,7 +348,7 @@ public abstract class Scroll extends Item {
 			
 			Scroll s = (Scroll) ingredients.get(0);
 			
-			s.quantity(s.quantity() - 1);
+			s.quantity(s.quantity().subtract(BigInteger.ONE));
 			if (ShatteredPixelDungeon.scene() instanceof AlchemyScene){
 				if (!s.isIdentified()){
 					((AlchemyScene) ShatteredPixelDungeon.scene()).showIdentify(s);
@@ -354,7 +356,7 @@ public abstract class Scroll extends Item {
 			} else {s.identify();
 }
 			
-			return Reflection.newInstance(stones.get(s.getClass())).quantity(2);
+			return Reflection.newInstance(stones.get(s.getClass())).quantity(BigInteger.TWO);
 		}
 		
 		@Override
@@ -364,9 +366,9 @@ public abstract class Scroll extends Item {
 			Scroll s = (Scroll) ingredients.get(0);
 
 			if (!s.isKnown()){
-				return new Runestone.PlaceHolder().quantity(2);
+				return new Runestone.PlaceHolder().quantity(BigInteger.TWO);
 			} else {
-				return Reflection.newInstance(stones.get(s.getClass())).quantity(2);
+				return Reflection.newInstance(stones.get(s.getClass())).quantity(BigInteger.TWO);
 			}
 		}
 	}

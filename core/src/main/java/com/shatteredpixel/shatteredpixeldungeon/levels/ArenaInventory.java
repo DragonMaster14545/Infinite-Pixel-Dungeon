@@ -1,5 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
@@ -78,7 +80,7 @@ public class ArenaInventory {
     private static void giveStarterKit( Hero hero ){
         new Dagger().identify().collect();
         new ClothArmor().identify().collect();
-        new Barricade().quantity(2).collect();
+        new Barricade().quantity(BigInteger.TWO).collect();
         new SmallRation().collect();
         new TicketToWaveArena().collect();
 

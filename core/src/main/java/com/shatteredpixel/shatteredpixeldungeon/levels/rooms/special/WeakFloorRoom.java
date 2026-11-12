@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -76,7 +78,7 @@ public class WeakFloorRoom extends SpecialRoom {
 		vis.pos(well.x, well.y);
 		level.customTiles.add(vis);
 
-		Blob.seed( well.x + level.width() * well.y, 1, WellID.class, level );
+		Blob.seed( well.x + level.width() * well.y, BigInteger.ONE, WellID.class, level );
 	}
 
 	public static class HiddenWell extends CustomTilemap {
@@ -122,7 +124,7 @@ public class WeakFloorRoom extends SpecialRoom {
 					if (Dungeon.level.insideMap(cell)) {
 						off[cell] = cur[cell];
 
-						volume += off[cell];
+						volume = volume.add(off[cell]);
 					}
 				}
 			}

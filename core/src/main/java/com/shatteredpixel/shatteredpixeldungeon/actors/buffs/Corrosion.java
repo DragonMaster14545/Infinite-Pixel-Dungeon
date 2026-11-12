@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -67,13 +71,13 @@ public class Corrosion extends Buff implements Hero.Doom {
 		source = bundle.getClass( SOURCE );
 	}
 
-	public void set(float duration, long damage){
+	public void set(float duration, BigInteger damage){
 		set(duration, damage, null);
 	}
 
-	public void set(float duration, long damage, Class source) {
+	public void set(float duration, BigInteger damage, Class source) {
 		this.left = Math.max(duration, left);
-		if (this.damage < damage) this.damage = damage;
+		if ((Big.dec(this.damage).compareTo(Big.dec(damage)) < 0)) this.damage = damage.doubleValue();
 		this.source = source;
 	}
 	
@@ -89,19 +93,19 @@ public class Corrosion extends Buff implements Hero.Doom {
 
 	@Override
 	public String iconTextDisplay() {
-		return Long.toString((long) damage);
+		return Big.of(damage).toString();
 	}
 
 	@Override
 	public String desc() {
-		return Messages.get(this, "desc", dispTurns(left), (long)damage);
+		return Messages.get(this, "desc", dispTurns(left), Big.of(damage));
 	}
 
 	@Override
 	public boolean act() {
 		if (target.isAlive()) {
-			target.damage((long)damage, this);
-			if (damage < (Dungeon.scalingDepth()/2)+2) {
+			target.damage(Big.of(damage), this);
+			if ((Big.dec(damage).compareTo(Big.dec((Dungeon.scalingDepth().divide(BigInteger.TWO)).add(BigInteger.TWO))) < 0)) {
 				damage++;
 			} else {
 				damage += 0.5f;

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -62,7 +66,7 @@ public class ChaliceOfBlood extends Artifact {
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
 		if (isEquipped( hero )
-				&& level() < levelCap
+				&& (level().compareTo(BigInteger.valueOf(levelCap)) < 0)
 				&& !cursed
 				&& !hero.isInvulnerable(getClass())
 				&& hero.buff(MagicImmune.class) == null)
@@ -76,9 +80,9 @@ public class ChaliceOfBlood extends Artifact {
 
 		if (action.equals(AC_PRICK)){
 
-			long damage = (int) (5 + 3*(level()*level()));
+			BigInteger damage = BigInteger.valueOf(Big.toInt((BigInteger.valueOf(5).add(BigInteger.valueOf(3).multiply((level().multiply(level())))))));
 
-			if (damage > hero.HP*0.75) {
+			if ((Big.dec(damage).compareTo(Big.dec(hero.HP).multiply(Big.dec(0.75))) > 0)) {
 
 				GameScene.show(
 					new WndOptions(new ItemSprite(this),
@@ -101,7 +105,7 @@ public class ChaliceOfBlood extends Artifact {
 	}
 
 	private void prick(Hero hero){
-		long damage = (int) (5 + 3*(level()*level()));
+		BigInteger damage = BigInteger.valueOf(Big.toInt((BigInteger.valueOf(5).add(BigInteger.valueOf(3).multiply((level().multiply(level())))))));
 
 		Earthroot.Armor armor = hero.buff(Earthroot.Armor.class);
 		if (armor != null) {
@@ -113,17 +117,17 @@ public class ChaliceOfBlood extends Artifact {
 			damage = rockArmor.absorb(damage);
 		}
 
-		damage -= hero.drRoll();
+		damage = damage.subtract(hero.drRoll());
 
 		hero.sprite.operate( hero.pos );
 		hero.busy();
 		hero.spend(3f);
 		GLog.w( Messages.get(this, "onprick") );
-		if (damage <= 0){
-			damage = 1;
+		if ((damage.compareTo(BigInteger.ZERO) <= 0)){
+			damage = BigInteger.ONE;
 		} else {
 			Sample.INSTANCE.play(Assets.Sounds.CURSED);
-			hero.sprite.emitter().burst( ShadowParticle.CURSE, (int)(4+(damage/10)) );
+			hero.sprite.emitter().burst( ShadowParticle.CURSE, Big.toInt((BigInteger.valueOf(4).add((damage.divide(BigInteger.TEN))))) );
 		}
 
 		hero.damage(damage, this);
@@ -140,9 +144,9 @@ public class ChaliceOfBlood extends Artifact {
 
 	@Override
 	public Item upgrade() {
-		if (level() >= 6)
+		if ((level().compareTo(BigInteger.valueOf(6)) >= 0))
 			image = ItemSpriteSheet.ARTIFACT_CHALICE3;
-		else if (level() >= 2)
+		else if ((level().compareTo(BigInteger.TWO) >= 0))
 			image = ItemSpriteSheet.ARTIFACT_CHALICE2;
 		return super.upgrade();
 	}
@@ -150,8 +154,8 @@ public class ChaliceOfBlood extends Artifact {
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
-		if (level() >= 7) image = ItemSpriteSheet.ARTIFACT_CHALICE3;
-		else if (level() >= 3) image = ItemSpriteSheet.ARTIFACT_CHALICE2;
+		if ((level().compareTo(BigInteger.valueOf(7)) >= 0)) image = ItemSpriteSheet.ARTIFACT_CHALICE3;
+		else if ((level().compareTo(BigInteger.valueOf(3)) >= 0)) image = ItemSpriteSheet.ARTIFACT_CHALICE2;
 	}
 
 	@Override
@@ -166,23 +170,23 @@ public class ChaliceOfBlood extends Artifact {
 		//grants 5 turns of healing up-front, if hero isn't starving
 		if (target.isStarving()) return;
 
-		double healDelay = Math.max(1d, 10d - (1.33d + level()*0.667d));
+		double healDelay = Big.dec(1d).max(Big.dec(10d).subtract((Big.dec(1.33d).add(Big.dec(level()).multiply(Big.dec(0.667d)))))).doubleValue();
 		healDelay /= amount;
 		double heal = 5d/healDelay;
 		//effectively 0.5/1/1.5/2/2.5 HP per turn at +0/+6/+8/+9/+10
 		//apply rarity first, so the fractional part is rounded probabilistically
 		//instead of being truncated away afterward
 		//(which made regen actually gives a little against what the item's desc says)
-		heal *= getRarityMultiplier();
-		long healAmount = (long)heal;
-		if (Random.Double() < heal - healAmount){
-			healAmount++;
+		heal *= getRarityMultiplier().doubleValue();
+		BigInteger healAmount = Big.of(heal);
+		if ((Big.dec(Random.Double()).compareTo(Big.dec(heal).subtract(Big.dec(healAmount))) < 0)){
+			healAmount = healAmount.add(BigInteger.ONE);
 		}
-		if (healAmount >= 1 && target.HP < target.HT) {
-			target.HP = Math.min(target.HT, target.HP + healAmount);
-			target.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(healAmount), FloatingText.HEALING);
+		if ((healAmount.compareTo(BigInteger.ONE) >= 0) && (target.HP.compareTo(target.HT) < 0)) {
+			target.HP = target.HT.min(target.HP.add(healAmount));
+			target.sprite.showStatusWithIcon(CharSprite.POSITIVE, healAmount.toString(), FloatingText.HEALING);
 
-			if (target.HP == target.HT && target instanceof Hero) {
+			if ((target.HP.compareTo(target.HT) == 0) && target instanceof Hero) {
 				((Hero) target).resting = false;
 			}
 		}
@@ -196,15 +200,15 @@ public class ChaliceOfBlood extends Artifact {
 			desc += "\n\n";
 			if (cursed)
 				desc += Messages.get(this, "desc_cursed");
-			else if (level() == 0)
+			else if ((level().compareTo(BigInteger.ZERO) == 0))
 				desc += Messages.get(this, "desc_1");
-			else if (level() < levelCap)
+			else if ((level().compareTo(BigInteger.valueOf(levelCap)) < 0))
 				desc += Messages.get(this, "desc_2");
 			else
 				desc += Messages.get(this, "desc_3");
 		}
 
-		desc += Messages.get(this, "hp", (level() < 10 ? 1f / (10f - (level()*0.9f)) : ((3 * Math.pow(level() - 1, 2) / 243)))*getRarityMultiplier());
+		desc += Messages.get(this, "hp", ((level().compareTo(BigInteger.TEN) < 0) ? Big.div(Big.dec(1f), (Big.dec(10f).subtract((Big.dec(level()).multiply(Big.dec(0.9f)))))) : Big.dec(((3 * Math.pow(level().subtract(BigInteger.ONE).doubleValue(), 2) / 243)))).multiply(Big.dec(getRarityMultiplier())));
 
 		return desc;
 	}

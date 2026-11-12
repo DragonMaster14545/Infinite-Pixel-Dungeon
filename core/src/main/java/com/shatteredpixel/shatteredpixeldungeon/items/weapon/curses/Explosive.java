@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
@@ -45,7 +47,7 @@ public class Explosive extends Weapon.Enchantment {
 	private int durability = 100;
 
 	@Override
-	public long proc( Weapon weapon, Char attacker, Char defender, long damage ) {
+	public BigInteger proc( Weapon weapon, Char attacker, Char defender, BigInteger damage ) {
 
 		if (weapon instanceof MissileWeapon
 				&& ((MissileWeapon)weapon).parent != null && ((MissileWeapon) weapon).parent.enchantment instanceof Explosive){

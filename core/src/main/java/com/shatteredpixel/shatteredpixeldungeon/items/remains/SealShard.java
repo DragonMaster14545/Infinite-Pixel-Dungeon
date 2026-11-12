@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.remains;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -38,8 +40,8 @@ public class SealShard extends RemainsItem {
 
 	@Override
 	protected void doEffect(Hero hero) {
-		Buff.affect(hero, Barrier.class).incShield(hero.HT/10);
-		hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString(hero.HT/10), FloatingText.SHIELDING );
+		Buff.affect(hero, Barrier.class).incShield(hero.HT.divide(BigInteger.TEN));
+		hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, hero.HT.divide(BigInteger.TEN).toString(), FloatingText.SHIELDING );
 		Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
 	}
 

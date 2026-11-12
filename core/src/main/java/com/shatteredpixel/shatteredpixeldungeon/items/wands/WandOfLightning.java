@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -60,12 +64,12 @@ public class WandOfLightning extends DamageWand {
 
 	private ArrayList<Lightning.Arc> arcs = new ArrayList<>();
 
-	public long min(long lvl){
-		return ((5+lvl)*getRarityMultiplier());
+	public BigInteger min(BigInteger lvl){
+		return ((BigInteger.valueOf(5).add(lvl)).multiply(getRarityMultiplier()));
 	}
 
-	public long max(long lvl){
-		return ((10+5*lvl)*getRarityMultiplier());
+	public BigInteger max(BigInteger lvl){
+		return ((BigInteger.TEN.add(BigInteger.valueOf(5).multiply(lvl))).multiply(getRarityMultiplier()));
 	}
 	
 	@Override
@@ -86,20 +90,20 @@ public class WandOfLightning extends DamageWand {
 			}
 			wandProc(ch, chargesPerCast());
 			if (ch == curUser && ch.isAlive()) {
-				ch.damage(Math.round(damageRoll() * multiplier * 0.5f), this);
+				ch.damage(Big.round(Big.dec(damageRoll()).multiply(Big.dec(multiplier)).multiply(Big.dec(0.5f))), this);
 				if (!curUser.isAlive()) {
 					Badges.validateDeathFromFriendlyMagic();
 					Dungeon.fail( this );
 					GLog.n(Messages.get(this, "ondeath"));
 				}
 			} else {
-				ch.damage(Math.round(damageRoll() * multiplier), this);
+				ch.damage(Big.round(Big.dec(damageRoll()).multiply(Big.dec(multiplier))), this);
 			}
 		}
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
+	public void onHit(MagesStaff staff, Char attacker, Char defender, BigInteger damage) {
 		//acts like shocking enchantment
 		new LightningOnHit().proc(staff, attacker, defender, damage);
 	}

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
@@ -82,11 +86,11 @@ public class Hunger extends Buff implements Hero.Doom {
 
 			if (isStarving()) {
 
-				partialDamage += STEP * target.HT/1000f;
+				partialDamage += Big.div(Big.dec(STEP).multiply(Big.dec(target.HT)), Big.dec(1000f)).doubleValue();
 
 				if (partialDamage > 1){
-					target.damage( (long) partialDamage, this);
-					partialDamage -= (long)partialDamage;
+					target.damage( Big.of(partialDamage), this);
+					partialDamage -= Big.of(partialDamage).doubleValue();
 				}
 				
 			} else if (!Dungeon.level.locked){
@@ -95,7 +99,7 @@ public class Hunger extends Buff implements Hero.Doom {
 				if (newLevel >= STARVING) {
 
 					GLog.n( Messages.get(this, "onstarving") );
-					hero.damage( 1, this );
+					hero.damage( BigInteger.ONE, this );
 
 					hero.interrupt();
 
@@ -153,10 +157,10 @@ public class Hunger extends Buff implements Hero.Doom {
 		} else if (level > STARVING) {
 			float excess = level - STARVING;
 			level = STARVING;
-			partialDamage += excess * (target.HT/1000f);
+			partialDamage += Big.dec(excess).multiply((Big.div(Big.dec(target.HT), Big.dec(1000f)))).doubleValue();
 			if (partialDamage > 1f){
-				target.damage( (long)partialDamage, this );
-				partialDamage -= (long)partialDamage;
+				target.damage( Big.of(partialDamage), this );
+				partialDamage -= Big.of(partialDamage).doubleValue();
 			}
 		}
 
@@ -164,7 +168,7 @@ public class Hunger extends Buff implements Hero.Doom {
 			GLog.w( Messages.get(this, "onhungry") );
 		} else if (oldLevel < STARVING && level >= STARVING){
 			GLog.n( Messages.get(this, "onstarving") );
-			target.damage( 1, this );
+			target.damage( BigInteger.ONE, this );
 		}
 
 		BuffIndicator.refreshHero();

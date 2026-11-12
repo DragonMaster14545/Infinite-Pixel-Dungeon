@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
@@ -130,7 +134,7 @@ public class BattlePass {
 
     public static boolean canAffordReset(){
         ensureLoaded();
-        return Dungeon.energy >= RESET_ENERGY_COST && isBattlePassFinished();
+        return (Dungeon.energy.compareTo(BigInteger.valueOf(RESET_ENERGY_COST)) >= 0) && isBattlePassFinished();
     }
 
     public static boolean isBattlePassFinished(){
@@ -142,7 +146,7 @@ public class BattlePass {
         ensureLoaded();
         if (!canAffordReset()) return false;
 
-        Dungeon.energy -= RESET_ENERGY_COST;
+        Dungeon.energy = Dungeon.energy.subtract(BigInteger.valueOf(RESET_ENERGY_COST));
 
         history.add( 0, new MonthRecord( monthKey, totalXP, new ArrayList<>( claimedTiers ), repeatableTiersClaimed,
             BattlePassTiers.rewardSnapshot(), seasonName( monthKey ), premium,
@@ -168,7 +172,7 @@ public class BattlePass {
     }
 
     public static boolean canAffordHistoryClaim(){
-        return Dungeon.energy >= HISTORY_CLAIM_ENERGY_COST;
+        return (Dungeon.energy.compareTo(BigInteger.valueOf(HISTORY_CLAIM_ENERGY_COST)) >= 0);
     }
 
     public static Item buyHistoryTier( String monthKey, int tier, boolean premiumTrack ){
@@ -205,12 +209,12 @@ public class BattlePass {
             }
         }
 
-        Dungeon.energy -= HISTORY_CLAIM_ENERGY_COST;
+        Dungeon.energy = Dungeon.energy.subtract(BigInteger.valueOf(HISTORY_CLAIM_ENERGY_COST));
 
         if (reward != null && Dungeon.hero != null){
             reward.collect();
         } else if (reward == null && !premiumTrack) {
-            Dungeon.gold += BattlePassTiers.goldFor( tier );
+            Dungeon.gold = Dungeon.gold.add(BattlePassTiers.goldFor( tier ));
         }
 
         saveGlobal();
@@ -294,7 +298,7 @@ public class BattlePass {
         ensureLoaded();
         Class<? extends Item> costItem = premiumCostItem();
         return Dungeon.hero != null
-                && Dungeon.hero.belongings.count( costItem ) >= premiumCostItemQuantity;
+                && (Dungeon.hero.belongings.count( costItem ).compareTo(BigInteger.valueOf(premiumCostItemQuantity)) >= 0);
     }
     public static boolean isPremium(){
         ensureLoaded();
@@ -325,7 +329,7 @@ public class BattlePass {
         try {
             costIcon = BattlePass.premiumCostItem().newInstance();
         } catch (Exception e) {
-            costIcon = new Gold( BattlePass.premiumCostItemQuantity );
+            costIcon = new Gold( BigInteger.valueOf(BattlePass.premiumCostItemQuantity) );
         }
 
         ItemSprite icon = new ItemSprite();
@@ -369,7 +373,7 @@ public class BattlePass {
         if (premium) return true;
         if (!canAffordPremium()) return false;
 
-        Dungeon.hero.belongings.removeItem( premiumCostItem(), premiumCostItemQuantity );
+        Dungeon.hero.belongings.removeItem( premiumCostItem(), BigInteger.valueOf(premiumCostItemQuantity) );
 
         premium = true;
         saveGlobal();
@@ -556,12 +560,12 @@ public class BattlePass {
 
     private static int lastDeepestFloor;
     private static int lastEnemiesSlain;
-    private static long lastGoldCollected;
+    private static BigInteger lastGoldCollected = BigInteger.ZERO;
 
     public static void onRunStart(){
         lastDeepestFloor = 0;
         lastEnemiesSlain = 0;
-        lastGoldCollected = 0;
+        lastGoldCollected = BigInteger.ZERO;
         Tasks.onRunStart();
     }
 
@@ -581,9 +585,9 @@ public class BattlePass {
             lastEnemiesSlain = Statistics.enemiesSlain;
         }
 
-        long deltaGold = Statistics.goldCollected - lastGoldCollected;
-        if (deltaGold > 0){
-            totalXP += (int)(deltaGold / GOLD_PER_XP);
+        BigInteger deltaGold = Statistics.goldCollected.subtract(lastGoldCollected);
+        if ((deltaGold.compareTo(BigInteger.ZERO) > 0)){
+            totalXP += Big.toInt((deltaGold.divide(BigInteger.valueOf(GOLD_PER_XP))));
             lastGoldCollected = Statistics.goldCollected;
         }
 
@@ -729,7 +733,7 @@ public class BattlePass {
                 reward.collect();
                 result = reward;
             } else {
-                Dungeon.gold += BattlePassTiers.goldFor( tier );
+                Dungeon.gold = Dungeon.gold.add(BattlePassTiers.goldFor( tier ));
             }
         } else {
             claimedTiers.add( tier );
@@ -742,10 +746,10 @@ public class BattlePass {
                     reward.collect();
                     result = reward;
                 } else {
-                    Dungeon.gold += BattlePassTiers.goldFor( tier );
+                    Dungeon.gold = Dungeon.gold.add(BattlePassTiers.goldFor( tier ));
                 }
             } else {
-                Dungeon.gold += BattlePassTiers.goldFor( tier );
+                Dungeon.gold = Dungeon.gold.add(BattlePassTiers.goldFor( tier ));
             }
         }
 

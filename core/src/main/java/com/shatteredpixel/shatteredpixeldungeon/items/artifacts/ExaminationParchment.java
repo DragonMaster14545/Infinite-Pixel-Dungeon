@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -58,7 +62,7 @@ public class ExaminationParchment extends Artifact {
 
         levelCap = 10;
 
-        charge = 0;
+        charge = BigInteger.ZERO;
         partialCharge = 0;
     }
 
@@ -80,7 +84,7 @@ public class ExaminationParchment extends Artifact {
         ArrayList<String> actions = super.actions( hero );
         if (isEquipped( hero ) && !cursed && hero.buff(MagicImmune.class) == null) {
             actions.add(AC_ANSWER);
-            if (level() < levelCap) {
+            if ((level().compareTo(BigInteger.valueOf(levelCap)) < 0)) {
                 actions.add(AC_ENERGIZE);
             }
         }
@@ -100,22 +104,22 @@ public class ExaminationParchment extends Artifact {
             else if (warmUpDelay > 0)           GLog.w( Messages.get(this, "not_ready") );
             else {
                 operation = Random.Int(4);
-                if (charge < 51) {
+                if ((charge.compareTo(BigInteger.valueOf(51)) < 0)) {
                     parameter = Random.Int(99);
                     parameter2 = Random.Int(99);
-                } else if (charge < 101) {
+                } else if ((charge.compareTo(BigInteger.valueOf(101)) < 0)) {
                     parameter = Random.Int(999);
                     parameter2 = Random.Int(999);
-                } else if (charge < 501) {
+                } else if ((charge.compareTo(BigInteger.valueOf(501)) < 0)) {
                     parameter = Random.Int(9999);
                     parameter2 = Random.Int(9999);
-                } else if (charge < 1001) {
+                } else if ((charge.compareTo(BigInteger.valueOf(1001)) < 0)) {
                     parameter = Random.Int(99999);
                     parameter2 = Random.Int(9999);
-                } else if (charge < 5001) {
+                } else if ((charge.compareTo(BigInteger.valueOf(5001)) < 0)) {
                     parameter = Random.Int(99999);
                     parameter2 = Random.Int(99999);
-                } else if (charge > 10001) {
+                } else if ((charge.compareTo(BigInteger.valueOf(10001)) > 0)) {
                     parameter = Random.Int(999999);
                     parameter2 = Random.Int(999999);
                 } else {
@@ -150,10 +154,10 @@ public class ExaminationParchment extends Artifact {
         } else if (action.equals(AC_ENERGIZE)) {
             if (!isEquipped(hero))              GLog.i( Messages.get(this, "need_to_equip") );
             else if (cursed)                    GLog.w( Messages.get(this, "cursed") );
-            else if (Dungeon.energy < 10)        GLog.w( Messages.get(this, "need_energy") );
+            else if ((Dungeon.energy.compareTo(BigInteger.TEN) < 0))        GLog.w( Messages.get(this, "need_energy") );
             else {
 
-                final int maxLevels = (int) Math.min(levelCap - level(), Dungeon.energy/10);
+                final int maxLevels = Big.toInt(BigInteger.valueOf(levelCap).subtract(level()).min(Dungeon.energy.divide(BigInteger.TEN)));
 
                 String[] options;
                 if (maxLevels > 1){
@@ -171,19 +175,19 @@ public class ExaminationParchment extends Artifact {
                         super.onSelect(index);
 
                         if (index == 0){
-                            Dungeon.energy -= 10;
+                            Dungeon.energy = Dungeon.energy.subtract(BigInteger.TEN);
                             Sample.INSTANCE.play(Assets.Sounds.DRINK);
                             Sample.INSTANCE.playDelayed(Assets.Sounds.PUFF, 0.5f);
                             Dungeon.hero.sprite.operate(Dungeon.hero.pos);
                             upgrade();
                             Catalog.countUse(ExaminationParchment.class);
                         } else if (index == 1){
-                            Dungeon.energy -= 10L *maxLevels;
+                            Dungeon.energy = Dungeon.energy.subtract(BigInteger.valueOf(10L *maxLevels));
                             Sample.INSTANCE.play(Assets.Sounds.DRINK);
                             Sample.INSTANCE.playDelayed(Assets.Sounds.PUFF, 0.5f);
                             Dungeon.hero.sprite.operate(Dungeon.hero.pos);
-                            upgrade((int) maxLevels);
-                            Catalog.countUses(ExaminationParchment.class, maxLevels);
+                            upgrade(BigInteger.valueOf((int) maxLevels));
+                            Catalog.countUses(ExaminationParchment.class, BigInteger.valueOf(maxLevels));
                         }
 
                     }
@@ -213,7 +217,7 @@ public class ExaminationParchment extends Artifact {
                     curUser.sprite.emitter().start( Speck.factory( Speck.UP ), 0.2f, 5 );
 
                     totalAnswers += 1;
-                    charge += reward;
+                    charge = charge.add(BigInteger.valueOf(reward));
 
                     updateQuickslot();
                     Catalog.countUse(ExaminationParchment.class);
@@ -234,11 +238,11 @@ public class ExaminationParchment extends Artifact {
         } );
     }
 
-    public int consumeEnergy(long amount){
-        long result = amount - charge;
-        charge = (int) Math.max(0, charge - amount);
+    public int consumeEnergy(BigInteger amount){
+        BigInteger result = amount.subtract(charge);
+        charge = BigInteger.valueOf(Big.toInt(BigInteger.ZERO.max(charge.subtract(amount))));
         Talent.onArtifactUsed(Dungeon.hero);
-        return (int) Math.max(0, result);
+        return Big.toInt(BigInteger.ZERO.max(result));
     }
 
     @Override
@@ -260,9 +264,9 @@ public class ExaminationParchment extends Artifact {
         if (target.buff(MagicImmune.class) != null) return;
         partialCharge += 0.25f*amount;
         if (partialCharge >= 1){
-            long charge = (long)partialCharge;
-            partialCharge -= charge;
-            this.charge += charge;
+            BigInteger charge = Big.of(partialCharge);
+            partialCharge -= charge.doubleValue();
+            this.charge = this.charge.add(charge);
             updateQuickslot();
         }
     }
@@ -322,12 +326,12 @@ public class ExaminationParchment extends Artifact {
         public boolean act() {
 
             if (warmUpDelay > 0){
-                if (level() >= 10){
+                if ((level().compareTo(BigInteger.TEN) >= 0)){
                     warmUpDelay = 0;
                 } else if (warmUpDelay == 101){
                     warmUpDelay = 100f;
                 } else if (!cursed && target.buff(MagicImmune.class) == null) {
-                    float turnsToWarmUp = (int) Math.pow(10 - level(), 2);
+                    float turnsToWarmUp = (int) Math.pow(BigInteger.TEN.subtract(level()).doubleValue(), 2);
                     warmUpDelay -= 100 / turnsToWarmUp;
                 }
                 updateQuickslot();
@@ -343,15 +347,15 @@ public class ExaminationParchment extends Artifact {
             //generates 2 energy every hero level, +1 energy per toolkit level
             //to a max of 12 energy per hero level
             //This means that energy absorbed into the kit is recovered in 5 hero levels
-            double chargeGain = (1 + level()) * levelPortion;
+            double chargeGain = Big.dec((BigInteger.ONE.add(level()))).multiply(Big.dec(levelPortion)).doubleValue();
             chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
-            chargeGain *= getRarityMultiplier();
+            chargeGain *= getRarityMultiplier().doubleValue();
             chargeGain = Math.min(50, chargeGain);
             partialCharge += chargeGain;
 
             //charge is in increments of 1 energy.
             while (partialCharge >= 1) {
-                charge++;
+                charge = charge.add(BigInteger.ONE);
                 partialCharge -= 1;
 
                 updateQuickslot();
@@ -360,13 +364,13 @@ public class ExaminationParchment extends Artifact {
 
         public void obtainItem(Item item) {
             int chargesUsed = chargesToUse(item);
-            charge -= chargesUsed;
-            exp += chargesUsed;
+            charge = charge.subtract(BigInteger.valueOf(chargesUsed));
+            exp = exp.add(BigInteger.valueOf(chargesUsed));
             GLog.i(Messages.get(ExaminationParchment.class, "obtain_item", item.name()));
 
             Talent.onArtifactUsed(Dungeon.hero);
-            while (exp >= (300L * Math.round(1.33f * level())) && level() < levelCap) {
-                exp -= 300L * Math.round(1.33f * level());
+            while ((exp.compareTo((BigInteger.valueOf(300L).multiply(Big.round(Big.dec(1.33f).multiply(Big.dec(level())))))) >= 0) && (level().compareTo(BigInteger.valueOf(levelCap)) < 0)) {
+                exp = exp.subtract(BigInteger.valueOf(300L).multiply(Big.round(Big.dec(1.33f).multiply(Big.dec(level())))));
                 Catalog.countUse(ExaminationParchment.class);
                 GLog.p(Messages.get(ExaminationParchment.class, "level_up"));
                 upgrade();
@@ -375,26 +379,26 @@ public class ExaminationParchment extends Artifact {
         }
 
         public int chargesToUse(Item item){
-            long value = item.value();
+            BigInteger value = item.value();
             float valUsing = 1;
             int chargesUsed = 0;
-            while (valUsing < value){
-                valUsing += 2 + item.level()/2f + item.quantity();
+            while ((Big.dec(valUsing).compareTo(Big.dec(value)) < 0)){
+                valUsing += Big.dec(2).add(Big.div(Big.dec(item.level()), Big.dec(2f))).add(Big.dec(item.quantity())).floatValue();
                 chargesUsed++;
             }
-            return (int) (chargesUsed + (availableEnergy() * 0.05f));
+            return Big.toInt(((Big.dec(chargesUsed).add((Big.dec(availableEnergy()).multiply(Big.dec(0.05f)))))).toBigInteger());
         }
 
         public void removeBuff(Buff buff) {
             int chargesUsed = chargesToUseInbuff(buff);
             buff.detach();
-            charge -= chargesUsed;
-            exp += chargesUsed;
+            charge = charge.subtract(BigInteger.valueOf(chargesUsed));
+            exp = exp.add(BigInteger.valueOf(chargesUsed));
             GLog.i(Messages.get(ExaminationParchment.class, "remove_buff", buff.name()));
 
             Talent.onArtifactUsed(Dungeon.hero);
-            while (exp >= (300L * Math.round(1.33f * level())) && level() < levelCap) {
-                exp -= 300L * Math.round(1.33f * level());
+            while ((exp.compareTo((BigInteger.valueOf(300L).multiply(Big.round(Big.dec(1.33f).multiply(Big.dec(level())))))) >= 0) && (level().compareTo(BigInteger.valueOf(levelCap)) < 0)) {
+                exp = exp.subtract(BigInteger.valueOf(300L).multiply(Big.round(Big.dec(1.33f).multiply(Big.dec(level())))));
                 Catalog.countUse(ExaminationParchment.class);
                 GLog.p(Messages.get(ExaminationParchment.class, "level_up"));
                 upgrade();
@@ -414,10 +418,10 @@ public class ExaminationParchment extends Artifact {
             if (buff instanceof Hunger) {
                 chargesUsed = 1500;
             }
-            return (int) (chargesUsed + (availableEnergy() * 0.05f));
+            return Big.toInt(((Big.dec(chargesUsed).add((Big.dec(availableEnergy()).multiply(Big.dec(0.05f)))))).toBigInteger());
         }
 
-        public long availableEnergy(){
+        public BigInteger availableEnergy(){
             return charge;
         }
 

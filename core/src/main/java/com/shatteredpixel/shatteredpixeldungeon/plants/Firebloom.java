@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.plants;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -51,7 +53,7 @@ public class Firebloom extends Plant {
 			Buff.affect(ch, FireImbue.class).set( FireImbue.DURATION*0.3f );
 		}
 		
-		GameScene.add( Blob.seed( pos, 2, Fire.class ) );
+		GameScene.add( Blob.seed( pos, BigInteger.TWO, Fire.class ) );
 		
 		if (Dungeon.level.heroFOV[pos]) {
 			CellEmitter.get( pos ).burst( FlameParticle.FACTORY, 5 );

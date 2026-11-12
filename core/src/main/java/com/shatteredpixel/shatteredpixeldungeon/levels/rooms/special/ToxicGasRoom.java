@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
@@ -56,7 +58,7 @@ public class ToxicGasRoom extends SpecialRoom {
 			int cell = level.pointToCell(p);
 			if (level.map[cell] == Terrain.EMPTY) {
 				//as if gas has been spreading in the room for a while
-				Blob.seed(cell, 30, ToxicGas.class, level);
+				Blob.seed(cell, BigInteger.valueOf(30), ToxicGas.class, level);
 			}
 		}
 
@@ -68,7 +70,7 @@ public class ToxicGasRoom extends SpecialRoom {
 				cell = level.pointToCell(random(2));
 			} while (level.map[cell] != Terrain.EMPTY);
 			level.setTrap(new ToxicVent().reveal(), cell);
-			Blob.seed(cell, 12, ToxicGasSeed.class, level);
+			Blob.seed(cell, BigInteger.valueOf(12), ToxicGasSeed.class, level);
 			Painter.set(level, cell, Terrain.INACTIVE_TRAP);
 		}
 
@@ -94,7 +96,7 @@ public class ToxicGasRoom extends SpecialRoom {
 
 		goldPositions.remove((Integer) furthestPos);
 		Item mainGold = new Gold().random();
-		mainGold.quantity(mainGold.quantity()*2);
+		mainGold.quantity(mainGold.quantity().multiply(BigInteger.TWO));
 		level.drop(mainGold, furthestPos).type = Heap.Type.SKELETON;
 
 		for (int i = 0; i < 2; i++){
@@ -112,7 +114,7 @@ public class ToxicGasRoom extends SpecialRoom {
 	@Override
 	public boolean canPlaceCharacter(Point p, Level l) {
 		Blob gas = l.blobs.get(ToxicGas.class);
-		return gas == null || gas.volume == 0 || gas.cur[l.pointToCell(p)] == 0;
+		return gas == null || (gas.volume.compareTo(BigInteger.ZERO) == 0) || (gas.cur[l.pointToCell(p)].compareTo(BigInteger.ZERO) == 0);
 	}
 
 	public static class ToxicGasSeed extends Blob {
@@ -126,16 +128,16 @@ public class ToxicGasRoom extends SpecialRoom {
 					cell = j + i* Dungeon.level.width();
 					if (Dungeon.level.insideMap(cell)) {
 						if (Dungeon.level.map[cell] != Terrain.INACTIVE_TRAP){
-							off[cell] = 0;
+							off[cell] = BigInteger.ZERO;
 							continue;
 						}
 
 						off[cell] = cur[cell];
-						volume += off[cell];
+						volume = volume.add(off[cell]);
 
-						if (gas == null || gas.volume == 0){
+						if (gas == null || (gas.volume.compareTo(BigInteger.ZERO) == 0)){
 							GameScene.add(Blob.seed(cell, off[cell], ToxicGas.class));
-						} else if (gas.cur[cell] <= 9*off[cell]){
+						} else if ((gas.cur[cell].compareTo(BigInteger.valueOf(9).multiply(off[cell])) <= 0)){
 							GameScene.add(Blob.seed(cell, off[cell], ToxicGas.class));
 						}
 					}

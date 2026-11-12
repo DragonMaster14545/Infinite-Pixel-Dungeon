@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SeasonalTasks;
@@ -212,7 +214,7 @@ public class Potion extends Item {
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
 		actions.add( AC_DRINK );
-        if (quantity() > 1 && isIdentified() && isRepeatable()) actions.add( AC_DRINK_ALL );
+        if ((quantity().compareTo(BigInteger.ONE) > 0) && isIdentified() && isRepeatable()) actions.add( AC_DRINK_ALL );
 		return actions;
 	}
 	
@@ -350,13 +352,13 @@ public class Potion extends Item {
 			}
 		}
 	}
-    protected void drinkAll( Hero hero, long quantity ) {
+    protected void drinkAll( Hero hero, BigInteger quantity ) {
 
         detachAll( hero.belongings.backpack );
 
         hero.spend( TIME_TO_DRINK );
         hero.busy();
-        for (int i = 0; i < quantity; i++) {
+        for (int i = 0; (BigInteger.valueOf(i).compareTo(quantity) < 0); i++) {
             apply( hero );
         }
 
@@ -541,13 +543,13 @@ public class Potion extends Item {
 	}
 	
 	@Override
-	public long value() {
-		return 30 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(30).multiply(quantity);
 	}
 
 	@Override
-	public long energyVal() {
-		return 6 * quantity;
+	public BigInteger energyVal() {
+		return BigInteger.valueOf(6).multiply(quantity);
 	}
 
 	public static class PlaceHolder extends Potion {
@@ -594,7 +596,7 @@ public class Potion extends Item {
 			
 			for (Item ingredient : ingredients){
 				if (!(ingredient instanceof Plant.Seed
-						&& ingredient.quantity() >= 1
+						&& (ingredient.quantity().compareTo(BigInteger.ONE) >= 0)
 						&& types.containsKey(ingredient.getClass()))){
 					return false;
 				}
@@ -603,8 +605,8 @@ public class Potion extends Item {
 		}
 		
 		@Override
-		public long cost(ArrayList<Item> ingredients) {
-			return 0;
+		public BigInteger cost(ArrayList<Item> ingredients) {
+			return BigInteger.ZERO;
 		}
 		
 		@Override
@@ -612,7 +614,7 @@ public class Potion extends Item {
 			if (!testIngredients(ingredients)) return null;
 			
 			for (Item ingredient : ingredients){
-				ingredient.quantity(ingredient.quantity() - 1);
+				ingredient.quantity(ingredient.quantity().subtract(BigInteger.ONE));
 			}
 			
 			ArrayList<Class<?extends Plant.Seed>> seeds = new ArrayList<>();

@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
@@ -62,7 +64,7 @@ public class Dread extends Buff {
 		if (!Dungeon.level.heroFOV[target.pos]
 				&& Dungeon.level.distance(target.pos, Dungeon.hero.pos) >= 6) {
 			if (target instanceof Mob){
-				((Mob) target).EXP /= 2;
+				((Mob) target).EXP = ((Mob) target).EXP.divide(BigInteger.TWO);
 			}
 			target.destroy();
 			target.sprite.killAndErase();

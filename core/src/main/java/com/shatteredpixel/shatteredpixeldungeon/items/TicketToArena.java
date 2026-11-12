@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -125,8 +127,8 @@ public class TicketToArena extends Item{
     }
 
     @Override
-    public long value() {
-        return 210 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(210).multiply(quantity);
     }
 
     @Override

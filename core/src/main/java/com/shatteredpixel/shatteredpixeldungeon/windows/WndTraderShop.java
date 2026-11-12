@@ -1,5 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -145,8 +147,8 @@ public class WndTraderShop extends Window {
 	}
 
 	private void refresh() {
-		gold.text( Messages.get( this, "gold", fmt( Dungeon.gold ) ) );
-		energy.text( Messages.get( this, "energy", fmt( Dungeon.energy ) ) );
+		gold.text( Messages.get( this, "gold", fmt( Big.toLong(Dungeon.gold) ) ) );
+		energy.text( Messages.get( this, "energy", fmt( Big.toLong(Dungeon.energy) ) ) );
 
 		content.clear();
 		ArrayList<TraderStock.Offer> offers = TraderStock.offers();
@@ -176,25 +178,25 @@ public class WndTraderShop extends Window {
 			content.add( text );
 
 			RedButton goldBtn = new RedButton( offer.sold ? Messages.get( this, "sold_out" )
-					: Messages.get( this, "buy_gold", fmt( offer.gold ) ), 7 ) {
+					: Messages.get( this, "buy_gold", fmt( Big.toLong(offer.gold) ) ), 7 ) {
 				@Override
 				public void onClick() {
 					buy( index, false );
 				}
 			};
 			goldBtn.setRect( 0, cy + ICON, bw, BTN_H );
-			goldBtn.enable( !offer.sold && Dungeon.gold >= offer.gold );
+			goldBtn.enable( !offer.sold && (Dungeon.gold.compareTo(offer.gold) >= 0) );
 			content.add( goldBtn );
 
 			RedButton energyBtn = new RedButton( offer.sold ? Messages.get( this, "sold_out" )
-					: Messages.get( this, "buy_energy", fmt( offer.energy ) ), 7 ) {
+					: Messages.get( this, "buy_energy", fmt( Big.toLong(offer.energy) ) ), 7 ) {
 				@Override
 				public void onClick() {
 					buy( index, true );
 				}
 			};
 			energyBtn.setRect( bw + GAP, cy + ICON, bw, BTN_H );
-			energyBtn.enable( !offer.sold && Dungeon.energy >= offer.energy );
+			energyBtn.enable( !offer.sold && (Dungeon.energy.compareTo(offer.energy) >= 0) );
 			content.add( energyBtn );
 
 			cy += ROW_H;

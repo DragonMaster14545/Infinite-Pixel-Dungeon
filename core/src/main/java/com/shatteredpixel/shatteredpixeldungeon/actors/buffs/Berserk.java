@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -102,22 +106,22 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 	public boolean act() {
 		if (state == State.BERSERK){
 			ShieldBuff buff = target.buff(WarriorShield.class);
-			if (target.shielding() > 0) {
+			if ((target.shielding().compareTo(BigInteger.ZERO) > 0)) {
 				//lose 2.5% of shielding per turn, but no less than 1
-				long dmg = (long) Math.ceil(target.shielding() * 0.025f);
-				if (buff != null && buff.shielding() > 0) {
+				BigInteger dmg = Big.trunc(Big.ceil(Big.dec(target.shielding()).multiply(Big.dec(0.025f))));
+				if (buff != null && (buff.shielding().compareTo(BigInteger.ZERO) > 0)) {
 					dmg = buff.absorbDamage(dmg);
 				}
 
-				if (dmg > 0){
+				if ((dmg.compareTo(BigInteger.ZERO) > 0)){
 					//if there is leftover damage, then try to remove from other shielding buffs
 					for (ShieldBuff s : target.buffs(ShieldBuff.class)){
 						dmg = s.absorbDamage(dmg);
-						if (dmg == 0) break;
+						if ((dmg.compareTo(BigInteger.ZERO) == 0)) break;
 					}
 				}
 
-				if (target.shielding() <= 0){
+				if ((target.shielding().compareTo(BigInteger.ZERO) <= 0)){
 					state = State.RECOVERING;
 					power = 0f;
 					BuffIndicator.refreshHero();
@@ -140,7 +144,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 			if (powerLossBuffer > 0){
 				powerLossBuffer--;
 			} else {
-				double rageLoss = GameMath.gate(0.1f, this.power, 1f) * 0.067f * Math.pow((target.HP / (float) target.HT), 2);
+				double rageLoss = GameMath.gate(0.1f, this.power, 1f) * 0.067f * Math.pow((Big.div(Big.dec(target.HP), Big.dec(target.HT.floatValue()))).doubleValue(), 2);
 				if (Dungeon.hero.subClass == HeroSubClass.BERSERKER) rageLoss *= 0.5f;
 				this.power -= rageLoss;
 
@@ -180,7 +184,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 	}
 
 	public boolean berserking(){
-		if (target.HP == 0
+		if ((target.HP.compareTo(BigInteger.ZERO) == 0)
 				&& state == State.NORMAL
 				&& power >= 1f
 				&& target.buff(WarriorShield.class) != null
@@ -189,7 +193,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 			ActionIndicator.clearAction(this);
 		}
 
-		return state == State.BERSERK && target.shielding() > 0;
+		return state == State.BERSERK && (target.shielding().compareTo(BigInteger.ZERO) > 0);
 	}
 
 	private void startBerserking(){
@@ -198,7 +202,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 		Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
 		GameScene.flash(0xFF0000);
 
-		if (target.HP > 0) {
+		if ((target.HP.compareTo(BigInteger.ZERO) > 0)) {
 			turnRecovery = TURN_RECOVERY_START;
 			levelRecovery = 0;
 		} else {
@@ -207,7 +211,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 		}
 
 		//base multiplier scales at 2/3/4/5/6x at 100/37/20/9/0% HP
-		float shieldMultiplier = 2f + 4*(float)Math.pow((1f-(target.HP/(float)target.HT)), 3);
+		float shieldMultiplier = 2f + 4*(float)Math.pow((Big.dec(1f).subtract((Big.div(Big.dec(target.HP), Big.dec(target.HT.floatValue()))))).doubleValue(), 3);
 
 		//Endless rage effect on shield and cooldown
 		if (power > 1f){
@@ -217,17 +221,17 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 		}
 
 		WarriorShield shield = target.buff(WarriorShield.class);
-		int shieldAmount = Math.round(shield.maxShield() * shieldMultiplier);
-		shield.supercharge(shieldAmount);
+		int shieldAmount = Big.toInt(Big.round(Big.dec(shield.maxShield()).multiply(Big.dec(shieldMultiplier))));
+		shield.supercharge(BigInteger.valueOf(shieldAmount));
 		target.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(shieldAmount), FloatingText.SHIELDING );
 
 		BuffIndicator.refreshHero();
 	}
 	
-	public void damage(long damage){
+	public void damage(BigInteger damage){
 		if (state != State.NORMAL) return;
 		float maxPower = 1f + 0.1667f*((Hero)target).pointsInTalent(Talent.ENDLESS_RAGE);
-		power = Math.min(maxPower, power + (damage/(float)target.HT)/3f );
+		power = Big.dec(maxPower).min(Big.dec(power).add(Big.div((Big.div(Big.dec(damage), Big.dec(target.HT.floatValue()))), Big.dec(3f)))).doubleValue();
 		BuffIndicator.refreshHero(); //show new power immediately
 		powerLossBuffer = 3; //2 turns until rage starts dropping
 		if (power >= 1f){
@@ -279,7 +283,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 	@Override
 	public void doAction() {
 		WarriorShield shield = target.buff(WarriorShield.class);
-		if (shield != null && shield.maxShield() > 0) {
+		if (shield != null && (shield.maxShield().compareTo(BigInteger.ZERO) > 0)) {
 			startBerserking();
 			ActionIndicator.clearAction(this);
 		} else {
@@ -352,7 +356,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 
 	@Override
 	public String desc() {
-		double dispDamage = ((long)damageFactor(10000) / 100d) - 100d;
+		double dispDamage = (Big.div(Big.dec(Big.of(damageFactor(10000))), Big.dec(100d))).subtract(Big.dec(100d)).doubleValue();
 		switch (state){
 			case NORMAL: default:
 				return Messages.get(this, "angered_desc", Math.floor(power * 100f), dispDamage);

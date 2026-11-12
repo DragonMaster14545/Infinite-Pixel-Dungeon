@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
@@ -67,12 +69,12 @@ public class PotionOfStrength extends Potion {
 	}
 
 	@Override
-	public long value() {
-		return isKnown() ? 50 * quantity : super.value();
+	public BigInteger value() {
+		return isKnown() ? BigInteger.valueOf(50).multiply(quantity) : super.value();
 	}
 
 	@Override
-	public long energyVal() {
-		return isKnown() ? 10 * quantity : super.energyVal();
+	public BigInteger energyVal() {
+		return isKnown() ? BigInteger.TEN.multiply(quantity) : super.energyVal();
 	}
 }

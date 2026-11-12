@@ -1,5 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -86,7 +88,7 @@ public class RacingTheDeath extends Buff implements Hero.Doom {
         updateTrail();
 
         if (damage > 0) {
-            target.damage(damage, this);
+            target.damage(BigInteger.valueOf(damage), this);
         }
     }
 

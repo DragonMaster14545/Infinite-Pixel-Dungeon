@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -94,18 +98,18 @@ public class ScrollOfUpgrade extends InventoryScroll {
 							"Accept", "Cancel") {
 						@Override public void onSelect(boolean positive, String text) {
 							if(!positive) return;
-							long number;
+							BigInteger number;
 							try {
-								number = Long.parseLong(text.trim());
+								number = BigInteger.valueOf(Long.parseLong(text.trim()));
 							} catch (NumberFormatException e){
 								GLog.w("No valid number was entered.");
 								return;
 							}
-							if (number <= 0){
+							if ((number.compareTo(BigInteger.ZERO) <= 0)){
 								GLog.w("Enter an amount greater than zero.");
 								return;
 							}
-							if (number >= quantity()){
+							if ((number.compareTo(quantity()) >= 0)){
 								curItem = detachAll(hero.belongings.backpack);
 							} else {
 								curItem = split(number);
@@ -128,7 +132,7 @@ public class ScrollOfUpgrade extends InventoryScroll {
 		ArrayList<String> actions = super.actions( hero );
 		if (isIdentified() && !anonymous) {
 			actions.add(AC_UPGRADE);
-			if (quantity() > 1)
+			if ((quantity().compareTo(BigInteger.ONE) > 0))
 				actions.add(AC_UPGRADE_AMOUNT);
 		}
 		return actions;
@@ -146,7 +150,7 @@ public class ScrollOfUpgrade extends InventoryScroll {
 		GameScene.selectItem(multiUpgrade ? itemSelector2 : itemSelector);
 	}
 
-	public Item upgradeItem(Item item, long amount) {
+	public Item upgradeItem(Item item, BigInteger amount) {
 		Degrade.detach( curUser, Degrade.class );
 
 		//logic for telling the user when item properties change from upgrades
@@ -158,7 +162,7 @@ public class ScrollOfUpgrade extends InventoryScroll {
 			boolean hadCursedEnchant = w.hasCurseEnchant();
 			boolean hadGoodEnchant = w.hasGoodEnchant();
 
-			item = w.upgrade(amount);
+			item = w.upgrade((amount));
 
 			if (w.cursedKnown && hadCursedEnchant && !w.hasCurseEnchant()){
 				removeCurse( Dungeon.hero );
@@ -178,7 +182,7 @@ public class ScrollOfUpgrade extends InventoryScroll {
 			boolean hadCursedGlyph = a.hasCurseGlyph();
 			boolean hadGoodGlyph = a.hasGoodGlyph();
 
-			item = a.upgrade(amount);
+			item = a.upgrade((amount));
 
 			if (a.cursedKnown && hadCursedGlyph && !a.hasCurseGlyph()){
 				removeCurse( Dungeon.hero );
@@ -194,18 +198,18 @@ public class ScrollOfUpgrade extends InventoryScroll {
 		} else if (item instanceof Wand || item instanceof Ring) {
 			boolean wasCursed = item.cursed;
 
-			item = item.upgrade(amount);
+			item = item.upgrade((amount));
 
 			if (item.cursedKnown && wasCursed && !item.cursed){
 				removeCurse( Dungeon.hero );
 			}
 
 		} else {
-			item = item.upgrade(amount);
+			item = item.upgrade((amount));
 		}
 
 		Badges.validateItemLevelAquired(item);
-		Statistics.upgradesUsed += amount;
+		Statistics.upgradesUsed = Statistics.upgradesUsed.add(amount);
 		Badges.validateMageUnlock();
 
 		Catalog.countUse(item.getClass());
@@ -229,13 +233,13 @@ public class ScrollOfUpgrade extends InventoryScroll {
 	}
 	
 	@Override
-	public long value() {
-		return isKnown() ? 50 * quantity : super.value();
+	public BigInteger value() {
+		return isKnown() ? BigInteger.valueOf(50).multiply(quantity) : super.value();
 	}
 
 	@Override
-	public long energyVal() {
-		return isKnown() ? 10 * quantity : super.energyVal();
+	public BigInteger energyVal() {
+		return isKnown() ? BigInteger.TEN.multiply(quantity) : super.energyVal();
 	}
 
 	public WndBag.ItemSelector itemSelector2 = new WndBag.ItemSelector() {

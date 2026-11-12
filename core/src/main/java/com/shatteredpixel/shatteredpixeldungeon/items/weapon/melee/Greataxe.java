@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -53,13 +57,12 @@ public class Greataxe extends MeleeWeapon {
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  7*(tier()+4) +    //63 base, up from 36
-				lvl*(tier()+2);   //+7
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(7*(tier()+4)).add(lvl.multiply(BigInteger.valueOf((tier()+2))));   //+7
 	}
 
 	@Override
-	public int STRReq(long lvl) {
+	public int STRReq(BigInteger lvl) {
 		int req = STRReq(tier+1, lvl); //20 base strength req, up from 18
 		if (masteryPotionBonus){
 			req -= 2;
@@ -97,7 +100,7 @@ public class Greataxe extends MeleeWeapon {
 
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
-		if (hero.HP / (float)hero.HT >= 0.5f){
+		if ((Big.div(Big.dec(hero.HP), Big.dec(hero.HT.floatValue())).compareTo(Big.dec(0.5f)) >= 0)){
 			GLog.w(Messages.get(this, "ability_cant_use"));
 			return;
 		}
@@ -127,9 +130,9 @@ public class Greataxe extends MeleeWeapon {
 				AttackIndicator.target(enemy);
 
 				//+(15+(2*lvl)) damage, roughly +60% base damage, +55% scaling
-				long dmgBoost = augment.damageFactor(15 + 2*buffedLvl());
+				BigInteger dmgBoost = augment.damageFactor(BigInteger.valueOf(15).add(BigInteger.TWO.multiply(buffedLvl())));
 
-				if (hero.attack(enemy, 1, dmgBoost, Char.INFINITE_ACCURACY)){
+				if (hero.attack(enemy, 1, dmgBoost.floatValue(), Char.INFINITE_ACCURACY)){
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 				}
 
@@ -147,16 +150,16 @@ public class Greataxe extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		long dmgBoost = levelKnown ? 15 + 2*buffedLvl() : 15;
+		BigInteger dmgBoost = levelKnown ? BigInteger.valueOf(15).add(BigInteger.TWO.multiply(buffedLvl())) : BigInteger.valueOf(15);
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
+			return Messages.get(this, "ability_desc", augment.damageFactor(min().add(dmgBoost)), augment.damageFactor(max().add(dmgBoost)));
 		} else {
-			return Messages.get(this, "typical_ability_desc", min(0)+dmgBoost, max(0)+dmgBoost);
+			return Messages.get(this, "typical_ability_desc", min(BigInteger.ZERO).add(dmgBoost), max(BigInteger.ZERO).add(dmgBoost));
 		}
 	}
 
-	public String upgradeAbilityStat(long level){
-		long dmgBoost = 15 + 2*level;
-		return augment.damageFactor(min(level)+dmgBoost) + "-" + augment.damageFactor(max(level)+dmgBoost);
+	public String upgradeAbilityStat(BigInteger level){
+		BigInteger dmgBoost = BigInteger.valueOf(15).add(BigInteger.TWO.multiply(level));
+		return augment.damageFactor(min(level).add(dmgBoost)) + "-" + augment.damageFactor(max(level).add(dmgBoost));
 	}
 }

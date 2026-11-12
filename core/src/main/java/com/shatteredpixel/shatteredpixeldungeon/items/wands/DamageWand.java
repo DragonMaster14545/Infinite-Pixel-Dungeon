@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WandEmpower;
@@ -35,27 +39,27 @@ import com.watabou.noosa.audio.Sample;
 //wands with AOE or circumstantial direct damage count here (e.g. fireblast, transfusion), but wands with indirect damage do not (e.g. corrosion)
 public abstract class DamageWand extends Wand{
 
-	public long min(){
-		return Math.round(min(buffedLvl())*(1+ Dungeon.hero.lvl/150d));
+	public BigInteger min(){
+		return Big.round(Big.dec(min(buffedLvl())).multiply(Big.dec((1+ Dungeon.hero.lvl/150d))));
 	}
 
-	public abstract long min(long lvl);
+	public abstract BigInteger min(BigInteger lvl);
 
-	public long max(){
-		return Math.round(max(buffedLvl())*(1+ Dungeon.hero.lvl/150d));
+	public BigInteger max(){
+		return Big.round(Big.dec(max(buffedLvl())).multiply(Big.dec((1+ Dungeon.hero.lvl/150d))));
 	}
 
-	public abstract long max(long lvl);
+	public abstract BigInteger max(BigInteger lvl);
 
-	public long damageRoll(){
+	public BigInteger damageRoll(){
 		return damageRoll(buffedLvl());
 	}
 
-	public long damageRoll(long lvl){
-		long dmg = Hero.heroDamageIntRange(min(lvl), max(lvl));
+	public BigInteger damageRoll(BigInteger lvl){
+		BigInteger dmg = Hero.heroDamageIntRange(min(lvl), max(lvl));
 		WandEmpower emp = Dungeon.hero.buff(WandEmpower.class);
 		if (emp != null){
-			dmg += emp.dmgBoost;
+			dmg = dmg.add(BigInteger.valueOf(emp.dmgBoost));
 			emp.left--;
 			if (emp.left <= 0) {
 				emp.detach();
@@ -70,11 +74,11 @@ public abstract class DamageWand extends Wand{
 		if (levelKnown)
 			return Messages.get(this, "stats_desc", min(), max()) + "\n\n" + Messages.get(Wand.class, "charges", curCharges, getMaxCharges());
 		else
-			return Messages.get(this, "stats_desc", min(0), max(0));
+			return Messages.get(this, "stats_desc", min(BigInteger.ZERO), max(BigInteger.ZERO));
 	}
 
 	@Override
-	public String upgradeStat1(long level) {
+	public String upgradeStat1(BigInteger level) {
 		return min(level) + "-" + max(level);
 	}
 }

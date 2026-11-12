@@ -91,7 +91,7 @@ public class ShurikenOfShadows extends MissileWeapon {
 				Dungeon.fail(this);
 				GLog.n(Messages.get(this, "ondeath"));
 			} else if (target instanceof Mob) {
-                target.damage(Math.round(damageRoll(curUser)), this);
+                target.damage(damageRoll(curUser), this);
                 if (target.isAlive()) {
                     Buff.affect(target, Paralysis.class, 3f);
                 }

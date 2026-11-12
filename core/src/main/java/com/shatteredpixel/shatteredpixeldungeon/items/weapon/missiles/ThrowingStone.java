@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -42,7 +46,7 @@ public class ThrowingStone extends MissileWeapon {
 	}
 	
 	@Override
-	public long value() {
-		return Math.round(super.value()/2f); //half normal value
+	public BigInteger value() {
+		return Big.round(Big.div(Big.dec(super.value()), Big.dec(2f))); //half normal value
 	}
 }

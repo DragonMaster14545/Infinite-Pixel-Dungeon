@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -51,10 +55,10 @@ public class Warlock extends Mob implements Callback {
 	{
 		spriteClass = WarlockSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(70);
-		defenseSkill = Dungeon.getCycleMultiplier(18);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(70));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(18));
 		
-		EXP = Dungeon.getCycleMultiplier(11);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(11));
 		maxLvl = 21;
 		
 		loot = Generator.Category.POTION;
@@ -64,18 +68,18 @@ public class Warlock extends Mob implements Callback {
 	}
 	
 	@Override
-	public long damageRoll() {
-		return Random.NormalLongRange( Dungeon.getCycleMultiplier(12), Dungeon.getCycleMultiplier(18) );
+	public BigInteger damageRoll() {
+		return Big.normalRange(Dungeon.getCycleMultiplier(BigInteger.valueOf(12)), Dungeon.getCycleMultiplier(BigInteger.valueOf(18)));
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(25);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(25));
 	}
 	
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(8));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(8)));
 	}
 	
 	@Override
@@ -118,9 +122,9 @@ public class Warlock extends Mob implements Callback {
 				Sample.INSTANCE.play( Assets.Sounds.DEGRADE );
 			}
 			
-			long dmg = Random.NormalIntRange( 12, 18 );
+			BigInteger dmg = BigInteger.valueOf(Random.NormalIntRange( 12, 18 ));
 			dmg = Dungeon.getCycleMultiplier(dmg);
-			dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
+			dmg = Big.round(Big.dec(dmg).multiply(Big.dec(AscensionChallenge.statModifier(this))));
 			enemy.damage( dmg, new DarkBolt() );
 			
 			if (enemy == Dungeon.hero && !enemy.isAlive()) {

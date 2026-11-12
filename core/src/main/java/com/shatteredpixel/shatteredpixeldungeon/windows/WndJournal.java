@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -912,7 +914,7 @@ public class WndJournal extends WndTabbed {
 						desc += item.info();
 					}
 
-					if (Catalog.useCount(itemClass) > 1) {
+					if ((Catalog.useCount(itemClass).compareTo(BigInteger.ONE) > 0)) {
 						if (item.isUpgradable() || item instanceof Artifact) {
 							desc += "\n\n" + Messages.get(CatalogTab.class, "upgrade_count", Catalog.useCount(itemClass));
 						} else if (item instanceof Trinket) {
@@ -1024,12 +1026,12 @@ public class WndJournal extends WndTabbed {
 				}
 				if (mob instanceof WandOfWarding.Ward){
 					if (mob instanceof WandOfWarding.Ward.WardSentry){
-						((WandOfWarding.Ward) mob).upgrade(3);
-						((WandOfWarding.Ward) mob).upgrade(3);
-						((WandOfWarding.Ward) mob).upgrade(3);
-						((WandOfWarding.Ward) mob).upgrade(3);
+						((WandOfWarding.Ward) mob).upgrade(BigInteger.valueOf(3));
+						((WandOfWarding.Ward) mob).upgrade(BigInteger.valueOf(3));
+						((WandOfWarding.Ward) mob).upgrade(BigInteger.valueOf(3));
+						((WandOfWarding.Ward) mob).upgrade(BigInteger.valueOf(3));
 					} else {
-						((WandOfWarding.Ward) mob).upgrade(0);
+						((WandOfWarding.Ward) mob).upgrade(BigInteger.ZERO);
 					}
 				}
 
@@ -1040,7 +1042,7 @@ public class WndJournal extends WndTabbed {
 				if (seen) {
 					title = Messages.titleCase(mob.name());
 					desc = mob.description();
-					if (Bestiary.encounterCount(entityCls) > 1){
+					if ((Bestiary.encounterCount(entityCls).compareTo(BigInteger.ONE) > 0)){
 						if (entityCls == RatKing.class){
 							desc += "\n\n" + Messages.get(CatalogTab.class, "barter_count", Bestiary.encounterCount(entityCls));
 						} else {
@@ -1077,7 +1079,7 @@ public class WndJournal extends WndTabbed {
 				if (seen) {
 					title = Messages.titleCase(trap.name());
 					desc = trap.desc();
-					if (Bestiary.encounterCount(entityCls) > 1){
+					if ((Bestiary.encounterCount(entityCls).compareTo(BigInteger.ONE) > 0)){
 						desc += "\n\n" + Messages.get(CatalogTab.class, "trap_count", Bestiary.encounterCount(entityCls));
 					}
 				} else {
@@ -1094,7 +1096,7 @@ title = "???";
 				if (seen) {
 					title = Messages.titleCase(plant.name());
 					desc = plant.desc();
-					if (Bestiary.encounterCount(entityCls) > 1){
+					if ((Bestiary.encounterCount(entityCls).compareTo(BigInteger.ONE) > 0)){
 						desc += "\n\n" + Messages.get(CatalogTab.class, "plant_count", Bestiary.encounterCount(entityCls));
 					}
 				} else {

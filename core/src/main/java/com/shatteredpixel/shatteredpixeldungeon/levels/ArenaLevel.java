@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -170,7 +172,7 @@ public class ArenaLevel extends Level {
             itemsToSpawn.add(new LaserisedEmblem());
             itemsToSpawn.add(new SummonerEmblem());
             itemsToSpawn.add(new TrihitEmblem());
-            itemsToSpawn.add(new SmallRation().quantity(Random.IntRange(3, 6)));
+            itemsToSpawn.add(new SmallRation().quantity(BigInteger.valueOf(Random.IntRange(3, 6))));
 
 			Point itemPlacement = new Point(cellToPoint(arenaDoor));
 			if (itemPlacement.y == ROOM_TOP-1){
@@ -374,7 +376,7 @@ public class ArenaLevel extends Level {
 							Buff.affect(mob, RageShield.class).set(power*4);
 						}
 						if (power >= 200){
-							mob.HP = mob.HT *= 2;
+							mob.HP = mob.HT = mob.HT.multiply(BigInteger.TWO);
 						}
 						if (power >= 250) {
 							ChampionEnemy.rollForChampion(mob);

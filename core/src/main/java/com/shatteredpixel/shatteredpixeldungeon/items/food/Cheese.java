@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
@@ -75,8 +77,8 @@ public class Cheese extends Food {
 	}
 	
 	@Override
-	public long value() {
-		return 40 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(40).multiply(quantity);
 	}
 
 	@Override

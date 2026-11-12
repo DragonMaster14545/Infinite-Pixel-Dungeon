@@ -29,6 +29,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.modules;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -54,7 +56,7 @@ public class HasteModule extends Module {
     }
 
     @Override
-    public long value() {
-        return 750 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(750).multiply(quantity);
     }
 }

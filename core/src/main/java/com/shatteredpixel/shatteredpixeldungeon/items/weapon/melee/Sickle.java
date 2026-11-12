@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -48,9 +52,8 @@ public class Sickle extends MeleeWeapon {
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  Math.round(6.67d*(tier()+1)) +    //20 base, up from 15
-				lvl*(tier()+1);                   //scaling unchanged
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(Math.round(6.67d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf((tier()+1))));                   //scaling unchanged
 	}
 
 	@Override
@@ -61,13 +64,13 @@ public class Sickle extends MeleeWeapon {
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
 		//replaces damage with 15+2.5*lvl bleed, roughly 138% avg base dmg, 125% avg scaling
-		long bleedAmt = augment.damageFactor(Math.round(15f + 2.5f*buffedLvl()));
+		BigInteger bleedAmt = augment.damageFactor(Big.round(Big.dec(15f).add(Big.dec(2.5f).multiply(Big.dec(buffedLvl())))));
 		Sickle.harvestAbility(hero, target, 0f, bleedAmt, this);
 	}
 
 	@Override
 	public String abilityInfo() {
-		long bleedAmt = levelKnown ? Math.round(15f + 2.5f*buffedLvl()) : 15;
+		BigInteger bleedAmt = levelKnown ? Big.round(Big.dec(15f).add(Big.dec(2.5f).multiply(Big.dec(buffedLvl())))) : BigInteger.valueOf(15);
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(bleedAmt));
 		} else {
@@ -76,11 +79,11 @@ public class Sickle extends MeleeWeapon {
 	}
 
 	@Override
-	public String upgradeAbilityStat(long level) {
-		return Long.toString(augment.damageFactor(Math.round(15f + 2.5f*level)));
+	public String upgradeAbilityStat(BigInteger level) {
+		return augment.damageFactor(Big.round(Big.dec(15f).add(Big.dec(2.5f).multiply(Big.dec(level))))).toString();
 	}
 
-	public static void harvestAbility(Hero hero, Integer target, float bleedMulti, long bleedBoost, MeleeWeapon wep){
+	public static void harvestAbility(Hero hero, Integer target, float bleedMulti, BigInteger bleedBoost, MeleeWeapon wep){
 
 		if (target == null) {
 			return;
@@ -107,7 +110,7 @@ public class Sickle extends MeleeWeapon {
 				AttackIndicator.target(enemy);
 
 				Buff.affect(enemy, HarvestBleedTracker.class, 0);
-				if (hero.attack(enemy, bleedMulti, bleedBoost, Char.INFINITE_ACCURACY)){
+				if (hero.attack(enemy, bleedMulti, bleedBoost.floatValue(), Char.INFINITE_ACCURACY)){
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 				}
 

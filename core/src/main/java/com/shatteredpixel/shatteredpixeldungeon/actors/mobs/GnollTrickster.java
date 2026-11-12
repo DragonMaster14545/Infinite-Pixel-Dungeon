@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -48,10 +50,10 @@ public class GnollTrickster extends Gnoll {
 	{
 		spriteClass = GnollTricksterSprite.class;
 
-		HP = HT = Dungeon.getCycleMultiplier(40);
-		defenseSkill = Dungeon.getCycleMultiplier(5);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(40));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(5));
 
-		EXP = Dungeon.getCycleMultiplier(5);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(5));
 
 		WANDERING = new Wandering();
 		state = WANDERING;
@@ -66,8 +68,8 @@ public class GnollTrickster extends Gnoll {
 	private int combo = 0;
 
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(16);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(16));
 	}
 
 	@Override
@@ -77,7 +79,7 @@ public class GnollTrickster extends Gnoll {
 	}
 
 	@Override
-	public long attackProc( Char enemy, long damage ) {
+	public BigInteger attackProc( Char enemy, BigInteger damage ) {
 		damage = super.attackProc( enemy, damage );
 
         if (combo >= 1){
@@ -93,7 +95,7 @@ public class GnollTrickster extends Gnoll {
 			if (effect >=6 && enemy.buff(Burning.class) == null){
 
 				if (Dungeon.level.flamable[enemy.pos]) {
-                    GameScene.add(Blob.seed(enemy.pos, 4, Fire.class));
+                    GameScene.add(Blob.seed(enemy.pos, BigInteger.valueOf(4), Fire.class));
                 }
 				Buff.affect(enemy, Burning.class).reignite( enemy );
 
@@ -127,7 +129,7 @@ public class GnollTrickster extends Gnoll {
 	public Item createLoot() {
 		MissileWeapon drop = (MissileWeapon)super.createLoot();
 		//half quantity, rounded up
-		drop.quantity((drop.quantity()+1)/2);
+		drop.quantity((drop.quantity().add(BigInteger.ONE)).divide(BigInteger.TWO));
 		return drop;
 	}
 	

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.fishingrods;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
@@ -76,7 +80,7 @@ public abstract class FishingRod extends Item {
     public boolean hook;
 
     public double fishingPower(){
-        return ((level()+1)*amplifier)*getRarityMultiplier();
+        return (Big.dec((level().add(BigInteger.ONE))).multiply(Big.dec(amplifier))).multiply(Big.dec(getRarityMultiplier())).doubleValue();
     }
 
     public int fishingStrength(){
@@ -141,7 +145,7 @@ public abstract class FishingRod extends Item {
                         hook.tier = tier;
                         hook.level = level();
                         hook.tries = fishingStrength();
-                        hook.power = (long) fishingPower();
+                        hook.power = Big.of(fishingPower());
                         GameScene.add(hook);
                         ScrollOfTeleportation.appear(hook, hooking.collisionPos);
                         defaultAction = AC_UNCAST;
@@ -177,7 +181,7 @@ public abstract class FishingRod extends Item {
     @Override
     public Item upgrade() {
         super.upgrade();
-        bonusFishingStr = (int) Math.min(15000, level() / 5);
+        bonusFishingStr = Big.toInt(BigInteger.valueOf(15000).min(level().divide(BigInteger.valueOf(5))));
         return this;
     }
 
@@ -198,21 +202,21 @@ public abstract class FishingRod extends Item {
     }
 
     @Override
-    public long visiblyUpgraded() {
+    public BigInteger visiblyUpgraded() {
         return level();
     }
 
     @Override
-    public long buffedVisiblyUpgraded() {
+    public BigInteger buffedVisiblyUpgraded() {
         return level();
     }
 
-    public String upgradeStat1(long level){
-        return Long.toString(Math.round((level+1)*amplifier*100)) + '%';
+    public String upgradeStat1(BigInteger level){
+        return Big.round(Big.dec((level.add(BigInteger.ONE))).multiply(Big.dec(amplifier)).multiply(Big.dec(100))).toString() + '%';
     }
 
-    public String upgradeStat2(long level){
-        return Long.toString(baseFishingStr + Math.min(15000, level/5));
+    public String upgradeStat2(BigInteger level){
+        return BigInteger.valueOf(baseFishingStr).add(BigInteger.valueOf(15000).min(level.divide(BigInteger.valueOf(5)))).toString();
     }
 
     @Override
@@ -223,7 +227,7 @@ public abstract class FishingRod extends Item {
     }
 
     @Override
-    public long value() {
-        return 60 * Dungeon.escalatingDepth() / 5;
+    public BigInteger value() {
+        return BigInteger.valueOf(60).multiply(Dungeon.escalatingDepth()).divide(BigInteger.valueOf(5));
     }
 }

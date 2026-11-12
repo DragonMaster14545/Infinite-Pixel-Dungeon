@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -68,9 +72,9 @@ public class    SkeletonKey extends Artifact {
 
         levelCap = 10;
 
-        charge = 3+level()/2;
+        charge = BigInteger.valueOf(3).add(level().divide(BigInteger.TWO));
         partialCharge = 0;
-        setChargeCap(3+level()/2);
+        setChargeCap(BigInteger.valueOf(3).add(level().divide(BigInteger.TWO)));
 
         defaultAction = AC_INSERT;
     }
@@ -113,13 +117,13 @@ public class    SkeletonKey extends Artifact {
 
     //levels when used, with bonus xp for opening locks that could be opened with keys
     public void gainExp( int xpGain ){
-        if (level() == levelCap){
+        if ((level().compareTo(BigInteger.valueOf(levelCap)) == 0)){
             return;
         }
 
-        exp += xpGain;
-        if (exp > 4+level()){
-            exp -= 4+level();
+        exp = exp.add(BigInteger.valueOf(xpGain));
+        if ((exp.compareTo(BigInteger.valueOf(4).add(level())) > 0)){
+            exp = exp.subtract(BigInteger.valueOf(4).add(level()));
             upgrade();
             GLog.p(Messages.get(this, "levelup"));
             Catalog.countUse(SkeletonKey.class);
@@ -149,7 +153,7 @@ public class    SkeletonKey extends Artifact {
                             GLog.w(Messages.get(SkeletonKey.class, "wont_open"));
                             return;
                         }
-                        if (charge < 1){
+                        if ((charge.compareTo(BigInteger.ONE) < 0)){
                             GLog.i( Messages.get(SkeletonKey.class, "iron_charges") );
                             return;
                         }
@@ -160,7 +164,7 @@ public class    SkeletonKey extends Artifact {
                                 Buff.affect(curUser, KeyReplacementTracker.class).processIronLockOpened();
                                 Level.set(target, Terrain.DOOR);
                                 GameScene.updateMap(target);
-                                charge -= 1;
+                                charge = charge.subtract(BigInteger.ONE);
                                 gainExp(2 + 1);
                                 Talent.onArtifactUsed(Dungeon.hero);
                                 curUser.spendAndNext(Actor.TICK);
@@ -187,7 +191,7 @@ public class    SkeletonKey extends Artifact {
                         return;
                     } else if (Dungeon.level.map[target] == Terrain.CRYSTAL_DOOR) {
 
-                        if (charge < 5) {
+                        if ((charge.compareTo(BigInteger.valueOf(5)) < 0)) {
                             GLog.i(Messages.get(SkeletonKey.class, "crystal_charges"));
                             return;
                         }
@@ -198,7 +202,7 @@ public class    SkeletonKey extends Artifact {
                                 Buff.affect(curUser, KeyReplacementTracker.class).processCrystalLockOpened();
                                 Level.set(target, Terrain.EMPTY);
                                 GameScene.updateMap(target);
-                                charge -= 5;
+                                charge = charge.subtract(BigInteger.valueOf(5));
                                 gainExp(2 + 5);
                                 Talent.onArtifactUsed(Dungeon.hero);
                                 Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
@@ -211,7 +215,7 @@ public class    SkeletonKey extends Artifact {
                         return;
                     } else if (Dungeon.level.map[target] == Terrain.DOOR || Dungeon.level.map[target] == Terrain.OPEN_DOOR){
 
-                        if (charge < 2) {
+                        if ((charge.compareTo(BigInteger.TWO) < 0)) {
                             GLog.i(Messages.get(SkeletonKey.class, "lock_charges"));
                             return;
                         }
@@ -235,7 +239,7 @@ public class    SkeletonKey extends Artifact {
 
                             if (pushCell != -1 && !Char.hasProp(toMove, Char.Property.IMMOVABLE)){
                                 Ballistica push = new Ballistica(target, pushCell, Ballistica.PROJECTILE);
-                                WandOfBlastWave.throwChar(toMove, push, 1, false, false, this);
+                                WandOfBlastWave.throwChar(toMove, push, BigInteger.ONE, false, false, this);
                                 //artifactProc(toMove, visiblyUpgraded(), 2);
                             } else {
                                 GLog.w(Messages.get(SkeletonKey.class, "lock_no_space"));
@@ -249,7 +253,7 @@ public class    SkeletonKey extends Artifact {
                             public void call() {
                                 Level.set(target, Terrain.HERO_LKD_DR);
                                 GameScene.updateMap(target);
-                                charge -= 2;
+                                charge = charge.subtract(BigInteger.TWO);
                                 gainExp(2);
                                 Talent.onArtifactUsed(Dungeon.hero);
                                 curUser.spendAndNext(Actor.TICK);
@@ -276,7 +280,7 @@ public class    SkeletonKey extends Artifact {
                         return;
 
                     } else if (Dungeon.level.heaps.get(target) != null && Dungeon.level.heaps.get(target).type == Heap.Type.LOCKED_CHEST){
-                        if (charge < 2) {
+                        if ((charge.compareTo(BigInteger.TWO) < 0)) {
                             GLog.i(Messages.get(SkeletonKey.class, "gold_charges"));
                             return;
                         }
@@ -286,7 +290,7 @@ public class    SkeletonKey extends Artifact {
                             public void call() {
                                 Buff.affect(curUser, KeyReplacementTracker.class).processGoldLockOpened();
                                 Dungeon.level.heaps.get(target).open(curUser);
-                                charge -= 2;
+                                charge = charge.subtract(BigInteger.TWO);
                                 gainExp(2 + 2);
                                 Talent.onArtifactUsed(Dungeon.hero);
                                 curUser.spendAndNext(Actor.TICK);
@@ -297,7 +301,7 @@ public class    SkeletonKey extends Artifact {
                         return;
 
                     } else if (Dungeon.level.heaps.get(target) != null && Dungeon.level.heaps.get(target).type == Heap.Type.CRYSTAL_CHEST){
-                        if (charge < 5) {
+                        if ((charge.compareTo(BigInteger.valueOf(5)) < 0)) {
                             GLog.i(Messages.get(SkeletonKey.class, "crystal_charges"));
                             return;
                         }
@@ -307,7 +311,7 @@ public class    SkeletonKey extends Artifact {
                             public void call() {
                                 Buff.affect(curUser, KeyReplacementTracker.class).processCrystalLockOpened();
                                 Dungeon.level.heaps.get(target).open(curUser);
-                                charge -= 5;
+                                charge = charge.subtract(BigInteger.valueOf(5));
                                 gainExp(2 + 5);
                                 Talent.onArtifactUsed(Dungeon.hero);
                                 curUser.spendAndNext(Actor.TICK);
@@ -320,7 +324,7 @@ public class    SkeletonKey extends Artifact {
                     }
                 }
 
-                if (charge < 2){
+                if ((charge.compareTo(BigInteger.TWO) < 0)){
                     GLog.i(Messages.get(SkeletonKey.class, "wall_charges"));
                     return;
                 }
@@ -358,7 +362,7 @@ public class    SkeletonKey extends Artifact {
                             placeWall(curUser.pos+2*PathFinder.CIRCLE8[(finalClosestIdx +1)%8], knockBackDir);
                         }
 
-                        charge -= 2;
+                        charge = charge.subtract(BigInteger.TWO);
                         gainExp(2);
 
                         Dungeon.observe();
@@ -389,13 +393,13 @@ public class    SkeletonKey extends Artifact {
 
     @Override
     public void charge(Hero target, float amount) {
-        if (charge < getChargeCap() && !cursed && target.buff(MagicImmune.class) == null){
+        if ((charge.compareTo(getChargeCap()) < 0) && !cursed && target.buff(MagicImmune.class) == null){
             partialCharge += 0.133f*amount;
             while (partialCharge >= 1){
                 partialCharge--;
-                charge++;
+                charge = charge.add(BigInteger.ONE);
             }
-            if (charge >= getChargeCap()){
+            if ((charge.compareTo(getChargeCap()) >= 0)){
                 partialCharge = 0;
             }
             updateQuickslot();
@@ -420,21 +424,21 @@ public class    SkeletonKey extends Artifact {
     public class keyRecharge extends ArtifactBuff {
         @Override
         public boolean act() {
-            if (charge < getChargeCap()
+            if ((charge.compareTo(getChargeCap()) < 0)
                     && !cursed
                     && target.buff(MagicImmune.class) == null
                     && Regeneration.regenOn()) {
                 //120 turns to charge at full, 60 turns to charge at 0/8
-                float chargeGain = 1 / Math.max(1, (120f - (getChargeCap() - charge)*7.5f));
+                float chargeGain = Big.div(Big.dec(1), Big.dec(1).max((Big.dec(120f).subtract(Big.dec((getChargeCap().subtract(charge))).multiply(Big.dec(7.5f)))))).floatValue();
                 chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
-                chargeGain *= getRarityMultiplier();
+                chargeGain *= getRarityMultiplier().floatValue();
                 partialCharge += chargeGain;
 
                 while (partialCharge >= 1) {
                     partialCharge --;
-                    charge ++;
+                    charge = charge.add(BigInteger.ONE);
 
-                    if (charge == getChargeCap()){
+                    if ((charge.compareTo(getChargeCap()) == 0)){
                         partialCharge = 0;
                     }
                 }
@@ -450,18 +454,18 @@ public class    SkeletonKey extends Artifact {
 
     @Override
     public Item upgrade() {
-        setChargeCap(3 + (level()+1)/2);
+        setChargeCap(BigInteger.valueOf(3).add((level().add(BigInteger.ONE)).divide(BigInteger.TWO)));
         return super.upgrade();
     }
 
     private void placeWall(int pos, int knockbackDIR ){
         Blob wall = Dungeon.level.blobs.get(KeyWall.class);
-        if (!Dungeon.level.solid[pos] || (wall != null && wall.cur[pos] > 0)) {
-            GameScene.add(Blob.seed(pos, 10, KeyWall.class));
+        if (!Dungeon.level.solid[pos] || (wall != null && (wall.cur[pos].compareTo(BigInteger.ZERO) > 0))) {
+            GameScene.add(Blob.seed(pos, BigInteger.TEN, KeyWall.class));
 
             Char ch = Actor.findChar(pos);
             if (ch != null && ch.alignment == Char.Alignment.ENEMY){
-                WandOfBlastWave.throwChar(ch, new Ballistica(pos, pos+knockbackDIR, Ballistica.PROJECTILE), 1, false, false, this);
+                WandOfBlastWave.throwChar(ch, new Ballistica(pos, pos+knockbackDIR, Ballistica.PROJECTILE), BigInteger.ONE, false, false, this);
                 //artifactProc(ch, visiblyUpgraded(), 2);
             }
         }
@@ -483,21 +487,21 @@ public class    SkeletonKey extends Artifact {
             for (int i = area.left; i < area.right; i++){
                 for (int j = area.top; j < area.bottom; j++){
                     cell = i + j*l.width();
-                    off[cell] = cur[cell] > 0 ? cur[cell] - 1 : 0;
+                    off[cell] = (cur[cell].compareTo(BigInteger.ZERO) > 0) ? cur[cell].subtract(BigInteger.ONE) : BigInteger.ZERO;
 
-                    if (cur[cell] > 0 && off[cell] == 0){
+                    if ((cur[cell].compareTo(BigInteger.ZERO) > 0) && (off[cell].compareTo(BigInteger.ZERO) == 0)){
                         cellEnded = true;
                     }
 
                     //caps at 10 turns
-                    off[cell] = Math.min(off[cell], 9);
+                    off[cell] = off[cell].min(BigInteger.valueOf(9));
 
-                    volume += off[cell];
+                    volume = volume.add(off[cell]);
 
-                    l.losBlocking[cell] = off[cell] > 0 || (Terrain.flags[l.map[cell]] & Terrain.LOS_BLOCKING) != 0;
-                    l.solid[cell] = off[cell] > 0 || (Terrain.flags[l.map[cell]] & Terrain.SOLID) != 0;
-                    l.passable[cell] = off[cell] == 0 && (Terrain.flags[l.map[cell]] & Terrain.PASSABLE) != 0;
-                    l.avoid[cell] = off[cell] == 0 && (Terrain.flags[l.map[cell]] & Terrain.AVOID) != 0;
+                    l.losBlocking[cell] = (off[cell].compareTo(BigInteger.ZERO) > 0) || (Terrain.flags[l.map[cell]] & Terrain.LOS_BLOCKING) != 0;
+                    l.solid[cell] = (off[cell].compareTo(BigInteger.ZERO) > 0) || (Terrain.flags[l.map[cell]] & Terrain.SOLID) != 0;
+                    l.passable[cell] = (off[cell].compareTo(BigInteger.ZERO) == 0) && (Terrain.flags[l.map[cell]] & Terrain.PASSABLE) != 0;
+                    l.avoid[cell] = (off[cell].compareTo(BigInteger.ZERO) == 0) && (Terrain.flags[l.map[cell]] & Terrain.AVOID) != 0;
                 }
             }
 
@@ -507,12 +511,12 @@ public class    SkeletonKey extends Artifact {
         }
 
         @Override
-        public void seed(Level level, int cell, long amount) {
+        public void seed(Level level, int cell, BigInteger amount) {
             super.seed(level, cell, amount);
-            level.losBlocking[cell] = cur[cell] > 0 || (Terrain.flags[level.map[cell]] & Terrain.LOS_BLOCKING) != 0;
-            level.solid[cell] = cur[cell] > 0 || (Terrain.flags[level.map[cell]] & Terrain.SOLID) != 0;
-            level.passable[cell] = cur[cell] == 0 && (Terrain.flags[level.map[cell]] & Terrain.PASSABLE) != 0;
-            level.avoid[cell] = cur[cell] == 0 && (Terrain.flags[level.map[cell]] & Terrain.AVOID) != 0;
+            level.losBlocking[cell] = (cur[cell].compareTo(BigInteger.ZERO) > 0) || (Terrain.flags[level.map[cell]] & Terrain.LOS_BLOCKING) != 0;
+            level.solid[cell] = (cur[cell].compareTo(BigInteger.ZERO) > 0) || (Terrain.flags[level.map[cell]] & Terrain.SOLID) != 0;
+            level.passable[cell] = (cur[cell].compareTo(BigInteger.ZERO) == 0) && (Terrain.flags[level.map[cell]] & Terrain.PASSABLE) != 0;
+            level.avoid[cell] = (cur[cell].compareTo(BigInteger.ZERO) == 0) && (Terrain.flags[level.map[cell]] & Terrain.AVOID) != 0;
         }
 
         @Override
@@ -520,10 +524,10 @@ public class    SkeletonKey extends Artifact {
             super.clear(cell);
             if (cur == null) return;
             Level l = Dungeon.level;
-            l.losBlocking[cell] = cur[cell] > 0 || (Terrain.flags[l.map[cell]] & Terrain.LOS_BLOCKING) != 0;
-            l.solid[cell] = cur[cell] > 0 || (Terrain.flags[l.map[cell]] & Terrain.SOLID) != 0;
-            l.passable[cell] = cur[cell] == 0 && (Terrain.flags[l.map[cell]] & Terrain.PASSABLE) != 0;
-            l.avoid[cell] = cur[cell] == 0 && (Terrain.flags[l.map[cell]] & Terrain.AVOID) != 0;
+            l.losBlocking[cell] = (cur[cell].compareTo(BigInteger.ZERO) > 0) || (Terrain.flags[l.map[cell]] & Terrain.LOS_BLOCKING) != 0;
+            l.solid[cell] = (cur[cell].compareTo(BigInteger.ZERO) > 0) || (Terrain.flags[l.map[cell]] & Terrain.SOLID) != 0;
+            l.passable[cell] = (cur[cell].compareTo(BigInteger.ZERO) == 0) && (Terrain.flags[l.map[cell]] & Terrain.PASSABLE) != 0;
+            l.avoid[cell] = (cur[cell].compareTo(BigInteger.ZERO) == 0) && (Terrain.flags[l.map[cell]] & Terrain.AVOID) != 0;
         }
 
         @Override
@@ -534,12 +538,12 @@ public class    SkeletonKey extends Artifact {
 
         @Override
         public void onBuildFlagMaps(Level l) {
-            if (volume > 0){
+            if ((volume.compareTo(BigInteger.ZERO) > 0)){
                 for (int i=0; i < l.length(); i++) {
-                    l.losBlocking[i] = l.losBlocking[i] || cur[i] > 0;
-                    l.solid[i] = l.solid[i] || cur[i] > 0;
-                    l.passable[i] = l.passable[i] && cur[i] == 0;
-                    l.avoid[i] = l.avoid[i] && cur[i] == 0;
+                    l.losBlocking[i] = l.losBlocking[i] || (cur[i].compareTo(BigInteger.ZERO) > 0);
+                    l.solid[i] = l.solid[i] || (cur[i].compareTo(BigInteger.ZERO) > 0);
+                    l.passable[i] = l.passable[i] && (cur[i].compareTo(BigInteger.ZERO) == 0);
+                    l.avoid[i] = l.avoid[i] && (cur[i].compareTo(BigInteger.ZERO) == 0);
                 }
             }
         }
@@ -628,21 +632,21 @@ public class    SkeletonKey extends Artifact {
             int keysNeeded = ironKeysNeeded[Dungeon.depth];
             boolean removed = false;
             if (keysNeeded >= 0) {
-                while (Notes.keyCount(new IronKey(Dungeon.depth)) > keysNeeded) {
+                while ((Notes.keyCount(new IronKey(Dungeon.depth)).compareTo(BigInteger.valueOf(keysNeeded)) > 0)) {
                     Notes.remove(new IronKey(Dungeon.depth));
                     removed = true;
                 }
             }
             keysNeeded = goldenKeysNeeded[Dungeon.depth];
             if (keysNeeded >= 0) {
-                while (Notes.keyCount(new GoldenKey(Dungeon.depth)) > keysNeeded) {
+                while ((Notes.keyCount(new GoldenKey(Dungeon.depth)).compareTo(BigInteger.valueOf(keysNeeded)) > 0)) {
                     Notes.remove(new GoldenKey(Dungeon.depth));
                     removed = true;
                 }
             }
             keysNeeded = crystalKeysNeeded[Dungeon.depth];
             if (keysNeeded >= 0) {
-                while (Notes.keyCount(new CrystalKey(Dungeon.depth)) > keysNeeded) {
+                while ((Notes.keyCount(new CrystalKey(Dungeon.depth)).compareTo(BigInteger.valueOf(keysNeeded)) > 0)) {
                     Notes.remove(new CrystalKey(Dungeon.depth));
                     removed = true;
                 }

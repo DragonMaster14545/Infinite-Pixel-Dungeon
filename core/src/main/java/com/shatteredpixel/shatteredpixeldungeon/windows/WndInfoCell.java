@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -146,7 +148,7 @@ public class WndInfoCell extends Window {
 
 		if (Dungeon.level.heroFOV[cell]) {
 			for (Blob blob : Dungeon.level.blobs.values()) {
-				if (blob.volume > 0 && blob.cur[cell] > 0 && blob.tileDesc() != null) {
+				if ((blob.volume.compareTo(BigInteger.ZERO) > 0) && (blob.cur[cell].compareTo(BigInteger.ZERO) > 0) && blob.tileDesc() != null) {
 					if (desc.length() > 0) {
 						desc += "\n\n";
 					}

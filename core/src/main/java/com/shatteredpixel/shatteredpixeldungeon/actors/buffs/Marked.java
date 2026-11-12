@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -242,10 +244,10 @@ public class Marked extends Buff implements ActionIndicator.Action {
 
     public static void effect(Char enemy){
         Marked mark = enemy.buff(Marked.class);
-        if (mark.stack >= 2) Buff.affect(enemy, Poison.class).set(Dungeon.escalatingDepth());
+        if (mark.stack >= 2) Buff.affect(enemy, Poison.class).set(Dungeon.escalatingDepth().doubleValue());
         if (mark.stack >= 3) Buff.affect(enemy, Cripple.class, 4f);
         if (mark.stack >= 4) Buff.affect(enemy, Blindness.class, 4f);
-        if (mark.stack >= 5) Buff.affect(enemy, Bleeding.class).level = Dungeon.escalatingDepth();
+        if (mark.stack >= 5) Buff.affect(enemy, Bleeding.class).level = Dungeon.escalatingDepth().doubleValue();
         if (mark.stack >= 6) Buff.affect(enemy, Vulnerable.class, 4f);
         if (mark.stack >= 7) Buff.affect(enemy, Hex.class, 4f);
         if (mark.stack >= 8) Buff.affect(enemy, Slow.class, 4f);
@@ -256,7 +258,7 @@ public class Marked extends Buff implements ActionIndicator.Action {
         for (Char ch : Actor.chars()){
             if (ch instanceof Bbat){
                 ch.sprite.emitter().burst(Speck.factory(Speck.SMOKE), 10);
-                ch.HP = Math.min(ch.HT, ch.HP + ch.HT / 5 * mark.stack);
+                ch.HP = ch.HT.min(ch.HP.add(ch.HT.divide(BigInteger.valueOf(5)).multiply(BigInteger.valueOf(mark.stack))));
             }
         }
         enemy.buff(Marked.class).detach();

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
@@ -260,19 +262,19 @@ public class StartScene extends PixelScene {
 					classIcon.copy(Icons.get(info.heroClass));
 				}
 
-                long diff = Game.realTime - info.lastPlayed;
-                if (diff > 99L * 30 * 24 * 60 * 60_000){
+                BigInteger diff = BigInteger.valueOf(Game.realTime - info.lastPlayed);
+                if ((diff.compareTo(BigInteger.valueOf(99L * 30 * 24 * 60 * 60_000)) > 0)){
                     lastPlayed.text(Messages.get(StartScene.class, "long_time_ago"));
-                } else if (diff < 60_000){
+                } else if ((diff.compareTo(BigInteger.valueOf(60_000)) < 0)){
                     lastPlayed.text(Messages.get(StartScene.class, "one_minute_ago"));
-                } else if (diff < 2 * 60 * 60_000){
-                    lastPlayed.text(Messages.get(StartScene.class, "minutes_ago", diff / 60_000));
-                } else if (diff < 2 * 24 * 60 * 60_000){
-                    lastPlayed.text(Messages.get(StartScene.class, "hours_ago", diff / (60 * 60_000)));
-                } else if (diff < 2L * 30 * 24 * 60 * 60_000){
-                    lastPlayed.text(Messages.get(StartScene.class, "days_ago", diff / (24 * 60 * 60_000)));
+                } else if ((diff.compareTo(BigInteger.valueOf(2 * 60 * 60_000)) < 0)){
+                    lastPlayed.text(Messages.get(StartScene.class, "minutes_ago", diff.divide(BigInteger.valueOf(60_000))));
+                } else if ((diff.compareTo(BigInteger.valueOf(2 * 24 * 60 * 60_000)) < 0)){
+                    lastPlayed.text(Messages.get(StartScene.class, "hours_ago", diff.divide(BigInteger.valueOf((60 * 60_000)))));
+                } else if ((diff.compareTo(BigInteger.valueOf(2L * 30 * 24 * 60 * 60_000)) < 0)){
+                    lastPlayed.text(Messages.get(StartScene.class, "days_ago", diff.divide(BigInteger.valueOf((24 * 60 * 60_000)))));
                 } else {
-                    lastPlayed.text(Messages.get(StartScene.class, "months_ago", diff / (30L * 24 * 60 * 60_000)));
+                    lastPlayed.text(Messages.get(StartScene.class, "months_ago", diff.divide(BigInteger.valueOf((30L * 24 * 60 * 60_000)))));
                 }
 				
 				depth.text(Integer.toString(info.depth));

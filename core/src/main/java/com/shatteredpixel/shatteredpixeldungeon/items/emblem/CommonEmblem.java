@@ -1,5 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.emblem;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -20,9 +22,9 @@ public class CommonEmblem extends EmblemSystem {
     }
 
     @Override
-    public long value() {
-        long price = 400;
-        return price * Rarity.COMMON.multiplier;
+    public BigInteger value() {
+        BigInteger price = BigInteger.valueOf(400);
+        return price.multiply(Rarity.COMMON.multiplier);
     }
 
     @Override

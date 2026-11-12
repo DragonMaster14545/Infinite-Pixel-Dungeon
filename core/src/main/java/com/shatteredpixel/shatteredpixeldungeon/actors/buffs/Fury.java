@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 
 public class Fury extends Buff {
@@ -37,7 +39,7 @@ public class Fury extends Buff {
 	
 	@Override
 	public boolean act() {
-		if (target.HP > target.HT * LEVEL) {
+		if ((Big.dec(target.HP).compareTo(Big.dec(target.HT).multiply(Big.dec(LEVEL))) > 0)) {
 			detach();
 		}
 		

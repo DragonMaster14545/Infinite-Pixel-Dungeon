@@ -1,5 +1,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.ShulkerBox;
@@ -43,8 +47,8 @@ public class WndVaultLink extends Window {
 		}
 		WndBag.INSTANCE = this;
 
-		final long capacity = link.slots();
-		final long pages = Math.max(1, (capacity + PAGE_SIZE - 1) / PAGE_SIZE);
+		final BigInteger capacity = link.slots();
+		final long pages = Big.toLong(BigInteger.ONE.max((capacity.add(BigInteger.valueOf(PAGE_SIZE)).subtract(BigInteger.ONE)).divide(BigInteger.valueOf(PAGE_SIZE))));
 		this.page = Math.max(0, Math.min(page, pages - 1));
 		int nav = pages > 1 ? NAV_HEIGHT + 2 : 0;
 
@@ -76,7 +80,7 @@ public class WndVaultLink extends Window {
 		for (int i = 0; i < PAGE_SIZE; i++) {
 			long index = this.page * PAGE_SIZE + i;
 			final ShulkerBox box = index < stored.size() ? stored.get((int) index) : null;
-			final boolean locked = index >= capacity;
+			final boolean locked = (BigInteger.valueOf(index).compareTo(capacity) >= 0);
 
 			int x = (i % COLS) * (slotWidth + SLOT_MARGIN);
 			int y = TITLE_HEIGHT + (i / COLS) * (slotHeight + SLOT_MARGIN);

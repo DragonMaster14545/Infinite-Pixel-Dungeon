@@ -1,5 +1,8 @@
 package com.shatteredpixel.shatteredpixeldungeon;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
@@ -17,11 +20,11 @@ public class Tasks {
 
     public static class Task {
         public final Type type;
-        public final long target;
-        public long progress;
+        public final BigInteger target;
+        public BigInteger progress = BigInteger.ZERO;
         public boolean completed;
 
-        Task( Type type, long target ){
+        Task( Type type, BigInteger target ){
             this.type = type;
             this.target = target;
         }
@@ -75,7 +78,7 @@ public class Tasks {
                 case PICK_UP_GOLD:      target = 50 + (int)(Math.random()*100); break;
                 default: target = 1; break;
             }
-            result.add( new Task( type, target ) );
+            result.add( new Task( type, BigInteger.valueOf(target) ) );
         }
         return result;
     }
@@ -85,11 +88,11 @@ public class Tasks {
         return null;
     }
 
-    private static void progress( Type type, long amount ){
+    private static void progress( Type type, BigInteger amount ){
         Task t = find( type );
         if (t == null || t.completed) return;
-        t.progress = Math.min( t.target, t.progress + amount );
-        if (t.progress >= t.target){
+        t.progress = t.target.min(t.progress.add(amount));
+        if ((t.progress.compareTo(t.target) >= 0)){
             t.completed = true;
             GLog.p( Messages.get( Tasks.class, "task_done", t.description() ) );
             checkAllComplete();
@@ -101,7 +104,7 @@ public class Tasks {
         for (Task t : tasks) if (!t.completed) return;
 
         allClaimed = true;
-        Dungeon.gold += GOLD_REWARD;
+        Dungeon.gold = Dungeon.gold.add(BigInteger.valueOf(GOLD_REWARD));
         BattlePass.totalXP += XP_REWARD;
         BattlePass.saveGlobal();
         GLog.p( Messages.get( Tasks.class, "all_done", GOLD_REWARD, XP_REWARD ) );
@@ -109,7 +112,7 @@ public class Tasks {
 
     public static void onDepthReached( int depth ){
         Task t = find( Type.REACH_DEPTH );
-        if (t != null && !t.completed && depth >= t.target){
+        if (t != null && !t.completed && (BigInteger.valueOf(depth).compareTo(t.target) >= 0)){
             t.progress = t.target;
             t.completed = true;
             GLog.p( Messages.get( Tasks.class, "task_done", t.description() ) );
@@ -117,15 +120,15 @@ public class Tasks {
         }
     }
 
-    public static void onEnemySlain(){ progress( Type.SLAY_ENEMIES, 1 ); }
-    public static void onPotionDrunk(){ progress( Type.DRINK_POTION, 1 ); }
-    public static void onScrollRead(){ progress( Type.READ_SCROLL, 1 ); }
-    public static void onWandUsed(){ progress( Type.USE_WAND, 1 ); }
-    public static void onGoldCollected( long amount ){ progress( Type.PICK_UP_GOLD, amount ); }
-    public static void onChestOpened(){ progress( Type.OPEN_CHEST, 1 ); }
-    public static void onArmorEquipped(){ progress( Type.EQUIP_ARMOR, 1 ); }
-    public static void onRestedToFull(){ progress( Type.REST_TO_FULL, 1 ); }
-    public static void onItemIdentified(){ progress( Type.IDENTIFY_ITEM, 1 ); }
+    public static void onEnemySlain(){ progress( Type.SLAY_ENEMIES, BigInteger.ONE ); }
+    public static void onPotionDrunk(){ progress( Type.DRINK_POTION, BigInteger.ONE ); }
+    public static void onScrollRead(){ progress( Type.READ_SCROLL, BigInteger.ONE ); }
+    public static void onWandUsed(){ progress( Type.USE_WAND, BigInteger.ONE ); }
+    public static void onGoldCollected( BigInteger amount ){ progress( Type.PICK_UP_GOLD, amount ); }
+    public static void onChestOpened(){ progress( Type.OPEN_CHEST, BigInteger.ONE ); }
+    public static void onArmorEquipped(){ progress( Type.EQUIP_ARMOR, BigInteger.ONE ); }
+    public static void onRestedToFull(){ progress( Type.REST_TO_FULL, BigInteger.ONE ); }
+    public static void onItemIdentified(){ progress( Type.IDENTIFY_ITEM, BigInteger.ONE ); }
 
     private static final String TASK_TYPES      = "task_types";
     private static final String TASK_TARGETS    = "task_targets";
@@ -135,8 +138,8 @@ public class Tasks {
 
     public static void storeInBundle( Bundle bundle ){
         String[] types = new String[tasks.size()];
-        long[] targets = new long[tasks.size()];
-        long[] progress = new long[tasks.size()];
+        BigInteger[] targets = Big.newArray(tasks.size());
+        BigInteger[] progress = Big.newArray(tasks.size());
         boolean[] completed = new boolean[tasks.size()];
 
         for (int i = 0; i < tasks.size(); i++){
@@ -148,8 +151,8 @@ public class Tasks {
         }
 
         bundle.put( TASK_TYPES, types );
-        bundle.put( TASK_TARGETS, targets );
-        bundle.put( TASK_PROGRESS, progress );
+        Big.putArray(bundle, TASK_TARGETS, targets);
+        Big.putArray(bundle, TASK_PROGRESS, progress);
         bundle.put( TASK_COMPLETED, completed );
         bundle.put( ALL_CLAIMED, allClaimed );
     }
@@ -159,8 +162,8 @@ public class Tasks {
 
         if (bundle.contains( TASK_TYPES )){
             String[] types = bundle.getStringArray( TASK_TYPES );
-            long[] targets = bundle.getLongArray( TASK_TARGETS );
-            long[] progress = bundle.getLongArray( TASK_PROGRESS );
+            BigInteger[] targets = Big.getBigArray(bundle, TASK_TARGETS);
+            BigInteger[] progress = Big.getBigArray(bundle, TASK_PROGRESS);
             boolean[] completed = bundle.getBooleanArray( TASK_COMPLETED );
 
             for (int i = 0; i < types.length; i++){

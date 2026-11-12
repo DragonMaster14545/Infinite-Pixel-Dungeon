@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Recipe;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.*;
@@ -109,14 +111,14 @@ public abstract class ExoticScroll extends Scroll {
 
 	@Override
 	//20 gold more than its none-exotic equivalent
-	public long value() {
-		return (Reflection.newInstance(exoToReg.get(getClass())).value() + 30) * quantity;
+	public BigInteger value() {
+		return (Reflection.newInstance(exoToReg.get(getClass())).value().add(BigInteger.valueOf(30))).multiply(quantity);
 	}
 
 	@Override
 	//6 more energy than its none-exotic equivalent
-	public long energyVal() {
-		return (Reflection.newInstance(exoToReg.get(getClass())).energyVal() + 6) * quantity;
+	public BigInteger energyVal() {
+		return (Reflection.newInstance(exoToReg.get(getClass())).energyVal().add(BigInteger.valueOf(6))).multiply(quantity);
 	}
 	
 	public static class ScrollToExotic extends Recipe {
@@ -131,14 +133,14 @@ public abstract class ExoticScroll extends Scroll {
 		}
 		
 		@Override
-		public long cost(ArrayList<Item> ingredients) {
-			return 6;
+		public BigInteger cost(ArrayList<Item> ingredients) {
+			return BigInteger.valueOf(6);
 		}
 		
 		@Override
 		public Item brew(ArrayList<Item> ingredients) {
 			for (Item i : ingredients){
-				i.quantity(i.quantity()-1);
+				i.quantity(i.quantity().subtract(BigInteger.ONE));
 			}
 
 			return Reflection.newInstance(regToExo.get(ingredients.get(0).getClass()));

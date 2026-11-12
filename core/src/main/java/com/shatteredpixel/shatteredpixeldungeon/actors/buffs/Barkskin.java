@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -37,7 +41,7 @@ public class Barkskin extends Buff {
 		type = buffType.POSITIVE;
 	}
 
-	private long level = 0;
+	private BigInteger level = BigInteger.ZERO;
 	private int interval = 1;
 	
 	@Override
@@ -45,7 +49,7 @@ public class Barkskin extends Buff {
 		if (target.isAlive()) {
 
 			spend( interval );
-			if (--level <= 0) {
+			if (((level = level.subtract(BigInteger.ONE)).compareTo(BigInteger.ZERO) <= 0)) {
 				detach();
 			}
 			
@@ -58,12 +62,12 @@ public class Barkskin extends Buff {
 		return true;
 	}
 	
-	public long level() {
+	public BigInteger level() {
 		return level;
 	}
 	
-	public void set( long value, int time ) {
-		if (level <= value) {
+	public void set( BigInteger value, int time ) {
+		if ((level.compareTo(value) <= 0)) {
 			level = value;
 			interval = time;
 			spend(time - cooldown() - 1);
@@ -80,14 +84,14 @@ public class Barkskin extends Buff {
 		if (target instanceof Hero){
 			float max = ((Hero) target).lvl*((Hero) target).pointsInTalent(Talent.BARKSKIN)/2;
 			max = Math.max(max, 2+((Hero) target).lvl/3);
-			return Math.max(0, (max-level)/max);
+			return Big.dec(0).max(Big.div((Big.dec(max).subtract(Big.dec(level))), Big.dec(max))).floatValue();
 		}
 		return 0;
 	}
 
 	@Override
 	public String iconTextDisplay() {
-		return Long.toString(level);
+		return level.toString();
 	}
 
 	@Override
@@ -102,29 +106,29 @@ public class Barkskin extends Buff {
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );
 		bundle.put( INTERVAL, interval );
-		bundle.put( LEVEL, level );
+		Big.put(bundle, LEVEL, level);
 	}
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle( bundle );
 		interval = bundle.getInt( INTERVAL );
-		level = bundle.getLong( LEVEL );
+		level = Big.getBig(bundle, LEVEL);
 	}
 
 	//These two methods allow for multiple instances of barkskin to stack in terms of duration
 	// but only the stronger bonus is applied
 
-	public static long currentLevel(Char ch ){
-		long level = 0;
+	public static BigInteger currentLevel(Char ch ){
+		BigInteger level = BigInteger.ZERO;
 		for (Barkskin b : ch.buffs(Barkskin.class)){
-			level = Math.max(level, b.level);
+			level = level.max(b.level);
 		}
 		return level;
 	}
 
 	//reset if a matching buff exists, otherwise append
-	public static void conditionallyAppend(Char ch, long level, int interval){
+	public static void conditionallyAppend(Char ch, BigInteger level, int interval){
 		for (Barkskin b : ch.buffs(Barkskin.class)){
 			if (b.interval == interval){
 				b.set(level, interval);

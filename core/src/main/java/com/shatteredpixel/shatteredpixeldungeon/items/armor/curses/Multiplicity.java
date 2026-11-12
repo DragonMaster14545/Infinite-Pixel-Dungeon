@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.curses;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -49,7 +51,7 @@ public class Multiplicity extends Armor.Glyph {
 	private static ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x000000 );
 
 	@Override
-	public long proc(Armor armor, Char attacker, Char defender, long damage) {
+	public BigInteger proc(Armor armor, Char attacker, Char defender, BigInteger damage) {
 
 		float procChance = 1/20f * procChanceMultiplier(defender);
 		if ( Random.Float() < procChance ) {

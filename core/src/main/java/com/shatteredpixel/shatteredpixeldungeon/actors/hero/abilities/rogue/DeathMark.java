@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -103,7 +107,7 @@ public class DeathMark extends ArmorAbility {
 	}
 
 	public static void processFearTheReaper( Char ch ){
-		if (ch.HP > 0 || ch.buff(DeathMarkTracker.class) == null){
+		if ((ch.HP.compareTo(BigInteger.ZERO) > 0) || ch.buff(DeathMarkTracker.class) == null){
 			return;
 		}
 
@@ -146,7 +150,7 @@ public class DeathMark extends ArmorAbility {
 
 		public static float DURATION = 5f;
 
-		long initialHP = 0;
+		BigInteger initialHP = BigInteger.ZERO;
 
 		{
 			type = buffType.NEGATIVE;
@@ -168,8 +172,8 @@ public class DeathMark extends ArmorAbility {
 			return Math.max(0, (DURATION - visualcooldown()) / DURATION);
 		}
 
-		private void setInitialHP( long hp ){
-			if (initialHP < hp){
+		private void setInitialHP( BigInteger hp ){
+			if ((initialHP.compareTo(hp) < 0)){
 				initialHP = hp;
 			}
 		}
@@ -190,14 +194,14 @@ public class DeathMark extends ArmorAbility {
 			target.deathMarked = false;
 			if (!target.isAlive()){
 				target.sprite.flash();
-				target.sprite.bloodBurstA(target.sprite.center(), (int)Math.min(Integer.MAX_VALUE, target.HT*2));
+				target.sprite.bloodBurstA(target.sprite.center(), Big.toInt(BigInteger.valueOf(Integer.MAX_VALUE).min(target.HT.multiply(BigInteger.TWO))));
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STAB);
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 				target.die(this);
-				int shld = Math.round(initialHP * (0.125f*Dungeon.hero.pointsInTalent(Talent.DEATHLY_DURABILITY)));
+				int shld = Big.toInt(Big.round(Big.dec(initialHP).multiply(Big.dec((0.125f*Dungeon.hero.pointsInTalent(Talent.DEATHLY_DURABILITY))))));
 				if (shld > 0 && target.alignment != Char.Alignment.ALLY){
 					Dungeon.hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shld), FloatingText.SHIELDING);
-					Buff.affect(Dungeon.hero, Barrier.class).setShield(shld);
+					Buff.affect(Dungeon.hero, Barrier.class).setShield(BigInteger.valueOf(shld));
 				}
 			}
 		}
@@ -207,13 +211,13 @@ public class DeathMark extends ArmorAbility {
 		@Override
 		public void storeInBundle(Bundle bundle) {
 			super.storeInBundle(bundle);
-			bundle.put(INITIAL_HP, initialHP);
+			Big.put(bundle, INITIAL_HP, initialHP);
 		}
 
 		@Override
 		public void restoreFromBundle(Bundle bundle) {
 			super.restoreFromBundle(bundle);
-			initialHP = bundle.getInt(INITIAL_HP);
+			initialHP = BigInteger.valueOf(bundle.getInt(INITIAL_HP));
 		}
 	}
 

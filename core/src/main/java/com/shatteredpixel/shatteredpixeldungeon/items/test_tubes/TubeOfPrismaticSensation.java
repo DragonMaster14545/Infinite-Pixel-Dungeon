@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.test_tubes;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -47,17 +49,17 @@ public class TubeOfPrismaticSensation extends Tubes {
 	public void apply( Hero hero ) {
 		identify();
 
-		Buff.affect(hero, PrismaticGuard.class).set(hero.HT/2);
+		Buff.affect(hero, PrismaticGuard.class).set(hero.HT.divide(BigInteger.TWO));
 		GLog.h( "Are you familiar with this?" );
 	}
 
 	@Override
-	public long value() {
-		return isKnown() ? 250 * quantity : super.value();
+	public BigInteger value() {
+		return isKnown() ? BigInteger.valueOf(250).multiply(quantity) : super.value();
 	}
 
 	@Override
-	public long energyVal() {
-		return isKnown() ? 8 * quantity : super.energyVal();
+	public BigInteger energyVal() {
+		return isKnown() ? BigInteger.valueOf(8).multiply(quantity) : super.energyVal();
 	}
 }

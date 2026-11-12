@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -76,7 +78,7 @@ public class SacrificeRoom extends SpecialRoom {
 		Painter.fill( level, c.x - 1, c.y - 1, 3, 3, Terrain.EMBERS );
 		Painter.set( level, c, Terrain.PEDESTAL );
 
-		Blob.seed( level.pointToCell(c), 6 + Dungeon.depth * 4, SacrificialFire.class, level ).setPrize(prize(level));
+		Blob.seed( level.pointToCell(c), BigInteger.valueOf(6 + Dungeon.depth * 4), SacrificialFire.class, level ).setPrize(prize(level));
 
 		door.set( Door.Type.EMPTY );
 	}

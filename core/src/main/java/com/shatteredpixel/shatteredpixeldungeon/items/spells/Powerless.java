@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -80,13 +84,13 @@ public class Powerless extends Spell {
 	}
 
 	@Override
-	public long value() {
-		return (long)(60 * (quantity/(float) Recipe.OUT_QUANTITY));
+	public BigInteger value() {
+		return Big.trunc((Big.dec(60).multiply((Big.div(Big.dec(quantity), Big.dec((float) Recipe.OUT_QUANTITY))))));
 	}
 
 	@Override
-	public long energyVal() {
-		return (long)(12 * (quantity/(float) Recipe.OUT_QUANTITY));
+	public BigInteger energyVal() {
+		return Big.trunc((Big.dec(12).multiply((Big.div(Big.dec(quantity), Big.dec((float) Recipe.OUT_QUANTITY))))));
 	}
 
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
@@ -136,7 +140,7 @@ public class Powerless extends Spell {
 					if ( ch.alignment != target.alignment ) {
 						//Buff.affect(Dungeon.hero, MindVision.class, 1f);
 						Buff.affect(ch, Paralysis.class, 1f);
-						ch.damage(1, Powerless.class);
+						ch.damage(BigInteger.ONE, Powerless.class);
 						((Mob) ch).aggro(target);
 					}
 				}

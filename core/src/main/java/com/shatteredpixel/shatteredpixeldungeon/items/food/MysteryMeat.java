@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -45,8 +47,8 @@ public class MysteryMeat extends Food {
 		effect(hero);
 	}
 
-	public long value() {
-		return 5 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(5).multiply(quantity);
 	}
 
 	public static void effect(Hero hero){
@@ -61,7 +63,7 @@ public class MysteryMeat extends Food {
 				break;
 			case 2:
 				GLog.w( Messages.get(MysteryMeat.class, "not_well") );
-				Buff.affect( hero, Poison.class ).set( hero.HT / 5 );
+				Buff.affect( hero, Poison.class ).set( hero.HT.divide(BigInteger.valueOf(5)).doubleValue() );
 				break;
 			case 3:
 				GLog.w( Messages.get(MysteryMeat.class, "stuffed") );

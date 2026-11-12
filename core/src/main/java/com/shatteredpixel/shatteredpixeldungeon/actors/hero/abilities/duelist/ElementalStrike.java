@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.duelist;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -232,19 +236,19 @@ public class ElementalStrike extends ArmorAbility {
 		//*** Blocking ***
 		} else if (ench instanceof Blocking){
 			if (targetsHit > 0){
-				long shield = Math.round(Math.round(6f*targetsHit*powerMulti));
-				Buff.affect(hero, Barrier.class).setShield(Math.round(6f*targetsHit*powerMulti));
-				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(shield), FloatingText.SHIELDING);
+				BigInteger shield = BigInteger.valueOf(Math.round(Math.round(6f*targetsHit*powerMulti)));
+				Buff.affect(hero, Barrier.class).setShield(BigInteger.valueOf(Math.round(6f*targetsHit*powerMulti)));
+				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, shield.toString(), FloatingText.SHIELDING);
 			}
 
 		//*** Vampiric ***
 		} else if (ench instanceof Vampiric){
 			if (targetsHit > 0){
-				long heal = Math.round(2.5f*targetsHit*powerMulti);
-				heal = Math.min( heal, hero.HT - hero.HP );
-				if (heal > 0){
-					hero.HP += heal;
-					hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString( heal ), FloatingText.HEALING );
+				BigInteger heal = BigInteger.valueOf(Math.round(2.5f*targetsHit*powerMulti));
+				heal = heal.min(hero.HT.subtract(hero.HP));
+				if ((heal.compareTo(BigInteger.ZERO) > 0)){
+					hero.HP = hero.HP.add(heal);
+					hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, heal.toString(), FloatingText.HEALING );
 				}
 			}
 
@@ -265,7 +269,7 @@ public class ElementalStrike extends ArmorAbility {
 
 	public static class ElementalStrikeLuckyTracker extends Buff{};
 
-	private long storedKineticDamage = 0;
+	private BigInteger storedKineticDamage = BigInteger.ZERO;
 
 	public static class ElementalStrikeFurrowCounter extends CounterBuff{{revivePersists = true;}};
 
@@ -284,19 +288,19 @@ public class ElementalStrike extends ArmorAbility {
 		//*** Blazing ***
 		if (ench instanceof Blazing){
 			for (int cell : cone.cells) {
-				GameScene.add(Blob.seed(cell, Math.round(8 * powerMulti), Fire.class));
+				GameScene.add(Blob.seed(cell, BigInteger.valueOf(Math.round(8 * powerMulti)), Fire.class));
 			}
 
 		//*** Chilling ***
 		} else if (ench instanceof Chilling){
 			for (int cell : cone.cells) {
-				GameScene.add(Blob.seed(cell, Math.round(8 * powerMulti), Freezing.class));
+				GameScene.add(Blob.seed(cell, BigInteger.valueOf(Math.round(8 * powerMulti)), Freezing.class));
 			}
 
 		//*** Shocking ***
 		} else if (ench instanceof Shocking){
 			for (int cell : cone.cells) {
-				GameScene.add(Blob.seed(cell, Math.round(8 * powerMulti), Electricity.class));
+				GameScene.add(Blob.seed(cell, BigInteger.valueOf(Math.round(8 * powerMulti)), Electricity.class));
 			}
 
 		//*** Blooming ***
@@ -358,18 +362,18 @@ public class ElementalStrike extends ArmorAbility {
 		//*** no enchantment ***
 		if (ench == null) {
 			for (Char ch : affected){
-				ch.damage(Math.round(powerMulti* Hero.heroDamageIntRange(6, 12)), ElementalStrike.this);
+				ch.damage(Big.round(Big.dec(powerMulti).multiply(Big.dec(Hero.heroDamageIntRange(BigInteger.valueOf(6), BigInteger.valueOf(12))))), ElementalStrike.this);
 			}
 
 		//*** Kinetic ***
 		} else if (ench instanceof Kinetic){
-			if (storedKineticDamage > 0) {
+			if ((storedKineticDamage.compareTo(BigInteger.ZERO) > 0)) {
 				for (Char ch : affected) {
 					if (ch != primaryTarget) {
-						ch.damage(Math.round(storedKineticDamage * 0.4f * powerMulti), ench);
+						ch.damage(Big.round(Big.dec(storedKineticDamage).multiply(Big.dec(0.4f)).multiply(Big.dec(powerMulti))), ench);
 					}
 				}
-				storedKineticDamage = 0;
+				storedKineticDamage = BigInteger.ZERO;
 			}
 			//clear stored damage if there was no primary target
 			if (primaryTarget == null && hero.buff(Kinetic.ConservedDamage.class) != null){
@@ -400,7 +404,7 @@ public class ElementalStrike extends ArmorAbility {
 				int knockback = Math.round(5*powerMulti);
 				WandOfBlastWave.throwChar(ch,
 						new Ballistica(ch.pos, aim.collisionPos, Ballistica.MAGIC_BOLT),
-						knockback,
+						BigInteger.valueOf(knockback),
 						true,
 						true,
 						ElementalStrike.this);
@@ -422,7 +426,7 @@ public class ElementalStrike extends ArmorAbility {
 		} else if (ench instanceof Projecting){
 			for (Char ch : affected){
 				if (ch != primaryTarget) {
-					ch.damage(Math.round(hero.damageRoll() * 0.3f * powerMulti), ench);
+					ch.damage(Big.round(Big.dec(hero.damageRoll()).multiply(Big.dec(0.3f)).multiply(Big.dec(powerMulti))), ench);
 				}
 			}
 
@@ -445,7 +449,7 @@ public class ElementalStrike extends ArmorAbility {
 						&& ch.buff(Corruption.class) == null
 						&& ch instanceof Mob
 						&& ch.isAlive()) {
-					float hpMissing = 1f - (ch.HP / (float)ch.HT);
+					float hpMissing = Big.dec(1f).subtract((Big.div(Big.dec(ch.HP), Big.dec(ch.HT.floatValue())))).floatValue();
 					float chance = 0.05f + 0.2f*hpMissing; //5-25%
 					if (Random.Float() < chance*powerMulti){
 						Corruption.corruptionHeal(ch);
@@ -458,7 +462,7 @@ public class ElementalStrike extends ArmorAbility {
 		} else if (ench instanceof Grim){
 			for (Char ch : affected){
 				if (ch != primaryTarget) {
-					float hpMissing = 1f - (ch.HP / (float)ch.HT);
+					float hpMissing = Big.dec(1f).subtract((Big.div(Big.dec(ch.HP), Big.dec(ch.HT.floatValue())))).floatValue();
 					float chance = 0.06f + 0.24f*hpMissing; //6-30%
 					if (Random.Float() < chance*powerMulti){
 						ch.damage( ch.HP, Grim.class );
@@ -526,7 +530,7 @@ public class ElementalStrike extends ArmorAbility {
 		} else if (ench instanceof Polarized){
 			for (Char ch : affected){
 				if (Random.Float() < 0.5f*powerMulti){
-					ch.damage(Hero.heroDamageIntRange(24, 36), ElementalStrike.this);
+					ch.damage(Hero.heroDamageIntRange(BigInteger.valueOf(24), BigInteger.valueOf(36)), ElementalStrike.this);
 				}
 			}
 
@@ -541,7 +545,7 @@ public class ElementalStrike extends ArmorAbility {
         //*** Laserised ***
 		} else if (ench instanceof Laserised){
             for (Char ch : affected) {
-                WandOfDisintegration wand = ((WandOfDisintegration) (new WandOfDisintegration().upgrade(Math.round(hero.belongings.weapon.level()))));
+                WandOfDisintegration wand = ((WandOfDisintegration) (new WandOfDisintegration().upgrade((hero.belongings.weapon.level()))));
                 wand.fx(
                         new Ballistica( hero.pos, ch.pos, Ballistica.STOP_SOLID),
                         new Callback() {
@@ -562,7 +566,7 @@ public class ElementalStrike extends ArmorAbility {
                     assert ch != null;
                     if (ch.alignment != hero.alignment){
                         Sample.INSTANCE.play(Assets.Sounds.HIT_STAB, 1f, 0.75f);
-                        ch.damage(Hero.heroDamageIntRange(24, 36), ElementalStrike.this);
+                        ch.damage(Hero.heroDamageIntRange(BigInteger.valueOf(24), BigInteger.valueOf(36)), ElementalStrike.this);
                     }
                 }
             }
@@ -595,8 +599,8 @@ public class ElementalStrike extends ArmorAbility {
 					Char ch = Actor.findChar(cell);
                     assert ch != null;
                     if (ch.alignment != hero.alignment){
-						if (hero.damageRoll() > ch.HT * 0.07d && !(hero.damageRoll() > ch.HT)) {
-							ch.damage((long) (hero.damageRoll() * powerMulti), Scorching.class);
+						if ((Big.dec(hero.damageRoll()).compareTo(Big.dec(ch.HT).multiply(Big.dec(0.07d))) > 0) && !((hero.damageRoll().compareTo(ch.HT) > 0))) {
+							ch.damage(Big.trunc((Big.dec(hero.damageRoll()).multiply(Big.dec(powerMulti)))), Scorching.class);
 							ch.sprite.emitter().burst( FlameParticle.FACTORY, 25);
 						}
 					}
@@ -611,7 +615,7 @@ public class ElementalStrike extends ArmorAbility {
                     assert ch != null;
                     if (ch.alignment != hero.alignment) {
 						if (hero.buff(Racked.StackTracker.class) != null && hero.buff(Racked.StackTracker.class).stacks >= 15) {
-                            ch.damage((long) (hero.damageRoll() * 2d), Racked.class);
+                            ch.damage(Big.trunc((Big.dec(hero.damageRoll()).multiply(Big.dec(2d)))), Racked.class);
 							hero.buff(Racked.StackTracker.class).resetStacks();
 							Buff.affect(hero, Racked.RackedEnchantmentCooldown.class, 5f);
 						}
@@ -635,7 +639,7 @@ public class ElementalStrike extends ArmorAbility {
 							if (b == null){
 								b = new Bleeding();
 							}
-							b.set(hero.damageRoll()*((double) ch.HP / ch.HT));
+							b.set(Big.dec(hero.damageRoll()).multiply((Big.div(Big.dec(ch.HP.doubleValue()), Big.dec(ch.HT)))).doubleValue());
 							b.attachTo(ch);
 						}
 					}

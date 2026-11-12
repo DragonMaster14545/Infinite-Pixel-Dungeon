@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
@@ -31,8 +33,8 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 public abstract class NPC extends Mob {
 
 	{
-		HP = HT = 1;
-		EXP = 0;
+		HP = HT = BigInteger.ONE;
+		EXP = BigInteger.ZERO;
 
 		alignment = Alignment.NEUTRAL;
 		state = PASSIVE;

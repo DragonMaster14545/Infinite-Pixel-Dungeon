@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -38,10 +40,10 @@ public class RingOfSharpshooting extends Ring {
 	public String statsInfo() {
 		if (isIdentified()){
 			String info = Messages.get(this, "stats",
-					soloBuffedBonus(), Messages.decimalFormat("#.##", 100f * (Math.pow(1.15, soloBonus()) - 1f)));
-			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)){
+					soloBuffedBonus(), Messages.decimalFormat("#.##", 100f * (Math.pow(1.15, soloBonus().doubleValue()) - 1f)));
+			if (isEquipped(Dungeon.hero) && (soloBuffedBonus().compareTo(combinedBuffedBonus(Dungeon.hero)) != 0)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
-						combinedBuffedBonus(Dungeon.hero), Messages.decimalFormat("#.##", 100f * (Math.pow(1.15, combinedBonus(Dungeon.hero)) - 1f)));
+						combinedBuffedBonus(Dungeon.hero), Messages.decimalFormat("#.##", 100f * (Math.pow(1.15, combinedBonus(Dungeon.hero).doubleValue()) - 1f)));
 			}
 			return info;
 		} else {
@@ -50,15 +52,15 @@ public class RingOfSharpshooting extends Ring {
 	}
 
 	@Override
-	public String upgradeStat1(long level) {
-		if (cursed && cursedKnown) level = Math.min(-1, level-3);
-		return Long.toString(level+1);
+	public String upgradeStat1(BigInteger level) {
+		if (cursed && cursedKnown) level = BigInteger.valueOf(-1).min(level.subtract(BigInteger.valueOf(3)));
+		return level.add(BigInteger.ONE).toString();
 	}
 
 	@Override
-	public String upgradeStat2(long level) {
-		if (cursed && cursedKnown) level = Math.min(-1, level-3);
-		return Messages.decimalFormat("#.##", 100f * (Math.pow(1.15, level+1)-1f)) + "%";
+	public String upgradeStat2(BigInteger level) {
+		if (cursed && cursedKnown) level = BigInteger.valueOf(-1).min(level.subtract(BigInteger.valueOf(3)));
+		return Messages.decimalFormat("#.##", 100f * (Math.pow(1.15, level.add(BigInteger.ONE).doubleValue())-1f)) + "%";
 	}
 	
 	@Override
@@ -66,8 +68,8 @@ public class RingOfSharpshooting extends Ring {
 		return new Aim();
 	}
 	
-	public static long levelDamageBonus( Char target ){
-        return Math.min(getBuffedBonus(target, RingOfSharpshooting.Aim.class) + 1, 10L * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
+	public static BigInteger levelDamageBonus( Char target ){
+        return getBuffedBonus(target, RingOfSharpshooting.Aim.class).add(BigInteger.ONE).min(BigInteger.valueOf(10L * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion())));
 		//return getBuffedBonus(target, RingOfSharpshooting.Aim.class) + 1;
 	}
 	

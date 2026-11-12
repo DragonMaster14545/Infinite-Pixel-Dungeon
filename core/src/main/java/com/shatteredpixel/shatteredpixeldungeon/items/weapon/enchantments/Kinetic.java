@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -39,9 +43,9 @@ public class Kinetic extends Weapon.Enchantment {
 	private static ItemSprite.Glowing YELLOW = new ItemSprite.Glowing( 0xFFFF00 );
 	
 	@Override
-	public long proc(Weapon weapon, Char attacker, Char defender, long damage) {
+	public BigInteger proc(Weapon weapon, Char attacker, Char defender, BigInteger damage) {
 		
-		long conservedDamage = 0;
+		BigInteger conservedDamage = BigInteger.ZERO;
 		if (attacker.buff(ConservedDamage.class) != null) {
 			conservedDamage = attacker.buff(ConservedDamage.class).damageBonus();
 			attacker.buff(ConservedDamage.class).detach();
@@ -50,7 +54,7 @@ public class Kinetic extends Weapon.Enchantment {
 		//use a tracker so that we can know the true final damage
 		Buff.affect(attacker, KineticTracker.class).conservedDamage = conservedDamage;
 		
-		return damage + conservedDamage;
+		return damage.add(conservedDamage);
 	}
 	
 	@Override
@@ -64,7 +68,7 @@ public class Kinetic extends Weapon.Enchantment {
 			actPriority = Actor.VFX_PRIO;
 		}
 
-		public long conservedDamage;
+		public BigInteger conservedDamage = BigInteger.ZERO;
 
 		@Override
 		public boolean act() {
@@ -97,17 +101,17 @@ public class Kinetic extends Weapon.Enchantment {
 
 		@Override
 		public String iconTextDisplay() {
-			return Long.toString(damageBonus());
+			return damageBonus().toString();
 		}
 		
 		private double preservedDamage;
 		
-		public void setBonus(long bonus){
-			preservedDamage = bonus;
+		public void setBonus(BigInteger bonus){
+			preservedDamage = bonus.doubleValue();
 		}
 		
-		public long damageBonus(){
-			return (long) Math.ceil(preservedDamage);
+		public BigInteger damageBonus(){
+			return Big.of(Math.ceil(preservedDamage));
 		}
 		
 		@Override

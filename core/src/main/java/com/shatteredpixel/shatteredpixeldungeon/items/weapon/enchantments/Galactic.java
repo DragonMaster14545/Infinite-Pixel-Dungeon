@@ -1,5 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -118,7 +120,7 @@ public class Galactic extends Weapon.Enchantment {
     }
 
     @Override
-    public long proc( Weapon weapon, Char attacker, Char defender, long damage ) {
+    public BigInteger proc( Weapon weapon, Char attacker, Char defender, BigInteger damage ) {
         for (Weapon.Enchantment enchantment : list()) {
             damage = enchantment.proc( weapon, attacker, defender, damage );
         }

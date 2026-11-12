@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barkskin;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
@@ -44,16 +46,16 @@ public class PhantomMeat extends Food {
 		effect(hero);
 	}
 
-	public long value() {
-		return 30 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(30).multiply(quantity);
 	}
 
 	public static void effect(Hero hero){
 
-		Barkskin.conditionallyAppend( hero, hero.HT / 4, 1 );
+		Barkskin.conditionallyAppend( hero, hero.HT.divide(BigInteger.valueOf(4)), 1 );
 		Buff.affect( hero, Invisibility.class, Invisibility.DURATION );
-		hero.HP = Math.min( hero.HP + hero.HT / 4, hero.HT );
-		hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Long.toString(hero.HT / 4), FloatingText.HEALING );
+		hero.HP = hero.HP.add(hero.HT.divide(BigInteger.valueOf(4))).min(hero.HT);
+		hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, hero.HT.divide(BigInteger.valueOf(4)).toString(), FloatingText.HEALING );
 		PotionOfHealing.cure(hero);
 
 	}

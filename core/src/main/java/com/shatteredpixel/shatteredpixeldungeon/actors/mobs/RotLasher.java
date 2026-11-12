@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -41,10 +43,10 @@ public class RotLasher extends Mob {
 	{
 		spriteClass = RotLasherSprite.class;
 
-		HP = HT = Dungeon.getCycleMultiplier(80);
-		defenseSkill = 0;
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(80));
+		defenseSkill = BigInteger.ZERO;
 
-		EXP = Dungeon.getCycleMultiplier(1);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.ONE);
 
 		loot = Generator.Category.SEED;
 		lootChance = 0.75f;
@@ -58,15 +60,15 @@ public class RotLasher extends Mob {
 
 	@Override
 	protected boolean act() {
-		if (HP < HT && (enemy == null || !Dungeon.level.adjacent(pos, enemy.pos))) {
-			sprite.showStatusWithIcon(CharSprite.POSITIVE, Long.toString(Math.min(5, HT - HP)), FloatingText.HEALING);
-			HP = Math.min(HT, HP + 3 + Dungeon.cycle * 25L);
+		if ((HP.compareTo(HT) < 0) && (enemy == null || !Dungeon.level.adjacent(pos, enemy.pos))) {
+			sprite.showStatusWithIcon(CharSprite.POSITIVE, BigInteger.valueOf(5).min(HT.subtract(HP)).toString(), FloatingText.HEALING);
+			HP = HT.min(HP.add(BigInteger.valueOf(3)).add(BigInteger.valueOf(Dungeon.cycle * 25L)));
 		}
 		return super.act();
 	}
 
 	@Override
-	public void damage(long dmg, Object src) {
+	public void damage(BigInteger dmg, Object src) {
 		if (src instanceof Burning) {
 			destroy();
 			sprite.die();
@@ -76,7 +78,7 @@ public class RotLasher extends Mob {
 	}
 
 	@Override
-	public long attackProc(Char enemy, long damage) {
+	public BigInteger attackProc(Char enemy, BigInteger damage) {
 		damage = super.attackProc( enemy, damage );
 		Buff.affect( enemy, Cripple.class, 2f );
         if (enemy == Dungeon.hero){
@@ -101,18 +103,18 @@ public class RotLasher extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(10), Dungeon.getCycleMultiplier(20));
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.TEN), Dungeon.getCycleMultiplier(BigInteger.valueOf(20)));
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(25);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(25));
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(8));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(8)));
 	}
 	
 	{

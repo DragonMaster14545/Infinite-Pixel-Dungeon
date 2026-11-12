@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
@@ -34,10 +36,10 @@ public class Gnoll extends Mob {
 	{
 		spriteClass = GnollSprite.class;
 		
-		HP = HT = Dungeon.getCycleMultiplier(12);
-		defenseSkill = Dungeon.getCycleMultiplier(4);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(12));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(4));
 		
-		EXP = Dungeon.getCycleMultiplier(2);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.TWO);
 		maxLvl = 8;
 		
 		loot = Gold.class;
@@ -45,17 +47,17 @@ public class Gnoll extends Mob {
 	}
 	
 	@Override
-	public long damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(1), Dungeon.getCycleMultiplier(6) );
+	public BigInteger damageRoll() {
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.ONE), Dungeon.getCycleMultiplier(BigInteger.valueOf(6)) );
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(10);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.TEN);
 	}
 	
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(2));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.TWO));
 	}
 }

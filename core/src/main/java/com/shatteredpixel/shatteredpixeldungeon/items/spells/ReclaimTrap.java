@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -69,7 +73,7 @@ public class ReclaimTrap extends TargetedSpell {
 	@Override
 	protected void affectTarget(Ballistica bolt, Hero hero) {
 		if (storedTrap == null) {
-			quantity++; //storing a trap doesn't consume the spell
+			quantity = quantity.add(BigInteger.ONE); //storing a trap doesn't consume the spell
 			Trap t = Dungeon.level.traps.get(bolt.collisionPos);
 			if (t != null && t.active && t.visible) {
 				t.disarm(); //even disarms traps that normally wouldn't be
@@ -125,13 +129,13 @@ public class ReclaimTrap extends TargetedSpell {
 	}
 	
 	@Override
-	public long value() {
-		return (long)(60 * (quantity/(float)Recipe.OUT_QUANTITY));
+	public BigInteger value() {
+		return Big.trunc((Big.dec(60).multiply((Big.div(Big.dec(quantity), Big.dec((float)Recipe.OUT_QUANTITY))))));
 	}
 
 	@Override
-	public long energyVal() {
-		return (long)(12 * (quantity/(float)Recipe.OUT_QUANTITY));
+	public BigInteger energyVal() {
+		return Big.trunc((Big.dec(12).multiply((Big.div(Big.dec(quantity), Big.dec((float)Recipe.OUT_QUANTITY))))));
 	}
 	
 	private static final String STORED_TRAP = "stored_trap";

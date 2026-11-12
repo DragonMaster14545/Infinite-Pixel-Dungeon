@@ -1,5 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.modules;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
@@ -30,12 +32,12 @@ public class ItemModule extends Module {
                 case 0: default:
                     detach(curUser.belongings.backpack);
                     updateQuickslot();
-                    Dungeon.level.drop(Generator.random(Generator.Category.POTION).quantity(Random.Int(2, 5)), curUser.pos).sprite.drop();
+                    Dungeon.level.drop(Generator.random(Generator.Category.POTION).quantity(BigInteger.valueOf(Random.Int(2, 5))), curUser.pos).sprite.drop();
                     break;
                 case 1:
                     detach(curUser.belongings.backpack);
                     updateQuickslot();
-                    Dungeon.level.drop(Generator.random(Generator.Category.SCROLL).quantity(Random.Int(2, 5)), curUser.pos).sprite.drop();
+                    Dungeon.level.drop(Generator.random(Generator.Category.SCROLL).quantity(BigInteger.valueOf(Random.Int(2, 5))), curUser.pos).sprite.drop();
                     break;
                 case 2:
                     detach(curUser.belongings.backpack);
@@ -47,7 +49,7 @@ public class ItemModule extends Module {
     }
 
     @Override
-    public long value() {
-        return 150 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(150).multiply(quantity);
     }
 }

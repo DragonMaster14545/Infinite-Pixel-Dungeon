@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -32,9 +36,9 @@ public class VialOfBlood extends Trinket {
 	}
 
 	@Override
-	protected long upgradeEnergyCost() {
+	protected BigInteger upgradeEnergyCost() {
 		//6 -> 8(14) -> 10(24) -> 12(36)
-		return 6+2*level();
+		return BigInteger.valueOf(6).add(BigInteger.TWO.multiply(level()));
 	}
 
 	@Override
@@ -42,13 +46,13 @@ public class VialOfBlood extends Trinket {
 		if (isIdentified()){
 			return Messages.get(this,
 					"stats_desc",
-					Messages.decimalFormat("#.##", 100*(totalHealMultiplier((int)buffedLvl())-1f)),
-					Long.toString(maxHealPerTurn((int)buffedLvl())));
+					Messages.decimalFormat("#.##", 100*(totalHealMultiplier(Big.toInt(buffedLvl()))-1f)),
+					maxHealPerTurn(Big.toInt(buffedLvl())).toString());
 		} else {
 			return Messages.get(this,
 					"typical_stats_desc",
-					Messages.decimalFormat("#.##", 100*(totalHealMultiplier((int)buffedLvl())-1f)),
-					Long.toString(maxHealPerTurn((int)buffedLvl())));
+					Messages.decimalFormat("#.##", 100*(totalHealMultiplier(Big.toInt(buffedLvl()))-1f)),
+					maxHealPerTurn(Big.toInt(buffedLvl())).toString());
 		}
 	}
 
@@ -68,24 +72,24 @@ public class VialOfBlood extends Trinket {
 		}
 	}
 
-	public static long maxHealPerTurn(){
+	public static BigInteger maxHealPerTurn(){
 		return maxHealPerTurn(trinketLevel(VialOfBlood.class));
 	}
 
-	public static long maxHealPerTurn(int level){
-		long maxHP = Dungeon.hero == null ? 20 : Dungeon.hero.HT;
+	public static BigInteger maxHealPerTurn(int level){
+		BigInteger maxHP = Dungeon.hero == null ? BigInteger.valueOf(20) : Dungeon.hero.HT;
 		if (level == -1){
 			return maxHP;
 		} else {
 			switch (level){
 				case 0: default:
-					return 4 + Math.round(0.15f*maxHP);
+					return BigInteger.valueOf(4).add(Big.round(Big.dec(0.15f).multiply(Big.dec(maxHP))));
 				case 1:
-					return 3 + Math.round(0.10f*maxHP);
+					return BigInteger.valueOf(3).add(Big.round(Big.dec(0.10f).multiply(Big.dec(maxHP))));
 				case 2:
-					return 2 + Math.round(0.07f*maxHP);
+					return BigInteger.TWO.add(Big.round(Big.dec(0.07f).multiply(Big.dec(maxHP))));
 				case 3:
-					return 1 + Math.round(0.05f*maxHP);
+					return BigInteger.ONE.add(Big.round(Big.dec(0.05f).multiply(Big.dec(maxHP))));
 			}
 		}
 	}

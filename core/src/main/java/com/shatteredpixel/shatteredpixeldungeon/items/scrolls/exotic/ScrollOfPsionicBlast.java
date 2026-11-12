@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -67,13 +70,13 @@ public class ScrollOfPsionicBlast extends ExoticScroll {
 		for (Mob mob : targets){
 			//always kills non-resistant enemies
 			//resistant enemies take 50% current HP at full health, scaling to 75% at 1/2 HP, and 100% at 1/3 hp
-			mob.damage(Math.round(mob.HT/2d + mob.HP/2d), this);
+			mob.damage(Big.round(Big.div(Big.dec(mob.HT), Big.dec(2d)).add(Big.div(Big.dec(mob.HP), Big.dec(2d)))), this);
 			if (mob.isAlive()) {
 				Buff.prolong(mob, Blindness.class, Blindness.DURATION);
 			}
 		}
 		
-		curUser.damage(Math.max(0, Math.round(curUser.HT*(0.5d * Math.pow(0.9, targets.size())))), this);
+		curUser.damage(BigInteger.ZERO.max(Big.round(Big.dec(curUser.HT).multiply(Big.dec((0.5d * Math.pow(0.9, targets.size())))))), this);
 		if (curUser.isAlive()) {
 			Buff.prolong(curUser, Blindness.class, Blindness.DURATION);
 			Buff.prolong(curUser, Weakness.class, Weakness.DURATION*5f);

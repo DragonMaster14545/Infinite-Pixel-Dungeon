@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
@@ -51,7 +55,7 @@ public class ScrollOfRetribution extends Scroll {
 		GameScene.flash( 0x80FFFFFF );
 		
 		//scales from 0x to 1x power, maxing at ~10% HP
-		double hpPercent = (curUser.HT - curUser.HP)/(double)(curUser.HT);
+		double hpPercent = Big.div(Big.dec((curUser.HT.subtract(curUser.HP))), Big.dec((curUser.HT).doubleValue())).doubleValue();
 		double power = Math.min( 4f, 4.45f*hpPercent);
 		
 		Sample.INSTANCE.play( Assets.Sounds.BLAST );
@@ -68,7 +72,7 @@ public class ScrollOfRetribution extends Scroll {
 
 		for (Mob mob : targets){
 			//deals 10%HT, plus 0-90%HP based on scaling
-			mob.damage(Math.round(mob.HT/10d + (mob.HP * power * 0.225d)), this);
+			mob.damage(Big.round(Big.div(Big.dec(mob.HT), Big.dec(10d)).add((Big.dec(mob.HP).multiply(Big.dec(power)).multiply(Big.dec(0.225d))))), this);
 			if (mob.isAlive()) {
 				Buff.prolong(mob, Blindness.class, Blindness.DURATION);
 			}
@@ -85,7 +89,7 @@ public class ScrollOfRetribution extends Scroll {
 	}
 	
 	@Override
-	public long value() {
-		return isKnown() ? 40 * quantity : super.value();
+	public BigInteger value() {
+		return isKnown() ? BigInteger.valueOf(40).multiply(quantity) : super.value();
 	}
 }

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
@@ -47,8 +49,8 @@ public class GrippingTrap extends Trap {
 		Char c = Actor.findChar( pos );
 
 		if (c != null && !c.flying) {
-			long damage = Math.max( 0,  (2 + scalingDepth()/2) - c.drRoll()/2 );
-			Buff.affect( c, Bleeding.class ).set( damage );
+			BigInteger damage = BigInteger.ZERO.max((BigInteger.TWO.add(scalingDepth().divide(BigInteger.TWO))).subtract(c.drRoll().divide(BigInteger.TWO)));
+			Buff.affect( c, Bleeding.class ).set( damage.doubleValue() );
 			Buff.prolong( c, Cripple.class, Cripple.DURATION);
 			Wound.hit( c );
 		} else {

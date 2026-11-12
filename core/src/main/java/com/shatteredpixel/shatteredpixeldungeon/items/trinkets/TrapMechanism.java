@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.trinkets;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -37,15 +41,15 @@ public class TrapMechanism extends Trinket {
 	}
 
 	@Override
-	protected long upgradeEnergyCost() {
+	protected BigInteger upgradeEnergyCost() {
 		//6 -> 5(11) -> 7(18) -> 8(26)
-		return Math.round(5+1.67f*level());
+		return Big.round(Big.dec(5).add(Big.dec(1.67f).multiply(Big.dec(level()))));
 	}
 
 	@Override
 	public String statsDesc() {
 		if (isIdentified()){
-			return Messages.get(this, "stats_desc", (int)(100*overrideNormalLevelChance((int)buffedLvl())));
+			return Messages.get(this, "stats_desc", (int)(100*overrideNormalLevelChance(Big.toInt(buffedLvl()))));
 		} else {
 			return Messages.get(this, "typical_stats_desc", (int)(100*overrideNormalLevelChance(0)));
 		}

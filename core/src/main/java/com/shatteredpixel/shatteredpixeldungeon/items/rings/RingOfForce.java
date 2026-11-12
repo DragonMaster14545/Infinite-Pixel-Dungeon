@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -51,7 +55,7 @@ public class RingOfForce extends Ring {
 		return new Force();
 	}
 	
-	public static long armedDamageBonus( Char ch ){
+	public static BigInteger armedDamageBonus( Char ch ){
 		return getBuffedBonus( ch, Force.class);
 	}
 
@@ -79,81 +83,75 @@ public class RingOfForce extends Ring {
 		return tier;
 	}
 
-	public static long damageRoll( Hero hero ){
+	public static BigInteger damageRoll( Hero hero ){
 		if (hero.buff(Force.class) != null
 				&& hero.buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) == null) {
-			long level = getBuffedBonus(hero, Force.class);
+			BigInteger level = getBuffedBonus(hero, Force.class);
 			float tier = tier(hero.STR());
-			long dmg = Hero.heroDamageIntRange(min(level, tier), max(level, tier));
+			BigInteger dmg = Hero.heroDamageIntRange(min(level, tier), max(level, tier));
 			if (hero.buff(BrawlersStance.class) != null
 				&& hero.buff(BrawlersStance.class).active){
 				// 3+tier base dmg, roughly +60%->45% dmg at T1->5
 				// lvl*((4+2*tier)/8) scaling, +50% dmg
-				dmg += Math.round(3+tier+(level*((4+2*tier)/8f)));
+				dmg = dmg.add(Big.round(Big.dec(3+tier).add((Big.dec(level).multiply(Big.dec(((4+2*tier)/8f)))))));
 			}
 			return dmg;
 		} else {
 			//attack without any ring of force influence
-			return Hero.heroDamageIntRange(1, Math.max(hero.STR()-8, 1));
+			return Hero.heroDamageIntRange(BigInteger.ONE, BigInteger.valueOf(Math.max(hero.STR()-8, 1)));
 		}
 	}
 
 	//same as equivalent tier weapon
-	private static long min(long lvl, float tier){
-		if (lvl <= 0) tier = 1; //tier is forced to 1 if cursed
+	private static BigInteger min(BigInteger lvl, float tier){
+		if ((lvl.compareTo(BigInteger.ZERO) <= 0)) tier = 1; //tier is forced to 1 if cursed
 
-		return Math.max( 0, Math.round(
-				tier +  //base
-				lvl*1d     //level scaling
-		));
+		return BigInteger.ZERO.max(Big.round(Big.dec(tier).add(Big.dec(lvl).multiply(Big.dec(1d)))));
 	}
 
 	//same as equivalent tier weapon
-	private static long max(long lvl, float tier){
-		if (lvl <= 0) tier = 1; //tier is forced to 1 if cursed
+	private static BigInteger max(BigInteger lvl, float tier){
+		if ((lvl.compareTo(BigInteger.ZERO) <= 0)) tier = 1; //tier is forced to 1 if cursed
 
-		return Math.max( 0, Math.round(
-				5d*(tier+1) +    //base
-				lvl*(tier+1)    //level scaling
-		));
+		return BigInteger.ZERO.max(Big.round(Big.dec(5d*(tier+1)).add(Big.dec(lvl).multiply(Big.dec((tier+1))))));
 	}
 
 	@Override
 	public String statsInfo() {
 		float tier = tier(Dungeon.hero != null ? Dungeon.hero.STR() : 10);
 		if (isIdentified()) {
-			long level = soloBuffedBonus();
+			BigInteger level = soloBuffedBonus();
 			String info = Messages.get(this, "stats", min(level, tier), max(level, tier), level);
-			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)){
+			if (isEquipped(Dungeon.hero) && (soloBuffedBonus().compareTo(combinedBuffedBonus(Dungeon.hero)) != 0)){
 				level = combinedBuffedBonus(Dungeon.hero);
 				info += "\n\n" + Messages.get(this, "combined_stats", min(level, tier), max(level, tier), level);
 			}
 			return info;
 		} else {
-			return Messages.get(this, "typical_stats", min(1, tier), max(1, tier), 1);
+			return Messages.get(this, "typical_stats", min(BigInteger.ONE, tier), max(BigInteger.ONE, tier), 1);
 		}
 	}
 
 	@Override
-	public String upgradeStat1(long level) {
-		if (cursed && cursedKnown) level = Math.min(-1, level-3);
+	public String upgradeStat1(BigInteger level) {
+		if (cursed && cursedKnown) level = BigInteger.valueOf(-1).min(level.subtract(BigInteger.valueOf(3)));
 		float tier = tier(Dungeon.hero != null ? Dungeon.hero.STR() : 10);
-		return min(level+1, tier) + "-" + max(level+1, tier);
+		return min(level.add(BigInteger.ONE), tier) + "-" + max(level.add(BigInteger.ONE), tier);
 	}
 
 	@Override
-	public String upgradeStat2(long level) {
-		if (cursed && cursedKnown) level = Math.min(-1, level-3);
-		return Long.toString(level+1);
+	public String upgradeStat2(BigInteger level) {
+		if (cursed && cursedKnown) level = BigInteger.valueOf(-1).min(level.subtract(BigInteger.valueOf(3)));
+		return level.add(BigInteger.ONE).toString();
 	}
 
 	@Override
-	public String upgradeStat3(long level) {
-		if (cursed && cursedKnown) level = Math.min(-1, level-3);
+	public String upgradeStat3(BigInteger level) {
+		if (cursed && cursedKnown) level = BigInteger.valueOf(-1).min(level.subtract(BigInteger.valueOf(3)));
 		if (Dungeon.hero != null && Dungeon.hero.heroClass == HeroClass.DUELIST){
 			float tier = tier(Dungeon.hero != null ? Dungeon.hero.STR() : 10);
-			int bonus = Math.round(3+tier+(level*((4+2*tier)/8f)));
-			return (min(level+1, tier) + bonus) + "-" + (max(level+1, tier) + bonus);
+			int bonus = Big.toInt(Big.round(Big.dec(3+tier).add((Big.dec(level).multiply(Big.dec(((4+2*tier)/8f)))))));
+			return (min(level.add(BigInteger.ONE), tier).add(BigInteger.valueOf(bonus))) + "-" + (max(level.add(BigInteger.ONE), tier).add(BigInteger.valueOf(bonus)));
 		} else {
 			return null;
 		}
@@ -231,13 +229,13 @@ public class RingOfForce extends Ring {
 		if (Dungeon.hero != null && Dungeon.hero.isClass(HeroClass.DUELIST)
 			&& (anonymous || isIdentified() || isEquipped(Dungeon.hero))){
 			//0 if unidentified, solo level if unequipped, combined level if equipped
-			long level = isIdentified() ? (isEquipped(Dungeon.hero) ? getBuffedBonus(Dungeon.hero, Force.class) : soloBuffedBonus()) : 0;
+			BigInteger level = isIdentified() ? (isEquipped(Dungeon.hero) ? getBuffedBonus(Dungeon.hero, Force.class) : soloBuffedBonus()) : BigInteger.ZERO;
 			float tier = tier(Dungeon.hero.STR());
-			int dmgBoost = Math.round(3+tier+(level*((4+2*tier)/8f)));
+			int dmgBoost = Big.toInt(Big.round(Big.dec(3+tier).add((Big.dec(level).multiply(Big.dec(((4+2*tier)/8f)))))));
 			if (isIdentified()) {
-				info += "\n\n" + Messages.get(this, "ability_desc", min(level, tier)+dmgBoost, max(level, tier)+dmgBoost);
+				info += "\n\n" + Messages.get(this, "ability_desc", min(level, tier).add(BigInteger.valueOf(dmgBoost)), max(level, tier).add(BigInteger.valueOf(dmgBoost)));
 			} else {
-				info += "\n\n" + Messages.get(this, "typical_ability_desc",  min(level, tier)+dmgBoost, max(level, tier)+dmgBoost);
+				info += "\n\n" + Messages.get(this, "typical_ability_desc",  min(level, tier).add(BigInteger.valueOf(dmgBoost)), max(level, tier).add(BigInteger.valueOf(dmgBoost)));
 			}
 		}
 

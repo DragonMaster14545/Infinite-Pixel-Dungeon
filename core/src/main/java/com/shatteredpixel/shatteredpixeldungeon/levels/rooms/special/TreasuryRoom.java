@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
@@ -71,7 +73,7 @@ public class TreasuryRoom extends SpecialRoom {
 				do {
 					pos = level.pointToCell(random());
 				} while (level.map[pos] != Terrain.EMPTY);
-				level.drop( new Gold( Dungeon.IntRange( 5, 12 ) ), pos );
+				level.drop( new Gold( BigInteger.valueOf(Dungeon.IntRange( 5, 12 )) ), pos );
 			}
 		}
 		

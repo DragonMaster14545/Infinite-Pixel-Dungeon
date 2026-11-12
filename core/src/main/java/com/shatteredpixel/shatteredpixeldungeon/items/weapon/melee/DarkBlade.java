@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -82,16 +86,15 @@ public class DarkBlade extends MeleeWeapon {
     //equal to tier 4 in damage at +5
 
     @Override
-    public long max(long lvl) {
+    public BigInteger max(BigInteger lvl) {
         //+5 per level, up from +6
-        return 6L * (tier()) +                    //20 base, down from 30
-                lvl * (tier()+2);
+        return BigInteger.valueOf(6L * (tier())).add(lvl.multiply(BigInteger.valueOf((tier()+2))));
     }
 
     @Override
-    public long proc(Char attacker, Char defender, long damage) {
+    public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 
-        if (damage >= defender.HP
+        if ((damage.compareTo(defender.HP) >= 0)
                 && Random.Float() < 0.15f
                 && !defender.isImmune(Corruption.class)
                 && defender.buff(Corruption.class) == null
@@ -105,7 +108,7 @@ public class DarkBlade extends MeleeWeapon {
 
             AllyBuff.affectAndLoot(enemy, hero, Corruption.class);
 
-            return 0;
+            return BigInteger.ZERO;
         }
 
         return super.proc(attacker, defender, damage);
@@ -213,7 +216,7 @@ public class DarkBlade extends MeleeWeapon {
 
 		//we apply here because of projecting
 		RunicSlashTracker tracker = Buff.affect(hero, RunicSlashTracker.class);
-		tracker.boost = 3f + 0.50f*buffedLvl();
+		tracker.boost = Big.dec(3f).add(Big.dec(0.50f).multiply(Big.dec(buffedLvl()))).floatValue();
 		hero.belongings.abilityWeapon = this;
 		if (!hero.canAttack(enemy)){
 			GLog.w(Messages.get(this, "ability_target_range"));
@@ -258,7 +261,7 @@ public class DarkBlade extends MeleeWeapon {
 	@Override
 	public String abilityInfo() {
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", 300+50*buffedLvl());
+			return Messages.get(this, "ability_desc", BigInteger.valueOf(300).add(BigInteger.valueOf(50).multiply(buffedLvl())));
 		} else {
 			return Messages.get(this, "typical_ability_desc", 300);
 		}

@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -56,25 +60,24 @@ public class Dagger extends MeleeWeapon {
 	}
 
 	@Override
-	public long max(long lvl) {
-		return  4L*(tier()+1) +    //8 base, down from 10
-				lvl*(tier()+1);   //scaling unchanged
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(4L*(tier()+1)).add(lvl.multiply(BigInteger.valueOf((tier()+1))));   //scaling unchanged
 	}
 	
 	@Override
-	public long damageRoll(Char owner) {
+	public BigInteger damageRoll(Char owner) {
 		if (owner instanceof Hero) {
 			Hero hero = (Hero)owner;
 			Char enemy = hero.enemy();
 			if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
 				//deals 75% toward max to max on surprise, instead of min to max.
-				long diff = max() - min();
-				long damage = augment.damageFactor(Hero.heroDamageIntRange(
-						min() + Math.round(diff*0.75f),
+				BigInteger diff = max().subtract(min());
+				BigInteger damage = augment.damageFactor(Hero.heroDamageIntRange(
+						min().add(Big.round(Big.dec(diff).multiply(Big.dec(0.75f)))),
 						max()));
 				int exStr = hero.STR() - STRReq();
 				if (exStr > 0) {
-					damage += Hero.heroDamageIntRange(0, exStr);
+					damage = damage.add(Hero.heroDamageIntRange(BigInteger.ZERO, BigInteger.valueOf(exStr)));
 				}
 				return damage;
 			}
@@ -93,24 +96,24 @@ public class Dagger extends MeleeWeapon {
 
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
-		sneakAbility(hero, target, 5, 2+buffedLvl()/150, this);
+		sneakAbility(hero, target, 5, BigInteger.TWO.add(buffedLvl().divide(BigInteger.valueOf(150))), this);
 	}
 
 	@Override
 	public String abilityInfo() {
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", 2+buffedLvl()/150);
+			return Messages.get(this, "ability_desc", BigInteger.TWO.add(buffedLvl().divide(BigInteger.valueOf(150))));
 		} else {
 			return Messages.get(this, "typical_ability_desc", 2);
 		}
 	}
 
 	@Override
-	public String upgradeAbilityStat(long level) {
-		return Long.toString(2+level/150);
+	public String upgradeAbilityStat(BigInteger level) {
+		return BigInteger.TWO.add(level.divide(BigInteger.valueOf(150))).toString();
 	}
 
-	public static void sneakAbility(Hero hero, Integer target, int maxDist, long invisTurns, MeleeWeapon wep){
+	public static void sneakAbility(Hero hero, Integer target, int maxDist, BigInteger invisTurns, MeleeWeapon wep){
 		if (target == null) {
 			return;
 		}
@@ -128,7 +131,7 @@ public class Dagger extends MeleeWeapon {
 		}
 
 		wep.beforeAbilityUsed(hero, null);
-		Buff.affect(hero, Invisibility.class, invisTurns-1); //1 fewer turns as ability is instant
+		Buff.affect(hero, Invisibility.class, invisTurns.subtract(BigInteger.ONE).floatValue()); //1 fewer turns as ability is instant
 
 		Dungeon.hero.sprite.turnTo( Dungeon.hero.pos, target);
 		Dungeon.hero.pos = target;

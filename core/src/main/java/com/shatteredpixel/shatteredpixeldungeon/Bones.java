@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -104,7 +107,7 @@ public class Bones {
 					item = hero.belongings.weapon;
 					//if the hero has two weapons (champion), pick the stronger one
 					if (hero.belongings.secondWep != null &&
-							(item == null || hero.belongings.secondWep.trueLevel() > item.trueLevel())){
+							(item == null || (hero.belongings.secondWep.trueLevel().compareTo(item.trueLevel()) > 0))){
 						item = hero.belongings.secondWep;
 						break;
 					}
@@ -150,9 +153,9 @@ public class Bones {
 			if (Dungeon.Int(3) < items.size()) {
 				item = Random.element(items);
 				if (item.stackable){
-					item.quantity(Dungeon.NormalLongRange(1, (item.quantity() + 1) / 2));
-					if (item.quantity() > 3){
-						item.quantity(3);
+					item.quantity(Dungeon.NormalLongRange(BigInteger.ONE, (item.quantity().add(BigInteger.ONE)).divide(BigInteger.TWO)));
+					if ((item.quantity().compareTo(BigInteger.valueOf(3)) > 0)){
+						item.quantity(BigInteger.valueOf(3));
 					}
 				}
 			} else {
@@ -239,8 +242,8 @@ public class Bones {
 
 					if (item.isUpgradable()) {
 						//caps at +3
-						if (item.level() > 3) {
-							item.degrade(item.level() - 3);
+						if ((item.level().compareTo(BigInteger.valueOf(3)) > 0)) {
+							item.degrade((item.level().subtract(BigInteger.valueOf(3))));
 						}
 						//thrown weapons are always IDed, otherwise set unknown
 						item.levelKnown = item instanceof MissileWeapon;

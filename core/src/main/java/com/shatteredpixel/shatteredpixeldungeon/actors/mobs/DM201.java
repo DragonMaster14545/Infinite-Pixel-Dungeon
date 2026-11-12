@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -36,8 +40,8 @@ public class DM201 extends DM200 {
 	{
 		spriteClass = DM201Sprite.class;
 
-		HP = HT = Dungeon.getCycleMultiplier(120);
-		EXP = Dungeon.getCycleMultiplier(25)-24;
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(120));
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(25)).subtract(BigInteger.valueOf(24));
 
 		properties.add(Property.IMMOVABLE);
 
@@ -45,14 +49,14 @@ public class DM201 extends DM200 {
 	}
 
 	@Override
-	public long damageRoll() {
-		return Random.NormalLongRange( Dungeon.getCycleMultiplier(15), Dungeon.getCycleMultiplier(25) );
+	public BigInteger damageRoll() {
+		return Big.normalRange(Dungeon.getCycleMultiplier(BigInteger.valueOf(15)), Dungeon.getCycleMultiplier(BigInteger.valueOf(25)));
 	}
 
 	private boolean threatened = false;
 
 	@Override
-	public void damage(long dmg, Object src) {
+	public void damage(BigInteger dmg, Object src) {
 		if ((src instanceof Char && !Dungeon.level.adjacent(pos, ((Char)src).pos))
 				|| enemy == null || !Dungeon.level.adjacent(pos, enemy.pos)){
 			threatened = true;
@@ -69,10 +73,10 @@ public class DM201 extends DM200 {
 		threatened = false;
 		spend(TICK);
 
-		GameScene.add(Blob.seed(enemy.pos, 15, CorrosiveGas.class).setStrength((Dungeon.escalatingDepth() + 1) / 2));
+		GameScene.add(Blob.seed(enemy.pos, BigInteger.valueOf(15), CorrosiveGas.class).setStrength((Dungeon.escalatingDepth().add(BigInteger.ONE)).divide(BigInteger.TWO)));
 		for (int i : PathFinder.NEIGHBOURS8){
 			if (!Dungeon.level.solid[enemy.pos+i]) {
-				GameScene.add(Blob.seed(enemy.pos + i, 5, CorrosiveGas.class).setStrength((Dungeon.escalatingDepth() + 1 )/ 2));
+				GameScene.add(Blob.seed(enemy.pos + i, BigInteger.valueOf(5), CorrosiveGas.class).setStrength((Dungeon.escalatingDepth().add(BigInteger.ONE)).divide(BigInteger.TWO)));
 			}
 		}
 

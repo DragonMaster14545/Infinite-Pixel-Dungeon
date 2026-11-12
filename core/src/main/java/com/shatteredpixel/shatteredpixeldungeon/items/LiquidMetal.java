@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -108,7 +112,7 @@ public class LiquidMetal extends Item {
 	}
 
 	@Override
-	public long value() {
+	public BigInteger value() {
 		return quantity;
 	}
 
@@ -135,7 +139,7 @@ public class LiquidMetal extends Item {
 				MissileWeapon m = (MissileWeapon)item;
 
 				int maxToUse = 5*(m.tier+1);
-				maxToUse *= Math.pow(2, m.level());
+				maxToUse *= Math.pow(2, m.level().doubleValue());
 
 				float durabilityPerMetal = 100 / (float)maxToUse;
 
@@ -147,15 +151,15 @@ public class LiquidMetal extends Item {
 						Math.ceil(m.durabilityLeft()/ m.durabilityPerUse()) >= Math.ceil(m.MAX_DURABILITY/ m.durabilityPerUse()) ){
 					GLog.w(Messages.get(LiquidMetal.class, "already_fixed"));
 					return;
-				} else if (maxToUse < quantity()) {
-					Catalog.countUses(LiquidMetal.class, maxToUse);
+				} else if ((BigInteger.valueOf(maxToUse).compareTo(quantity()) < 0)) {
+					Catalog.countUses(LiquidMetal.class, BigInteger.valueOf(maxToUse));
 					m.repair(maxToUse*durabilityPerMetal);
-					quantity(quantity()-maxToUse);
+					quantity(quantity().subtract(BigInteger.valueOf(maxToUse)));
 					GLog.i(Messages.get(LiquidMetal.class, "apply", maxToUse));
 
 				} else {
 					Catalog.countUses(LiquidMetal.class, quantity());
-					m.repair(quantity()*durabilityPerMetal);
+					m.repair(Big.dec(quantity()).multiply(Big.dec(durabilityPerMetal)).floatValue());
 					GLog.i(Messages.get(LiquidMetal.class, "apply", quantity()));
 					detachAll(Dungeon.hero.belongings.backpack);
 				}
@@ -179,8 +183,8 @@ public class LiquidMetal extends Item {
 		}
 
 		@Override
-		public long cost(ArrayList<Item> ingredients) {
-			return 3;
+		public BigInteger cost(ArrayList<Item> ingredients) {
+			return BigInteger.valueOf(3);
 		}
 
 		@Override
@@ -188,8 +192,8 @@ public class LiquidMetal extends Item {
 			Item result = sampleOutput(ingredients);
 
 			MissileWeapon w = (MissileWeapon) ingredients.get(0);
-			w.quantity(0);
-			Buff.affect(Dungeon.hero, MissileWeapon.UpgradedSetTracker.class).levelThresholds.put(w.setID, Long.MAX_VALUE);
+			w.quantity(BigInteger.ZERO);
+			Buff.affect(Dungeon.hero, MissileWeapon.UpgradedSetTracker.class).levelThresholds.put(w.setID, BigInteger.valueOf(Long.MAX_VALUE));
 
 			return result;
 		}
@@ -199,7 +203,7 @@ public class LiquidMetal extends Item {
 			MissileWeapon m = (MissileWeapon) ingredients.get(0);
 
 			if (m.levelKnown){
-				return new LiquidMetal().quantity(metalQuantity(m));
+				return new LiquidMetal().quantity(BigInteger.valueOf(metalQuantity(m)));
 			} else {
 				return new LiquidMetal();
 			}
@@ -210,9 +214,9 @@ public class LiquidMetal extends Item {
 			if (m.defaultQuantity() != 3){
 				quantityPerWeapon = 3f / m.defaultQuantity();
 			}
-			quantityPerWeapon += Math.pow(2, Math.min(3, m.level()));
+			quantityPerWeapon += Math.pow(2, BigInteger.valueOf(3).min(m.level()).doubleValue());
 
-			float quantity = m.quantity()-1;
+			float quantity = m.quantity().subtract(BigInteger.ONE).floatValue();
 			quantity += 0.25f + 0.0075f*m.durabilityLeft();
 
 			return Math.round(quantity * quantityPerWeapon);

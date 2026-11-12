@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.items.Recipe;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -36,8 +38,8 @@ public class StewedMeat extends Food {
 	}
 	
 	@Override
-	public long value() {
-		return 8 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(8).multiply(quantity);
 	}
 	
 	public static class oneMeat extends Recipe.SimpleRecipe{

@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -38,9 +42,8 @@ public class WarScythe extends MeleeWeapon {
     }
 
     @Override
-    public long max(long lvl) {
-        return  Math.round(6.67d*(tier()+1)) +    //40 base, up from 30
-                lvl*(tier()+1);                   //scaling unchanged
+    public BigInteger max(BigInteger lvl) {
+        return  BigInteger.valueOf(Math.round(6.67d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf((tier()+1))));                   //scaling unchanged
     }
 
     @Override
@@ -51,13 +54,13 @@ public class WarScythe extends MeleeWeapon {
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
 		//replaces damage with 30+4.5*lvl bleed, roughly 133% avg base dmg, 129% avg scaling
-		long bleedAmt = augment.damageFactor(Math.round(30f + 4.5f*buffedLvl()));
+		BigInteger bleedAmt = augment.damageFactor(Big.round(Big.dec(30f).add(Big.dec(4.5f).multiply(Big.dec(buffedLvl())))));
 		Sickle.harvestAbility(hero, target, 0f, bleedAmt, this);
 	}
 
 	@Override
 	public String abilityInfo() {
-		long bleedAmt = levelKnown ? Math.round(30f + 4.5f*buffedLvl()) : 30;
+		BigInteger bleedAmt = levelKnown ? Big.round(Big.dec(30f).add(Big.dec(4.5f).multiply(Big.dec(buffedLvl())))) : BigInteger.valueOf(30);
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(bleedAmt));
 		} else {
@@ -66,8 +69,8 @@ public class WarScythe extends MeleeWeapon {
     }
 
 	@Override
-	public String upgradeAbilityStat(long level) {
-		return Long.toString(augment.damageFactor(Math.round(30f + 4.5f*level)));
+	public String upgradeAbilityStat(BigInteger level) {
+		return augment.damageFactor(Big.round(Big.dec(30f).add(Big.dec(4.5f).multiply(Big.dec(level))))).toString();
 	}
 
 }

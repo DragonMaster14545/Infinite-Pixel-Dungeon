@@ -51,6 +51,7 @@ import com.watabou.utils.Reflection;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.math.BigInteger;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -655,11 +656,11 @@ public class ScrollOfDebug extends Scroll {
                                 else if(input[i].matches("[\\-x+]\\d+")) {
                                     switch (input[i].charAt(0)) {
                                         case 'x':
-                                            item.quantity(Integer.parseInt(input[i].substring(1)));
+                                            item.quantity(new BigInteger(input[i].substring(1)));
                                             break;
                                         case '-':
                                         case '+':
-                                            item.level(Integer.parseInt(input[i]));
+                                            item.level(new BigInteger(input[i]));
                                             break;
                                     }
                                 }
@@ -772,7 +773,7 @@ public class ScrollOfDebug extends Scroll {
                                 }
                                 @Override public void onSelect(Integer cell) {
                                     if(cell == null) return;
-                                    GameScene.add(Blob.seed(cell, amount, (Class<Blob>)cls));
+                                    GameScene.add(Blob.seed(cell, BigInteger.valueOf(amount), (Class<Blob>)cls));
                                 }
                             });
                             return false;
@@ -980,6 +981,8 @@ public class ScrollOfDebug extends Scroll {
             }
             else if (type == long.class || type == Long.class)
                 args[i] = Long.parseLong(input[j++]);
+            else if (type == BigInteger.class)
+                args[i] = new BigInteger(input[j++]);
                 // being through, nothing actually uses these (I hope)
             else if (type == short.class || type == Short.class)
                 args[i] = Short.parseShort(input[j++]);

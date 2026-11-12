@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.test_tubes;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -202,7 +204,7 @@ public class Tubes extends Item {
 
 	@Override
 	public Item random() {
-		quantity = 1;
+		quantity = BigInteger.ONE;
 		return this;
 	}
 
@@ -401,13 +403,13 @@ public class Tubes extends Item {
 	}
 
 	@Override
-	public long value() {
-		return 30 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(30).multiply(quantity);
 	}
 
 	@Override
-	public long energyVal() {
-		return 6 * quantity;
+	public BigInteger energyVal() {
+		return BigInteger.valueOf(6).multiply(quantity);
 	}
 
 	public static class PlaceHolder extends Tubes {

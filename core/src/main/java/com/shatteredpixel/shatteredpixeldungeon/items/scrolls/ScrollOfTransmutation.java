@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -91,7 +95,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 
 		//all regular or exotic scrolls, except itself
 		} else if (item instanceof Scroll){
-			return item != this || item.quantity() > 1;
+			return item != this || (item.quantity().compareTo(BigInteger.ONE) > 0);
 
 		//all rings, wands, artifacts, trinkets, seeds, and runestones
 		} else {
@@ -186,12 +190,12 @@ public class ScrollOfTransmutation extends InventoryScroll {
 				result.levelKnown = item.levelKnown;
 				result.cursed = item.cursed;
 				result.cursedKnown = item.cursedKnown;
-				if (item.visiblyUpgraded() == 10){
-					result.level(2);
-				} else if (item.visiblyUpgraded() >= 5){
-					result.level(1);
+				if ((item.visiblyUpgraded().compareTo(BigInteger.TEN) == 0)){
+					result.level(BigInteger.TWO);
+				} else if ((item.visiblyUpgraded().compareTo(BigInteger.valueOf(5)) >= 0)){
+					result.level(BigInteger.ONE);
 				} else {
-					result.level(0);
+					result.level(BigInteger.ZERO);
 				}
 				return result;
 			} else {
@@ -214,7 +218,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 			do {
 				n = (Wand) Generator.randomUsingDefaults(Generator.Category.WAND);
 			} while (Challenges.isItemBlocked(n) || n.getClass() == wandClass);
-			n.level(0);
+			n.level(BigInteger.ZERO);
 			n.identify();
 			staff.imbueWand(n, null);
 		}
@@ -246,13 +250,13 @@ public class ScrollOfTransmutation extends InventoryScroll {
 				n.tier += Dungeon.cycle * 5;
 		} while (Challenges.isItemBlocked(n) || n.getClass() == w.getClass());
 
-		n.level(0);
+		n.level(BigInteger.ZERO);
 		n.quantity(w.quantity());
-		long level = w.trueLevel();
-		if (level > 0) {
-			n.upgrade( level );
-		} else if (level < 0) {
-			n.degrade( -level );
+		BigInteger level = w.trueLevel();
+		if ((level.compareTo(BigInteger.ZERO) > 0)) {
+			n.upgrade( (level) );
+		} else if ((level.compareTo(BigInteger.ZERO) < 0)) {
+			n.degrade( (level.negate()) );
 		}
 		
 		n.enchantment = w.enchantment;
@@ -267,7 +271,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 
 		//technically a new set, ensure old one is destroyed (except for darts)
 		if (w instanceof MissileWeapon && w.isUpgradable()){
-			Buff.affect(Dungeon.hero, MissileWeapon.UpgradedSetTracker.class).levelThresholds.put(((MissileWeapon) w).setID, Long.MAX_VALUE);
+			Buff.affect(Dungeon.hero, MissileWeapon.UpgradedSetTracker.class).levelThresholds.put(((MissileWeapon) w).setID, BigInteger.valueOf(Long.MAX_VALUE));
 		}
 
 		n.quantity(w.quantity());
@@ -282,13 +286,13 @@ public class ScrollOfTransmutation extends InventoryScroll {
 			n = (Ring)Generator.randomUsingDefaults( Generator.Category.RING );
 		} while (Challenges.isItemBlocked(n) || n.getClass() == r.getClass());
 		
-		n.level(0);
+		n.level(BigInteger.ZERO);
 		
-		long level = r.level();
-		if (level > 0) {
-			n.upgrade( level );
-		} else if (level < 0) {
-			n.degrade( -level );
+		BigInteger level = r.level();
+		if ((level.compareTo(BigInteger.ZERO) > 0)) {
+			n.upgrade( (level) );
+		} else if ((level.compareTo(BigInteger.ZERO) < 0)) {
+			n.degrade( (level.negate()) );
 		}
 		
 		n.levelKnown = r.levelKnown;
@@ -336,7 +340,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 			n.cursed = a.cursed;
 			n.levelKnown = a.levelKnown;
             n.rarity = a.rarity;
-            n.upgrade(a.level());
+            n.upgrade((a.level()));
 			return n;
 		}
 		
@@ -349,7 +353,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 			n = (Trinket)Generator.random(Generator.Category.TRINKET);
 		} while ( Challenges.isItemBlocked(n) || n.getClass() == t.getClass());
 
-		n.level((t.trueLevel() > n.maxUpgrade()) ? Math.min(n.maxUpgrade(), t.trueLevel()) : t.trueLevel());
+		n.level(((t.trueLevel().compareTo(n.maxUpgrade()) > 0)) ? n.maxUpgrade().min(t.trueLevel()) : t.trueLevel());
 		n.levelKnown = t.levelKnown;
 		n.cursedKnown = t.cursedKnown;
 		n.cursed = t.cursed;
@@ -364,9 +368,9 @@ public class ScrollOfTransmutation extends InventoryScroll {
 			n = (Wand)Generator.randomUsingDefaults( Generator.Category.WAND );
 		} while ( Challenges.isItemBlocked(n) || n.getClass() == w.getClass());
 		
-		n.level( 0 );
-		long level = w.trueLevel();
-		n.upgrade( level );
+		n.level( BigInteger.ZERO );
+		BigInteger level = w.trueLevel();
+		n.upgrade( (level) );
 
 		n.levelKnown = w.levelKnown;
 		n.curChargeKnown = w.curChargeKnown;
@@ -419,12 +423,12 @@ public class ScrollOfTransmutation extends InventoryScroll {
 	}
 	
 	@Override
-	public long value() {
-		return isKnown() ? 50 * quantity : super.value();
+	public BigInteger value() {
+		return isKnown() ? BigInteger.valueOf(50).multiply(quantity) : super.value();
 	}
 
 	@Override
-	public long energyVal() {
-		return isKnown() ? 10 * quantity : super.energyVal();
+	public BigInteger energyVal() {
+		return isKnown() ? BigInteger.TEN.multiply(quantity) : super.energyVal();
 	}
 }

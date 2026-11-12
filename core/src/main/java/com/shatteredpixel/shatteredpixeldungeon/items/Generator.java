@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
@@ -1028,7 +1030,7 @@ public class Generator {
 					cat.using2ndProbs = false;
 				}
 				if (bundle.contains(cat.name().toLowerCase() + CATEGORY_SEED)){
-					cat.seed = bundle.getLong(cat.name().toLowerCase() + CATEGORY_SEED);
+					cat.seed = Big.toLong(Big.getBig(bundle, cat.name().toLowerCase() + CATEGORY_SEED));
 					cat.dropped = bundle.getInt(cat.name().toLowerCase() + CATEGORY_DROPPED);
 				}
 			}

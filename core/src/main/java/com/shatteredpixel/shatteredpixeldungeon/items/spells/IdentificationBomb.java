@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -76,7 +80,7 @@ public class IdentificationBomb extends Spell {
             item.detachAll(hero.belongings.backpack);
         }
 
-        hero.damage(Math.max(0, Math.round(hero.HT*(0.66d * Math.pow(0.9, destroyedItems)))), new Bomb.ConjuredBomb());
+        hero.damage(BigInteger.ZERO.max(Big.round(Big.dec(hero.HT).multiply(Big.dec((0.66d * Math.pow(0.9, destroyedItems)))))), new Bomb.ConjuredBomb());
         if (hero.isAlive()) {
             Buff.prolong(hero, Blindness.class, Blindness.DURATION);
             Dungeon.observe();
@@ -88,8 +92,8 @@ public class IdentificationBomb extends Spell {
     }
 
     @Override
-    public long value() {
-        return 20 + 50;
+    public BigInteger value() {
+        return BigInteger.valueOf(20 + 50);
     }
 
     public static class Recipe extends SimpleRecipe {

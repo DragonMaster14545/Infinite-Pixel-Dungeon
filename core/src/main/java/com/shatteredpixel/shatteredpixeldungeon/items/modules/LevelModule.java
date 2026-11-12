@@ -29,6 +29,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.modules;
 
+
+import java.math.BigInteger;
 import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.hero;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -61,8 +63,8 @@ public class LevelModule extends Module {
     }
 
     @Override
-    public long value() {
-        return 35000 * quantity;
+    public BigInteger value() {
+        return BigInteger.valueOf(35000).multiply(quantity);
     }
 
 }

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
@@ -200,15 +202,15 @@ public class GamesInProgress {
 		public int level;
 		public int str;
 		public int strBonus;
-		public long exp;
-		public long hp;
-		public long ht;
-		public long shld;
+		public BigInteger exp = BigInteger.ZERO;
+		public BigInteger hp = BigInteger.ZERO;
+		public BigInteger ht = BigInteger.ZERO;
+		public BigInteger shld = BigInteger.ZERO;
 		public HeroClass heroClass;
 		public HeroSubClass subClass;
 		public int armorTier;
 		
-		public long goldCollected;
+		public BigInteger goldCollected = BigInteger.ZERO;
 		public int maxDepth;
 	}
 

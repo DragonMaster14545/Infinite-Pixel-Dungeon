@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.ui.Component;
@@ -83,9 +85,9 @@ public class HealthBar extends Component {
 	}
 
 	public void level(Char c){
-		double health = c.HP;
-		double shield = c.shielding();
-		double max = Math.max(health+shield, c.HT);
+		double health = c.HP.doubleValue();
+		double shield = c.shielding().doubleValue();
+		double max = Big.dec(health+shield).max(Big.dec(c.HT)).doubleValue();
 
 		level(health/max, (health+shield)/max);
 	}

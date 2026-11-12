@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -58,9 +62,9 @@ public class WandOfCorrosion extends Wand {
 
 	@Override
 	public void onZap(Ballistica bolt) {
-		CorrosiveGas gas = Blob.seed(bolt.collisionPos, (int) (50 + 10 * buffedLvl()), CorrosiveGas.class);
+		CorrosiveGas gas = Blob.seed(bolt.collisionPos, BigInteger.valueOf(Big.toInt((BigInteger.valueOf(50).add(BigInteger.TEN.multiply(buffedLvl()))))), CorrosiveGas.class);
 		CellEmitter.get(bolt.collisionPos).burst(Speck.factory(Speck.CORROSION), 10 );
-		gas.setStrength((long) ((2 + buffedLvl())*(1+ Dungeon.hero.lvl/150d)), getClass());
+		gas.setStrength(Big.trunc((Big.dec((BigInteger.TWO.add(buffedLvl()))).multiply(Big.dec((1+ Dungeon.hero.lvl/150d))))), getClass());
 		GameScene.add(gas);
 		Sample.INSTANCE.play(Assets.Sounds.GAS);
 
@@ -92,13 +96,13 @@ public class WandOfCorrosion extends Wand {
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, long damage) {
-		long level = Math.max( 0, buffedLvl()*getRarityMultiplier() );
+	public void onHit(MagesStaff staff, Char attacker, Char defender, BigInteger damage) {
+		BigInteger level = BigInteger.ZERO.max(buffedLvl().multiply(getRarityMultiplier()));
 
 		// lvl 0 - 33%
 		// lvl 1 - 50%
 		// lvl 2 - 60%
-		float procChance = (level+1f)/(level+3f) * procChanceMultiplier(attacker);
+		float procChance = Big.div((Big.dec(level).add(Big.dec(1f))), (Big.dec(level).add(Big.dec(3f)))).multiply(Big.dec(procChanceMultiplier(attacker))).floatValue();
 		if (Dungeon.Float() < procChance) {
 
 			float powerMulti = Math.max(1f, procChance);
@@ -122,18 +126,18 @@ public class WandOfCorrosion extends Wand {
 	@Override
 	public String statsDesc() {
 		if (levelKnown)
-			return Messages.get(this, "stats_desc", 2+buffedLvl());
+			return Messages.get(this, "stats_desc", BigInteger.TWO.add(buffedLvl()));
 		else
 			return Messages.get(this, "stats_desc", 2);
 	}
 
 	@Override
-	public String upgradeStat1(long level) {
-		return Long.toString(level+2);
+	public String upgradeStat1(BigInteger level) {
+		return level.add(BigInteger.TWO).toString();
 	}
 
 	@Override
-	public String upgradeStat2(long level) {
-		return Messages.decimalFormat("#.##x", 1+.2f*level);
+	public String upgradeStat2(BigInteger level) {
+		return Messages.decimalFormat("#.##x", Big.dec(1).add(Big.dec(.2f).multiply(Big.dec(level))).doubleValue());
 	}
 }

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -56,8 +58,8 @@ public class PrismaticImage extends NPC {
 	{
 		spriteClass = PrismaticSprite.class;
 		
-		HP = HT = 10;
-		defenseSkill = 1;
+		HP = HT = BigInteger.TEN;
+		defenseSkill = BigInteger.ONE;
 		
 		alignment = Alignment.ALLY;
 		intelligentAlly = true;
@@ -148,7 +150,7 @@ public class PrismaticImage extends NPC {
 		deathTimer = bundle.getInt( TIMER );
 	}
 	
-	public void duplicate( Hero hero, long HP ) {
+	public void duplicate( Hero hero, BigInteger HP ) {
 		this.hero = hero;
 		heroID = this.hero.id();
 		this.HP = HP;
@@ -156,26 +158,26 @@ public class PrismaticImage extends NPC {
 	}
 	
 	@Override
-	public long damageRoll() {
+	public BigInteger damageRoll() {
 		if (hero != null) {
-			return Dungeon.NormalLongRange( 2 + hero.lvl/4, 4 + hero.lvl/2 );
+			return Dungeon.NormalLongRange( BigInteger.valueOf(2 + hero.lvl/4), BigInteger.valueOf(4 + hero.lvl/2) );
 		} else {
-			return Dungeon.NormalLongRange( 2, 4 );
+			return Dungeon.NormalLongRange( BigInteger.TWO, BigInteger.valueOf(4) );
 		}
 	}
 	
 	@Override
-	public long attackSkill(Char target ) {
+	public BigInteger attackSkill(Char target ) {
 		if (hero != null) {
 			//same base attack skill as hero, benefits from accuracy ring
-			return (int)((9 + hero.lvl) * RingOfAccuracy.accuracyMultiplier(hero));
+			return BigInteger.valueOf((int)((9 + hero.lvl) * RingOfAccuracy.accuracyMultiplier(hero)));
 		} else {
-			return 0;
+			return BigInteger.ZERO;
 		}
 	}
 	
 	@Override
-	public long defenseSkill(Char enemy) {
+	public BigInteger defenseSkill(Char enemy) {
 		if (hero != null) {
 			int baseEvasion = 4 + hero.lvl;
 			int heroEvasion = (int)((4 + hero.lvl) * RingOfEvasion.evasionMultiplier( hero ));
@@ -185,24 +187,24 @@ public class PrismaticImage extends NPC {
 
 			//if the hero has more/less evasion, 50% of it is applied
 			//includes ring of evasion and armor boosts
-			return super.defenseSkill(enemy) * (baseEvasion + heroEvasion) / 2;
+			return super.defenseSkill(enemy).multiply(BigInteger.valueOf((baseEvasion + heroEvasion))).divide(BigInteger.TWO);
 		} else {
-			return 0;
+			return BigInteger.ZERO;
 		}
 	}
 	
 	@Override
-	public long drRoll() {
-		long dr = super.drRoll();
+	public BigInteger drRoll() {
+		BigInteger dr = super.drRoll();
 		if (hero != null){
-			return dr + hero.drRoll();
+			return dr.add(hero.drRoll());
 		} else {
 			return dr;
 		}
 	}
 	
 	@Override
-	public long defenseProc(Char enemy, long damage) {
+	public BigInteger defenseProc(Char enemy, BigInteger damage) {
 		if (hero != null && hero.belongings.armor() != null){
 			damage = hero.belongings.armor().proc( enemy, this, damage );
 		}
@@ -210,13 +212,13 @@ public class PrismaticImage extends NPC {
 	}
 	
 	@Override
-	public void damage(long dmg, Object src) {
+	public void damage(BigInteger dmg, Object src) {
 		
 		//TODO improve this when I have proper damage source logic
 		if (hero != null && hero.belongings.armor() != null && hero.belongings.armor().hasGlyph(AntiMagic.class, this)
 				&& AntiMagic.RESISTS.contains(src.getClass())){
-			dmg -= AntiMagic.drRoll(hero, hero.belongings.armor().buffedLvl());
-			dmg = Math.max(dmg, 0);
+			dmg = dmg.subtract(AntiMagic.drRoll(hero, hero.belongings.armor().buffedLvl()));
+			dmg = dmg.max(BigInteger.ZERO);
 		}
 		
 		super.damage(dmg, src);
@@ -231,7 +233,7 @@ public class PrismaticImage extends NPC {
 	}
 	
 	@Override
-	public long attackProc( Char enemy, long damage ) {
+	public BigInteger attackProc( Char enemy, BigInteger damage ) {
 		
 		if (enemy instanceof Mob) {
 			((Mob)enemy).aggro( this );

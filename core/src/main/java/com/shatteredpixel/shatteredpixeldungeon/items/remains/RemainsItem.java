@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.remains;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
@@ -74,8 +76,8 @@ public abstract class RemainsItem extends Item {
 	}
 
 	@Override
-	public long value() {
-		return 50;
+	public BigInteger value() {
+		return BigInteger.valueOf(50);
 	}
 
 	public static RemainsItem get(HeroClass cls){

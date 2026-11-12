@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WellFed;
@@ -47,8 +49,8 @@ public class MeatPie extends Food {
 	}
 	
 	@Override
-	public long value() {
-		return 40 * quantity;
+	public BigInteger value() {
+		return BigInteger.valueOf(40).multiply(quantity);
 	}
 	
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe {
@@ -60,7 +62,7 @@ public class MeatPie extends Food {
 			boolean meat = false;
 			
 			for (Item ingredient : ingredients){
-				if (ingredient.quantity() > 0) {
+				if ((ingredient.quantity().compareTo(BigInteger.ZERO) > 0)) {
 					if (ingredient instanceof Pasty || ingredient instanceof PhantomMeat) {
 						pasty = true;
 					} else if (ingredient.getClass() == Food.class) {
@@ -78,8 +80,8 @@ public class MeatPie extends Food {
 		}
 		
 		@Override
-		public long cost(ArrayList<Item> ingredients) {
-			return 6;
+		public BigInteger cost(ArrayList<Item> ingredients) {
+			return BigInteger.valueOf(6);
 		}
 		
 		@Override
@@ -87,7 +89,7 @@ public class MeatPie extends Food {
 			if (!testIngredients(ingredients)) return null;
 			
 			for (Item ingredient : ingredients){
-				ingredient.quantity(ingredient.quantity() - 1);
+				ingredient.quantity(ingredient.quantity().subtract(BigInteger.ONE));
 			}
 			
 			return sampleOutput(null);

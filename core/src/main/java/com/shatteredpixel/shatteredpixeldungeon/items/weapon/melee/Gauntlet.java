@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -53,9 +57,8 @@ public class Gauntlet extends MeleeWeapon {
 	}
 	
 	@Override
-	public long max(long lvl) {
-		return  Math.round(3d*(tier()+1)) +     //18 base, down from 36
-				lvl*Math.round(0.5d*(tier()+2));  //+3.5 per level, down from +7
+	public BigInteger max(BigInteger lvl) {
+		return  BigInteger.valueOf(Math.round(3d*(tier()+1))).add(lvl.multiply(BigInteger.valueOf(Math.round(0.5d*(tier()+2)))));  //+3.5 per level, down from +7
 	}
 
 	private ArrayList<Char> affected = new ArrayList<>();
@@ -63,7 +66,7 @@ public class Gauntlet extends MeleeWeapon {
 	private ArrayList<Lightning.Arc> arcs = new ArrayList<>();
 
 	@Override
-	public long proc(Char attacker, Char defender, long damage) {
+	public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 		affected.clear();
 		arcs.clear();
 
@@ -72,7 +75,7 @@ public class Gauntlet extends MeleeWeapon {
 		affected.remove(defender); //defender isn't hurt by lightning
 		for (Char ch : affected) {
 			if (ch.alignment != attacker.alignment) {
-				ch.damage(Math.round(damage * 0.75f), Shocking.class);
+				ch.damage(Big.round(Big.dec(damage).multiply(Big.dec(0.75f))), Shocking.class);
 			}
 		}
 
@@ -120,7 +123,7 @@ public class Gauntlet extends MeleeWeapon {
 
 				for (Char ch : affected) {
 					if (ch.alignment != hero.alignment) {
-						ch.damage(Math.round(damageRoll(hero) * 0.6f), Shocking.class);
+						ch.damage(Big.round(Big.dec(damageRoll(hero)).multiply(Big.dec(0.6f))), Shocking.class);
 						ch.spend(1.5f);
 					}
 				}
@@ -141,14 +144,14 @@ public class Gauntlet extends MeleeWeapon {
 	@Override
 	public String abilityInfo() {
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", augment.damageFactor(Math.round(min()*0.6d)), augment.damageFactor(Math.round(max()*0.6d)));
+			return Messages.get(this, "ability_desc", augment.damageFactor(Big.round(Big.dec(min()).multiply(Big.dec(0.6d)))), augment.damageFactor(Big.round(Big.dec(max()).multiply(Big.dec(0.6d)))));
 		} else {
-			return Messages.get(this, "typical_ability_desc", augment.damageFactor(Math.round(min(0)*0.6d)), augment.damageFactor(Math.round(max(0)*0.6d)));
+			return Messages.get(this, "typical_ability_desc", augment.damageFactor(Big.round(Big.dec(min(BigInteger.ZERO)).multiply(Big.dec(0.6d)))), augment.damageFactor(Big.round(Big.dec(max(BigInteger.ZERO)).multiply(Big.dec(0.6d)))));
 		}
 	}
 
-	public String upgradeAbilityStat(long level){
-		return "+" + augment.damageFactor(4 + Math.round(0.75f*level));
+	public String upgradeAbilityStat(BigInteger level){
+		return "+" + augment.damageFactor(BigInteger.valueOf(4).add(Big.round(Big.dec(0.75f).multiply(Big.dec(level)))));
 	}
 
 }

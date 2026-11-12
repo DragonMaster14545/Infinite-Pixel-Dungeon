@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -104,23 +108,23 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		
 		public boolean canKO(Char defender){
 			if (defender instanceof DwarfKing){
-				return defender.HP < defender.HT / 6;
+				return (defender.HP.compareTo(defender.HT.divide(BigInteger.valueOf(6))) < 0);
 			}
 			if (defender.properties().contains(Char.Property.MINIBOSS)
 					|| defender.properties().contains(Char.Property.BOSS)){
-				return (defender.HP/(float)defender.HT) < (KOThreshold()/5f);
+				return ((Big.div(Big.dec(defender.HP), Big.dec(defender.HT.floatValue()))).compareTo(Big.dec((KOThreshold()/5f))) < 0);
 			} else {
-				return (defender.HP/(float)defender.HT) < KOThreshold();
+				return ((Big.div(Big.dec(defender.HP), Big.dec(defender.HT.floatValue()))).compareTo(Big.dec(KOThreshold())) < 0);
 			}
 		}
 		
-		public long damageRoll( Char attacker ){
-			long dmg = attacker.damageRoll();
+		public BigInteger damageRoll( Char attacker ){
+			BigInteger dmg = attacker.damageRoll();
 			for( int i = 1; i < damageRolls; i++){
-				long newDmg = attacker.damageRoll();
-				if (newDmg > dmg) dmg = newDmg;
+				BigInteger newDmg = attacker.damageRoll();
+				if ((newDmg.compareTo(dmg) > 0)) dmg = newDmg;
 			}
-			return Math.round(dmg * (1f + baseDmgBonus));
+			return Big.round(Big.dec(dmg).multiply(Big.dec((1f + baseDmgBonus))));
 		}
 		
 		public static AttackLevel getLvl(int turnsInvis){
@@ -167,7 +171,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		return AttackLevel.getLvl(turnsInvis).ordinal()+1;
 	}
 
-	public long damageRoll( Char attacker ){
+	public BigInteger damageRoll( Char attacker ){
 		return AttackLevel.getLvl(turnsInvis).damageRoll(attacker);
 	}
 

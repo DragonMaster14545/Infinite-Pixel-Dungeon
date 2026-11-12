@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -53,13 +57,13 @@ public class CreativeGloves extends MeleeWeapon {
 	}
 
 	@Override
-	public long min(long lvl) {
-		return 1 + Math.round(Math.pow(1.0125d, level()/2d));
+	public BigInteger min(BigInteger lvl) {
+		return BigInteger.valueOf(1 + Math.round(Math.pow(1.0125d, Big.div(Big.dec(level()), Big.dec(2d)).doubleValue())));
 	}
 
 	@Override
-	public long max(long lvl) {
-		return 5 + Math.round(Math.pow(1.025d, level()/2d));
+	public BigInteger max(BigInteger lvl) {
+		return BigInteger.valueOf(5 + Math.round(Math.pow(1.025d, Big.div(Big.dec(level()), Big.dec(2d)).doubleValue())));
 	}
 
 	@Override
@@ -101,7 +105,7 @@ public class CreativeGloves extends MeleeWeapon {
 				enemy.damage(enemy.HP, this);
 				enemy.sprite.emitter().burst( ShadowParticle.UP, 15 );
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG, 2f, 0.4f);
-				hero.damage(enemy.HP/2, this);
+				hero.damage(enemy.HP.divide(BigInteger.TWO), this);
 
 				Invisibility.dispel();
 

@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArtifactRecharge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -159,7 +161,7 @@ public class Food extends Item {
 	}
 	
 	@Override
-	public long value() {
-		return 10 * quantity;
+	public BigInteger value() {
+		return BigInteger.TEN.multiply(quantity);
 	}
 }

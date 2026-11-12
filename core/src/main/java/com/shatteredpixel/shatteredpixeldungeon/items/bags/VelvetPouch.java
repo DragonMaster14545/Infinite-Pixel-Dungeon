@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bags;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.EmblemSystem;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.GooBlob;
@@ -54,8 +56,8 @@ public class VelvetPouch extends Bag {
 	}
 	
 	@Override
-	public long value() {
-		return 30;
+	public BigInteger value() {
+		return BigInteger.valueOf(30);
 	}
 
 }

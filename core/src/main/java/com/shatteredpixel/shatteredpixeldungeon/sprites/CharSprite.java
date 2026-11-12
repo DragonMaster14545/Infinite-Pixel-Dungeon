@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -354,14 +358,14 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		}
 	}
 
-	public void bloodBurstA( PointF from, long damage ) {
-		bloodBurstA(from, (int)Math.min(Integer.MAX_VALUE, damage));
+	public void bloodBurstA( PointF from, BigInteger damage ) {
+		bloodBurstA(from, Big.toInt(BigInteger.valueOf(Integer.MAX_VALUE).min(damage)));
 	}
 	
 	public void bloodBurstA( PointF from, int damage ) {
 		if (visible) {
 			PointF c = center();
-			int n = (int)Math.min( 9 * Math.sqrt( (double)damage / ch.HT ), 9 );
+			int n = (int)Math.min( 9 * Math.sqrt( Big.div(Big.dec((double)damage), Big.dec(ch.HT)).doubleValue() ), 9 );
 			Splash.at( c, PointF.angle( from, c ), 3.1415926f / 2, blood(), n );
 		}
 	}

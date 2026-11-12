@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -227,8 +230,8 @@ public class WaveArenaLevel extends Level {
     public void generateItems() {
 
         itemsToSpawn = new ArrayList<>();
-        itemsToSpawn.add(new SmallRation().quantity(Random.IntRange(2, 4)));
-        itemsToSpawn.add(new PotionOfHealing().quantity(Random.IntRange(2, 4)));
+        itemsToSpawn.add(new SmallRation().quantity(BigInteger.valueOf(Random.IntRange(2, 4))));
+        itemsToSpawn.add(new PotionOfHealing().quantity(BigInteger.valueOf(Random.IntRange(2, 4))));
 
         for (Item item : itemsToSpawn) {
 
@@ -378,7 +381,7 @@ public class WaveArenaLevel extends Level {
             Buff.affect( mob, RageShield.class ).set( power * 2 );
         }
         if (wave >= 20) {
-            mob.HP = mob.HT = (int)(mob.HT * (1 + wave / 10f));
+            mob.HP = mob.HT = BigInteger.valueOf(Big.toInt(((Big.dec(mob.HT).multiply(Big.dec((1 + wave / 10f))))).toBigInteger()));
         }
         if (wave >= 25 && Random.Int( 3 ) == 0) {
             ChampionEnemy.rollForChampion( mob );

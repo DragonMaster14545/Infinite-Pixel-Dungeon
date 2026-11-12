@@ -29,6 +29,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -371,14 +373,14 @@ public class DimensionalLevel extends Level {
                         if (power >= 50) {
                             Buff.affect(mob, ElixirOfAquaticRejuvenation.AquaHealing.class)
                                     .set(power*5);
-                            mob.HP = mob.HT *= 4;
+                            mob.HP = mob.HT = mob.HT.multiply(BigInteger.valueOf(4));
                         }
                         if (power >= 100) {
                             Buff.affect(mob, Overload.class, 20f);
                         }
                         if (power >= 150) {
                             Buff.affect(mob, BlobImmunity.class, power);
-                            mob.HP = mob.HT *= 7;
+                            mob.HP = mob.HT = mob.HT.multiply(BigInteger.valueOf(7));
                         }
                         if (power == 200) {
                             GLog.h("KEEPER: This dimension is about to distort at 50 more mobs. Be ready!");
@@ -394,7 +396,7 @@ public class DimensionalLevel extends Level {
                                 case 5:             buffCls = ChampionEnemy.Growing.class;      break;
                             }
                             Buff.affect(mob, buffCls);
-                            mob.HP = mob.HT *= 10;
+                            mob.HP = mob.HT = mob.HT.multiply(BigInteger.TEN);
                         }
                         if (power == 250) {
                             InterlevelScene.mode = InterlevelScene.Mode.RESET;

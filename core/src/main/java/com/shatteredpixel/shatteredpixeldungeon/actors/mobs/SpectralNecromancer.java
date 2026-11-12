@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -136,7 +140,7 @@ public class SpectralNecromancer extends Necromancer {
 
 				Char blocker = Actor.findChar(summoningPos);
 				if (blocker.alignment != alignment){
-					blocker.damage( (long) (Math.pow(Random.NormalLongRange(2, 10), Dungeon.cycle+1)), new SummoningBlockDamage() );
+					blocker.damage( Big.of((Math.pow(Big.normalRange(BigInteger.TWO, BigInteger.TEN).doubleValue(), Dungeon.cycle+1))), new SummoningBlockDamage() );
 					if (blocker == Dungeon.hero && !blocker.isAlive()){
 						Badges.validateDeathFromEnemyMagic();
 						Dungeon.fail(this);
@@ -152,7 +156,7 @@ public class SpectralNecromancer extends Necromancer {
 		summoning = firstSummon = false;
 
 		Wraith wraith = Wraith.spawnAt(summoningPos, Wraith.class);
-		wraith.adjustStats(0);
+		wraith.adjustStats(BigInteger.ZERO);
 		Dungeon.level.occupyCell( wraith );
 		((SpectralNecromancerSprite)sprite).finishSummoning();
 

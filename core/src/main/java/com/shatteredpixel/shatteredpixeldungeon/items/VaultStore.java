@@ -1,5 +1,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
@@ -59,7 +63,7 @@ public class VaultStore {
 	private static final String PINNED = "pinned";
 	private static final String EXTRA_SLOTS = "extra_slots";
 
-	private static final EnumMap<Mode, Long> extraCache = new EnumMap<>(Mode.class);
+	private static final EnumMap<Mode, BigInteger> extraCache = new EnumMap<>(Mode.class);
 
 	private static final EnumMap<Mode, Integer> pinnedCache = new EnumMap<>(Mode.class);
 
@@ -72,7 +76,7 @@ public class VaultStore {
 		if (list == null) {
 			list = new ArrayList<>();
 			pinnedCache.put(mode, 0);
-			extraCache.put(mode, 0L);
+			extraCache.put(mode, BigInteger.ZERO);
 			String file = fileName(mode);
 			if (FileUtils.fileExists(file)) {
 				try {
@@ -82,7 +86,7 @@ public class VaultStore {
 						if (o instanceof ShulkerBox) list.add((ShulkerBox) o);
 					}
 					if (b.contains(EXTRA_SLOTS)) {
-						extraCache.put(mode, Math.max(0L, b.getLong(EXTRA_SLOTS)));
+						extraCache.put(mode, BigInteger.ZERO.max(Big.getBig(b, EXTRA_SLOTS)));
 					}
 					if (b.contains(PINNED)) {
 						pinnedCache.put(mode, Math.max(0, Math.min(b.getInt(PINNED), list.size())));
@@ -95,15 +99,15 @@ public class VaultStore {
 		return list;
 	}
 
-	public static long extraSlots() {
+	public static BigInteger extraSlots() {
 		boxes();
-		Long e = extraCache.get(mode());
-		return e == null ? 0 : e;
+		BigInteger e = extraCache.get(mode());
+		return e == null ? BigInteger.ZERO : e;
 	}
 
-	public static void setExtraSlots(long n) {
+	public static void setExtraSlots(BigInteger n) {
 		boxes();
-		extraCache.put(mode(), Math.max(0L, n));
+		extraCache.put(mode(), BigInteger.ZERO.max(n));
 	}
 
 	public static int pinnedCount() {
@@ -163,7 +167,7 @@ public class VaultStore {
 			Bundle b = new Bundle();
 			b.put(BOXES, boxes());
 			b.put(PINNED, pinnedCount());
-			b.put(EXTRA_SLOTS, extraSlots());
+			Big.put(b, EXTRA_SLOTS, extraSlots());
 			FileUtils.bundleToFile(fileName(mode()), b);
 			return true;
 		} catch (IOException e) {

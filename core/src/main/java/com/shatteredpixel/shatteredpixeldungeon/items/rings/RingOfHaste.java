@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -40,10 +42,10 @@ public class RingOfHaste extends Ring {
 	public String statsInfo() {
 		if (isIdentified()){
 			String info = Messages.get(this, "stats",
-					Messages.decimalFormat("#.##", 100f * (Math.pow(1.015, soloBuffedBonus()) - 1f)));
-			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)){
+					Messages.decimalFormat("#.##", 100f * (Math.pow(1.015, soloBuffedBonus().doubleValue()) - 1f)));
+			if (isEquipped(Dungeon.hero) && (soloBuffedBonus().compareTo(combinedBuffedBonus(Dungeon.hero)) != 0)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
-						Messages.decimalFormat("#.##", 100f * (Math.pow(1.015, combinedBuffedBonus(Dungeon.hero)) - 1f)));
+						Messages.decimalFormat("#.##", 100f * (Math.pow(1.015, combinedBuffedBonus(Dungeon.hero).doubleValue()) - 1f)));
 			}
 			return info;
 		} else {
@@ -51,9 +53,9 @@ public class RingOfHaste extends Ring {
 		}
 	}
 
-	public String upgradeStat1(long level){
-		if (cursed && cursedKnown) level = Math.min(-1, level-3);
-		return Messages.decimalFormat("#.##", 100f * (Math.pow(1.015, level+1)-1f)) + "%";
+	public String upgradeStat1(BigInteger level){
+		if (cursed && cursedKnown) level = BigInteger.valueOf(-1).min(level.subtract(BigInteger.valueOf(3)));
+		return Messages.decimalFormat("#.##", 100f * (Math.pow(1.015, level.add(BigInteger.ONE).doubleValue())-1f)) + "%";
 	}
 
 	@Override
@@ -62,7 +64,7 @@ public class RingOfHaste extends Ring {
 	}
 	
 	public static float speedMultiplier( Char target ){
-        return Math.min((float)Math.pow(1.015, getBuffedBonus(target, Haste.class)), 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
+        return Math.min((float)Math.pow(1.015, getBuffedBonus(target, Haste.class).doubleValue()), 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
 		//return (float)Math.pow(1.015, getBuffedBonus(target, Haste.class));
 	}
 	

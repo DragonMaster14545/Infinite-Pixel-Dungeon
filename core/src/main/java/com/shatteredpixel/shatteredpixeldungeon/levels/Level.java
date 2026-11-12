@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -317,7 +319,7 @@ public abstract class Level implements Bundlable {
 		createItems();
 
 		if (Dungeon.isChallenged(Challenges.DANCE_FLOOR)) {
-			GameScene.add(Blob.seed(0, 1, DanceFloor.class, this));
+			GameScene.add(Blob.seed(0, BigInteger.ONE, DanceFloor.class, this));
 		}
 
 		Random.popGenerator();
@@ -527,7 +529,7 @@ public abstract class Level implements Bundlable {
             }
         }
         if (Dungeon.weekly) {
-            m.HP = m.HT *= 2;
+            m.HP = m.HT = m.HT.multiply(BigInteger.TWO);
         }
 		return m;
 	}
@@ -539,7 +541,7 @@ public abstract class Level implements Bundlable {
 
 		Mob m = Reflection.newInstance(mobsToSpawnArena.remove(0));
 		if (Dungeon.weekly) {
-			m.HP = m.HT *= 2;
+			m.HP = m.HT = m.HT.multiply(BigInteger.TWO);
 		}
 		return m;
 	}
@@ -1146,7 +1148,7 @@ public abstract class Level implements Bundlable {
 	}
 	
 	public void occupyCell( Char ch ){
-		if (!ch.isImmune(Web.class) && Blob.volumeAt(ch.pos, Web.class) > 0){
+		if (!ch.isImmune(Web.class) && (Blob.volumeAt(ch.pos, Web.class).compareTo(BigInteger.ZERO) > 0)){
 			blobs.get(Web.class).clear(ch.pos);
 			Web.affectChar( ch );
 		}
@@ -1285,7 +1287,7 @@ public abstract class Level implements Bundlable {
 			}
 		}
 
-		if (hard && Blob.volumeAt(cell, Web.class) > 0){
+		if (hard && (Blob.volumeAt(cell, Web.class).compareTo(BigInteger.ZERO) > 0)){
 			blobs.get(Web.class).clear(cell);
 		}
 	}
@@ -1326,14 +1328,14 @@ public abstract class Level implements Bundlable {
 			//allies and specific enemies can see through shrouding fog
 			if ((c.alignment != Char.Alignment.ALLY && !(c instanceof GnollGeomancer))
 					&& Dungeon.level.blobs.containsKey(SmokeScreen.class)
-					&& Dungeon.level.blobs.get(SmokeScreen.class).volume > 0) {
+					&& (Dungeon.level.blobs.get(SmokeScreen.class).volume.compareTo(BigInteger.ZERO) > 0)) {
 				if (blocking == null) {
 					System.arraycopy(Dungeon.level.losBlocking, 0, modifiableBlocking, 0, modifiableBlocking.length);
 					blocking = modifiableBlocking;
 				}
 				Blob s = Dungeon.level.blobs.get(SmokeScreen.class);
 				for (int i = 0; i < blocking.length; i++){
-					if (!blocking[i] && s.cur[i] > 0){
+					if (!blocking[i] && (s.cur[i].compareTo(BigInteger.ZERO) > 0)){
 						blocking[i] = true;
 					}
 				}

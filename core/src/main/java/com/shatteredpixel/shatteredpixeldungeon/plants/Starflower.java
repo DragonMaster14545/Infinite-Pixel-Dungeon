@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.plants;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bless;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -66,13 +68,13 @@ public class Starflower extends Plant {
 		}
 		
 		@Override
-		public long value() {
-			return 30 * quantity;
+		public BigInteger value() {
+			return BigInteger.valueOf(30).multiply(quantity);
 		}
 
 		@Override
-		public long energyVal() {
-			return 3 * quantity;
+		public BigInteger energyVal() {
+			return BigInteger.valueOf(3).multiply(quantity);
 		}
 	}
 }

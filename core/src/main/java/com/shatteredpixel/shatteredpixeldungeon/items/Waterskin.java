@@ -24,6 +24,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -90,13 +94,13 @@ public class Waterskin extends Item {
 
 			if (volume > 0) {
 				
-				float missingHealthPercent = 1f - (hero.HP / (float)hero.HT);
+				float missingHealthPercent = Big.dec(1f).subtract((Big.div(Big.dec(hero.HP), Big.dec(hero.HT.floatValue())))).floatValue();
 
-				long curShield = 0;
+				BigInteger curShield = BigInteger.ZERO;
 				if (hero.buff(Barrier.class) != null) curShield = hero.buff(Barrier.class).shielding();
-				int maxShield = Math.round(hero.HT);
+				int maxShield = Big.toInt(hero.HT);
 				if (hero.subClass == HeroSubClass.WARDEN){
-					float missingShieldPercent = 1f - (curShield / (float)maxShield);
+					float missingShieldPercent = Big.dec(1f).subtract((Big.div(Big.dec(curShield), Big.dec((float)maxShield)))).floatValue();
 					missingShieldPercent *= 1f;
 					if (missingShieldPercent > 0){
 						missingHealthPercent += missingShieldPercent;
@@ -109,7 +113,7 @@ public class Waterskin extends Item {
 
 				if (Dewdrop.consumeDew(dropsNeeded, hero, true)){
 					volume -= dropsNeeded;
-					Catalog.countUses(Dewdrop.class, dropsNeeded);
+					Catalog.countUses(Dewdrop.class, BigInteger.valueOf(dropsNeeded));
 
 					hero.spend(TIME_TO_DRINK);
 					hero.busy();
@@ -167,7 +171,7 @@ public class Waterskin extends Item {
 	public void collectDew( Dewdrop dew ) {
 
 		GLog.i( Messages.get(this, "collected") );
-		volume += dew.quantity;
+		volume += Big.toLong(dew.quantity);
 		if (volume >= MAX_VOLUME) {
 			volume = MAX_VOLUME;
 			GLog.p( Messages.get(this, "full") );

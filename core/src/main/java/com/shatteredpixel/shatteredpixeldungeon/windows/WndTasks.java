@@ -1,5 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Tasks;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -34,7 +36,7 @@ public class WndTasks extends Window {
             add( bg );
 
             String label = task.description();
-            if (task.target > 1) {
+            if ((task.target.compareTo(BigInteger.ONE) > 0)) {
                 label += "  (" + task.progress + "/" + task.target + ")";
             }
             RenderedTextBlock text = PixelScene.renderTextBlock( label, 7 );

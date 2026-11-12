@@ -24,6 +24,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+
+import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.*;
@@ -49,7 +52,7 @@ public class KeyDisplay extends Visual {
 	private SmartTexture tx = TextureCache.get(Assets.Interfaces.MENU_BTN);
 	
 	private boolean dirty = true;
-	private long[] keys;
+	private BigInteger[] keys;
 	
 	//mapping of key types to slots in the array, 0 is reserved for black (missed) keys
 	//this also determines the order these keys will appear (lower first)
@@ -69,26 +72,26 @@ public class KeyDisplay extends Visual {
 	}
 	
 	public void updateKeys(){
-		keys = new long[keyMap.size()+1];
+		keys = Big.newArray(keyMap.size()+1);
 		
 		for (Notes.KeyRecord rec : Notes.getRecords(Notes.KeyRecord.class)){
 			if (rec.depth() < Dungeon.depth){
 				//only ever 1 black key
-				keys[0] = 1;
+				keys[0] = BigInteger.ONE;
 			} else if (rec.depth() == Dungeon.depth){
-				keys[keyMap.get(rec.type())] += rec.quantity();
+				keys[keyMap.get(rec.type())] = keys[keyMap.get(rec.type())].add(rec.quantity());
 			}
 		}
 		
 		totalKeys = 0;
-		for (long k : keys){
-			totalKeys += k;
+		for (BigInteger k : keys){
+			totalKeys += k.intValue();
 		}
 		dirty = true;
 	}
 	
-	public long keyCount(){
-		return totalKeys;
+	public BigInteger keyCount(){
+		return BigInteger.valueOf(totalKeys);
 	}
 	
 	@Override
@@ -131,14 +134,14 @@ public class KeyDisplay extends Visual {
 		
 		while (totalKeys > maxKeys){
 			Class<? extends Key> mostType = null;
-			long mostNum = 0;
+			BigInteger mostNum = BigInteger.ZERO;
 			for (Class<?extends Key> k : keyMap.keySet()){
-				if (keys[keyMap.get(k)] >= mostNum){
+				if ((keys[keyMap.get(k)].compareTo(mostNum) >= 0)){
 					mostType = k;
 					mostNum = keys[keyMap.get(k)];
 				}
 			}
-			keys[keyMap.get(mostType)]--;
+			keys[keyMap.get(mostType)] = keys[keyMap.get(mostType)].subtract(BigInteger.ONE);
 			totalKeys--;
 		}
 		
@@ -156,14 +159,14 @@ public class KeyDisplay extends Visual {
 		for (int i = 0; i < totalKeys; i++){
 			int keyIdx = 0;
 			
-			if (i == 0 && keys[0] > 0){
+			if (i == 0 && (keys[0].compareTo(BigInteger.ZERO) > 0)){
 				//black key
 				keyIdx = 0;
 				
 			} else {
 				for (int j = 1; j < keys.length; j++){
-					if (keys[j] > 0){
-						keys[j]--;
+					if ((keys[j].compareTo(BigInteger.ZERO) > 0)){
+						keys[j] = keys[j].subtract(BigInteger.ONE);
 						keyIdx = j;
 						break;
 					}

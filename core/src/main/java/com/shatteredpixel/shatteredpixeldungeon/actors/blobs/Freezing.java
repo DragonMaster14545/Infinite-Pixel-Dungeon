@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
 
+
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -49,20 +51,20 @@ public class Freezing extends Blob {
 		for (int i = area.left-1; i <= area.right; i++) {
 			for (int j = area.top-1; j <= area.bottom; j++) {
 				cell = i + j*Dungeon.level.width();
-				if (cur[cell] > 0) {
+				if ((cur[cell].compareTo(BigInteger.ZERO) > 0)) {
 					
-					if (fire != null && fire.volume > 0 && fire.cur[cell] > 0){
+					if (fire != null && (fire.volume.compareTo(BigInteger.ZERO) > 0) && (fire.cur[cell].compareTo(BigInteger.ZERO) > 0)){
 						fire.clear(cell);
-						off[cell] = cur[cell] = 0;
+						off[cell] = cur[cell] = BigInteger.ZERO;
 						continue;
 					}
 					
 					Freezing.freeze(cell);
 					
-					off[cell] = cur[cell] - 1;
-					volume += off[cell];
+					off[cell] = cur[cell].subtract(BigInteger.ONE);
+					volume = volume.add(off[cell]);
 				} else {
-					off[cell] = 0;
+					off[cell] = BigInteger.ZERO;
 				}
 			}
 		}
@@ -120,12 +122,12 @@ public class Freezing extends Blob {
 		}
 
 		Fire fire = (Fire) Dungeon.level.blobs.get(Fire.class);
-		if (fire != null && fire.volume > 0) {
+		if (fire != null && (fire.volume.compareTo(BigInteger.ZERO) > 0)) {
 			fire.clear( cell );
 		}
 
 		MagicalFireRoom.EternalFire eternalFire = (MagicalFireRoom.EternalFire)Dungeon.level.blobs.get(MagicalFireRoom.EternalFire.class);
-		if (eternalFire != null && eternalFire.volume > 0) {
+		if (eternalFire != null && (eternalFire.volume.compareTo(BigInteger.ZERO) > 0)) {
 			eternalFire.clear( cell );
 		}
 		

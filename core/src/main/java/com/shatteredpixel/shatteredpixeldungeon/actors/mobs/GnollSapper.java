@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+
+
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -41,10 +45,10 @@ public class GnollSapper extends Mob {
 
 		spriteClass = GnollSapperSprite.class;
 
-		HP = HT = Dungeon.getCycleMultiplier(45);
-		defenseSkill = Dungeon.getCycleMultiplier(15);
+		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(45));
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(15));
 
-		EXP = Dungeon.getCycleMultiplier(10);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.TEN);
 		maxLvl = -2;
 
 		properties.add(Property.MINIBOSS);
@@ -95,24 +99,24 @@ public class GnollSapper extends Mob {
 	}
 
 	@Override
-	public long damageRoll() {
-		return Random.NormalLongRange( Dungeon.getCycleMultiplier(1), Dungeon.getCycleMultiplier(6) );
+	public BigInteger damageRoll() {
+		return Big.normalRange(Dungeon.getCycleMultiplier(BigInteger.ONE), Dungeon.getCycleMultiplier(BigInteger.valueOf(6)));
 	}
 
 	@Override
-	public long attackSkill(Char target ) {
-		return Dungeon.getCycleMultiplier(18);
+	public BigInteger attackSkill(Char target ) {
+		return Dungeon.getCycleMultiplier(BigInteger.valueOf(18));
 	}
 
 	@Override
-	public void damage(long dmg, Object src) {
+	public void damage(BigInteger dmg, Object src) {
 		super.damage(dmg, src);
-		abilityCooldown -= dmg/10f;
+		abilityCooldown -= Big.toLong((Big.div(Big.dec(dmg), Big.dec(10f))).toBigInteger());
 	}
 
 	@Override
-	public long cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(0), Dungeon.getCycleMultiplier(6));
+	public BigInteger cycledDrRoll() {
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(6)));
 	}
 
 	@Override
