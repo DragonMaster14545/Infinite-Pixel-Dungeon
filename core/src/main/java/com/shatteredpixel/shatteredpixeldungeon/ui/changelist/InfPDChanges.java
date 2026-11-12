@@ -81,6 +81,20 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.PLUS.get(), "Prolonging numbers",
+                "The ultimate significant change in this update is tweaking certain numbers from _64-bit variables to more than that (I can't imagine the limits right now)_, increasing their max value from ~9 quintillion to beyond the quantifiable infinity (~1e308):\n" +
+                        "_-_ gold and alchemical energy\n" +
+                        "_-_ mob experience value\n" +
+                        "_-_ current and max health of living entities\n" +
+                        "_-_ dealt damage from most of sources\n" +
+                        "_-_ amount of stored and gained experience\n" +
+                        "_-_ upgrades and amount of items\n" +
+                        "_-_ wand and artifact charges\n" +
+                        "_-_ equipment stats like damage, blocking and other effects\n" +
+                        "_-_ limits on buffs like barksking and healing\n" +
+                        "_-_ statistics and ranking stats\n\n" +
+                        "This is still potentially unstable overhaul to the codebase, and you can now grind until your device crashes."));
+
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.GALACTIC_INFUSION), new GalacticInfusion().trueName(),
                 "You can now put runes when the enchantment is Galactic! Well, you need to craft Enchantment Rune to add them in your enchantment."));
 
@@ -98,7 +112,8 @@ public class InfPDChanges {
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Adjusted the columns of WndBag, 5 for portrait (from 7) and 13 for landscape (from 11), and the Equipment Bag's base height is now the same as other bags\n" +
-                            "_-_ Ring slot upgrades increased to 65, from 18"
+                            "_-_ Ring slot upgrades increased to 65, from 18\n" +
+                            "_-_ Removed the nullifying exp system when reaching a certain level"
         ));
 
         changes = new ChangeInfo("D", false, "");
