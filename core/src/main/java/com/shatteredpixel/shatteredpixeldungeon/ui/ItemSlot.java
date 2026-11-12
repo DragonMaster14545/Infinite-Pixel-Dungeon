@@ -307,7 +307,7 @@ public class ItemSlot extends Button {
 		if ((trueLvl.compareTo(BigInteger.ZERO) != 0) || (buffedLvl.compareTo(BigInteger.ZERO) != 0)) {
 			level.text( Messages.format( TXT_LEVEL, buffedLvl ) );
 			level.measure();
-			if (level.width > width - (margin.left + margin.right) * 1.25f){
+			if (level.width > width - (margin.left + margin.right) * 1.25f && trueLvl.compareTo(BigInteger.valueOf(999999999L)) < 0 ){
 				level.scale.set(PixelScene.align(1f - 0.015f*(63 - Long.numberOfLeadingZeros(Big.toLong(buffedLvl)))));
 			} else {
 				level.scale.set(1f);

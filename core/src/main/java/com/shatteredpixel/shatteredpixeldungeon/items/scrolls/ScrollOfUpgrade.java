@@ -94,7 +94,7 @@ public class ScrollOfUpgrade extends InventoryScroll {
 					GameScene.selectItem(itemSelector2);
 				} else {
 					curUser = hero;
-					GameScene.show(new WndTextInput("Enter amount of upgrades to be used:", null, "", 15, false,
+					GameScene.show(new WndTextInput("Enter amount of upgrades to be used:", null, "", Integer.MAX_VALUE, false,
 							"Accept", "Cancel") {
 						@Override public void onSelect(boolean positive, String text) {
 							if(!positive) return;
