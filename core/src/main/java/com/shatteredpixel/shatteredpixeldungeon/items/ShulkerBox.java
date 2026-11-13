@@ -163,6 +163,10 @@ public class ShulkerBox extends Item {
     }
 
     private void store(Hero hero, Item item) {
+        store(hero, item, null);
+    }
+
+    private void store(Hero hero, Item item, BigInteger amount) {
         if (!canStore(item)) {
             GLog.w(Messages.get(this, "cannot_store"));
             return;
@@ -179,15 +183,19 @@ public class ShulkerBox extends Item {
 			return;
 		}
 
+		BigInteger want = amount == null ? item.quantity() : amount.min(item.quantity());
+		BigInteger count = want.min(room);
+		if (count.signum() <= 0) return;
+
 		Item toStore = item;
-		if ((item.quantity().compareTo(room) > 0)) {
-			Item part = item.split(room);
+		if ((item.quantity().compareTo(count) > 0)) {
+			Item part = item.split(count);
 			if (part == null) {
-				GLog.w(Messages.get(this, "stack_limit", maxQuantity()));
+				GLog.w(Messages.get(this, "cannot_split"));
 				return;
 			}
 			toStore = part;
-			GLog.i(Messages.get(this, "stack_split", room, maxQuantity()));
+			if (want.compareTo(room) > 0) GLog.i(Messages.get(this, "stack_split", room, maxQuantity()));
 		} else {
 			item.detachAll(hero.belongings.backpack);
 		}
@@ -223,6 +231,72 @@ public class ShulkerBox extends Item {
         GLog.i(Messages.get(this, "taken", item.name()));
         updateQuickslot();
         return true;
+    }
+
+    public boolean takeOut(Hero hero, Item item, BigInteger amount) {
+        if (indexOf(item) < 0) return false;
+        if (amount == null || !item.stackable || amount.compareTo(item.quantity()) >= 0) {
+            return takeOut(hero, item);
+        }
+        if (amount.signum() <= 0) return false;
+
+        Item part = item.split(amount);
+        if (part == null) {
+            GLog.w(Messages.get(this, "cannot_split"));
+            return false;
+        }
+        if (!part.collect(hero.belongings.backpack)) {
+            item.quantity(item.quantity().add(amount));
+            GLog.w(Messages.get(this, "pack_full"));
+            return false;
+        }
+
+        hero.sprite.operate(hero.pos);
+        hero.spend(1f);
+        hero.busy();
+        Sample.INSTANCE.play(Assets.Sounds.ITEM);
+        GLog.i(Messages.get(this, "taken", part.name()));
+        updateQuickslot();
+        return true;
+    }
+
+    public interface AmountCallback {
+        void apply(BigInteger amount);
+    }
+
+    public static void promptAmount(final ShulkerBox box, final String key, final BigInteger max, final AmountCallback callback) {
+        GameScene.show(new WndTextInput(
+                Messages.get(box, key + "_amount_title"),
+                Messages.get(box, "amount_body", Big.fmt(max)),
+                max.toString(),
+                40,
+                false,
+                Messages.get(box, "amount_confirm"),
+                Messages.get(box, "amount_cancel")) {
+            @Override
+            public void onSelect(boolean positive, String text) {
+                if (!positive) return;
+                String t = text == null ? "" : text.trim().toLowerCase();
+                BigInteger n;
+                if (t.isEmpty() || t.equals("all") || t.equals("max")) {
+                    n = max;
+                } else if (t.equals("half")) {
+                    n = max.divide(BigInteger.TWO).max(BigInteger.ONE);
+                } else {
+                    try {
+                        n = Big.parse(t);
+                    } catch (NumberFormatException e) {
+                        GLog.w(Messages.get(box, "amount_invalid", text.trim()));
+                        return;
+                    }
+                }
+                if (n.signum() <= 0) {
+                    GLog.w(Messages.get(box, "amount_invalid", text == null ? "" : text.trim()));
+                    return;
+                }
+                callback.apply(n.min(max));
+            }
+        });
     }
 
     @Override
@@ -276,8 +350,23 @@ public class ShulkerBox extends Item {
             }
 
             @Override
-            public void onSelect(Item item) {
-                if (item != null) store(hero, item);
+            public void onSelect(final Item item) {
+                if (item == null) return;
+                if (!canStore(item)) {
+                    store(hero, item);
+                    return;
+                }
+                BigInteger max = item.quantity().min(quantityRoomFor(item));
+                if (item.stackable && max.compareTo(BigInteger.ONE) > 0) {
+                    promptAmount(ShulkerBox.this, "store", max, new AmountCallback() {
+                        @Override
+                        public void apply(BigInteger amount) {
+                            store(hero, item, amount);
+                        }
+                    });
+                } else {
+                    store(hero, item);
+                }
             }
         });
     }
@@ -504,7 +593,16 @@ public class ShulkerBox extends Item {
 		if ((level().compareTo(BigInteger.valueOf(MAX_LEVEL)) >= 0)) return this;
 		super.upgrade();
 		levelKnown = true;
-		GLog.p(Messages.get(this, "upgraded", capacity()));
+		return this;
+	}
+
+	@Override
+	public Item upgrade(BigInteger n) {
+		BigInteger room = BigInteger.valueOf(MAX_LEVEL).subtract(level()).max(BigInteger.ZERO);
+		n = n.min(room);
+		if (n.signum() <= 0) return this;
+		super.upgrade(n);
+		levelKnown = true;
 		return this;
 	}
 

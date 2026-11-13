@@ -153,24 +153,24 @@ public class TraderStock {
 	private static Item rollItem() {
 		// we sold clean items here of course, we are a trader....
 		Item item = null;
-		for (int attempt = 0; attempt < 8; attempt++) {
+		boolean clean = false;
+		for (int attempt = 0; attempt < 8 && !clean; attempt++) {
 			Generator.Category cat = CATEGORIES[Random.chances( WEIGHTS )];
 			item = Generator.randomUsingDefaults( cat );
 			if ( item == null || item instanceof Gold ) continue;
 			if (item.cursed || (item.level().compareTo(BigInteger.ZERO) < 0) || (item.value().compareTo(BigInteger.ZERO) <= 0)) continue;
-			break;
+			clean = true;
 		}
-		if ( item == null || item instanceof Gold ) item = new Food();
+		if ( !clean ) item = new Food();
 		if ( item.isUpgradable() ) item.identify();
 		return item;
 	}
 
-	public static String buy( Hero hero, int index, boolean withEnergy ) {
+	public static String buy( Hero hero, Offer offer, boolean withEnergy ) {
 		if ( hero == null || !hero.isAlive() ) return "failed";
 
 		ArrayList<Offer> list = offers();
-		if ( index < 0 || index >= list.size() ) return "failed";
-		Offer offer = list.get( index );
+		if ( offer == null || !list.contains( offer ) ) return "failed";
 		if ( offer.sold ) return "sold_out";
 
 		BigInteger cost = withEnergy ? offer.energy : offer.gold;

@@ -654,7 +654,7 @@ public class Item implements Bundlable {
 		return this;
 	}
 	
-	final public Item upgrade(BigInteger n ) {
+	public Item upgrade(BigInteger n ) {
 		if ((n.compareTo(BigInteger.valueOf(20)) > 0)){
 			this.level = this.level.add(n.subtract(BigInteger.valueOf(20)));
 			for (int i=0; i < 20; i++) {

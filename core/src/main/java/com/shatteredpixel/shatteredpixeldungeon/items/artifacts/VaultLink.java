@@ -454,7 +454,7 @@ public class VaultLink extends Artifact {
 			for (Item ingredient : ingredients){
 				if ((ingredient.quantity().compareTo(BigInteger.ZERO) > 0)) {
 					if (ingredient instanceof ShulkerBox) {
-						shulker = true;
+						shulker = ((ShulkerBox) ingredient).isEmpty();
 					} else if (ingredient instanceof ScrollOfUpgrade) {
 						scroll = true;
 					} else if (ingredient instanceof ElixirOfMight) {

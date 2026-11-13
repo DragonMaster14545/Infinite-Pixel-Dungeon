@@ -145,6 +145,7 @@ public class WndVaultSell extends Window {
 		gold.text( Messages.get( this, "gold", Big.fmt(Dungeon.gold) ) );
 		energy.text( Messages.get( this, "energy", Big.fmt(Dungeon.energy) ) );
 
+		float scrollY = content.camera != null ? content.camera.scroll.y : 0;
 		content.clear();
 		ArrayList<Item> items = sellable();
 
@@ -171,33 +172,34 @@ public class WndVaultSell extends Window {
 			PixelScene.align( text );
 			content.add( text );
 
-			final long g = Big.toLong(item.value());
-			final long e = Big.toLong(item.energyVal());
+			final BigInteger g = item.value();
+			final BigInteger e = item.energyVal();
 
-			RedButton goldBtn = new RedButton( Messages.get( this, "sell_gold", fmt( g ) ), 7 ) {
+			RedButton goldBtn = new RedButton( Messages.get( this, "sell_gold", Big.fmt( g ) ), 7 ) {
 				@Override
 				public void onClick() {
 					sell( item, false );
 				}
 			};
 			goldBtn.setRect( 0, cy + ICON, bw, BTN_H );
-			goldBtn.enable( g > 0 );
+			goldBtn.enable( g.signum() > 0 );
 			content.add( goldBtn );
 
-			RedButton energyBtn = new RedButton( Messages.get( this, "sell_energy", fmt( e ) ), 7 ) {
+			RedButton energyBtn = new RedButton( Messages.get( this, "sell_energy", Big.fmt( e ) ), 7 ) {
 				@Override
 				public void onClick() {
 					sell( item, true );
 				}
 			};
 			energyBtn.setRect( bw + GAP, cy + ICON, bw, BTN_H );
-			energyBtn.enable( e > 0 );
+			energyBtn.enable( e.signum() > 0 );
 			content.add( energyBtn );
 
 			cy += ROW_H;
 		}
 		content.setSize( WIDTH, cy );
 		pane.setSize( WIDTH, listH );
+		pane.scrollTo( 0, scrollY );
 	}
 
 	private void sell( final Item item, final boolean forEnergy ) {

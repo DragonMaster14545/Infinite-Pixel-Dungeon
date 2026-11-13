@@ -116,6 +116,10 @@ public class InfPDChanges {
                             "_-_ Removed the nullifying exp system when reaching a certain level"
         ));
 
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
+                "_-_ Fixed an occasional upgrade popup on shulker boxes when opening a save\n"
+        ));
+
         changes = new ChangeInfo("D", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);

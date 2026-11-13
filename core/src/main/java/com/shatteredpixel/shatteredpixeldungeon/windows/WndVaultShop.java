@@ -194,7 +194,7 @@ public class WndVaultShop extends Window {
 		BigInteger[] levels = VaultLink.SHOP_LEVELS;
 		for (int i = 0; i < levels.length; i++) {
 			BigInteger level = levels[i].min(BigInteger.valueOf(ShulkerBox.MAX_LEVEL));
-			setRow(i, Big.toLong(link.goldPrice(level)), Big.toLong(link.energyPrice(level)));
+			setRow(i, link.goldPrice(level), link.energyPrice(level));
 		}
 
 		BigInteger[] packs = VaultLink.SLOT_PACKS;
@@ -211,16 +211,16 @@ public class WndVaultShop extends Window {
 				energyBtn[i].text(Messages.get(WndVaultShop.class, "slots_max"));
 				energyBtn[i].enable(false);
 			} else {
-				setRow(i, Big.toLong(link.slotGoldPrice(packs[p])), Big.toLong(link.slotEnergyPrice(packs[p])));
+				setRow(i, link.slotGoldPrice(packs[p]), link.slotEnergyPrice(packs[p]));
 			}
 		}
 	}
 
-	private void setRow(int i, long g, long e) {
-		goldBtn[i].text(Messages.get(WndVaultShop.class, "buy_gold", fmt(g)));
-		goldBtn[i].enable((Dungeon.gold.compareTo(BigInteger.valueOf(g)) >= 0));
-		energyBtn[i].text(Messages.get(WndVaultShop.class, "buy_energy", fmt(e)));
-		energyBtn[i].enable((Dungeon.energy.compareTo(BigInteger.valueOf(e)) >= 0));
+	private void setRow(int i, BigInteger g, BigInteger e) {
+		goldBtn[i].text(Messages.get(WndVaultShop.class, "buy_gold", Big.fmt(g)));
+		goldBtn[i].enable((Dungeon.gold.compareTo(g) >= 0));
+		energyBtn[i].text(Messages.get(WndVaultShop.class, "buy_energy", Big.fmt(e)));
+		energyBtn[i].enable((Dungeon.energy.compareTo(e) >= 0));
 	}
 
 	@Override

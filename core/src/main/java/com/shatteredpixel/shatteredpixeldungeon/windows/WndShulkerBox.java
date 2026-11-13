@@ -188,16 +188,31 @@ public class WndShulkerBox extends Window {
 		GameScene.show(new WndShulkerBox(box, index / PAGE_SIZE));
 	}
 
-	private void takeOut(Item item) {
+	private void takeOut(final Item item) {
 		if (item == null || Dungeon.hero == null || !Dungeon.hero.isAlive()) return;
 
-		hide();
-		box.takeOut(Dungeon.hero, item);
+		if (item.stackable && item.quantity().compareTo(BigInteger.ONE) > 0) {
+			ShulkerBox.promptAmount(box, "take", item.quantity(), new ShulkerBox.AmountCallback() {
+				@Override
+				public void apply(BigInteger amount) {
+					finishTake(item, amount);
+				}
+			});
+		} else {
+			finishTake(item, null);
+		}
+	}
 
-        if (!box.isEmpty()) {
-            GameScene.show(new WndShulkerBox(box, (int) page));
-        }
-    }
+	private void finishTake(Item item, BigInteger amount) {
+		if (Dungeon.hero == null || !Dungeon.hero.isAlive()) return;
+
+		hide();
+		box.takeOut(Dungeon.hero, item, amount);
+
+		if (!box.isEmpty()) {
+			GameScene.show(new WndShulkerBox(box, (int) page));
+		}
+	}
 
     @Override
     public void hide() {

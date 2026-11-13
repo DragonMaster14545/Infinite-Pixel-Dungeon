@@ -150,13 +150,13 @@ public class WndTraderShop extends Window {
 		gold.text( Messages.get( this, "gold", Big.fmt(Dungeon.gold) ) );
 		energy.text( Messages.get( this, "energy", Big.fmt(Dungeon.energy) ) );
 
+		float scrollY = content.camera != null ? content.camera.scroll.y : 0;
 		content.clear();
 		ArrayList<TraderStock.Offer> offers = TraderStock.offers();
 
 		float bw = ( WIDTH - GAP ) / 2f;
 		float cy = 0;
 		for (int i = 0; i < offers.size(); i++) {
-			final int index = i;
 			final TraderStock.Offer offer = offers.get( i );
 			final Item item = offer.item;
 
@@ -181,7 +181,7 @@ public class WndTraderShop extends Window {
 					: Messages.get( this, "buy_gold", Big.fmt(offer.gold) ), 7 ) {
 				@Override
 				public void onClick() {
-					buy( index, false );
+					buy( offer, false );
 				}
 			};
 			goldBtn.setRect( 0, cy + ICON, bw, BTN_H );
@@ -192,7 +192,7 @@ public class WndTraderShop extends Window {
 					: Messages.get( this, "buy_energy", Big.fmt(offer.energy) ), 7 ) {
 				@Override
 				public void onClick() {
-					buy( index, true );
+					buy( offer, true );
 				}
 			};
 			energyBtn.setRect( bw + GAP, cy + ICON, bw, BTN_H );
@@ -203,10 +203,11 @@ public class WndTraderShop extends Window {
 		}
 		content.setSize( WIDTH, cy );
 		pane.setSize( WIDTH, listH );
+		pane.scrollTo( 0, scrollY );
 	}
 
-	private void buy( int index, boolean withEnergy ) {
-		String error = TraderStock.buy( Dungeon.hero, index, withEnergy );
+	private void buy( TraderStock.Offer offer, boolean withEnergy ) {
+		String error = TraderStock.buy( Dungeon.hero, offer, withEnergy );
 		if (error != null) {
 			Game.scene().addToFront( new WndMessage( Messages.get( WndTraderShop.class, error ) ) );
 		} else {
