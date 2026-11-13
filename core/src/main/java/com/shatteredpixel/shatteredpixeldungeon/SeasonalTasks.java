@@ -172,6 +172,7 @@ public class SeasonalTasks {
         tasks = new ArrayList<>();
         if (bundle.contains( TASK_TYPES )){
             String[] types = bundle.getStringArray( TASK_TYPES );
+            if (types == null) types = new String[0];
             BigInteger[] targets = Big.getBigArray(bundle, TASK_TARGETS);
             BigInteger[] progress = Big.getBigArray(bundle, TASK_PROGRESS);
             boolean[] completed = bundle.getBooleanArray( TASK_COMPLETED );
@@ -179,10 +180,16 @@ public class SeasonalTasks {
                     ? bundle.getBooleanArray( TASK_CLAIMED ) : new boolean[types.length];
 
             for (int i = 0; i < types.length; i++){
-                Task t = new Task( Type.valueOf( types[i] ), targets[i] );
-                t.progress = progress[i];
-                t.completed = completed[i];
-                t.claimed = claimed[i];
+                Type type;
+                try {
+                    type = Type.valueOf( types[i] );
+                } catch (IllegalArgumentException e){
+                    continue;
+                }
+                Task t = new Task( type, i < targets.length ? targets[i] : BigInteger.ONE );
+                t.progress = i < progress.length ? progress[i] : BigInteger.ZERO;
+                t.completed = i < completed.length && completed[i];
+                t.claimed = i < claimed.length && claimed[i];
                 tasks.add( t );
             }
         }

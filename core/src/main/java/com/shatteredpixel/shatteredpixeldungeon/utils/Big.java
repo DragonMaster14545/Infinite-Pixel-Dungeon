@@ -158,7 +158,19 @@ public final class Big {
 	}
 	public static BigInteger[] getBigArray(Bundle b, String key){
 		if (!b.contains(key)) return new BigInteger[0];
-		String[] s = b.getStringArray(key);
+		String[] s = null;
+		try { s = b.getStringArray(key); } catch (Exception e){ s = null; }
+		if (s == null || s.length == 0){
+			try {
+				long[] l = b.getLongArray(key);
+				if (l != null && l.length > 0){
+					BigInteger[] old = new BigInteger[l.length];
+					for (int i = 0; i < l.length; i++) old[i] = BigInteger.valueOf(l[i]);
+					return old;
+				}
+			} catch (Exception e){
+			}
+		}
 		if (s == null) return new BigInteger[0];
 		BigInteger[] out = new BigInteger[s.length];
 		for (int i = 0; i < s.length; i++){
