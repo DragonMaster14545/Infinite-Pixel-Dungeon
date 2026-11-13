@@ -26,6 +26,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
 
 
+import com.shatteredpixel.shatteredpixeldungeon.items.ShulkerBox;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -56,21 +57,18 @@ public class Extractor extends InventorySpell {
 
 	@Override
 	protected boolean usableOnItem(Item item) {
-		return item.isUpgradable() && !((item.level().compareTo(BigInteger.ZERO) <= 0));
+		return (item.isUpgradable() && !((item.level().compareTo(BigInteger.ZERO) <= 0))) && !(item instanceof ShulkerBox || item instanceof MissileWeapon);
 	}
 
 	@Override
 	protected void onItemSelected(Item item) {
 
-		if (!(item instanceof MissileWeapon)) {
-			Dungeon.level.drop(new ScrollOfUpgrade().quantity(item.level()), curUser.pos).sprite.drop();
-			item.level(BigInteger.ZERO);
+		Dungeon.level.drop(new ScrollOfUpgrade().quantity(item.level()), curUser.pos).sprite.drop();
+		item.level(BigInteger.ZERO);
 
-			GLog.p(Messages.get(this, "extracted"));
-			curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
-		} else {
+		GLog.p(Messages.get(this, "extracted"));
+		curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
 
-		}
 	}
 	
 	@Override
