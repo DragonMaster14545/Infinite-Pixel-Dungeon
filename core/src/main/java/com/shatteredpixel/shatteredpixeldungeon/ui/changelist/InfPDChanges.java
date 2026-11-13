@@ -117,7 +117,8 @@ public class InfPDChanges {
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
-                "_-_ Fixed an occasional upgrade popup on shulker boxes when opening a save\n"
+                "_-_ Fixed an occasional upgrade popup on shulker boxes when opening a save\n" +
+                            "_-_ Fixed the incorrect heap pickup on item getter spell\n"
         ));
 
         changes = new ChangeInfo("D", false, "");

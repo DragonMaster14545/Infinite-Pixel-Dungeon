@@ -86,9 +86,12 @@ public class ItemGetter extends TargetedSpell{
                     new WndHeapPaged.Listener() {
                         @Override
                         public void onSelect(Item item) {
-                            GLog.i(Messages.get(ItemGetter.class, "found", item.name()));
+                            if (Dungeon.level.heaps.get(heap.pos) != heap || !heap.items.contains(item)) {
+                                GLog.w(Messages.get(ItemGetter.class, "no_match"));
+                                return;
+                            }
                             if (item.doPickUp(hero, heap.pos)) {
-                                heap.pickUp();
+                                heap.remove(item);
                                 GLog.i(Messages.capitalize(Messages.get(hero, "you_now_have", item.name())));
                             } else {
                                 GLog.w(Messages.get(ItemGetter.class, "cant_grab", item.name()));
