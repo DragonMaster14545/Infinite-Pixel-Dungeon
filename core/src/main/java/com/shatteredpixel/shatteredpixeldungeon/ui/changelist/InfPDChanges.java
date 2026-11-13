@@ -107,18 +107,20 @@ public class InfPDChanges {
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
                 "_-_ Increased overall chances of all rarities\n" +
-                        "_-_ Nerfed Raritizing Magic chance to 0.1%, from 7%"
+                        "_-_ Nerfed Raritizing Magic chance to 0.1%, from 7%\n" +
+                        "_-_ Pocket Alchemy spell now appears in the dungeon in 5% chance, from 4%"
         ));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ Adjusted the columns of WndBag, 5 for portrait (from 7) and 13 for landscape (from 11), and the Equipment Bag's base height is now the same as other bags\n" +
                             "_-_ Ring slot upgrades increased to 65, from 18\n" +
-                            "_-_ Removed the nullifying exp system when reaching a certain level"
+                            "_-_ Removed the nullifying exp system when reaching a certain level\n" +
+                            "_-_ Prism Box now spawns with 50% chance"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
                 "_-_ Fixed an occasional upgrade popup on shulker boxes when opening a save\n" +
-                            "_-_ Fixed the incorrect heap pickup on item getter spell\n"
+                            "_-_ Fixed the incorrect heap pickup on item getter spell"
         ));
 
         changes = new ChangeInfo("D", false, "");

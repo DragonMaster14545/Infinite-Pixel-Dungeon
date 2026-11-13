@@ -304,7 +304,8 @@ public class ShopRoom extends SpecialRoom {
 		}
 		if (Dungeon.depth > 6) itemsToSpawn.add(new QualityBag());
         if (Random.Int(5) == 0) itemsToSpawn.add(Generator.random(Generator.Category.TUBES).quantity(BigInteger.valueOf(Random.IntRange(2, 5))));
-        if (Random.Int(25) == 0) itemsToSpawn.add(new PocketAlchemy());
+        if (Random.Int(20) == 0) itemsToSpawn.add(new PocketAlchemy());
+		if (Random.Int(2) == 0) itemsToSpawn.add(new PrismBox());
 		if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_5)) itemsToSpawn.add(new Clayball());
 		itemsToSpawn.add( new Alchemize().quantity(BigInteger.valueOf(Random.IntRange(2, 3))));
 
