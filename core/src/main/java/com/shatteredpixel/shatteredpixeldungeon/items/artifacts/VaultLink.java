@@ -60,7 +60,7 @@ public class VaultLink extends Artifact {
 	}
 
 	public BigInteger packSize(BigInteger pack) {
-		return BigInteger.ZERO.max(pack.min(BigInteger.valueOf(10000).subtract(VaultStore.extraSlots())));
+		return BigInteger.ZERO.max(pack.min(BigInteger.valueOf(Integer.MAX_VALUE).subtract(VaultStore.extraSlots())));
 	}
 
 	public BigInteger slotGoldPrice(BigInteger pack) {
