@@ -21,7 +21,7 @@ allprojects {
         appName = 'Infinite Pixel Dungeon'
         appPackageName = 'com.dragonmaster14545.infinitepixeldungeon.com'
 
-        appVersionCode = 702
+        appVersionCode = 703
         appVersionName = 'InfPD-0.2.0e'
 
         appJavaCompatibility = JavaVersion.VERSION_11
