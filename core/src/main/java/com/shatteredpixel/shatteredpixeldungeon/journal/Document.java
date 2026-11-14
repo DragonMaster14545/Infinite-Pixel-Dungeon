@@ -38,7 +38,8 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 
 public enum Document {
-	
+
+	// TODO: make a super efficient tutorials about what's added and the bobylev's guide that was removed
 	ADVENTURERS_GUIDE(ItemSpriteSheet.GUIDE_PAGE, false),
 	ALCHEMY_GUIDE(ItemSpriteSheet.ALCH_PAGE, false),
 
