@@ -88,7 +88,7 @@ public class GooSprite extends MobSprite {
 	@Override
 	public void link(Char ch) {
 		super.link(ch);
-		if ((ch.HP.multiply(BigInteger.TWO).compareTo(ch.HT) <= 0))
+		if ((ch.HP.multiply(BigInteger.valueOf(2)).compareTo(ch.HT) <= 0))
 			spray(true);
 	}
 

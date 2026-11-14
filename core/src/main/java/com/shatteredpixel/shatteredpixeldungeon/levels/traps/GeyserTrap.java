@@ -80,7 +80,7 @@ public class GeyserTrap extends Trap {
 
 				//does the equivalent of a bomb's damage against fiery enemies.
 				if (Char.hasProp(ch, Char.Property.FIERY)){
-					BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(5).add(scalingDepth()), BigInteger.TEN.add(scalingDepth().multiply(BigInteger.TWO)));
+					BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(5).add(scalingDepth()), BigInteger.TEN.add(scalingDepth().multiply(BigInteger.valueOf(2))));
 					dmg = Big.trunc(Big.dec(dmg).multiply(Big.dec(0.67f)));
 					if (!ch.isImmune(GeyserTrap.class)){
 						ch.damage(dmg, this);
@@ -97,7 +97,7 @@ public class GeyserTrap extends Trap {
 					//trim it to just be the part that goes past them
 					trajectory = new Ballistica(trajectory.collisionPos, trajectory.path.get(trajectory.path.size() - 1), Ballistica.PROJECTILE);
 					//knock them back along that ballistica
-					WandOfBlastWave.throwChar(ch, trajectory, BigInteger.TWO, true, true, source);
+					WandOfBlastWave.throwChar(ch, trajectory, BigInteger.valueOf(2), true, true, source);
 				}
 			}
 		}
@@ -126,7 +126,7 @@ public class GeyserTrap extends Trap {
 
 			//does the equivalent of a bomb's damage against fiery enemies.
 			if (Char.hasProp(ch, Char.Property.FIERY)){
-				BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(5).add(scalingDepth()), BigInteger.TEN.add(scalingDepth().multiply(BigInteger.TWO)));
+				BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(5).add(scalingDepth()), BigInteger.TEN.add(scalingDepth().multiply(BigInteger.valueOf(2))));
 				if (!ch.isImmune(GeyserTrap.class)){
 					ch.damage(dmg, this);
 				}
@@ -139,7 +139,7 @@ public class GeyserTrap extends Trap {
 				//trace a ballistica in the direction of our target
 				Ballistica trajectory = new Ballistica(pos, targetpos, Ballistica.MAGIC_BOLT);
 				//knock them back along that ballistica
-				WandOfBlastWave.throwChar(ch, trajectory, BigInteger.TWO, true, true, source);
+				WandOfBlastWave.throwChar(ch, trajectory, BigInteger.valueOf(2), true, true, source);
 			}
 		}
 	}

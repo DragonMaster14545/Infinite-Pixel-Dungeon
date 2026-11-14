@@ -42,7 +42,9 @@ public class QuickSlot {
 	 */
 
 	//note that the current max size is coded at 6, due to UI constraints, but it could be much much bigger with no issue.
-	public static int SIZE = 12;
+	public static final int TOOLBAR_SIZE = 12;
+	public static final int SIDE_MAX = 6;
+	public static int SIZE = TOOLBAR_SIZE + 2 * SIDE_MAX;
 	private Item[] slots = new Item[SIZE];
 
 
@@ -152,9 +154,10 @@ public class QuickSlot {
 
 		int i = 0;
 		for (Bundlable item : placeholders){
-			while (!placements[i]){
+			while (i < placements.length && !placements[i]){
 				i++;
 			}
+			if (i >= placements.length || i >= SIZE) break;
 			setSlot( i, (Item)item );
 			i++;
 		}

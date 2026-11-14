@@ -698,7 +698,7 @@ abstract public class MissileWeapon extends Weapon {
 			price = Big.trunc(Big.dec(price).multiply(Big.dec(1.5)));
 		}
 		if (cursedKnown && (cursed || hasCurseEnchant())) {
-			price = price.divide(BigInteger.TWO);
+			price = price.divide(BigInteger.valueOf(2));
 		}
 		if (levelKnown && (level().compareTo(BigInteger.ZERO) > 0)) {
 			price = price.multiply((level().add(BigInteger.ONE)));

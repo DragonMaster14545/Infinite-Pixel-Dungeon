@@ -65,7 +65,7 @@ public class Sai extends MeleeWeapon {
     @Override
     public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
         DefenseDebuff debuff = Buff.affect(defender, DefenseDebuff.class, 3.33f);
-        debuff.stack += Big.toLong(max().divide(BigInteger.TWO));
+        debuff.stack += Big.toLong(max().divide(BigInteger.valueOf(2)));
         return super.proc(attacker, defender, damage);
     }
 

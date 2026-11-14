@@ -155,7 +155,7 @@ public class RingOfWealth extends Ring {
 					if ((w.buffedLvl().compareTo(BigInteger.valueOf(equipBonus)) > 0)){
 						equipBonus = (Big.toInt(w.buffedLvl())) + Math.min(equipBonus, 2);
 					} else {
-						equipBonus += Big.toLong(w.buffedLvl().min(BigInteger.TWO));
+						equipBonus += Big.toLong(w.buffedLvl().min(BigInteger.valueOf(2)));
 					}
 				}
 
@@ -232,7 +232,7 @@ public class RingOfWealth extends Ring {
 		switch (Random.Int(4)){
 			case 0: default:
 				Item i = new Gold().random();
-				return i.quantity(i.quantity().divide(BigInteger.TWO));
+				return i.quantity(i.quantity().divide(BigInteger.valueOf(2)));
 			case 1:
 				return Generator.randomUsingDefaults(Generator.Category.STONE);
 			case 2:
@@ -246,7 +246,7 @@ public class RingOfWealth extends Ring {
 		switch (Random.Int(6)){
 			case 0: default:
 				Item i = genLowValueConsumable();
-				return i.quantity(i.quantity().multiply(BigInteger.TWO));
+				return i.quantity(i.quantity().multiply(BigInteger.valueOf(2)));
 			case 1:
 				i = Generator.randomUsingDefaults(Generator.Category.POTION);
 				if (!(i instanceof ExoticPotion)) {
@@ -277,7 +277,7 @@ public class RingOfWealth extends Ring {
 				if (i instanceof Bomb){
 					return new Bomb.DoubleBomb();
 				} else {
-					return i.quantity(i.quantity().multiply(BigInteger.TWO));
+					return i.quantity(i.quantity().multiply(BigInteger.valueOf(2)));
 				}
 			case 1:
 				return new StoneOfEnchantment();
@@ -321,7 +321,7 @@ public class RingOfWealth extends Ring {
 		}
 		result.cursed = false;
 		result.cursedKnown = true;
-		if ((result.level().compareTo(BigInteger.TWO) >= 0)) {
+		if ((result.level().compareTo(BigInteger.valueOf(2)) >= 0)) {
 			latestDropTier = 4;
 		} else {
 			latestDropTier = 3;

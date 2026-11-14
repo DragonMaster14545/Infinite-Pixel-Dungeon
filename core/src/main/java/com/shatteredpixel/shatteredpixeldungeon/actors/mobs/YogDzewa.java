@@ -203,7 +203,7 @@ public class YogDzewa extends Mob {
 
 		BigInteger healingTarget = Dungeon.hero.HT.divide(BigInteger.valueOf(15));
 		if (YogFist.isNearYog(Dungeon.hero.pos))
-			healingTarget = healingTarget.multiply(BigInteger.TWO);
+			healingTarget = healingTarget.multiply(BigInteger.valueOf(2));
 
 		if ((takenDamage.compareTo(healingTarget) >= 0) && Dungeon.level.heroFOV[pos]){
 			takenDamage = takenDamage.subtract(healingTarget);
@@ -272,7 +272,7 @@ public class YogDzewa extends Mob {
 
 			if (abilityCooldown <= 0){
 
-				BigInteger beams = BigInteger.ONE.add((HT.subtract(HP)).divide((HT.divide(BigInteger.valueOf(5)).multiply(BigInteger.TWO))));
+				BigInteger beams = BigInteger.ONE.add((HT.subtract(HP)).divide((HT.divide(BigInteger.valueOf(5)).multiply(BigInteger.valueOf(2)))));
 				HashSet<Integer> affectedCells = new HashSet<>();
 				for (int i = 0; (BigInteger.valueOf(i).compareTo(beams) < 0); i++){
 
@@ -724,7 +724,7 @@ public class YogDzewa extends Mob {
 		public BigInteger attackProc(Char enemy, BigInteger damage) {
 			for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()){
 				if (mob instanceof YogDzewa && mob.isAlive()){
-					((YogDzewa) mob).stealLife(enemy, damage.divide(BigInteger.TWO));
+					((YogDzewa) mob).stealLife(enemy, damage.divide(BigInteger.valueOf(2)));
 				}
 			}
 			return super.attackProc(enemy, damage);
@@ -742,7 +742,7 @@ public class YogDzewa extends Mob {
 		public BigInteger attackProc(Char enemy, BigInteger damage) {
 			for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()){
 				if (mob instanceof YogDzewa && mob.isAlive()){
-					((YogDzewa) mob).stealLife(enemy, damage.divide(BigInteger.TWO));
+					((YogDzewa) mob).stealLife(enemy, damage.divide(BigInteger.valueOf(2)));
 				}
 			}
 			return super.attackProc(enemy, damage);
@@ -758,7 +758,7 @@ public class YogDzewa extends Mob {
 		public BigInteger attackProc(Char enemy, BigInteger damage) {
 			for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()){
 				if (mob instanceof YogDzewa && mob.isAlive()){
-					((YogDzewa) mob).stealLife(enemy, damage.divide(BigInteger.TWO));
+					((YogDzewa) mob).stealLife(enemy, damage.divide(BigInteger.valueOf(2)));
 				}
 			}
 			return super.attackProc(enemy, damage);
@@ -774,7 +774,7 @@ public class YogDzewa extends Mob {
 		public BigInteger attackProc(Char enemy, BigInteger damage) {
 			for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()){
 				if (mob instanceof YogDzewa && mob.isAlive()){
-					((YogDzewa) mob).stealLife(enemy, damage.divide(BigInteger.TWO));
+					((YogDzewa) mob).stealLife(enemy, damage.divide(BigInteger.valueOf(2)));
 				}
 			}
 			return super.attackProc(enemy, damage);

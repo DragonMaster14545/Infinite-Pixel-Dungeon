@@ -81,7 +81,7 @@ public class Wraith extends Mob {
 	
 	@Override
 	public BigInteger damageRoll() {
-		return Dungeon.NormalLongRange( BigInteger.ONE.add(level.divide(BigInteger.TWO)), BigInteger.TWO.add(level) );
+		return Dungeon.NormalLongRange( BigInteger.ONE.add(level.divide(BigInteger.valueOf(2))), BigInteger.valueOf(2).add(level) );
 	}
 	
 	@Override

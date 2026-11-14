@@ -49,7 +49,7 @@ public class ExpGenerator extends Mob {
 
     public void set(int lvl){
         level = lvl;
-        HT = HP = BigInteger.valueOf(Big.toInt(((Big.dec((BigInteger.valueOf(25).add(Dungeon.escalatingDepth().multiply(BigInteger.TWO)))).multiply(Big.dec((1.2f * level))))).toBigInteger()));
+        HT = HP = BigInteger.valueOf(Big.toInt(((Big.dec((BigInteger.valueOf(25).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(2))))).multiply(Big.dec((1.2f * level))))).toBigInteger()));
     }
 
     @Override

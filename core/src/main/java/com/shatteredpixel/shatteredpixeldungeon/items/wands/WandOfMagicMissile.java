@@ -52,11 +52,11 @@ public class WandOfMagicMissile extends DamageWand {
 	}
 
 	public BigInteger min(BigInteger lvl){
-		return ((BigInteger.TWO.add(lvl)).multiply(getRarityMultiplier()));
+		return ((BigInteger.valueOf(2).add(lvl)).multiply(getRarityMultiplier()));
 	}
 
 	public BigInteger max(BigInteger lvl){
-		return ((BigInteger.valueOf(8).add(BigInteger.TWO.multiply(lvl))).multiply(getRarityMultiplier()));
+		return ((BigInteger.valueOf(8).add(BigInteger.valueOf(2).multiply(lvl))).multiply(getRarityMultiplier()));
 	}
 	
 	@Override
@@ -69,7 +69,7 @@ public class WandOfMagicMissile extends DamageWand {
 			ch.damage(damageRoll(), this);
 			Sample.INSTANCE.play( Assets.Sounds.HIT_MAGIC, 1, Random.Float(0.87f, 1.15f) );
 
-			ch.sprite.burst(0xFFFFFFFF,  (int) Math.min(Math.sqrt(Big.dec(2).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue()), 1000));
+			ch.sprite.burst(0xFFFFFFFF,  Big.particles(Math.sqrt(Big.dec(2).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue())));
 
 			//apply the magic charge buff if we have another wand in inventory of a lower level, or already have the buff
 			for (Wand.Charger wandCharger : curUser.buffs(Wand.Charger.class)){

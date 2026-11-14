@@ -127,7 +127,7 @@ public class ChaliceOfBlood extends Artifact {
 			damage = BigInteger.ONE;
 		} else {
 			Sample.INSTANCE.play(Assets.Sounds.CURSED);
-			hero.sprite.emitter().burst( ShadowParticle.CURSE, Big.toInt((BigInteger.valueOf(4).add((damage.divide(BigInteger.TEN))))) );
+			hero.sprite.emitter().burst( ShadowParticle.CURSE, Big.particles(BigInteger.valueOf(4).add(damage.divide(BigInteger.TEN))) );
 		}
 
 		hero.damage(damage, this);
@@ -146,7 +146,7 @@ public class ChaliceOfBlood extends Artifact {
 	public Item upgrade() {
 		if ((level().compareTo(BigInteger.valueOf(6)) >= 0))
 			image = ItemSpriteSheet.ARTIFACT_CHALICE3;
-		else if ((level().compareTo(BigInteger.TWO) >= 0))
+		else if ((level().compareTo(BigInteger.valueOf(2)) >= 0))
 			image = ItemSpriteSheet.ARTIFACT_CHALICE2;
 		return super.upgrade();
 	}

@@ -120,7 +120,7 @@ public class RegrowingSlasher extends BlacksmithWeapon implements InternalKillsT
             }
             for (Char ch: affected){
                 if (hero.fieldOfView[ch.pos]) {
-                    ch.damage(ch.HT.multiply(BigInteger.TWO), hero);
+                    ch.damage(ch.HT.multiply(BigInteger.valueOf(2)), hero);
                     if (!ch.isAlive()){
                         CellEmitter.get( ch.pos ).burst(LeafParticle.GENERAL, 20);
                         CellEmitter.get( ch.pos ).burst( Speck.factory( Speck.STEAM ), 10 );

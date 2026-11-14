@@ -45,7 +45,7 @@ public class Bolas extends MissileWeapon {
 	
 	@Override
 	public BigInteger max(BigInteger lvl) {
-		return  BigInteger.valueOf(5L * tier()).add((tier == 1 ? BigInteger.valueOf(3).multiply(lvl) : BigInteger.valueOf(tier()).multiply(lvl).multiply(BigInteger.TWO))); //scaling unchanged
+		return  BigInteger.valueOf(5L * tier()).add((tier == 1 ? BigInteger.valueOf(3).multiply(lvl) : BigInteger.valueOf(tier()).multiply(lvl).multiply(BigInteger.valueOf(2)))); //scaling unchanged
 	}
 	
 	@Override

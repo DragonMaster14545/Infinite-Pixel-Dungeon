@@ -62,7 +62,7 @@ public class Kunai extends MissileWeapon {
     @Override
     public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 	    if (defender instanceof Mob && ((Mob) defender).surprisedBy(attacker)){
-            Buff.affect(attacker, WeaponCharge.class, 15f).stack = Big.toInt((level().multiply(level()).add(BigInteger.TWO)));
+            Buff.affect(attacker, WeaponCharge.class, 15f).stack = Big.toInt((level().multiply(level()).add(BigInteger.valueOf(2))));
         }
         return super.proc(attacker, defender, damage);
     }

@@ -67,6 +67,8 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.TerrainFeaturesTilemap;
+import com.shatteredpixel.shatteredpixeldungeon.ui.HorizontalScrollPane;
+import com.watabou.noosa.PointerArea;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BadgesGrid;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BadgesList;
 import com.shatteredpixel.shatteredpixeldungeon.ui.CustomNoteButton;
@@ -324,7 +326,10 @@ public class WndJournal extends WndTabbed {
 	public static class AlchemyTab extends Component {
 		
 		private RedButton[] pageButtons;
+		private HorizontalScrollPane pageStrip;
+		private boolean stripPositioned = false;
 		private static final int NUM_BUTTONS = 10;
+		private static final int MIN_BUTTON_WIDTH = 21;
 		
 		private static final int[] sprites = {
 				ItemSpriteSheet.SEED_HOLDER,
@@ -349,12 +354,20 @@ public class WndJournal extends WndTabbed {
 		
 		@Override
 		protected void createChildren() {
+			pageStrip = new HorizontalScrollPane(new Component());
+			add(pageStrip);
+
 			pageButtons = new RedButton[NUM_BUTTONS];
 			for (int i = 0; i < NUM_BUTTONS; i++){
 				final int idx = i;
 				pageButtons[i] = new RedButton( "" ){
+					{
+						hotArea.blockLevel = PointerArea.NEVER_BLOCK;
+					}
+
 					@Override
                     public void onClick() {
+						if (pageStrip.dragged()) return;
 						currentPageIdx = idx;
 						updateList();
 					}
@@ -365,7 +378,7 @@ public class WndJournal extends WndTabbed {
 					pageButtons[i].icon(new ItemSprite(ItemSpriteSheet.SOMETHING, null));
 					pageButtons[i].enable(false);
 				}
-				add( pageButtons[i] );
+				pageStrip.content().add( pageButtons[i] );
 			}
 			
 			title = new IconTitle();
@@ -382,31 +395,21 @@ public class WndJournal extends WndTabbed {
 		protected void layout() {
 			super.layout();
 			
-			if (width() >= 180){
-				float buttonWidth = width()/pageButtons.length;
-				for (int i = 0; i < NUM_BUTTONS; i++) {
-					pageButtons[i].setRect(x + i*buttonWidth, y, buttonWidth, ITEM_HEIGHT);
-					PixelScene.align(pageButtons[i]);
-				}
-			} else {
-				//for first row
-				float buttonWidth = width()/5;
-				float y = 0;
-				float x = 0;
-				for (int i = 0; i < NUM_BUTTONS; i++) {
-					pageButtons[i].setRect(this.x + x, this.y + y, buttonWidth, ITEM_HEIGHT);
-					PixelScene.align(pageButtons[i]);
-					x += buttonWidth;
-					if (i == 4){
-						y += ITEM_HEIGHT;
-						x = 0;
-						buttonWidth = width()/5;
-					}
-				}
+			float buttonWidth = Math.max(MIN_BUTTON_WIDTH, (float)Math.floor(width()/NUM_BUTTONS));
+			for (int i = 0; i < NUM_BUTTONS; i++) {
+				pageButtons[i].setRect(i*buttonWidth, 0, buttonWidth, ITEM_HEIGHT);
+			}
+			pageStrip.content().setSize(buttonWidth*NUM_BUTTONS, ITEM_HEIGHT);
+			pageStrip.setRect(x, y, width(), ITEM_HEIGHT);
+
+			if (!stripPositioned){
+				stripPositioned = true;
+				int sel = Math.max(0, currentPageIdx);
+				pageStrip.scrollTo(sel*buttonWidth - (width() - buttonWidth)/2f, 0);
 			}
 			
-			list.setRect(x, pageButtons[NUM_BUTTONS-1].bottom() + 1, width,
-					height - pageButtons[NUM_BUTTONS-1].bottom() + y - 1);
+			list.setRect(x, pageStrip.bottom() + 1, width,
+					height - pageStrip.height() - 1);
 			
 			updateList();
 		}

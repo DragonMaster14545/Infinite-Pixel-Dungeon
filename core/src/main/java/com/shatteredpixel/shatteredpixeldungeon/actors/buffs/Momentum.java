@@ -126,7 +126,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 	
 	public int evasionBonus(BigInteger heroLvl, BigInteger excessArmorStr ){
 		if (freerunTurns > 0) {
-			return Big.toInt((heroLvl.divide(BigInteger.TWO).add(excessArmorStr.multiply(BigInteger.valueOf(Dungeon.hero.pointsInTalent(Talent.EVASIVE_ARMOR))))));
+			return Big.toInt((heroLvl.divide(BigInteger.valueOf(2)).add(excessArmorStr.multiply(BigInteger.valueOf(Dungeon.hero.pointsInTalent(Talent.EVASIVE_ARMOR))))));
 		} else {
 			return 0;
 		}
@@ -245,7 +245,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 		//cooldown is functionally 10+2*stacks when active effect ends
 		freerunCooldown = 10 + 4*momentumStacks;
 		Sample.INSTANCE.play(Assets.Sounds.MISS, 1f, 0.8f);
-		target.sprite.emitter().burst(Speck.factory(Speck.JET), 5+ momentumStacks);
+		target.sprite.emitter().burst(Speck.factory(Speck.JET), Big.particles(5+ momentumStacks));
 		SpellSprite.show(target, SpellSprite.HASTE, 1, 1, 0);
 		momentumStacks = 0;
 		BuffIndicator.refreshHero();

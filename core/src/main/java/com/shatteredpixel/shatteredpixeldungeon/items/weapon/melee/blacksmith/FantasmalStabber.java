@@ -112,6 +112,6 @@ public class FantasmalStabber extends BlacksmithWeapon implements PreparationAll
 
     @Override
     protected void duelistAbility(Hero hero, Integer target) {
-        Dagger.sneakAbility(hero, target, 10, BigInteger.TWO,this);
+        Dagger.sneakAbility(hero, target, 10, BigInteger.valueOf(2),this);
     }
 }

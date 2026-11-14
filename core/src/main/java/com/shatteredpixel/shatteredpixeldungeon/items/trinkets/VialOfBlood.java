@@ -38,7 +38,7 @@ public class VialOfBlood extends Trinket {
 	@Override
 	protected BigInteger upgradeEnergyCost() {
 		//6 -> 8(14) -> 10(24) -> 12(36)
-		return BigInteger.valueOf(6).add(BigInteger.TWO.multiply(level()));
+		return BigInteger.valueOf(6).add(BigInteger.valueOf(2).multiply(level()));
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class VialOfBlood extends Trinket {
 				case 1:
 					return BigInteger.valueOf(3).add(Big.round(Big.dec(0.10f).multiply(Big.dec(maxHP))));
 				case 2:
-					return BigInteger.TWO.add(Big.round(Big.dec(0.07f).multiply(Big.dec(maxHP))));
+					return BigInteger.valueOf(2).add(Big.round(Big.dec(0.07f).multiply(Big.dec(maxHP))));
 				case 3:
 					return BigInteger.ONE.add(Big.round(Big.dec(0.05f).multiply(Big.dec(maxHP))));
 			}

@@ -48,7 +48,7 @@ public class TormentedSpirit extends Wraith {
 	//50% more damage scaling than regular wraiths
 	@Override
 	public BigInteger damageRoll() {
-		return Dungeon.NormalLongRange( BigInteger.ONE.add(Big.round(Big.dec(1.5f).multiply(Big.dec(level))).divide(BigInteger.TWO)), BigInteger.TWO.add(Big.round(Big.dec(1.5f).multiply(Big.dec(level)))) );
+		return Dungeon.NormalLongRange( BigInteger.ONE.add(Big.round(Big.dec(1.5f).multiply(Big.dec(level))).divide(BigInteger.valueOf(2))), BigInteger.valueOf(2).add(Big.round(Big.dec(1.5f).multiply(Big.dec(level)))) );
 	}
 
 	//50% more accuracy (and by extension evasion) scaling than regular wraiths

@@ -71,7 +71,7 @@ public class SeasonalTasks {
                 case DRINK_POTIONS:  target = BigInteger.valueOf(15).add(Big.of((Math.random()*50))); break;
                 case READ_SCROLLS:   target = BigInteger.valueOf(15).add(Big.of((Math.random()*100))); break;
                 case COLLECT_GOLD:   target = BigInteger.valueOf(200000).add(Big.of((Math.random()*300000))); break;
-                case DIE_TIMES:      target = BigInteger.TWO.add(Big.of((Math.random()*3))); break;
+                case DIE_TIMES:      target = BigInteger.valueOf(2).add(Big.of((Math.random()*3))); break;
                 case IDENTIFY_ITEMS: target = BigInteger.valueOf(30).add(Big.of((Math.random()*70))); break;
                 default: target = BigInteger.ONE; break;
             }

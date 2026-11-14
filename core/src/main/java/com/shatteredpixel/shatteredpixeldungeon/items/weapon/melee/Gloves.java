@@ -97,13 +97,13 @@ public class Gloves extends MeleeWeapon {
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
 		//+(2+0.5*lvl) damage, roughly +67% base damage, +50% scaling
-		BigInteger dmgBoost = augment.damageFactor(BigInteger.TWO.add(Big.round(Big.dec(0.5d).multiply(Big.dec(buffedLvl())))));
+		BigInteger dmgBoost = augment.damageFactor(BigInteger.valueOf(2).add(Big.round(Big.dec(0.5d).multiply(Big.dec(buffedLvl())))));
 		Sai.comboStrikeAbility(hero, target, 0, dmgBoost, this);
 	}
 
 	@Override
 	public String abilityInfo() {
-		int dmgBoost = Big.toInt(levelKnown ? BigInteger.TWO.add(Big.round(Big.dec(0.5f).multiply(Big.dec(buffedLvl())))) : BigInteger.TWO);
+		int dmgBoost = Big.toInt(levelKnown ? BigInteger.valueOf(2).add(Big.round(Big.dec(0.5f).multiply(Big.dec(buffedLvl())))) : BigInteger.valueOf(2));
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(BigInteger.valueOf(dmgBoost)));
 		} else {
@@ -112,7 +112,7 @@ public class Gloves extends MeleeWeapon {
 	}
 
 	public String upgradeAbilityStat(BigInteger level){
-		return "+" + augment.damageFactor(BigInteger.TWO.add(Big.round(Big.dec(0.5f).multiply(Big.dec(level)))));
+		return "+" + augment.damageFactor(BigInteger.valueOf(2).add(Big.round(Big.dec(0.5f).multiply(Big.dec(level)))));
 	}
 
 }

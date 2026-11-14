@@ -407,7 +407,7 @@ public class ElementalBlast extends ArmorAbility {
 							for (Mob m : Dungeon.level.mobs){
 								if (m instanceof WandOfLivingEarth.EarthGuardian){
 									((WandOfLivingEarth.EarthGuardian) m).setInfo(hero, BigInteger.ZERO, Big.roundD(effectMulti*charsHit*5));
-									m.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + charsHit);
+									m.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, Big.particles(8 + charsHit));
 									break;
 								}
 							}

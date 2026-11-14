@@ -72,9 +72,9 @@ public class    SkeletonKey extends Artifact {
 
         levelCap = 10;
 
-        charge = BigInteger.valueOf(3).add(level().divide(BigInteger.TWO));
+        charge = BigInteger.valueOf(3).add(level().divide(BigInteger.valueOf(2)));
         partialCharge = 0;
-        setChargeCap(BigInteger.valueOf(3).add(level().divide(BigInteger.TWO)));
+        setChargeCap(BigInteger.valueOf(3).add(level().divide(BigInteger.valueOf(2))));
 
         defaultAction = AC_INSERT;
     }
@@ -215,7 +215,7 @@ public class    SkeletonKey extends Artifact {
                         return;
                     } else if (Dungeon.level.map[target] == Terrain.DOOR || Dungeon.level.map[target] == Terrain.OPEN_DOOR){
 
-                        if ((charge.compareTo(BigInteger.TWO) < 0)) {
+                        if ((charge.compareTo(BigInteger.valueOf(2)) < 0)) {
                             GLog.i(Messages.get(SkeletonKey.class, "lock_charges"));
                             return;
                         }
@@ -253,7 +253,7 @@ public class    SkeletonKey extends Artifact {
                             public void call() {
                                 Level.set(target, Terrain.HERO_LKD_DR);
                                 GameScene.updateMap(target);
-                                charge = charge.subtract(BigInteger.TWO);
+                                charge = charge.subtract(BigInteger.valueOf(2));
                                 gainExp(2);
                                 Talent.onArtifactUsed(Dungeon.hero);
                                 curUser.spendAndNext(Actor.TICK);
@@ -280,7 +280,7 @@ public class    SkeletonKey extends Artifact {
                         return;
 
                     } else if (Dungeon.level.heaps.get(target) != null && Dungeon.level.heaps.get(target).type == Heap.Type.LOCKED_CHEST){
-                        if ((charge.compareTo(BigInteger.TWO) < 0)) {
+                        if ((charge.compareTo(BigInteger.valueOf(2)) < 0)) {
                             GLog.i(Messages.get(SkeletonKey.class, "gold_charges"));
                             return;
                         }
@@ -290,7 +290,7 @@ public class    SkeletonKey extends Artifact {
                             public void call() {
                                 Buff.affect(curUser, KeyReplacementTracker.class).processGoldLockOpened();
                                 Dungeon.level.heaps.get(target).open(curUser);
-                                charge = charge.subtract(BigInteger.TWO);
+                                charge = charge.subtract(BigInteger.valueOf(2));
                                 gainExp(2 + 2);
                                 Talent.onArtifactUsed(Dungeon.hero);
                                 curUser.spendAndNext(Actor.TICK);
@@ -324,7 +324,7 @@ public class    SkeletonKey extends Artifact {
                     }
                 }
 
-                if ((charge.compareTo(BigInteger.TWO) < 0)){
+                if ((charge.compareTo(BigInteger.valueOf(2)) < 0)){
                     GLog.i(Messages.get(SkeletonKey.class, "wall_charges"));
                     return;
                 }
@@ -362,7 +362,7 @@ public class    SkeletonKey extends Artifact {
                             placeWall(curUser.pos+2*PathFinder.CIRCLE8[(finalClosestIdx +1)%8], knockBackDir);
                         }
 
-                        charge = charge.subtract(BigInteger.TWO);
+                        charge = charge.subtract(BigInteger.valueOf(2));
                         gainExp(2);
 
                         Dungeon.observe();
@@ -454,7 +454,7 @@ public class    SkeletonKey extends Artifact {
 
     @Override
     public Item upgrade() {
-        setChargeCap(BigInteger.valueOf(3).add((level().add(BigInteger.ONE)).divide(BigInteger.TWO)));
+        setChargeCap(BigInteger.valueOf(3).add((level().add(BigInteger.ONE)).divide(BigInteger.valueOf(2))));
         return super.upgrade();
     }
 

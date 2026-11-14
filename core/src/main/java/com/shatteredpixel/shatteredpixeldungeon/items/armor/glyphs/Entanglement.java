@@ -54,7 +54,7 @@ public class Entanglement extends Glyph {
 
 			float powerMulti = Math.max(1f, procChance);
 
-			Buff.affect( defender, Earthroot.Armor.class ).level( Big.round(Big.dec((BigInteger.valueOf(5).add(BigInteger.TWO.multiply(level)))).multiply(Big.dec(powerMulti))) );
+			Buff.affect( defender, Earthroot.Armor.class ).level( Big.round(Big.dec((BigInteger.valueOf(5).add(BigInteger.valueOf(2).multiply(level)))).multiply(Big.dec(powerMulti))) );
 			CellEmitter.bottom( defender.pos ).start( EarthParticle.FACTORY, 0.05f, 8 );
 			PixelScene.shake( 1, 0.4f );
 			

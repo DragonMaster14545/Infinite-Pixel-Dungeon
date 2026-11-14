@@ -41,7 +41,7 @@ public class Rat extends Mob {
 		spriteClass = RatSprite.class;
 		
 		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(8));
-		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.TWO);
+		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(2));
 
 		maxLvl = 5;
 		EXP = Dungeon.getCycleMultiplier(BigInteger.ONE);

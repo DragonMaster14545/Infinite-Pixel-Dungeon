@@ -69,7 +69,7 @@ public class Degrade extends FlavourBuff {
 			// This means that levels 1/2/3/4/5/6/7/8/9/10/11/12/...
 			// Are now instead:       1/2/3/3/4/4/4/5/5/ 5/ 5/ 6/...
 			// Basically every level starting with 3 sticks around for 1 level longer than the last
-			return Big.roundD(Math.sqrt(BigInteger.TWO.multiply((level.subtract(BigInteger.ONE))).doubleValue()) + 1);
+			return Big.roundD(Math.sqrt(BigInteger.valueOf(2).multiply((level.subtract(BigInteger.ONE))).doubleValue()) + 1);
 		}
 	}
 

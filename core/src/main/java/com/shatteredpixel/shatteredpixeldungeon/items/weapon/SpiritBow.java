@@ -197,7 +197,7 @@ public class SpiritBow extends Weapon {
 
 	@Override
 	public BigInteger max(BigInteger lvl) {
-		BigInteger dmg = Big.trunc((Big.dec(6 + (Dungeon.hero.lvl/2.5f)).add(Big.dec(BigInteger.TWO.multiply(RingOfSharpshooting.levelDamageBonus(Dungeon.hero)))).add(Big.dec((curseInfusionBonus ? 2 + Dungeon.hero.lvl/15 : 0)))));
+		BigInteger dmg = Big.trunc((Big.dec(6 + (Dungeon.hero.lvl/2.5f)).add(Big.dec(BigInteger.valueOf(2).multiply(RingOfSharpshooting.levelDamageBonus(Dungeon.hero)))).add(Big.dec((curseInfusionBonus ? 2 + Dungeon.hero.lvl/15 : 0)))));
 		return BigInteger.ZERO.max(dmg);
 	}
 

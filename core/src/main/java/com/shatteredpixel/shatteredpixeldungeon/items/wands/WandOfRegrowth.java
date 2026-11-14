@@ -220,7 +220,7 @@ public class WandOfRegrowth extends Wand {
 			//20 charges at base, plus:
 			//2/3.1/4.2/5.5/6.8/8.4/10.4/13.2/18.0/30.8/inf. charges per hero level, at wand level:
 			//0/1  /2  /3  /4  /5  /6   /7   /8   /9   /10
-			return Big.toInt(Big.round(Big.dec(20).add(Big.dec(heroLvl.multiply((BigInteger.TWO.add(wndLvl)))).multiply((Big.dec(1f).add(Big.dec((wndLvl.divide((BigInteger.valueOf(50).subtract(BigInteger.valueOf(5).multiply(wndLvl))))))))))));
+			return Big.toInt(Big.round(Big.dec(20).add(Big.dec(heroLvl.multiply((BigInteger.valueOf(2).add(wndLvl)))).multiply((Big.dec(1f).add(Big.dec((wndLvl.divide((BigInteger.valueOf(50).subtract(BigInteger.valueOf(5).multiply(wndLvl))))))))))));
 		}
 	}
 
@@ -256,7 +256,7 @@ public class WandOfRegrowth extends Wand {
             return super.aimTiles(target);
         }
         Ballistica b = new Ballistica(Dungeon.hero.pos, target, Ballistica.WONT_STOP);
-        BigInteger maxDist = BigInteger.TWO.add(BigInteger.TWO.multiply(chargesPerCast()));
+        BigInteger maxDist = BigInteger.valueOf(2).add(BigInteger.valueOf(2).multiply(chargesPerCast()));
 
         ConeAOE tempCone = new ConeAOE( b,
                 maxDist.floatValue(),
@@ -268,7 +268,7 @@ public class WandOfRegrowth extends Wand {
 	public void fx(Ballistica bolt, Callback callback) {
 
 		// 4/6/8 distance
-		int maxDist = Big.toInt((BigInteger.TWO.add(BigInteger.TWO.multiply(chargesPerCast()))));
+		int maxDist = Big.toInt((BigInteger.valueOf(2).add(BigInteger.valueOf(2).multiply(chargesPerCast()))));
 
 		cone = new ConeAOE( bolt,
 				maxDist,
@@ -320,7 +320,7 @@ public class WandOfRegrowth extends Wand {
 
 	@Override
 	public String upgradeStat1(BigInteger level) {
-		return Messages.decimalFormat("#.##", Big.dec(3).add(Big.div(Big.dec((BigInteger.TWO.add(level))), Big.dec(3f))).doubleValue());
+		return Messages.decimalFormat("#.##", Big.dec(3).add(Big.div(Big.dec((BigInteger.valueOf(2).add(level))), Big.dec(3f))).doubleValue());
 	}
 
 	@Override

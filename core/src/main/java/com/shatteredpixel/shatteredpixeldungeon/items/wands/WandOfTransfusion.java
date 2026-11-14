@@ -72,7 +72,7 @@ public class WandOfTransfusion extends DamageWand {
 
 	@Override
 	public BigInteger max(BigInteger level) {
-		return ((BigInteger.valueOf(6).add(BigInteger.TWO.multiply(level))).multiply(getRarityMultiplier()));
+		return ((BigInteger.valueOf(6).add(BigInteger.valueOf(2).multiply(level))).multiply(getRarityMultiplier()));
 	}
 
 	private boolean freeCharge = false;
@@ -110,7 +110,7 @@ public class WandOfTransfusion extends DamageWand {
 				
 				ch.HP = ch.HP.add(healing);
 				
-				ch.sprite.emitter().burst(Speck.factory(Speck.HEALING),  (int) Math.min(Math.sqrt(Big.dec(2).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue()), 1000));
+				ch.sprite.emitter().burst(Speck.factory(Speck.HEALING),  Big.particles(Math.sqrt(Big.dec(2).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue())));
 				if ((healing.compareTo(BigInteger.ZERO) > 0)) {
 					ch.sprite.showStatusWithIcon(CharSprite.POSITIVE, healing.toString(), FloatingText.HEALING);
 				}
@@ -141,8 +141,8 @@ curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, BigInteger.valueOf(7).add
 				
 				//harms the undead
 				} else {
-					ch.damage(Big.trunc((Big.dec(Big.normalRange(BigInteger.valueOf(3).add(buffedLvl()), BigInteger.valueOf(6).add(BigInteger.TWO.multiply(buffedLvl())))).multiply(Big.dec((1+ Dungeon.hero.lvl/150f))))), this);
-					ch.sprite.emitter().start(ShadowParticle.UP, 0.05f,  (int) Math.min(Math.sqrt(BigInteger.TEN.add(buffedLvl()).doubleValue()), 1000));
+					ch.damage(Big.trunc((Big.dec(Big.normalRange(BigInteger.valueOf(3).add(buffedLvl()), BigInteger.valueOf(6).add(BigInteger.valueOf(2).multiply(buffedLvl())))).multiply(Big.dec((1+ Dungeon.hero.lvl/150f))))), this);
+					ch.sprite.emitter().start(ShadowParticle.UP, 0.05f,  Big.particles(Math.sqrt(BigInteger.TEN.add(buffedLvl()).doubleValue())));
 					Sample.INSTANCE.play(Assets.Sounds.BURNING);
 				}
 
@@ -169,7 +169,7 @@ curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, BigInteger.valueOf(7).add
 		if (defender.buff(Charm.class) != null && defender.buff(Charm.class).object == attacker.id()){
 			//grants a free use of the staff and shields self
 			freeCharge = true;
-			int shieldToGive = Big.toInt(Big.round(Big.dec((BigInteger.TWO.multiply((BigInteger.valueOf(7).add(buffedLvl()))))).multiply(Big.dec(procChanceMultiplier(attacker)))));
+			int shieldToGive = Big.toInt(Big.round(Big.dec((BigInteger.valueOf(2).multiply((BigInteger.valueOf(7).add(buffedLvl()))))).multiply(Big.dec(procChanceMultiplier(attacker)))));
 			Buff.affect(attacker, Barrier.class).setShield(BigInteger.valueOf(shieldToGive));
 			attacker.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
 			GLog.p( Messages.get(this, "charged") );

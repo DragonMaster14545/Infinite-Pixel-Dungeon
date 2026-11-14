@@ -373,7 +373,7 @@ public class GlobalCustomNoteButton extends IconButton {
             @Override
             public void onSelect(boolean positive, String text) {
                 if (positive && !text.isEmpty()){
-                    note.assignID();
+                    Notes.assignGlobalID(note);
                     note.editText(text, "");
                     Notes.addGlobalCustom(note);
                     Journal.saveGlobal(true);

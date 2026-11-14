@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
+import com.shatteredpixel.shatteredpixeldungeon.QuickSlot;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
@@ -608,7 +609,29 @@ public class WndSettings extends WndTabbed {
                                 chkExtraQuickslotRow.checked(SPDSettings.extraQuickslotRow());
                                 add(chkExtraQuickslotRow);
 
-                                resize(WIDTH_P, (int)chkExtraQuickslotRow.bottom());
+                                OptionSlider optLeftSlots = new OptionSlider(Messages.get(WndSettings.UITab.this, "left_quickslots"),
+                                        "0", String.valueOf(QuickSlot.SIDE_MAX), 0, QuickSlot.SIDE_MAX) {
+                                    @Override
+                                    protected void onChange() {
+                                        SideQuickslots.leftCount(getSelectedValue());
+                                    }
+                                };
+                                optLeftSlots.setSelectedValue(SideQuickslots.leftCount());
+                                optLeftSlots.setRect(0, chkExtraQuickslotRow.bottom() + GAP, width, SLIDER_HEIGHT);
+                                add(optLeftSlots);
+
+                                OptionSlider optRightSlots = new OptionSlider(Messages.get(WndSettings.UITab.this, "right_quickslots"),
+                                        "0", String.valueOf(QuickSlot.SIDE_MAX), 0, QuickSlot.SIDE_MAX) {
+                                    @Override
+                                    protected void onChange() {
+                                        SideQuickslots.rightCount(getSelectedValue());
+                                    }
+                                };
+                                optRightSlots.setSelectedValue(SideQuickslots.rightCount());
+                                optRightSlots.setRect(0, optLeftSlots.bottom() + GAP, width, SLIDER_HEIGHT);
+                                add(optRightSlots);
+
+                                resize(WIDTH_P, (int)optRightSlots.bottom());
 
 //								if(isAndroid()) {
 //									add(chkExtraQuickslotRow);

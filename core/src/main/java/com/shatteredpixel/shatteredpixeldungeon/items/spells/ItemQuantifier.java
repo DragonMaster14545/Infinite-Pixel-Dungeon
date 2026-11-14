@@ -74,7 +74,7 @@ public class ItemQuantifier extends InventorySpell {
 		if (!(item instanceof ItemQuantifier)) {
 			if (item.unique) {
 				if (Random.Float() < 0.25f) {
-					item.quantity(item.quantity().add(BigInteger.TWO));
+					item.quantity(item.quantity().add(BigInteger.valueOf(2)));
 					GLog.p(Messages.get(this, "quantified_unique", item.quantity()));
 					curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
 					increaseCost += Random.Double(0.75d);

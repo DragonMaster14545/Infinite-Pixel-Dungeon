@@ -98,7 +98,7 @@ public class Earthroot extends Plant {
 		}
 		
 		private static BigInteger blocking(){
-			return (Dungeon.scalingDepth().add(BigInteger.valueOf(5))).divide(BigInteger.TWO);
+			return (Dungeon.scalingDepth().add(BigInteger.valueOf(5))).divide(BigInteger.valueOf(2));
 		}
 		
 		public BigInteger absorb( BigInteger damage ) {

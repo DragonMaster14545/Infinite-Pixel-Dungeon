@@ -97,7 +97,7 @@ public class Bee extends Mob {
 	public void spawn( BigInteger level ) {
 		this.level = level;
 		
-		HT = (BigInteger.TWO.add(level)).multiply(BigInteger.valueOf(4));
+		HT = (BigInteger.valueOf(2).add(level)).multiply(BigInteger.valueOf(4));
 		defenseSkill = BigInteger.valueOf(9).add(level);
 	}
 

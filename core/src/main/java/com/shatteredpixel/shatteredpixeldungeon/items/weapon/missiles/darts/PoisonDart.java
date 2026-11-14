@@ -43,7 +43,7 @@ public class PoisonDart extends TippedDart {
 
 		//when processing charged shot, only poison enemies
 		if (!processingChargedShot || attacker.alignment != defender.alignment) {
-			Buff.affect(defender, Poison.class).set(BigInteger.valueOf(3).add(Dungeon.scalingDepth().divide(BigInteger.TWO)).doubleValue());
+			Buff.affect(defender, Poison.class).set(BigInteger.valueOf(3).add(Dungeon.scalingDepth().divide(BigInteger.valueOf(2))).doubleValue());
 		}
 		
 		return super.proc(attacker, defender, damage);

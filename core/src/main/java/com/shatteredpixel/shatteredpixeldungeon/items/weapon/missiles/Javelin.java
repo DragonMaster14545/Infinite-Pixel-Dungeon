@@ -48,7 +48,7 @@ public class Javelin extends MissileWeapon {
     protected void rangedHit(Char enemy, int cell) {
         super.rangedHit(enemy, cell);
         if (enemy == null || !enemy.isAlive()){
-            Item item = genConsumableDrop(buffedLvl().multiply(buffedLvl()).add(BigInteger.TWO));
+            Item item = genConsumableDrop(buffedLvl().multiply(buffedLvl()).add(BigInteger.valueOf(2)));
             if (item != null) Dungeon.level.drop(item, cell).sprite.drop();
         }
     }

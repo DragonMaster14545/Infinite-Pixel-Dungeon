@@ -153,7 +153,7 @@ public class Pasty extends Food {
 			case SHATTEREDPD_BIRTHDAY:
 			case PD_BIRTHDAY:
 				//gives 10% of level in exp, min of 2
-				BigInteger expToGive = BigInteger.TWO.max(hero.maxExp().divide(BigInteger.TEN));
+				BigInteger expToGive = BigInteger.valueOf(2).max(hero.maxExp().divide(BigInteger.TEN));
 				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, expToGive.toString(), FloatingText.EXPERIENCE);
 				hero.earnExp(expToGive, PotionOfExperience.class);
 				break;
@@ -194,7 +194,7 @@ public class Pasty extends Food {
                         hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, mys_toHeal.toString(), FloatingText.HEALING );
                     case 3:
                         //gives 10% of level in exp, min of 2
-                        BigInteger mys_expToGive = BigInteger.TWO.max(hero.maxExp().divide(BigInteger.TEN));
+                        BigInteger mys_expToGive = BigInteger.valueOf(2).max(hero.maxExp().divide(BigInteger.TEN));
                         hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, mys_expToGive.toString(), FloatingText.EXPERIENCE);
                         hero.earnExp(mys_expToGive, PotionOfExperience.class);
                         break;

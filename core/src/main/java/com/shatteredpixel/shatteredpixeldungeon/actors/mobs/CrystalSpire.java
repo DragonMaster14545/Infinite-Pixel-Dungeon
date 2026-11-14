@@ -222,7 +222,7 @@ public class CrystalSpire extends Mob {
 		aoeCells.addAll(spreadDiamondAOE(aoeCells));
 		targetedCells.add(new ArrayList<>(aoeCells));
 
-		if ((Big.dec(HP).compareTo(Big.div(Big.dec(BigInteger.TWO.multiply(HT)), Big.dec(3f))) < 0)){
+		if ((Big.dec(HP).compareTo(Big.div(Big.dec(BigInteger.valueOf(2).multiply(HT)), Big.dec(3f))) < 0)){
 			aoeCells.addAll(spreadDiamondAOE(aoeCells));
 			targetedCells.add(new ArrayList<>(aoeCells));
 			if ((Big.dec(HP).compareTo(Big.div(Big.dec(HT), Big.dec(3f))) < 0)) {
@@ -259,7 +259,7 @@ public class CrystalSpire extends Mob {
 		}
 
 		targetedCells.add(new ArrayList<>(lineCells));
-		if ((Big.dec(HP).compareTo(Big.div(Big.dec(BigInteger.TWO.multiply(HT)), Big.dec(3f))) < 0)){
+		if ((Big.dec(HP).compareTo(Big.div(Big.dec(BigInteger.valueOf(2).multiply(HT)), Big.dec(3f))) < 0)){
 			lineCells.addAll(spreadDiamondAOE(lineCells));
 			targetedCells.add(new ArrayList<>(lineCells));
 			if ((Big.dec(HP).compareTo(Big.div(Big.dec(HT), Big.dec(3f))) < 0)) {;

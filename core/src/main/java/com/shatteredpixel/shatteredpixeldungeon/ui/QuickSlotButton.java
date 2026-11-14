@@ -139,7 +139,7 @@ public class QuickSlotButton extends Button {
 			@Override
 			protected String hoverText() {
 				if (item == null){
-					return Messages.titleCase(Messages.get(WndKeyBindings.class, "quickslot_" + (slotNum+1)));
+					return slotName();
 				} else {
 					return super.hoverText();
 				}
@@ -204,10 +204,18 @@ public class QuickSlotButton extends Button {
 		return SPDAction.QUICKSLOT_SELECTOR;
 	}
 
+	private String slotName() {
+		String name = Messages.get(WndKeyBindings.class, "quickslot_" + (slotNum+1));
+		if (name == null || name.equals(Messages.NO_TEXT_FOUND)) {
+			name = "Quickslot " + (slotNum+1);
+		}
+		return Messages.titleCase(name);
+	}
+
 	@Override
 	protected String hoverText() {
 		if (slot.item == null){
-			return Messages.titleCase(Messages.get(WndKeyBindings.class, "quickslot_" + (slotNum+1)));
+			return slotName();
 		} else {
 			return super.hoverText();
 		}
@@ -310,6 +318,7 @@ public class QuickSlotButton extends Button {
 	}
 
 	public static void useTargeting(int idx){
+		if (idx < 0 || idx >= instance.length || instance[idx] == null) return;
 		instance[idx].useTargeting();
 	}
 	private void useTargeting() {
@@ -397,10 +406,11 @@ public class QuickSlotButton extends Button {
 	public static void cancel() {
 		if (targetingSlot != -1) {
 			for (QuickSlotButton btn : instance) {
+				if (btn == null) continue;
 				btn.crossB.visible = false;
 				btn.crossM.remove();
-				targetingSlot = -1;
 			}
+			targetingSlot = -1;
 		}
 	}
 }

@@ -153,7 +153,7 @@ public abstract class ChampionEnemy extends Buff {
 			if (target.flying || !Dungeon.level.pit[target.pos]) {
 				for (int i : PathFinder.NEIGHBOURS9) {
 					if (!Dungeon.level.solid[target.pos + i] && !Dungeon.level.water[target.pos + i]) {
-						GameScene.add(Blob.seed(target.pos + i, BigInteger.TWO, Fire.class));
+						GameScene.add(Blob.seed(target.pos + i, BigInteger.valueOf(2), Fire.class));
 					}
 				}
 			}
@@ -375,7 +375,7 @@ public abstract class ChampionEnemy extends Buff {
             if (target.flying || !Dungeon.level.pit[target.pos]) {
                 for (int i : PathFinder.NEIGHBOURS9) {
                     if (!Dungeon.level.solid[target.pos + i]) {
-                        GameScene.add(Blob.seed(target.pos + i, BigInteger.TWO, Blizzard.class));
+                        GameScene.add(Blob.seed(target.pos + i, BigInteger.valueOf(2), Blizzard.class));
                     }
                 }
             }

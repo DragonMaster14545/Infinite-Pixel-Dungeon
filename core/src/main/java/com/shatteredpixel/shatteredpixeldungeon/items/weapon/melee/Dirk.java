@@ -83,13 +83,13 @@ public class Dirk extends MeleeWeapon implements PreparationAllowed {
 
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
-		Dagger.sneakAbility(hero, target, 4, BigInteger.TWO.add(buffedLvl().divide(BigInteger.valueOf(150))), this);
+		Dagger.sneakAbility(hero, target, 4, BigInteger.valueOf(2).add(buffedLvl().divide(BigInteger.valueOf(150))), this);
 	}
 
 	@Override
 	public String abilityInfo() {
 		if (levelKnown){
-			return Messages.get(this, "ability_desc", BigInteger.TWO.add(buffedLvl().divide(BigInteger.valueOf(150))));
+			return Messages.get(this, "ability_desc", BigInteger.valueOf(2).add(buffedLvl().divide(BigInteger.valueOf(150))));
 		} else {
 			return Messages.get(this, "typical_ability_desc", 2);
 		}
@@ -97,7 +97,7 @@ public class Dirk extends MeleeWeapon implements PreparationAllowed {
 
 	@Override
 	public String upgradeAbilityStat(BigInteger level) {
-		return BigInteger.TWO.add(level.divide(BigInteger.valueOf(150))).toString();
+		return BigInteger.valueOf(2).add(level.divide(BigInteger.valueOf(150))).toString();
 	}
 
 }

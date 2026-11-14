@@ -436,16 +436,16 @@ public class BlackMimic extends Mob {
 			Ballistica trajectory = new Ballistica(pos, target.pos, Ballistica.STOP_TARGET);
 
 			for (int i : trajectory.subPath(0, trajectory.collisionPos)) {
-				GameScene.add(Blob.seed(i, BigInteger.valueOf(200), CorrosoGas.class).setStr(Dungeon.escalatingDepth().divide(BigInteger.TWO)));
+				GameScene.add(Blob.seed(i, BigInteger.valueOf(200), CorrosoGas.class).setStr(Dungeon.escalatingDepth().divide(BigInteger.valueOf(2))));
 				gasVented += 20;
 			}
 
-			GameScene.add(Blob.seed(trajectory.collisionPos, BigInteger.valueOf(290), CorrosoGas.class).setStr(Dungeon.escalatingDepth().divide(BigInteger.TWO)));
+			GameScene.add(Blob.seed(trajectory.collisionPos, BigInteger.valueOf(290), CorrosoGas.class).setStr(Dungeon.escalatingDepth().divide(BigInteger.valueOf(2))));
 
 			if (gasVented < 250) {
 				int toVentAround = (int) Math.ceil((250 - gasVented) / 8f);
 				for (int i : PathFinder.NEIGHBOURS8) {
-					GameScene.add(Blob.seed(trajectory.collisionPos + i, BigInteger.valueOf(toVentAround), CorrosoGas.class).setStr(Dungeon.escalatingDepth().divide(BigInteger.TWO)));
+					GameScene.add(Blob.seed(trajectory.collisionPos + i, BigInteger.valueOf(toVentAround), CorrosoGas.class).setStr(Dungeon.escalatingDepth().divide(BigInteger.valueOf(2))));
 				}
 			}
 		}
@@ -470,7 +470,7 @@ public class BlackMimic extends Mob {
 			if (Dungeon.level.adjacent(pos, target.pos)){
 				int oppositeAdjacent = target.pos + (target.pos - pos);
 				Ballistica trajectory = new Ballistica(target.pos, oppositeAdjacent, Ballistica.MAGIC_BOLT);
-				WandOfBlastWave.throwChar(target, trajectory, BigInteger.TWO, false, true, getClass());
+				WandOfBlastWave.throwChar(target, trajectory, BigInteger.valueOf(2), false, true, getClass());
 				if (target == Dungeon.hero){
 					Dungeon.hero.interrupt();
 				}

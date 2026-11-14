@@ -102,7 +102,7 @@ public class RockfallTrap extends Trap {
 			Char ch = Actor.findChar( cell );
 
 			if (ch != null && ch.isAlive()){
-				BigInteger damage = Big.normalRange(BigInteger.valueOf(5).add(Dungeon.escalatingDepth()), BigInteger.TEN.add(Dungeon.escalatingDepth().multiply(BigInteger.TWO)));
+				BigInteger damage = Big.normalRange(BigInteger.valueOf(5).add(Dungeon.escalatingDepth()), BigInteger.TEN.add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(2))));
 				damage = damage.subtract(ch.drRoll());
 				ch.damage( damage.max(BigInteger.ZERO) , this);
 

@@ -45,7 +45,7 @@ public class Snake extends Mob {
 		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(4));
 		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(25));
 		
-		EXP = Dungeon.getCycleMultiplier(BigInteger.TWO);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(2));
 		maxLvl = 7;
 		
 		loot = Generator.Category.SEED;

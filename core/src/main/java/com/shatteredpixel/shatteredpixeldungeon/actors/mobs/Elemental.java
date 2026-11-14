@@ -89,7 +89,7 @@ public abstract class Elemental extends Mob {
 		if (!summonedALly) {
 			return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(16)), Dungeon.getCycleMultiplier(BigInteger.valueOf(26)) );
 		} else {
-			BigInteger regionScale = BigInteger.TWO.max((BigInteger.ONE.add(Dungeon.scalingDepth().divide(BigInteger.valueOf(5)))));
+			BigInteger regionScale = BigInteger.valueOf(2).max((BigInteger.ONE.add(Dungeon.scalingDepth().divide(BigInteger.valueOf(5)))));
 			return Dungeon.NormalLongRange(BigInteger.valueOf(6).multiply(regionScale), BigInteger.valueOf(15).add(BigInteger.TEN.multiply(regionScale)));
 		}
 	}
@@ -99,7 +99,7 @@ public abstract class Elemental extends Mob {
 		if (!summonedALly) {
 			return Dungeon.getCycleMultiplier(BigInteger.valueOf(25));
 		} else {
-			BigInteger regionScale = BigInteger.TWO.max((BigInteger.ONE.add(Dungeon.scalingDepth().divide(BigInteger.valueOf(5)))));
+			BigInteger regionScale = BigInteger.valueOf(2).max((BigInteger.ONE.add(Dungeon.scalingDepth().divide(BigInteger.valueOf(5)))));
 			return BigInteger.valueOf(5).add(BigInteger.TEN.multiply(regionScale));
 		}
 	}
@@ -107,7 +107,7 @@ public abstract class Elemental extends Mob {
 	public void setSummonedALly(){
 		summonedALly = true;
 		//sewers are prison are equivalent, otherwise scales as normal (2/2/3/4/5)
-		BigInteger regionScale = BigInteger.TWO.max((BigInteger.ONE.add(Dungeon.scalingDepth().divide(BigInteger.valueOf(5)))));
+		BigInteger regionScale = BigInteger.valueOf(2).max((BigInteger.ONE.add(Dungeon.scalingDepth().divide(BigInteger.valueOf(5)))));
 		defenseSkill = BigInteger.TEN.multiply(regionScale);
 		HT = BigInteger.valueOf(30).multiply(regionScale);
 	}
@@ -195,7 +195,7 @@ public abstract class Elemental extends Mob {
 	@Override
 	public boolean add( Buff buff ) {
 		if (harmfulBuffs.contains( buff.getClass() )) {
-			damage( Dungeon.NormalLongRange( HT.divide(BigInteger.TWO), HT.multiply(BigInteger.valueOf(3)).divide(BigInteger.valueOf(5)) ), buff );
+			damage( Dungeon.NormalLongRange( HT.divide(BigInteger.valueOf(2)), HT.multiply(BigInteger.valueOf(3)).divide(BigInteger.valueOf(5)) ), buff );
 			return false;
 		} else {
 			return super.add( buff );
@@ -371,7 +371,7 @@ public abstract class Elemental extends Mob {
 					if (!Dungeon.level.solid[targetingPos + i]) {
 						CellEmitter.get(targetingPos + i).burst(ElmoParticle.FACTORY, 5);
 						if (Dungeon.level.water[targetingPos + i]) {
-							GameScene.add(Blob.seed(targetingPos + i, BigInteger.TWO, Fire.class));
+							GameScene.add(Blob.seed(targetingPos + i, BigInteger.valueOf(2), Fire.class));
 						} else {
 							GameScene.add(Blob.seed(targetingPos + i, BigInteger.valueOf(8), Fire.class));
 						}

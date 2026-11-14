@@ -1,6 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -112,7 +113,7 @@ public class RacingTheDeath extends Buff implements Hero.Doom {
         Emitter emitter = GameScene.emitter();
         emitter.pos(new PointF(sprite.x + sprite.width / 2, sprite.y + sprite.height / 2));
 
-        emitter.burst(particles, amount);
+        emitter.burst(particles, Big.particles(amount));
 
         Sample.INSTANCE.play(Assets.Sounds.LIGHTNING);
 

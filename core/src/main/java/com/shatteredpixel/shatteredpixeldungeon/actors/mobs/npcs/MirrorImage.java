@@ -115,7 +115,7 @@ public class MirrorImage extends NPC {
 		} else {
 			damage = hero.damageRoll(); //handles ring of force
 		}
-		return BigInteger.valueOf(Big.toInt(((damage.add(BigInteger.ONE)).divide(BigInteger.TWO)))); //half hero damage, rounded up
+		return BigInteger.valueOf(Big.toInt(((damage.add(BigInteger.ONE)).divide(BigInteger.valueOf(2))))); //half hero damage, rounded up
 	}
 	
 	@Override
@@ -137,7 +137,7 @@ public class MirrorImage extends NPC {
 			
 			//if the hero has more/less evasion, 50% of it is applied
 			//includes ring of evasion boost
-			return super.defenseSkill(enemy).multiply(BigInteger.valueOf((baseEvasion + heroEvasion))).divide(BigInteger.TWO);
+			return super.defenseSkill(enemy).multiply(BigInteger.valueOf((baseEvasion + heroEvasion))).divide(BigInteger.valueOf(2));
 		} else {
 			return BigInteger.ZERO;
 		}
@@ -157,7 +157,7 @@ public class MirrorImage extends NPC {
 	public BigInteger drRoll() {
 		BigInteger dr = super.drRoll();
 		if (hero != null && hero.belongings.weapon() != null){
-			return dr.add(Dungeon.NormalLongRange(BigInteger.ZERO, hero.belongings.weapon().defenseFactor(this).divide(BigInteger.TWO)));
+			return dr.add(Dungeon.NormalLongRange(BigInteger.ZERO, hero.belongings.weapon().defenseFactor(this).divide(BigInteger.valueOf(2))));
 		} else {
 			return dr;
 		}

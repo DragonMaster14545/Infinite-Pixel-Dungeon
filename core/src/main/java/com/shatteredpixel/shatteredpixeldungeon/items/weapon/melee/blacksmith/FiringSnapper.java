@@ -73,7 +73,7 @@ public class FiringSnapper extends BlacksmithWeapon implements InternalKillsThre
 
     @Override
     public BigInteger min(BigInteger lvl) {
-        return super.min(lvl).divide(BigInteger.TWO);
+        return super.min(lvl).divide(BigInteger.valueOf(2));
     }
 
     @Override

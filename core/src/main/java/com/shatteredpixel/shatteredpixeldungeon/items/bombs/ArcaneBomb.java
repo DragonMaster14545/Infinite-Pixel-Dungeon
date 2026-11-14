@@ -88,7 +88,7 @@ public class ArcaneBomb extends Bomb {
 		
 		for (Char ch : affected){
 			// 100%/83%/67% bomb damage based on distance, but pierces armor.
-			BigInteger damage = Dungeon.NormalLongRange( Dungeon.scalingDepth().add(BigInteger.valueOf(5)), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.TWO)) );
+			BigInteger damage = Dungeon.NormalLongRange( Dungeon.scalingDepth().add(BigInteger.valueOf(5)), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.valueOf(2))) );
 			float multiplier = 1f - (.16667f*Dungeon.level.distance(cell, ch.pos));
 			if (Dungeon.hero.heroClass == HeroClass.ROGUE){
 				damage = Big.trunc(Big.dec(damage).multiply(Big.dec(2.5f)));

@@ -281,7 +281,7 @@ public class ShulkerBox extends Item {
                 if (t.isEmpty() || t.equals("all") || t.equals("max")) {
                     n = max;
                 } else if (t.equals("half")) {
-                    n = max.divide(BigInteger.TWO).max(BigInteger.ONE);
+                    n = max.divide(BigInteger.valueOf(2)).max(BigInteger.ONE);
                 } else {
                     try {
                         n = Big.parse(t);

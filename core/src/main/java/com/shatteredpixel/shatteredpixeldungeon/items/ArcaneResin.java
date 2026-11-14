@@ -178,7 +178,7 @@ public class ArcaneResin extends Item {
 			Wand w = (Wand)ingredients.get(0);
 			BigInteger level = w.level().subtract(BigInteger.valueOf(w.resinBonus));
 
-			Item output = new ArcaneResin().quantity(BigInteger.TWO.multiply((level.add(BigInteger.ONE))));
+			Item output = new ArcaneResin().quantity(BigInteger.valueOf(2).multiply((level.add(BigInteger.ONE))));
 
 			if (Dungeon.hero.heroClass != HeroClass.MAGE && Dungeon.hero.hasTalent(Talent.WAND_PRESERVATION)){
 				output.quantity(output.quantity().add(BigInteger.valueOf(Dungeon.hero.pointsInTalent(Talent.WAND_PRESERVATION))));

@@ -131,6 +131,7 @@ public class GameScene extends PixelScene {
 	private static boolean invVisible = true;
 
 	private Toolbar toolbar;
+	private SideQuickslots sideSlots;
 	private Toast prompt;
 
 	private AttackIndicator attack;
@@ -366,6 +367,10 @@ public class GameScene extends PixelScene {
 		toolbar.camera = uiCamera;
 		add( toolbar );
 
+		sideSlots = new SideQuickslots();
+		sideSlots.camera = uiCamera;
+		add( sideSlots );
+
 		if (uiSize == 2) {
 			inventory = new InventoryPane();
 			inventory.camera = uiCamera;
@@ -377,6 +382,7 @@ public class GameScene extends PixelScene {
 			toolbar.setRect( 0, uiCamera.height - toolbar.height(), uiCamera.width, toolbar.height() );
 		}
 
+		sideSlots.toolbar( toolbar );
 		layoutTags();
 
 		switch (InterlevelScene.mode) {
@@ -774,6 +780,8 @@ private static float waterOfs = 0;
 		updateTags = false;
 
 		if (scene == null) return;
+
+		if (scene.sideSlots != null) scene.sideSlots.layoutSlots();
 
 		//move the camera center up a bit if we're on full UI and it is taking up lots of space
 		if (scene.inventory != null && scene.inventory.visible

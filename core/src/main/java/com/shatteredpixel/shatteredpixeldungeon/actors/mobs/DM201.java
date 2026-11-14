@@ -73,10 +73,10 @@ public class DM201 extends DM200 {
 		threatened = false;
 		spend(TICK);
 
-		GameScene.add(Blob.seed(enemy.pos, BigInteger.valueOf(15), CorrosiveGas.class).setStrength((Dungeon.escalatingDepth().add(BigInteger.ONE)).divide(BigInteger.TWO)));
+		GameScene.add(Blob.seed(enemy.pos, BigInteger.valueOf(15), CorrosiveGas.class).setStrength((Dungeon.escalatingDepth().add(BigInteger.ONE)).divide(BigInteger.valueOf(2))));
 		for (int i : PathFinder.NEIGHBOURS8){
 			if (!Dungeon.level.solid[enemy.pos+i]) {
-				GameScene.add(Blob.seed(enemy.pos + i, BigInteger.valueOf(5), CorrosiveGas.class).setStrength((Dungeon.escalatingDepth().add(BigInteger.ONE)).divide(BigInteger.TWO)));
+				GameScene.add(Blob.seed(enemy.pos + i, BigInteger.valueOf(5), CorrosiveGas.class).setStrength((Dungeon.escalatingDepth().add(BigInteger.ONE)).divide(BigInteger.valueOf(2))));
 			}
 		}
 

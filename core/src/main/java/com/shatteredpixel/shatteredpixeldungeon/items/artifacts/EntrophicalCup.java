@@ -124,7 +124,7 @@ public class EntrophicalCup extends Artifact {
         }
 
         hero.sprite.operate(hero.pos);
-        hero.sprite.emitter().burst(ShadowParticle.UP, Big.toInt(BigInteger.valueOf(4).multiply(gain).min(BigInteger.valueOf(40))));
+        hero.sprite.emitter().burst(ShadowParticle.UP, Big.particles(BigInteger.valueOf(4).multiply(gain)));
         hero.spend(1f);
         hero.busy();
         GLog.p(Messages.get(this, "sacrificed", level()));

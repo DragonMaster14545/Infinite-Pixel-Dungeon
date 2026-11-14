@@ -68,7 +68,7 @@ public class DKTreasureBag extends TreasureBag {
             items.add(new UnstableBrew().quantity(BigInteger.valueOf(50)));
         }
         if (Dungeon.cycle > 1){
-            items.add(new OverloadBeacon().quantity(BigInteger.TWO));
+            items.add(new OverloadBeacon().quantity(BigInteger.valueOf(2)));
             for (int i = 0; i < 3; i++) items.addAll(new BiggerGambleBag().items());
         }
         return items;

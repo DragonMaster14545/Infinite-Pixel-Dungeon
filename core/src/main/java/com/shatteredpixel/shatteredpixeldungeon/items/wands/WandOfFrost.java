@@ -55,7 +55,7 @@ public class WandOfFrost extends DamageWand {
 	}
 
 	public BigInteger min(BigInteger lvl){
-		return ((BigInteger.TWO.add(lvl)).multiply(getRarityMultiplier()));
+		return ((BigInteger.valueOf(2).add(lvl)).multiply(getRarityMultiplier()));
 	}
 
 	public BigInteger max(BigInteger lvl){
@@ -98,7 +98,7 @@ public class WandOfFrost extends DamageWand {
 				float chillturns = Math.min(10, ch.buff(Chill.class).cooldown());
 				damage = Big.round(Big.dec(damage).multiply(Big.dec(Math.pow(0.9333f, chillturns))));
 			} else {
-				ch.sprite.burst( 0xFF99CCFF, (int) Math.min(Math.sqrt(Big.dec(2).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue()), 1000));
+				ch.sprite.burst( 0xFF99CCFF, Big.particles(Math.sqrt(Big.dec(2).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue())));
 			}
 
 			wandProc(ch, chargesPerCast());
@@ -109,7 +109,7 @@ public class WandOfFrost extends DamageWand {
 				if (Dungeon.level.water[ch.pos])
 					Buff.affect(ch, Chill.class, BigInteger.valueOf(4).add(buffedLvl()).floatValue());
 				else
-					Buff.affect(ch, Chill.class, BigInteger.TWO.add(buffedLvl()).floatValue());
+					Buff.affect(ch, Chill.class, BigInteger.valueOf(2).add(buffedLvl()).floatValue());
 			}
 		} else {
 			Dungeon.level.pressCell(bolt.collisionPos);
@@ -118,7 +118,7 @@ public class WandOfFrost extends DamageWand {
 
 	@Override
 	public String upgradeStat2(BigInteger level) {
-		return BigInteger.TWO.add(level).toString();
+		return BigInteger.valueOf(2).add(level).toString();
 	}
 
 	@Override

@@ -88,7 +88,7 @@ public class Flail extends MeleeWeapon {
 			spin.detach();
 			//+(8+2*lvl) damage per spin, roughly +40% base damage, +45% scaling
 			// so +120% base dmg, +135% scaling at 3 spins
-			spinBoost = BigInteger.valueOf(spin.spins).multiply(augment.damageFactor(BigInteger.valueOf(8).add(BigInteger.TWO.multiply(buffedLvl()))));
+			spinBoost = BigInteger.valueOf(spin.spins).multiply(augment.damageFactor(BigInteger.valueOf(8).add(BigInteger.valueOf(2).multiply(buffedLvl()))));
 			return Float.POSITIVE_INFINITY;
 		} else {
 			spinBoost = BigInteger.ZERO;
@@ -131,7 +131,7 @@ public class Flail extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		BigInteger dmgBoost = levelKnown ? BigInteger.valueOf(8).add(BigInteger.TWO.multiply(buffedLvl())) : BigInteger.valueOf(8);
+		BigInteger dmgBoost = levelKnown ? BigInteger.valueOf(8).add(BigInteger.valueOf(2).multiply(buffedLvl())) : BigInteger.valueOf(8);
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(dmgBoost));
 		} else {
@@ -140,7 +140,7 @@ public class Flail extends MeleeWeapon {
 	}
 
 	public String upgradeAbilityStat(BigInteger level){
-		return "+" + augment.damageFactor(BigInteger.valueOf(8).add(BigInteger.TWO.multiply(level)));
+		return "+" + augment.damageFactor(BigInteger.valueOf(8).add(BigInteger.valueOf(2).multiply(level)));
 	}
 
 	public static class SpinAbilityTracker extends FlavourBuff {

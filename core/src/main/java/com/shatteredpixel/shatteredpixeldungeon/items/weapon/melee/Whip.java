@@ -63,12 +63,12 @@ public class Whip extends MeleeWeapon {
 
 	@Override
 	public BigInteger min(BigInteger lvl) {
-		return BigInteger.valueOf(tier()).add(lvl.divide(BigInteger.TWO));
+		return BigInteger.valueOf(tier()).add(lvl.divide(BigInteger.valueOf(2)));
 	}
 
 	@Override
 	public BigInteger max(BigInteger lvl) {
-		return  BigInteger.valueOf(3L*(tier())).add(lvl.multiply(BigInteger.valueOf((tier()-1))).divide(BigInteger.TWO));     //+4 per level, down from +5
+		return  BigInteger.valueOf(3L*(tier())).add(lvl.multiply(BigInteger.valueOf((tier()-1))).divide(BigInteger.valueOf(2)));     //+4 per level, down from +5
 	}
 
 	public static class WhipReachBooster extends Buff {};

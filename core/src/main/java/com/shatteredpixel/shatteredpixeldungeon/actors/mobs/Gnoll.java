@@ -39,7 +39,7 @@ public class Gnoll extends Mob {
 		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(12));
 		defenseSkill = Dungeon.getCycleMultiplier(BigInteger.valueOf(4));
 		
-		EXP = Dungeon.getCycleMultiplier(BigInteger.TWO);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(2));
 		maxLvl = 8;
 		
 		loot = Gold.class;
@@ -58,6 +58,6 @@ public class Gnoll extends Mob {
 	
 	@Override
 	public BigInteger cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.TWO));
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(2)));
 	}
 }

@@ -115,12 +115,20 @@ public class InfPDChanges {
                 "_-_ Adjusted the columns of WndBag, 5 for portrait (from 7) and 13 for landscape (from 11), and the Equipment Bag's base height is now the same as other bags\n" +
                             "_-_ Ring slot upgrades increased to 65, from 18\n" +
                             "_-_ Removed the nullifying exp system when reaching a certain level\n" +
-                            "_-_ Prism Box now spawns with 50% chance"
+                            "_-_ Prism Box now spawns with 50% chance\n" +
+                            "_-_ Capped all particle and splash effects for optimized gameplay\n" +
+                            "_-_ Added side quickslots options to add more quickslots in-game\n" +
+                            "_-_ Alchemy categories has been changed to 1-row horizontally scrollable to fit new recipes in the future\n" +
+                            "_-_ Item Info now becomes scrollable when its window reached a specific limit\n" +
+                            "_-_ The cycle stats are now computed once per cycle and some other optimizations on conversion, and it will skip when numbers are small"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
                 "_-_ Fixed an occasional upgrade popup on shulker boxes when opening a save\n" +
-                            "_-_ Fixed the incorrect heap pickup on item getter spell"
+                            "_-_ Fixed the incorrect heap pickup on item getter spell\n" +
+                            "_-_ Fixed an incorrect BigInteger formatting on the chances in rarities' window\n" +
+                            "_-_ Fixed an incorrect note deletion when creating a notes outside gamescene\n" +
+                            "_-_ Fixed a crash regarding opening the changelog or when starting a run"
         ));
 
         changes = new ChangeInfo("D", false, "");

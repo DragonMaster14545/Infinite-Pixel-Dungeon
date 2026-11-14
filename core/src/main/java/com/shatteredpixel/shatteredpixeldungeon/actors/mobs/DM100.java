@@ -66,7 +66,7 @@ public class DM100 extends Mob implements Callback {
 	
 	@Override
 	public BigInteger damageRoll() {
-		return Big.normalRange(Dungeon.getCycleMultiplier(BigInteger.TWO), Dungeon.getCycleMultiplier(BigInteger.valueOf(8)));
+		return Big.normalRange(Dungeon.getCycleMultiplier(BigInteger.valueOf(2)), Dungeon.getCycleMultiplier(BigInteger.valueOf(8)));
 	}
 	
 	@Override

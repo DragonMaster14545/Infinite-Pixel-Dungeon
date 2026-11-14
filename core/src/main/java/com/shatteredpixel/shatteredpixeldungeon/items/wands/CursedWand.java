@@ -481,7 +481,7 @@ public class CursedWand {
 		public boolean effect(Item origin, Char user, Ballistica bolt, boolean positiveOnly) {
 			final Char target = Actor.findChar( bolt.collisionPos );
 			if (target != null) {
-				BigInteger damage = Dungeon.scalingDepth().multiply(BigInteger.TWO);
+				BigInteger damage = Dungeon.scalingDepth().multiply(BigInteger.valueOf(2));
 				Char toHeal, toDamage;
 
 				//can only harm target if positive only
@@ -492,7 +492,7 @@ public class CursedWand {
 					toHeal = target;
 					toDamage = user;
 				}
-				toHeal.HP = toHeal.HT.min(toHeal.HP.add(damage.divide(BigInteger.TWO)));
+				toHeal.HP = toHeal.HT.min(toHeal.HP.add(damage.divide(BigInteger.valueOf(2))));
 				toHeal.sprite.emitter().burst(Speck.factory(Speck.HEALING), 3);
 				toHeal.sprite.showStatusWithIcon( CharSprite.POSITIVE, damage.toString(), FloatingText.HEALING );
 
@@ -822,7 +822,7 @@ public class CursedWand {
 						Char ch = Actor.findChar(i);
 						Burning burning = Buff.affect(ch, Burning.class);
 						burning.reignite(ch);
-						BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(5).add(Dungeon.scalingDepth()), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.TWO)));
+						BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(5).add(Dungeon.scalingDepth()), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.valueOf(2))));
 						ch.damage(dmg, burning);
 					}
 					if (Dungeon.level.flamable[i]){
@@ -902,7 +902,7 @@ public class CursedWand {
 					continue;
 				} else {
 
-					BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(5).add(Dungeon.scalingDepth()), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.TWO)));
+					BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(5).add(Dungeon.scalingDepth()), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.valueOf(2))));
 					switch (Random.Int(5)){
 						case 0: default:
 							Burning burning = Buff.affect(ch, Burning.class);
@@ -917,7 +917,7 @@ public class CursedWand {
 							break;
 						case 2:
 							Poison poison = Buff.affect(ch, Poison.class);
-							poison.set(BigInteger.valueOf(3).add(Dungeon.scalingDepth().divide(BigInteger.TWO)).doubleValue());
+							poison.set(BigInteger.valueOf(3).add(Dungeon.scalingDepth().divide(BigInteger.valueOf(2))).doubleValue());
 							ch.damage(dmg, poison);
 							ch.sprite.emitter().burst(PoisonParticle.SPLASH, 20);
 							break;

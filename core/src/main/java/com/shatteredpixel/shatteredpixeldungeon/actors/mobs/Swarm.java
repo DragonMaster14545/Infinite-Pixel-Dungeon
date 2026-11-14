@@ -94,7 +94,7 @@ public class Swarm extends Mob {
 	@Override
 	public BigInteger defenseProc( Char enemy, BigInteger damage ) {
 
-		if ((HP.compareTo(damage.add(BigInteger.TWO)) >= 0)) {
+		if ((HP.compareTo(damage.add(BigInteger.valueOf(2))) >= 0)) {
 			ArrayList<Integer> candidates = new ArrayList<>();
 			
 			int[] neighbours = {pos + 1, pos - 1, pos + Dungeon.level.width(), pos - Dungeon.level.width()};
@@ -114,7 +114,7 @@ public class Swarm extends Mob {
 				clone.state = clone.HUNTING;
 				GameScene.add( clone, SPLIT_DELAY ); //we add before assigning HP due to ascension
 
-				clone.HP = (HP.subtract(damage)).divide(BigInteger.TWO);
+				clone.HP = (HP.subtract(damage)).divide(BigInteger.valueOf(2));
 				Actor.add( new Pushing( clone, pos, clone.pos ) );
 
 				Dungeon.level.occupyCell(clone);

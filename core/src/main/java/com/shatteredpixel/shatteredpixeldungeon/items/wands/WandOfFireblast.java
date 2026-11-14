@@ -76,11 +76,11 @@ public class WandOfFireblast extends DamageWand {
 	public BigInteger max(BigInteger lvl){
 		switch (Big.toInt(chargesPerCast())){
 			case 1: default:
-				return ((BigInteger.TWO.add(BigInteger.TWO.multiply(lvl))).multiply(getRarityMultiplier()));
+				return ((BigInteger.valueOf(2).add(BigInteger.valueOf(2).multiply(lvl))).multiply(getRarityMultiplier()));
 			case 2:
-				return ((BigInteger.TWO.multiply((BigInteger.valueOf(4).add(BigInteger.TWO.multiply(lvl))))).multiply(getRarityMultiplier()));
+				return ((BigInteger.valueOf(2).multiply((BigInteger.valueOf(4).add(BigInteger.valueOf(2).multiply(lvl))))).multiply(getRarityMultiplier()));
 			case 3:
-				return ((BigInteger.valueOf(3).multiply((BigInteger.valueOf(6).add(BigInteger.TWO.multiply(lvl))))).multiply(getRarityMultiplier()));
+				return ((BigInteger.valueOf(3).multiply((BigInteger.valueOf(6).add(BigInteger.valueOf(2).multiply(lvl))))).multiply(getRarityMultiplier()));
 		}
 	}
 
@@ -178,7 +178,7 @@ public class WandOfFireblast extends DamageWand {
         }
         Ballistica b = new Ballistica(Dungeon.hero.pos, target, Ballistica.WONT_STOP);
         ConeAOE tempCone = new ConeAOE( b,
-                BigInteger.valueOf(3).add(BigInteger.TWO.multiply(chargesPerCast())).floatValue(),
+                BigInteger.valueOf(3).add(BigInteger.valueOf(2).multiply(chargesPerCast())).floatValue(),
                 BigInteger.valueOf(30).add(BigInteger.valueOf(20).multiply(chargesPerCast())).floatValue(),
                 Ballistica.STOP_TARGET | Ballistica.STOP_SOLID | Ballistica.IGNORE_SOFT_SOLID);
         return Arrays.asList(tempCone.cells.toArray(new Integer[0]));
@@ -189,7 +189,7 @@ public class WandOfFireblast extends DamageWand {
 		//need to perform flame spread logic here so we can determine what cells to put flames in.
 
 		// 5/7/9 distance
-		int maxDist = Big.toInt((BigInteger.valueOf(3).add(BigInteger.TWO.multiply(chargesPerCast()))));
+		int maxDist = Big.toInt((BigInteger.valueOf(3).add(BigInteger.valueOf(2).multiply(chargesPerCast()))));
 
 		cone = new ConeAOE( bolt,
 				maxDist,
@@ -240,17 +240,17 @@ public class WandOfFireblast extends DamageWand {
 
 	@Override
 	public String upgradeStat1(BigInteger level) {
-		return (BigInteger.ONE.add(level)) + "-" + (BigInteger.TWO.add(BigInteger.TWO.multiply(level)));
+		return (BigInteger.ONE.add(level)) + "-" + (BigInteger.valueOf(2).add(BigInteger.valueOf(2).multiply(level)));
 	}
 
 	@Override
 	public String upgradeStat2(BigInteger level) {
-		return (BigInteger.TWO.add(BigInteger.TWO.multiply(level))) + "-" + BigInteger.TWO.multiply((BigInteger.valueOf(4).add(BigInteger.TWO.multiply(level))));
+		return (BigInteger.valueOf(2).add(BigInteger.valueOf(2).multiply(level))) + "-" + BigInteger.valueOf(2).multiply((BigInteger.valueOf(4).add(BigInteger.valueOf(2).multiply(level))));
 	}
 
 	@Override
 	public String upgradeStat3(BigInteger level) {
-		return (BigInteger.valueOf(3).add(BigInteger.valueOf(3).multiply(level))) + "-" + BigInteger.valueOf(3).multiply((BigInteger.valueOf(6).add(BigInteger.TWO.multiply(level))));
+		return (BigInteger.valueOf(3).add(BigInteger.valueOf(3).multiply(level))) + "-" + BigInteger.valueOf(3).multiply((BigInteger.valueOf(6).add(BigInteger.valueOf(2).multiply(level))));
 	}
 
 	@Override

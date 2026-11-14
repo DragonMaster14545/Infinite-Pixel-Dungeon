@@ -130,7 +130,7 @@ public class Greataxe extends MeleeWeapon {
 				AttackIndicator.target(enemy);
 
 				//+(15+(2*lvl)) damage, roughly +60% base damage, +55% scaling
-				BigInteger dmgBoost = augment.damageFactor(BigInteger.valueOf(15).add(BigInteger.TWO.multiply(buffedLvl())));
+				BigInteger dmgBoost = augment.damageFactor(BigInteger.valueOf(15).add(BigInteger.valueOf(2).multiply(buffedLvl())));
 
 				if (hero.attack(enemy, 1, dmgBoost.floatValue(), Char.INFINITE_ACCURACY)){
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
@@ -150,7 +150,7 @@ public class Greataxe extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		BigInteger dmgBoost = levelKnown ? BigInteger.valueOf(15).add(BigInteger.TWO.multiply(buffedLvl())) : BigInteger.valueOf(15);
+		BigInteger dmgBoost = levelKnown ? BigInteger.valueOf(15).add(BigInteger.valueOf(2).multiply(buffedLvl())) : BigInteger.valueOf(15);
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(min().add(dmgBoost)), augment.damageFactor(max().add(dmgBoost)));
 		} else {
@@ -159,7 +159,7 @@ public class Greataxe extends MeleeWeapon {
 	}
 
 	public String upgradeAbilityStat(BigInteger level){
-		BigInteger dmgBoost = BigInteger.valueOf(15).add(BigInteger.TWO.multiply(level));
+		BigInteger dmgBoost = BigInteger.valueOf(15).add(BigInteger.valueOf(2).multiply(level));
 		return augment.damageFactor(min(level).add(dmgBoost)) + "-" + augment.damageFactor(max(level).add(dmgBoost));
 	}
 }

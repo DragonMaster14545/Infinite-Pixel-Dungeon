@@ -304,7 +304,7 @@ public class Ring extends KindofMisc {
 	public BigInteger value() {
 		BigInteger price = BigInteger.valueOf(75);
 		if (cursed && cursedKnown) {
-			price = price.divide(BigInteger.TWO);
+			price = price.divide(BigInteger.valueOf(2));
 		}
 		if (levelKnown) {
 			if ((level().compareTo(BigInteger.ZERO) > 0)) {
@@ -386,7 +386,7 @@ public class Ring extends KindofMisc {
 	//just used for ring descriptions
 	public BigInteger soloBonus(){
 		if (cursed){
-			return (BigInteger.ZERO.min(Ring.this.level().subtract(BigInteger.TWO)).multiply(getRarityMultiplier()));
+			return (BigInteger.ZERO.min(Ring.this.level().subtract(BigInteger.valueOf(2))).multiply(getRarityMultiplier()));
 		} else {
 			return ((Ring.this.level().add(BigInteger.ONE)).multiply(getRarityMultiplier()));
 		}
@@ -395,7 +395,7 @@ public class Ring extends KindofMisc {
 	//just used for ring descriptions
 	public BigInteger soloBuffedBonus(){
 		if (cursed){
-			return (BigInteger.ZERO.min(Ring.this.buffedLvl().subtract(BigInteger.TWO)).multiply(getRarityMultiplier()));
+			return (BigInteger.ZERO.min(Ring.this.buffedLvl().subtract(BigInteger.valueOf(2))).multiply(getRarityMultiplier()));
 		} else {
 			return ((Ring.this.buffedLvl().add(BigInteger.ONE)).multiply(getRarityMultiplier()));
 		}
@@ -403,7 +403,7 @@ public class Ring extends KindofMisc {
 
     public BigInteger soloVisualBonus(){
         if (cursed){
-            return (BigInteger.ZERO.min(Ring.this.buffedLvl().subtract(BigInteger.TWO)).multiply(getRarityMultiplier()));
+            return (BigInteger.ZERO.min(Ring.this.buffedLvl().subtract(BigInteger.valueOf(2))).multiply(getRarityMultiplier()));
         } else {
             return (Ring.this.buffedLvl().multiply(getRarityMultiplier()));
         }

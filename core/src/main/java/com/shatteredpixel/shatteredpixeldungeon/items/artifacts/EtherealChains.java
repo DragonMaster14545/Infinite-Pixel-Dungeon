@@ -287,8 +287,8 @@ public class EtherealChains extends Artifact {
 	@Override
 	public void charge(Hero target, float amount) {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
-		BigInteger chargeTarget = ((BigInteger.valueOf(5).add((level().multiply(BigInteger.TWO)))).multiply(getRarityMultiplier()));
-		if ((charge.compareTo(chargeTarget.multiply(BigInteger.TWO)) < 0)) {
+		BigInteger chargeTarget = ((BigInteger.valueOf(5).add((level().multiply(BigInteger.valueOf(2))))).multiply(getRarityMultiplier()));
+		if ((charge.compareTo(chargeTarget.multiply(BigInteger.valueOf(2))) < 0)) {
 			partialCharge += 0.5f * amount;
 			partialCharge *= getRarityMultiplier().doubleValue();
 			if (partialCharge >= 1) {
@@ -318,7 +318,7 @@ public class EtherealChains extends Artifact {
 
 		@Override
 		public boolean act() {
-			BigInteger chargeTarget = BigInteger.valueOf(5).add((level().multiply(BigInteger.TWO)));
+			BigInteger chargeTarget = BigInteger.valueOf(5).add((level().multiply(BigInteger.valueOf(2))));
 			if ((charge.compareTo(chargeTarget) < 0)
 					&& !cursed
 					&& target.buff(MagicImmune.class) == null
@@ -349,7 +349,7 @@ public class EtherealChains extends Artifact {
 			exp = exp.add(Big.roundD(levelPortion * 100));
 
 			//past the soft charge cap, gaining  charge from leveling is slowed.
-			if ((charge.compareTo(BigInteger.valueOf(5).add((level().multiply(BigInteger.TWO)))) > 0)) {
+			if ((charge.compareTo(BigInteger.valueOf(5).add((level().multiply(BigInteger.valueOf(2))))) > 0)) {
 				levelPortion *= Big.div(Big.dec((5 + (level().floatValue() * 2))), Big.dec(charge)).floatValue();
 			}
 			partialCharge += levelPortion * 6f;
@@ -357,7 +357,7 @@ public class EtherealChains extends Artifact {
 			if ((exp.compareTo(BigInteger.valueOf(100).add(level().multiply(BigInteger.valueOf(100)))) > 0) && (level().compareTo(BigInteger.valueOf(levelCap)) < 0)) {
 				exp = exp.subtract(BigInteger.valueOf(100).add(level().multiply(BigInteger.valueOf(100))));
 				GLog.p(Messages.get(this, "levelup"));
-				Catalog.countUses(EtherealChains.class, BigInteger.TWO);
+				Catalog.countUses(EtherealChains.class, BigInteger.valueOf(2));
 				upgrade();
 			}
 

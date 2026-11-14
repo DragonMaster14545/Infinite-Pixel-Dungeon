@@ -259,7 +259,7 @@ public class Imp extends NPC {
 				do {
 					reward = (Ring)Generator.random( Generator.Category.RING );
 				} while (reward.cursed);
-				reward.upgrade( (Dungeon.getCycleMultiplier(BigInteger.TWO)) );
+				reward.upgrade( (Dungeon.getCycleMultiplier(BigInteger.valueOf(2))) );
 				reward.cursed = true;
 				PsycheChest.questDepth = -1;
 			}

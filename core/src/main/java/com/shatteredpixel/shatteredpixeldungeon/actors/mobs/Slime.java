@@ -53,7 +53,7 @@ public class Slime extends Mob {
 	
 	@Override
 	public BigInteger damageRoll() {
-	    return Big.normalRange(Dungeon.getCycleMultiplier(BigInteger.TWO), Dungeon.getCycleMultiplier(BigInteger.valueOf(5)));
+	    return Big.normalRange(Dungeon.getCycleMultiplier(BigInteger.valueOf(2)), Dungeon.getCycleMultiplier(BigInteger.valueOf(5)));
 	}
 	
 	@Override

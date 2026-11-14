@@ -161,7 +161,7 @@ public class Tengu extends Mob {
 
 		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
 		if (lock != null && !isImmune(src.getClass()) && !isInvulnerable(src.getClass())){
-			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(Big.div(Big.dec(BigInteger.TWO.multiply(dmg)), Big.dec(3f)).floatValue());
+			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(Big.div(Big.dec(BigInteger.valueOf(2).multiply(dmg)), Big.dec(3f)).floatValue());
 			else                                                    lock.addTime(dmg.floatValue());
 		}
 
@@ -185,8 +185,8 @@ public class Tengu extends Mob {
 		}
 
 		//phase 1 of the fight is over
-		if (state == PrisonBossLevel.State.FIGHT_START && (HP.compareTo(HT.divide(BigInteger.TWO)) <= 0)){
-			HP = (HT.divide(BigInteger.TWO));
+		if (state == PrisonBossLevel.State.FIGHT_START && (HP.compareTo(HT.divide(BigInteger.valueOf(2))) <= 0)){
+			HP = (HT.divide(BigInteger.valueOf(2)));
 			yell(Messages.get(this, "interesting"));
 			((PrisonBossLevel)Dungeon.level).progress();
 			BossHealthBar.bleed(true);
@@ -345,7 +345,7 @@ public class Tengu extends Mob {
 		super.notice();
 		if (!BossHealthBar.isAssigned()) {
 			BossHealthBar.assignBoss(this);
-			if ((HP.compareTo(HT.divide(BigInteger.TWO)) <= 0)) BossHealthBar.bleed(true);
+			if ((HP.compareTo(HT.divide(BigInteger.valueOf(2))) <= 0)) BossHealthBar.bleed(true);
 			if ((HP.compareTo(HT) == 0)) {
 				yell(Messages.get(this, "notice_gotcha", Dungeon.hero.name()));
 				for (Char ch : Actor.chars()){
@@ -391,7 +391,7 @@ public class Tengu extends Mob {
 		abilityCooldown = bundle.getInt( ABILITY_COOLDOWN );
 		
 		BossHealthBar.assignBoss(this);
-		if ((HP.compareTo(HT.divide(BigInteger.TWO)) <= 0)) BossHealthBar.bleed(true);
+		if ((HP.compareTo(HT.divide(BigInteger.valueOf(2))) <= 0)) BossHealthBar.bleed(true);
 	}
 	
 	//don't bother bundling this, as its purely cosmetic
@@ -458,7 +458,7 @@ public class Tengu extends Mob {
 	//expects to be called once per turn;
 	public boolean canUseAbility(){
 		
-		if ((HP.compareTo(HT.divide(BigInteger.TWO)) > 0)) return false;
+		if ((HP.compareTo(HT.divide(BigInteger.valueOf(2))) > 0)) return false;
 		
 		if (abilitiesUsed >= targetAbilityUses()){
 			return false;
@@ -639,7 +639,7 @@ public class Tengu extends Mob {
 					if (PathFinder.distance[cell] < Integer.MAX_VALUE) {
 						Char ch = Actor.findChar(cell);
 						if (ch != null && !(ch instanceof Tengu)) {
-							BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(5).add(Dungeon.scalingDepth()), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.TWO)));
+							BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(5).add(Dungeon.scalingDepth()), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.valueOf(2))));
 							dmg = dmg.subtract(ch.drRoll());
 
 							if ((dmg.compareTo(BigInteger.ZERO) > 0)) {
@@ -803,7 +803,7 @@ public class Tengu extends Mob {
 				curCells = new int[toCells.size()];
 				int i = 0;
 				for (Integer c : toCells){
-					GameScene.add(Blob.seed(c, BigInteger.TWO, FireBlob.class));
+					GameScene.add(Blob.seed(c, BigInteger.valueOf(2), FireBlob.class));
 					curCells[i] = c;
 					i++;
 				}
@@ -1023,7 +1023,7 @@ public class Tengu extends Mob {
 			GameScene.add(Blob.seed(shockerPos, BigInteger.ONE, ShockerBlob.class));
 			for (int i = shockingOrdinals ? 0 : 1; i < PathFinder.CIRCLE8.length; i += 2){
 				if (!Dungeon.level.solid[shockerPos+PathFinder.CIRCLE8[i]]) {
-					GameScene.add(Blob.seed(shockerPos + PathFinder.CIRCLE8[i], BigInteger.TWO, ShockerBlob.class));
+					GameScene.add(Blob.seed(shockerPos + PathFinder.CIRCLE8[i], BigInteger.valueOf(2), ShockerBlob.class));
 				}
 			}
 		}
@@ -1073,7 +1073,7 @@ public class Tengu extends Mob {
 
 							Char ch = Actor.findChar(cell);
 							if (ch != null && !(ch instanceof Tengu)){
-								ch.damage(BigInteger.TWO.add(Dungeon.scalingDepth()), new Electricity());
+								ch.damage(BigInteger.valueOf(2).add(Dungeon.scalingDepth()), new Electricity());
 								
 								if (ch == Dungeon.hero){
 									Statistics.qualifiedForBossChallengeBadge = false;

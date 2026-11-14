@@ -865,14 +865,14 @@ public abstract class Mob extends Char {
 
 				BigInteger exp = EXP;
 				if (Dungeon.hero.buff(Bless.class) != null) {
-					exp = exp.multiply(BigInteger.TWO);
+					exp = exp.multiply(BigInteger.valueOf(2));
 				}
 				if ((exp.compareTo(BigInteger.ZERO) > 0)) {
 					Dungeon.hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, exp.toString(), FloatingText.EXPERIENCE);
 				}
 				Dungeon.hero.earnExp(exp, getClass());
 				if (Dungeon.hero.perks.contains(Perks.Perk.ADDITIONAL_MONEY)){
-					Dungeon.level.drop(new Gold(Dungeon.Long( BigInteger.valueOf(6).add(Dungeon.escalatingDepth().multiply(BigInteger.TWO)), BigInteger.valueOf(12).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(4))) )), pos).sprite.drop();
+					Dungeon.level.drop(new Gold(Dungeon.Long( BigInteger.valueOf(6).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(2))), BigInteger.valueOf(12).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(4))) )), pos).sprite.drop();
 				}
 				if (Dungeon.hero.buff(Overload.class) != null ||
 						this.buff(Overload.class) != null) {
@@ -895,8 +895,8 @@ public abstract class Mob extends Char {
 
 		if (cause == Chasm.class){
 			//50% chance to round up, 50% to round down
-			if ((EXP.remainder(BigInteger.TWO).compareTo(BigInteger.ONE) == 0)) EXP = EXP.add(BigInteger.valueOf(Random.Int(2)));
-			EXP = EXP.divide(BigInteger.TWO);
+			if ((EXP.remainder(BigInteger.valueOf(2)).compareTo(BigInteger.ONE) == 0)) EXP = EXP.add(BigInteger.valueOf(Random.Int(2)));
+			EXP = EXP.divide(BigInteger.valueOf(2));
 		}
 
         if (Dungeon.hero.buff(ScrollOfInsurgence.ChallengeInsurgence.class) != null){
@@ -920,7 +920,7 @@ public abstract class Mob extends Char {
         }
 
 		if (buff(DanceFloor.RewardBoost.class) != null) {
-			EXP = EXP.multiply(BigInteger.TWO);
+			EXP = EXP.multiply(BigInteger.valueOf(2));
 		}
 
 		if (alignment == Alignment.ENEMY){

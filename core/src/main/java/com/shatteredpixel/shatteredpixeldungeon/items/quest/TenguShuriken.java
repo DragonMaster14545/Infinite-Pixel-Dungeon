@@ -48,7 +48,7 @@ public class TenguShuriken extends MissileWeapon {
 
     @Override
     public BigInteger max(BigInteger lvl) {
-        return  BigInteger.valueOf(10 * tier).add((tier == 1 ? BigInteger.TWO.multiply(lvl) : BigInteger.valueOf(tier).multiply(lvl))); //scaling unchanged
+        return  BigInteger.valueOf(10 * tier).add((tier == 1 ? BigInteger.valueOf(2).multiply(lvl) : BigInteger.valueOf(tier).multiply(lvl))); //scaling unchanged
     }
 
     @Override

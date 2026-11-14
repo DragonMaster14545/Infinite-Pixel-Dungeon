@@ -176,7 +176,7 @@ public class SurfaceScene extends PixelScene {
 		BigInteger roseLevel = BigInteger.ZERO;
 		DriedRose rose = Dungeon.hero.belongings.getItem(DriedRose.class);
 		if (rose != null){
-			roseLevel = rose.level().divide(BigInteger.TWO);
+			roseLevel = rose.level().divide(BigInteger.valueOf(2));
 			if (rose.ghostWeapon() != null){
 				roseLevel = roseLevel.max(rose.ghostWeapon().level());
 			}
@@ -204,7 +204,7 @@ public class SurfaceScene extends PixelScene {
 			allySprite = new EarthGuardianSprite();
 		} else if ((wardLevel.compareTo(BigInteger.valueOf(3)) >= 0)){
 			allySprite = new WardSprite();
-			((WardSprite) allySprite).updateTier(Big.toInt(wardLevel.add(BigInteger.TWO).min(BigInteger.valueOf(6))));
+			((WardSprite) allySprite).updateTier(Big.toInt(wardLevel.add(BigInteger.valueOf(2)).min(BigInteger.valueOf(6))));
 		}
 		
 		if (allySprite != null){

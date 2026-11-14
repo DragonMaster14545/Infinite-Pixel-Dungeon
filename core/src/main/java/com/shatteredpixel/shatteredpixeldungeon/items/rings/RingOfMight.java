@@ -84,10 +84,10 @@ public class RingOfMight extends Ring {
 	public String statsInfo() {
 		if (isIdentified()){
 			String info = Messages.get(this, "stats",
-					soloBuffedBonus().subtract(BigInteger.ONE), (soloBuffedBonus().subtract(BigInteger.ONE)).multiply(BigInteger.TWO));
+					soloBuffedBonus().subtract(BigInteger.ONE), (soloBuffedBonus().subtract(BigInteger.ONE)).multiply(BigInteger.valueOf(2)));
 			if (isEquipped(Dungeon.hero) && (soloBuffedBonus().compareTo(combinedBuffedBonus(Dungeon.hero)) != 0)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
-						combinedBuffedBonus(Dungeon.hero).subtract(BigInteger.ONE), (combinedBuffedBonus(Dungeon.hero).subtract(BigInteger.ONE)).multiply(BigInteger.TWO));
+						combinedBuffedBonus(Dungeon.hero).subtract(BigInteger.ONE), (combinedBuffedBonus(Dungeon.hero).subtract(BigInteger.ONE)).multiply(BigInteger.valueOf(2)));
 			}
 			return info;
 		} else {
@@ -104,7 +104,7 @@ public class RingOfMight extends Ring {
 	@Override
 	public String upgradeStat2(BigInteger level) {
 		if (cursed && cursedKnown) level = BigInteger.valueOf(-1).min(level.subtract(BigInteger.valueOf(3))).subtract(BigInteger.ONE);
-		return level.multiply(BigInteger.TWO).toString();
+		return level.multiply(BigInteger.valueOf(2)).toString();
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class RingOfMight extends Ring {
 	public static int HTMultiplier( Char target ){
 		int multiplier = 0;
 		if ((getBuffedBonus(target, Might.class).compareTo(BigInteger.ONE) == 0)) multiplier = 2;
-		if ((getBuffedBonus(target, Might.class).compareTo(BigInteger.ONE) > 0)) multiplier += Big.toLong(getBuffedBonus(target, Might.class).multiply(BigInteger.TWO));
+		if ((getBuffedBonus(target, Might.class).compareTo(BigInteger.ONE) > 0)) multiplier += Big.toLong(getBuffedBonus(target, Might.class).multiply(BigInteger.valueOf(2)));
 		return Math.min(multiplier, 20 * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
 	}
 

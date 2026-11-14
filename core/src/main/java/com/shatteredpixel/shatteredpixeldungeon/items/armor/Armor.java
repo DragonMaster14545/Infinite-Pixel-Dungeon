@@ -105,11 +105,11 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 		}
 		
 		public BigInteger evasionFactor(BigInteger level){
-			return Big.round(Big.dec((BigInteger.TWO.add(level))).multiply(Big.dec(evasionFactor)));
+			return Big.round(Big.dec((BigInteger.valueOf(2).add(level))).multiply(Big.dec(evasionFactor)));
 		}
 		
 		public BigInteger defenseFactor(BigInteger level){
-			return Big.round(Big.dec((BigInteger.TWO.add(level))).multiply(Big.dec(defenceFactor)));
+			return Big.round(Big.dec((BigInteger.valueOf(2).add(level))).multiply(Big.dec(defenceFactor)));
 		}
 	}
 	
@@ -339,9 +339,9 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 			return BigInteger.valueOf(1 + tier()).add(lvl).add(augment.defenseFactor(lvl));
 		}
         
-		BigInteger max = BigInteger.valueOf(tier()).multiply((BigInteger.TWO.add(lvl))).add(augment.defenseFactor(lvl));
+		BigInteger max = BigInteger.valueOf(tier()).multiply((BigInteger.valueOf(2).add(lvl))).add(augment.defenseFactor(lvl));
 		if ((lvl.compareTo(max) > 0)){
-			return ((lvl.subtract(max)).add(BigInteger.ONE)).divide(BigInteger.TWO);
+			return ((lvl.subtract(max)).add(BigInteger.ONE)).divide(BigInteger.valueOf(2));
 		} else {
 			return max;
 		}
@@ -628,7 +628,7 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 	public BigInteger STRReq(BigInteger lvl){
 		BigInteger req = STRReq(tier, lvl);
 		if (masteryPotionBonus){
-			req = req.subtract(BigInteger.TWO);
+			req = req.subtract(BigInteger.valueOf(2));
 		}
 		return req;
 	}
@@ -649,7 +649,7 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 			price = Big.trunc(Big.dec(price).multiply(Big.dec(1.5)));
 		}
 		if (cursedKnown && (cursed || hasCurseGlyph())) {
-			price = price.divide(BigInteger.TWO);
+			price = price.divide(BigInteger.valueOf(2));
 		}
 		if (levelKnown && (level().compareTo(BigInteger.ZERO) > 0)) {
 			price = price.multiply(((level().add(BigInteger.ONE))));

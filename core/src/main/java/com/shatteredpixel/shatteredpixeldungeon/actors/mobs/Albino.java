@@ -40,7 +40,7 @@ public class Albino extends Rat {
 		spriteClass = AlbinoSprite.class;
 		
 		HP = HT = Dungeon.getCycleMultiplier(BigInteger.valueOf(15));
-		EXP = Dungeon.getCycleMultiplier(BigInteger.TWO);
+		EXP = Dungeon.getCycleMultiplier(BigInteger.valueOf(2));
         defenseSkill = Dungeon.getCycleMultiplier(BigInteger.TEN).subtract(BigInteger.TEN);
 		
 		loot = new MysteryMeat();

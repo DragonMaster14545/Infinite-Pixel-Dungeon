@@ -753,7 +753,7 @@ if (buff(RoundShield.GuardTracker.class) != null){
 		if (belongings.armor() != null) {
 			BigInteger armDr = Dungeon.NormalLongRange( belongings.armor().DRMin(), belongings.armor().DRMax());
 			if ((BigInteger.valueOf(STR()).compareTo(belongings.armor().STRReq()) < 0)){
-				armDr = armDr.subtract(BigInteger.TWO.multiply((belongings.armor().STRReq().subtract(BigInteger.valueOf(STR())))));
+				armDr = armDr.subtract(BigInteger.valueOf(2).multiply((belongings.armor().STRReq().subtract(BigInteger.valueOf(STR())))));
 			}
 			if (belongings.armor().masteryPotionBonus) armDr = Big.trunc(Big.dec(armDr).multiply(Big.dec(1.2f)));
 			if ((armDr.compareTo(BigInteger.ZERO) > 0)) dr = dr.add(armDr);
@@ -1216,15 +1216,19 @@ if (buff(RoundShield.GuardTracker.class) != null){
 			Heap heap = Dungeon.level.heaps.get( pos );
 			if (heap != null) {
 				Item item = heap.peek();
+				boolean hadQuantity = item.quantity().compareTo(BigInteger.ZERO) > 0;
 				if (item.doPickUp( this )) {
 					heap.pickUp();
+					boolean mergedIntoStack = hadQuantity && item.stackable
+							&& item.quantity().compareTo(BigInteger.ZERO) == 0
+							&& belongings.getSimilar(item) != null;
 
 					if (item instanceof Dewdrop
 							|| item instanceof TimekeepersHourglass.sandBag
 							|| item instanceof DriedRose.Petal
 							|| item instanceof Key
 							|| item instanceof Guidebook
-							|| (item.quantity().compareTo(BigInteger.ZERO) == 0)) {
+							|| (item.quantity().compareTo(BigInteger.ZERO) == 0 && !mergedIntoStack)) {
 						//Do Nothing
 					} else if (item instanceof DarkGold) {
 						DarkGold existing = belongings.getItem(DarkGold.class);
@@ -1739,7 +1743,7 @@ if (buff(RoundShield.GuardTracker.class) != null){
 		}
 
 		if (perks.contains(Perks.Perk.NO_ONESHOTS) && (dmg.compareTo(HT) >= 0) && (HP.compareTo(HT) == 0)){
-			dmg = dmg.divide(BigInteger.TWO);
+			dmg = dmg.divide(BigInteger.valueOf(2));
 		}
 
 		BigInteger preHP = HP.add(shielding());
@@ -1791,7 +1795,7 @@ if (buff(RoundShield.GuardTracker.class) != null){
 							Char ch = Actor.findChar(i);
 							if (ch != null && ch.alignment != alignment && ch != Dungeon.hero) {
 								BigInteger retaliationDamage = Big.dec(finalDmg).multiply(Big.dec(1.5f)).toBigInteger();
-								if (belongings.weapon() instanceof Greatshield) retaliationDamage = retaliationDamage.multiply(BigInteger.TWO);
+								if (belongings.weapon() instanceof Greatshield) retaliationDamage = retaliationDamage.multiply(BigInteger.valueOf(2));
 								ch.damage(retaliationDamage, Hero.this);
 								Sample.INSTANCE.play(Assets.Sounds.HIT_MAGIC);
 								CellEmitter.center(pos).burst(MagicMissile.SlowParticle.FACTORY, 10);
@@ -2361,8 +2365,8 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 					}
 				});
 
-				if (cause instanceof Hero.Doom) {
-					((Hero.Doom)cause).onDeath();
+				if (cause instanceof Doom) {
+					((Doom)cause).onDeath();
 				}
 
 				SacrificialFire.Marked sacMark = buff(SacrificialFire.Marked.class);
@@ -2443,8 +2447,8 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 			}
 		});
 
-		if (cause instanceof Hero.Doom) {
-			((Hero.Doom)cause).onDeath();
+		if (cause instanceof Doom) {
+			((Doom)cause).onDeath();
 		}
 
 		Dungeon.deleteGame( GamesInProgress.curSlot, true );
@@ -2827,7 +2831,7 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 				int index = Random.index( spawnPoints );
 
 				Rat rat = new Rat();
-				rat.alignment = Char.Alignment.ALLY;
+				rat.alignment = Alignment.ALLY;
 				rat.state = rat.HUNTING;
 				Buff.affect(rat, AscensionChallenge.AscensionBuffBlocker.class);
 				GameScene.add( rat );

@@ -844,7 +844,7 @@ public abstract class Char extends Actor {
 		BigInteger overflow = BigInteger.ZERO;
 
 		if (buff(IdealBag.OsmirdiumShield.class) != null){
-			overflow = dmg.divide(BigInteger.TWO);
+			overflow = dmg.divide(BigInteger.valueOf(2));
 			dmg = BigInteger.ZERO;
 		}
 
@@ -936,7 +936,7 @@ public abstract class Char extends Actor {
 			sprite.showStatusWithIcon(CharSprite.NEGATIVE, dmg.add(shielded).toString(), icon);
 		}
 
-		if (this instanceof Hero && ((Hero) this).perks.contains(IRON_WILL) && (HP.compareTo(HT.divide(BigInteger.TWO)) <= 0) &&
+		if (this instanceof Hero && ((Hero) this).perks.contains(IRON_WILL) && (HP.compareTo(HT.divide(BigInteger.valueOf(2))) <= 0) &&
 				(icon == FloatingText.PHYS_DMG || icon == FloatingText.PHYS_DMG_NO_BLOCK || icon == FloatingText.MAGIC_DMG)){
 			Camera.main.shake(4, 0.25f);
 			Sample.INSTANCE.play(Assets.Sounds.HIT_PARRY);
@@ -971,7 +971,7 @@ public abstract class Char extends Actor {
 						public void call() {
 							for (int cell : aoe.cells) {
 								Char mob = Actor.findChar(cell);
-								BigInteger damage = Big.normalRange(finalDmg.divide(BigInteger.valueOf(3)), finalDmg.divide(BigInteger.TWO));
+								BigInteger damage = Big.normalRange(finalDmg.divide(BigInteger.valueOf(3)), finalDmg.divide(BigInteger.valueOf(2)));
 
 								if (mob != null && (damage.compareTo(BigInteger.ZERO) > 0) && mob.alignment != Alignment.ALLY){
 									mob.damage(damage, src);

@@ -68,7 +68,7 @@ public abstract class Plant implements Bundlable {
 
 		if (Dungeon.level.heroFOV[pos] && Dungeon.hero.hasTalent(Talent.NATURES_AID)){
 			// 3/5 turns based on talent points spent
-			Barkskin.conditionallyAppend(Dungeon.hero, BigInteger.TWO, 1 + 2*(Dungeon.hero.pointsInTalent(Talent.NATURES_AID)));
+			Barkskin.conditionallyAppend(Dungeon.hero, BigInteger.valueOf(2), 1 + 2*(Dungeon.hero.pointsInTalent(Talent.NATURES_AID)));
 		}
 
 		wither();
@@ -214,7 +214,7 @@ public abstract class Plant implements Bundlable {
 
 		@Override
 		public BigInteger energyVal() {
-			return BigInteger.TWO.multiply(quantity);
+			return BigInteger.valueOf(2).multiply(quantity);
 		}
 
 		@Override

@@ -64,7 +64,7 @@ public class Dread extends Buff {
 		if (!Dungeon.level.heroFOV[target.pos]
 				&& Dungeon.level.distance(target.pos, Dungeon.hero.pos) >= 6) {
 			if (target instanceof Mob){
-				((Mob) target).EXP = ((Mob) target).EXP.divide(BigInteger.TWO);
+				((Mob) target).EXP = ((Mob) target).EXP.divide(BigInteger.valueOf(2));
 			}
 			target.destroy();
 			target.sprite.killAndErase();

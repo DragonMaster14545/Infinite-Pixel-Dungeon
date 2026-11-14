@@ -147,7 +147,7 @@ public class RipperDemon extends Mob {
 
 			if (leapPos != -1){
 
-				leapCooldown = Dungeon.NormalLongRange(BigInteger.TWO, BigInteger.valueOf(4)).floatValue();
+				leapCooldown = Dungeon.NormalLongRange(BigInteger.valueOf(2), BigInteger.valueOf(4)).floatValue();
 
 				if (rooted){
 					leapPos = -1;

@@ -50,7 +50,7 @@ public class Scorching extends Weapon.Enchantment {
 
 		if ((Big.dec(damage).compareTo(Big.dec(defender.HT).multiply(Big.dec(0.07d))) > 0) && !((damage.compareTo(defender.HT) > 0))) {
 			defender.damage(Big.trunc((Big.dec(damage).multiply(Big.dec(powerMulti)))), this);
-			defender.sprite.emitter().burst( FlameParticle.FACTORY, (int) Math.min(10, Math.sqrt(level.add(BigInteger.ONE).doubleValue())));
+			defender.sprite.emitter().burst( FlameParticle.FACTORY, Big.particles(Math.sqrt(level.add(BigInteger.ONE).doubleValue())));
 		}
 
 		return damage;

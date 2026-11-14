@@ -75,7 +75,7 @@ public class HolyBomb extends Bomb {
 				ch.sprite.emitter().start( ShadowParticle.UP, 0.05f, 10 );
 				
 				//bomb deals an additional 50% damage to unholy enemies in a 5x5 range
-				BigInteger damage = Big.round(Big.dec(Dungeon.NormalLongRange( Dungeon.scalingDepth().add(BigInteger.valueOf(5)), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.TWO)) )).multiply(Big.dec(0.5f)));
+				BigInteger damage = Big.round(Big.dec(Dungeon.NormalLongRange( Dungeon.scalingDepth().add(BigInteger.valueOf(5)), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.valueOf(2))) )).multiply(Big.dec(0.5f)));
 				if (Dungeon.hero.heroClass == HeroClass.ROGUE){
 					damage = Big.trunc(Big.dec(damage).multiply(Big.dec(2.5f)));
 				}

@@ -162,7 +162,7 @@ public class PrismaticImage extends NPC {
 		if (hero != null) {
 			return Dungeon.NormalLongRange( BigInteger.valueOf(2 + hero.lvl/4), BigInteger.valueOf(4 + hero.lvl/2) );
 		} else {
-			return Dungeon.NormalLongRange( BigInteger.TWO, BigInteger.valueOf(4) );
+			return Dungeon.NormalLongRange( BigInteger.valueOf(2), BigInteger.valueOf(4) );
 		}
 	}
 	
@@ -187,7 +187,7 @@ public class PrismaticImage extends NPC {
 
 			//if the hero has more/less evasion, 50% of it is applied
 			//includes ring of evasion and armor boosts
-			return super.defenseSkill(enemy).multiply(BigInteger.valueOf((baseEvasion + heroEvasion))).divide(BigInteger.TWO);
+			return super.defenseSkill(enemy).multiply(BigInteger.valueOf((baseEvasion + heroEvasion))).divide(BigInteger.valueOf(2));
 		} else {
 			return BigInteger.ZERO;
 		}

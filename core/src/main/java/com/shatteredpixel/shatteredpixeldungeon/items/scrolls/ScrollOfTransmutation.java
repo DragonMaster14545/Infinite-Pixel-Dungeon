@@ -191,7 +191,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 				result.cursed = item.cursed;
 				result.cursedKnown = item.cursedKnown;
 				if ((item.visiblyUpgraded().compareTo(BigInteger.TEN) == 0)){
-					result.level(BigInteger.TWO);
+					result.level(BigInteger.valueOf(2));
 				} else if ((item.visiblyUpgraded().compareTo(BigInteger.valueOf(5)) >= 0)){
 					result.level(BigInteger.ONE);
 				} else {

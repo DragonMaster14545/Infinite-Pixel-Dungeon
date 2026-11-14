@@ -92,7 +92,7 @@ public class Dart extends MissileWeapon {
 		if (bow != null){
 			if (!(this instanceof TippedDart) && Dungeon.hero.buff(Crossbow.ChargedShot.class) != null){
 				//ability increases base dmg by 37.5%, scaling by 50%
-				return  BigInteger.valueOf(7).add(BigInteger.TWO.multiply(bow.buffedLvl())).add(lvl);//+2 per bow level, +1 per level
+				return  BigInteger.valueOf(7).add(BigInteger.valueOf(2).multiply(bow.buffedLvl())).add(lvl);//+2 per bow level, +1 per level
 			} else {
 				return  BigInteger.valueOf((tier()+3)).add(bow.buffedLvl()).add(lvl);  //+1 per level or bow level
 			}
@@ -106,12 +106,12 @@ public class Dart extends MissileWeapon {
 		if (bow != null){
 			if (!(this instanceof TippedDart) && Dungeon.hero.buff(Crossbow.ChargedShot.class) != null){
 				//ability increases base dmg by 37.5%, scaling by 50%
-				return  BigInteger.valueOf(15).add(BigInteger.valueOf(4).multiply(bow.buffedLvl())).add(BigInteger.TWO.multiply(lvl)); //+4 per bow level, +2 per level
+				return  BigInteger.valueOf(15).add(BigInteger.valueOf(4).multiply(bow.buffedLvl())).add(BigInteger.valueOf(2).multiply(lvl)); //+4 per bow level, +2 per level
 			} else {
 				return  BigInteger.valueOf(4L*(tier()+3)).add(BigInteger.valueOf((tier()+2)).multiply(bow.buffedLvl())).add(BigInteger.valueOf((tier()+1)).multiply(lvl)); //+3 per bow level, +2 per level
 			}
 		} else {
-			return  BigInteger.valueOf(tier()*2L).add(BigInteger.TWO.multiply(lvl).multiply(BigInteger.valueOf(tier())));  //scaling unchanged
+			return  BigInteger.valueOf(tier()*2L).add(BigInteger.valueOf(2).multiply(lvl).multiply(BigInteger.valueOf(tier())));  //scaling unchanged
 		}
 	}
 	
@@ -278,8 +278,8 @@ public class Dart extends MissileWeapon {
 			
 			if (item == null) return;
 			
-			final BigInteger maxToTip = curItem.quantity().min(item.quantity().multiply(BigInteger.TWO));
-			final long maxSeedsToUse = Big.toLong((maxToTip.add(BigInteger.ONE)).divide(BigInteger.TWO));
+			final BigInteger maxToTip = curItem.quantity().min(item.quantity().multiply(BigInteger.valueOf(2)));
+			final long maxSeedsToUse = Big.toLong((maxToTip.add(BigInteger.ONE)).divide(BigInteger.valueOf(2)));
 			
 			final int singleSeedDarts;
 			
@@ -292,7 +292,7 @@ public class Dart extends MissileWeapon {
 						Messages.get(Dart.class, "tip_cancel")};
 			} else {
 				singleSeedDarts = 2;
-				if ((maxToTip.compareTo(BigInteger.TWO) <= 0)){
+				if ((maxToTip.compareTo(BigInteger.valueOf(2)) <= 0)){
 					options = new String[]{
 							Messages.get(Dart.class, "tip_two"),
 							Messages.get(Dart.class, "tip_cancel")};

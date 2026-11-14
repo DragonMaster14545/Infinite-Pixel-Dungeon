@@ -31,11 +31,16 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ItemSlot;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
+import com.shatteredpixel.shatteredpixeldungeon.ui.ScrollPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
+import com.watabou.noosa.ui.Component;
 
 public class WndInfoItem extends Window {
 	
 	private static final float GAP	= 2;
+
+	private static final float MIN_DESC_HEIGHT = 48;
+	private static final float BUTTON_RESERVE = 58;
 
 	private static final int WIDTH_MIN = 120;
 	private static final int WIDTH_MAX = 350;
@@ -128,9 +133,26 @@ public class WndInfoItem extends Window {
 		title.setRect( 0, 0, width, 0 );
 		add( title );
 
-		info.setPos(title.left(), title.bottom() + GAP);
-		add( info );
+		float top = title.bottom() + GAP;
+		float maxHeight = Math.max(MIN_DESC_HEIGHT,
+				PixelScene.uiCamera.height - chrome.marginVer() - top - BUTTON_RESERVE);
 
-		resize( width, (int)(info.bottom() + 2) );
+		if (info.height() > maxHeight) {
+			Component content = new Component();
+			content.add( info );
+			info.setPos( 0, 0 );
+			content.setSize( width, info.height() );
+
+			ScrollPane pane = new ScrollPane( content );
+			add( pane );
+			pane.setRect( 0, top, width, maxHeight );
+
+			resize( width, (int)(pane.bottom() + 2) );
+		} else {
+			info.setPos(title.left(), top);
+			add( info );
+
+			resize( width, (int)(info.bottom() + 2) );
+		}
 	}
 }

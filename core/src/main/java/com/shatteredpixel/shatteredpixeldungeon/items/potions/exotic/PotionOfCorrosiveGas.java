@@ -55,12 +55,12 @@ public class PotionOfCorrosiveGas extends ExoticPotion {
 		int centerVolume = 25;
 		for (int i : PathFinder.NEIGHBOURS8){
 			if (!Dungeon.level.solid[cell+i]){
-				GameScene.add( Blob.seed( cell+i, BigInteger.valueOf(25), CorrosiveGas.class ).setStrength( BigInteger.TWO.add(Dungeon.scalingDepth().divide(BigInteger.valueOf(5)))));
+				GameScene.add( Blob.seed( cell+i, BigInteger.valueOf(25), CorrosiveGas.class ).setStrength( BigInteger.valueOf(2).add(Dungeon.scalingDepth().divide(BigInteger.valueOf(5)))));
 			} else {
 				centerVolume += 25;
 			}
 		}
 
-		GameScene.add( Blob.seed( cell, BigInteger.valueOf(centerVolume), CorrosiveGas.class ).setStrength( BigInteger.TWO.add(Dungeon.scalingDepth().divide(BigInteger.valueOf(5)))));
+		GameScene.add( Blob.seed( cell, BigInteger.valueOf(centerVolume), CorrosiveGas.class ).setStrength( BigInteger.valueOf(2).add(Dungeon.scalingDepth().divide(BigInteger.valueOf(5)))));
 	}
 }

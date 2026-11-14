@@ -535,8 +535,8 @@ public abstract class YogFist extends Mob {
 		public void damage(BigInteger dmg, Object src) {
 			BigInteger beforeHP = HP;
 			super.damage(dmg, src);
-			if (isAlive() && (beforeHP.compareTo(HT.divide(BigInteger.TWO)) > 0) && (HP.compareTo(HT.divide(BigInteger.TWO)) < 0)){
-				HP = HT.divide(BigInteger.TWO);
+			if (isAlive() && (beforeHP.compareTo(HT.divide(BigInteger.valueOf(2))) > 0) && (HP.compareTo(HT.divide(BigInteger.valueOf(2))) < 0)){
+				HP = HT.divide(BigInteger.valueOf(2));
 				Buff.prolong( Dungeon.hero, Blindness.class, Blindness.DURATION*1.5f );
 				int i;
 				do {
@@ -607,8 +607,8 @@ public abstract class YogFist extends Mob {
 		public void damage(BigInteger dmg, Object src) {
 			BigInteger beforeHP = HP;
 			super.damage(dmg, src);
-			if (isAlive() && (beforeHP.compareTo(HT.divide(BigInteger.TWO)) > 0) && (HP.compareTo(HT.divide(BigInteger.TWO)) < 0)){
-				HP = HT.divide(BigInteger.TWO);
+			if (isAlive() && (beforeHP.compareTo(HT.divide(BigInteger.valueOf(2))) > 0) && (HP.compareTo(HT.divide(BigInteger.valueOf(2))) < 0)){
+				HP = HT.divide(BigInteger.valueOf(2));
 				Light l = Dungeon.hero.buff(Light.class);
 				if (l != null){
 					l.detach();

@@ -63,7 +63,7 @@ public class Skeleton extends Mob {
 	
 	@Override
 	public BigInteger damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.TWO), Dungeon.getCycleMultiplier(BigInteger.TEN) );
+		return Dungeon.NormalLongRange( Dungeon.getCycleMultiplier(BigInteger.valueOf(2)), Dungeon.getCycleMultiplier(BigInteger.TEN) );
 	}
 	
 	@Override

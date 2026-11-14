@@ -129,7 +129,7 @@ public class GnollTrickster extends Gnoll {
 	public Item createLoot() {
 		MissileWeapon drop = (MissileWeapon)super.createLoot();
 		//half quantity, rounded up
-		drop.quantity((drop.quantity().add(BigInteger.ONE)).divide(BigInteger.TWO));
+		drop.quantity((drop.quantity().add(BigInteger.ONE)).divide(BigInteger.valueOf(2)));
 		return drop;
 	}
 	

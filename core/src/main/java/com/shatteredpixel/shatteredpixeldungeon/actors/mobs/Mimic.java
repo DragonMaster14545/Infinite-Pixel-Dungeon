@@ -235,15 +235,15 @@ public class Mimic extends Mob {
 	@Override
 	public BigInteger damageRoll() {
 		if (alignment == Alignment.NEUTRAL){
-			return Dungeon.NormalLongRange( BigInteger.TWO.add(BigInteger.TWO.multiply(level)), BigInteger.TWO.add(BigInteger.TWO.multiply(level)));
+			return Dungeon.NormalLongRange( BigInteger.valueOf(2).add(BigInteger.valueOf(2).multiply(level)), BigInteger.valueOf(2).add(BigInteger.valueOf(2).multiply(level)));
 		} else {
-			return Dungeon.NormalLongRange( BigInteger.ONE.add(level), BigInteger.TWO.add(BigInteger.TWO.multiply(level)));
+			return Dungeon.NormalLongRange( BigInteger.ONE.add(level), BigInteger.valueOf(2).add(BigInteger.valueOf(2).multiply(level)));
 		}
 	}
 
 	@Override
 	public BigInteger drRoll() {
-		return super.drRoll().add(Dungeon.NormalLongRange(BigInteger.ZERO, BigInteger.ONE.add(level.divide(BigInteger.TWO))));
+		return super.drRoll().add(Dungeon.NormalLongRange(BigInteger.ZERO, BigInteger.ONE.add(level.divide(BigInteger.valueOf(2)))));
 	}
 
 	@Override
@@ -267,7 +267,7 @@ public class Mimic extends Mob {
 	
 	public void adjustStats( BigInteger level ) {
 		HP = HT = (BigInteger.ONE.add(level)).multiply(BigInteger.valueOf(5));
-		defenseSkill = BigInteger.TWO.add(level.divide(BigInteger.TWO));
+		defenseSkill = BigInteger.valueOf(2).add(level.divide(BigInteger.valueOf(2)));
 		
 		enemySeen = true;
 	}

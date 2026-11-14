@@ -171,7 +171,7 @@ public class Item implements Bundlable {
 		LEGENDARY(0xFF4500, "L", chance(10), multi(BigInteger.valueOf(5)), "Legendary"),
 		EPIC(0xFF00FF, "E", chance(6), multi(BigInteger.valueOf(4)), "Epic"),
 		RARE(0x0000FF, "R", chance(4), multi(BigInteger.valueOf(3)), "Rare"),
-		UNCOMMON(0xFFFF00, "U", chance(2), multi(BigInteger.TWO), "Uncommon"),
+		UNCOMMON(0xFFFF00, "U", chance(2), multi(BigInteger.valueOf(2)), "Uncommon"),
 		COMMON(0x00FF00, "C", chance(0), multi(BigInteger.ONE), "Common"),
 		NONE(0xFFFFFF, " ", 0, 1, "");
 
@@ -291,7 +291,7 @@ public class Item implements Bundlable {
 	}
 
 	public static double multi(BigInteger multi) {
-		return BigInteger.TWO.multiply(multi).doubleValue();
+		return BigInteger.valueOf(2).multiply(multi).doubleValue();
 	}
 
 	public String actionName(String action, Hero hero){

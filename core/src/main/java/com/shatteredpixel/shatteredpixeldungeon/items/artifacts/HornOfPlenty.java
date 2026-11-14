@@ -61,7 +61,7 @@ public class HornOfPlenty extends Artifact {
 
 		charge = BigInteger.ZERO;
 		partialCharge = 0;
-		setChargeCap(BigInteger.valueOf(5).add(level().divide(BigInteger.TWO)));
+		setChargeCap(BigInteger.valueOf(5).add(level().divide(BigInteger.valueOf(2))));
 
 		defaultAction = AC_SNACK;
 	}
@@ -142,7 +142,7 @@ public class HornOfPlenty extends Artifact {
 
 				if ((charge.compareTo(BigInteger.valueOf(8)) >= 0))        image = ItemSpriteSheet.ARTIFACT_HORN4;
 				else if ((charge.compareTo(BigInteger.valueOf(5)) >= 0))   image = ItemSpriteSheet.ARTIFACT_HORN3;
-				else if ((charge.compareTo(BigInteger.TWO) >= 0))   image = ItemSpriteSheet.ARTIFACT_HORN2;
+				else if ((charge.compareTo(BigInteger.valueOf(2)) >= 0))   image = ItemSpriteSheet.ARTIFACT_HORN2;
 				else                    image = ItemSpriteSheet.ARTIFACT_HORN1;
 
 				updateQuickslot();
@@ -176,7 +176,7 @@ public class HornOfPlenty extends Artifact {
 
 				if ((charge.compareTo(BigInteger.valueOf(8)) >= 0))        image = ItemSpriteSheet.ARTIFACT_HORN4;
 				else if ((charge.compareTo(BigInteger.valueOf(5)) >= 0))   image = ItemSpriteSheet.ARTIFACT_HORN3;
-				else if ((charge.compareTo(BigInteger.TWO) >= 0))   image = ItemSpriteSheet.ARTIFACT_HORN2;
+				else if ((charge.compareTo(BigInteger.valueOf(2)) >= 0))   image = ItemSpriteSheet.ARTIFACT_HORN2;
 				else                    image = ItemSpriteSheet.ARTIFACT_HORN1;
 
 				updateQuickslot();
@@ -203,13 +203,13 @@ public class HornOfPlenty extends Artifact {
 	@Override
 	public void level(BigInteger value) {
 		super.level(value);
-		setChargeCap(BigInteger.valueOf(5).add(level().divide(BigInteger.TWO)));
+		setChargeCap(BigInteger.valueOf(5).add(level().divide(BigInteger.valueOf(2))));
 	}
 
 	@Override
 	public Item upgrade() {
 		super.upgrade();
-		setChargeCap(BigInteger.valueOf(5).add(level().divide(BigInteger.TWO)));
+		setChargeCap(BigInteger.valueOf(5).add(level().divide(BigInteger.valueOf(2))));
 		return this;
 	}
 	
@@ -261,7 +261,7 @@ public class HornOfPlenty extends Artifact {
 		
 		if ((charge.compareTo(BigInteger.valueOf(8)) >= 0))       image = ItemSpriteSheet.ARTIFACT_HORN4;
 		else if ((charge.compareTo(BigInteger.valueOf(5)) >= 0))  image = ItemSpriteSheet.ARTIFACT_HORN3;
-		else if ((charge.compareTo(BigInteger.TWO) >= 0))   image = ItemSpriteSheet.ARTIFACT_HORN2;
+		else if ((charge.compareTo(BigInteger.valueOf(2)) >= 0))   image = ItemSpriteSheet.ARTIFACT_HORN2;
 	}
 
 	public class hornRecharge extends ArtifactBuff{
@@ -288,7 +288,7 @@ public class HornOfPlenty extends Artifact {
 
 					if ((charge.compareTo(BigInteger.valueOf(8)) >= 0))        image = ItemSpriteSheet.ARTIFACT_HORN4;
 					else if ((charge.compareTo(BigInteger.valueOf(5)) >= 0))   image = ItemSpriteSheet.ARTIFACT_HORN3;
-					else if ((charge.compareTo(BigInteger.TWO) >= 0))   image = ItemSpriteSheet.ARTIFACT_HORN2;
+					else if ((charge.compareTo(BigInteger.valueOf(2)) >= 0))   image = ItemSpriteSheet.ARTIFACT_HORN2;
 					else                    image = ItemSpriteSheet.ARTIFACT_HORN1;
 
 					updateQuickslot();

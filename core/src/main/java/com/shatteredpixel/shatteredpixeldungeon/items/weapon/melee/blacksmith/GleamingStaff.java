@@ -74,7 +74,7 @@ public class GleamingStaff extends BlacksmithWeapon implements InternalKillsThre
     public BigInteger defenseFactor( Char owner ) {
         BigInteger defense = BigInteger.valueOf(tier + Dungeon.cycle * 7).add((buffedLvl().multiply(BigInteger.valueOf((1 + Dungeon.cycle)))));
         if (owner.buff(GuardTracker.class) != null)
-            return defense.multiply(BigInteger.TWO);
+            return defense.multiply(BigInteger.valueOf(2));
         return defense;	//2 extra defence
     }
 

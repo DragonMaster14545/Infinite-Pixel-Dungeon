@@ -221,7 +221,7 @@ public class SandalsOfNature extends Artifact {
 		if ((level().compareTo(BigInteger.ZERO) < 0))        image = ItemSpriteSheet.ARTIFACT_SANDALS;
 		else if ((level().compareTo(BigInteger.ZERO) == 0))  image = ItemSpriteSheet.ARTIFACT_SHOES;
 		else if ((level().compareTo(BigInteger.ONE) == 0))  image = ItemSpriteSheet.ARTIFACT_BOOTS;
-		else if ((level().compareTo(BigInteger.TWO) >= 0))  image = ItemSpriteSheet.ARTIFACT_GREAVES;
+		else if ((level().compareTo(BigInteger.valueOf(2)) >= 0))  image = ItemSpriteSheet.ARTIFACT_GREAVES;
 		return super.upgrade();
 	}
 
@@ -250,7 +250,7 @@ public class SandalsOfNature extends Artifact {
 		curSeedEffect = bundle.getClass(CUR_SEED_EFFECT);
 
 		if ((level().compareTo(BigInteger.ONE) == 0))  image = ItemSpriteSheet.ARTIFACT_SHOES;
-		else if ((level().compareTo(BigInteger.TWO) == 0))  image = ItemSpriteSheet.ARTIFACT_BOOTS;
+		else if ((level().compareTo(BigInteger.valueOf(2)) == 0))  image = ItemSpriteSheet.ARTIFACT_BOOTS;
 		else if ((level().compareTo(BigInteger.valueOf(3)) >= 0))  image = ItemSpriteSheet.ARTIFACT_GREAVES;
 	}
 

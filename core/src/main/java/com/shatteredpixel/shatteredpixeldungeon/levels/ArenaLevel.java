@@ -376,7 +376,7 @@ public class ArenaLevel extends Level {
 							Buff.affect(mob, RageShield.class).set(power*4);
 						}
 						if (power >= 200){
-							mob.HP = mob.HT = mob.HT.multiply(BigInteger.TWO);
+							mob.HP = mob.HT = mob.HT.multiply(BigInteger.valueOf(2));
 						}
 						if (power >= 250) {
 							ChampionEnemy.rollForChampion(mob);

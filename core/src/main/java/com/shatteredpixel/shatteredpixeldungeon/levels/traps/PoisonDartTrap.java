@@ -58,7 +58,7 @@ public class PoisonDartTrap extends Trap {
 	}
 	
 	protected int poisonAmount(){
-		return Big.toInt(BigInteger.valueOf(8).add(Big.round(Big.div(Big.dec(BigInteger.TWO.multiply(Dungeon.escalatingDepth())), Big.dec(3f)))));
+		return Big.toInt(BigInteger.valueOf(8).add(Big.round(Big.div(Big.dec(BigInteger.valueOf(2).multiply(Dungeon.escalatingDepth())), Big.dec(3f)))));
 	}
 	
 	protected boolean canTarget( Char ch ){

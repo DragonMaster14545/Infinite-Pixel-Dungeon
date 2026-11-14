@@ -386,7 +386,7 @@ public class Wandmaker extends NPC {
 				given = false;
 				wand1 = (Wand) Generator.random(Generator.Category.WAND);
 				wand1.cursed = false;
-				wand1.upgrade((Dungeon.getCycleMultiplier(BigInteger.TWO)));
+				wand1.upgrade((Dungeon.getCycleMultiplier(BigInteger.valueOf(2))));
 				wand2 = (Wand) Generator.random(Generator.Category.WAND);
 				ArrayList<Item> toUndo = new ArrayList<>();
 				while (wand2.getClass() == wand1.getClass()) {
@@ -397,7 +397,7 @@ public class Wandmaker extends NPC {
 					Generator.undoDrop(i);
 				}
 				wand2.cursed = false;
-				wand2.upgrade((Dungeon.getCycleMultiplier(BigInteger.TWO)));
+				wand2.upgrade((Dungeon.getCycleMultiplier(BigInteger.valueOf(2))));
 
 			}
 		}

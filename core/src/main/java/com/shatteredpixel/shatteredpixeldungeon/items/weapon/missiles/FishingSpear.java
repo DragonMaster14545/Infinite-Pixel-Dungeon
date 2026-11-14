@@ -44,7 +44,7 @@ public class FishingSpear extends MissileWeapon {
 	@Override
 	public BigInteger proc(Char attacker, Char defender, BigInteger damage) {
 		if (defender instanceof Piranha){
-			damage = damage.max(defender.HP.divide(BigInteger.TWO));
+			damage = damage.max(defender.HP.divide(BigInteger.valueOf(2)));
 		}
 		return super.proc(attacker, defender, damage);
 	}

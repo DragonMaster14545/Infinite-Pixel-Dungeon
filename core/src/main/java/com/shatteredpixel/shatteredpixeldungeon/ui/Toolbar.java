@@ -94,7 +94,7 @@ public class Toolbar extends Component {
 
 		add(btnSwap = new SlotSwapTool(128, 0, 21, 23));
 
-		btnQuick = new QuickslotTool[QuickSlot.SIZE];
+		btnQuick = new QuickslotTool[QuickSlot.TOOLBAR_SIZE];
 		for (int i = 0; i < btnQuick.length; i++){
 			add( btnQuick[i] = new QuickslotTool(64, 0, 22, 24, i) );
 		}
@@ -104,11 +104,12 @@ public class Toolbar extends Component {
 			@Override
             public void onClick() {
 				if (QuickSlotButton.targetingSlot != -1){
-					int cell = QuickSlotButton.autoAim(QuickSlotButton.lastTarget, Dungeon.quickslot.getItem(QuickSlotButton.targetingSlot));
+					Item aimItem = Dungeon.quickslot.getItem(QuickSlotButton.targetingSlot);
+					int cell = (QuickSlotButton.lastTarget == null || aimItem == null) ? -1 : QuickSlotButton.autoAim(QuickSlotButton.lastTarget, aimItem);
 
 					if (cell != -1){
 						GameScene.handleCell(cell);
-					} else {
+					} else if (QuickSlotButton.lastTarget != null) {
 						//couldn't auto-aim, just target the position and hope for the best.
 						GameScene.handleCell( QuickSlotButton.lastTarget.pos );
 					}
@@ -769,7 +770,7 @@ public class Toolbar extends Component {
 		}
 	};
 	
-	private static class Tool extends Button {
+	static class Tool extends Button {
 		
 		private static final int BGCOLOR = 0x7B8073;
 		
@@ -845,7 +846,7 @@ public class Toolbar extends Component {
 		}
 	}
 	
-	private static class QuickslotTool extends Tool {
+	static class QuickslotTool extends Tool {
 		
 		private QuickSlotButton slot;
 		private int borderLeft = 2;

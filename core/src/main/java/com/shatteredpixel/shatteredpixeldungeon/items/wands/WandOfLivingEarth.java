@@ -71,7 +71,7 @@ public class WandOfLivingEarth extends DamageWand {
 	
 	@Override
 	public BigInteger max(BigInteger lvl) {
-		return ((BigInteger.valueOf(6).add(BigInteger.TWO.multiply(lvl))).multiply(getRarityMultiplier()));
+		return ((BigInteger.valueOf(6).add(BigInteger.valueOf(2).multiply(lvl))).multiply(getRarityMultiplier()));
 	}
 	
 	@Override
@@ -105,7 +105,7 @@ public class WandOfLivingEarth extends DamageWand {
 
 		//shooting at the guardian
 		if (guardian != null && guardian == ch){
-			guardian.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, (int) Math.min(Math.sqrt(Big.dec(8).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue()), 1000));
+			guardian.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, Big.particles(Math.sqrt(Big.dec(8).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue())));
 			guardian.setInfo(curUser, buffedLvl(), armorToAdd);
 			wandProc(guardian, chargesPerCast());
 			Sample.INSTANCE.play( Assets.Sounds.HIT_MAGIC, 1, 0.9f * Random.Float(0.87f, 1.15f) );
@@ -121,7 +121,7 @@ public class WandOfLivingEarth extends DamageWand {
 			//adjacent cell which is closes to the user of the wand.
 			if (ch != null){
 
-				ch.sprite.centerEmitter().burst(MagicMissile.EarthParticle.BURST,  (int) Math.min(Math.sqrt(Big.dec(5).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue()), 1000));
+				ch.sprite.centerEmitter().burst(MagicMissile.EarthParticle.BURST,  Big.particles(Math.sqrt(Big.dec(5).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue())));
 
 				wandProc(ch, chargesPerCast());
 				ch.damage(damage, this);
@@ -138,7 +138,7 @@ public class WandOfLivingEarth extends DamageWand {
 				}
 
 				if (closest == -1){
-					if ((armorToAdd.compareTo(BigInteger.ZERO) > 0)) {curUser.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT,  (int) Math.min(Math.sqrt(Big.dec(8).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue()), 1000));
+					if ((armorToAdd.compareTo(BigInteger.ZERO) > 0)) {curUser.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT,  Big.particles(Math.sqrt(Big.dec(8).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue())));
 					}
 					return; //do not spawn guardian or detach buff
 				} else {
@@ -157,7 +157,7 @@ public class WandOfLivingEarth extends DamageWand {
 				Dungeon.level.occupyCell(guardian);
 			}
 
-			guardian.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT,  (int) Math.min(Math.sqrt(Big.dec(8).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue()), 1000));
+			guardian.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT,  Big.particles(Math.sqrt(Big.dec(8).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue())));
 			buff.detach();
 			Sample.INSTANCE.play( Assets.Sounds.HIT_MAGIC, 1, 0.9f * Random.Float(0.87f, 1.15f) );
 
@@ -166,7 +166,7 @@ public class WandOfLivingEarth extends DamageWand {
 
 			if (ch != null) {
 
-				ch.sprite.centerEmitter().burst(MagicMissile.EarthParticle.BURST,  (int) Math.min(Math.sqrt(Big.dec(5).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue()), 1000));
+				ch.sprite.centerEmitter().burst(MagicMissile.EarthParticle.BURST,  Big.particles(Math.sqrt(Big.dec(5).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue())));
 
 				wandProc(ch, chargesPerCast());
 				ch.damage(damage, this);
@@ -174,10 +174,10 @@ public class WandOfLivingEarth extends DamageWand {
 				
 				if (guardian == null) {
 					if ((armorToAdd.compareTo(BigInteger.ZERO) > 0)) {
-						curUser.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT,  (int) Math.min(Math.sqrt(Big.dec(5).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue()), 1000));
+						curUser.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT,  Big.particles(Math.sqrt(Big.dec(5).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue())));
 					}
 				} else {
-					guardian.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT,  (int) Math.min(Math.sqrt(Big.dec(5).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue()), 1000));
+					guardian.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT,  Big.particles(Math.sqrt(Big.dec(5).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue())));
 					guardian.setInfo(curUser, buffedLvl(), armorToAdd);
 					if (ch.alignment == Char.Alignment.ENEMY || ch.buff(Amok.class) != null) {
 						guardian.aggro(ch);
@@ -199,7 +199,7 @@ public class WandOfLivingEarth extends DamageWand {
 	@Override
 	public String upgradeStat3(BigInteger level) {
 		if (Dungeon.isChallenged(Challenges.NO_ARMOR)){
-			return level + "-" + (BigInteger.TWO.add(level));
+			return level + "-" + (BigInteger.valueOf(2).add(level));
 		} else {
 			return level + "-" + (BigInteger.valueOf(3).add((BigInteger.valueOf(3).multiply(level))));
 		}
@@ -228,10 +228,10 @@ public class WandOfLivingEarth extends DamageWand {
 		int armor = Big.toInt(Big.round(Big.dec(damage).multiply(Big.dec(0.33f)).multiply(Big.dec(procChanceMultiplier(attacker)))));
 
 		if (guardian != null){
-			guardian.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT,  (int) Math.min(Math.sqrt(Big.dec(5).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue()), 1000));
+			guardian.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT,  Big.particles(Math.sqrt(Big.dec(5).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue())));
 			guardian.setInfo(Dungeon.hero, buffedLvl(), BigInteger.valueOf(armor));
 		} else {
-			attacker.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT,  (int) Math.min(Math.sqrt(Big.dec(5).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue()), 1000));
+			attacker.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT,  Big.particles(Math.sqrt(Big.dec(5).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue())));
 			Buff.affect(attacker, RockArmor.class).addArmor(buffedLvl(), BigInteger.valueOf(armor));
 		}
 	}
@@ -264,7 +264,7 @@ public class WandOfLivingEarth extends DamageWand {
 		private void addArmor( BigInteger wandLevel, BigInteger toAdd ){
 			this.wandLevel = this.wandLevel.max(wandLevel);
 			armor = armor.add(toAdd);
-			armor = armor.min(BigInteger.TWO.multiply(armorToGuardian()));
+			armor = armor.min(BigInteger.valueOf(2).multiply(armorToGuardian()));
 		}
 
 		private BigInteger armorToGuardian(){
@@ -272,7 +272,7 @@ public class WandOfLivingEarth extends DamageWand {
 		}
 
 		public BigInteger absorb( BigInteger damage ) {
-			BigInteger block = damage.subtract(damage.divide(BigInteger.TWO));
+			BigInteger block = damage.subtract(damage.divide(BigInteger.valueOf(2)));
 			if ((armor.compareTo(block) <= 0)) {
 				detach();
 				return damage.subtract(armor);
@@ -362,7 +362,7 @@ public class WandOfLivingEarth extends DamageWand {
 		@Override
 		public BigInteger attackSkill(Char target) {
 			//same as the hero
-			return BigInteger.TWO.multiply(defenseSkill).add(BigInteger.valueOf(5));
+			return BigInteger.valueOf(2).multiply(defenseSkill).add(BigInteger.valueOf(5));
 		}
 
 		@Override
@@ -373,14 +373,14 @@ public class WandOfLivingEarth extends DamageWand {
 
 		@Override
 		public BigInteger damageRoll() {
-			return Big.normalRange(BigInteger.TWO, BigInteger.valueOf(4).add(Dungeon.scalingDepth().divide(BigInteger.TWO)));
+			return Big.normalRange(BigInteger.valueOf(2), BigInteger.valueOf(4).add(Dungeon.scalingDepth().divide(BigInteger.valueOf(2))));
 		}
 
 		@Override
 		public BigInteger drRoll() {
 			BigInteger dr = super.drRoll();
 			if (Dungeon.isChallenged(Challenges.NO_ARMOR)){
-				return (dr.add(Big.normalRange(wandLevel, BigInteger.TWO.add(wandLevel))));
+				return (dr.add(Big.normalRange(wandLevel, BigInteger.valueOf(2).add(wandLevel))));
 			} else {
 				return (dr.add(Big.normalRange(wandLevel, BigInteger.valueOf(3).add(BigInteger.valueOf(3).multiply(wandLevel)))));
 			}
@@ -392,7 +392,7 @@ public class WandOfLivingEarth extends DamageWand {
 
 			if (Actor.chars().contains(this)) {
 				if (Dungeon.isChallenged(Challenges.NO_ARMOR)) {
-					desc += "\n\n" + Messages.get(this, "wand_info", wandLevel, BigInteger.TWO.add(wandLevel));
+					desc += "\n\n" + Messages.get(this, "wand_info", wandLevel, BigInteger.valueOf(2).add(wandLevel));
 				} else {
 					desc += "\n\n" + Messages.get(this, "wand_info", wandLevel, BigInteger.valueOf(3).add(BigInteger.valueOf(3).multiply(wandLevel)));
 				}
@@ -429,7 +429,7 @@ public class WandOfLivingEarth extends DamageWand {
 			public boolean act(boolean enemyInFOV, boolean justAlerted) {
 				if (!enemyInFOV){
 					Buff.affect(Dungeon.hero, RockArmor.class).addArmor(wandLevel, HP);
-					Dungeon.hero.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, Big.toInt((Big.dec(8).add(Big.div(Big.dec(wandLevel), Big.dec(2f))).min(Big.dec(1000))).toBigInteger()));
+					Dungeon.hero.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, Big.particles(Big.dec(8).add(Big.div(Big.dec(wandLevel), Big.dec(2f))).toBigInteger()));
 					destroy();
 					sprite.die();
 					return true;

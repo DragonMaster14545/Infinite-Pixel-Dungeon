@@ -88,7 +88,7 @@ public class WandOfTeleportation extends DamageWand {
             ch.damage(damageRoll(), this);
 
             Sample.INSTANCE.play( Assets.Sounds.HIT_MAGIC, 1, Random.Float(0.87f, 1.15f) );
-            ch.sprite.burst(0xFFFFFFFF,  (int) Math.min(Math.sqrt(Big.dec(2).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue()), 100));
+            ch.sprite.burst(0xFFFFFFFF,  Big.particles(Math.sqrt(Big.dec(2).add(Big.div(Big.dec(buffedLvl()), Big.dec(2f))).doubleValue())));
 
             for (Wand.Charger wandCharger : curUser.buffs(Wand.Charger.class)){
                 if ((wandCharger.wand().buffedLvl().compareTo(buffedLvl()) < 0) || curUser.buff(WandOfMagicMissile.MagicCharge.class) != null){
@@ -104,7 +104,7 @@ public class WandOfTeleportation extends DamageWand {
 
     @Override
     protected BigInteger chargesPerCast() {
-        return BigInteger.TWO;
+        return BigInteger.valueOf(2);
     }
 
     @Override

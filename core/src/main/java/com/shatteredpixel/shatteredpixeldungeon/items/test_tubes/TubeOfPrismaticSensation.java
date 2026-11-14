@@ -49,7 +49,7 @@ public class TubeOfPrismaticSensation extends Tubes {
 	public void apply( Hero hero ) {
 		identify();
 
-		Buff.affect(hero, PrismaticGuard.class).set(hero.HT.divide(BigInteger.TWO));
+		Buff.affect(hero, PrismaticGuard.class).set(hero.HT.divide(BigInteger.valueOf(2)));
 		GLog.h( "Are you familiar with this?" );
 	}
 

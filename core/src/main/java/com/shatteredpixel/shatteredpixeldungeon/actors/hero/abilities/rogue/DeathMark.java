@@ -194,7 +194,7 @@ public class DeathMark extends ArmorAbility {
 			target.deathMarked = false;
 			if (!target.isAlive()){
 				target.sprite.flash();
-				target.sprite.bloodBurstA(target.sprite.center(), Big.toInt(BigInteger.valueOf(Integer.MAX_VALUE).min(target.HT.multiply(BigInteger.TWO))));
+				target.sprite.bloodBurstA(target.sprite.center(), Big.toInt(BigInteger.valueOf(Integer.MAX_VALUE).min(target.HT.multiply(BigInteger.valueOf(2)))));
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STAB);
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 				target.die(this);

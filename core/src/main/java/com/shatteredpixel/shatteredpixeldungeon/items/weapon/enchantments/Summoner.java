@@ -91,7 +91,7 @@ public class Summoner extends Weapon.Enchantment {
         }
 
         public AlephKnight() {
-            HP = HT = BigInteger.valueOf(4).add(Dungeon.escalatingDepth().multiply(BigInteger.TWO));
+            HP = HT = BigInteger.valueOf(4).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(2)));
             defenseSkill = BigInteger.valueOf(6).add(Dungeon.escalatingDepth());
         }
 

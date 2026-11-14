@@ -101,12 +101,12 @@ public class WandOfPrismaticLight extends DamageWand {
 		}
 
 		if (ch.properties().contains(Char.Property.DEMONIC) || ch.properties().contains(Char.Property.UNDEAD)){
-			ch.sprite.emitter().start( ShadowParticle.UP, 0.05f,  (int) Math.min(Math.sqrt(BigInteger.TEN.add(buffedLvl()).doubleValue()), 1000));
+			ch.sprite.emitter().start( ShadowParticle.UP, 0.05f,  Big.particles(Math.sqrt(BigInteger.TEN.add(buffedLvl()).doubleValue())));
 			Sample.INSTANCE.play(Assets.Sounds.BURNING);
 
 			ch.damage(Big.round(Big.dec(dmg).multiply(Big.dec(1.333f))), this);
 		} else {
-			ch.sprite.centerEmitter().burst( RainbowParticle.BURST,  (int) Math.min(Math.sqrt(BigInteger.TEN.add(buffedLvl()).doubleValue()), 1000));
+			ch.sprite.centerEmitter().burst( RainbowParticle.BURST,  Big.particles(Math.sqrt(BigInteger.TEN.add(buffedLvl()).doubleValue())));
 
 			ch.damage(dmg, this);
 		}
@@ -153,7 +153,7 @@ public class WandOfPrismaticLight extends DamageWand {
 	@Override
 	public String upgradeStat3(BigInteger level) {
 		if (Dungeon.isChallenged(Challenges.DARKNESS)){
-			return BigInteger.TWO.add(level).toString();
+			return BigInteger.valueOf(2).add(level).toString();
 		} else {
 			return BigInteger.TEN.add(BigInteger.valueOf(5).multiply(level)).toString();
 		}

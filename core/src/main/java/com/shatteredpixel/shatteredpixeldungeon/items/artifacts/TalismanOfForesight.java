@@ -135,7 +135,7 @@ public class TalismanOfForesight extends Artifact {
 	}
 
 	private float maxDist(){
-		return Big.dec(BigInteger.valueOf(5).add(BigInteger.TWO.multiply(level()))).min(Big.div(Big.dec((charge.subtract(BigInteger.valueOf(3)))), Big.dec(1.08f))).floatValue();
+		return Big.dec(BigInteger.valueOf(5).add(BigInteger.valueOf(2).multiply(level()))).min(Big.div(Big.dec((charge.subtract(BigInteger.valueOf(3)))), Big.dec(1.08f))).floatValue();
 	}
 
 	private CellSelector.Listener scry = new CellSelector.Listener(){
@@ -191,7 +191,7 @@ public class TalismanOfForesight extends Artifact {
 
 					Char ch = Actor.findChar(cell);
 					if (ch != null && ch.alignment != Char.Alignment.NEUTRAL && ch.alignment != curUser.alignment){
-						Buff.append(curUser, CharAwareness.class, BigInteger.valueOf(5).add(BigInteger.TWO.multiply(level())).floatValue()).charID = ch.id();
+						Buff.append(curUser, CharAwareness.class, BigInteger.valueOf(5).add(BigInteger.valueOf(2).multiply(level())).floatValue()).charID = ch.id();
 
 						if (!curUser.fieldOfView[ch.pos]){
 							earnedExp += 10;
@@ -200,7 +200,7 @@ public class TalismanOfForesight extends Artifact {
 
 					Heap h = Dungeon.level.heaps.get(cell);
 					if (h != null){
-						Buff.append(curUser, HeapAwareness.class, BigInteger.valueOf(5).add(BigInteger.TWO.multiply(level())).floatValue()).pos = h.pos;
+						Buff.append(curUser, HeapAwareness.class, BigInteger.valueOf(5).add(BigInteger.valueOf(2).multiply(level())).floatValue()).pos = h.pos;
 
 						if (!h.seen){
 							earnedExp += 10;

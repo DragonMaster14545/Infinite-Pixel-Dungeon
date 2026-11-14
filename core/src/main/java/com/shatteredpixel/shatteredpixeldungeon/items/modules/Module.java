@@ -96,7 +96,7 @@ public class Module extends Item {
 
     @Override
     public Item random() {
-        quantity = (Dungeon.LongRange( BigInteger.TWO, BigInteger.valueOf(4) ));
+        quantity = (Dungeon.LongRange( BigInteger.valueOf(2), BigInteger.valueOf(4) ));
         return this;
     }
 

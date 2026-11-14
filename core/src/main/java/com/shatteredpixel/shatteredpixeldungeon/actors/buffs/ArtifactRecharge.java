@@ -73,11 +73,13 @@ public class ArtifactRecharge extends Buff {
 	}
 	
 	public ArtifactRecharge set( float amount ){
+		if (Float.isNaN(amount) || Float.isInfinite(amount)) return this;
 		if (left < amount) left = amount;
 		return this;
 	}
 	
 	public ArtifactRecharge prolong( float amount ){
+		if (Float.isNaN(amount) || Float.isInfinite(amount)) return this;
 		left += amount;
 		return this;
 	}
@@ -117,7 +119,7 @@ public class ArtifactRecharge extends Buff {
 	@Override
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
-		bundle.put( LEFT, left );
+		bundle.put( LEFT, Float.isNaN(left) || Float.isInfinite(left) ? 0f : left );
 		bundle.put( IGNORE_HORN, ignoreHornOfPlenty );
 	}
 	
@@ -125,6 +127,7 @@ public class ArtifactRecharge extends Buff {
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
 		left = bundle.getFloat(LEFT);
+		if (Float.isNaN(left) || Float.isInfinite(left)) left = 0;
 		ignoreHornOfPlenty = bundle.getBoolean(IGNORE_HORN);
 	}
 

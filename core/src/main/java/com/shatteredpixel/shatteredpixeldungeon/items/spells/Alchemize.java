@@ -98,7 +98,7 @@ public class Alchemize extends Spell {
 
 		@Override
 		public BigInteger cost(ArrayList<Item> ingredients) {
-			return BigInteger.TWO;
+			return BigInteger.valueOf(2);
 		}
 
 		@Override

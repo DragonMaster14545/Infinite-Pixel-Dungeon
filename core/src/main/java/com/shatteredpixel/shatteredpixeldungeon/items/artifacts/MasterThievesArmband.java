@@ -63,7 +63,7 @@ public class MasterThievesArmband extends Artifact {
 
 		charge = BigInteger.ZERO;
 		partialCharge = 0;
-		setChargeCap(BigInteger.valueOf(5).add(level().divide(BigInteger.TWO)));
+		setChargeCap(BigInteger.valueOf(5).add(level().divide(BigInteger.valueOf(2))));
 
 		defaultAction = AC_STEAL;
 	}
@@ -137,7 +137,7 @@ public class MasterThievesArmband extends Artifact {
 
 							boolean surprised = ((Mob) ch).surprisedBy(curUser, false);
 							float lootMultiplier = Big.dec(1f).add(Big.dec(0.1f).multiply(Big.dec(level()))).floatValue();
-							int debuffDuration = Big.toInt((BigInteger.valueOf(3).add(level().divide(BigInteger.TWO))));
+							int debuffDuration = Big.toInt((BigInteger.valueOf(3).add(level().divide(BigInteger.valueOf(2)))));
 
 							Invisibility.dispel(curUser);
 
@@ -146,7 +146,7 @@ public class MasterThievesArmband extends Artifact {
 								Surprise.hit(ch);
 								Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 								debuffDuration += 2;
-								exp = exp.add(BigInteger.TWO);
+								exp = exp.add(BigInteger.valueOf(2));
 							}
 
 							float lootChance = ((Mob) ch).lootChance() * lootMultiplier;
@@ -239,7 +239,7 @@ public class MasterThievesArmband extends Artifact {
 
 	@Override
 	public Item upgrade() {
-		setChargeCap(BigInteger.valueOf(5).add((level().add(BigInteger.ONE)).divide(BigInteger.TWO)));
+		setChargeCap(BigInteger.valueOf(5).add((level().add(BigInteger.ONE)).divide(BigInteger.valueOf(2))));
 		return super.upgrade();
 	}
 

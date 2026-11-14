@@ -59,7 +59,7 @@ public class WandOfDisintegration extends DamageWand {
 
 
 	public BigInteger min(BigInteger lvl){
-		return ((BigInteger.TWO.add(lvl)).multiply(getRarityMultiplier()));
+		return ((BigInteger.valueOf(2).add(lvl)).multiply(getRarityMultiplier()));
 	}
 
 	public BigInteger max(BigInteger lvl){
@@ -151,12 +151,12 @@ public class WandOfDisintegration extends DamageWand {
 	}
 
 	private int distance() {
-		return Big.toInt((buffedLvl().multiply(BigInteger.TWO).add(BigInteger.valueOf(6))));
+		return Big.toInt((buffedLvl().multiply(BigInteger.valueOf(2)).add(BigInteger.valueOf(6))));
 	}
 
 	@Override
 	public String upgradeStat2(BigInteger level) {
-		return BigInteger.valueOf(6).add(level.multiply(BigInteger.TWO)).toString();
+		return BigInteger.valueOf(6).add(level.multiply(BigInteger.valueOf(2))).toString();
 	}
 
 	@Override

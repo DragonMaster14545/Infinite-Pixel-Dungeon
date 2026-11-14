@@ -76,7 +76,7 @@ public class Goo extends Mob {
 	public BigInteger damageRoll() {
 		BigInteger min = Dungeon.getCycleMultiplier(BigInteger.ONE);
 
-		BigInteger max = ((HP.multiply(BigInteger.TWO).compareTo(HT) <= 0)) ? Dungeon.getCycleMultiplier(BigInteger.valueOf(12)) : Dungeon.getCycleMultiplier(BigInteger.valueOf(18));
+		BigInteger max = ((HP.multiply(BigInteger.valueOf(2)).compareTo(HT) <= 0)) ? Dungeon.getCycleMultiplier(BigInteger.valueOf(12)) : Dungeon.getCycleMultiplier(BigInteger.valueOf(18));
 		if (pumpedUp > 0) {
 			pumpedUp = 0;
 			if (enemy == Dungeon.hero) {
@@ -92,19 +92,19 @@ public class Goo extends Mob {
 	@Override
 	public BigInteger attackSkill(Char target ) {
 		BigInteger attack = Dungeon.getCycleMultiplier(BigInteger.TEN);
-		if ((HP.multiply(BigInteger.TWO).compareTo(HT) <= 0)) attack = Dungeon.getCycleMultiplier(BigInteger.valueOf(15));
-		if (pumpedUp > 0) attack = attack.multiply(BigInteger.TWO);
+		if ((HP.multiply(BigInteger.valueOf(2)).compareTo(HT) <= 0)) attack = Dungeon.getCycleMultiplier(BigInteger.valueOf(15));
+		if (pumpedUp > 0) attack = attack.multiply(BigInteger.valueOf(2));
 		return attack;
 	}
 
 	@Override
 	public BigInteger defenseSkill(Char enemy) {
-		return BigInteger.valueOf(Big.toInt(((Big.dec(super.defenseSkill(enemy)).multiply(Big.dec((((HP.multiply(BigInteger.TWO).compareTo(HT) <= 0))? 1.5 : 1))))).toBigInteger()));
+		return BigInteger.valueOf(Big.toInt(((Big.dec(super.defenseSkill(enemy)).multiply(Big.dec((((HP.multiply(BigInteger.valueOf(2)).compareTo(HT) <= 0))? 1.5 : 1))))).toBigInteger()));
 	}
 
 	@Override
 	public BigInteger cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.TWO));
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(2)));
 	}
 
 	@Override
@@ -131,7 +131,7 @@ public class Goo extends Mob {
 			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) && healInc < 3) {
 				healInc++;
 			}
-			if ((HP.multiply(BigInteger.TWO).compareTo(HT) > 0)) {
+			if ((HP.multiply(BigInteger.valueOf(2)).compareTo(HT) > 0)) {
 				BossHealthBar.bleed(false);
 				((GooSprite)sprite).spray(false);
 				HP = HP.min(HT);
@@ -193,7 +193,7 @@ public class Goo extends Mob {
 			spend( attackDelay() );
 
 			return true;
-		} else if (pumpedUp >= 2 || Random.Int( ((HP.multiply(BigInteger.TWO).compareTo(HT) <= 0)) ? 2 : 5 ) > 0) {
+		} else if (pumpedUp >= 2 || Random.Int( ((HP.multiply(BigInteger.valueOf(2)).compareTo(HT) <= 0)) ? 2 : 5 ) > 0) {
 
 			boolean visible = Dungeon.level.heroFOV[pos];
 
@@ -273,9 +273,9 @@ public class Goo extends Mob {
 			BossHealthBar.assignBoss( this );
 			Dungeon.level.seal();
 		}
-		boolean bleeding = ((HP.multiply(BigInteger.TWO).compareTo(HT) <= 0));
+		boolean bleeding = ((HP.multiply(BigInteger.valueOf(2)).compareTo(HT) <= 0));
 		super.damage(dmg, src);
-		if (((HP.multiply(BigInteger.TWO).compareTo(HT) <= 0)) && !bleeding){
+		if (((HP.multiply(BigInteger.valueOf(2)).compareTo(HT) <= 0)) && !bleeding){
 			BossHealthBar.bleed(true);
 			sprite.showStatus(CharSprite.WARNING, Messages.get(this, "enraged"));
 			((GooSprite)sprite).spray(true);
@@ -354,7 +354,7 @@ public class Goo extends Mob {
 
 		pumpedUp = bundle.getInt( PUMPEDUP );
 		if (state != SLEEPING) BossHealthBar.assignBoss(this);
-		if (((HP.multiply(BigInteger.TWO).compareTo(HT) <= 0))) BossHealthBar.bleed(true);
+		if (((HP.multiply(BigInteger.valueOf(2)).compareTo(HT) <= 0))) BossHealthBar.bleed(true);
 
 		healInc = bundle.getInt(HEALINC);
 	}

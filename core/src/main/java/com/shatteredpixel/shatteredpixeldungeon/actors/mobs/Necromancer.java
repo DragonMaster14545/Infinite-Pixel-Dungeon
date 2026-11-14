@@ -232,7 +232,7 @@ public class Necromancer extends Mob {
 
 				Char blocker = Actor.findChar(summoningPos);
 				if (blocker.alignment != alignment){
-					blocker.damage( Big.of((Math.pow(Dungeon.NormalLongRange(BigInteger.TWO, BigInteger.TEN).doubleValue(), Dungeon.cycle+1))), new SummoningBlockDamage() );
+					blocker.damage( Big.of((Math.pow(Dungeon.NormalLongRange(BigInteger.valueOf(2), BigInteger.TEN).doubleValue(), Dungeon.cycle+1))), new SummoningBlockDamage() );
 					if (blocker == Dungeon.hero && !blocker.isAlive()){
 						Badges.validateDeathFromEnemyMagic();
 						Dungeon.fail(this);

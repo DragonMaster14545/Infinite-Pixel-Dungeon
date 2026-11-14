@@ -252,7 +252,7 @@ public class AlchemistsToolkit extends Artifact {
 			//generates 2 energy every hero level, +1 energy per toolkit level
 			//to a max of 12 energy per hero level
 			//This means that energy absorbed into the kit is recovered in 5 hero levels
-			double chargeGain = Big.dec((BigInteger.TWO.add(level()))).multiply(Big.dec(levelPortion)).doubleValue();
+			double chargeGain = Big.dec((BigInteger.valueOf(2).add(level()))).multiply(Big.dec(levelPortion)).doubleValue();
 			chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
 			chargeGain *= getRarityMultiplier().doubleValue();
 			chargeGain = Math.min(2000000000, chargeGain);

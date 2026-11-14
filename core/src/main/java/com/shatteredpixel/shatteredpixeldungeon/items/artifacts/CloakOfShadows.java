@@ -372,7 +372,7 @@ public class CloakOfShadows extends Artifact {
 					((Hero) target).interrupt();
 				} else {
 					//target hero level is 1 + 2*cloak level
-					int lvlDiffFromTarget = Big.toInt((BigInteger.valueOf(((Hero) target).lvl).subtract((BigInteger.ONE.add(level().multiply(BigInteger.TWO))))));
+					int lvlDiffFromTarget = Big.toInt((BigInteger.valueOf(((Hero) target).lvl).subtract((BigInteger.ONE.add(level().multiply(BigInteger.valueOf(2)))))));
 					//plus an extra one for each level after 6
 					if ((level().compareTo(BigInteger.valueOf(7)) >= 0)){
 						lvlDiffFromTarget -= Big.toLong(level().subtract(BigInteger.valueOf(6)));
@@ -410,7 +410,7 @@ public class CloakOfShadows extends Artifact {
 
         public void dispelAssassin(){
             updateQuickslot();
-            charge = BigInteger.ZERO.min(charge.subtract(BigInteger.TWO));
+            charge = BigInteger.ZERO.min(charge.subtract(BigInteger.valueOf(2)));
         }
 
 		@Override

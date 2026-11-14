@@ -529,7 +529,7 @@ public abstract class Level implements Bundlable {
             }
         }
         if (Dungeon.weekly) {
-            m.HP = m.HT = m.HT.multiply(BigInteger.TWO);
+            m.HP = m.HT = m.HT.multiply(BigInteger.valueOf(2));
         }
 		return m;
 	}
@@ -541,7 +541,7 @@ public abstract class Level implements Bundlable {
 
 		Mob m = Reflection.newInstance(mobsToSpawnArena.remove(0));
 		if (Dungeon.weekly) {
-			m.HP = m.HT = m.HT.multiply(BigInteger.TWO);
+			m.HP = m.HT = m.HT.multiply(BigInteger.valueOf(2));
 		}
 		return m;
 	}

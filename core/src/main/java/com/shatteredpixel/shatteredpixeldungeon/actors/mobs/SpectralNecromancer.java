@@ -140,7 +140,7 @@ public class SpectralNecromancer extends Necromancer {
 
 				Char blocker = Actor.findChar(summoningPos);
 				if (blocker.alignment != alignment){
-					blocker.damage( Big.of((Math.pow(Big.normalRange(BigInteger.TWO, BigInteger.TEN).doubleValue(), Dungeon.cycle+1))), new SummoningBlockDamage() );
+					blocker.damage( Big.of((Math.pow(Big.normalRange(BigInteger.valueOf(2), BigInteger.TEN).doubleValue(), Dungeon.cycle+1))), new SummoningBlockDamage() );
 					if (blocker == Dungeon.hero && !blocker.isAlive()){
 						Badges.validateDeathFromEnemyMagic();
 						Dungeon.fail(this);

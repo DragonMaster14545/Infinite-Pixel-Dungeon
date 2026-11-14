@@ -78,7 +78,7 @@ public class ShockBomb extends Bomb {
 			int power = 16 - 4*Dungeon.level.distance(ch.pos, cell);
 			if (power > 0){
 				//32% to 8% regular bomb damage
-				BigInteger damage = Big.round(Big.dec(Dungeon.NormalLongRange(BigInteger.valueOf(5).add(Dungeon.scalingDepth()), BigInteger.TEN.add(BigInteger.TWO.multiply(Dungeon.scalingDepth())))).multiply(Big.dec((power/50f))));
+				BigInteger damage = Big.round(Big.dec(Dungeon.NormalLongRange(BigInteger.valueOf(5).add(Dungeon.scalingDepth()), BigInteger.TEN.add(BigInteger.valueOf(2).multiply(Dungeon.scalingDepth())))).multiply(Big.dec((power/50f))));
 				if (Dungeon.hero.heroClass == HeroClass.ROGUE){
 					damage = Big.trunc(Big.dec(damage).multiply(Big.dec(2.5f)));
 				}

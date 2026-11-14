@@ -158,7 +158,7 @@ public enum HeroClass {
 		}
 
 		if (SPDSettings.quickslotWaterskin()) {
-			for (int s = 0; s < QuickSlot.SIZE; s++) {
+			for (int s = 0; s < QuickSlot.TOOLBAR_SIZE; s++) {
 				if (Dungeon.quickslot.getItem(s) == null) {
 					Dungeon.quickslot.setSlot(s, waterskin);
 					break;
@@ -254,7 +254,7 @@ public enum HeroClass {
 		hero.belongings.weapon.activate(hero);
 
 		ThrowingSpike spikes = new ThrowingSpike();
-		spikes.quantity(BigInteger.TWO).identify().collect(); //set quantity is 3, but Duelist starts with 2
+		spikes.quantity(BigInteger.valueOf(2)).identify().collect(); //set quantity is 3, but Duelist starts with 2
 
 		Dungeon.quickslot.setSlot(0, hero.belongings.weapon);
 		Dungeon.quickslot.setSlot(1, spikes);

@@ -55,8 +55,8 @@ public class ArmoredBrute extends Brute {
 	
 	@Override
 	protected void triggerEnrage () {
-		Buff.affect(this, ArmoredRage.class).setShield(HT.divide(BigInteger.TWO).add(BigInteger.ONE));
-		sprite.showStatusWithIcon( CharSprite.POSITIVE, HT.divide(BigInteger.TWO).add(BigInteger.ONE).toString(), FloatingText.SHIELDING );
+		Buff.affect(this, ArmoredRage.class).setShield(HT.divide(BigInteger.valueOf(2)).add(BigInteger.ONE));
+		sprite.showStatusWithIcon( CharSprite.POSITIVE, HT.divide(BigInteger.valueOf(2)).add(BigInteger.ONE).toString(), FloatingText.SHIELDING );
 		if (Dungeon.level.heroFOV[pos]) {
 			sprite.showStatus( CharSprite.WARNING, Messages.get(this, "enraged") );
 		}

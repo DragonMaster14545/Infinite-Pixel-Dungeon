@@ -113,8 +113,8 @@ public class FishingHook extends Ring {
 				do {
 					i = genConsumableDrop(level.subtract(BigInteger.ONE));
 				} while (Challenges.isItemBlocked(i));
-				i.quantity(i.quantity().multiply(BigInteger.TWO));
-				if (Dungeon.hero.perks.contains(Perks.Perk.FISHING_PRO) && Random.Int(4) == 0) i.quantity(i.quantity().multiply(BigInteger.TWO));
+				i.quantity(i.quantity().multiply(BigInteger.valueOf(2)));
+				if (Dungeon.hero.perks.contains(Perks.Perk.FISHING_PRO) && Random.Int(4) == 0) i.quantity(i.quantity().multiply(BigInteger.valueOf(2)));
 				drops.add(i);
 				dropsToRare--;
                 dropsToBag--;
@@ -212,7 +212,7 @@ public class FishingHook extends Ring {
 		switch (Random.Int(7)){
 			case 0: default:
 				Item i = genLowValueConsumable();
-				return i.quantity(i.quantity().multiply(BigInteger.TWO));
+				return i.quantity(i.quantity().multiply(BigInteger.valueOf(2)));
 			case 1:
 				i = Generator.randomUsingDefaults(Generator.Category.POTION);
 				if (!(i instanceof ExoticPotion)) {
@@ -243,7 +243,7 @@ public class FishingHook extends Ring {
 				if (i instanceof Bomb){
 					return new Bomb.DoubleBomb();
 				} else {
-					return i.quantity(i.quantity().multiply(BigInteger.TWO));
+					return i.quantity(i.quantity().multiply(BigInteger.valueOf(2)));
 				}
 			case 1:
 				return new StoneOfEnchantment();
@@ -267,7 +267,7 @@ public class FishingHook extends Ring {
                 } else if (i instanceof ShurikenOfShadows) {
 					return i.quantity(BigInteger.valueOf(3));
                 } else {
-					return i.quantity(i.quantity().multiply(BigInteger.TWO));
+					return i.quantity(i.quantity().multiply(BigInteger.valueOf(2)));
 				}
             case 1:
                 return new IdealBag();
@@ -287,7 +287,7 @@ public class FishingHook extends Ring {
         switch (Random.Int(3)){
             case 0: default:
                 Item i = genCommonBag();
-                return i.quantity(i.quantity().multiply(BigInteger.TWO));
+                return i.quantity(i.quantity().multiply(BigInteger.valueOf(2)));
             case 1:
                 return new UncommonTreasureBag();
         }
@@ -297,7 +297,7 @@ public class FishingHook extends Ring {
         switch (Random.Int(3)){
             case 0: default:
                 Item i = genUncommonBag();
-                return i.quantity(i.quantity().multiply(BigInteger.TWO));
+                return i.quantity(i.quantity().multiply(BigInteger.valueOf(2)));
             case 1:
                 return new RareTreasureBag();
         }
@@ -307,7 +307,7 @@ public class FishingHook extends Ring {
         switch (Random.Int(4)){
             case 0: default:
                 Item i = genRareBag();
-                return i.quantity(i.quantity().multiply(BigInteger.TWO));
+                return i.quantity(i.quantity().multiply(BigInteger.valueOf(2)));
             case 1:
                 return new EpicTreasureBag();
         }
@@ -322,7 +322,7 @@ public class FishingHook extends Ring {
             switch (Random.Int(5)){
                 case 0: default:
                     Item i = genEpicBag();
-                    return i.quantity(i.quantity().multiply(BigInteger.TWO));
+                    return i.quantity(i.quantity().multiply(BigInteger.valueOf(2)));
                 case 1:
                     return new LegendaryTreasureBag();
             }
@@ -360,7 +360,7 @@ public class FishingHook extends Ring {
 		}
 		result.cursed = false;
 		result.cursedKnown = true;
-		if ((result.level().compareTo(BigInteger.TWO) >= 0)) {
+		if ((result.level().compareTo(BigInteger.valueOf(2)) >= 0)) {
 			latestDropTier = 4;
 		} else {
 			latestDropTier = 3;

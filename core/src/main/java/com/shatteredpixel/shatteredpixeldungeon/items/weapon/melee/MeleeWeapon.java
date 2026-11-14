@@ -294,7 +294,7 @@ public class MeleeWeapon extends Weapon {
 
 	@Override
 	public BigInteger min(BigInteger lvl) {
-		return  BigInteger.valueOf(tier()*2L).add(lvl.multiply(BigInteger.TWO));    //level scaling
+		return  BigInteger.valueOf(tier()*2L).add(lvl.multiply(BigInteger.valueOf(2)));    //level scaling
 	}
 
 	@Override
@@ -459,7 +459,7 @@ private static boolean evaluatingTwinUpgrades = false;
 			price = Big.trunc(Big.dec(price).multiply(Big.dec(1.5)));
 		}
 		if (cursedKnown && (cursed || hasCurseEnchant())) {
-			price = price.divide(BigInteger.TWO);
+			price = price.divide(BigInteger.valueOf(2));
 		}
 		if (levelKnown && (level().compareTo(BigInteger.ZERO) > 0)) {
 			price = price.multiply(((level().add(BigInteger.ONE))));

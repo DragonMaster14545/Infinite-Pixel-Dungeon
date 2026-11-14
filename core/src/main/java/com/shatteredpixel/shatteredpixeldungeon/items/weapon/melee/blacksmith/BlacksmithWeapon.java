@@ -40,7 +40,7 @@ public abstract class BlacksmithWeapon extends MeleeWeapon {
 
     @Override
     public BigInteger min(BigInteger lvl) {
-        return  BigInteger.valueOf((tier()+Dungeon.cycle*7L)*2).add(lvl.multiply(BigInteger.TWO));    //level scaling
+        return  BigInteger.valueOf((tier()+Dungeon.cycle*7L)*2).add(lvl.multiply(BigInteger.valueOf(2)));    //level scaling
     }
 
     @Override

@@ -54,7 +54,7 @@ public class FlashingTrap extends Trap {
 		Char c = Actor.findChar( pos );
 		
 		if (c != null) {
-			BigInteger damage = BigInteger.ZERO.max((BigInteger.valueOf(4).add(scalingDepth().divide(BigInteger.TWO))).subtract(c.drRoll().divide(BigInteger.TWO)));
+			BigInteger damage = BigInteger.ZERO.max((BigInteger.valueOf(4).add(scalingDepth().divide(BigInteger.valueOf(2)))).subtract(c.drRoll().divide(BigInteger.valueOf(2))));
 			Buff.affect( c, Bleeding.class ).set( damage.doubleValue() );
 			Buff.prolong( c, Blindness.class, Blindness.DURATION );
 			Buff.prolong( c, Cripple.class, Cripple.DURATION*2f );

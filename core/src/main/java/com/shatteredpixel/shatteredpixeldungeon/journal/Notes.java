@@ -718,6 +718,19 @@ public class Notes {
 
 	private static ArrayList<CustomRecord> globalCustomRecords = new ArrayList<>();
 
+	public static void assignGlobalID( CustomRecord rec ){
+		if (rec.ID != -1) return;
+		int max = nextCustomID - 1;
+		for (CustomRecord r : globalCustomRecords){
+			if (r.ID > max) max = r.ID;
+		}
+		for (Record r : records){
+			if (r instanceof CustomRecord && ((CustomRecord) r).ID > max) max = ((CustomRecord) r).ID;
+		}
+		rec.ID = max + 1;
+		nextCustomID = max + 2;
+	}
+
 	public static void addGlobalCustom( CustomRecord rec ){
 		globalCustomRecords.add( rec );
 		Journal.saveNeeded = true;

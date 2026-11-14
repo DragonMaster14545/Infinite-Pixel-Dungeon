@@ -53,7 +53,7 @@ public class Firebloom extends Plant {
 			Buff.affect(ch, FireImbue.class).set( FireImbue.DURATION*0.3f );
 		}
 		
-		GameScene.add( Blob.seed( pos, BigInteger.TWO, Fire.class ) );
+		GameScene.add( Blob.seed( pos, BigInteger.valueOf(2), Fire.class ) );
 		
 		if (Dungeon.level.heroFOV[pos]) {
 			CellEmitter.get( pos ).burst( FlameParticle.FACTORY, 5 );

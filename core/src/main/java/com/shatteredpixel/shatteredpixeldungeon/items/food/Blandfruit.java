@@ -266,7 +266,7 @@ public class Blandfruit extends Food {
 		
 		@Override
 		public BigInteger cost(ArrayList<Item> ingredients) {
-			return BigInteger.TWO;
+			return BigInteger.valueOf(2);
 		}
 		
 		@Override

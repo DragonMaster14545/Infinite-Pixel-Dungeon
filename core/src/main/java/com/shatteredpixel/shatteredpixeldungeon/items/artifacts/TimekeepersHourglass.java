@@ -283,7 +283,7 @@ public class TimekeepersHourglass extends Artifact {
 
 				Invisibility.dispel();
 
-				BigInteger usedCharge = charge.min(BigInteger.TWO);
+				BigInteger usedCharge = charge.min(BigInteger.valueOf(2));
 				//buffs always act last, so the stasis buff should end a turn early.
 				spend(BigInteger.valueOf(5).multiply(usedCharge).floatValue());
 
@@ -484,7 +484,7 @@ public class TimekeepersHourglass extends Artifact {
 			TimekeepersHourglass hourglass = hero.belongings.getItem( TimekeepersHourglass.class );
 			if (hourglass != null && !hourglass.cursed) {
 				hourglass.upgrade();
-				Catalog.countUses(hourglass.getClass(), BigInteger.TWO);
+				Catalog.countUses(hourglass.getClass(), BigInteger.valueOf(2));
 				Sample.INSTANCE.play( Assets.Sounds.DEWDROP );
 				if ((hourglass.level().compareTo(BigInteger.valueOf(hourglass.levelCap)) == 0))
 					GLog.p( Messages.get(this, "maxlevel") );

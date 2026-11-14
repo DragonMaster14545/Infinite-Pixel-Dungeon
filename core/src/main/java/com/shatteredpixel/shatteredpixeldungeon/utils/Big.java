@@ -22,6 +22,7 @@ public final class Big {
 	public static BigInteger of(double v){
 		if (Double.isNaN(v)) return BigInteger.ZERO;
 		if (Double.isInfinite(v)) return v > 0 ? LMAX : LMIN;
+		if (Math.abs(v) < 9.0e18) return BigInteger.valueOf((long) v);
 		return new BigDecimal(v).toBigInteger();
 	}
 	public static BigInteger of(float v){ return of((double) v); }
@@ -33,6 +34,7 @@ public final class Big {
 
 	public static float ratio(BigInteger a, BigInteger b){
 		if (b.signum() == 0) return 0f;
+		if (a.bitLength() < 53 && b.bitLength() < 53) return (float) ((double) a.longValue() / (double) b.longValue());
 		return new BigDecimal(a).divide(new BigDecimal(b), MC).floatValue();
 	}
 
@@ -52,7 +54,9 @@ public final class Big {
 			m = s.substring(0, lead);
 			int dec = Math.max(0, 3 - lead);
 			if (dec > 0){
-				String f = s.substring(lead, lead + dec).replaceAll("0+$", "");
+				int e = lead + dec;
+				while (e > lead && s.charAt(e - 1) == '0') e--;
+				String f = s.substring(lead, e);
 				if (!f.isEmpty()) m += "." + f;
 			}
 			suffix = SUF[idx];
@@ -63,10 +67,18 @@ public final class Big {
 		return sign + m + suffix;
 	}
 
-	private static final java.util.regex.Pattern NUM = java.util.regex.Pattern.compile("\\d{5,}");
+	private static final java.util.regex.Pattern NUM = java.util.regex.Pattern.compile("(?<![\\w.#])\\d{5,}(?![\\w]|\\.\\d)");
 
 	public static String fmtText(String t){
 		if (t == null || t.length() < 5) return t;
+		int run = 0;
+		boolean any = false;
+		for (int i = 0, n = t.length(); i < n; i++){
+			char c = t.charAt(i);
+			if (c >= '0' && c <= '9'){ if (++run >= 5){ any = true; break; } }
+			else run = 0;
+		}
+		if (!any) return t;
 		java.util.regex.Matcher m = NUM.matcher(t);
 		StringBuffer sb = new StringBuffer();
 		while (m.find()) m.appendReplacement(sb, java.util.regex.Matcher.quoteReplacement(fmt(new BigInteger(m.group()))));
@@ -90,11 +102,29 @@ public final class Big {
 		return m.group(1).equals("-") ? r.negate() : r;
 	}
 
+	public static final int PARTICLE_CAP = 40;
+
+	public static int particles(double v){
+		if (Double.isNaN(v) || v <= 0) return 0;
+		return (int) Math.min(v, PARTICLE_CAP);
+	}
+
+	public static int particles(int v){
+		return Math.max(0, Math.min(v, PARTICLE_CAP));
+	}
+
+	public static int particles(BigInteger v){
+		if (v == null || v.signum() <= 0) return 0;
+		return v.compareTo(PCAP) > 0 ? PARTICLE_CAP : v.intValue();
+	}
+
 	public static BigInteger trunc(BigDecimal d){ return d.toBigInteger(); }
 
 	
+	private static final BigDecimal HALF = new BigDecimal("0.5");
+	private static final BigInteger PCAP = BigInteger.valueOf(PARTICLE_CAP);
 	public static BigInteger round(BigDecimal d){
-		return d.add(new BigDecimal("0.5")).setScale(0, RoundingMode.FLOOR).toBigInteger();
+		return d.add(HALF).setScale(0, RoundingMode.FLOOR).toBigInteger();
 	}
 	public static BigInteger round(BigInteger b){ return b; }
 
@@ -123,15 +153,13 @@ public final class Big {
 
 	
 	public static long toLong(BigInteger b){
-		if (b.compareTo(LMAX) > 0) return Long.MAX_VALUE;
-		if (b.compareTo(LMIN) < 0) return Long.MIN_VALUE;
-		return b.longValue();
+		if (b.bitLength() < 64) return b.longValue();
+		return b.signum() > 0 ? Long.MAX_VALUE : Long.MIN_VALUE;
 	}
 	
 	public static int toInt(BigInteger b){
-		if (b.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0) return Integer.MAX_VALUE;
-		if (b.compareTo(BigInteger.valueOf(Integer.MIN_VALUE)) < 0) return Integer.MIN_VALUE;
-		return b.intValue();
+		if (b.bitLength() < 32) return b.intValue();
+		return b.signum() > 0 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
 	}
 	public static int toInt(BigDecimal b){ return toInt(b.toBigInteger()); }
 

@@ -356,7 +356,7 @@ public abstract class Scroll extends Item {
 			} else {s.identify();
 }
 			
-			return Reflection.newInstance(stones.get(s.getClass())).quantity(BigInteger.TWO);
+			return Reflection.newInstance(stones.get(s.getClass())).quantity(BigInteger.valueOf(2));
 		}
 		
 		@Override
@@ -366,9 +366,9 @@ public abstract class Scroll extends Item {
 			Scroll s = (Scroll) ingredients.get(0);
 
 			if (!s.isKnown()){
-				return new Runestone.PlaceHolder().quantity(BigInteger.TWO);
+				return new Runestone.PlaceHolder().quantity(BigInteger.valueOf(2));
 			} else {
-				return Reflection.newInstance(stones.get(s.getClass())).quantity(BigInteger.TWO);
+				return Reflection.newInstance(stones.get(s.getClass())).quantity(BigInteger.valueOf(2));
 			}
 		}
 	}

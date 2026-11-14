@@ -204,7 +204,7 @@ public class WandOfEarthblast extends DamageWand {
 		MagicMissile.boltFromChar( curUser.sprite.parent,
 				MagicMissile.EARTHBLAST,
 				curUser.sprite,
-				bolt.path.get(Big.toInt((dist.divide(BigInteger.TWO)))),
+				bolt.path.get(Big.toInt((dist.divide(BigInteger.valueOf(2))))),
 				callback );
 		Sample.INSTANCE.play( Assets.Sounds.ZAP );
 		Sample.INSTANCE.play( Assets.Sounds.ROCKS );

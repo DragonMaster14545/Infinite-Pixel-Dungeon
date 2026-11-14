@@ -419,7 +419,7 @@ public class DM300 extends Mob {
 		if (Dungeon.level.adjacent(pos, target.pos)){
 			int oppositeAdjacent = target.pos + (target.pos - pos);
 			Ballistica trajectory = new Ballistica(target.pos, oppositeAdjacent, Ballistica.MAGIC_BOLT);
-			WandOfBlastWave.throwChar(target, trajectory, BigInteger.TWO, false, false, this);
+			WandOfBlastWave.throwChar(target, trajectory, BigInteger.valueOf(2), false, false, this);
 			if (target == Dungeon.hero){
 				Dungeon.hero.interrupt();
 			}

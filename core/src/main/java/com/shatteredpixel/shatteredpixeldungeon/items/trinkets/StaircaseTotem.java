@@ -37,7 +37,7 @@ public class StaircaseTotem extends Trinket {
 	@Override
 	protected BigInteger upgradeEnergyCost() {
 		//15 -> 17(32) -> 19(51) -> 21(72)
-		return BigInteger.valueOf(15).add(BigInteger.TWO.multiply(level()));
+		return BigInteger.valueOf(15).add(BigInteger.valueOf(2).multiply(level()));
 	}
 
     @Override

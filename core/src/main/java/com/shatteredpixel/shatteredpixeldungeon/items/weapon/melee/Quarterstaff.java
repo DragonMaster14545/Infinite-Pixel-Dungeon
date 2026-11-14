@@ -52,7 +52,7 @@ public class Quarterstaff extends MeleeWeapon {
 
 	@Override
 	public BigInteger defenseFactor( Char owner ) {
-		return BigInteger.TWO;	//2 extra defence
+		return BigInteger.valueOf(2);	//2 extra defence
 	}
 
 	@Override

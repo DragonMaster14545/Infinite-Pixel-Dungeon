@@ -234,7 +234,7 @@ public class Pickaxe extends MeleeWeapon {
 						|| enemy instanceof Spinner
 						|| enemy instanceof Scorpio) {
 					//+(8+2*lvl) damage, equivalent to +100% damage
-					damageBoost = augment.damageFactor(BigInteger.valueOf(8).add(BigInteger.TWO.multiply(buffedLvl())));
+					damageBoost = augment.damageFactor(BigInteger.valueOf(8).add(BigInteger.valueOf(2).multiply(buffedLvl())));
 				}
 				beforeAbilityUsed(hero, enemy);
 				AttackIndicator.target(enemy);
@@ -255,12 +255,12 @@ public class Pickaxe extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		BigInteger dmgBoost = BigInteger.valueOf(8).add(BigInteger.TWO.multiply(buffedLvl()));
+		BigInteger dmgBoost = BigInteger.valueOf(8).add(BigInteger.valueOf(2).multiply(buffedLvl()));
 		return Messages.get(this, "ability_desc", augment.damageFactor(min().add(dmgBoost)), augment.damageFactor(max().add(dmgBoost)));
 	}
 
 	public String upgradeAbilityStat(BigInteger level){
-		BigInteger dmgBoost = BigInteger.valueOf(8).add(BigInteger.TWO.multiply(level));
+		BigInteger dmgBoost = BigInteger.valueOf(8).add(BigInteger.valueOf(2).multiply(level));
 		return augment.damageFactor(min(level).add(dmgBoost)) + "-" + augment.damageFactor(max(level).add(dmgBoost));
 	}
 

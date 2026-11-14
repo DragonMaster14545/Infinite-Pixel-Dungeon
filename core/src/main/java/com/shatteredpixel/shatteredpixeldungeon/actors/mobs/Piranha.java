@@ -67,7 +67,7 @@ public class Piranha extends Mob {
 		super();
 		
 		HP = HT = BigInteger.TEN.add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(5)));
-		defenseSkill = BigInteger.TEN.add(Dungeon.escalatingDepth().multiply(BigInteger.TWO));
+		defenseSkill = BigInteger.TEN.add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(2)));
 	}
 	
 	@Override
@@ -86,12 +86,12 @@ public class Piranha extends Mob {
 	
 	@Override
 	public BigInteger damageRoll() {
-		return Dungeon.NormalLongRange( Dungeon.escalatingDepth(), BigInteger.valueOf(4).add(Dungeon.escalatingDepth().multiply(BigInteger.TWO)) );
+		return Dungeon.NormalLongRange( Dungeon.escalatingDepth(), BigInteger.valueOf(4).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(2))) );
 	}
 	
 	@Override
 	public BigInteger attackSkill(Char target ) {
-		return BigInteger.valueOf(20).add(Dungeon.escalatingDepth().multiply(BigInteger.TWO));
+		return BigInteger.valueOf(20).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(2)));
 	}
 	
 	@Override

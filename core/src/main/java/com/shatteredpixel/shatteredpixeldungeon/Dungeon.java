@@ -398,17 +398,27 @@ public class Dungeon {
 	}
 
 
+	private static int cycleCacheCycle = -1;
+	private static BigInteger cycleCacheMod = null;
+	private static BigInteger cycleCacheFactor = null;
+
 	public static BigInteger getCycleMultiplier( BigInteger baseValue ) {
-        BigInteger modifier = BigInteger.ZERO;
-        if (Dungeon.hero != null) {
-            modifier = Big.of(Math.pow(1.0045, hero.lvl)).min(BigInteger.valueOf(30));
-        }
-		java.math.BigDecimal base = Big.dec(BigInteger.valueOf(cycle).add(modifier)).add(Big.dec(1.3));
-		double exp = cycle * 1.25;
-		int whole = (int) Math.floor(exp);
-		double frac = exp - whole;
-		java.math.BigDecimal factor = base.pow(whole, Big.MC).multiply(Big.dec(Math.pow(base.doubleValue(), frac)), Big.MC);
-		return baseValue.multiply(factor.toBigInteger());
+		BigInteger modifier = BigInteger.ZERO;
+		if (Dungeon.hero != null) {
+			modifier = Big.of(Math.pow(1.0045, hero.lvl)).min(BigInteger.valueOf(30));
+		}
+		BigInteger factor = cycleCacheFactor;
+		if (factor == null || cycleCacheCycle != cycle || !modifier.equals(cycleCacheMod)) {
+			java.math.BigDecimal base = Big.dec(BigInteger.valueOf(cycle).add(modifier)).add(Big.dec(1.3));
+			double exp = Math.max(0, cycle) * 1.25;
+			int whole = (int) Math.floor(exp);
+			double frac = exp - whole;
+			factor = base.pow(whole, Big.MC).multiply(Big.dec(Math.pow(base.doubleValue(), frac)), Big.MC).toBigInteger();
+			cycleCacheCycle = cycle;
+			cycleCacheMod = modifier;
+			cycleCacheFactor = factor;
+		}
+		return baseValue.multiply(factor);
 	}
 
 	public static int saveParse(BigInteger value) {

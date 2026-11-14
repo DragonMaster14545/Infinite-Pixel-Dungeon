@@ -208,7 +208,7 @@ public class Artifact extends KindofMisc {
 		if ((level().compareTo(BigInteger.ZERO) > 0))
 			price = price.add((BigInteger.valueOf(20).multiply(visiblyUpgraded())));
 		if (cursed && cursedKnown) {
-			price = price.divide(BigInteger.TWO);
+			price = price.divide(BigInteger.valueOf(2));
 		}
 		if ((price.compareTo(BigInteger.ONE) < 0)) {
 			price = BigInteger.ONE;

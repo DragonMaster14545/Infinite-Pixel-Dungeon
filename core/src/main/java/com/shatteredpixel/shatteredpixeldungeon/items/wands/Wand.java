@@ -550,7 +550,7 @@ public abstract class Wand extends Item {
 	public BigInteger value() {
 		BigInteger price = BigInteger.valueOf(75);
 		if (cursed && cursedKnown) {
-			price = price.divide(BigInteger.TWO);
+			price = price.divide(BigInteger.valueOf(2));
 		}
 		if (levelKnown) {
 			if ((level().compareTo(BigInteger.ZERO) > 0)) {

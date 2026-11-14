@@ -75,7 +75,7 @@ public class ShrapnelBomb extends Bomb {
 		
 		for (Char ch : affected){
 			//regular bomb damage, which falls off at a rate of 5% per tile of distance
-			BigInteger damage = Dungeon.NormalLongRange( Dungeon.scalingDepth().add(BigInteger.valueOf(5)), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.TWO)) );
+			BigInteger damage = Dungeon.NormalLongRange( Dungeon.scalingDepth().add(BigInteger.valueOf(5)), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.valueOf(2))) );
 			if (Dungeon.hero.heroClass == HeroClass.ROGUE){
 				damage = Big.trunc(Big.dec(damage).multiply(Big.dec(2.5f)));
 			}

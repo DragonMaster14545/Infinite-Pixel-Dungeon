@@ -94,8 +94,8 @@ public class Brute extends Mob {
 	}
 	
 	protected void triggerEnrage(){
-		Buff.affect(this, BruteRage.class).setShield(HT.divide(BigInteger.TWO).add(BigInteger.valueOf(4)));
-		sprite.showStatusWithIcon( CharSprite.POSITIVE, HT.divide(BigInteger.TWO).add(BigInteger.valueOf(4)).toString(), FloatingText.SHIELDING );
+		Buff.affect(this, BruteRage.class).setShield(HT.divide(BigInteger.valueOf(2)).add(BigInteger.valueOf(4)));
+		sprite.showStatusWithIcon( CharSprite.POSITIVE, HT.divide(BigInteger.valueOf(2)).add(BigInteger.valueOf(4)).toString(), FloatingText.SHIELDING );
 		if (Dungeon.level.heroFOV[pos]) {
 			SpellSprite.show( this, SpellSprite.BERSERK);
 		}

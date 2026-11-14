@@ -45,6 +45,7 @@ public class Splash {
 		if (n <= 0) {
 			return;
 		}
+		n = Math.min(n, 100);
 		
 		Emitter emitter = GameScene.emitter();
 		if (emitter == null) return;
@@ -65,6 +66,7 @@ public class Splash {
 		if (n <= 0) {
 			return;
 		}
+		n = Math.min(n, 100);
 		
 		Emitter emitter = GameScene.emitter();
 		if (emitter == null) return;
@@ -83,6 +85,7 @@ public class Splash {
 		if (n <= 0) {
 			return;
 		}
+		n = Math.min(n, 100);
 
 		Emitter emitter = GameScene.emitter();
 		if (emitter == null) return;
@@ -103,6 +106,7 @@ public class Splash {
 		if (n <= 0) {
 			return;
 		}
+		n = Math.min(n, 100);
 
 		Emitter emitter = GameScene.emitter();
 		if (emitter == null) return;

@@ -219,7 +219,7 @@ public class RunicBlade extends MeleeWeapon {
                                                 Char enemy = Actor.findChar( cell );
                                                 if (enemy != null && enemy != curUser) {
                                                     if (Char.hit(curUser, enemy, true)) {
-                                                        BigInteger dmg = (curBlade.damageRoll(curUser).multiply(BigInteger.TWO));
+                                                        BigInteger dmg = (curBlade.damageRoll(curUser).multiply(BigInteger.valueOf(2)));
                                                         enemy.damage(dmg, curBlade);
                                                         if (curUser.isSubclass(HeroSubClass.GLADIATOR)) Buff.affect( curUser, Combo.class ).hit( enemy );
                                                         curBlade.proc(curUser, enemy, dmg);

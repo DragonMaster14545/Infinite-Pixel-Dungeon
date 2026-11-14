@@ -105,7 +105,7 @@ public class CreativeGloves extends MeleeWeapon {
 				enemy.damage(enemy.HP, this);
 				enemy.sprite.emitter().burst( ShadowParticle.UP, 15 );
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG, 2f, 0.4f);
-				hero.damage(enemy.HP.divide(BigInteger.TWO), this);
+				hero.damage(enemy.HP.divide(BigInteger.valueOf(2)), this);
 
 				Invisibility.dispel();
 

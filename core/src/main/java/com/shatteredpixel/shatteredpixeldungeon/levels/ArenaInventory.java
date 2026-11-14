@@ -80,7 +80,7 @@ public class ArenaInventory {
     private static void giveStarterKit( Hero hero ){
         new Dagger().identify().collect();
         new ClothArmor().identify().collect();
-        new Barricade().quantity(BigInteger.TWO).collect();
+        new Barricade().quantity(BigInteger.valueOf(2)).collect();
         new SmallRation().collect();
         new TicketToWaveArena().collect();
 

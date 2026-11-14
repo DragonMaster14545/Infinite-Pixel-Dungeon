@@ -63,7 +63,7 @@ public class FetidRat extends Rat {
 
 	@Override
 	public BigInteger cycledDrRoll() {
-		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.TWO));
+		return Dungeon.NormalLongRange(Dungeon.getCycleMultiplier(BigInteger.ZERO), Dungeon.getCycleMultiplier(BigInteger.valueOf(2)));
 	}
 
 	@Override

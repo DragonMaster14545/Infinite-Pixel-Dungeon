@@ -193,7 +193,7 @@ public class Bomb extends Item {
 					continue;
 				}
 
-				BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(5).add(Dungeon.scalingDepth()), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.TWO)));
+				BigInteger dmg = Dungeon.NormalLongRange(BigInteger.valueOf(5).add(Dungeon.scalingDepth()), BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.valueOf(2))));
 
 				//those not at the center of the blast take less damage
 				if (ch.pos != cell){
@@ -230,7 +230,7 @@ public class Bomb extends Item {
 	}
 
 	public static BigInteger maxDamage() {
-		return Big.round(Big.dec((BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.TWO)))).multiply(Big.dec(Dungeon.fireDamage)));
+		return Big.round(Big.dec((BigInteger.TEN.add(Dungeon.scalingDepth().multiply(BigInteger.valueOf(2))))).multiply(Big.dec(Dungeon.fireDamage)));
 	}
 
 	public static BigInteger minDamage() {
@@ -355,7 +355,7 @@ public class Bomb extends Item {
 		@Override
 		public boolean doPickUp(Hero hero, int pos, float time) {
 			Bomb bomb = new Bomb();
-			bomb.quantity(BigInteger.TWO);
+			bomb.quantity(BigInteger.valueOf(2));
 			if (bomb.doPickUp(hero, pos, time)) {
 				//isaaaaac.... (don't bother doing this when not in english)
 				if (SPDSettings.language() == Languages.ENGLISH)

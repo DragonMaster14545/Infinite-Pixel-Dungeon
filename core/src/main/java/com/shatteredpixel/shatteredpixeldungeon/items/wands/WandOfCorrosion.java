@@ -64,7 +64,7 @@ public class WandOfCorrosion extends Wand {
 	public void onZap(Ballistica bolt) {
 		CorrosiveGas gas = Blob.seed(bolt.collisionPos, BigInteger.valueOf(Big.toInt((BigInteger.valueOf(50).add(BigInteger.TEN.multiply(buffedLvl()))))), CorrosiveGas.class);
 		CellEmitter.get(bolt.collisionPos).burst(Speck.factory(Speck.CORROSION), 10 );
-		gas.setStrength(Big.trunc((Big.dec((BigInteger.TWO.add(buffedLvl()))).multiply(Big.dec((1+ Dungeon.hero.lvl/150d))))), getClass());
+		gas.setStrength(Big.trunc((Big.dec((BigInteger.valueOf(2).add(buffedLvl()))).multiply(Big.dec((1+ Dungeon.hero.lvl/150d))))), getClass());
 		GameScene.add(gas);
 		Sample.INSTANCE.play(Assets.Sounds.GAS);
 
@@ -126,14 +126,14 @@ public class WandOfCorrosion extends Wand {
 	@Override
 	public String statsDesc() {
 		if (levelKnown)
-			return Messages.get(this, "stats_desc", BigInteger.TWO.add(buffedLvl()));
+			return Messages.get(this, "stats_desc", BigInteger.valueOf(2).add(buffedLvl()));
 		else
 			return Messages.get(this, "stats_desc", 2);
 	}
 
 	@Override
 	public String upgradeStat1(BigInteger level) {
-		return level.add(BigInteger.TWO).toString();
+		return level.add(BigInteger.valueOf(2)).toString();
 	}
 
 	@Override

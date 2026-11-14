@@ -67,7 +67,7 @@ public class Blazing extends Weapon.Enchantment {
 				}
 			}
 			
-			defender.sprite.emitter().burst( FlameParticle.FACTORY, (int) Math.min(50, Math.sqrt(level.add(BigInteger.ONE).doubleValue())));
+			defender.sprite.emitter().burst( FlameParticle.FACTORY, Big.particles(Math.sqrt(level.add(BigInteger.ONE).doubleValue())));
 			
 		}
 
