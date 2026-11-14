@@ -21,7 +21,7 @@ public class WndShulkerItem extends WndInfoItem {
 	public static void markPinned(Group parent, InventorySlot slot) {
 		RenderedTextBlock mark = PixelScene.renderTextBlock("*", 9);
 		mark.hardlight(PIN_COLOR);
-		mark.setPos(slot.left() + 1, slot.top());
+		mark.setPos(slot.left() + 1, slot.bottom() - mark.height() - 1);
 		PixelScene.align(mark);
 		parent.add(mark);
 	}
