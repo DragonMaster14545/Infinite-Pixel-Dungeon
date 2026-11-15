@@ -17,6 +17,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndShulkerBox;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndShulkerFilter;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndShulkerInspect;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndTextInput;
 import com.watabou.noosa.audio.Sample;
@@ -32,6 +33,8 @@ public class ShulkerBox extends Item {
     public static final String AC_OPEN  = "OPEN";
     public static final String AC_STORE = "STORE";
     public static final String AC_COLOR = "COLOR";
+	public static final String AC_FILTER = "FILTER";
+	public static final String AC_STORE_MATCHING = "STORE_MATCHING";
 	public static final String AC_INSPECT = "INSPECT";
 
     public static final int BASE_CAPACITY = 25;
@@ -138,9 +141,16 @@ public class ShulkerBox extends Item {
         return false;
     }
 
-    private boolean canStore(Item item) {
+	private ShulkerFilter filter = new ShulkerFilter();
+
+	public ShulkerFilter filter() {
+		return filter;
+	}
+
+	private boolean canStore(Item item) {
         Hero hero = Dungeon.hero;
         return hero != null
+				&& (!filter.isActive() || filter.matches(item))
                 && item != null
                 && !(item instanceof Bag)
                 && !(item instanceof ShulkerBox)
@@ -168,7 +178,7 @@ public class ShulkerBox extends Item {
 
     private void store(Hero hero, Item item, BigInteger amount) {
         if (!canStore(item)) {
-            GLog.w(Messages.get(this, "cannot_store"));
+            GLog.w(Messages.get(this, filter.isActive() && !filter.matches(item) ? "filter_mismatch" : "cannot_store"));
             return;
         }
 
@@ -208,6 +218,53 @@ public class ShulkerBox extends Item {
         GLog.i(Messages.get(this, "stored", toStore.name()));
         updateQuickslot();
     }
+
+	public int storeMatching(Hero hero, boolean spendTurn) {
+		if (hero == null || !hero.belongings.backpack.contains(this)) return 0;
+
+		ArrayList<Item> candidates = new ArrayList<>(hero.belongings.backpack.items);
+		int moved = 0;
+
+		for (Item item : candidates) {
+			if (!filter.isActive() || !canStore(item)) continue;
+			if (item.level().compareTo(maxItemLevel()) > 0) continue;
+
+			BigInteger room = quantityRoomFor(item);
+			if (room.signum() <= 0) continue;
+
+			BigInteger count = item.quantity().min(room);
+			if (count.signum() <= 0) continue;
+
+			Item toStore = item;
+			if (item.quantity().compareTo(count) > 0) {
+				Item part = item.split(count);
+				if (part == null) continue;
+				toStore = part;
+			} else {
+				item.detachAll(hero.belongings.backpack);
+			}
+			addToContents(toStore);
+			moved++;
+		}
+
+		if (moved > 0) {
+			if (spendTurn) {
+				hero.sprite.operate(hero.pos);
+				hero.spend(1f);
+				hero.busy();
+			}
+			Sample.INSTANCE.play(Assets.Sounds.ITEM);
+			GLog.i(Messages.get(this, "stored_matching", moved));
+			updateQuickslot();
+		} else if (spendTurn) {
+			GLog.w(Messages.get(this, "nothing_matching"));
+		}
+		return moved;
+	}
+
+	public void autoStore(Hero hero) {
+		if (filter.autoStore && filter.isActive()) storeMatching(hero, false);
+	}
 
     public boolean takeOut(Hero hero, Item item) {
         int at = indexOf(item);
@@ -307,6 +364,10 @@ public class ShulkerBox extends Item {
         if (hero.belongings.backpack.contains(this)) {
             actions.add(2, AC_STORE);
         }
+		actions.add(AC_FILTER);
+		if (hero.belongings.backpack.contains(this) && filter.isActive()) {
+			actions.add(AC_STORE_MATCHING);
+		}
         actions.add(AC_COLOR);
         return actions;
     }
@@ -323,6 +384,14 @@ public class ShulkerBox extends Item {
 			defaultAction = AC_STORE;
 		} else if (action.equals(AC_INSPECT)) {
 			GameScene.show(new WndShulkerInspect(this));
+
+		} else if (action.equals(AC_FILTER)) {
+			ensureUnique();
+			GameScene.show(new WndShulkerFilter(this));
+
+		} else if (action.equals(AC_STORE_MATCHING)) {
+			ensureUnique();
+			storeMatching(hero, true);
 
 		} else if (action.equals(AC_COLOR)) {
 			startColor();
@@ -632,6 +701,7 @@ public class ShulkerBox extends Item {
             desc += "\n\n" + Messages.get(this, "desc_id",
                     Long.toHexString(boxId).toUpperCase(), contents.size(), capacity());
             desc += "\n" + Messages.get(this, "desc_limits", maxItemLevel(), maxQuantity());
+			if (filter.isActive()) desc += "\n" + Messages.get(this, "desc_filter");
 
             if (!contents.isEmpty()) {
                 desc += "\n\n" + Messages.get(this, "desc_value", value());
@@ -641,6 +711,7 @@ public class ShulkerBox extends Item {
 		return desc;
 	}
 
+	private static final String FILTER = "filter";
     private static final String BOX_ID = "box_id";
     private static final String CONTENTS = "contents";
     private static final String PINNED = "pinned";
@@ -654,6 +725,7 @@ public class ShulkerBox extends Item {
         bundle.put(BOX_ID, boxId);
         bundle.put(CONTENTS, contents);
         bundle.put(PINNED, pinnedCount());
+		bundle.put(FILTER, filter);
         bundle.put(CUSTOM_COLOR, customColor);
         bundle.put(COLOR, color);
 		bundle.put(PLAYER_COLOR, playerColor);
@@ -669,6 +741,11 @@ public class ShulkerBox extends Item {
         for (Bundlable b : bundle.getCollection(CONTENTS)) {
             if (b != null) contents.add((Item) b);
         }
+		filter = new ShulkerFilter();
+		if (bundle.contains(FILTER)) {
+			Bundlable f = bundle.get(FILTER);
+			if (f instanceof ShulkerFilter) filter = (ShulkerFilter) f;
+		}
         pinned = bundle.contains(PINNED) ? Math.max(0, Math.min(bundle.getInt(PINNED), contents.size())) : 0;
 		levelKnown = true;
 		cursedKnown = true;

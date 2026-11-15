@@ -106,6 +106,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap.Type;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.ShulkerBox;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.PsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
@@ -1251,6 +1252,10 @@ if (buff(RoundShield.GuardTracker.class) != null){
 						}
 					}
 					
+					for (ShulkerBox shulker : belongings.getAllItems(ShulkerBox.class)) {
+						shulker.autoStore(this);
+					}
+
 					curAction = null;
 				} else {
 
