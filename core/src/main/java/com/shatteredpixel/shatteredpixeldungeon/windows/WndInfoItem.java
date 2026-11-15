@@ -138,6 +138,7 @@ public class WndInfoItem extends Window {
 				PixelScene.uiCamera.height - chrome.marginVer() - top - BUTTON_RESERVE);
 
 		if (info.height() > maxHeight) {
+			info.maxWidth( width - 3 );
 			Component content = new Component();
 			content.add( info );
 			info.setPos( 0, 0 );
@@ -145,9 +146,8 @@ public class WndInfoItem extends Window {
 
 			ScrollPane pane = new ScrollPane( content );
 			add( pane );
+			resize( width, (int)Math.ceil(top + maxHeight + 2) );
 			pane.setRect( 0, top, width, maxHeight );
-
-			resize( width, (int)(pane.bottom() + 2) );
 		} else {
 			info.setPos(title.left(), top);
 			add( info );

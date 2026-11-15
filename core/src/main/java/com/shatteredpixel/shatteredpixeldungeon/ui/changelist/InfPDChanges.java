@@ -91,7 +91,8 @@ public class InfPDChanges {
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
-                "_-_ Fixed a crash when creating a global notes in a fresh save on journal scene\n"
+                "_-_ Fixed a crash when creating a global notes in a fresh save on journal scene\n" +
+                        "_-_ Fixed horizontal scrolling on item window when it reaches specific height limit"
         ));
 
         changes = new ChangeInfo("E", false, "");
