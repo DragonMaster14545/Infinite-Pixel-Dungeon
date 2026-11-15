@@ -11,6 +11,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.CompartmentBox;
 import com.shatteredpixel.shatteredpixeldungeon.items.ShulkerBox;
 import com.shatteredpixel.shatteredpixeldungeon.items.VaultStore;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
@@ -123,12 +124,26 @@ public class VaultLink extends Artifact {
 		return BigInteger.ONE.max(price.multiply((BigInteger.valueOf(100).add(inflationPercent()))).divide(BigInteger.valueOf(100)));
 	}
 
+	private BigInteger boxBase(BigInteger level, boolean compartment) {
+		BigInteger base = basePrice(level);
+		return compartment ? base.multiply(BigInteger.valueOf(10)) : base;
+	}
+
 	public BigInteger goldPrice(BigInteger level) {
-		return inflate(basePrice(level));
+		return goldPrice(level, false);
+	}
+
+	public BigInteger goldPrice(BigInteger level, boolean compartment) {
+		return inflate(boxBase(level, compartment));
 	}
 
 	public BigInteger energyPrice(BigInteger level) {
-		return inflate(BigInteger.valueOf(60).max(basePrice(level).divide(BigInteger.valueOf(5))));
+		return energyPrice(level, false);
+	}
+
+	public BigInteger energyPrice(BigInteger level, boolean compartment) {
+		BigInteger floor = BigInteger.valueOf(compartment ? 60L * 10 : 60L);
+		return inflate(floor.max(boxBase(level, compartment).divide(BigInteger.valueOf(5))));
 	}
 
 	private void pay(boolean withEnergy, BigInteger cost) {
@@ -142,16 +157,20 @@ public class VaultLink extends Artifact {
 	}
 
 	public String buy(Hero hero, BigInteger level, boolean withEnergy) {
+		return buy(hero, level, withEnergy, false);
+	}
+
+	public String buy(Hero hero, BigInteger level, boolean withEnergy, boolean compartment) {
 		if (cursed) return "cursed";
 		if (hero == null || !hero.isAlive()) return "shop_failed";
 
 		level = BigInteger.ZERO.max(level.min(BigInteger.valueOf(ShulkerBox.MAX_LEVEL)));
-		BigInteger cost = withEnergy ? energyPrice(level) : goldPrice(level);
+		BigInteger cost = withEnergy ? energyPrice(level, compartment) : goldPrice(level, compartment);
 		if (((withEnergy ? Dungeon.energy : Dungeon.gold).compareTo(cost) < 0)) {
 			return withEnergy ? "shop_no_energy" : "shop_no_gold";
 		}
 
-		ShulkerBox box = new ShulkerBox();
+		ShulkerBox box = compartment ? new CompartmentBox() : new ShulkerBox();
 		box.level(BigInteger.valueOf(Big.toInt(level)));
 
 		if (box.collect(hero.belongings.backpack)) {
@@ -245,7 +264,7 @@ public class VaultLink extends Artifact {
 	public String refusal(Hero hero, Item item) {
 		if (!(item instanceof ShulkerBox)) return "not_box";
 		if ((BigInteger.valueOf(VaultStore.boxes().size()).compareTo(slots()) >= 0)) return "full";
-		for (Item inside : ((ShulkerBox) item).contents()) {
+		for (Item inside : ((ShulkerBox) item).allContents()) {
 			if (inside.unique || inside instanceof Key || inside instanceof Amulet) return "has_unique";
 		}
 		return null;

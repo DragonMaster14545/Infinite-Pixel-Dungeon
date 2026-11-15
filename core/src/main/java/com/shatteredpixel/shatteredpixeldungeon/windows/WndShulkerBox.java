@@ -5,6 +5,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.items.CompartmentBox;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.ShulkerBox;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -27,6 +28,7 @@ public class WndShulkerBox extends Window {
 	private static final int NAV_HEIGHT = 16;
 	private static final int FOOTER = 2;
 	private static final int ACTION_HEIGHT = 16;
+	private static final int COMP_HEIGHT = 16;
 	private static final int PAGE_SIZE = ROWS * COLS;
 
     private final ShulkerBox box;
@@ -53,13 +55,15 @@ public class WndShulkerBox extends Window {
 		int slotWidth = 28;
 		int slotHeight = 28;
 		int nav = pages > 1 ? NAV_HEIGHT + 2 : 0;
+		final boolean compartments = box instanceof CompartmentBox;
+		int compRow = box instanceof CompartmentBox ? COMP_HEIGHT + 2 : 0;
 
         int windowWidth = slotWidth * COLS + SLOT_MARGIN * (COLS - 1);
         while (slotWidth >= 20 && (windowWidth + chrome.marginHor()) > PixelScene.uiCamera.width) {
             slotWidth--;
             windowWidth -= COLS;
         }
-        int windowHeight = TITLE_HEIGHT + slotHeight * ROWS + SLOT_MARGIN * (ROWS - 1) + nav + ACTION_HEIGHT + 2 + FOOTER;
+        int windowHeight = compRow + TITLE_HEIGHT + slotHeight * ROWS + SLOT_MARGIN * (ROWS - 1) + nav + ACTION_HEIGHT + 2 + FOOTER;
         while (slotHeight >= 20 && (windowHeight + 20 + chrome.marginTop()) > PixelScene.uiCamera.height) {
             slotHeight--;
             windowHeight -= ROWS;
@@ -72,13 +76,25 @@ public class WndShulkerBox extends Window {
         PixelScene.align(title);
         add(title);
 
+        if (compartments) {
+			final CompartmentBox cbox = (CompartmentBox) box;
+			RedButton drop = WndShulkerCompartments.dropdown(cbox, this, new Runnable() {
+				@Override
+				public void run() {
+					GameScene.show(new WndShulkerBox(cbox, 0));
+				}
+			}, windowWidth);
+			drop.setRect(0, TITLE_HEIGHT, windowWidth, COMP_HEIGHT);
+			add(drop);
+		}
+
         ArrayList<Item> items = box.contents();
 		for (int i = 0; i < PAGE_SIZE; i++) {
 			long index = this.page * PAGE_SIZE + i;
 			final Item item = index < items.size() ? items.get((int) index) : null;
 
             int x = (i % COLS) * (slotWidth + SLOT_MARGIN);
-            int y = TITLE_HEIGHT + (i / COLS) * (slotHeight + SLOT_MARGIN);
+            int y = compRow + TITLE_HEIGHT + (i / COLS) * (slotHeight + SLOT_MARGIN);
 
             InventorySlot slot = new InventorySlot(item) {
                 @Override
@@ -175,6 +191,23 @@ public class WndShulkerBox extends Window {
 				togglePin(item);
 			}
 		});
+
+		if (box instanceof CompartmentBox && ((CompartmentBox) box).compartmentCount() > 1) {
+			final CompartmentBox cbox = (CompartmentBox) box;
+			labels.add(Messages.get(WndShulkerItem.class, "move"));
+			runs.add(new Runnable() {
+				@Override
+				public void run() {
+					WndShulkerCompartments.chooseTarget(cbox, item, new Runnable() {
+						@Override
+						public void run() {
+							WndShulkerBox.this.hide();
+							GameScene.show(new WndShulkerBox(cbox, (int) page));
+						}
+					});
+				}
+			});
+		}
 
 		Game.scene().addToFront(new WndShulkerItem(item, labels, runs));
 		return true;

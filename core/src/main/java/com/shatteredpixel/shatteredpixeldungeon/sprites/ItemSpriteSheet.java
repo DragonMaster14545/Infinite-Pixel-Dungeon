@@ -870,6 +870,7 @@ public class ItemSpriteSheet {
 	public static final int CHEEST      = BAGS+7;
 	public static final int SHULK_BOX      = BAGS+8;
 	public static final int PRISM_BOX      = BAGS+9;
+	public static final int COMPARTMENT_BOX      = BAGS+10;
 	static{
 		assignItemRect(WATERSKIN,   16, 14);
 		assignItemRect(BACKPACK,    16, 16);
@@ -881,6 +882,7 @@ public class ItemSpriteSheet {
 		assignItemRect(CHEEST,      16, 14);
 		assignItemRect(SHULK_BOX,      12, 16);
 		assignItemRect(PRISM_BOX,      12, 13);
+		assignItemRect(COMPARTMENT_BOX,      12, 16);
 	}
 
 	private static final int TREASURE_BAGS =                       xy(1, 26);

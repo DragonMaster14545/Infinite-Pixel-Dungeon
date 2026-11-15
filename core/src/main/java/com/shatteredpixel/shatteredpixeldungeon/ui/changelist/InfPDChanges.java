@@ -5,6 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BadgeBanner;
 import com.shatteredpixel.shatteredpixeldungeon.items.BlackPsycheChest;
+import com.shatteredpixel.shatteredpixeldungeon.items.CompartmentBox;
 import com.shatteredpixel.shatteredpixeldungeon.items.InfoPage;
 import com.shatteredpixel.shatteredpixeldungeon.items.LostBackpack;
 import com.shatteredpixel.shatteredpixeldungeon.items.PrismBox;
@@ -80,6 +81,10 @@ public class InfPDChanges {
         changes = new ChangeInfo("F", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.COMPARTMENT_BOX), new CompartmentBox().trueName(),
+                "A new variant of shulker box that stores 4x of the current maximum slots of shulker boxes."
+        ));
 
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.SHULK_BOX), new ShulkerBox().trueName(),
                 "A new _Filter_ action has been added to filter your things in the shulker boxes, once you set a filter, you can now store matching items that fits in your filter."

@@ -51,9 +51,9 @@ public class ShulkerBox extends Item {
 		cursedKnown = true;
     }
 
-    private final ArrayList<Item> contents = new ArrayList<>();
+    protected ArrayList<Item> contents = new ArrayList<>();
 
-    private int pinned = 0;
+    protected int pinned = 0;
 
     public int pinnedCount() {
         return Math.max(0, Math.min(pinned, contents.size()));
@@ -91,6 +91,10 @@ public class ShulkerBox extends Item {
 
     public ArrayList<Item> contents() {
         return new ArrayList<>(contents);
+    }
+
+    public ArrayList<Item> allContents() {
+        return contents();
     }
 
     public int size() {
@@ -482,7 +486,6 @@ public class ShulkerBox extends Item {
 	@Override
 	public int tint() {
 		if (!customColor) return -1;
-		//mixes in a quarter of white so dark colors don't hide the sprite's shading
 		int r = (color >> 16) & 0xFF, g = (color >> 8) & 0xFF, b = color & 0xFF;
 		r += (255 - r) / 4;
 		g += (255 - g) / 4;

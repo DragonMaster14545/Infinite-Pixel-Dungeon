@@ -301,6 +301,9 @@ public class ShopRoom extends SpecialRoom {
 			if (Random.Int(2) == 0) {
 				itemsToSpawn.add(new ShulkerBox());
 			}
+			if (Random.Int(2) == 0) {
+				itemsToSpawn.add(new CompartmentBox());
+			}
 		}
 		if (Dungeon.depth > 6) itemsToSpawn.add(new QualityBag());
         if (Random.Int(5) == 0) itemsToSpawn.add(Generator.random(Generator.Category.TUBES).quantity(BigInteger.valueOf(Random.IntRange(2, 5))));

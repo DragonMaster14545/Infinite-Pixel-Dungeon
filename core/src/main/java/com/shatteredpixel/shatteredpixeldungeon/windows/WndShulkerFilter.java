@@ -195,7 +195,7 @@ public class WndShulkerFilter extends Window {
 	}
 
 	private float section(float y, String key) {
-		RenderedTextBlock t = PixelScene.renderTextBlock(Messages.get(this, key), 7);
+		RenderedTextBlock t = PixelScene.renderTextBlock(Messages.get(WndShulkerFilter.class, key), 7);
 		t.hardlight(0xB0B0B0);
 		t.maxWidth(WIDTH);
 		t.setPos(0, y);
@@ -205,7 +205,7 @@ public class WndShulkerFilter extends Window {
 
 	private float categoryButton(final int index, float x, float y, float w) {
 		String label = (filter.hasCategory(index) ? "[x] " : "[ ] ")
-				+ Messages.get(this, "cat_" + ShulkerFilter.CATEGORY_KEYS[index]);
+				+ Messages.get(WndShulkerFilter.class, "cat_" + ShulkerFilter.CATEGORY_KEYS[index]);
 		RedButton b = new RedButton(label, 6) {
 			@Override
 			public void onClick() {

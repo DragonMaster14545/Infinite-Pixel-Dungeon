@@ -4,6 +4,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
+import com.shatteredpixel.shatteredpixeldungeon.items.CompartmentBox;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.ShulkerBox;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -26,6 +27,7 @@ public class WndShulkerInspect extends Window {
 	private static final int TITLE_HEIGHT = 14;
 	private static final int NAV_HEIGHT = 16;
 	private static final int FOOTER_HEIGHT = 12;
+	private static final int COMP_HEIGHT = 16;
 
 	private final ShulkerBox box;
 	private final long page;
@@ -42,6 +44,8 @@ public class WndShulkerInspect extends Window {
 		final long pages = Big.toLong(BigInteger.ONE.max((box.capacity().add(BigInteger.valueOf(PAGE_SIZE)).subtract(BigInteger.ONE)).divide(BigInteger.valueOf(PAGE_SIZE))));
 		this.page = Math.max(0, Math.min(page, pages - 1));
 		int nav = pages > 1 ? NAV_HEIGHT + 2 : 0;
+		final boolean compartments = box instanceof CompartmentBox;
+		final int compRow = compartments ? COMP_HEIGHT + 2 : 0;
 
 		int slotWidth = 28;
 		int slotHeight = 28;
@@ -53,7 +57,7 @@ public class WndShulkerInspect extends Window {
 		}
 		int gridHeight = slotHeight * ROWS + SLOT_MARGIN * (ROWS - 1);
 		while (slotHeight >= 20
-				&& (TITLE_HEIGHT + gridHeight + nav + FOOTER_HEIGHT + 20 + chrome.marginTop()) > PixelScene.uiCamera.height) {
+				&& (compRow + TITLE_HEIGHT + gridHeight + nav + FOOTER_HEIGHT + 20 + chrome.marginTop()) > PixelScene.uiCamera.height) {
 			slotHeight--;
 			gridHeight -= ROWS;
 		}
@@ -66,12 +70,24 @@ public class WndShulkerInspect extends Window {
 		PixelScene.align(title);
 		add(title);
 
+		if (compartments) {
+			final CompartmentBox cbox = (CompartmentBox) box;
+			RedButton drop = WndShulkerCompartments.dropdown(cbox, this, new Runnable() {
+				@Override
+				public void run() {
+					GameScene.show(new WndShulkerInspect(cbox, 0));
+				}
+			}, windowWidth);
+			drop.setRect(0, TITLE_HEIGHT, windowWidth, COMP_HEIGHT);
+			add(drop);
+		}
+
 		for (int i = 0; i < PAGE_SIZE; i++) {
 			long index = this.page * PAGE_SIZE + i;
 			final Item item = index < items.size() ? items.get((int) index) : null;
 
 			int x = (i % COLS) * (slotWidth + SLOT_MARGIN);
-			int y = TITLE_HEIGHT + (i / COLS) * (slotHeight + SLOT_MARGIN);
+			int y = compRow + TITLE_HEIGHT + (i / COLS) * (slotHeight + SLOT_MARGIN);
 
 			InventorySlot slot = new InventorySlot(item) {
 				@Override
@@ -96,7 +112,7 @@ public class WndShulkerInspect extends Window {
 			else if (index < box.pinnedCount()) WndShulkerItem.markPinned(this, slot);
 		}
 
-		float y = TITLE_HEIGHT + gridHeight + 2;
+		float y = compRow + TITLE_HEIGHT + gridHeight + 2;
 
 		if (pages > 1) {
 			RedButton prev = new RedButton("<") {
