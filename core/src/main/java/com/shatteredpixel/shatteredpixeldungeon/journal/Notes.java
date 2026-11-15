@@ -724,8 +724,10 @@ public class Notes {
 		for (CustomRecord r : globalCustomRecords){
 			if (r.ID > max) max = r.ID;
 		}
-		for (Record r : records){
-			if (r instanceof CustomRecord && ((CustomRecord) r).ID > max) max = ((CustomRecord) r).ID;
+		if (records != null){
+			for (Record r : records){
+				if (r instanceof CustomRecord && ((CustomRecord) r).ID > max) max = ((CustomRecord) r).ID;
+			}
 		}
 		rec.ID = max + 1;
 		nextCustomID = max + 2;
