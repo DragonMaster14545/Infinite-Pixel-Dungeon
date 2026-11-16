@@ -100,6 +100,10 @@ public class InfPDChanges {
                 "A new _Filter_ action has been added to filter your things in the shulker boxes, once you set a filter, you can now store matching items that fits in your filter."
         ));
 
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Level harness from equipments obtained from fishing hooks is changed to level/3^(cycle+1) from level/36^(cycle+1)"
+        ));
+
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
                 "_-_ Fixed a crash when creating a global notes in a fresh save on journal scene\n" +
                         "_-_ Fixed horizontal scrolling on item window when it reaches specific height limit"

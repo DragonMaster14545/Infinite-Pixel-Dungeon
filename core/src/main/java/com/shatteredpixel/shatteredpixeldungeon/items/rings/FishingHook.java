@@ -84,8 +84,8 @@ public class FishingHook extends Ring {
 
 		//reset (if needed), decrement, and store counts
 		if (triesToDrop == Float.MIN_VALUE) {
-			triesToDrop = Dungeon.NormalIntRange(7, 18);
-			dropsToRare = Dungeon.NormalIntRange(40, 100);
+			triesToDrop = Dungeon.NormalIntRange(2, 8);
+			dropsToRare = Dungeon.NormalIntRange(20, 25);
             dropsToBag = Dungeon.NormalIntRange(40, 50);
 		}
 
@@ -107,7 +107,7 @@ public class FishingHook extends Ring {
 					i = genEquipmentDrop(level.subtract(BigInteger.ONE));
 				} while (Challenges.isItemBlocked(i));
 				drops.add(i);
-                dropsToRare = Dungeon.NormalIntRange(40, 100);
+                dropsToRare = Dungeon.NormalIntRange(5, 15);
 			} else {
 				Item i;
 				do {
@@ -119,7 +119,7 @@ public class FishingHook extends Ring {
 				dropsToRare--;
                 dropsToBag--;
 			}
-			triesToDrop += Random.NormalIntRange(0, 15);
+			triesToDrop += Random.NormalIntRange(0, 5);
 		}
 
 		return drops;
@@ -253,8 +253,6 @@ public class FishingHook extends Ring {
 				return Random.Float() < ExoticCrystals.consumableExoticChance() ? new ScrollOfMidas() : new ScrollOfTransmutation();
 			case 4:
 				return new AlchemyBag();
-            case 5:
-                return new ShurikenOfShadows();
 		}
 	}
 
@@ -262,11 +260,9 @@ public class FishingHook extends Ring {
         switch (Random.Int(5)){
             case 0: default:
                 Item i = genHighValueConsumable();
-                if (i instanceof Bomb){
-                    return new Bomb.DoubleBomb();
-                } else if (i instanceof ShurikenOfShadows) {
-					return i.quantity(BigInteger.valueOf(3));
-                } else {
+                if (i instanceof Bomb) {
+					return new Bomb.DoubleBomb();
+				} else {
 					return i.quantity(i.quantity().multiply(BigInteger.valueOf(2)));
 				}
             case 1:
@@ -354,8 +350,8 @@ public class FishingHook extends Ring {
 		}
 		//minimum level of sqrt(ringLvl)
 		if (result.isUpgradable()){
-			if ((Big.dec(result.level()).compareTo(Big.floor(Big.div(Big.dec(level), Big.dec(Math.pow(36, (Dungeon.cycle+1)))))) < 0)){
-				result.level(Big.trunc(Big.floor(Big.div(Big.dec(level), Big.dec(Math.pow(36, (Dungeon.cycle+1)))))));
+			if ((Big.dec(result.level()).compareTo(Big.floor(Big.div(Big.dec(level), Big.dec(Math.pow(3, Dungeon.cycle+1))))) < 0)){
+				result.level(Big.trunc(Big.floor(Big.div(Big.dec(level), Big.dec(Math.pow(3, Dungeon.cycle+1))))));
 			}
 		}
 		result.cursed = false;
