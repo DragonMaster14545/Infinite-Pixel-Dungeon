@@ -318,6 +318,8 @@ public class StartScene extends PixelScene {
                     } else {
                         steps.hardlight(1.5f, 1.5f, 0f);
                     }
+                } else if (info.practice){
+					steps.hardlight(0.5f, 2f, 1f);
                 } else if (info.daily){
 					if (info.dailyReplay){
 						steps.hardlight(1f, 0.5f, 2f);

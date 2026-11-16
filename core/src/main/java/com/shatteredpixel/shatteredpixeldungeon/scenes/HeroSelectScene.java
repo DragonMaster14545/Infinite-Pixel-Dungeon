@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
 
 
+import com.shatteredpixel.shatteredpixeldungeon.items.VaultStore;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.*;
@@ -123,6 +124,7 @@ public class HeroSelectScene extends PixelScene {
 
 				Dungeon.hero = null;
 				Dungeon.daily = Dungeon.dailyReplay = false;
+				Dungeon.practice = false;
                 Dungeon.weekly = Dungeon.weeklyReplay = false;
 				Dungeon.initSeed();
 				ActionIndicator.action = null;
@@ -836,6 +838,42 @@ public class HeroSelectScene extends PixelScene {
             weeklyButton.icon(Icons.get(Icons.CALENDAR));
             add(weeklyButton);
             buttons.add(weeklyButton);
+
+			StyledButton practiceButton = new StyledButton(Chrome.Type.BLANK, Messages.get(HeroSelectScene.class, "practice"), 6){
+				@Override
+				public void onClick() {
+					super.onClick();
+
+					if (GamesInProgress.selectedClass == null) return;
+
+					for (GamesInProgress.Info game : GamesInProgress.checkAll()){
+						if (game.practice){
+							ShatteredPixelDungeon.scene().addToFront(new WndMessage(Messages.get(HeroSelectScene.class, "practice_existing")));
+							return;
+						}
+					}
+
+					final VaultStore.Mode[] vaults = VaultStore.Mode.values();
+					String[] labels = new String[vaults.length];
+					for (int i = 0; i < vaults.length; i++) {
+						labels[i] = Messages.get(com.shatteredpixel.shatteredpixeldungeon.items.artifacts.VaultLink.class, "mode_" + vaults[i].name().toLowerCase());
+					}
+					ShatteredPixelDungeon.scene().addToFront(new WndOptions(
+							Icons.get(Icons.ALCHEMY),
+							Messages.get(HeroSelectScene.class, "practice"),
+							Messages.get(HeroSelectScene.class, "practice_desc"),
+							labels){
+						@Override
+						protected void onSelect(int index) {
+							Dungeon.startPractice(vaults[index]);
+						}
+					});
+				}
+			};
+			practiceButton.leftJustify = true;
+			practiceButton.icon(Icons.get(Icons.ALCHEMY));
+			add(practiceButton);
+			buttons.add(practiceButton);
 
 			StyledButton seedfinderButton = new StyledButton(Chrome.Type.BLANK, Messages.get(HeroSelectScene.class, "seedfinder"), 6){
 				@Override

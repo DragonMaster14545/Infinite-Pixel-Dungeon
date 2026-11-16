@@ -116,6 +116,7 @@ public class WelcomeScene extends PixelScene {
 				Game.reportException( new RuntimeException("Rankings Updating Failed!",e));
 			}
 			Dungeon.daily = Dungeon.dailyReplay = false;
+			Dungeon.practice = false;
             Dungeon.weekly = Dungeon.weeklyReplay = false;
 
 			if (previousVersion <= ShatteredPixelDungeon.v2_3_2){

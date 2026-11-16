@@ -73,6 +73,7 @@ public class Hunger extends Buff implements Hero.Doom {
 	public boolean act() {
 
 		if ( target.buff(WellFed.class) != null
+				|| Dungeon.practice
 				|| SPDSettings.intro()
 				|| target.buff(ScrollOfChallenge.ChallengeArena.class) != null
                 || target.buff(ScrollOfInsurgence.ChallengeInsurgence.class) != null){

@@ -115,6 +115,8 @@ public class WndGameInProgress extends Window {
             } else {
                 statSlot("_Weekly For_", "_" + info.customSeed + "_");
             }
+        } else if (info.practice) {
+			statSlot(Messages.get(this, "practice_mode"), "_" + Messages.get(this, "practice_value") + "_");
         } else if (info.daily) {
 			if (info.dailyReplay) {
 				statSlot(Messages.get(this, "replay_for"), "_" + info.customSeed + "_");
@@ -138,6 +140,7 @@ public class WndGameInProgress extends Window {
 				
 				Dungeon.hero = null;
 				Dungeon.daily = Dungeon.dailyReplay = false;
+				Dungeon.practice = false;
                 Dungeon.weekly = Dungeon.weeklyReplay = false;
 				ActionIndicator.action = null;
 				InterlevelScene.mode = InterlevelScene.Mode.CONTINUE;

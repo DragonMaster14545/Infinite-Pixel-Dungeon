@@ -37,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.ShadowBox;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.LostBackpack;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SkeletonKey;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.VaultLink;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -120,6 +121,12 @@ public class InterlevelScene extends PixelScene {
 	@Override
 	public void create() {
 		super.create();
+
+		if (Dungeon.practice && Dungeon.hero != null && Dungeon.level != null
+				&& (mode == Mode.DESCEND || mode == Mode.ASCEND || mode == Mode.FALL || mode == Mode.RETURN)) {
+			Game.switchScene(GameScene.class);
+			return;
+		}
 		
 		String loadingAsset;
 		int loadingDepth;
@@ -269,7 +276,7 @@ public class InterlevelScene extends PixelScene {
 		align(loadingText);
 		add(loadingText);
 
-		if (mode == Mode.DESCEND && lastRegion <= 5 && !DeviceCompat.isDebug()){
+		if (mode == Mode.DESCEND && lastRegion <= 5 && !DeviceCompat.isDebug() && !Dungeon.practice){
 			if (Dungeon.hero == null || (loadingDepth > Statistics.deepestFloor && loadingDepth % 5 == 1)){
 					storyMessage = PixelScene.renderTextBlock(Document.INTROS.pageBody(region), 6);
 					storyMessage.maxWidth( PixelScene.landscape() ? 180 : 125);
@@ -612,6 +619,12 @@ public class InterlevelScene extends PixelScene {
 			Dungeon.init();
 			GameLog.wipe();
 
+			if (Dungeon.practice) {
+				Dungeon.depth = 0;
+				Dungeon.branch = 0;
+				new VaultLink().identify().collect();
+			}
+
 			//When debugging, we may start a game at a later depth to quickly test something
 			// if this happens, the games quickly generates all prior levels on branch 0 first,
 			// which ensures levelgen consistency with a regular game that was played to that depth.
@@ -783,7 +796,7 @@ public class InterlevelScene extends PixelScene {
 		SpecialRoom.resetPitRoom(Dungeon.depth+1);
 
 		Level level = Dungeon.newLevel();
-		Dungeon.switchLevel( level, level.entrance() );
+		Dungeon.switchLevel( level, Dungeon.practice ? Dungeon.hero.pos : level.entrance() );
 
         //need to reset key replacement tracking as well
         if (Dungeon.hero.buff(SkeletonKey.KeyReplacementTracker.class) != null){

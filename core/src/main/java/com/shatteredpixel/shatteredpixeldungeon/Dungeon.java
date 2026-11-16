@@ -26,6 +26,7 @@ package com.shatteredpixel.shatteredpixeldungeon;
 
 
 
+import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -73,6 +74,8 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.CavesLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CityBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CityLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.DeadEndLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.PracticeLevel;
+import com.shatteredpixel.shatteredpixeldungeon.items.VaultStore;
 import com.shatteredpixel.shatteredpixeldungeon.levels.DimensionalLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.HallsBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.HallsLevel;
@@ -269,6 +272,26 @@ public class Dungeon {
 
 	public static boolean weekly;
     public static boolean daily;
+	public static boolean practice;
+	public static VaultStore.Mode practiceVault = VaultStore.Mode.NORMAL;
+	public static int practiceTurns = 0;
+	public static int practiceGen = 0;
+
+	public static void startPractice(VaultStore.Mode vault) {
+		if (hero != null && practice) VaultStore.save();
+		if (hero != null && hero.heroClass != null) GamesInProgress.selectedClass = hero.heroClass;
+		practiceVault = vault;
+		practiceTurns = 0;
+		practiceGen = 0;
+		hero = null;
+		daily = dailyReplay = false;
+		weekly = weeklyReplay = false;
+		practice = true;
+		initSeed();
+		ActionIndicator.action = null;
+		InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
+		Game.switchScene( InterlevelScene.class );
+	}
     public static boolean dailyReplay;
     public static boolean weeklyReplay;
 	public static String customSeedText = "";
@@ -454,7 +477,9 @@ public class Dungeon {
 		Actor.clear();
 		
 		Level level;
-		if (branch == 0) {
+		if (practice) {
+			level = new PracticeLevel();
+		} else if (branch == 0) {
 			switch (depth) {
 				case 1:
 				case 2:
@@ -590,7 +615,7 @@ public class Dungeon {
 	}
 
 	public static long seedCurDepth(){
-		return seedForDepth(depth, branch);
+		return seedForDepth(depth, branch) + (practice ? 7919L * practiceGen : 0L);
 	}
 
 	public static long seedForDepth(int depth, int branch){
@@ -840,6 +865,10 @@ public class Dungeon {
 	private static final String HERO		= "hero";
 	private static final String DEPTH		= "depth";
     private static final String CYCLE		= "cycle";
+	private static final String PRACTICE	= "practice";
+	private static final String PRACTICE_VAULT	= "practice_vault";
+	private static final String PRACTICE_TURNS	= "practice_turns";
+	private static final String PRACTICE_GEN	= "practice_gen";
     private static final String RESPAWN_TIMER		= "respawntimer";
     private static final String ADDMOBS		= "additionalMobs";
     private static final String FIREDANAGE = "firedamage";
@@ -867,6 +896,10 @@ public class Dungeon {
 			bundle.put( SEED, seed );
 			bundle.put( CUSTOM_SEED, customSeedText );
 			bundle.put( DAILY, daily );
+			bundle.put( PRACTICE, practice );
+			bundle.put( PRACTICE_VAULT, practiceVault.name() );
+			bundle.put( PRACTICE_TURNS, practiceTurns );
+			bundle.put( PRACTICE_GEN, practiceGen );
             bundle.put( WEEKLY, weekly );
 			bundle.put( DAILY_REPLAY, dailyReplay );
             bundle.put( WEEKLY_REPLAY, weeklyReplay );
@@ -988,6 +1021,16 @@ public class Dungeon {
 		seed = Big.toLong(bundle.contains( SEED ) ? Big.getBig(bundle, SEED) : BigInteger.valueOf(DungeonSeed.randomSeed()));
 		customSeedText = bundle.getString( CUSTOM_SEED );
 		daily = bundle.getBoolean( DAILY );
+		practice = bundle.getBoolean( PRACTICE );
+		practiceVault = VaultStore.Mode.NORMAL;
+		practiceTurns = bundle.getInt( PRACTICE_TURNS );
+		practiceGen = bundle.getInt( PRACTICE_GEN );
+		if (bundle.contains( PRACTICE_VAULT )) {
+			try {
+				practiceVault = VaultStore.Mode.valueOf( bundle.getString( PRACTICE_VAULT ) );
+			} catch (IllegalArgumentException ignored) {
+			}
+		}
         weekly = bundle.getBoolean( WEEKLY );
 		dailyReplay = bundle.getBoolean( DAILY_REPLAY );
         weeklyReplay = bundle.getBoolean( WEEKLY_REPLAY );
@@ -1164,6 +1207,7 @@ public class Dungeon {
         info.weekly = bundle.getBoolean( WEEKLY );
         info.weeklyReplay = bundle.getBoolean( WEEKLY_REPLAY );
 		info.daily = bundle.getBoolean( DAILY );
+		info.practice = bundle.getBoolean( PRACTICE );
 		info.dailyReplay = bundle.getBoolean( DAILY_REPLAY );
         info.lastPlayed = Big.toLong(Big.getBig(bundle, LAST_PLAYED));
 

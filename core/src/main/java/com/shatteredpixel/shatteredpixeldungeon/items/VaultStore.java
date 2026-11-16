@@ -46,6 +46,7 @@ public class VaultStore {
 	@SuppressWarnings("NewApi")
     public static Mode mode() {
 		if (Dungeon.level != null || Dungeon.hero != null) {
+			if (Dungeon.practice) return Dungeon.practiceVault;
 			if (Dungeon.weekly) return Mode.WEEKLY;
 			if (Dungeon.daily) return Mode.DAILY;
 			if (Dungeon.customSeedText != null && !Dungeon.customSeedText.isEmpty()) return Mode.SEED;

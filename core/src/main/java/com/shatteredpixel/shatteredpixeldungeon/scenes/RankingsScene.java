@@ -198,6 +198,7 @@ public class RankingsScene extends PixelScene {
 		super.destroy();
 		//so that opening daily records does not trigger WndDailies opening on future visits
 		Dungeon.daily = Dungeon.dailyReplay = false;
+		Dungeon.practice = false;
         Dungeon.weekly = Dungeon.weeklyReplay = false;
 	}
 

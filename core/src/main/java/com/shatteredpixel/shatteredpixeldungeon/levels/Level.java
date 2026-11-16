@@ -602,6 +602,10 @@ public abstract class Level implements Bundlable {
 
 	//returns true if we immediately transition, false otherwise
 	public boolean activateTransition(Hero hero, LevelTransition transition){
+		if (Dungeon.practice){
+			GLog.w(Messages.get(Level.class, "practice_sealed"));
+			return false;
+		}
 		if (locked){
 			return false;
 		}

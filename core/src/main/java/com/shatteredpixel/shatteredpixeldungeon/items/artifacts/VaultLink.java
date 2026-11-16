@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndVaultLink;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
@@ -36,6 +37,7 @@ public class VaultLink extends Artifact {
 
 	public static final String AC_OPEN        = "OPEN";
 	public static final String AC_DEPOSIT_ALL = "DEPOSIT_ALL";
+	public static final String AC_SWITCH_VAULT = "SWITCH_VAULT";
 
 	private static final int BASE_SLOTS = 6;
 	private static final int SLOTS_PER_LEVEL = 2;
@@ -229,6 +231,7 @@ public class VaultLink extends Artifact {
 		if (!cursed) {
 			actions.add(0, AC_OPEN);
 			actions.add(AC_DEPOSIT_ALL);
+			if (Dungeon.practice) actions.add(AC_SWITCH_VAULT);
 		}
 		return actions;
 	}
@@ -242,6 +245,11 @@ public class VaultLink extends Artifact {
 	public void execute(Hero hero, String action) {
 		super.execute(hero, action);
 
+		if (action.equals(AC_SWITCH_VAULT)) {
+			if (Dungeon.practice) switchVault();
+			return;
+		}
+
 		if (!(action.equals(AC_OPEN) || action.equals(AC_DEPOSIT_ALL))) return;
 
 		if (cursed) {
@@ -251,6 +259,38 @@ public class VaultLink extends Artifact {
 		} else {
 			depositAll(hero);
 		}
+	}
+
+	private void switchVault() {
+		final VaultStore.Mode[] all = VaultStore.Mode.values();
+		final ArrayList<VaultStore.Mode> options = new ArrayList<>();
+		for (VaultStore.Mode m : all) {
+			if (m != VaultStore.mode()) options.add(m);
+		}
+		String[] labels = new String[options.size()];
+		for (int i = 0; i < labels.length; i++) {
+			labels[i] = Messages.get(VaultLink.class, "mode_" + options.get(i).name().toLowerCase());
+		}
+		GameScene.show(new WndOptions(
+				Messages.get(VaultLink.class, "switch_title"),
+				Messages.get(VaultLink.class, "switch_desc", modeName()),
+				labels) {
+			@Override
+			protected void onSelect(int index) {
+				final VaultStore.Mode target = options.get(index);
+				String targetName = Messages.get(VaultLink.class, "mode_" + target.name().toLowerCase());
+				GameScene.show(new WndOptions(
+						Messages.get(VaultLink.class, "switch_title"),
+						Messages.get(VaultLink.class, "switch_confirm", targetName),
+						Messages.get(VaultLink.class, "switch_yes"),
+						Messages.get(VaultLink.class, "switch_no")) {
+					@Override
+					protected void onSelect(int i) {
+						if (i == 0) Dungeon.startPractice(target);
+					}
+				});
+			}
+		});
 	}
 
 	private String modeName() {

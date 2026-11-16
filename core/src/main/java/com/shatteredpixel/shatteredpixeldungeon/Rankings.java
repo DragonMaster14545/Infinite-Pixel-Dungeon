@@ -83,6 +83,7 @@ public enum Rankings {
     public LinkedHashMap<Long, BigInteger> weeklyScoreHistory = new LinkedHashMap<>();
 
 	public void submit( boolean win, Object cause ) {
+		if (Dungeon.practice) return;
 		BattlePass.onRunEnd();
 		
 		load();
@@ -636,7 +637,7 @@ public enum Rankings {
 		}
 	}
 
-	public static final Comparator<Record> scoreComparator = new Comparator<Rankings.Record>() {
+	public static final Comparator<Record> scoreComparator = new Comparator<Record>() {
 		@Override
 		public int compare( Record lhs, Record rhs ) {
 			//this covers custom seeded runs and dailies

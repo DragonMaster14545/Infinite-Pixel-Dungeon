@@ -154,6 +154,7 @@ public class GamesInProgress {
 		info.seed = Dungeon.seed;
 		info.customSeed = Dungeon.customSeedText;
 		info.daily = Dungeon.daily;
+		info.practice = Dungeon.practice;
         info.weekly = Dungeon.weekly;
 		info.dailyReplay = Dungeon.dailyReplay;
         info.weeklyReplay = Dungeon.weeklyReplay;
@@ -195,6 +196,7 @@ public class GamesInProgress {
 		public long seed;
 		public String customSeed;
 		public boolean daily;
+		public boolean practice;
         public boolean weekly;
 		public boolean dailyReplay;
         public boolean weeklyReplay;
@@ -214,9 +216,9 @@ public class GamesInProgress {
 		public int maxDepth;
 	}
 
-    public static final Comparator<GamesInProgress.Info> levelComparator = new Comparator<GamesInProgress.Info>() {
+    public static final Comparator<Info> levelComparator = new Comparator<Info>() {
         @Override
-        public int compare(GamesInProgress.Info lhs, GamesInProgress.Info rhs ) {
+        public int compare(Info lhs, Info rhs ) {
             if (rhs.level != lhs.level){
                 return (int)Math.signum( rhs.level - lhs.level );
             } else {
@@ -225,9 +227,9 @@ public class GamesInProgress {
         }
     };
 
-    public static final Comparator<GamesInProgress.Info> lastPlayedComparator = new Comparator<GamesInProgress.Info>() {
+    public static final Comparator<Info> lastPlayedComparator = new Comparator<Info>() {
 		@Override
-		public int compare(GamesInProgress.Info lhs, GamesInProgress.Info rhs ) {
+		public int compare(Info lhs, Info rhs ) {
             return (int)Math.signum( rhs.lastPlayed - lhs.lastPlayed );
 		}
 	};

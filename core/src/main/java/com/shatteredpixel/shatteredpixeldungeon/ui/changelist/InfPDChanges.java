@@ -82,6 +82,11 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.ALCHEMY), "Vault Practice Mode",
+                "Managing your vault while fighting is hassle, so we made a new mode that you can manage your vaults peacefully with some other items that can be bought to your other run.\n\n" +
+                        "The mode resets at approximately 10k turns so save your items at the shulker box and store them in your vault before the reset happens."));
+
+
         changes.addButton(new ChangeButton(new Image(Icons.get(Icons.SKULL)), "Floor Randomizer",
                 "A new mechanic for this dungeon: Floor Randomizer!\n\n" +
                             "It picks a random mob to modify and enhances its stats slightly to make the floor more challenging. However, this only affects the mobs that are created during the generation and not the ones that are spawned."
