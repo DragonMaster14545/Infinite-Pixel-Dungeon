@@ -683,6 +683,7 @@ public abstract class Char extends Actor {
 	public BigInteger attackProc( Char enemy, BigInteger damage ) {
 		for (ChampionEnemy buff : buffs(ChampionEnemy.class)){
 			buff.onAttackProc( enemy );
+			damage = buff.onAttackDamage( enemy, damage );
 		}
 		return damage;
 	}

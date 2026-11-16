@@ -43,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FloorMod;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
@@ -175,6 +176,7 @@ public abstract class Level implements Bundlable {
 	public boolean[] openSpace;
 	
 	public Feeling feeling = Feeling.NONE;
+	public String floorModText = null;
 	
 	public int entrance;
 	public int exit;
@@ -216,6 +218,7 @@ public abstract class Level implements Bundlable {
 	private static final String MOBS		= "mobs";
 	private static final String BLOBS		= "blobs";
 	private static final String FEELING		= "feeling";
+	private static final String FLOOR_MOD	= "floor_mod";
 
 	public void create() {
 
@@ -322,6 +325,8 @@ public abstract class Level implements Bundlable {
 			GameScene.add(Blob.seed(0, BigInteger.ONE, DanceFloor.class, this));
 		}
 
+		FloorMod.rollForLevel(this);
+
 		Random.popGenerator();
 	}
 	
@@ -332,7 +337,7 @@ public abstract class Level implements Bundlable {
 		length = w * h;
 		
 		map = new int[length];
-		Arrays.fill( map, feeling == Level.Feeling.CHASM ? Terrain.CHASM : Terrain.WALL );
+		Arrays.fill( map, feeling == Feeling.CHASM ? Terrain.CHASM : Terrain.WALL );
 		
 		visited     = new boolean[length];
 		mapped      = new boolean[length];
@@ -440,6 +445,7 @@ public abstract class Level implements Bundlable {
 		}
 
 		feeling = bundle.getEnum( FEELING, Feeling.class );
+		floorModText = bundle.contains( FLOOR_MOD ) ? bundle.getString( FLOOR_MOD ) : null;
 		if (feeling == Feeling.DARK) {
 			viewDistance = Math.round(5 * viewDistance / 8f);
 		}
@@ -480,6 +486,7 @@ public abstract class Level implements Bundlable {
 		bundle.put( MOBS, mobs );
 		bundle.put( BLOBS, blobs.values() );
 		bundle.put( FEELING, feeling );
+		if (floorModText != null) bundle.put( FLOOR_MOD, floorModText );
 		bundle.put( "mobs_to_spawn", mobsToSpawn.toArray(new Class[0]));
 		bundle.put( "mobs_to_spawn_arena", mobsToSpawnArena.toArray(new Class[0]));
 		bundle.put( "respawner", respawner );

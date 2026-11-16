@@ -69,6 +69,10 @@ public abstract class ChampionEnemy extends Buff {
 
 	}
 
+	public BigInteger onAttackDamage(Char enemy, BigInteger damage){
+		return damage;
+	}
+
 	public boolean canAttackWithExtraReach( Char enemy ){
 		return false;
 	}

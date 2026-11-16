@@ -140,14 +140,22 @@ public class Notes {
 		TROLL,
 		IMP,
 
-		DEMON_SPAWNER;
+		DEMON_SPAWNER,
+
+		MOB_MODS;
 	}
 	
 	public static class LandmarkRecord extends Record {
 		
 		protected Landmark landmark;
+		protected String info;
 		
 		public LandmarkRecord() {}
+
+		public LandmarkRecord(Landmark landmark, int depth, String info ) {
+			this(landmark, depth);
+			this.info = info;
+		}
 		
 		public LandmarkRecord(Landmark landmark, int depth ) {
 			this.landmark = landmark;
@@ -205,6 +213,9 @@ public class Notes {
 
 				case DEMON_SPAWNER:
 					return new Image(new SpawnerSprite());
+
+				case MOB_MODS:
+					return Icons.get(Icons.SKULL);
 			}
 		}
 
@@ -253,6 +264,8 @@ public class Notes {
 				case IMP:           return Messages.get(Imp.class, "desc");
 
 				case DEMON_SPAWNER: return Messages.get(DemonSpawner.class, "desc");
+
+				case MOB_MODS:      return info == null ? "" : info;
 			}
 		}
 
@@ -274,12 +287,14 @@ public class Notes {
 		public void restoreFromBundle(Bundle bundle) {
 			super.restoreFromBundle(bundle);
 			landmark = Landmark.valueOf(bundle.getString(LANDMARK));
+			info = bundle.contains("info") ? bundle.getString("info") : null;
 		}
 		
 		@Override
 		public void storeInBundle(Bundle bundle) {
 			super.storeInBundle(bundle);
 			bundle.put( LANDMARK, landmark.name() );
+			if (info != null) bundle.put( "info", info );
 		}
 	}
 	
@@ -536,6 +551,17 @@ public class Notes {
 		LandmarkRecord l = new LandmarkRecord( landmark, Dungeon.depth );
 		if (!records.contains(l)) {
 			boolean result = records.add(new LandmarkRecord(landmark, Dungeon.depth));
+			Collections.sort(records, comparator);
+			addGlobal( landmark );
+			return result;
+		}
+		return false;
+	}
+
+	public static boolean add( Landmark landmark, String info ) {
+		LandmarkRecord l = new LandmarkRecord( landmark, Dungeon.depth, info );
+		if (!records.contains(l)) {
+			boolean result = records.add(l);
 			Collections.sort(records, comparator);
 			addGlobal( landmark );
 			return result;

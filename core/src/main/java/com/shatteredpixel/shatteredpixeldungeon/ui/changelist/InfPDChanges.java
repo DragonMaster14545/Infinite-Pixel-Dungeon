@@ -82,6 +82,11 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton(new ChangeButton(new Image(Icons.get(Icons.SKULL)), "Floor Randomizer",
+                "A new mechanic for this dungeon: Floor Randomizer!\n\n" +
+                            "It picks a random mob to modify and enhances its stats slightly to make the floor more challenging. However, this only affects the mobs that are created during the generation and not the ones that are spawned."
+        ));
+
         changes.addButton(new ChangeButton(new ItemSprite(ItemSpriteSheet.COMPARTMENT_BOX), new CompartmentBox().trueName(),
                 "A new variant of shulker box that stores 4x of the current maximum slots of shulker boxes."
         ));
