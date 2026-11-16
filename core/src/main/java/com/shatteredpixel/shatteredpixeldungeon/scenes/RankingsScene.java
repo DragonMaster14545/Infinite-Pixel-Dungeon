@@ -39,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.*;
 import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndDailies;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndRanking;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndRecordBoard;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndVictoryCongrats;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndWeeklies;
 import com.watabou.noosa.BitmapText;
@@ -162,6 +163,21 @@ public class RankingsScene extends PixelScene {
 			left += 16;
 			add(btnDailies);
 		}
+
+        IconButton btnHall = new IconButton(Icons.BADGES.get()) {
+            @Override
+            public void onClick() {
+                ShatteredPixelDungeon.scene().addToFront(new WndRecordBoard(WndRecordBoard.HALL));
+            }
+
+            @Override
+            protected void onPointerUp() {
+                icon.hardlight(1f, 1f, 1f);
+            }
+        };
+        btnHall.setRect( left, 0, 16, 20 );
+        left += 16;
+        add(btnHall);
 
         if (Rankings.INSTANCE.latestWeekly != null) {
             IconButton btnWeeklies = new IconButton(Icons.CALENDAR.get()) {

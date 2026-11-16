@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.RankingsScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.*;
 import com.shatteredpixel.shatteredpixeldungeon.utils.DungeonSeed;
@@ -52,7 +53,7 @@ import java.util.stream.IntStream;
 public class WndRanking extends WndTabbed {
 	
 	private static final int WIDTH			= 115;
-	private static final int HEIGHT			= 144;
+	private static int HEIGHT			= 144;
 	
 	private static WndRanking INSTANCE;
 	
@@ -62,6 +63,10 @@ public class WndRanking extends WndTabbed {
 	public WndRanking( final Rankings.Record rec ) {
 		
 		super();
+		int whereNow = Rankings.INSTANCE.locate( rec );
+		if (whereNow != 0) {
+			HEIGHT += 16 * (1 + ((!rec.daily && !rec.weekly) ? 1 : 0) + (whereNow == 2 ? 1 : 0));
+		}
 		resize( WIDTH, HEIGHT );
 
 		if (INSTANCE != null){
@@ -258,7 +263,12 @@ public class WndRanking extends WndTabbed {
 				pos = statSlot(this, Messages.get(this, "alchemy"), num.format(Statistics.itemsCrafted), pos);
 			}
 
-			int buttontop = HEIGHT - 16;
+			final Rankings.Record target = WndRanking.this.record;
+			final int where = target == null ? 0 : Rankings.INSTANCE.locate(target);
+			final boolean notesOk = where != 0 && !target.daily && !target.weekly;
+			final boolean inHall = where == 2;
+			int rows = where == 0 ? 0 : 1 + (notesOk ? 1 : 0) + (inHall ? 1 : 0);
+			float buttontop = HEIGHT - 16 * (rows + 1);
 
 			if (Dungeon.hero != null && Dungeon.seed != -1 && !Dungeon.daily && !Dungeon.weekly){
 				final Image icon = Icons.get(Icons.SEED);
@@ -288,6 +298,99 @@ public class WndRanking extends WndTabbed {
 				btnSeed.icon(icon);
 				btnSeed.setRect(0, buttontop, 115, 16);
 				add(btnSeed);
+			}
+
+			if (target != null && where != 0) {
+				float rowTop = buttontop + 16;
+
+				if (notesOk) {
+					final boolean hasNote = target.note != null && !target.note.isEmpty();
+					RedButton btnNotes = new RedButton(Messages.get(WndRanking.class, hasNote ? "notes_filled" : "notes")){
+						@Override
+						public void onClick() {
+							super.onClick();
+							ShatteredPixelDungeon.scene().addToFront(new WndTextInput(
+									Messages.get(WndRanking.class, "notes_title"),
+									"",
+									target.note == null ? "" : target.note,
+									500,
+									true,
+									Messages.get(WndRanking.class, "notes_save"),
+									Messages.get(WndRanking.class, "hall_no")){
+								@Override
+								public void onSelect(boolean positive, String text) {
+									if (positive) {
+										target.note = text.trim();
+										Rankings.INSTANCE.save();
+										WndRanking.this.hide();
+										ShatteredPixelDungeon.scene().addToFront(new WndRanking(target));
+									}
+								}
+							});
+						}
+					};
+					btnNotes.setRect(0, rowTop, 115, 16);
+					add(btnNotes);
+					rowTop += 16;
+				}
+
+				RedButton btnHall = new RedButton(Messages.get(WndRanking.class, inHall ? "hall_return" : "hall_move")){
+					@Override
+					public void onClick() {
+						super.onClick();
+						ShatteredPixelDungeon.scene().addToFront(new WndOptions(
+								Icons.get(Icons.BADGES),
+								Messages.get(WndRanking.class, inHall ? "hall_return" : "hall_move"),
+								Messages.get(WndRanking.class, inHall ? "hall_return_desc" : "hall_move_desc"),
+								Messages.get(WndRanking.class, "hall_yes"),
+								Messages.get(WndRanking.class, "hall_no")){
+							@Override
+							protected void onSelect(int index) {
+								if (index == 0){
+									if (inHall) Rankings.INSTANCE.returnFromHall(target);
+									else Rankings.INSTANCE.moveToHall(target);
+									WndRanking.this.hide();
+									ShatteredPixelDungeon.switchNoFade(RankingsScene.class);
+								}
+							}
+						});
+					}
+				};
+				btnHall.setRect(0, rowTop, 115, 16);
+				add(btnHall);
+				rowTop += 16;
+
+				if (inHall) {
+					RedButton btnPage = new RedButton(Messages.get(WndRanking.class, "hall_page")){
+						@Override
+						public void onClick() {
+							super.onClick();
+							final ArrayList<Integer> pages = new ArrayList<>();
+							ArrayList<String> labels = new ArrayList<>();
+							for (int pg = 0; pg < Rankings.INSTANCE.hallPages; pg++) {
+								if (pg == target.hallPage) continue;
+								pages.add(pg);
+								labels.add(Messages.get(WndRanking.class, "hall_page_n", pg + 1));
+							}
+							pages.add(Rankings.INSTANCE.hallPages);
+							labels.add(Messages.get(WndRanking.class, "hall_page_new"));
+							ShatteredPixelDungeon.scene().addToFront(new WndOptions(
+									Icons.get(Icons.BADGES),
+									Messages.get(WndRanking.class, "hall_page"),
+									Messages.get(WndRanking.class, "hall_page_desc", target.hallPage + 1),
+									labels.toArray(new String[0])){
+								@Override
+								protected void onSelect(int index) {
+									Rankings.INSTANCE.setHallPage(target, pages.get(index));
+									WndRanking.this.hide();
+									ShatteredPixelDungeon.switchNoFade(RankingsScene.class);
+								}
+							});
+						}
+					};
+					btnPage.setRect(0, rowTop, 115, 16);
+					add(btnPage);
+				}
 			}
 
 		}

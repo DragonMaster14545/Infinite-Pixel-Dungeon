@@ -77,6 +77,8 @@ public enum Rankings {
 
 	public Record latestDaily;
     public Record latestWeekly;
+	public ArrayList<Record> hallRecords = new ArrayList<>();
+	public int hallPages = 1;
 	public Record latestDailyReplay = null; //not stored, only meant to be temp
     public Record latestWeeklyReplay = null; //not stored, only meant to be temp
 	public LinkedHashMap<Long, BigInteger> dailyScoreHistory = new LinkedHashMap<>();
@@ -355,6 +357,15 @@ public enum Rankings {
 
 		if (data == null) return;
 
+		boolean[] savedChallenges = data.getBooleanArray(CHALLENGES);
+		boolean[] paddedChallenges = new boolean[Challenges.values().length];
+		System.arraycopy(savedChallenges, 0, paddedChallenges, 0, Math.min(savedChallenges.length, paddedChallenges.length));
+		Dungeon.challenges = paddedChallenges;
+		Dungeon.practice = false;
+		Dungeon.daily = data.contains(DAILY) && data.getBoolean(DAILY);
+		Dungeon.weekly = data.contains(WEEKLY) && data.getBoolean(WEEKLY);
+		Dungeon.customSeedText = data.contains(CUSTOM_SEED) ? data.getString(CUSTOM_SEED) : "";
+
 		Bundle handler = data.getBundle(HANDLERS);
 		Scroll.restore(handler);
 		Potion.restore(handler);
@@ -398,6 +409,8 @@ public enum Rankings {
 		rec.score = calculateScore();
 	}
 	
+	private static final String HALL_RECORDS	= "hall_records";
+	private static final String HALL_PAGES	= "hall_pages";
 	private static final String RECORDS	= "records";
 	private static final String LATEST	= "latest";
 	private static final String TOTAL	= "total";
@@ -413,6 +426,8 @@ public enum Rankings {
 	public void save() {
 		Bundle bundle = new Bundle();
 		bundle.put( RECORDS, records );
+		bundle.put( HALL_RECORDS, hallRecords );
+		bundle.put( HALL_PAGES, hallPages );
 		bundle.put( LATEST, lastRecord );
 		bundle.put( TOTAL, totalNumber );
 		bundle.put( WON, wonNumber );
@@ -463,6 +478,14 @@ public enum Rankings {
 			for (Bundlable record : bundle.getCollection( RECORDS )) {
 				records.add( (Record)record );
 			}
+			hallRecords.clear();
+			if (bundle.contains( HALL_RECORDS )) {
+				for (Bundlable record : bundle.getCollection( HALL_RECORDS )) {
+					hallRecords.add( (Record)record );
+				}
+			}
+			hallPages = Math.max( 1, bundle.getInt( HALL_PAGES ) );
+			for (Record r : hallRecords) hallPages = Math.max( hallPages, r.hallPage + 1 );
 			lastRecord = bundle.getInt( LATEST );
 			
 			totalNumber = bundle.getInt( TOTAL );
@@ -532,6 +555,8 @@ public enum Rankings {
 		private static final String SEED    = "custom_seed";
 		private static final String DAILY   = "daily";
         private static final String WEEKLY   = "weekly";
+		private static final String NOTE = "note";
+		private static final String HALL_PAGE = "hall_page";
 
 		private static final String DATE    = "date";
 		private static final String VERSION = "version";
@@ -554,6 +579,8 @@ public enum Rankings {
 		public String customSeed;
 		public boolean daily;
         public boolean weekly;
+		public String note = "";
+		public int hallPage = 0;
 
 		public String date;
 		public String version;
@@ -591,6 +618,8 @@ public enum Rankings {
 			customSeed  = bundle.getString( SEED );
 			daily       = bundle.getBoolean( DAILY );
             weekly       = bundle.getBoolean( WEEKLY );
+			note         = bundle.contains( NOTE ) ? bundle.getString( NOTE ) : "";
+			hallPage     = bundle.getInt( HALL_PAGE );
 
 			heroClass	= bundle.getEnum( CLASS, HeroClass.class );
 			armorTier	= bundle.getInt( TIER );
@@ -622,6 +651,8 @@ public enum Rankings {
 			bundle.put( SEED, customSeed );
 			bundle.put( DAILY, daily );
             bundle.put( WEEKLY, weekly );
+			bundle.put( NOTE, note == null ? "" : note );
+			bundle.put( HALL_PAGE, hallPage );
 
 			bundle.put( CLASS, heroClass );
 			bundle.put( TIER, armorTier );
@@ -635,6 +666,78 @@ public enum Rankings {
 			if (gameData != null) bundle.put( DATA, gameData );
 			bundle.put( ID, gameID );
 		}
+	}
+
+	public static final Comparator<Record> bestFirst = new Comparator<Record>() {
+		@Override
+		public int compare( Record lhs, Record rhs ) {
+			return rhs.score.compareTo( lhs.score );
+		}
+	};
+
+	private static boolean same( Record a, Record b ) {
+		return a == b || (a.gameID != null && a.gameID.equals( b.gameID ));
+	}
+
+	private static boolean removeRecord( ArrayList<Record> list, Record rec ) {
+		for (int i = 0; i < list.size(); i++) {
+			if (same( list.get( i ), rec )) {
+				list.remove( i );
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static boolean containsRecord( ArrayList<Record> list, Record rec ) {
+		for (Record r : list) {
+			if (same( r, rec )) return true;
+		}
+		return false;
+	}
+
+	//0 = not movable, 1 = in the rankings, 2 = in the hall of heroes
+	public int locate( Record rec ) {
+		load();
+		if (containsRecord( hallRecords, rec )) return 2;
+		if (containsRecord( records, rec )) return 1;
+		return 0;
+	}
+
+	public boolean moveToHall( Record rec ) {
+		load();
+		boolean removed = removeRecord( records, rec );
+		if (removed) {
+			lastRecord = -1;
+		}
+		if (!removed) return false;
+		rec.hallPage = 0;
+		hallRecords.add( rec );
+		Collections.sort( hallRecords, bestFirst );
+		save();
+		return true;
+	}
+
+	public void setHallPage( Record rec, int page ) {
+		load();
+		rec.hallPage = Math.max( 0, page );
+		int used = 1;
+		for (Record r : hallRecords) used = Math.max( used, r.hallPage + 1 );
+		hallPages = used;
+		save();
+	}
+
+	public boolean returnFromHall( Record rec ) {
+		load();
+		if (!removeRecord( hallRecords, rec )) return false;
+		records.add( rec );
+		Collections.sort( records, scoreComparator );
+		while (records.size() > TABLE_SIZE) {
+			records.remove( records.size() - 1 );
+		}
+		lastRecord = -1;
+		save();
+		return true;
 	}
 
 	public static final Comparator<Record> scoreComparator = new Comparator<Record>() {

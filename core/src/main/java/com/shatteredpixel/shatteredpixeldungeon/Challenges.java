@@ -50,6 +50,7 @@ public enum Challenges {
 
 	public static int activeChallenges() {
 		int count = 0;
+		if (Dungeon.challenges == null) return 0;
 		for (boolean challengeActive : Dungeon.challenges) {
 			if (challengeActive) count++;
 		}

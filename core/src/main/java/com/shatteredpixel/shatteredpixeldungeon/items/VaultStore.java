@@ -50,7 +50,7 @@ public class VaultStore {
 			if (Dungeon.weekly) return Mode.WEEKLY;
 			if (Dungeon.daily) return Mode.DAILY;
 			if (Dungeon.customSeedText != null && !Dungeon.customSeedText.isEmpty()) return Mode.SEED;
-			if (IntStream.range(0, Dungeon.challenges.length).anyMatch(i -> Dungeon.challenges[i])) return Mode.CHALLENGE;
+			if (Dungeon.challenges != null && IntStream.range(0, Dungeon.challenges.length).anyMatch(i -> Dungeon.challenges[i])) return Mode.CHALLENGE;
 		}
 		return Mode.NORMAL;
 	}
