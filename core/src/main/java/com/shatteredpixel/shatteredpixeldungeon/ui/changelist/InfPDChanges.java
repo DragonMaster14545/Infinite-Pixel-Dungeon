@@ -87,7 +87,7 @@ public class InfPDChanges {
 
         changes.addButton( new ChangeButton(Icons.get(Icons.ALCHEMY), "Vault Practice Mode",
                 "Managing your vault while fighting is hassle, so we made a new mode that you can manage your vaults peacefully with some other items that can be bought to your other run.\n\n" +
-                        "The mode resets at approximately 10k turns so save your items at the shulker box and store them in your vault before the reset happens."));
+                        "The mode resets at approximately 2.14b turns so save your items at the shulker box and store them in your vault before the reset happens, or reset as early as possible to keep your items in your backpack."));
 
 
         changes.addButton(new ChangeButton(new Image(Icons.get(Icons.SKULL)), "Floor Randomizer",

@@ -17,6 +17,12 @@ import com.shatteredpixel.shatteredpixeldungeon.items.ShulkerBox;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.RatKingRoom;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretChestChasmRoom;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretHoardRoom;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretLarderRoom;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretSummoningRoom;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretWellRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.*;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.EmptyRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.StudyRoom;
@@ -26,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
 import com.watabou.utils.Point;
+import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
 import java.math.BigInteger;
@@ -33,12 +40,13 @@ import java.util.ArrayList;
 
 public class PracticeLevel extends Level {
 
-	public static final int REGEN_TURNS = 10000;
+	public static final int REGEN_TURNS = Integer.MAX_VALUE - 1;
 
-	private static final int H = 45;
-	private static final int START_X = 5;
-	private static final int MAX_X = 100;
-	private static final int[] ROW_TOP = {1, 13, 23, 35};
+	private static final int BLOCK = 22;
+	private static final int BIG_W = 50;
+	private static final int OFF = BIG_W + 1;
+	private static final int START_X = OFF + 5;
+	private static final int MAX_X = OFF + 100;
 	private static final int ROOM = 9;
 
 	private static final int HAND_DUMMY = 0;
@@ -49,12 +57,18 @@ public class PracticeLevel extends Level {
 	@SuppressWarnings("unchecked")
 	private static final Class<? extends Room>[] ROOMS = new Class[]{
 			ArmoryRoom.class, ArtifactAtriumRoom.class, CryptRoom.class, CrystalChoiceRoom.class,
-			CrystalMazeRoom.class, CrystalPathRoom.class, CrystalVaultRoom.class, GardenRoom.class,
+			CrystalMazeRoom.class, CrystalPathRoom.class, CrystalVaultRoom.class, RatKingRoom.class,
 			LaboratoryRoom.class, LibraryRoom.class, MagicWellRoom.class, ArtifactAtriumRoom.class,
 			MagicalFireRoom.class, PoisonGardenRoom.class, PoolRoom.class, RunestoneRoom.class,
 			SacrificeRoom.class, SentryRoom.class, StatueRoom.class, StorageRoom.class, ToxicGasRoom.class,
 			TrapsRoom.class, TreasuryRoom.class, AlchemyChamberRoom.class, StudyRoom.class, SuspiciousChestRoom.class,
-			EmptyRoom.class, EmptyRoom.class, EmptyRoom.class, EmptyRoom.class, EmptyRoom.class
+			EmptyRoom.class, EmptyRoom.class, EmptyRoom.class, EmptyRoom.class, EmptyRoom.class,
+			SecretChestChasmRoom.class, SecretHoardRoom.class, SecretLarderRoom.class, SecretSummoningRoom.class, SecretWellRoom.class,
+			//we will repeat the rooms here to make sure the level is good
+			ArmoryRoom.class, ArtifactAtriumRoom.class, CryptRoom.class, CrystalChoiceRoom.class,
+			CrystalMazeRoom.class, CrystalPathRoom.class, CrystalVaultRoom.class, RatKingRoom.class,
+			LaboratoryRoom.class, LibraryRoom.class, MagicWellRoom.class, ArtifactAtriumRoom.class,
+			MagicalFireRoom.class, PoisonGardenRoom.class, PoolRoom.class, RunestoneRoom.class,
 	};
 
 	{
@@ -64,6 +78,7 @@ public class PracticeLevel extends Level {
 	}
 
 	private int W;
+	private int H;
 	private final ArrayList<Integer> dummyCells = new ArrayList<>();
 	private int shopkeeperCell = -1;
 	private int[] alchemyRect, libraryRect, shopRect;
@@ -107,7 +122,15 @@ public class PracticeLevel extends Level {
 		lib.hand = HAND_LIBRARY;
 		lib.width = 10;
 		slots.add(lib);
-		for (Class<? extends Room> c : ROOMS) {
+		ArrayList<Class<? extends Room>> pool = new ArrayList<>();
+		for (Class<? extends Room> c : ROOMS) pool.add(c);
+		for (int i = pool.size() - 1; i > 0; i--) {
+			int j = Random.Int(i + 1);
+			Class<? extends Room> tmp = pool.get(i);
+			pool.set(i, pool.get(j));
+			pool.set(j, tmp);
+		}
+		for (Class<? extends Room> c : pool) {
 			Slot r = new Slot();
 			r.cls = c;
 			r.width = 10;
@@ -121,16 +144,20 @@ public class PracticeLevel extends Level {
 		int row = 0;
 		int x = START_X;
 		for (Slot sl : slots) {
-			if (x + sl.width > MAX_X && row < ROW_TOP.length - 1) {
+			if (x + sl.width > MAX_X) {
 				row++;
 				x = START_X;
 			}
 			sl.row = row;
 			sl.l = x;
-			sl.t = ROW_TOP[row];
+			sl.t = rowTop(row);
 			x += sl.width;
 		}
 		return slots;
+	}
+
+	private static int rowTop(int row) {
+		return 1 + (row / 2) * BLOCK + (row % 2 == 1 ? 12 : 0);
 	}
 
 	private void fill(int x1, int y1, int x2, int y2, int terrain) {
@@ -148,17 +175,30 @@ public class PracticeLevel extends Level {
 		itemsToSpawn.clear();
 
 		ArrayList<Slot> slots = layout();
-		int maxRight = 40;
+		int maxRight = OFF + 40;
 		for (Slot s : slots) maxRight = Math.max(maxRight, s.l + s.width);
-		W = maxRight + 2;
+		W = maxRight + 4;
+
+		int rows = 1;
+		for (Slot sl : slots) rows = Math.max(rows, sl.row + 1);
+		int blocks = (rows + 1) / 2;
+		int lastCorridorEnd = 12 + (blocks - 1) * BLOCK;
+		int lastRoomEnd = rows % 2 == 0 ? rowTop(rows - 1) + ROOM : lastCorridorEnd;
+		H = Math.max(lastCorridorEnd, lastRoomEnd) + 2;
 
 		setSize(W, H);
 
-		fill(1, 10, W - 2, 12, Terrain.EMPTY_SP);
-		fill(1, 32, W - 2, 34, Terrain.EMPTY_SP);
-		fill(1, 10, 3, 34, Terrain.EMPTY_SP);
+		fill(1, 1, BIG_W, H - 2, Terrain.EMPTY);
+		fill(OFF, 0, OFF, H - 1, Terrain.WALL);
 
-		int entrance = 9 * W + 2;
+		for (int bl = 0; bl < blocks; bl++) {
+			fill(OFF + 1, 10 + bl * BLOCK, W - 2, 12 + bl * BLOCK, Terrain.EMPTY_SP);
+			map[(11 + bl * BLOCK) * W + OFF] = Terrain.DOOR;
+		}
+		fill(OFF + 1, 10, OFF + 3, lastCorridorEnd, Terrain.EMPTY_SP);
+		fill(W - 4, 10, W - 2, lastCorridorEnd, Terrain.EMPTY_SP);
+
+		int entrance = 9 * W + OFF + 2;
 		map[entrance] = Terrain.ENTRANCE;
 		transitions.add(new LevelTransition(this, entrance, LevelTransition.Type.REGULAR_ENTRANCE));
 
@@ -397,6 +437,6 @@ public class PracticeLevel extends Level {
 
 	@Override
 	public int randomRespawnCell(Char ch) {
-		return 11 * W + 2;
+		return 11 * W + OFF + 2;
 	}
 }

@@ -92,8 +92,9 @@ public class Upgrades implements Bundlable {
                 cost.put(ScrollOfMagicMapping.class, BigInteger.valueOf(3).pow(level));
                 return cost;
             }
-        },
+        };
 
+        /*
         RING_CAPACITY(Integer.MAX_VALUE,"Ring Capacity","Extends the effect of the rings per level") {
             @Override
             public int ringExpansion() {
@@ -108,6 +109,8 @@ public class Upgrades implements Bundlable {
                 return cost;
             }
         },;
+         */
+
 
         public final int maxLevel;
         public final String name;
