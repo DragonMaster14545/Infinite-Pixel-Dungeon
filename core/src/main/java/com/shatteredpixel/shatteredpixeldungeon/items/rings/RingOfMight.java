@@ -121,7 +121,7 @@ public class RingOfMight extends Ring {
 		int multiplier = 0;
 		if ((getBuffedBonus(target, Might.class).compareTo(BigInteger.ONE) == 0)) multiplier = 2;
 		if ((getBuffedBonus(target, Might.class).compareTo(BigInteger.ONE) > 0)) multiplier += Big.toLong(getBuffedBonus(target, Might.class).multiply(BigInteger.valueOf(2)));
-		return Math.min(multiplier, 20 * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
+		return multiplier;
 	}
 
 	public class Might extends RingBuff {

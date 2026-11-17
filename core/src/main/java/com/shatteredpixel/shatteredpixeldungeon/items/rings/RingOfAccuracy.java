@@ -71,7 +71,7 @@ public class RingOfAccuracy extends Ring {
         if ((getBuffedBonus(target, Accuracy.class).compareTo(BigInteger.ZERO) > 0)) multiplier = 1.2f;
         if ((getBuffedBonus(target, Accuracy.class).compareTo(BigInteger.ONE) > 0)) multiplier += Big.dec(getBuffedBonus(target, Accuracy.class)).multiply(Big.dec(0.02)).floatValue();
 
-		return Math.min(multiplier, 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
+		return multiplier;
 	}
 	
 	public class Accuracy extends RingBuff {

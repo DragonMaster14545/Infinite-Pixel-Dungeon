@@ -71,7 +71,7 @@ public class RingOfExperience extends Ring {
         if ((getBuffedBonus(target, Experience.class).compareTo(BigInteger.ZERO) > 0)) multiplier = 1.02f;
         if ((getBuffedBonus(target, Experience.class).compareTo(BigInteger.ONE) > 0)) multiplier += Big.dec(getBuffedBonus(target, Experience.class)).multiply(Big.dec(0.02)).floatValue();
 
-		return Math.min(multiplier, 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
+		return multiplier;
 	}
 	
 	public class Experience extends RingBuff {

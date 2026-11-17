@@ -64,7 +64,7 @@ public class RingOfHaste extends Ring {
 	}
 	
 	public static float speedMultiplier( Char target ){
-        return Math.min((float)Math.pow(1.015, getBuffedBonus(target, Haste.class).doubleValue()), 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
+        return (float) Math.pow(1.015, getBuffedBonus(target, Haste.class).doubleValue());
 		//return (float)Math.pow(1.015, getBuffedBonus(target, Haste.class));
 	}
 	

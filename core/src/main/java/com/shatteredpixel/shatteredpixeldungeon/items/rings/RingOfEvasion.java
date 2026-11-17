@@ -69,7 +69,7 @@ public class RingOfEvasion extends Ring {
         float multiplier = 1f;
         if ((getBuffedBonus(target, Evasion.class).compareTo(BigInteger.ZERO) > 0)) multiplier = 1.2f;
         if ((getBuffedBonus(target, Evasion.class).compareTo(BigInteger.ONE) > 0)) multiplier += Big.dec(getBuffedBonus(target, Evasion.class)).multiply(Big.dec(0.0025)).floatValue();
-        return Math.min(multiplier, 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
+        return multiplier;
 	}
 
 	public class Evasion extends RingBuff {

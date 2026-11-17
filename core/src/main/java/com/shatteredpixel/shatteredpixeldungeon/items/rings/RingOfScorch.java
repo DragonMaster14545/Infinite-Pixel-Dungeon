@@ -71,7 +71,7 @@ public class RingOfScorch extends Ring {
         if ((getBuffedBonus(target, Scorch.class).compareTo(BigInteger.ZERO) > 0)) multiplier = 0.02d;
         if ((getBuffedBonus(target, Scorch.class).compareTo(BigInteger.ONE) > 0)) multiplier += Big.dec(getBuffedBonus(target, Scorch.class)).multiply(Big.dec(0.035d)).doubleValue();
 
-		return Math.min(multiplier, 10f * (1 + Dungeon.cycle + Dungeon.hero.upgrades.ringExpansion()));
+		return multiplier;
 	}
 	
 	public class Scorch extends RingBuff {

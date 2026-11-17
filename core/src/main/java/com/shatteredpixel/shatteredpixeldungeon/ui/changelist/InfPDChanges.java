@@ -104,7 +104,8 @@ public class InfPDChanges {
         ));
 
         changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
-                "_-_ Level harness from equipments obtained from fishing hooks is changed to level/3^(cycle+1) from level/36^(cycle+1)"
+                "_-_ Level harness from equipments obtained from fishing hooks is changed to level/3^(cycle+1) from level/36^(cycle+1)\n" +
+                            "_-_ Ring caps has been removed"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
