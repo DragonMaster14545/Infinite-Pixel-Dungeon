@@ -82,6 +82,9 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.BADGES), "Hall of Heroes",
+                "I'd like you to honor your heroes on what they've done or contributed on your behalf, it is kind of low budget feature but I would like to keep your heroes separated on the normal rankings board."));
+
         changes.addButton( new ChangeButton(Icons.get(Icons.ALCHEMY), "Vault Practice Mode",
                 "Managing your vault while fighting is hassle, so we made a new mode that you can manage your vaults peacefully with some other items that can be bought to your other run.\n\n" +
                         "The mode resets at approximately 10k turns so save your items at the shulker box and store them in your vault before the reset happens."));
