@@ -65,7 +65,7 @@ public class WndRanking extends WndTabbed {
 		super();
 		int whereNow = Rankings.INSTANCE.locate( rec );
 		if (whereNow != 0) {
-			HEIGHT += 16 * (1 + ((!rec.daily && !rec.weekly) ? 1 : 0) + (whereNow == 2 ? 1 : 0));
+			HEIGHT = 144 + 16 * (1 + ((!rec.daily && !rec.weekly) ? 1 : 0) + (whereNow == 2 ? 1 : 0));
 		}
 		resize( WIDTH, HEIGHT );
 
