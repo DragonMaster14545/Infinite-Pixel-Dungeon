@@ -114,7 +114,7 @@ public class RingOfMight extends Ring {
 	
 	public static int strengthBonus( Char target ){
 		int boost = Big.toInt(BigInteger.valueOf(2000000000L).min(getBuffedBonus(target, Might.class)));
-		return (boost >= 1) ? Math.min(boost, 10 * (1 + Dungeon.cycle)) : 0;
+		return (boost >= 1) ? boost : 0;
     }
 	
 	public static int HTMultiplier( Char target ){
