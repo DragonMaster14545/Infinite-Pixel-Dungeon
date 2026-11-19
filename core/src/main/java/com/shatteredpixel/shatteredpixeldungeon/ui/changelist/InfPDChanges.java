@@ -164,7 +164,10 @@ public class InfPDChanges {
                             "_-_ Fixed the incorrect heap pickup on item getter spell\n" +
                             "_-_ Fixed an incorrect BigInteger formatting on the chances in rarities' window\n" +
                             "_-_ Fixed an incorrect note deletion when creating a notes outside gamescene\n" +
-                            "_-_ Fixed a crash regarding opening the changelog or when starting a run"
+                            "_-_ Fixed a crash regarding opening the changelog or when starting a run\n" +
+                            "_-_ Fixed an error related to Upgrade enum of hero\n" +
+                            "_-_ Fixed a same seed bug on daily and weekly runs\n" +
+                            "_-_ Fixed the huge memory usage when gaining an exp with low requirements to get SoU and SoTr"
         ));
 
         changes = new ChangeInfo("D", false, "");

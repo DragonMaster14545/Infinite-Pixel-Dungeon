@@ -2176,16 +2176,12 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 
 		BigInteger neededExp = PsycheChest.neededExp();
 
-        if ((totalExp.compareTo(neededExp) >= 0) && grinding){
-			int souCount = 0;
-
-            while ((totalExp.compareTo(neededExp) >= 0)) {
-                totalExp = totalExp.subtract(neededExp);
-                souCount++;
-            }
+		if (neededExp.signum() > 0 && (totalExp.compareTo(neededExp) >= 0) && grinding){
+			BigInteger[] qr = totalExp.divideAndRemainder(neededExp);
+			totalExp = qr[1];
 
 			ScrollOfUpgrade sou = new ScrollOfUpgrade();
-			sou.quantity(BigInteger.valueOf(souCount));
+			sou.quantity(qr[0]);
 
 			if (!sou.collect()){
 				Dungeon.level.drop(sou, pos);
@@ -2193,28 +2189,24 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 				GLog.p( Messages.get(this, "you_now_have", sou.name()) );
 				new Flare(6, 28).color(0x38FF48, true).show(sprite, 3.67f);
 			}
-        }
+		}
 
         BigInteger neededExpTransmutation = PsycheChest.neededExpTransmutation();
 
-        if ((totalExp_Transmutation.compareTo(neededExpTransmutation) >= 0) && grinding){
-            int souCount = 0;
+		if (neededExpTransmutation.signum() > 0 && (totalExp_Transmutation.compareTo(neededExpTransmutation) >= 0) && grinding){
+			BigInteger[] qr = totalExp_Transmutation.divideAndRemainder(neededExpTransmutation);
+			totalExp_Transmutation = qr[1];
 
-            while ((totalExp_Transmutation.compareTo(neededExpTransmutation) >= 0)) {
-                totalExp_Transmutation = totalExp_Transmutation.subtract(neededExpTransmutation);
-                souCount++;
-            }
+			ScrollOfTransmutation sou = new ScrollOfTransmutation();
+			sou.quantity(qr[0]);
 
-            ScrollOfTransmutation sou = new ScrollOfTransmutation();
-            sou.quantity(BigInteger.valueOf(souCount));
-
-            if (!sou.collect()){
-                Dungeon.level.drop(sou, pos);
-            } else {
-                GLog.p( Messages.get(this, "you_now_have", sou.name()) );
-                new Flare(6, 28).color(0xbd34eb, true).show(sprite, 3.67f);
-            }
-        }
+			if (!sou.collect()){
+				Dungeon.level.drop(sou, pos);
+			} else {
+				GLog.p( Messages.get(this, "you_now_have", sou.name()) );
+				new Flare(6, 28).color(0xbd34eb, true).show(sprite, 3.67f);
+			}
+		}
 
 		boolean levelUp = false;
 		while ((this.exp.compareTo(maxExp()) >= 0)) {
