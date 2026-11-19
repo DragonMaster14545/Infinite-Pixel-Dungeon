@@ -108,9 +108,24 @@ public class InfPDChanges {
                             "_-_ Ring caps has been removed"
         ));
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ You can now transfer shulker boxes from another vault modes (i.e. transferring a box fromnormla to daily vault)\n" +
+                            "_-_ You can now see a history log of your vault for each mode.\n" +
+                            "_-_ You can now search items from the boxes\n" +
+                            "_-_ Furtherly optimized the exp gain to not produce lags"
+        ));
+
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
                 "_-_ Fixed a crash when creating a global notes in a fresh save on journal scene\n" +
-                        "_-_ Fixed horizontal scrolling on item window when it reaches specific height limit"
+                        "_-_ Fixed crash when falling on a practice level\n" +
+                        "_-_ Fixed horizontal scrolling on item window when it reaches specific height limit\n" +
+                        "_-_ Fixed an incorrect BigInteger formatting on the chances in rarities' window\n" +
+                        "_-_ Fixed an incorrect note deletion when creating a notes outside gamescene\n" +
+                        "_-_ Fixed a crash regarding opening the changelog or when starting a run\n" +
+                        "_-_ Fixed an error related to Upgrade enum of hero\n" +
+                        "_-_ Fixed a same seed bug on daily and weekly runs\n" +
+                        "_-_ Fixed the huge memory usage when gaining an exp with low requirements to get SoU and SoTr\n" +
+                        "_-_ Fixed a loading error involving tubes in rankings"
         ));
 
         changes = new ChangeInfo("E", false, "");
@@ -156,20 +171,12 @@ public class InfPDChanges {
                             "_-_ Added side quickslots options to add more quickslots in-game\n" +
                             "_-_ Alchemy categories has been changed to 1-row horizontally scrollable to fit new recipes in the future\n" +
                             "_-_ Item Info now becomes scrollable when its window reached a specific limit\n" +
-                            "_-_ The cycle stats are now computed once per cycle and some other optimizations on conversion, and it will skip when numbers are small\n" +
-                            "_-_ Furtherly optimized the exp gain to not produce lags"
+                            "_-_ The cycle stats are now computed once per cycle and some other optimizations on conversion, and it will skip when numbers are small"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
                 "_-_ Fixed an occasional upgrade popup on shulker boxes when opening a save\n" +
-                            "_-_ Fixed the incorrect heap pickup on item getter spell\n" +
-                            "_-_ Fixed an incorrect BigInteger formatting on the chances in rarities' window\n" +
-                            "_-_ Fixed an incorrect note deletion when creating a notes outside gamescene\n" +
-                            "_-_ Fixed a crash regarding opening the changelog or when starting a run\n" +
-                            "_-_ Fixed an error related to Upgrade enum of hero\n" +
-                            "_-_ Fixed a same seed bug on daily and weekly runs\n" +
-                            "_-_ Fixed the huge memory usage when gaining an exp with low requirements to get SoU and SoTr\n" +
-                            "_-_ Fixed a loading error involving tubes in rankings"
+                            "_-_ Fixed the incorrect heap pickup on item getter spell"
         ));
 
         changes = new ChangeInfo("D", false, "");
