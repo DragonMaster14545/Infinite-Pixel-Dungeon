@@ -19,7 +19,27 @@ public class VaultStore {
 
 	public enum Mode { NORMAL, DAILY, WEEKLY, SEED, CHALLENGE }
 
-	private static int capacityPercent(Mode mode) {
+	public static final int MAX_HISTORY = 300;
+
+	public static final String LOG_DEPOSIT = "deposit";
+	public static final String LOG_WITHDRAW = "withdraw";
+	public static final String LOG_TRANSFER_OUT = "transfer_out";
+	public static final String LOG_TRANSFER_IN = "transfer_in";
+
+	public static class Entry {
+		public long time;
+		public String type;
+		public String text;
+	}
+
+	private static class Store {
+		ArrayList<ShulkerBox> boxes = new ArrayList<>();
+		int pinned = 0;
+		BigInteger extra = BigInteger.ZERO;
+		ArrayList<Entry> history = new ArrayList<>();
+	}
+
+	public static int capacityPercent(Mode mode) {
 		switch (mode) {
 			case DAILY:
 			case WEEKLY:    return 50;
@@ -27,7 +47,7 @@ public class VaultStore {
 		}
 	}
 
-	private static int limitPercent(Mode mode) {
+	public static int limitPercent(Mode mode) {
 		switch (mode) {
 			case DAILY:
 			case WEEKLY:    return 50;
@@ -44,7 +64,7 @@ public class VaultStore {
 	}
 
 	@SuppressWarnings("NewApi")
-    public static Mode mode() {
+	public static Mode mode() {
 		if (Dungeon.level != null || Dungeon.hero != null) {
 			if (Dungeon.practice) return Dungeon.practiceVault;
 			if (Dungeon.weekly) return Mode.WEEKLY;
@@ -63,58 +83,76 @@ public class VaultStore {
 	private static final String BOXES = "boxes";
 	private static final String PINNED = "pinned";
 	private static final String EXTRA_SLOTS = "extra_slots";
+	private static final String HISTORY = "history";
 
-	private static final EnumMap<Mode, BigInteger> extraCache = new EnumMap<>(Mode.class);
+	private static final EnumMap<Mode, Store> stores = new EnumMap<>(Mode.class);
 
-	private static final EnumMap<Mode, Integer> pinnedCache = new EnumMap<>(Mode.class);
-
-	private static final EnumMap<Mode, ArrayList<ShulkerBox>> cache = new EnumMap<>(Mode.class);
-
-	public static ArrayList<ShulkerBox> boxes() {
-		Mode mode = mode();
-
-		ArrayList<ShulkerBox> list = cache.get(mode);
-		if (list == null) {
-			list = new ArrayList<>();
-			pinnedCache.put(mode, 0);
-			extraCache.put(mode, BigInteger.ZERO);
+	private static Store store(Mode mode) {
+		Store s = stores.get(mode);
+		if (s == null) {
+			s = new Store();
 			String file = fileName(mode);
 			if (FileUtils.fileExists(file)) {
 				try {
 					Bundle b = FileUtils.bundleFromFile(file);
 					Collection<Bundlable> loaded = b.getCollection(BOXES);
 					for (Bundlable o : loaded) {
-						if (o instanceof ShulkerBox) list.add((ShulkerBox) o);
+						if (o instanceof ShulkerBox) s.boxes.add((ShulkerBox) o);
 					}
 					if (b.contains(EXTRA_SLOTS)) {
-						extraCache.put(mode, BigInteger.ZERO.max(Big.getBig(b, EXTRA_SLOTS)));
+						s.extra = BigInteger.ZERO.max(Big.getBig(b, EXTRA_SLOTS));
 					}
 					if (b.contains(PINNED)) {
-						pinnedCache.put(mode, Math.max(0, Math.min(b.getInt(PINNED), list.size())));
+						s.pinned = Math.max(0, Math.min(b.getInt(PINNED), s.boxes.size()));
+					}
+					if (b.contains(HISTORY)) {
+						String[] lines = b.getStringArray(HISTORY);
+						if (lines != null) {
+							for (String line : lines) {
+								String[] p = line.split("\\|", 3);
+								if (p.length < 3) continue;
+								try {
+									Entry e = new Entry();
+									e.time = Long.parseLong(p[0]);
+									e.type = p[1];
+									e.text = p[2];
+									s.history.add(e);
+								} catch (NumberFormatException ignored) {
+								}
+							}
+						}
 					}
 				} catch (IOException ignored) {
 				}
 			}
-			cache.put(mode, list);
+			stores.put(mode, s);
 		}
-		return list;
+		return s;
+	}
+
+	public static ArrayList<ShulkerBox> boxes() {
+		return boxes(mode());
+	}
+
+	public static ArrayList<ShulkerBox> boxes(Mode mode) {
+		return store(mode).boxes;
 	}
 
 	public static BigInteger extraSlots() {
-		boxes();
-		BigInteger e = extraCache.get(mode());
-		return e == null ? BigInteger.ZERO : e;
+		return extraSlots(mode());
+	}
+
+	public static BigInteger extraSlots(Mode mode) {
+		return store(mode).extra;
 	}
 
 	public static void setExtraSlots(BigInteger n) {
-		boxes();
-		extraCache.put(mode(), BigInteger.ZERO.max(n));
+		store(mode()).extra = BigInteger.ZERO.max(n);
 	}
 
 	public static int pinnedCount() {
-		ArrayList<ShulkerBox> list = boxes();
-		Integer p = pinnedCache.get(mode());
-		return p == null ? 0 : Math.max(0, Math.min(p, list.size()));
+		Store s = store(mode());
+		return Math.max(0, Math.min(s.pinned, s.boxes.size()));
 	}
 
 	public static int indexOf(ShulkerBox box) {
@@ -144,7 +182,7 @@ public class VaultStore {
 			list.add(p, box);
 			p++;
 		}
-		pinnedCache.put(mode(), p);
+		store(mode()).pinned = p;
 		return true;
 	}
 
@@ -153,23 +191,61 @@ public class VaultStore {
 		if (i < 0) return -1;
 		int p = pinnedCount();
 		boxes().remove(i);
-		if (i < p) pinnedCache.put(mode(), p - 1);
+		if (i < p) store(mode()).pinned = p - 1;
 		return i;
 	}
 
 	public static void putBack(ShulkerBox box, int index, int pinnedBefore) {
 		ArrayList<ShulkerBox> list = boxes();
 		list.add(Math.max(0, Math.min(index, list.size())), box);
-		pinnedCache.put(mode(), pinnedBefore);
+		store(mode()).pinned = pinnedBefore;
+	}
+
+	public static ArrayList<Entry> history() {
+		return history(mode());
+	}
+
+	public static ArrayList<Entry> history(Mode mode) {
+		return store(mode).history;
+	}
+
+	public static void log(String type, String text) {
+		log(mode(), type, text);
+	}
+
+	public static void log(Mode mode, String type, String text) {
+		ArrayList<Entry> h = store(mode).history;
+		Entry e = new Entry();
+		e.time = System.currentTimeMillis();
+		e.type = type;
+		e.text = text == null ? "" : text.replace('\n', ' ');
+		h.add(e);
+		while (h.size() > MAX_HISTORY) h.remove(0);
+	}
+
+	public static void unlog(Mode mode) {
+		ArrayList<Entry> h = store(mode).history;
+		if (!h.isEmpty()) h.remove(h.size() - 1);
 	}
 
 	public static boolean save() {
+		return save(mode());
+	}
+
+	public static boolean save(Mode mode) {
 		try {
+			Store s = store(mode);
 			Bundle b = new Bundle();
-			b.put(BOXES, boxes());
-			b.put(PINNED, pinnedCount());
-			Big.put(b, EXTRA_SLOTS, extraSlots());
-			FileUtils.bundleToFile(fileName(mode()), b);
+			b.put(BOXES, s.boxes);
+			b.put(PINNED, Math.max(0, Math.min(s.pinned, s.boxes.size())));
+			Big.put(b, EXTRA_SLOTS, s.extra);
+			String[] lines = new String[s.history.size()];
+			for (int i = 0; i < lines.length; i++) {
+				Entry e = s.history.get(i);
+				lines[i] = e.time + "|" + e.type + "|" + e.text;
+			}
+			b.put(HISTORY, lines);
+			FileUtils.bundleToFile(fileName(mode), b);
 			return true;
 		} catch (IOException e) {
 			return false;

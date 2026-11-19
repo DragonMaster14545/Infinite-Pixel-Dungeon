@@ -62,7 +62,7 @@ public class WndVaultLink extends Window {
 		}
 		int gridHeight = slotHeight * ROWS + SLOT_MARGIN * (ROWS - 1);
 		while (slotHeight >= 20
-				&& (TITLE_HEIGHT + gridHeight + nav + BUTTON_HEIGHT * 3 + 5 + 20 + chrome.marginTop()) > PixelScene.uiCamera.height) {
+				&& (TITLE_HEIGHT + gridHeight + nav + BUTTON_HEIGHT * 4 + 7 + 20 + chrome.marginTop()) > PixelScene.uiCamera.height) {
 			slotHeight--;
 			gridHeight -= ROWS;
 		}
@@ -70,7 +70,7 @@ public class WndVaultLink extends Window {
 		final ArrayList<ShulkerBox> stored = link.stored();
 
 		RenderedTextBlock title = PixelScene.renderTextBlock(
-				Messages.titleCase(link.name()) + "  " + stored.size() + "/" + capacity, 8);
+				Messages.titleCase(link.name()) + "  " + Big.fmt(BigInteger.valueOf(stored.size())) + "/" + Big.fmt(capacity), 8);
 		title.hardlight(TITLE_COLOR);
 		title.maxWidth(windowWidth - 2);
 		title.setPos(1, (TITLE_HEIGHT - title.height()) / 2f - 1);
@@ -186,7 +186,17 @@ public class WndVaultLink extends Window {
 		trader.setRect(0, y + (BUTTON_HEIGHT + SLOT_MARGIN) * 2, windowWidth, BUTTON_HEIGHT);
 		add(trader);
 
-		resize(windowWidth, (int) (y + BUTTON_HEIGHT * 3 + SLOT_MARGIN * 2));
+		RedButton history = new RedButton(Messages.get(link, "btn_history")) {
+			@Override
+			public void onClick() {
+				hide();
+				GameScene.show(new WndVaultHistory(reopen()));
+			}
+		};
+		history.setRect(0, y + (BUTTON_HEIGHT + SLOT_MARGIN) * 3, windowWidth, BUTTON_HEIGHT);
+		add(history);
+
+		resize(windowWidth, (int) (y + BUTTON_HEIGHT * 4 + SLOT_MARGIN * 3));
 	}
 
 	private void goTo(long newPage) {
@@ -233,6 +243,15 @@ public class WndVaultLink extends Window {
 			@Override
 			public void run() {
 				Game.scene().addToFront(new WndShulkerInspect(box));
+			}
+		});
+
+		labels.add(Messages.get(WndShulkerItem.class, "transfer"));
+		runs.add(new Runnable() {
+			@Override
+			public void run() {
+				hide();
+				link.startTransfer(Dungeon.hero, box, reopen());
 			}
 		});
 

@@ -39,7 +39,7 @@ public class ShulkerBox extends Item {
 
     public static final int BASE_CAPACITY = 25;
 	public static final int CAPACITY_PER_LEVEL = 5;
-	public static final int MAX_LEVEL = 100;
+	public static final int MAX_LEVEL = 1000;
 	public static final int BASE_LIMIT = 10;
 	public static final int LIMIT_PER_LEVEL = 10;
 
@@ -226,10 +226,14 @@ public class ShulkerBox extends Item {
 	public int storeMatching(Hero hero, boolean spendTurn) {
 		if (hero == null || !hero.belongings.backpack.contains(this)) return 0;
 
-		ArrayList<Item> candidates = new ArrayList<>(hero.belongings.backpack.items);
+		ArrayList<Item> candidates = new ArrayList<>();
+		ArrayList<Bag> owners = new ArrayList<>();
+		collectCandidates(hero.belongings.backpack, candidates, owners, 0);
 		int moved = 0;
 
-		for (Item item : candidates) {
+		for (int ci = 0; ci < candidates.size(); ci++) {
+			Item item = candidates.get(ci);
+			Bag owner = owners.get(ci);
 			if (!filter.isActive() || !canStore(item)) continue;
 			if (item.level().compareTo(maxItemLevel()) > 0) continue;
 
@@ -245,7 +249,7 @@ public class ShulkerBox extends Item {
 				if (part == null) continue;
 				toStore = part;
 			} else {
-				item.detachAll(hero.belongings.backpack);
+				item.detachAll(owner);
 			}
 			addToContents(toStore);
 			moved++;
@@ -264,6 +268,18 @@ public class ShulkerBox extends Item {
 			GLog.w(Messages.get(this, "nothing_matching"));
 		}
 		return moved;
+	}
+
+	private void collectCandidates(Bag bag, ArrayList<Item> items, ArrayList<Bag> owners, int depth) {
+		for (Item item : new ArrayList<>(bag.items)) {
+			if (item instanceof ShulkerBox) continue;
+			if (item instanceof Bag) {
+				if (depth < 5) collectCandidates((Bag) item, items, owners, depth + 1);
+				continue;
+			}
+			items.add(item);
+			owners.add(bag);
+		}
 	}
 
 	public void autoStore(Hero hero) {

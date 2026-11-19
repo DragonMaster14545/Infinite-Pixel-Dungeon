@@ -110,6 +110,17 @@ public class Chasm implements Hero.Doom {
 	public static void heroFall( int pos ) {
 		
 		jumpConfirmed = false;
+
+		if (Dungeon.practice && Dungeon.hero != null && Dungeon.hero.isAlive()) {
+			Dungeon.hero.interrupt();
+			int back = Dungeon.level.randomRespawnCell( Dungeon.hero );
+			com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation.appear( Dungeon.hero, back );
+			Dungeon.level.occupyCell( Dungeon.hero );
+			Dungeon.observe();
+			GameScene.updateFog();
+			GLog.w( Messages.get( Chasm.class, "practice_fall" ) );
+			return;
+		}
 				
 		Sample.INSTANCE.play( Assets.Sounds.FALLING );
 

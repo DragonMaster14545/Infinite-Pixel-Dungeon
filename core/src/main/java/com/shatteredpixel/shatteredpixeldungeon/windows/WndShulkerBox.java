@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.CompartmentBox;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.ShulkerBox;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -33,14 +34,20 @@ public class WndShulkerBox extends Window {
 
     private final ShulkerBox box;
 	private final long page;
+	private final String query;
 
 	public WndShulkerBox(ShulkerBox box) {
 		this(box, 0);
 	}
 
     public WndShulkerBox(ShulkerBox box, int page) {
+        this(box, page, "");
+    }
+
+    public WndShulkerBox(ShulkerBox box, int page, String query) {
         super();
         this.box = box;
+        this.query = query == null ? "" : query.trim();
 
         if (WndBag.INSTANCE != null) {
             WndBag.INSTANCE.hide();
@@ -49,12 +56,20 @@ public class WndShulkerBox extends Window {
 
 		final BigInteger capacity = box.capacity();
 		final long pages = Big.toLong(BigInteger.ONE.max((capacity.add(BigInteger.valueOf(PAGE_SIZE)).subtract(BigInteger.ONE)).divide(BigInteger.valueOf(PAGE_SIZE))));
+		final ArrayList<Item> shown = filtered(box, this.query);
+		long pagesShown = pages;
 		int usedPages = Math.max(1, (box.contents().size() + PAGE_SIZE - 1) / PAGE_SIZE);
-		this.page = Math.max(0, Math.min(page, Math.min(pages, usedPages) - 1));
+		long lastPage = Math.min(pages, usedPages) - 1;
+		if (!this.query.isEmpty()) {
+			pagesShown = Math.max(1, (shown.size() + PAGE_SIZE - 1) / PAGE_SIZE);
+			lastPage = pagesShown - 1;
+		}
+		final long pageCount = pagesShown;
+		this.page = Math.max(0, Math.min(page, lastPage));
 
 		int slotWidth = 28;
 		int slotHeight = 28;
-		int nav = pages > 1 ? NAV_HEIGHT + 2 : 0;
+		int nav = pageCount > 1 ? NAV_HEIGHT + 2 : 0;
 		final boolean compartments = box instanceof CompartmentBox;
 		int compRow = box instanceof CompartmentBox ? COMP_HEIGHT + 2 : 0;
 
@@ -88,7 +103,7 @@ public class WndShulkerBox extends Window {
 			add(drop);
 		}
 
-        ArrayList<Item> items = box.contents();
+        ArrayList<Item> items = shown;
 		for (int i = 0; i < PAGE_SIZE; i++) {
 			long index = this.page * PAGE_SIZE + i;
 			final Item item = index < items.size() ? items.get((int) index) : null;
@@ -116,10 +131,10 @@ public class WndShulkerBox extends Window {
             add(slot);
 
             if (item == null) slot.enable(false);
-            else if (index < box.pinnedCount()) WndShulkerItem.markPinned(this, slot);
+            else if (box.isPinned(item)) WndShulkerItem.markPinned(this, slot);
         }
 
-		if (pages > 1) {
+		if (pageCount > 1) {
 			float navY = windowHeight - FOOTER - ACTION_HEIGHT - 2 - NAV_HEIGHT;
 
 			RedButton prev = new RedButton("<") {
@@ -139,10 +154,10 @@ public class WndShulkerBox extends Window {
 				}
 			};
 			next.setRect(windowWidth - 36, navY, 36, NAV_HEIGHT);
-			next.enable(this.page < pages - 1);
+			next.enable(this.page < pageCount - 1);
 			add(next);
 
-			RenderedTextBlock label = PixelScene.renderTextBlock((this.page + 1) + "/" + pages, 8);
+			RenderedTextBlock label = PixelScene.renderTextBlock((this.page + 1) + "/" + pageCount, 8);
 			label.setPos((windowWidth - label.width()) / 2f, navY + (NAV_HEIGHT - label.height()) / 2f);
 			PixelScene.align(label);
 			add(label);
@@ -155,19 +170,79 @@ public class WndShulkerBox extends Window {
 			public void onClick() {
 				box.sortContents();
 				hide();
-				GameScene.show(new WndShulkerBox(box, 0));
+				GameScene.show(new WndShulkerBox(box, 0, WndShulkerBox.this.query));
 			}
 		};
-		sort.setRect(0, actionY, windowWidth, ACTION_HEIGHT);
+		float half = (windowWidth - SLOT_MARGIN) / 2f;
+		sort.setRect(0, actionY, half, ACTION_HEIGHT);
 		sort.enable(box.size() > 1);
 		add(sort);
+
+		String searchLabel = this.query.isEmpty()
+				? Messages.get(WndShulkerBox.class, "search")
+				: Messages.get(WndShulkerBox.class, "search_active", this.query);
+		RedButton search = new RedButton(searchLabel, 7) {
+			@Override
+			public void onClick() {
+				askSearch();
+			}
+		};
+		search.setRect(half + SLOT_MARGIN, actionY, half, ACTION_HEIGHT);
+		add(search);
 
 		resize(windowWidth, windowHeight);
 	}
 
+	private static ArrayList<Item> filtered(ShulkerBox box, String query) {
+		ArrayList<Item> all = box.contents();
+		if (query == null || query.trim().isEmpty()) return all;
+		String[] words = query.trim().toLowerCase().split("\\s+");
+		ArrayList<Item> out = new ArrayList<>();
+		for (Item item : all) {
+			if (matches(item, words, 0)) out.add(item);
+		}
+		return out;
+	}
+
+	private static boolean matches(Item item, String[] words, int depth) {
+		if (item == null) return false;
+		String name = item.name() == null ? "" : item.name().toLowerCase();
+		boolean ok = true;
+		for (String word : words) {
+			if (!name.contains(word)) {
+				ok = false;
+				break;
+			}
+		}
+		if (ok) return true;
+		if (item instanceof Bag && depth < 4) {
+			for (Item inner : new ArrayList<>(((Bag) item).items)) {
+				if (matches(inner, words, depth + 1)) return true;
+			}
+		}
+		return false;
+	}
+
+	private void askSearch() {
+		GameScene.show(new WndTextInput(
+				Messages.get(WndShulkerBox.class, "search_title"),
+				Messages.get(WndShulkerBox.class, "search_body"),
+				query,
+				60,
+				false,
+				Messages.get(WndShulkerBox.class, "search_go"),
+				Messages.get(WndShulkerBox.class, "search_clear")) {
+			@Override
+			public void onSelect(boolean positive, String text) {
+				WndShulkerBox.this.hide();
+				GameScene.show(new WndShulkerBox(box, 0, positive ? text : ""));
+			}
+		});
+	}
+
 	private void goTo(int newPage) {
 		hide();
-		GameScene.show(new WndShulkerBox(box, newPage));
+		GameScene.show(new WndShulkerBox(box, newPage, query));
 	}
 
 	private boolean inspect(final Item item) {
@@ -218,7 +293,7 @@ public class WndShulkerBox extends Window {
 
 		int index = Math.max(0, box.indexOf(item));
 		hide();
-		GameScene.show(new WndShulkerBox(box, index / PAGE_SIZE));
+		GameScene.show(new WndShulkerBox(box, query.isEmpty() ? index / PAGE_SIZE : 0, query));
 	}
 
 	private void takeOut(final Item item) {
@@ -243,7 +318,7 @@ public class WndShulkerBox extends Window {
 		box.takeOut(Dungeon.hero, item, amount);
 
 		if (!box.isEmpty()) {
-			GameScene.show(new WndShulkerBox(box, (int) page));
+			GameScene.show(new WndShulkerBox(box, (int) page, query));
 		}
 	}
 

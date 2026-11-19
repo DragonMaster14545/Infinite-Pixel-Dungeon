@@ -221,8 +221,12 @@ public class VaultLink extends Artifact {
 	}
 
 	public BigInteger slots() {
+		return slots(VaultStore.mode());
+	}
+
+	public BigInteger slots(VaultStore.Mode mode) {
 		BigInteger normal = BigInteger.valueOf(BASE_SLOTS).add(BigInteger.valueOf(SLOTS_PER_LEVEL).multiply(level()));
-		return BigInteger.ONE.max(Big.round(Big.div(Big.dec(normal.multiply(BigInteger.valueOf(VaultStore.capacityPercent()))), Big.dec(100f)))).add(VaultStore.extraSlots());
+		return BigInteger.ONE.max(Big.round(Big.div(Big.dec(normal.multiply(BigInteger.valueOf(VaultStore.capacityPercent(mode)))), Big.dec(100f)))).add(VaultStore.extraSlots(mode));
 	}
 
 	@Override
@@ -328,7 +332,10 @@ public class VaultLink extends Artifact {
 			return;
 		}
 		for (ShulkerBox b : moved) b.detachAll(hero.belongings.backpack);
+		for (ShulkerBox b : moved) VaultStore.log(VaultStore.LOG_DEPOSIT, b.name());
+		VaultStore.save();
 		if (!VaultStore.sync()) {
+			for (int i = 0; i < moved.size(); i++) VaultStore.unlog(VaultStore.mode());
 			VaultStore.boxes().removeAll(moved);
 			VaultStore.save();
 			for (ShulkerBox b : moved) b.collect(hero.belongings.backpack);
@@ -380,7 +387,10 @@ public class VaultLink extends Artifact {
 		}
 
 		box.detachAll(hero.belongings.backpack);
+		VaultStore.log(VaultStore.LOG_DEPOSIT, box.name());
+		VaultStore.save();
 		if (!VaultStore.sync()) {
+			VaultStore.unlog(VaultStore.mode());
 			list.remove(box);
 			VaultStore.save();
 			if (!box.collect(hero.belongings.backpack)) {
@@ -413,7 +423,10 @@ public class VaultLink extends Artifact {
 			GLog.w(Messages.get(this, "write_failed"));
 			return;
 		}
+		VaultStore.log(VaultStore.LOG_WITHDRAW, box.name());
+		VaultStore.save();
 		if (!VaultStore.sync()) {
+			VaultStore.unlog(VaultStore.mode());
 			VaultStore.putBack(box, at, pinnedBefore);
 			box.detachAll(Dungeon.hero.belongings.backpack);
 			VaultStore.save();
@@ -423,6 +436,127 @@ public class VaultLink extends Artifact {
 
 		finishTurn(hero);
 		GLog.i(Messages.get(this, "withdrawn", box.name()));
+	}
+
+	private static String modeLabel(VaultStore.Mode m) {
+		return Messages.get(VaultLink.class, "mode_" + m.name().toLowerCase());
+	}
+
+	private BigInteger transferBase(ShulkerBox box) {
+		BigInteger base = basePrice(box.level());
+		return box instanceof CompartmentBox ? base.multiply(BigInteger.valueOf(10)) : base;
+	}
+
+	public BigInteger transferGoldFee(ShulkerBox box) {
+		return BigInteger.valueOf(100).max(transferBase(box).multiply(BigInteger.valueOf(10)).divide(BigInteger.valueOf(100)));
+	}
+
+	public BigInteger transferEnergyFee(ShulkerBox box) {
+		return BigInteger.valueOf(20).max(transferGoldFee(box).divide(BigInteger.valueOf(5)));
+	}
+
+	public String transferRefusal(ShulkerBox box, VaultStore.Mode target) {
+		if (target == VaultStore.mode()) return "transfer_same";
+		if (!VaultStore.boxes().contains(box)) return "already_taken";
+		if (BigInteger.valueOf(VaultStore.boxes(target).size()).compareTo(slots(target)) >= 0) return "transfer_full";
+
+		BigInteger normal = BigInteger.valueOf(ShulkerBox.BASE_LIMIT).add(BigInteger.valueOf(ShulkerBox.LIMIT_PER_LEVEL).multiply(box.level()));
+		BigInteger limit = BigInteger.ONE.max(Big.round(Big.div(Big.dec(normal.multiply(BigInteger.valueOf(VaultStore.limitPercent(target)))), Big.dec(100f))));
+		for (Item inside : box.allContents()) {
+			if (inside.level().compareTo(limit) > 0) return "transfer_limit";
+			if (inside.quantity().compareTo(limit) > 0) return "transfer_limit";
+		}
+		return null;
+	}
+
+	public String transfer(Hero hero, ShulkerBox box, VaultStore.Mode target, boolean withEnergy) {
+		if (cursed) return "cursed";
+		if (hero == null || !hero.isAlive()) return "shop_failed";
+
+		String why = transferRefusal(box, target);
+		if (why != null) return why;
+
+		BigInteger cost = withEnergy ? transferEnergyFee(box) : transferGoldFee(box);
+		if ((withEnergy ? Dungeon.energy : Dungeon.gold).compareTo(cost) < 0) {
+			return withEnergy ? "shop_no_energy" : "shop_no_gold";
+		}
+
+		VaultStore.Mode from = VaultStore.mode();
+		int pinnedBefore = VaultStore.pinnedCount();
+		int at = VaultStore.take(box);
+		if (at < 0) return "already_taken";
+		VaultStore.boxes(target).add(box);
+		VaultStore.log(from, VaultStore.LOG_TRANSFER_OUT, box.name() + " > " + modeLabel(target));
+		VaultStore.log(target, VaultStore.LOG_TRANSFER_IN, box.name() + " < " + modeLabel(from));
+
+		if (!VaultStore.save(target) || !VaultStore.save(from)) {
+			rollbackTransfer(box, from, target, at, pinnedBefore);
+			return "write_failed";
+		}
+
+		pay(withEnergy, cost);
+		if (!VaultStore.sync()) {
+			refund(withEnergy, cost);
+			rollbackTransfer(box, from, target, at, pinnedBefore);
+			return "write_failed";
+		}
+
+		GLog.i(Messages.get(this, "transferred", box.name(), modeLabel(target)));
+		updateQuickslot();
+		return null;
+	}
+
+	private void rollbackTransfer(ShulkerBox box, VaultStore.Mode from, VaultStore.Mode target, int at, int pinnedBefore) {
+		VaultStore.boxes(target).remove(box);
+		VaultStore.unlog(from);
+		VaultStore.unlog(target);
+		VaultStore.putBack(box, at, pinnedBefore);
+		VaultStore.save(target);
+		VaultStore.save(from);
+	}
+
+	public void startTransfer(final Hero hero, final ShulkerBox box, final Runnable after) {
+		final ArrayList<VaultStore.Mode> options = new ArrayList<>();
+		for (VaultStore.Mode m : VaultStore.Mode.values()) {
+			if (m != VaultStore.mode()) options.add(m);
+		}
+		String[] labels = new String[options.size()];
+		for (int i = 0; i < labels.length; i++) {
+			VaultStore.Mode m = options.get(i);
+			labels[i] = modeLabel(m) + " (" + Big.fmt(BigInteger.valueOf(VaultStore.boxes(m).size())) + "/" + Big.fmt(slots(m)) + ")";
+		}
+		GameScene.show(new WndOptions(
+				Messages.get(VaultLink.class, "transfer_title"),
+				Messages.get(VaultLink.class, "transfer_desc", box.name(), modeLabel(VaultStore.mode()), 10),
+				labels) {
+			@Override
+			protected void onSelect(int index) {
+				final VaultStore.Mode target = options.get(index);
+				String why = transferRefusal(box, target);
+				if (why != null) {
+					GLog.w(Messages.get(VaultLink.class, why, modeLabel(target)));
+					if (after != null) after.run();
+					return;
+				}
+				GameScene.show(new WndOptions(
+						Messages.get(VaultLink.class, "transfer_title"),
+						Messages.get(VaultLink.class, "transfer_confirm", box.name(), modeLabel(target)),
+						Messages.get(VaultLink.class, "transfer_pay_gold", Big.fmt(transferGoldFee(box))),
+						Messages.get(VaultLink.class, "transfer_pay_energy", Big.fmt(transferEnergyFee(box))),
+						Messages.get(VaultLink.class, "switch_no")) {
+					@Override
+					protected void onSelect(int i) {
+						if (i == 2) {
+							if (after != null) after.run();
+							return;
+						}
+						String err = transfer(hero, box, target, i == 1);
+						if (err != null) GLog.w(Messages.get(VaultLink.class, err, modeLabel(target)));
+						if (after != null) after.run();
+					}
+				});
+			}
+		});
 	}
 
 	private void finishTurn(Hero hero) {
@@ -435,7 +569,7 @@ public class VaultLink extends Artifact {
 
 	@Override
 	public String status() {
-		return VaultStore.boxes().size() + "/" + slots();
+		return Big.fmt(BigInteger.valueOf(VaultStore.boxes().size())) + "/" + Big.fmt(slots());
 	}
 
 	@Override
