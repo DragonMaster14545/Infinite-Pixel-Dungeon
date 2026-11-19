@@ -20,7 +20,7 @@ public class Upgrades implements Bundlable {
         Bundle upgradesBundle = new Bundle();
 
         for (Upgrade upgrade : upgrades) {
-            upgradesBundle.put(String.valueOf(upgrade.data.ordinal()), upgrade.level);
+            upgradesBundle.put(upgrade.data.name(), upgrade.level);
         }
 
         bundle.put("upgrades", upgradesBundle);
@@ -31,10 +31,24 @@ public class Upgrades implements Bundlable {
         upgrades = new ArrayList<>();
         Bundle upgradesBundle = bundle.getBundle("upgrades");
 
+        if (upgradesBundle == null) return;
+
+        UpgradeData[] all = UpgradeData.values();
         for (String key : upgradesBundle.getKeys()) {
             int level = upgradesBundle.getInt(key);
-            Upgrade upgrade = new Upgrade(UpgradeData.values()[Integer.parseInt(key)], level);
-            upgrades.add(upgrade);
+            UpgradeData data = null;
+            try {
+                int index = Integer.parseInt(key);
+                if (index >= 0 && index < all.length) data = all[index];
+            } catch (NumberFormatException e) {
+                try {
+                    data = UpgradeData.valueOf(key);
+                } catch (IllegalArgumentException e2) {
+                    data = null;
+                }
+            }
+            if (data == null || level <= 0) continue;
+            upgrades.add(new Upgrade(data, level));
         }
     }
 
