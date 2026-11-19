@@ -167,7 +167,8 @@ public class InfPDChanges {
                             "_-_ Fixed a crash regarding opening the changelog or when starting a run\n" +
                             "_-_ Fixed an error related to Upgrade enum of hero\n" +
                             "_-_ Fixed a same seed bug on daily and weekly runs\n" +
-                            "_-_ Fixed the huge memory usage when gaining an exp with low requirements to get SoU and SoTr"
+                            "_-_ Fixed the huge memory usage when gaining an exp with low requirements to get SoU and SoTr\n" +
+                            "_-_ Fixed a loading error involving tubes in rankings"
         ));
 
         changes = new ChangeInfo("D", false, "");

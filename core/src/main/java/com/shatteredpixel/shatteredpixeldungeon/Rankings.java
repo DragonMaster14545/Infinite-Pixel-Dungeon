@@ -370,6 +370,7 @@ public enum Rankings {
 		Scroll.restore(handler);
 		Potion.restore(handler);
 		Ring.restore(handler);
+		Tubes.restore(handler);
 
 		Badges.loadLocal(data.getBundle(BADGES));
 
