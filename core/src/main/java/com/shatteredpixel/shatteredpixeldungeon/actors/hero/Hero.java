@@ -2209,22 +2209,42 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
 		}
 
 		boolean levelUp = false;
-		while ((this.exp.compareTo(maxExp()) >= 0)) {
-			this.exp = this.exp.subtract(maxExp());
-            lvl++;
-            levelUp = true;
+		BigInteger[] gain = levelGain(this.exp, lvl);
+		int gained = gain[0].intValue();
+		if (gained > 0) {
+			this.exp = this.exp.subtract(gain[1]);
+			levelUp = true;
+			int remaining = gained;
 
-            if (buff(ElixirOfMight.HTBoost.class) != null){
-                buff(ElixirOfMight.HTBoost.class).onLevelUp();
-            }
+			while (remaining > 0 && buff(ElixirOfMight.HTBoost.class) != null) {
+				remaining--;
+				lvl++;
+				buff(ElixirOfMight.HTBoost.class).onLevelUp();
+				updateHT( true );
+				Bbat.updateHP();
+				attackSkill++;
+				defenseSkill++;
+				Perks.earnPerk(this);
+			}
 
-            updateHT( true );
-            Bbat.updateHP();
-            attackSkill++;
-            defenseSkill++;
-            Perks.earnPerk(this);
-
-        }
+			if (remaining > 0) {
+				int target = lvl + remaining;
+				while (perks.size() < Perks.Perk.values().length) {
+					int at = Perks.nextPerkLevel();
+					if (at <= lvl || at > target) break;
+					int before = perks.size();
+					lvl = at;
+					Perks.earnPerk(this);
+					if (perks.size() == before) break;
+				}
+				lvl = target;
+				attackSkill += remaining;
+				defenseSkill += remaining;
+				Bbat.level += remaining - 1;
+				Bbat.updateHP();
+				updateHT( true );
+			}
+		}
 		
 		if (levelUp) {
 			
@@ -2256,6 +2276,28 @@ if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
         } else {
             return BigInteger.valueOf(20 + lvl * 20L);
         }
+	}
+
+	private static BigInteger[] levelGain( BigInteger exp, int startLvl ){
+		BigInteger zero = BigInteger.ZERO;
+		if (exp.compareTo(maxExp(startLvl)) < 0) return new BigInteger[]{zero, zero};
+
+		BigInteger a = maxExp(0);
+		BigInteger b = maxExp(1).subtract(a);
+		BigInteger base = a.add(b.multiply(BigInteger.valueOf(startLvl)));
+
+		long lo = 0;
+		long hi = Integer.MAX_VALUE - (long) startLvl;
+		while (lo < hi) {
+			long mid = (lo + hi + 1) >>> 1;
+			BigInteger n = BigInteger.valueOf(mid);
+			BigInteger cost = n.multiply(base).add(b.multiply(n).multiply(n.subtract(BigInteger.ONE)).shiftRight(1));
+			if (cost.compareTo(exp) <= 0) lo = mid; else hi = mid - 1;
+		}
+
+		BigInteger n = BigInteger.valueOf(lo);
+		BigInteger cost = n.multiply(base).add(b.multiply(n).multiply(n.subtract(BigInteger.ONE)).shiftRight(1));
+		return new BigInteger[]{n, cost};
 	}
 	
 	public boolean isStarving() {

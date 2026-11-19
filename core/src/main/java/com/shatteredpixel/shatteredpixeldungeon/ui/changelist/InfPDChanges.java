@@ -156,7 +156,8 @@ public class InfPDChanges {
                             "_-_ Added side quickslots options to add more quickslots in-game\n" +
                             "_-_ Alchemy categories has been changed to 1-row horizontally scrollable to fit new recipes in the future\n" +
                             "_-_ Item Info now becomes scrollable when its window reached a specific limit\n" +
-                            "_-_ The cycle stats are now computed once per cycle and some other optimizations on conversion, and it will skip when numbers are small"
+                            "_-_ The cycle stats are now computed once per cycle and some other optimizations on conversion, and it will skip when numbers are small\n" +
+                            "_-_ Furtherly optimized the exp gain to not produce lags"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",

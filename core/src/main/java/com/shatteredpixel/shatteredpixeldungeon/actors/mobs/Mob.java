@@ -851,8 +851,22 @@ public abstract class Mob extends Char {
 		}
 
 		if (Dungeon.hero.isAlive()) {
-			
+
 			if (alignment == Alignment.ENEMY) {
+				BigInteger exp = EXP;
+				if (Dungeon.hero.buff(Bless.class) != null) {
+					exp = exp.multiply(BigInteger.valueOf(2));
+				}
+				if (exp.signum() > 0) {
+					try {
+						if (Dungeon.hero.sprite != null) {
+							Dungeon.hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, exp.toString(), FloatingText.EXPERIENCE);
+						}
+					} catch (Exception e) {
+					}
+					Dungeon.hero.earnExp(exp, getClass());
+				}
+
 				Statistics.enemiesSlain++;
 				Tasks.onEnemySlain();
 				SeasonalTasks.onEnemySlain();
@@ -862,15 +876,6 @@ public abstract class Mob extends Char {
 				Bestiary.countEncounter(getClass());
 
 				AscensionChallenge.processEnemyKill(this);
-
-				BigInteger exp = EXP;
-				if (Dungeon.hero.buff(Bless.class) != null) {
-					exp = exp.multiply(BigInteger.valueOf(2));
-				}
-				if ((exp.compareTo(BigInteger.ZERO) > 0)) {
-					Dungeon.hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, exp.toString(), FloatingText.EXPERIENCE);
-				}
-				Dungeon.hero.earnExp(exp, getClass());
 				if (Dungeon.hero.perks.contains(Perks.Perk.ADDITIONAL_MONEY)){
 					Dungeon.level.drop(new Gold(Dungeon.Long( BigInteger.valueOf(6).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(2))), BigInteger.valueOf(12).add(Dungeon.escalatingDepth().multiply(BigInteger.valueOf(4))) )), pos).sprite.drop();
 				}
