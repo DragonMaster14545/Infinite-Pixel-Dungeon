@@ -435,7 +435,7 @@ public static final String KEY_VICTORY_NAGGED= "victory_nagged";
 	}
 
 	public static void lastDaily( BigInteger value ){
-		put( KEY_LAST_DAILY, Big.toInt(value) );
+		put( KEY_LAST_DAILY, Big.toLong(value) );
 	}
 
 	public static long lastDaily() {
@@ -443,7 +443,7 @@ public static final String KEY_VICTORY_NAGGED= "victory_nagged";
 	}
 
     public static void lastWeekly( BigInteger value ){
-        put( KEY_LAST_WEEKLY, Big.toInt(value) );
+        put( KEY_LAST_WEEKLY, Big.toLong(value) );
     }
 
     public static long lastWeekly() {
