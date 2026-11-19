@@ -59,6 +59,7 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Wiki;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -80,6 +81,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ScrollPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ScrollingGridPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ScrollingListPane;
+import com.shatteredpixel.shatteredpixeldungeon.ui.WikiGridPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.watabou.input.KeyBindings;
 import com.watabou.input.KeyEvent;
@@ -93,6 +95,8 @@ import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
 public class WndJournal extends WndTabbed {
 	
@@ -110,6 +114,7 @@ public class WndJournal extends WndTabbed {
 	private CatalogTab catalogTab;
 	private BadgesTab badgesTab;
 	private GlobalNotesTab globalNotesTab;
+	private WikiTab wikiTab;
 	public static int last_index = 0;
     private static WndJournal INSTANCE = null;
 
@@ -152,6 +157,11 @@ public class WndJournal extends WndTabbed {
 		add(globalNotesTab);
 		globalNotesTab.setRect(0, 0, width, height);
 		globalNotesTab.updateList();
+
+		wikiTab = new WikiTab();
+		add(wikiTab);
+		wikiTab.setRect(0, 0, width, height);
+		wikiTab.updateList();
 		Tab[] tabs = {
 				new IconTab( Icons.JOURNAL.get() ) {
 					protected void select( boolean value ) {
@@ -224,6 +234,18 @@ public class WndJournal extends WndTabbed {
 					protected String hoverText() {
 						return Messages.get(globalNotesTab, "title");
 					}
+				},
+				new IconTab( Icons.INFO.get() ) {
+					protected void select( boolean value ) {
+						super.select( value );
+						wikiTab.active = wikiTab.visible = value;
+						if (value) last_index = 6;
+					}
+
+					@Override
+					protected String hoverText() {
+						return Messages.get(wikiTab, "title");
+					}
 				}
 		};
 
@@ -264,6 +286,7 @@ public class WndJournal extends WndTabbed {
 		notesTab.layout();
 		catalogTab.layout();
 		globalNotesTab.layout();
+		wikiTab.layout();
 	}
 
 	public static void refreshGlobalNotes(){
@@ -603,6 +626,287 @@ public class WndJournal extends WndTabbed {
 
 		}
 
+	}
+
+	public static class WikiTab extends Component {
+
+		private WikiGridPane grid;
+		private static String query = "";
+		private static boolean editMode = false;
+		private static String lastCategory = "";
+
+		@Override
+		protected void createChildren() {
+			grid = new WikiGridPane();
+			add( grid );
+		}
+
+		@Override
+		protected void layout() {
+			super.layout();
+			grid.setRect( x, y, width, height);
+		}
+
+		private void show(Window window) {
+			if (ShatteredPixelDungeon.scene() instanceof GameScene) {
+				GameScene.show(window);
+			} else {
+				ShatteredPixelDungeon.scene().addToFront(window);
+			}
+		}
+
+		private ScrollingGridPane.GridItem tool(Image icon, final Runnable action) {
+			return new ScrollingGridPane.GridItem(icon) {
+				@Override
+				public boolean onClick(float x, float y) {
+					if (inside( x, y )) {
+						action.run();
+						return true;
+					}
+					return false;
+				}
+			};
+		}
+
+		public void updateList(){
+			grid.clear();
+
+			int total = Wiki.articles().size();
+			grid.addHeader("_" + Messages.get(this, "title") + "_ (" + total + ")", 9, true);
+
+			String tools = "_" + Messages.get(this, "tools") + "_";
+			if (!query.isEmpty()) tools += " - " + Messages.get(this, "search_active", query);
+			if (editMode) tools += " - " + Messages.get(this, "edit_on");
+			grid.addHeader(tools);
+
+			ScrollingGridPane.GridItem searchItem = tool(Icons.MAGNIFY.get(), new Runnable() {
+				@Override
+				public void run() {
+					askSearch();
+				}
+			});
+			if (!query.isEmpty()) searchItem.hardLightBG(0.6f, 2f, 0.6f);
+			grid.addItem(searchItem);
+
+			grid.addItem(tool(Icons.PLUS.get(), new Runnable() {
+				@Override
+				public void run() {
+					askNew();
+				}
+			}));
+
+			ScrollingGridPane.GridItem editItem = tool(Icons.COPY.get(), new Runnable() {
+				@Override
+				public void run() {
+					editMode = !editMode;
+					updateList();
+				}
+			});
+			if (editMode) editItem.hardLightBG(2f, 1.6f, 0.4f);
+			grid.addItem(editItem);
+
+			LinkedHashMap<String, ArrayList<Wiki.Article>> groups = Wiki.grouped(query);
+			if (groups.isEmpty()) {
+				grid.addHeader(Messages.get(this, "empty"));
+			}
+
+			for (Map.Entry<String, ArrayList<Wiki.Article>> group : groups.entrySet()) {
+				grid.addHeader("_" + Messages.titleCase(group.getKey()) + "_ (" + group.getValue().size() + "):");
+
+				int number = 1;
+				for (final Wiki.Article article : group.getValue()) {
+					final Wiki.Article art = article;
+					final boolean read = Wiki.isRead(article);
+					ScrollingGridPane.GridItem item = new ScrollingGridPane.GridItem(new ItemSprite(art.icon)) {
+						@Override
+						public boolean onClick(float x, float y) {
+							if (inside( x, y )) {
+								if (editMode && art.custom) {
+									askEdit(art);
+								} else {
+									show(new WndText(new ItemSprite(art.icon), art.title, art.body));
+									Wiki.markRead(art);
+									hardLightBG(1, 1, 1);
+								}
+								return true;
+							}
+							return false;
+						}
+					};
+
+					BitmapText num = new BitmapText(Integer.toString(number++), PixelScene.pixelFont);
+					num.measure();
+					item.addSecondIcon(num);
+
+					if (editMode && art.custom) {
+						item.hardLightBG(2f, 1.6f, 0.4f);
+					} else if (!read) {
+						item.hardLightBG(1f, 1f, 2f);
+					}
+					grid.addItem(item);
+				}
+			}
+
+			grid.setRect(x, y, width, height);
+		}
+
+		private void askSearch() {
+			show(new WndTextInput(
+					Messages.get(this, "search_title"),
+					Messages.get(this, "search_body"),
+					query,
+					120,
+					false,
+					Messages.get(this, "search_confirm"),
+					Messages.get(this, "search_clear")) {
+				@Override
+				public void onSelect(boolean positive, String text) {
+					query = positive && text != null ? text.trim() : "";
+					updateList();
+				}
+			});
+		}
+
+		private void askNew() {
+			show(new WndTextInput(
+					Messages.get(this, "new_title"),
+					Messages.get(this, "new_title_body"),
+					"",
+					120,
+					false,
+					Messages.get(this, "next"),
+					Messages.get(this, "cancel")) {
+				@Override
+				public void onSelect(boolean positive, String text) {
+					final String title = text == null ? "" : text.trim();
+					if (!positive || title.isEmpty()) return;
+					show(new WndTextInput(
+							title,
+							Messages.get(WikiTab.this, "category_body"),
+							lastCategory.isEmpty() ? Wiki.defaultCategory() : lastCategory,
+							120,
+							false,
+							Messages.get(WikiTab.this, "next"),
+							Messages.get(WikiTab.this, "cancel")) {
+						@Override
+						public void onSelect(boolean positive, String text) {
+							if (!positive) return;
+							final String category = text == null || text.trim().isEmpty() ? Wiki.defaultCategory() : text.trim();
+							lastCategory = category;
+							show(new WndWikiIcon(new WndWikiIcon.Callback() {
+								@Override
+								public void onPick(final int sprite) {
+									show(new WndTextInput(
+											title,
+											Messages.get(WikiTab.this, "new_body_body"),
+											"",
+											4000,
+											true,
+											Messages.get(WikiTab.this, "save"),
+											Messages.get(WikiTab.this, "cancel")) {
+										@Override
+										public void onSelect(boolean positive, String text) {
+											if (!positive) return;
+											Wiki.add(title, category, sprite, text == null ? "" : text);
+											updateList();
+										}
+									});
+								}
+							}));
+						}
+					});
+				}
+			});
+		}
+
+		private void askEdit(final Wiki.Article article) {
+			show(new WndOptions(
+					new ItemSprite(article.icon),
+					article.title,
+					Messages.get(this, "edit_prompt"),
+					Messages.get(this, "edit_title"),
+					Messages.get(this, "edit_category"),
+					Messages.get(this, "edit_icon"),
+					Messages.get(this, "edit_body"),
+					Messages.get(this, "delete"),
+					Messages.get(this, "cancel")) {
+				@Override
+				protected void onSelect(int index) {
+					if (index == 0) {
+						show(new WndTextInput(
+								Messages.get(WikiTab.this, "edit_title"),
+								"",
+								article.title,
+								120,
+								false,
+								Messages.get(WikiTab.this, "save"),
+								Messages.get(WikiTab.this, "cancel")) {
+							@Override
+							public void onSelect(boolean positive, String text) {
+								if (!positive || text == null || text.trim().isEmpty()) return;
+								Wiki.update(article, text.trim(), null, null, null);
+								updateList();
+							}
+						});
+					} else if (index == 1) {
+						show(new WndTextInput(
+								Messages.get(WikiTab.this, "edit_category"),
+								Messages.get(WikiTab.this, "category_body"),
+								article.category,
+								120,
+								false,
+								Messages.get(WikiTab.this, "save"),
+								Messages.get(WikiTab.this, "cancel")) {
+							@Override
+							public void onSelect(boolean positive, String text) {
+								if (!positive) return;
+								Wiki.update(article, null, text == null ? "" : text, null, null);
+								updateList();
+							}
+						});
+					} else if (index == 2) {
+						show(new WndWikiIcon(new WndWikiIcon.Callback() {
+							@Override
+							public void onPick(int sprite) {
+								Wiki.update(article, null, null, sprite, null);
+								updateList();
+							}
+						}));
+					} else if (index == 3) {
+						show(new WndTextInput(
+								article.title,
+								Messages.get(WikiTab.this, "new_body_body"),
+								article.body,
+								4000,
+								true,
+								Messages.get(WikiTab.this, "save"),
+								Messages.get(WikiTab.this, "cancel")) {
+							@Override
+							public void onSelect(boolean positive, String text) {
+								if (!positive) return;
+								Wiki.update(article, null, null, null, text == null ? "" : text);
+								updateList();
+							}
+						});
+					} else if (index == 4) {
+						show(new WndOptions(
+								new ItemSprite(article.icon),
+								article.title,
+								Messages.get(WikiTab.this, "delete_confirm"),
+								Messages.get(WikiTab.this, "delete"),
+								Messages.get(WikiTab.this, "cancel")) {
+							@Override
+							protected void onSelect(int index) {
+								if (index == 0) {
+									Wiki.remove(article);
+									updateList();
+								}
+							}
+						});
+					}
+				}
+			});
+		}
 	}
 
 	public static class GlobalNotesTab extends Component {

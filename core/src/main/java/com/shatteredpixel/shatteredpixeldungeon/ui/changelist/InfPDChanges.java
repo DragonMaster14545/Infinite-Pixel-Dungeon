@@ -82,6 +82,9 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.JOURNAL), "Wiki",
+                "I added a wiki system which you can store knowledge of your own into the game. The experienced's guides are listed here, so as my other guides on the next updates."));
+
         changes.addButton( new ChangeButton(Icons.get(Icons.BADGES), "Hall of Heroes",
                 "I'd like you to honor your heroes on what they've done or contributed on your behalf, it is kind of low budget feature but I would like to keep your heroes separated on the normal rankings board."));
 

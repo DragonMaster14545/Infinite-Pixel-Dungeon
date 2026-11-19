@@ -58,7 +58,8 @@ public class SaveScene extends PixelScene {
             "battlepass_new.dat",
             "journal.dat",
             "badges.dat",
-            "rankings.dat"
+            "rankings.dat",
+            "wiki.dat"
     };
 
     private static final String EXPORT_BLOB_FILE = "save_export.txt";
