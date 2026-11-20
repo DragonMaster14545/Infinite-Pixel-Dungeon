@@ -69,7 +69,11 @@ public class BlobEmitter extends Emitter {
 						&& (map[cell].compareTo(BigInteger.ZERO) > 0)) {
 					float x = (i + Random.Float(bound.left, bound.right)) * size;
 					float y = (j + Random.Float(bound.top, bound.bottom)) * size;
-					factory.emit(this, index, x, y);
+					if (blob instanceof CustomBlobCellEmission) {
+						((CustomBlobCellEmission) blob).emit(this, factory, index, i, j, cell, size);
+					} else {
+						factory.emit(this, index, x, y);
+					}
 				}
 			}
 		}

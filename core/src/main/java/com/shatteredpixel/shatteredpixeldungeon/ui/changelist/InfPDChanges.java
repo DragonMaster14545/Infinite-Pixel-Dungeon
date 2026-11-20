@@ -81,6 +81,9 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.BROKEN_STAFF), "Craftable Unique Class Items",
                 "You can now craft class items from other classes, especially on Duelists' weapon abilities, and these are the table-flipping twist!"));
 
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.CONQUEST_WAND), "Wand of Conquest",
+                "A new wand that functions as a zoning wand! It can do damage or paralyze the enemies and shield or heal yourself and your allies."));
+
         changes = new ChangeInfo("InfPD-0.2.0", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);

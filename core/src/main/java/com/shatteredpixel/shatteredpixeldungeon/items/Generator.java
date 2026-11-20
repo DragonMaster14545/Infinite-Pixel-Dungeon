@@ -25,6 +25,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
 
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfConquest;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
@@ -459,9 +460,10 @@ public class Generator {
 					WandOfUnstable.class,
 					WandOfEarthblast.class,
                     WandOfTeleportation.class,
-                    WandOfLifesteal.class
+                    WandOfLifesteal.class,
+					WandOfConquest.class
 			};
-			WAND.defaultProbs = new float[]{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0 };
+			WAND.defaultProbs = new float[]{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 1 };
 			WAND.probs = WAND.defaultProbs.clone();
 			
 			//see generator.randomWeapon

@@ -67,6 +67,8 @@ public class MagicMissile extends Emitter {
 	public static final int ELMO            = 14;
 	public static final int POISON          = 15;
 
+	public static final int CONQUEST            = 16;
+
     public static final int INVISI          = 17;
     public static final int HOLYEXP         = 18;
     public static final int EARTHBLAST      = 19;
@@ -181,6 +183,10 @@ public class MagicMissile extends Emitter {
 			case WARD:
 				size( 4 );
 				pour( WardParticle.FACTORY, 0.01f );
+				break;
+			case CONQUEST:
+				size( 4 );
+				pour( ConquestParticle.FACTORY, 0.02f );
 				break;
 			case SHAMAN_RED:
 				size( 2 );
@@ -732,6 +738,62 @@ public class MagicMissile extends Emitter {
 		public void update() {
 			super.update();
 			
+			am = 1 - left / lifespan;
+		}
+	}
+
+	public static class ConquestParticle extends PixelParticle.Shrinking {
+
+		public static final Emitter.Factory FACTORY = new Factory() {
+			@Override
+			public void emit( Emitter emitter, int index, float x, float y ) {
+				((ConquestParticle)emitter.recycle( ConquestParticle.class )).reset( x, y );
+			}
+			@Override
+			public boolean lightMode() {
+				return true;
+			}
+		};
+
+		public static final Emitter.Factory UP = new Factory() {
+			@Override
+			public void emit( Emitter emitter, int index, float x, float y ) {
+				((ConquestParticle)emitter.recycle( ConquestParticle.class )).resetUp( x, y );
+			}
+			@Override
+			public boolean lightMode() {
+				return true;
+			}
+		};
+
+		public ConquestParticle() {
+			super();
+
+			lifespan = 0.35f;
+
+			color( 0xff171b );
+		}
+
+		public void reset( float x, float y ) {
+			revive();
+
+			this.x = x;
+			this.y = y;
+
+			left = lifespan;
+			size = 6;
+		}
+
+		public void resetUp( float x, float y){
+			reset(x, y);
+
+			speed.set( Random.Float( -8, +8 ), Random.Float( -32, -48 ) );
+		}
+
+		@Override
+		public void update() {
+			super.update();
+
 			am = 1 - left / lifespan;
 		}
 	}
