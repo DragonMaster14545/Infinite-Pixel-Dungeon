@@ -25,6 +25,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.SmokedBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
@@ -441,6 +442,7 @@ public class QuickRecipe extends Component {
 				result.add(new QuickRecipe(new DanceImmune.Recipe()));
 				result.add(new QuickRecipe(new ItemGetter.Recipe()));
 				result.add(new QuickRecipe(new Powerless.Recipe()));
+				result.add(new QuickRecipe(new SmokedBuffs.Recipe()));
 				return result;
             case 9:
                 if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_6)) result.add(new QuickRecipe(new WandOfEarthblast.Recipe(), new ArrayList<>(Arrays.asList(new WandOfFireblast(), new WandOfLivingEarth(), new Cheese())), new WandOfEarthblast()));

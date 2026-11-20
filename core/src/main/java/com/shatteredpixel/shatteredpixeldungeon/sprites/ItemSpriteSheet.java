@@ -951,6 +951,7 @@ public class ItemSpriteSheet {
 	public static final int DANCE_IMMUNE  = SPELLS_NEW_ROW+11;
 	public static final int ITEMGETTER  = SPELLS_NEW_ROW+12;
 	public static final int POWERLESS  = SPELLS_NEW_ROW+13;
+	public static final int SMOKER  = SPELLS_NEW_ROW+14;
 	static {
 		assignItemRect(EXTRACTOR,     10, 15);
 		assignItemRect(GAMBLER,     10, 15);
@@ -966,6 +967,7 @@ public class ItemSpriteSheet {
 		assignItemRect(DANCE_IMMUNE,    	 11, 11);
 		assignItemRect(ITEMGETTER,     10, 15);
 		assignItemRect(POWERLESS,    	 12, 12);
+		assignItemRect(SMOKER,    	 8, 16);
 	}
 
     private static final int TEST_TUBES =								xy(1, 34);

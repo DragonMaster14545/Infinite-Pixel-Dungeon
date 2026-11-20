@@ -26,6 +26,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items;
 
 
 
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.SmokedBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -260,7 +261,8 @@ public abstract class Recipe {
 			new Extractor.Recipe(),
 			new ItemGetter.Recipe(),
 			new Powerless.Recipe(),
-			new Raritize.MergeRecipe()
+			new Raritize.MergeRecipe(),
+			new SmokedBuffs.Recipe()
 	};
 	
 	private static Recipe[] threeIngredientRecipes = new Recipe[]{

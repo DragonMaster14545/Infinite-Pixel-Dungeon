@@ -26,6 +26,9 @@ package com.shatteredpixel.shatteredpixeldungeon.journal;
 
 
 import java.math.BigInteger;
+
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.SmokedBuffs;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.SearingSlasher;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
@@ -270,7 +273,7 @@ public enum Catalog {
 		MELEE_WEAPONS.addItems(Generator.Category.WEP_T4.classes);
 		MELEE_WEAPONS.addItems(Generator.Category.WEP_T5.classes);
 		MELEE_WEAPONS.addItems(StarlightSmasher.class, FiringSnapper.class, RegrowingSlasher.class,
-				GleamingStaff.class, FantasmalStabber.class);
+				GleamingStaff.class, FantasmalStabber.class, SearingSlasher.class);
 
 		ARMOR.addItems(Generator.Category.ARMOR.classes);
 
@@ -345,7 +348,8 @@ public enum Catalog {
 				ReclaimTrap.class, SummonElemental.class, BeaconOfReturning.class, FireBooster.class,
 				Vampirism.class, RespawnBooster.class, Raritize.class, Extractor.class, Gambler.class,
                 GalacticInfusion.class, Barricade.class, DeterminantInfusion.class, PocketAlchemy.class,
-                TierUpgrade.class, ArmorTierUpgrade.class, Powerless.class, ItemGetter.class);
+                TierUpgrade.class, ArmorTierUpgrade.class, Powerless.class, ItemGetter.class,
+				SmokedBuffs.class);
 
 		LOOT_BAGS.addItems(GambleBag.class, BiggerGambleBag.class, QualityBag.class, AlchemyBag.class,
 				GooTreasureBag.class, RatSkull.class, TenguTreasureBag.class, TenguShuriken.class, TenguBomb.class,
