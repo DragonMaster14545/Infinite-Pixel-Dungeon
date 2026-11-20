@@ -26,6 +26,11 @@ package com.shatteredpixel.shatteredpixeldungeon.items;
 
 
 
+import com.shatteredpixel.shatteredpixeldungeon.items.specialitems.BowOfHunter;
+import com.shatteredpixel.shatteredpixeldungeon.items.specialitems.CloakCloth;
+import com.shatteredpixel.shatteredpixeldungeon.items.specialitems.DuelistsRapier;
+import com.shatteredpixel.shatteredpixeldungeon.items.specialitems.MageStaff;
+import com.shatteredpixel.shatteredpixeldungeon.items.specialitems.SealShard;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.SmokedBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
@@ -278,7 +283,12 @@ public abstract class Recipe {
 			new Blueprint.Recipe(),
 			new WandOfTerraforming.Recipe(),
 			new SearingSlasher.Recipe(),
-			new VaultLink.Recipe()
+			new VaultLink.Recipe(),
+			new CloakCloth.Recipe(),
+			new MageStaff.Recipe(),
+			new SealShard.Recipe(),
+			new DuelistsRapier.Recipe(),
+			new BowOfHunter.Recipe()
 	};
 	
 	public static ArrayList<Recipe> findRecipes(ArrayList<Item> ingredients){

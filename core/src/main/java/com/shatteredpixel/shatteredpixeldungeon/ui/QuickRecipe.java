@@ -25,6 +25,11 @@
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 
+import com.shatteredpixel.shatteredpixeldungeon.items.specialitems.BowOfHunter;
+import com.shatteredpixel.shatteredpixeldungeon.items.specialitems.CloakCloth;
+import com.shatteredpixel.shatteredpixeldungeon.items.specialitems.DuelistsRapier;
+import com.shatteredpixel.shatteredpixeldungeon.items.specialitems.MageStaff;
+import com.shatteredpixel.shatteredpixeldungeon.items.specialitems.SealShard;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.SmokedBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
@@ -454,6 +459,12 @@ public class QuickRecipe extends Component {
 				result.add(new QuickRecipe(new Blueprint.Recipe()));
 				result.add(new QuickRecipe(new SearingSlasher.Recipe()));
 				result.add(new QuickRecipe(new Raritize.MergeRecipe(), new ArrayList<>(Arrays.asList(new Raritize(), new Raritize())), new Raritize()));
+				result.add(null);
+				result.add(new QuickRecipe(new CloakCloth.Recipe()));
+				result.add(new QuickRecipe(new MageStaff.Recipe()));
+				result.add(new QuickRecipe(new SealShard.Recipe()));
+				result.add(new QuickRecipe(new DuelistsRapier.Recipe()));
+				result.add(new QuickRecipe(new BowOfHunter.Recipe()));
                 return result;
 		}
 	}

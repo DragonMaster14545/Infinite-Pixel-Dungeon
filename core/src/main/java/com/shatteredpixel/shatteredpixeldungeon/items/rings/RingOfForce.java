@@ -148,7 +148,7 @@ public class RingOfForce extends Ring {
 	@Override
 	public String upgradeStat3(BigInteger level) {
 		if (cursed && cursedKnown) level = BigInteger.valueOf(-1).min(level.subtract(BigInteger.valueOf(3)));
-		if (Dungeon.hero != null && Dungeon.hero.heroClass == HeroClass.DUELIST){
+		if (Dungeon.hero != null && Dungeon.hero.isClass(HeroClass.DUELIST)){
 			float tier = tier(Dungeon.hero != null ? Dungeon.hero.STR() : 10);
 			int bonus = Big.toInt(Big.round(Big.dec(3+tier).add((Big.dec(level).multiply(Big.dec(((4+2*tier)/8f)))))));
 			return (min(level.add(BigInteger.ONE), tier).add(BigInteger.valueOf(bonus))) + "-" + (max(level.add(BigInteger.ONE), tier).add(BigInteger.valueOf(bonus)));

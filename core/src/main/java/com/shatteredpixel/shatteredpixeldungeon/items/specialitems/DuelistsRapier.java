@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.specialitems;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Blueprint;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
@@ -24,10 +25,19 @@ public class DuelistsRapier extends Item {
         unique = true;
     }
 
+	public static boolean owned( Hero hero ) {
+		return hero != null && hero.belongings != null && hero.belongings.getItem(DuelistsRapier.class) != null;
+	}
+
     @Override
     public boolean isIdentified() {
         return true;
     }
+
+	@Override
+	public boolean isUpgradable() {
+		return false;
+	}
 
     public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
 

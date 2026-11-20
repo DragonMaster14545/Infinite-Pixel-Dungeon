@@ -120,14 +120,14 @@ public class MeleeWeapon extends Weapon {
 		if (action.equals(AC_ABILITY)){
 			usesTargeting = false;
 			if (!isEquipped(hero)) {
-				if (hero.heroClass == HeroClass.DUELIST){
+				if (hero.isClass(HeroClass.DUELIST)){
 					if (hero.buff(Talent.SwiftEquipCooldown.class) == null
 						|| hero.buff(Talent.SwiftEquipCooldown.class).hasSecondUse()){
 						execute(hero, AC_EQUIP);
-					} else if (hero.heroClass == HeroClass.DUELIST) {
+					} else if (hero.isClass(HeroClass.DUELIST)) {
 						GLog.w(Messages.get(this, "ability_need_equip"));
 					}
-				} else if (hero.heroClass == HeroClass.DUELIST) {
+				} else if (hero.isClass(HeroClass.DUELIST)) {
 					GLog.w(Messages.get(this, "ability_need_equip"));
 				}
 			} else if (!hero.isClass(HeroClass.DUELIST)){

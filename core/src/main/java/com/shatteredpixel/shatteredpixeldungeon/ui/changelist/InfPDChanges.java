@@ -74,6 +74,13 @@ public class InfPDChanges {
                 "In the next update, we will try to add new items, and possibly adding new mechanics to the game!"
         ));
 
+        changes = new ChangeInfo("InfPD-0.2.1", true, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.BROKEN_STAFF), "Craftable Unique Class Items",
+                "You can now craft class items from other classes, especially on Duelists' weapon abilities, and these are the table-flipping twist!"));
+
         changes = new ChangeInfo("InfPD-0.2.0", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);

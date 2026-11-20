@@ -26,6 +26,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
 
 
+import com.shatteredpixel.shatteredpixeldungeon.items.specialitems.DuelistsRapier;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
@@ -234,7 +235,8 @@ public class Hero extends Char {
 
 	public boolean isClass(HeroClass clazz){
 		if (heroClass == HeroClass.RAT_KING) return true;
-		return clazz == this.heroClass;
+		if (clazz == this.heroClass) return true;
+		return clazz == HeroClass.DUELIST && DuelistsRapier.owned(this);
 	}
 
 	public HeroSubClass subClass = HeroSubClass.NONE;
