@@ -259,10 +259,9 @@ public abstract class ConquestZone extends Blob implements CustomBlobCellEmissio
         protected void affect(Char ch, int cell) {
             if (ch.alignment != Char.Alignment.ENEMY) return;
             if (Char.hasProp(ch, Char.Property.BOSS) || Char.hasProp(ch, Char.Property.MINIBOSS)) return;
-            if (ch.buff(Paralysis.class) != null) return;
             Float until = rest.get(ch.id());
             if (until != null && until > Actor.now()) return;
-            Buff.prolong(ch, Paralysis.class, 3f);
+            Buff.prolong(ch, Paralysis.class, 1f);
             rest.put(ch.id(), Actor.now() + 8f);
         }
     }
