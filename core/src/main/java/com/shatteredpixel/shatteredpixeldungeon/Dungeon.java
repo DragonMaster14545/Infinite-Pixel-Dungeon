@@ -27,6 +27,7 @@ package com.shatteredpixel.shatteredpixeldungeon;
 
 
 import com.shatteredpixel.shatteredpixeldungeon.items.KeptItems;
+import com.shatteredpixel.shatteredpixeldungeon.items.RubyRewards;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
@@ -1240,6 +1241,7 @@ public class Dungeon {
 	public static void win( Object cause ) {
 
 		updateLevelExplored();
+		if (!Statistics.gameWon) RubyRewards.award();
 		Statistics.gameWon = true;
 
 		hero.belongings.identify();

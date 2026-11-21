@@ -93,7 +93,13 @@ public class InfPDChanges {
                 ));
 
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.RUBY), "Rubies",
-                "The rubies are the new currency that persists globally and can be used to buy something or use it to keep an item to the next run and something else..."));
+                "The rubies are the new currency that persists globally and can be used to buy something or use it to keep an item to the next run and something else...\n\n" +
+                        "You can earn rubies in some ways:\n" +
+                        "_-_ There are 2 rubies each region, each of them has a quantity of 1-3 rubies\n" +
+                        "_-_ Finish daily runs for 10 rubies, if at least 1 challenge is active then it gives 15 rubies + 5 per challenge active\n" +
+                        "_-_ Finish weekly runs for 40 rubies plus 7 rubies per challenge if at least one challenge is active\n" +
+                        "_-_ Finish a run with challenge for 3 rubies per challenge active\n\n" +
+                        "_Run replays are not included in earning rubies, so be careful using your weekly or daily runs as you need to win first before getting the rubies earned._"));
 
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.BROKEN_STAFF), "Craftable Unique Class Items",
                 "You can now craft class items from other classes, especially on Duelists' weapon abilities, and these are the table-flipping twist!"));
