@@ -235,7 +235,7 @@ public class WndJournal extends WndTabbed {
 						return Messages.get(globalNotesTab, "title");
 					}
 				},
-				new IconTab( Icons.INFO.get() ) {
+				new IconTab( Icons.MAGNIFY.get() ) {
 					protected void select( boolean value ) {
 						super.select( value );
 						wikiTab.active = wikiTab.visible = value;

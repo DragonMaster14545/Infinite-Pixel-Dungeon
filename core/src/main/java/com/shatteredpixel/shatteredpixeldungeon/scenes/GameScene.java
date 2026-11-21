@@ -44,6 +44,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Honeypot;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.KeptItems;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
 import com.shatteredpixel.shatteredpixeldungeon.items.journal.Guidebook;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
@@ -578,6 +579,10 @@ public class GameScene extends PixelScene {
 		TrinketCatalyst cata = Dungeon.hero.belongings.getItem(TrinketCatalyst.class);
 		if (cata != null && cata.hasRolledTrinkets()){
 			addToFront(new TrinketCatalyst.WndTrinket(cata));
+		}
+
+		if (KeptItems.consumePending()) {
+			addToFront(new WndKeptItems());
 		}
 
 		if (!invVisible) toggleInvPane();
@@ -1387,6 +1392,7 @@ private static float waterOfs = 0;
 				restart.bottom() + 2
 		);
 		scene.add(menu);
+		WndKeepItem.offer(null);
 	}
 	
 	public static void bossSlain() {

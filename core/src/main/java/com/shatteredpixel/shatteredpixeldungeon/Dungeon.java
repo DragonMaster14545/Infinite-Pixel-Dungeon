@@ -26,6 +26,7 @@ package com.shatteredpixel.shatteredpixeldungeon;
 
 
 
+import com.shatteredpixel.shatteredpixeldungeon.items.KeptItems;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
@@ -346,6 +347,8 @@ public class Dungeon {
 			Generator.fullReset();
 
 		Random.resetGenerators();
+
+		KeptItems.markPending();
 		
 		Statistics.reset();
 		Notes.reset();

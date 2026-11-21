@@ -44,6 +44,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.*;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Archs;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndKeepItem;
 import com.watabou.gltextures.SmartTexture;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.glwrap.Matrix;
@@ -266,7 +267,7 @@ public class SurfaceScene extends PixelScene {
 		Dungeon.win( Amulet.class );
 		Dungeon.deleteGame( GamesInProgress.curSlot, true );
 		Badges.saveGlobal();
-		
+		WndKeepItem.offer(null);
 		fadeIn();
 	}
 

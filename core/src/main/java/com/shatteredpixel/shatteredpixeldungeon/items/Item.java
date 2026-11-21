@@ -241,6 +241,7 @@ public class Item implements Bundlable {
 
 	public boolean wereOofed = false;
     public boolean canCollectWithSOH = false;
+	public boolean keptBound = false;
 	
 	public static final Comparator<Item> itemComparator = new Comparator<Item>() {
 		@Override
@@ -815,6 +816,10 @@ public class Item implements Bundlable {
             if (emblemUse > 0) {
                 joint += Messages.get(EmblemSystem.class, "emblem_use", 5 - emblemUse) + "\n\n";
             }
+
+			if (keptBound) {
+				joint += Messages.get(this, "kept_bound") + "\n\n";
+			}
             return joint + desc();
 		}
 
@@ -885,6 +890,7 @@ public class Item implements Bundlable {
 
 	@Override
 	public void storeInBundle( Bundle bundle ) {
+		bundle.put( "kept_bound", keptBound );
 		Big.put(bundle, QUANTITY, quantity);
 		Big.put(bundle, LEVEL, level);
 		bundle.put( LEVEL_KNOWN, levelKnown );
@@ -907,6 +913,7 @@ public class Item implements Bundlable {
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
+		keptBound = bundle.getBoolean( "kept_bound" );
 		quantity	= Big.getBig(bundle, QUANTITY);
 		levelKnown	= bundle.getBoolean( LEVEL_KNOWN );
 		cursedKnown	= bundle.getBoolean( CURSED_KNOWN );

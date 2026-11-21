@@ -39,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.StyledButton;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndKeepItem;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
@@ -80,31 +81,38 @@ public class AmuletScene extends PixelScene {
 		btnExit = new StyledButton(Chrome.Type.GREY_BUTTON_TR, Messages.get(this, "exit") ) {
 			@Override
             public void onClick() {
-				Dungeon.win( Amulet.class );
-				Dungeon.deleteGame( GamesInProgress.curSlot, true );
-				Badges.saveGlobal();
 				btnExit.enable(false);
 				btnStay.enable(false);
 
-				AmuletScene.this.add(new Delayer(0.1f){
+				WndKeepItem.offer(new Runnable() {
 					@Override
-					protected void onComplete() {
-						if (BadgeBanner.isShowingBadges()){
-							AmuletScene.this.add(new Delayer(3f){
-								@Override
-								protected void onComplete() {
+					public void run() {
+						Dungeon.win( Amulet.class );
+						Dungeon.deleteGame( GamesInProgress.curSlot, true );
+						Badges.saveGlobal();
+
+						AmuletScene.this.add(new Delayer(0.1f){
+							@Override
+							protected void onComplete() {
+								if (BadgeBanner.isShowingBadges()){
+									AmuletScene.this.add(new Delayer(3f){
+										@Override
+										protected void onComplete() {
+											Game.switchScene( RankingsScene.class );
+										}
+									});
+								} else {
 									Game.switchScene( RankingsScene.class );
 								}
-							});
-						} else {
-							Game.switchScene( RankingsScene.class );
-						}
+							}
+						});
+
+						Music.INSTANCE.playTracks(
+								new String[]{Assets.Music.THEME_2, Assets.Music.THEME_1},
+								new float[]{1, 1},
+								false);
 					}
 				});
-				Music.INSTANCE.playTracks(
-						new String[]{Assets.Music.THEME_2, Assets.Music.THEME_1},
-						new float[]{1, 1},
-						false);
 			}
 		};
 		btnExit.icon(new ItemSprite(ItemSpriteSheet.AMULET));

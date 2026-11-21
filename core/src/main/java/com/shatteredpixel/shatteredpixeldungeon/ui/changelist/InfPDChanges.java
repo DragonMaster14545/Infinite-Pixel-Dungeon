@@ -77,6 +77,10 @@ public class InfPDChanges {
         changes = new ChangeInfo("InfPD-0.2.1", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.AMULET), "Keeping Items",
+                "With the new ruby currency, you can now keep a maximum of 3 items per run (total of 15 items stored) and get them on another run or later.\n\n" +
+                        "To balance these changes, the ruby costs now scales with equipment's level and rarity and unique items cannot be kept."
+                ));
 
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.VAULT_LINK), "Trader Changes",
                 "You can now spend rubies to buy shulker boxes with goods on the trader shop. There are 5 shulker boxes with contents in each box:\n\n" +

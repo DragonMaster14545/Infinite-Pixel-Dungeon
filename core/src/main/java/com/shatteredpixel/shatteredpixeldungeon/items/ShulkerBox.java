@@ -156,6 +156,7 @@ public class ShulkerBox extends Item {
         return hero != null
 				&& (!filter.isActive() || filter.matches(item))
                 && item != null
+                && !item.keptBound
                 && !(item instanceof Bag)
                 && !(item instanceof ShulkerBox)
                 && !item.isEquipped(hero)

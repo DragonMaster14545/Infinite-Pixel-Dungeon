@@ -273,7 +273,7 @@ public class JournalScene extends PixelScene {
 				return Messages.get(WndJournal.WikiTab.class, "title");
 			}
 		};
-		btnWiki.icon(Icons.JOURNAL.get());
+		btnWiki.icon(Icons.MAGNIFY.get());
 		btnWiki.setRect(btnGlobalNotes.right()-2, btnBadges.top(), pw/6f + 1.5f, lastIDX == 5 ? 25 : 20);
 		align(btnWiki);
 		if (lastIDX != 5) btnWiki.icon().brightness(0.6f);
