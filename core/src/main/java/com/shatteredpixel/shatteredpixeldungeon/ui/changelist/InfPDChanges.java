@@ -84,6 +84,10 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.CONQUEST_WAND), "Wand of Conquest",
                 "A new wand that functions as a zoning wand! It can do damage or paralyze the enemies and shield or heal yourself and your allies."));
 
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
+                "_-_ Fixed hero upgrades doesn't load in the next load when not upgraded\n"
+        ));
+
         changes = new ChangeInfo("InfPD-0.2.0", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);

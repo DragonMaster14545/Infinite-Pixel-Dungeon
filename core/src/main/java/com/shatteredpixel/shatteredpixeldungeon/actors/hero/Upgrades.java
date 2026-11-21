@@ -29,6 +29,10 @@ public class Upgrades implements Bundlable {
     @Override
     public void restoreFromBundle(Bundle bundle) {
         upgrades = new ArrayList<>();
+        for (UpgradeData data : UpgradeData.values()) {
+            upgrades.add(new Upgrade(data));
+        }
+
         Bundle upgradesBundle = bundle.getBundle("upgrades");
 
         if (upgradesBundle == null) return;
@@ -38,17 +42,22 @@ public class Upgrades implements Bundlable {
             int level = upgradesBundle.getInt(key);
             UpgradeData data = null;
             try {
-                int index = Integer.parseInt(key);
-                if (index >= 0 && index < all.length) data = all[index];
-            } catch (NumberFormatException e) {
+                data = UpgradeData.valueOf(key);
+            } catch (IllegalArgumentException e) {
                 try {
-                    data = UpgradeData.valueOf(key);
-                } catch (IllegalArgumentException e2) {
+                    int index = Integer.parseInt(key);
+                    if (index >= 0 && index < all.length) data = all[index];
+                } catch (NumberFormatException e2) {
                     data = null;
                 }
             }
             if (data == null || level <= 0) continue;
-            upgrades.add(new Upgrade(data, level));
+            for (Upgrade u : upgrades) {
+                if (u.data == data) {
+                    u.level = Math.min(level, data.maxLevel);
+                    break;
+                }
+            }
         }
     }
 
