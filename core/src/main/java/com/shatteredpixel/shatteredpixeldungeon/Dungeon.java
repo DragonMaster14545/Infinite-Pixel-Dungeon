@@ -176,7 +176,8 @@ public class Dungeon {
 		LORE_HALLS,
 		LORE_INFINITY,
 		CHEESY_CHEEST,
-        UTILITY_BAG;
+        UTILITY_BAG,
+		RUBY;
 
 		public int count = 0;
 
@@ -802,6 +803,16 @@ public class Dungeon {
 		int floorThisSet = (depth % 5);
 		//chance is floors left / scrolls left
 		return Random.Int(5 - floorThisSet) < asLeftThisSet;
+	}
+
+	public static boolean rubyDrops() {
+		//2 ruby each floor set
+		int rubyPileLeftThisSet = 2 - (LimitedDrops.RUBY.count - (depth / 5));
+		if (rubyPileLeftThisSet <= 0) return false;
+
+		int floorThisSet = (depth % 5);
+		//chance is floors left / scrolls left
+		return Random.Int(5 - floorThisSet) < rubyPileLeftThisSet;
 	}
 
 	public static double resetDamage(){

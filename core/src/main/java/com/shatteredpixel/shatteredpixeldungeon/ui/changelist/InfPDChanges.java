@@ -78,6 +78,9 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.RUBY), "Rubies",
+                "The rubies are the new currency that persists globally and can be used to buy something or use it to keep an item to the next run and something else..."));
+
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.BROKEN_STAFF), "Craftable Unique Class Items",
                 "You can now craft class items from other classes, especially on Duelists' weapon abilities, and these are the table-flipping twist!"));
 

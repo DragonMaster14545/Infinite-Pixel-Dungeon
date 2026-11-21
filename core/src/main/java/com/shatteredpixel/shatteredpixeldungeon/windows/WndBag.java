@@ -25,6 +25,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 
+import com.shatteredpixel.shatteredpixeldungeon.items.RubyBank;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -208,56 +209,52 @@ public class WndBag extends WndTabbed {
 	}
 
 	protected void placeTitle( Bag bag, int width ){
-		float titleWidth;
+		Image goldIcon = Icons.get(Icons.COIN_SML);
+		goldIcon.x = width - goldIcon.width();
+		goldIcon.y = 0;
+		PixelScene.align(goldIcon);
+		add(goldIcon);
 
-		if ((Dungeon.energy.compareTo(BigInteger.ZERO) == 0)) {
-			ItemSprite gold = new ItemSprite(ItemSpriteSheet.GOLD, null);
-			gold.x = width - gold.width();
-			gold.y = (TITLE_HEIGHT - gold.height()) / 2f;
-			PixelScene.align(gold);
-			add(gold);
+		BitmapText goldAmt = new BitmapText(Big.fmt(Dungeon.gold), PixelScene.pixelFont);
+		goldAmt.hardlight(TITLE_COLOR);
+		goldAmt.measure();
+		goldAmt.x = goldIcon.x - goldAmt.width() - 1;
+		goldAmt.y = goldIcon.y;
+		PixelScene.align(goldAmt);
+		add(goldAmt);
 
-			BitmapText amt = new BitmapText(Big.fmt(Dungeon.gold), PixelScene.pixelFont);
-			amt.hardlight(TITLE_COLOR);
-			amt.measure();
-			amt.x = width - gold.width() - amt.width() - 1;
-			amt.y = (TITLE_HEIGHT - amt.baseLine()) / 2f - 1;
-			PixelScene.align(amt);
-			add(amt);
+		Image energyIcon = Icons.get(Icons.ENERGY_SML);
+		energyIcon.x = goldAmt.x - energyIcon.width() - 3;
+		energyIcon.y = 0;
+		PixelScene.align(energyIcon);
+		add(energyIcon);
 
-			titleWidth = amt.x;
-		} else {
-			Image gold = Icons.get(Icons.COIN_SML);
-			gold.x = width - gold.width() - 0.5f;
-			gold.y = 0;
-			PixelScene.align(gold);
-			add(gold);
+		BitmapText energyAmt = new BitmapText(Big.fmt(Dungeon.energy), PixelScene.pixelFont);
+		energyAmt.hardlight(0x44CCFF);
+		energyAmt.measure();
+		energyAmt.x = energyIcon.x - energyAmt.width() - 1;
+		energyAmt.y = 0;
+		PixelScene.align(energyAmt);
+		add(energyAmt);
 
-			BitmapText amt = new BitmapText(Big.fmt(Dungeon.gold), PixelScene.pixelFont);
-			amt.hardlight(TITLE_COLOR);
-			amt.measure();
-			amt.x = width - gold.width() - amt.width() - 2f;
-			amt.y = 0;
-			PixelScene.align(amt);
-			add(amt);
+		float titleWidth = energyAmt.x;
 
-			titleWidth = amt.x;
+		if (RubyBank.get().signum() > 0) {
+			Image rubyIcon = Icons.get(Icons.RUBY_SML);
+			rubyIcon.x = width - rubyIcon.width();
+			rubyIcon.y = goldIcon.height();
+			PixelScene.align(rubyIcon);
+			add(rubyIcon);
 
-			Image energy = Icons.get(Icons.ENERGY_SML);
-			energy.x = width - energy.width();
-			energy.y = gold.height();
-			PixelScene.align(energy);
-			add(energy);
+			BitmapText rubyAmt = new BitmapText(Big.fmt(RubyBank.get()), PixelScene.pixelFont);
+			rubyAmt.hardlight(0xFF4466);
+			rubyAmt.measure();
+			rubyAmt.x = rubyIcon.x - rubyAmt.width() - 1;
+			rubyAmt.y = rubyIcon.y;
+			PixelScene.align(rubyAmt);
+			add(rubyAmt);
 
-			amt = new BitmapText(Big.fmt(Dungeon.energy), PixelScene.pixelFont);
-			amt.hardlight(0x44CCFF);
-			amt.measure();
-			amt.x = width - energy.width() - amt.width() - 1;
-			amt.y = energy.y;
-			PixelScene.align(amt);
-			add(amt);
-
-			titleWidth = Math.min(titleWidth, amt.x);
+			titleWidth = Math.min(titleWidth, rubyAmt.x);
 		}
 
 		String title = selector != null ? selector.textPrompt() : null;
@@ -265,10 +262,7 @@ public class WndBag extends WndTabbed {
 				title != null ? Messages.titleCase(title) : Messages.titleCase( bag.name() ), 8 );
 		txtTitle.hardlight( TITLE_COLOR );
 		txtTitle.maxWidth( (int)titleWidth - 2 );
-		txtTitle.setPos(
-				1,
-				(TITLE_HEIGHT - txtTitle.height()) / 2f - 1
-		);
+		txtTitle.setPos( 1, (TITLE_HEIGHT - txtTitle.height()) / 2f - 1 );
 		PixelScene.align(txtTitle);
 		add( txtTitle );
 	}

@@ -390,7 +390,8 @@ public static void systemFont(boolean value){
 	public static final String KEY_INTRO		= "intro";
 
 	public static final String KEY_SUPPORT_NAGGED= "support_nagged";
-public static final String KEY_VICTORY_NAGGED= "victory_nagged";
+	public static final String KEY_VICTORY_NAGGED= "victory_nagged";
+	public static final String KEY_RUBY	= "ruby_bank";
 
 	public static void intro( boolean value ) {
 		put( KEY_INTRO, value );
@@ -432,6 +433,18 @@ public static final String KEY_VICTORY_NAGGED= "victory_nagged";
 
 	public static String customSeed() {
 		return getString( KEY_CUSTOM_SEED, "", 20);
+	}
+
+	public static BigInteger ruby() {
+		try {
+			return new BigInteger( getString( KEY_RUBY, "0" ) );
+		} catch (Exception e) {
+			return BigInteger.ZERO;
+		}
+	}
+
+	public static void ruby( BigInteger value ) {
+		put( KEY_RUBY, value.max( BigInteger.ZERO ).toString() );
 	}
 
 	public static void lastDaily( BigInteger value ){

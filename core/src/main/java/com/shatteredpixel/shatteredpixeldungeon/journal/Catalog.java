@@ -27,6 +27,7 @@ package com.shatteredpixel.shatteredpixeldungeon.journal;
 
 import java.math.BigInteger;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.Ruby;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.SmokedBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.SearingSlasher;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
@@ -358,7 +359,7 @@ public enum Catalog {
 				IdealBag.EnergyBottle.class, IdealBag.OsmiridiumPlate.class, CommonTreasureBag.class, UncommonTreasureBag.class,
                 RareTreasureBag.class, EpicTreasureBag.class, LegendaryTreasureBag.class);
 
-		MISC_CONSUMABLES.addItems( Gold.class, EnergyCrystal.class, Dewdrop.class,
+		MISC_CONSUMABLES.addItems( Gold.class, EnergyCrystal.class, Ruby.class, Dewdrop.class,
 				IronKey.class, GoldenKey.class, CrystalKey.class, WornKey.class,
 				TrinketCatalyst.class, Stylus.class, Torch.class, Honeypot.class, Ankh.class,
 				CorpseDust.class, Embers.class, CeremonialCandle.class, DarkGold.class, DwarfToken.class,

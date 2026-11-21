@@ -115,6 +115,7 @@ public class FloatingText extends RenderedTextBlock {
 	public static int MOB_BOOST     = 27;
     public static int REVERSE     = 28;
     public static int RACKED_DMG     = 29;
+    public static int RUBY     = 30;
 
     //hit reason icons
     public static int HIT_WEP   = 36;

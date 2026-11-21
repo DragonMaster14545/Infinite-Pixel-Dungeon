@@ -72,6 +72,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.OverloadBeacon;
+import com.shatteredpixel.shatteredpixeldungeon.items.Ruby;
 import com.shatteredpixel.shatteredpixeldungeon.items.Stylus;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
@@ -246,6 +247,12 @@ public abstract class Level implements Bundlable {
 			if (Dungeon.asNeeded()) {
 				Dungeon.LimitedDrops.ARCANE_STYLI.count++;
 				addItemToSpawn( new Stylus() );
+			}
+			if (Dungeon.rubyDrops()) {
+				Dungeon.LimitedDrops.RUBY.count++;
+				Ruby ruby = new Ruby();
+				ruby.random();
+				addItemToSpawn( ruby );
 			}
 			if ( Dungeon.enchStoneNeeded() ){
 				Dungeon.LimitedDrops.ENCH_STONE.drop();
