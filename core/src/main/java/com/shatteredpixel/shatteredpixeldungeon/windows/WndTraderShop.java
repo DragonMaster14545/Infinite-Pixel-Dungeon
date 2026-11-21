@@ -1,6 +1,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 
+import com.shatteredpixel.shatteredpixeldungeon.items.ShulkerBox;
+import com.shatteredpixel.shatteredpixeldungeon.items.RubyBank;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -33,7 +35,7 @@ public class WndTraderShop extends Window {
 
 	private final Runnable back;
 
-	private final RenderedTextBlock title, timer, gold, energy;
+	private final RenderedTextBlock title, timer, gold, energy, rubies;
 	private final ScrollPane pane;
 	private final Component content;
 	private final float listH;
@@ -82,7 +84,12 @@ public class WndTraderShop extends Window {
 		energy.hardlight( 0x60E0FF );
 		energy.setPos( WIDTH / 2, y );
 		add( energy );
-		y += lineH * 2 + GAP;
+		rubies = PixelScene.renderTextBlock( "", 7 );
+		rubies.maxWidth( WIDTH );
+		rubies.hardlight( 0xFF4466 );
+		rubies.setPos( 0, y + lineH + 2 );
+		add( rubies );
+		y += lineH * 3 + GAP;
 
 		float footer = BTN_H;
 		float maxList = PixelScene.uiCamera.height - 60 - y - footer - chrome.marginVer();
@@ -149,6 +156,7 @@ public class WndTraderShop extends Window {
 	private void refresh() {
 		gold.text( Messages.get( this, "gold", Big.fmt(Dungeon.gold) ) );
 		energy.text( Messages.get( this, "energy", Big.fmt(Dungeon.energy) ) );
+		rubies.text( Messages.get( this, "ruby", Big.fmt(RubyBank.get()) ) );
 
 		float scrollY = content.camera != null ? content.camera.scroll.y : 0;
 		content.clear();
@@ -170,12 +178,28 @@ public class WndTraderShop extends Window {
 			content.add( slot );
 
 			String label = Messages.titleCase( item.title() );
+			if ( item instanceof ShulkerBox ) label += " (" + ( (ShulkerBox) item ).size() + ")";
 			RenderedTextBlock text = PixelScene.renderTextBlock( label, 6 );
 			text.maxWidth( WIDTH - ICON - 2 );
 			text.hardlight( offer.sold ? 0x808080 : 0xFFFFFF );
 			text.setPos( ICON + 2, cy + ( ICON - text.height() ) / 2f );
 			PixelScene.align( text );
 			content.add( text );
+
+			if ( offer.ruby.signum() > 0 ) {
+				RedButton rubyBtn = new RedButton( offer.sold ? Messages.get( this, "sold_out" )
+						: Messages.get( this, "buy_ruby", Big.fmt(offer.ruby) ), 7 ) {
+					@Override
+					public void onClick() {
+					buy( offer, false );
+					}
+				};
+				rubyBtn.setRect( 0, cy + ICON, WIDTH, BTN_H );
+				rubyBtn.enable( !offer.sold && RubyBank.get().compareTo( offer.ruby ) >= 0 );
+				content.add( rubyBtn );
+				cy += ROW_H;
+				continue;
+			}
 
 			RedButton goldBtn = new RedButton( offer.sold ? Messages.get( this, "sold_out" )
 					: Messages.get( this, "buy_gold", Big.fmt(offer.gold) ), 7 ) {

@@ -78,6 +78,16 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.VAULT_LINK), "Trader Changes",
+                "You can now spend rubies to buy shulker boxes with goods on the trader shop. There are 5 shulker boxes with contents in each box:\n\n" +
+                            "_-_ 1: 10 potions, costs 25 rubies\n" +
+                            "_-_ 2: 10 scrolls, costs 25 rubies\n" +
+                            "_-_ 3: 5 randomly picked from: weapons, armor, wand and ring, costs 40 rubies\n" +
+                            "_-_ 4: 8 randomly picked from: food, seed and stone, costs 10 rubies\n" +
+                            "_-_ 5: 10 randomly picked from: artifacts and tubes, costs 30 rubies\n\n" +
+                            "_-_ Each equipments will guaranteed to be upgraded and some are not."
+                ));
+
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.RUBY), "Rubies",
                 "The rubies are the new currency that persists globally and can be used to buy something or use it to keep an item to the next run and something else..."));
 
