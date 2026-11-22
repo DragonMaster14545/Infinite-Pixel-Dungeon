@@ -77,6 +77,17 @@ public class InfPDChanges {
         changes = new ChangeInfo("InfPD-0.2.1", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+
+        Image ic = Icons.get(Icons.CALENDAR);
+        ic.hardlight(1.5f, 0.4f, 0.4f);
+        changes.addButton( new ChangeButton(ic, "Monthly Runs!",
+                "_Every month there is a specific seeded run that's available to all players!_\n\n" +
+                        "The monthly run makes it easy to compete again friends or other folks on the internet, without having to coordinate and share a specific seed.\n\n" +
+                        "The game does keep track of your previous month scores, and there is a separate leaderboard for them.\n\n" +
+                        "To avoid confusion in reading the monthly run seed, their format is Year-Month\n\n" +
+                        "_Special Bonus:_ Starting a monthly run gives all the players a box with the same contents which is given after starting the run, so good luck with it!",
+                        "The monthly box starts with 1 weapon, armor, ring, wand and a thrown weapon, 2 potions and scrolls and some food. Each of them has a random level and quantity."));
+
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.SHULK_BOX), "Loadouts",
                 "You can spend rubies to buy items before actually going to a run for you to get an advantage on early game." +
                         " You can buy loadouts on any modes, and you can refresh them with 2 rubies or wait for restock. The loadout box cannot be stored nor upgradable however."
@@ -103,6 +114,7 @@ public class InfPDChanges {
                         "_-_ There are 2 rubies each region, each of them has a quantity of 1-3 rubies\n" +
                         "_-_ Finish daily runs for 10 rubies, if at least 1 challenge is active then it gives 15 rubies + 5 per challenge active\n" +
                         "_-_ Finish weekly runs for 40 rubies plus 7 rubies per challenge if at least one challenge is active\n" +
+                        "_-_ Finish monthly runs for 150 rubies plus 10 rubies per challenge if at least one challenge is active\n" +
                         "_-_ Finish a run with challenge for 3 rubies per challenge active\n\n" +
                         "_Run replays are not included in earning rubies, so be careful using your weekly or daily runs as you need to win first before getting the rubies earned._"));
 
@@ -721,7 +733,6 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
-        Image ic = Icons.get(Icons.CALENDAR);
         ic.hardlight(1.5f, 1.5f, 0f);
         changes.addButton( new ChangeButton(ic, "Weekly Runs Changes",
                 "Enemies in weekly runs now have their health doubled, and gives you a 2.5x score multiplier regardless if you win or not. It's your choice."));

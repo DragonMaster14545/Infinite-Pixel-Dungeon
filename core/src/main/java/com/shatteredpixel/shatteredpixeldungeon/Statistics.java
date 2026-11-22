@@ -57,6 +57,7 @@ public class Statistics {
 	public static float chalMultiplier;
 	public static float cycleMultiplier;
     public static float weeklyMultiplier;
+    public static float monthlyMultiplier;
 	public static BigInteger totalScore = BigInteger.ZERO;
 
 	//used for hero unlock badges
@@ -100,6 +101,7 @@ public class Statistics {
 		winMultiplier   = 1;
 		chalMultiplier  = 1;
         weeklyMultiplier= 1;
+        monthlyMultiplier= 1;
 		totalScore      = BigInteger.ZERO;
 		
 		upgradesUsed    = BigInteger.ZERO;
@@ -142,6 +144,7 @@ public class Statistics {
 	private static final String CHAL_MULT		= "chal_mult";
 	private static final String CYCLE_MULT		= "cycle_mult";
     private static final String WEEKLY_MULT		= "weekly_mult";
+    private static final String MONTHLY_MULT		= "monthly_mult";
 	private static final String TOTAL_SCORE		= "total_score";
 	
 	private static final String UPGRADES	= "upgradesUsed";
@@ -187,6 +190,7 @@ public class Statistics {
 		bundle.put( CHAL_MULT,   chalMultiplier );
 		bundle.put( CYCLE_MULT,   cycleMultiplier );
         bundle.put( WEEKLY_MULT,   weeklyMultiplier );
+        bundle.put( MONTHLY_MULT,  monthlyMultiplier );
 		Big.put(bundle, TOTAL_SCORE, totalScore);
 		
 		Big.put(bundle, UPGRADES, upgradesUsed);
@@ -239,6 +243,7 @@ public class Statistics {
 		chalMultiplier  = bundle.getFloat( CHAL_MULT );
 		cycleMultiplier = bundle.getFloat( CYCLE_MULT );
         weeklyMultiplier = bundle.getFloat( WEEKLY_MULT );
+        monthlyMultiplier = bundle.contains( MONTHLY_MULT ) ? bundle.getFloat( MONTHLY_MULT ) : 1f;
 		totalScore      = Big.getBig(bundle, TOTAL_SCORE);
 		
 		upgradesUsed    = BigInteger.valueOf(bundle.getInt( UPGRADES ));

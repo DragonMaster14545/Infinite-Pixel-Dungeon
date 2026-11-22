@@ -128,6 +128,14 @@ public enum Icons {
     WEEKLY_DEPTH_LARGE,
     WEEKLY_DEPTH_TRAPS,
     WEEKLY_DEPTH_SECRETS,
+	MONTHLY_DEPTH,      //monthly depth icons
+	MONTHLY_DEPTH_CHASM,
+	MONTHLY_DEPTH_WATER,
+	MONTHLY_DEPTH_GRASS,
+	MONTHLY_DEPTH_DARK,
+	MONTHLY_DEPTH_LARGE,
+	MONTHLY_DEPTH_TRAPS,
+	MONTHLY_DEPTH_SECRETS,
 	CHAL_COUNT,
 	CYCLE_COUNT,
 	COIN_SML,
@@ -469,6 +477,31 @@ public enum Icons {
                 icon.frame( icon.texture.uvRectBySize( 184, 48, 7, 7 ) );
                 break;
 
+			case MONTHLY_DEPTH:
+				icon.frame( icon.texture.uvRectBySize( 128, 56, 6, 7 ) );
+				break;
+			case MONTHLY_DEPTH_CHASM:
+				icon.frame( icon.texture.uvRectBySize( 136, 56, 7, 7 ) );
+				break;
+			case MONTHLY_DEPTH_WATER:
+				icon.frame( icon.texture.uvRectBySize( 144, 56, 7, 7 ) );
+				break;
+			case MONTHLY_DEPTH_GRASS:
+				icon.frame( icon.texture.uvRectBySize( 152, 56, 7, 7 ) );
+				break;
+			case MONTHLY_DEPTH_DARK:
+				icon.frame( icon.texture.uvRectBySize( 160, 56, 7, 7 ) );
+				break;
+			case MONTHLY_DEPTH_LARGE:
+				icon.frame( icon.texture.uvRectBySize( 168, 56, 7, 7 ) );
+				break;
+			case MONTHLY_DEPTH_TRAPS:
+				icon.frame( icon.texture.uvRectBySize( 176, 56, 7, 7 ) );
+				break;
+			case MONTHLY_DEPTH_SECRETS:
+				icon.frame( icon.texture.uvRectBySize( 184, 56, 7, 7 ) );
+				break;
+
 			//large icons are scaled down to match game's size
 			case CELESTI:
 				icon.frame( icon.texture.uvRectBySize( 32, 96, 32, 32 ) );
@@ -503,13 +536,14 @@ public enum Icons {
 	}
 
 	private static int runTypeOfsX(){
-		return (Dungeon.daily || Dungeon.weekly) ? 64 : 0;
+		return (Dungeon.daily || Dungeon.weekly || Dungeon.monthly) ? 64 : 0;
 	}
 
 	private static int runTypeOfsY(){
 		if ((Dungeon.daily && Dungeon.dailyReplay)
-				|| (!Dungeon.weekly && !Dungeon.daily && !Dungeon.customSeedText.isEmpty())
-                || (Dungeon.weeklyReplay && Dungeon.weekly)){
+				|| (!Dungeon.monthly && !Dungeon.weekly && !Dungeon.daily && !Dungeon.customSeedText.isEmpty())
+                || (Dungeon.weeklyReplay && Dungeon.weekly)
+				|| (Dungeon.monthlyReplay && Dungeon.monthly)){
 			return 8;
 		} else {
 			return 0;
@@ -553,7 +587,26 @@ public enum Icons {
 	}
 
 	public static Image get(Level.Feeling feeling){
-		if (Dungeon.weekly && !Dungeon.weeklyReplay) {
+		if (Dungeon.monthly && !Dungeon.monthlyReplay) {
+			switch (feeling){
+				case NONE: default:
+					return get(MONTHLY_DEPTH);
+				case CHASM:
+					return get(MONTHLY_DEPTH_CHASM);
+				case WATER:
+					return get(MONTHLY_DEPTH_WATER);
+				case GRASS:
+					return get(MONTHLY_DEPTH_GRASS);
+				case DARK:
+					return get(MONTHLY_DEPTH_DARK);
+				case LARGE:
+					return get(MONTHLY_DEPTH_LARGE);
+				case TRAPS:
+					return get(MONTHLY_DEPTH_TRAPS);
+				case SECRETS:
+					return get(MONTHLY_DEPTH_SECRETS);
+			}
+		} else if (Dungeon.weekly && !Dungeon.weeklyReplay) {
             switch (feeling){
                 case NONE: default:
                     return get(WEEKLY_DEPTH);

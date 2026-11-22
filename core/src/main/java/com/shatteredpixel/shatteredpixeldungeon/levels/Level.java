@@ -29,6 +29,7 @@ import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.MonthlyRun;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -373,6 +374,7 @@ public abstract class Level implements Bundlable {
 			}
 		}
 		createMobs();
+		for (Mob monthlyMob : mobs.toArray(new Mob[0])) MonthlyRun.scale(monthlyMob);
 	}
 
 	public void playLevelMusic(){
@@ -545,6 +547,7 @@ public abstract class Level implements Bundlable {
         if (Dungeon.weekly) {
             m.HP = m.HT = m.HT.multiply(BigInteger.valueOf(2));
         }
+		MonthlyRun.scale(m);
 		return m;
 	}
 
@@ -557,6 +560,7 @@ public abstract class Level implements Bundlable {
 		if (Dungeon.weekly) {
 			m.HP = m.HT = m.HT.multiply(BigInteger.valueOf(2));
 		}
+		MonthlyRun.scale(m);
 		return m;
 	}
 

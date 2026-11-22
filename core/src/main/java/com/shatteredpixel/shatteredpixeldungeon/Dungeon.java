@@ -275,6 +275,7 @@ public class Dungeon {
 	public static int version;
 
 	public static boolean weekly;
+	public static boolean monthly;
     public static boolean daily;
 	public static boolean practice;
 	public static VaultStore.Mode practiceVault = VaultStore.Mode.NORMAL;
@@ -290,6 +291,7 @@ public class Dungeon {
 		hero = null;
 		daily = dailyReplay = false;
 		weekly = weeklyReplay = false;
+		monthly = monthlyReplay = false;
 		practice = true;
 		initSeed();
 		ActionIndicator.action = null;
@@ -298,6 +300,7 @@ public class Dungeon {
 	}
     public static boolean dailyReplay;
     public static boolean weeklyReplay;
+	public static boolean monthlyReplay;
 	public static String customSeedText = "";
 	public static long seed;
     public static long lastPlayed;
@@ -317,6 +320,11 @@ public class Dungeon {
             DateFormat format = new SimpleDateFormat("yyyy-MM/w", Locale.ROOT);
             format.setTimeZone(TimeZone.getTimeZone("UTC"));
             customSeedText = format.format(new Date(SPDSettings.lastWeekly()));
+        } else if (monthly) {
+            seed = SPDSettings.lastMonthly() + DungeonSeed.TOTAL_SEEDS;
+            DateFormat format = new SimpleDateFormat("yyyy-MM", Locale.ROOT);
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+            customSeedText = format.format(new Date(SPDSettings.lastMonthly()));
         } else if (!SPDSettings.customSeed().isEmpty()){
 			customSeedText = SPDSettings.customSeed();
 			seed = DungeonSeed.convertFromText(customSeedText);
@@ -352,6 +360,7 @@ public class Dungeon {
 
 		KeptItems.markPending();
 		Loadout.markPending();
+		MonthlyRun.markPending();
 		
 		Statistics.reset();
 		Notes.reset();
@@ -874,8 +883,10 @@ public class Dungeon {
 	private static final String CUSTOM_SEED	= "custom_seed";
 	private static final String DAILY	    = "daily";
     private static final String WEEKLY	    = "weekly";
+	private static final String MONTHLY = "monthly";
 	private static final String DAILY_REPLAY= "daily_replay";
     private static final String WEEKLY_REPLAY= "weekly_replay";
+    private static final String MONTHLY_REPLAY = "monthly_replay";
     private static final String LAST_PLAYED = "last_played";
 	private static final String CHALLENGES	= "challenges";
 	private static final String MOBS_TO_CHAMPION	= "mobs_to_champion";
@@ -918,8 +929,10 @@ public class Dungeon {
 			bundle.put( PRACTICE_TURNS, practiceTurns );
 			bundle.put( PRACTICE_GEN, practiceGen );
             bundle.put( WEEKLY, weekly );
+			bundle.put( MONTHLY, monthly );
 			bundle.put( DAILY_REPLAY, dailyReplay );
             bundle.put( WEEKLY_REPLAY, weeklyReplay );
+            bundle.put( MONTHLY_REPLAY, monthlyReplay );
             bundle.put( LAST_PLAYED, lastPlayed = Game.realTime);
 			bundle.put( CHALLENGES, challenges );
 			bundle.put( MOBS_TO_CHAMPION, mobsToChampion );
@@ -1049,8 +1062,10 @@ public class Dungeon {
 			}
 		}
         weekly = bundle.getBoolean( WEEKLY );
+		monthly = bundle.getBoolean( MONTHLY );
 		dailyReplay = bundle.getBoolean( DAILY_REPLAY );
         weeklyReplay = bundle.getBoolean( WEEKLY_REPLAY );
+        monthlyReplay = bundle.getBoolean( MONTHLY_REPLAY );
 
 		Actor.clear();
 		Actor.restoreNextID( bundle );
@@ -1223,6 +1238,8 @@ public class Dungeon {
 		info.customSeed = bundle.getString( CUSTOM_SEED );
         info.weekly = bundle.getBoolean( WEEKLY );
         info.weeklyReplay = bundle.getBoolean( WEEKLY_REPLAY );
+        info.monthly = bundle.getBoolean( MONTHLY );
+        info.monthlyReplay = bundle.getBoolean( MONTHLY_REPLAY );
 		info.daily = bundle.getBoolean( DAILY );
 		info.practice = bundle.getBoolean( PRACTICE );
 		info.dailyReplay = bundle.getBoolean( DAILY_REPLAY );

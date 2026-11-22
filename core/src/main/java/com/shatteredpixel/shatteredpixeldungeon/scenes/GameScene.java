@@ -590,6 +590,10 @@ public class GameScene extends PixelScene {
 			Loadout.deliver(Dungeon.hero);
 		}
 
+		if (MonthlyRun.consumePending()) {
+			MonthlyRun.deliver(Dungeon.hero);
+		}
+
 		if (!invVisible) toggleInvPane();
 		fadeIn();
 

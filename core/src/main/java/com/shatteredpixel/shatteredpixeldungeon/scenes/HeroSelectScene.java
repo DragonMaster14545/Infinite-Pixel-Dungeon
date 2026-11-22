@@ -126,6 +126,7 @@ public class HeroSelectScene extends PixelScene {
 				Dungeon.daily = Dungeon.dailyReplay = false;
 				Dungeon.practice = false;
                 Dungeon.weekly = Dungeon.weeklyReplay = false;
+				Dungeon.monthly = Dungeon.monthlyReplay = false;
 				Dungeon.initSeed();
 				ActionIndicator.action = null;
 				InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
@@ -838,6 +839,93 @@ public class HeroSelectScene extends PixelScene {
             weeklyButton.icon(Icons.get(Icons.CALENDAR));
             add(weeklyButton);
             buttons.add(weeklyButton);
+
+            StyledButton monthlyButton = new StyledButton(Chrome.Type.BLANK, Messages.get(HeroSelectScene.class, "monthly"), 6){
+
+                private static final long SECOND = 1000;
+                private static final long DAY = 24 * 60 * 60 * SECOND;
+
+                private long msLeft() {
+                    long last = SPDSettings.lastMonthly();
+                    if (last <= 0) return 0;
+                    return MonthlyRun.nextStart(last) - Game.realTime;
+                }
+
+                @Override
+                public void onClick() {
+                    super.onClick();
+
+                    for (GamesInProgress.Info game : GamesInProgress.checkAll()){
+                        if (game.monthly){
+                            ShatteredPixelDungeon.scene().addToFront(new WndMessage(Messages.get(HeroSelectScene.class, "monthly_existing")));
+                            return;
+                        }
+                    }
+
+                    final long left = msLeft();
+                    Image icon = Icons.get(Icons.CALENDAR);
+                    if (left <= 0) icon.hardlight(1.5f, 0.4f, 0.4f);
+                    else icon.hardlight(1f, 0.5f, 2f);
+                    ShatteredPixelDungeon.scene().addToFront(new WndOptions(
+                            icon,
+                            Messages.get(HeroSelectScene.class, "monthly"),
+                            left > 0 ?
+                                    Messages.get(HeroSelectScene.class, "monthly_repeat") :
+                                    Messages.get(HeroSelectScene.class, "monthly_desc"),
+                            Messages.get(HeroSelectScene.class, "monthly_yes"),
+                            Messages.get(HeroSelectScene.class, "monthly_no")){
+                        @Override
+                        protected void onSelect(int index) {
+                            if (index == 0){
+                                if (left <= 0) {
+                                    SPDSettings.lastMonthly(BigInteger.valueOf(MonthlyRun.monthStart(Game.realTime)));
+                                    Dungeon.monthlyReplay = false;
+                                } else {
+                                    Dungeon.monthlyReplay = true;
+                                }
+
+                                Dungeon.hero = null;
+                                Dungeon.practice = false;
+                                Dungeon.monthly = true;
+                                Dungeon.initSeed();
+                                ActionIndicator.action = null;
+                                InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
+
+                                Game.switchScene( InterlevelScene.class );
+                            }
+                        }
+                    });
+                }
+
+                private long timeToUpdate = 0;
+
+                private final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss", Locale.ROOT);
+                {
+                    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                }
+
+                @Override
+                public void update() {
+                    super.update();
+
+                    if (Game.realTime > timeToUpdate && visible){
+                        long diff = msLeft();
+                        if (diff > 0){
+                            long days = diff / DAY;
+                            String timeStr = dateFormat.format(new Date(diff % DAY));
+                            text(days > 0 ? days + "d " + timeStr : timeStr);
+                            timeToUpdate = Game.realTime + SECOND;
+                        } else {
+                            text(Messages.get(HeroSelectScene.class, "monthly"));
+                            timeToUpdate = Long.MAX_VALUE;
+                        }
+                    }
+                }
+            };
+            monthlyButton.leftJustify = true;
+            monthlyButton.icon(Icons.get(Icons.CALENDAR));
+            add(monthlyButton);
+            buttons.add(monthlyButton);
 
 			StyledButton practiceButton = new StyledButton(Chrome.Type.BLANK, Messages.get(HeroSelectScene.class, "practice"), 6){
 				@Override

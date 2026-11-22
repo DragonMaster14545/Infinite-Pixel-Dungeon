@@ -15,11 +15,17 @@ public class RubyRewards {
     public static final int weeklyBase = 40;
     public static final int weeklyChallenge = 7;
     public static final int challenged = 3;
+    public static final int monthlyBase = 150;
+    public static final int monthlyChallenge = 10;
 
     public static int lastReward = 0;
 
     public static int compute() {
         int n = Challenges.activeChallenges();
+        if (Dungeon.monthly) {
+            if (Dungeon.monthlyReplay) return 0;
+            return monthlyBase + (monthlyChallenge * n);
+        }
         if (Dungeon.weekly && !Dungeon.weeklyReplay) {
             return weeklyBase + (weeklyChallenge * n);
         }

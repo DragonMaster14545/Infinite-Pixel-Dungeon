@@ -108,6 +108,16 @@ public class WelcomeScene extends PixelScene {
                         Game.reportException( new RuntimeException("Rankings Updating Failed!",e));
                     }
                 }
+				if (Rankings.INSTANCE.latestMonthly != null){
+					try {
+						Rankings.INSTANCE.loadGameData(Rankings.INSTANCE.latestMonthly);
+						Rankings.INSTANCE.saveGameData(Rankings.INSTANCE.latestMonthly);
+					} catch (Exception e) {
+						//if we encounter a fatal per-record error, then clear that record's data
+						Rankings.INSTANCE.latestMonthly.gameData = null;
+						Game.reportException( new RuntimeException("Rankings Updating Failed!",e));
+					}
+				}
 				Collections.sort(Rankings.INSTANCE.records, Rankings.scoreComparator);
 				Rankings.INSTANCE.save();
 			} catch (Exception e) {
@@ -118,6 +128,7 @@ public class WelcomeScene extends PixelScene {
 			Dungeon.daily = Dungeon.dailyReplay = false;
 			Dungeon.practice = false;
             Dungeon.weekly = Dungeon.weeklyReplay = false;
+			Dungeon.monthly = Dungeon.monthlyReplay = false;
 
 			if (previousVersion <= ShatteredPixelDungeon.v2_3_2){
 				Document.ADVENTURERS_GUIDE.findPage(Document.GUIDE_ALCHEMY);

@@ -158,6 +158,8 @@ public class GamesInProgress {
         info.weekly = Dungeon.weekly;
 		info.dailyReplay = Dungeon.dailyReplay;
         info.weeklyReplay = Dungeon.weeklyReplay;
+        info.monthly = Dungeon.monthly;
+        info.monthlyReplay = Dungeon.monthlyReplay;
 		
 		info.level = Dungeon.hero.lvl;
 		info.str = Dungeon.hero.STR;
@@ -200,6 +202,8 @@ public class GamesInProgress {
         public boolean weekly;
 		public boolean dailyReplay;
         public boolean weeklyReplay;
+        public boolean monthly;
+        public boolean monthlyReplay;
 
 		public int level;
 		public int str;

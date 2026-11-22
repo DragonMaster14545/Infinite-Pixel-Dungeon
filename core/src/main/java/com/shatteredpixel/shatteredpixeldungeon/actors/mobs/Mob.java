@@ -158,6 +158,8 @@ public abstract class Mob extends Char {
 	
 	public BigInteger EXP = BigInteger.ONE;
 	public int maxLvl = Integer.MAX_VALUE;
+
+	public boolean monthlyScaled = false;
 	public double bossMaxHPMulti = (Big.dec(Dungeon.escalatingDepth()).multiply(Big.dec(0.025d))).add(Big.dec(bossMulti())).doubleValue();
 	
 	protected Char enemy;
@@ -204,6 +206,7 @@ public abstract class Mob extends Char {
 		bundle.put( SEEN, enemySeen );
 		bundle.put( TARGET, target );
 		bundle.put( MAX_LVL, maxLvl );
+		bundle.put( "monthly_scaled", monthlyScaled );
 
 		if (enemy != null) {
 			bundle.put(ENEMY_ID, enemy.id() );
@@ -233,6 +236,7 @@ public abstract class Mob extends Char {
 		target = bundle.getInt( TARGET );
 
 		if (bundle.contains(MAX_LVL)) maxLvl = bundle.getInt(MAX_LVL);
+		monthlyScaled = bundle.getBoolean( "monthly_scaled" );
 
 		if (bundle.contains(ENEMY_ID)) {
 			enemyID = bundle.getInt(ENEMY_ID);

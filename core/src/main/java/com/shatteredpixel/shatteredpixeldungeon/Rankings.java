@@ -77,12 +77,16 @@ public enum Rankings {
 
 	public Record latestDaily;
     public Record latestWeekly;
+	public Record latestMonthly;
 	public ArrayList<Record> hallRecords = new ArrayList<>();
 	public int hallPages = 1;
 	public Record latestDailyReplay = null; //not stored, only meant to be temp
     public Record latestWeeklyReplay = null; //not stored, only meant to be temp
+	public Record latestMonthlyReplay = null;
 	public LinkedHashMap<Long, BigInteger> dailyScoreHistory = new LinkedHashMap<>();
     public LinkedHashMap<Long, BigInteger> weeklyScoreHistory = new LinkedHashMap<>();
+	public LinkedHashMap<Long, BigInteger> monthlyScoreHistory = new LinkedHashMap<>();
+
 
 	public void submit( boolean win, Object cause ) {
 		if (Dungeon.practice) return;
@@ -120,6 +124,7 @@ public enum Rankings {
 		rec.customSeed  = Dungeon.customSeedText;
 		rec.daily       = Dungeon.daily;
         rec.weekly       = Dungeon.weekly;
+		rec.monthly		= Dungeon.monthly;
 
 		Badges.validateHighScore( rec.score );
 		
@@ -158,6 +163,22 @@ public enum Rankings {
             save();
             return;
         }
+
+		if (rec.monthly) {
+			if (Dungeon.monthlyReplay) {
+				latestMonthlyReplay = rec;
+				return;
+			}
+
+			latestMonthly = rec;
+			if (Dungeon.seed <= DungeonSeed.TOTAL_SEEDS) {
+				monthlyScoreHistory.put(Dungeon.seed, rec.score);
+			} else {
+				monthlyScoreHistory.put(Dungeon.seed - DungeonSeed.TOTAL_SEEDS, rec.score);
+			}
+			save();
+			return;
+		}
 
 		records.add( rec );
 		
@@ -233,6 +254,7 @@ public enum Rankings {
 			if (Statistics.gameWon)         Statistics.winMultiplier += 1f;
 			if (Statistics.ascended)        Statistics.winMultiplier += 0.5f;
             Statistics.weeklyMultiplier = Dungeon.weekly ? 2.5f : 1f;
+            Statistics.monthlyMultiplier = Dungeon.monthly ? 4f : 1f;
 
 		//pre v1.3.0 runs have different score calculations
 		//only progress and treasure score, and they are each up to 50% bigger
@@ -254,7 +276,7 @@ public enum Rankings {
 
 		Statistics.totalScore = BigInteger.valueOf(Statistics.progressScore).add(Statistics.treasureScore).add(BigInteger.valueOf(Statistics.exploreScore)).add(BigInteger.valueOf(Statistics.totalBossScore)).add(BigInteger.valueOf(Statistics.totalQuestScore));
 
-		Statistics.totalScore = Statistics.totalScore.multiply(Big.of((Statistics.winMultiplier * Statistics.chalMultiplier * Statistics.cycleMultiplier * Statistics.weeklyMultiplier)));
+		Statistics.totalScore = Statistics.totalScore.multiply(Big.of((Statistics.winMultiplier * Statistics.chalMultiplier * Statistics.cycleMultiplier * Statistics.weeklyMultiplier * Statistics.monthlyMultiplier)));
 
 		return Statistics.totalScore;
 	}
@@ -269,8 +291,10 @@ public enum Rankings {
 	public static final String CUSTOM_SEED	= "custom_seed";
 	public static final String DAILY	    = "daily";
     public static final String WEEKLY	    = "weekly";
+    public static final String MONTHLY	    = "monthly";
 	public static final String DAILY_REPLAY	= "daily_replay";
     public static final String WEEKLY_REPLAY	= "weekly_replay";
+	public static final String MONTHLY_REPLAY = "monthly_replay";
 
 	public void saveGameData(Record rec){
 		if (Dungeon.hero == null){
@@ -340,7 +364,9 @@ public enum Rankings {
 		rec.gameData.put( DAILY, Dungeon.daily );
 		rec.gameData.put( DAILY_REPLAY, Dungeon.dailyReplay );
         rec.gameData.put( WEEKLY, Dungeon.weekly );
+        rec.gameData.put( MONTHLY, Dungeon.monthly );
         rec.gameData.put( WEEKLY_REPLAY, Dungeon.weeklyReplay );
+		rec.gameData.put( MONTHLY_REPLAY, Dungeon.monthlyReplay );
 	}
 
 	public void loadGameData(Record rec){
@@ -364,6 +390,7 @@ public enum Rankings {
 		Dungeon.practice = false;
 		Dungeon.daily = data.contains(DAILY) && data.getBoolean(DAILY);
 		Dungeon.weekly = data.contains(WEEKLY) && data.getBoolean(WEEKLY);
+		Dungeon.monthly = data.contains(MONTHLY) && data.getBoolean(MONTHLY);
 		Dungeon.customSeedText = data.contains(CUSTOM_SEED) ? data.getString(CUSTOM_SEED) : "";
 
 		Bundle handler = data.getBundle(HANDLERS);
@@ -399,12 +426,15 @@ public enum Rankings {
             Dungeon.daily = rec.gameData.getBoolean(DAILY);
             Dungeon.dailyReplay = rec.gameData.getBoolean(DAILY_REPLAY);
             Dungeon.weekly = rec.gameData.getBoolean(WEEKLY);
+            Dungeon.monthly = rec.gameData.getBoolean(MONTHLY);
             Dungeon.weeklyReplay = rec.gameData.getBoolean(WEEKLY_REPLAY);
+			Dungeon.monthlyReplay = rec.gameData.getBoolean(MONTHLY_REPLAY);
         } else {
             Dungeon.seed = -1;
             Dungeon.customSeedText = "";
             Dungeon.daily = Dungeon.dailyReplay = false;
             Dungeon.weekly = Dungeon.weeklyReplay = false;
+            Dungeon.monthly = Dungeon.monthlyReplay = false;
         }
 
 		rec.score = calculateScore();
@@ -419,10 +449,13 @@ public enum Rankings {
 
 	public static final String LATEST_DAILY	        = "latest_daily";
     public static final String LATEST_WEEKLY	        = "latest_weekly";
+	public static final String LATEST_MONTHLY 		= "latest_monthly";
 	public static final String DAILY_HISTORY_DATES  = "daily_history_dates";
 	public static final String DAILY_HISTORY_SCORES = "daily_history_scores";
     public static final String WEEKLY_HISTORY_DATES  = "weekly_history_dates";
     public static final String WEEKLY_HISTORY_SCORES = "weekly_history_scores";
+	public static final String MONTHLY_HISTORY_DATES  = "monthly_history_dates";
+	public static final String MONTHLY_HISTORY_SCORES = "monthly_history_scores";
 
 	public void save() {
 		Bundle bundle = new Bundle();
@@ -435,13 +468,17 @@ public enum Rankings {
 
 		bundle.put(LATEST_DAILY, latestDaily);
         bundle.put(LATEST_WEEKLY, latestWeekly);
+		bundle.put(LATEST_MONTHLY, latestMonthly);
 
 		long[] dates = new long[dailyScoreHistory.size()];
 		BigInteger[] scores = Big.newArray(dailyScoreHistory.size());
         long[] weekly_dates = new long[weeklyScoreHistory.size()];
         BigInteger[] weekly_scores = Big.newArray(weeklyScoreHistory.size());
+		long[] monthly_dates = new long[monthlyScoreHistory.size()];
+		BigInteger[] monthly_scores = Big.newArray(monthlyScoreHistory.size());
 		int i = 0;
         int j = 0;
+		int k = 0;
 		for (Long l : dailyScoreHistory.keySet()){
 			dates[i] = l;
 			scores[i] = dailyScoreHistory.get(l);
@@ -452,10 +489,17 @@ public enum Rankings {
             weekly_scores[j] = weeklyScoreHistory.get(l);
             j++;
         }
+		for (Long l : monthlyScoreHistory.keySet()){
+			monthly_dates[k] = l;
+			monthly_scores[k] = monthlyScoreHistory.get(l);
+			k++;
+		}
 		bundle.put(DAILY_HISTORY_DATES, dates);
 		Big.putArray(bundle, DAILY_HISTORY_SCORES, scores);
         bundle.put(WEEKLY_HISTORY_DATES, weekly_dates);
         Big.putArray(bundle, WEEKLY_HISTORY_SCORES, weekly_scores);
+		bundle.put(MONTHLY_HISTORY_DATES, monthly_dates);
+		Big.putArray(bundle, MONTHLY_HISTORY_SCORES, monthly_scores);
 
 		try {
 			FileUtils.bundleToFile( RANKINGS_FILE, bundle);
@@ -537,6 +581,23 @@ public enum Rankings {
                 }
             }
 
+			if (bundle.contains(LATEST_MONTHLY)){
+				latestMonthly = (Record) bundle.get(LATEST_MONTHLY);
+
+				monthlyScoreHistory.clear();
+				BigInteger[] scores = Big.getBigArray(bundle, MONTHLY_HISTORY_SCORES);
+				int j = 0;
+				long latestDate = 0;
+				for (long date : bundle.getLongArray(MONTHLY_HISTORY_DATES)){
+					monthlyScoreHistory.put(date, scores[j]);
+					if (date > latestDate) latestDate = date;
+					j++;
+				}
+				if (latestDate > SPDSettings.lastMonthly()){
+					SPDSettings.lastMonthly(BigInteger.valueOf(latestDate));
+				}
+			}
+
 		} catch (IOException e) {
 		}
 	}
@@ -556,6 +617,7 @@ public enum Rankings {
 		private static final String SEED    = "custom_seed";
 		private static final String DAILY   = "daily";
         private static final String WEEKLY   = "weekly";
+		private static final String MONTHLY = "monthly";
 		private static final String NOTE = "note";
 		private static final String HALL_PAGE = "hall_page";
 
@@ -580,6 +642,7 @@ public enum Rankings {
 		public String customSeed;
 		public boolean daily;
         public boolean weekly;
+		public boolean monthly;
 		public String note = "";
 		public int hallPage = 0;
 
@@ -619,6 +682,7 @@ public enum Rankings {
 			customSeed  = bundle.getString( SEED );
 			daily       = bundle.getBoolean( DAILY );
             weekly       = bundle.getBoolean( WEEKLY );
+			monthly		= bundle.getBoolean( MONTHLY );
 			note         = bundle.contains( NOTE ) ? bundle.getString( NOTE ) : "";
 			hallPage     = bundle.getInt( HALL_PAGE );
 
@@ -652,6 +716,7 @@ public enum Rankings {
 			bundle.put( SEED, customSeed );
 			bundle.put( DAILY, daily );
             bundle.put( WEEKLY, weekly );
+			bundle.put( MONTHLY, monthly );
 			bundle.put( NOTE, note == null ? "" : note );
 			bundle.put( HALL_PAGE, hallPage );
 

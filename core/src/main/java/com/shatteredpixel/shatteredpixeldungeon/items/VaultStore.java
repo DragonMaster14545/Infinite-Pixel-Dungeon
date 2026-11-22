@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 
 public class VaultStore {
 
-	public enum Mode { NORMAL, DAILY, WEEKLY, SEED, CHALLENGE }
+	public enum Mode { NORMAL, DAILY, WEEKLY, MONTHLY, SEED, CHALLENGE }
 
 	public static final int MAX_HISTORY = 300;
 
@@ -42,7 +42,8 @@ public class VaultStore {
 	public static int capacityPercent(Mode mode) {
 		switch (mode) {
 			case DAILY:
-			case WEEKLY:    return 50;
+			case WEEKLY:
+			case MONTHLY: return 50;
 			default:        return 100;
 		}
 	}
@@ -50,7 +51,8 @@ public class VaultStore {
 	public static int limitPercent(Mode mode) {
 		switch (mode) {
 			case DAILY:
-			case WEEKLY:    return 50;
+			case WEEKLY:
+            case MONTHLY: return 50;
 			default:        return 100;
 		}
 	}
@@ -69,6 +71,7 @@ public class VaultStore {
 			if (Dungeon.practice) return Dungeon.practiceVault;
 			if (Dungeon.weekly) return Mode.WEEKLY;
 			if (Dungeon.daily) return Mode.DAILY;
+			if (Dungeon.monthly) return Mode.MONTHLY;
 			if (Dungeon.customSeedText != null && !Dungeon.customSeedText.isEmpty()) return Mode.SEED;
 			if (Dungeon.challenges != null && IntStream.range(0, Dungeon.challenges.length).anyMatch(i -> Dungeon.challenges[i])) return Mode.CHALLENGE;
 		}

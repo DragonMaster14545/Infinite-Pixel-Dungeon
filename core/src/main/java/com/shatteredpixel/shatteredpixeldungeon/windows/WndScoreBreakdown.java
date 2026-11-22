@@ -84,6 +84,9 @@ public class WndScoreBreakdown extends Window {
 		if (Statistics.cycleMultiplier > 1) {
 			pos = statSlot(this, Messages.get(this, "cycle_multiplier"), Statistics.cycleMultiplier + "x", pos, false);
 		}
+        if (Statistics.monthlyMultiplier > 1) {
+            pos = statSlot(this, Messages.get(this, "monthly_multiplier"), Statistics.monthlyMultiplier + "x", pos, false);
+        }
         if (Statistics.weeklyMultiplier > 1) {
             pos = statSlot(this, Messages.get(this, "weekly_multiplier"), Statistics.weeklyMultiplier + "x", pos, false);
         }

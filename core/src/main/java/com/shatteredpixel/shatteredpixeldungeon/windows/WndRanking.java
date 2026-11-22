@@ -234,7 +234,13 @@ public class WndRanking extends WndTabbed {
 					pos = statSlot(this, Messages.get(this, "ascent"), num.format(Statistics.highestAscent), pos);
 				}
 				if (Dungeon.seed != -1) {
-					if (Dungeon.weekly) {
+					if (Dungeon.monthly) {
+						if (Dungeon.monthlyReplay) {
+							pos = statSlot(this, "_Monthly Replay For_", "_" + Dungeon.customSeedText + "_", pos);
+						} else {
+							pos = statSlot(this, "_Monthly For_", "_" + Dungeon.customSeedText + "_", pos);
+						}
+					} else if (Dungeon.weekly) {
                         if (Dungeon.weeklyReplay) {
                             pos = statSlot(this, "_Weekly Replay For_", "_" + Dungeon.customSeedText + "_", pos);
                         } else {

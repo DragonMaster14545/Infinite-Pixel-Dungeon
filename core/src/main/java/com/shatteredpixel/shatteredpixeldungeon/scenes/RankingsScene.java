@@ -38,6 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.*;
 import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndDailies;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndMonthlies;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndRanking;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndRecordBoard;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndVictoryCongrats;
@@ -182,6 +183,24 @@ public class RankingsScene extends PixelScene {
             add(btnWeeklies);
         }
 
+		if (Rankings.INSTANCE.latestMonthly != null) {
+			IconButton btnMonthlies = new IconButton(Icons.CALENDAR.get()) {
+				@Override
+				public void onClick() {
+					ShatteredPixelDungeon.scene().addToFront(new WndMonthlies());
+				}
+
+				@Override
+				protected void onPointerUp() {
+					icon.hardlight(1.5f, 0.4f, 0.4f);
+				}
+			};
+			btnMonthlies.icon().hardlight(1.5f, 0.4f, 0.4f);
+			btnMonthlies.setRect( left, 0, 16, 20 );
+			left += 16;
+			add(btnMonthlies);
+		}
+
          IconButton btnHall = new IconButton(Icons.BADGES.get()) {
             @Override
             public void onClick() {
@@ -201,6 +220,8 @@ public class RankingsScene extends PixelScene {
             addToFront(new WndWeeklies());
         } else if (Dungeon.daily){
 			addToFront(new WndDailies());
+		} else if (Dungeon.monthly) {
+			addToFront(new WndMonthlies());
 		} else if (Badges.isUnlocked(Badges.Badge.VICTORY) && !SPDSettings.victoryNagged()) {
 			SPDSettings.victoryNagged(true);
 			add(new WndVictoryCongrats());
@@ -216,6 +237,7 @@ public class RankingsScene extends PixelScene {
 		Dungeon.daily = Dungeon.dailyReplay = false;
 		Dungeon.practice = false;
         Dungeon.weekly = Dungeon.weeklyReplay = false;
+		Dungeon.monthly = Dungeon.monthlyReplay = false;
 	}
 
 	@Override

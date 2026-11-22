@@ -153,6 +153,7 @@ public class TitleScene extends PixelScene {
         Dungeon.daily = Dungeon.dailyReplay = false;
         Dungeon.practice = false;
         Dungeon.weekly = Dungeon.weeklyReplay = false;
+		Dungeon.monthly = Dungeon.monthlyReplay = false;
 
 		StyledButton btnBadges = new StyledButton(GREY_TR, Messages.get(this, "journal")){
 			@Override

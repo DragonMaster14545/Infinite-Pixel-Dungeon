@@ -387,6 +387,7 @@ public static void systemFont(boolean value){
 	public static final String KEY_CUSTOM_SEED	= "custom_seed";
 	public static final String KEY_LAST_DAILY	= "last_daily";
     public static final String KEY_LAST_WEEKLY	= "last_weekly";
+    public static final String KEY_LAST_MONTHLY	= "last_monthly";
 	public static final String KEY_INTRO		= "intro";
 
 	public static final String KEY_SUPPORT_NAGGED= "support_nagged";
@@ -461,6 +462,14 @@ public static void systemFont(boolean value){
 
     public static long lastWeekly() {
         return getLong( KEY_LAST_WEEKLY, 0);
+    }
+
+    public static void lastMonthly( BigInteger value ){
+        put( KEY_LAST_MONTHLY, Big.toLong(value) );
+    }
+
+    public static long lastMonthly() {
+        return getLong( KEY_LAST_MONTHLY, 0);
     }
 
 	public static void supportNagged( boolean value ) {

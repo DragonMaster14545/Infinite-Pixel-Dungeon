@@ -608,6 +608,8 @@ public class VaultLink extends Artifact {
 				color = 0xFFFFFF;
 			} else if (VaultStore.mode() == VaultStore.Mode.DAILY) {
 				color = 0x007bff;
+			} else if (VaultStore.mode() == VaultStore.Mode.MONTHLY) {
+				color = 0xc23535;
 			} else if (VaultStore.mode() == VaultStore.Mode.WEEKLY || VaultStore.mode() == VaultStore.Mode.CHALLENGE) {
 				color = 0xffff00;
 			} else {

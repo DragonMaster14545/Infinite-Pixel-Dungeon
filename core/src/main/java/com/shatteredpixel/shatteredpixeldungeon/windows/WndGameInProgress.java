@@ -109,7 +109,13 @@ public class WndGameInProgress extends Window {
 		} else {
 			statSlot(Messages.get(this, "depth"), BigInteger.valueOf(info.maxDepth));
 		}
-		if (info.weekly) {
+		if (info.monthly) {
+			if (info.monthlyReplay) {
+				statSlot(Messages.get(this, "monthly_replay_for"), "_" + info.customSeed + "_");
+			} else {
+				statSlot(Messages.get(this, "monthly_for"), "_" + info.customSeed + "_");
+			}
+		} else if (info.weekly) {
             if (info.weeklyReplay) {
                 statSlot("_Weekly Replay For_", "_" + info.customSeed + "_");
             } else {
@@ -142,6 +148,7 @@ public class WndGameInProgress extends Window {
 				Dungeon.daily = Dungeon.dailyReplay = false;
 				Dungeon.practice = false;
                 Dungeon.weekly = Dungeon.weeklyReplay = false;
+				Dungeon.monthly = Dungeon.monthlyReplay = false;
 				ActionIndicator.action = null;
 				InterlevelScene.mode = InterlevelScene.Mode.CONTINUE;
 				ShatteredPixelDungeon.switchScene(InterlevelScene.class);
