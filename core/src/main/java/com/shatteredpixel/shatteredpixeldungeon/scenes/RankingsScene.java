@@ -164,21 +164,6 @@ public class RankingsScene extends PixelScene {
 			add(btnDailies);
 		}
 
-        IconButton btnHall = new IconButton(Icons.BADGES.get()) {
-            @Override
-            public void onClick() {
-                ShatteredPixelDungeon.scene().addToFront(new WndRecordBoard(WndRecordBoard.HALL));
-            }
-
-            @Override
-            protected void onPointerUp() {
-                icon.hardlight(1f, 1f, 1f);
-            }
-        };
-        btnHall.setRect( left, 0, 16, 20 );
-        left += 16;
-        add(btnHall);
-
         if (Rankings.INSTANCE.latestWeekly != null) {
             IconButton btnWeeklies = new IconButton(Icons.CALENDAR.get()) {
                 @Override
@@ -196,6 +181,21 @@ public class RankingsScene extends PixelScene {
             left += 16;
             add(btnWeeklies);
         }
+
+         IconButton btnHall = new IconButton(Icons.BADGES.get()) {
+            @Override
+            public void onClick() {
+                       ShatteredPixelDungeon.scene().addToFront(new WndRecordBoard(WndRecordBoard.HALL));
+            }
+
+            @Override
+            protected void onPointerUp() {
+                icon.hardlight(1f, 1f, 1f);
+            }
+        };
+        btnHall.setRect( left, 0, 16, 20 );
+        left += 16;
+        add(btnHall);
 
         if (Dungeon.weekly) {
             addToFront(new WndWeeklies());
