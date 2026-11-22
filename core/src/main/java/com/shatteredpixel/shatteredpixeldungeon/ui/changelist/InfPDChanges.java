@@ -112,6 +112,9 @@ public class InfPDChanges {
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.CONQUEST_WAND), "Wand of Conquest",
                 "A new wand that functions as a zoning wand! It can do damage or paralyze the enemies and shield or heal yourself and your allies."));
 
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.ELEMENTAL_WAND), "Wand of Elemental",
+                "A new wand that functions as a zoning wand! It can damage enemies with elemental power."));
+
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ You can now change the color of borders in the settings"
         ));

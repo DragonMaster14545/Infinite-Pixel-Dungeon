@@ -1002,10 +1002,12 @@ public class ItemSpriteSheet {
     public static final int LIFESTEAL_WAND	= NEW_WAND_ROW+0;
 	public static final int TERRAFORM_WAND	= NEW_WAND_ROW+1;
 	public static final int CONQUEST_WAND	= NEW_WAND_ROW+2;
+	public static final int ELEMENTAL_WAND	= NEW_WAND_ROW+3;
     static{
         assignItemRect(LIFESTEAL_WAND, 14, 14);
 		assignItemRect(TERRAFORM_WAND, 14, 14);
 		assignItemRect(CONQUEST_WAND, 14, 14);
+		assignItemRect(ELEMENTAL_WAND, 14, 14);
     }
 
     private static final int NEW_ARTIFACT_ROW =								xy(1, 37);

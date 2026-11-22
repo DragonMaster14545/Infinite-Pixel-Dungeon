@@ -26,6 +26,8 @@ package com.shatteredpixel.shatteredpixeldungeon.actors;
 
 
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ConquestZone;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ElementZone;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
@@ -927,6 +929,7 @@ public abstract class Char extends Actor {
 			if (src instanceof Scorching)                 				icon = FloatingText.SCORCH_DMG;
 			if (src instanceof Racked.RackedDamage)                 	icon = FloatingText.RACKED_DMG;
 			if (src instanceof AscensionChallenge)                      icon = FloatingText.AMULET;
+			if (src instanceof ConquestZone)							icon = FloatingText.MAGIC_DMG;
 
             if ((icon == FloatingText.PHYS_DMG || icon == FloatingText.PHYS_DMG_NO_BLOCK) && hitMissIcon != -1){
                 if (icon == FloatingText.PHYS_DMG_NO_BLOCK) hitMissIcon += 18; //extra row
