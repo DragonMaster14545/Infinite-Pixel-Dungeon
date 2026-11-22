@@ -77,6 +77,11 @@ public class InfPDChanges {
         changes = new ChangeInfo("InfPD-0.2.1", true, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
+        changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.SHULK_BOX), "Loadouts",
+                "You can spend rubies to buy items before actually going to a run for you to get an advantage on early game." +
+                        " You can buy loadouts on any modes, and you can refresh them with 2 rubies or wait for restock. The loadout box cannot be stored nor upgradable however."
+        ));
+
         changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.AMULET), "Keeping Items",
                 "With the new ruby currency, you can now keep a maximum of 3 items per run (total of 15 items stored) and get them on another run or later.\n\n" +
                         "To balance these changes, the ruby costs now scales with equipment's level and rarity and unique items cannot be kept."

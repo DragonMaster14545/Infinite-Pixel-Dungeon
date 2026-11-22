@@ -27,6 +27,7 @@ package com.shatteredpixel.shatteredpixeldungeon;
 
 
 import com.shatteredpixel.shatteredpixeldungeon.items.KeptItems;
+import com.shatteredpixel.shatteredpixeldungeon.items.Loadout;
 import com.shatteredpixel.shatteredpixeldungeon.items.RubyRewards;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
@@ -350,6 +351,7 @@ public class Dungeon {
 		Random.resetGenerators();
 
 		KeptItems.markPending();
+		Loadout.markPending();
 		
 		Statistics.reset();
 		Notes.reset();

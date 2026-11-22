@@ -443,6 +443,7 @@ private static boolean evaluatingTwinUpgrades = false;
 
 	@Override
 	public String status() {
+		if (Dungeon.hero == null) return null;
 		if (isEquipped(Dungeon.hero)
 				&& Dungeon.hero.buff(Charger.class) != null) {
 			Charger buff = Dungeon.hero.buff(Charger.class);

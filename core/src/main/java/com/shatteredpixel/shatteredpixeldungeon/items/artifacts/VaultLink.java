@@ -2,6 +2,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 
 
+import com.shatteredpixel.shatteredpixeldungeon.items.LoadoutBox;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
@@ -306,6 +307,7 @@ public class VaultLink extends Artifact {
 	}
 
 	public String refusal(Hero hero, Item item) {
+		if (item instanceof LoadoutBox) return "loadout_box";
 		if (!(item instanceof ShulkerBox)) return "not_box";
 		if ((BigInteger.valueOf(VaultStore.boxes().size()).compareTo(slots()) >= 0)) return "full";
 		for (Item inside : ((ShulkerBox) item).allContents()) {

@@ -875,6 +875,19 @@ public class HeroSelectScene extends PixelScene {
 			add(practiceButton);
 			buttons.add(practiceButton);
 
+			StyledButton loadoutButton = new StyledButton(Chrome.Type.BLANK, Messages.get(HeroSelectScene.class, "loadout"), 6){
+				@Override
+				public void onClick() {
+					super.onClick();
+					ShatteredPixelDungeon.scene().addToFront(new WndLoadoutShop());
+				}
+			};
+			loadoutButton.leftJustify = true;
+			loadoutButton.icon(Icons.get(Icons.PLUS));
+			add(loadoutButton);
+			buttons.add(loadoutButton);
+
+
 			StyledButton seedfinderButton = new StyledButton(Chrome.Type.BLANK, Messages.get(HeroSelectScene.class, "seedfinder"), 6){
 				@Override
                 public void onClick() {
