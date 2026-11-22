@@ -26,6 +26,8 @@ package com.shatteredpixel.shatteredpixeldungeon;
 
 import com.watabou.noosa.NinePatch;
 
+import java.util.Objects;
+
 public class Chrome {
 
 	public enum  Type {
@@ -48,6 +50,19 @@ public class Chrome {
 	}
 	
 	public static NinePatch get( Type type ) {
+		NinePatch patch = base( type );
+		if (patch != null && tinted( type )) {
+			int color = ChromeColors.color();
+			if (color != -1) patch.hardlight( color );
+		}
+		return patch;
+	}
+
+	private static boolean tinted( Type type ) {
+        return Objects.requireNonNull(type) != Type.RED_BUTTON;
+    }
+
+	private static NinePatch base( Type type ) {
 		String Asset = Assets.Interfaces.CHROME;
 		switch (type) {
 		case WINDOW:

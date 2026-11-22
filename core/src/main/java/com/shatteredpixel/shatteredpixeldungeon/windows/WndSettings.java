@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
+import com.shatteredpixel.shatteredpixeldungeon.ChromeColors;
 import com.shatteredpixel.shatteredpixeldungeon.QuickSlot;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -409,6 +410,7 @@ public class WndSettings extends WndTabbed {
 		OptionSlider optUIMode;
 		OptionSlider optUIScale;
 		RedButton btnToolbarSettings;
+		RedButton btnBorderColor;
 		CheckBox chkFlipTags;
 		ColorBlock sep2;
 		CheckBox chkFont;
@@ -660,6 +662,19 @@ public class WndSettings extends WndTabbed {
 
 			}
 
+			btnBorderColor = new RedButton(Messages.get(this, "border_color", Messages.get(ChromeColors.class, "c" + ChromeColors.index())), 9){
+				@Override
+				public void onClick() {
+					ShatteredPixelDungeon.scene().addToFront(new WndChromeColors(new Runnable() {
+						@Override
+						public void run() {
+							btnBorderColor.text(Messages.get(UITab.this, "border_color", Messages.get(ChromeColors.class, "c" + ChromeColors.index())));
+						}
+					}));
+				}
+			};
+			add(btnBorderColor);
+
 			sep2 = new ColorBlock(1, 1, 0xFF000000);
 			add(sep2);
 
@@ -745,6 +760,9 @@ public class WndSettings extends WndTabbed {
 				chkVibrate.setRect(0, chkFont.bottom() + GAP, width, BTN_HEIGHT);
 				height = chkVibrate.bottom();
 			}
+
+			btnBorderColor.setRect(0, height + GAP, width, BTN_HEIGHT);
+			height = btnBorderColor.bottom();
 		}
 
 	}
