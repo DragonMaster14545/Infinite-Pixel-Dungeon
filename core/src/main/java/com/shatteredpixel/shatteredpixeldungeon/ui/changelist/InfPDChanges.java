@@ -733,6 +733,7 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        ic = Icons.get(Icons.CALENDAR);
         ic.hardlight(1.5f, 1.5f, 0f);
         changes.addButton( new ChangeButton(ic, "Weekly Runs Changes",
                 "Enemies in weekly runs now have their health doubled, and gives you a 2.5x score multiplier regardless if you win or not. It's your choice."));
