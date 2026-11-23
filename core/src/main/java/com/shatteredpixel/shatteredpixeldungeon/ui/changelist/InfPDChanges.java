@@ -78,6 +78,28 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.STAIRS), "New Rooms",
+                "There are new rooms to mess with the dungeon. We've added 5 rooms on each type: Crystal, Special and Secret rooms.",
+                            "_Special Rooms:_\n\n" +
+                                "_-_ Forge Room: a ring of eternal fire around a pedestal chest holding a weapon or armor already upgraded twice. A Potion of Frost spawns on the floor.\n" +
+                                "_-_ Drowned Cache Room: deep water around a dry island with a wand/ring/artifact chest plus a potion and scroll. A Potion of Levitation spawns on the floor.\n" +
+                                "_-_ Ossuary Room: 3 to 4 tombs along the walls, each with a weapon, armor or ring. Every tomb opens a wraith.\n" +
+                                "_-_ Seed Nursery Room: grass room with 3 to 4 planted random plants and 2 to 3 dropped seeds.\n" +
+                                "_-_ Cartographer Study room: a Scroll of Magic Mapping on a pedestal chest, plus 3 random scrolls or potions.",
+                            "_Secret Rooms:_\n\n" +
+                                "_-_ Smuggler's Stash Room: 5 to 8 gold piles and a potion/scroll chest.\n" +
+                                "_-_ Catacomb Room: 3 to 4 skeleton heaps with random items.\n" +
+                                "_-_ Pressure Vault Room: checkerboard of hidden traps of one type, wand/ring/artifact chest in the middle. Cells next to the door are always safe.\n" +
+                                "_-_ Hidden Glade Room: Sungrass x2, Earthroot, 3 dewdrops.\n" +
+                                "_-_ Gallery Room: two pedestals, one wand/ring/artifact and one weapon/armor.",
+                            "_Crystal Rooms:_\n\n" +
+                                    "_-_ Gallery Room: three crystal-door room (consumable, equipment, wand/ring/artifact), drops 2 keys.\n" +
+                                    "_-_ Crystal Reliquary Room: three crystal chests with three different gear types, drops 2 keys.\n" +
+                                    "_-_ Double-Lock Vault Room: two crystal doors in a row, consumables first, then the chest and a piece of gear, drops 2 keys.\n" +
+                                    "_-_ Shard Arsenal Room: one crystal door, upgraded weapon, upgraded armor and a throwing weapon, drops 1 key.\n" +
+                                    "_-_ Crystal Arboretum Room: one crystal door, planted seeds and dewdrops, drops 1 key."
+        ));
+
         Image ic = Icons.get(Icons.CALENDAR);
         ic.hardlight(1.5f, 0.4f, 0.4f);
         changes.addButton( new ChangeButton(ic, "Monthly Runs!",

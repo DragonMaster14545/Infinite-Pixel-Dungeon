@@ -86,7 +86,8 @@ public abstract class SpecialRoom extends Room {
 	private static final ArrayList<Class<? extends SpecialRoom>> EQUIP_SPECIALS = new ArrayList<>( Arrays.asList(
 			WeakFloorRoom.class, CryptRoom.class, PoolRoom.class, ArmoryRoom.class, SentryRoom.class,
 			StatueRoom.class, CrystalVaultRoom.class, CrystalChoiceRoom.class, SacrificeRoom.class,
-			SanctuaryRoom.class
+			SanctuaryRoom.class, ForgeRoom.class, DrownedCacheRoom.class, OssuaryRoom.class,
+			CrystalArsenalRoom.class, CrystalReliquaryRoom.class, CrystalDoubleLockRoom.class
 	));
 
 	//10 special rooms which give consumables more often than equipment
@@ -94,12 +95,15 @@ public abstract class SpecialRoom extends Room {
 	private static final ArrayList<Class<? extends SpecialRoom>> CONSUMABLE_SPECIALS = new ArrayList<>( Arrays.asList(
 			RunestoneRoom.class, GardenRoom.class, LibraryRoom.class, StorageRoom.class,
 			TreasuryRoom.class, MagicWellRoom.class, ToxicGasRoom.class, MagicalFireRoom.class,
-			TrapsRoom.class, CrystalPathRoom.class, ArtifactAtriumRoom.class, CrystalMazeRoom.class, AlchemyChamberRoom.class
+			TrapsRoom.class, CrystalPathRoom.class, ArtifactAtriumRoom.class, CrystalMazeRoom.class, AlchemyChamberRoom.class,
+			SeedNurseryRoom.class, CartographerStudyRoom.class, CrystalGalleryRoom.class, CrystalArboretumRoom.class
 	) );
 
 	//only one special that uses crystal keys per floor
 	public static final ArrayList<Class<? extends SpecialRoom>> CRYSTAL_KEY_SPECIALS = new ArrayList<>( Arrays.asList(
-			PitRoom.class, CrystalVaultRoom.class, CrystalChoiceRoom.class, CrystalPathRoom.class
+			PitRoom.class, CrystalVaultRoom.class, CrystalChoiceRoom.class, CrystalPathRoom.class,
+			CrystalGalleryRoom.class, CrystalReliquaryRoom.class, CrystalDoubleLockRoom.class,
+			CrystalArsenalRoom.class, CrystalArboretumRoom.class
 	) );
 
 	//only one special that generates a potion per floor

@@ -41,7 +41,9 @@ public abstract class SecretRoom extends SpecialRoom {
 			SecretGardenRoom.class, SecretLaboratoryRoom.class, SecretLibraryRoom.class,
 			SecretLarderRoom.class, SecretWellRoom.class, SecretRunestoneRoom.class,
 			SecretArtilleryRoom.class, SecretChestChasmRoom.class, SecretHoneypotRoom.class,
-			SecretHoardRoom.class, SecretMazeRoom.class, SecretSummoningRoom.class));
+			SecretHoardRoom.class, SecretMazeRoom.class, SecretSummoningRoom.class,
+			SecretStashRoom.class, SecretCatacombRoom.class, SecretPressureVaultRoom.class,
+			SecretGladeRoom.class, SecretGalleryRoom.class));
 	
 	public static ArrayList<Class<? extends SecretRoom>> runSecrets = new ArrayList<>();
 
