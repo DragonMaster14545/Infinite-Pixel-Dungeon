@@ -175,10 +175,70 @@ abstract public class MissileWeapon extends Weapon {
 		return actions;
 	}
 
+	private boolean setCapApplies() {
+		if (this instanceof Dart || spawnedForEffect || parent != null) return false;
+		if (defaultQuantity() <= 0 || durabilityPerUse() <= 0) return false;
+		if (setID == getClass().getSimpleName().hashCode()) return false;
+		return true;
+	}
+
+	public ArrayList<MissileWeapon> splitExtraSets() {
+		ArrayList<MissileWeapon> extras = new ArrayList<>();
+		if (!setCapApplies()) return extras;
+		BigInteger cap = BigInteger.valueOf(defaultQuantity());
+		if (quantity.compareTo(cap) <= 0) return extras;
+		BigInteger extra = quantity.subtract(cap);
+		quantity = cap;
+		while (extra.signum() > 0 && extras.size() < 1000) {
+			BigInteger n = extra.min(cap);
+			extra = extra.subtract(n);
+			Item dupe = duplicate();
+			if (!(dupe instanceof MissileWeapon)) break;
+			MissileWeapon set = (MissileWeapon) dupe;
+			set.setID = new SecureRandom().nextLong();
+			set.quantity = n;
+			set.durability = MAX_DURABILITY;
+			set.extraThrownLeft = false;
+			set.parent = null;
+			extras.add(set);
+		}
+		return extras;
+	}
+
+	private static void giveExtraSets(ArrayList<MissileWeapon> extras, Bag container) {
+		for (MissileWeapon set : extras) {
+			if (!set.collect(container)) {
+				Dungeon.level.drop(set, Dungeon.hero.pos).sprite.drop();
+			} else {
+				GLog.i(Messages.get(Hero.class, "you_now_have", set.name()));
+			}
+		}
+	}
+
+	public static void normalizeInventory(Hero hero) {
+		if (hero == null || hero.belongings == null) return;
+		for (MissileWeapon m : hero.belongings.getAllItems(MissileWeapon.class)) {
+			ArrayList<MissileWeapon> extras = m.splitExtraSets();
+			if (!extras.isEmpty()) {
+				m.updateQuickslot();
+				giveExtraSets(extras, hero.belongings.backpack);
+			}
+		}
+	}
+
 	@Override
 	public boolean collect(Bag container) {
 		if (container instanceof MagicalHolster) holster = true;
-		return super.collect(container);
+		ArrayList<MissileWeapon> extras = null;
+		if (Dungeon.hero != null && container != null
+				&& (container.owner == Dungeon.hero || container == Dungeon.hero.belongings.backpack)) {
+			extras = splitExtraSets();
+		}
+		boolean collected = super.collect(container);
+		if (extras != null && !extras.isEmpty()) {
+			giveExtraSets(extras, container);
+		}
+		return collected;
 	}
 
 	public boolean isSimilar( Item item ) {
