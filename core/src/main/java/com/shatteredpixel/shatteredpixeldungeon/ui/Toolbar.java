@@ -803,6 +803,7 @@ public class Toolbar extends Component {
 			super.createChildren();
 			
 			base = new Image( Assets.Interfaces.TOOLBAR );
+			ChromeColors.tint( base );
 			add( base );
 		}
 		
@@ -826,13 +827,13 @@ public class Toolbar extends Component {
 
 		@Override
 		protected void onPointerDown() {
-			base.brightness( 1.4f );
+			ChromeColors.shade( base, 1.4f );
 		}
 		
 		@Override
 		protected void onPointerUp() {
 			if (active) {
-				base.resetColor();
+				ChromeColors.tint( base );
 			} else {
 				base.tint( BGCOLOR, 0.7f );
 			}

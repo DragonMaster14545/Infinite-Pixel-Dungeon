@@ -26,6 +26,7 @@ package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 
 
+import com.shatteredpixel.shatteredpixeldungeon.ChromeColors;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
@@ -90,6 +91,7 @@ public class StatusPane extends Component {
 
 		if (large)  bg = new NinePatch( asset, 0, 64, 41, 39, 33, 0, 4, 0 );
 		else        bg = new NinePatch( asset, 0, 0, 128, 36, 85, 0, 45, 0 );
+		ChromeColors.tint( bg );
 		add( bg );
 
 		heroInfo = new Button(){

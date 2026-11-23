@@ -59,8 +59,15 @@ public class Chrome {
 	}
 
 	private static boolean tinted( Type type ) {
-        return Objects.requireNonNull(type) != Type.RED_BUTTON;
-    }
+		switch (type) {
+			case RED_BUTTON:
+			case BLANK:
+			case TOAST_WHITE:
+				return false;
+			default:
+				return true;
+		}
+	}
 
 	private static NinePatch base( Type type ) {
 		String Asset = Assets.Interfaces.CHROME;

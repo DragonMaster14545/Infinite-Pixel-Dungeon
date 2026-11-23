@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.ChromeColors;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -84,6 +85,7 @@ public class TalentButton extends Button {
 		add(fill);
 
 		bg = new Image(Assets.Interfaces.TALENT_BUTTON);
+		ChromeColors.tint(bg);
 		add(bg);
 	}
 
@@ -223,14 +225,14 @@ public class TalentButton extends Button {
 	@Override
 	protected void onPointerDown() {
 		icon.brightness( 1.5f );
-		bg.brightness( 1.5f );
+		ChromeColors.shade(bg, 1.5f );
 		Sample.INSTANCE.play( Assets.Sounds.CLICK );
 	}
 
 	@Override
 	protected void onPointerUp() {
 		icon.resetColor();
-		bg.resetColor();
+		ChromeColors.tint(bg);
 	}
 
 	@Override

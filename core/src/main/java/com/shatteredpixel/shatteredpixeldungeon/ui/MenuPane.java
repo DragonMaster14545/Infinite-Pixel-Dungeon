@@ -71,6 +71,7 @@ public class MenuPane extends Component {
 		super.createChildren();
 
 		bg = new Image(Assets.Interfaces.MENU);
+		ChromeColors.tint(bg);
 		add(bg);
 
 		depthIcon = Icons.get(Dungeon.branch);

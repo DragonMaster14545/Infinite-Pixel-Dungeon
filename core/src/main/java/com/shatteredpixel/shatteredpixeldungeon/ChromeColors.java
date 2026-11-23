@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon;
 
+import com.watabou.noosa.Visual;
 import com.watabou.utils.GameSettings;
 
 public class ChromeColors {
@@ -34,5 +35,28 @@ public class ChromeColors {
 
     public static int labelColor(int i) {
         return COLORS[i] == -1 ? 0xFFFFFF : COLORS[i];
+    }
+
+    public static void tint(Visual v) {
+        if (v == null) return;
+        int c = color();
+        if (c == -1) {
+            v.resetColor();
+        } else {
+            v.hardlight(c);
+        }
+    }
+
+    public static void shade(Visual v, float b) {
+        if (v == null) return;
+        int c = color();
+        if (c == -1) {
+            v.brightness(b);
+        } else {
+            float r = ((c >> 16) & 0xFF) / 255f;
+            float g = ((c >> 8) & 0xFF) / 255f;
+            float bl = (c & 0xFF) / 255f;
+            v.hardlight(r * b, g * b, bl * b);
+        }
     }
 }
