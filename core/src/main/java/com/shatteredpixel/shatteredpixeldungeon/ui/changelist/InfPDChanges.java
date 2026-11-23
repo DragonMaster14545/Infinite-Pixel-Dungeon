@@ -155,7 +155,8 @@ public class InfPDChanges {
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
                 "_-_ Fixed hero upgrades doesn't load in the next load when not upgraded\n" +
-                            "_-_ Fixed quantities of missile weapons exceeds to its limits when obtained through fishing rods and treasure bags"
+                            "_-_ Fixed quantities of missile weapons exceeds to its limits when obtained through fishing rods and treasure bags\n" +
+                            "_-_ Fixed seceral bugs on Waved Arena Level"
         ));
 
         changes = new ChangeInfo("InfPD-0.2.0", true, "");

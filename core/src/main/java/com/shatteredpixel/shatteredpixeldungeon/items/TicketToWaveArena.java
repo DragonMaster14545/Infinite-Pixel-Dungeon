@@ -85,10 +85,12 @@ public class TicketToWaveArena extends Item{
                 Catalog.countUse(getClass());
                 ArenaInventory.stashAndStart( hero );
             } else {
+                ArenaInventory.ensureLoaded();
+                boolean known = ArenaInventory.depth > 0;
                 InterlevelScene.mode = InterlevelScene.Mode.RETURN;
-                InterlevelScene.returnDepth = ArenaInventory.depth;
-                InterlevelScene.returnBranch = ArenaInventory.branch;
-                InterlevelScene.returnPos = ArenaInventory.pos;
+                InterlevelScene.returnDepth = known ? ArenaInventory.depth : 1;
+                InterlevelScene.returnBranch = known ? ArenaInventory.branch : Dungeon.BRANCH_NORMAL;
+                InterlevelScene.returnPos = known ? ArenaInventory.pos : -1;
                 Game.switchScene( InterlevelScene.class );
                 detach(hero.belongings.backpack);
                 ArenaInventory.restoreAndMerge( hero );

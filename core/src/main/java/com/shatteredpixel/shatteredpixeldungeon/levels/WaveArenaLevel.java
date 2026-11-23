@@ -41,6 +41,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Stamina;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.MobSpawner;
 import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
+import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.emblem.LaserisedEmblem;
@@ -96,6 +97,8 @@ public class WaveArenaLevel extends Level {
     private ArenaShopLevel shop;
     private int waveNumber = 0;
     private boolean waveActive = false;
+    private int waveTimer = 0;
+    private int announcedRemaining = -1;
 
     @Override
     public String tilesTex() {
@@ -113,6 +116,7 @@ public class WaveArenaLevel extends Level {
     private static final String SHOP = "shop";
     private static final String WAVE_NUM = "wave_number";
     private static final String WAVE_ACTIVE = "wave_active";
+    private static final String WAVE_TIMER = "wave_timer";
 
     @Override
     public void storeInBundle( Bundle bundle ) {
@@ -123,6 +127,7 @@ public class WaveArenaLevel extends Level {
         bundle.put( SHOP, shop);
         bundle.put( WAVE_NUM, waveNumber );
         bundle.put( WAVE_ACTIVE, waveActive );
+        bundle.put( WAVE_TIMER, waveTimer );
     }
 
     @Override
@@ -134,6 +139,7 @@ public class WaveArenaLevel extends Level {
         shop = (ArenaShopLevel) bundle.get(SHOP);
         waveNumber = bundle.contains( WAVE_NUM ) ? bundle.getInt( WAVE_NUM ) : 0;
         waveActive = bundle.contains( WAVE_ACTIVE ) && bundle.getBoolean( WAVE_ACTIVE );
+        waveTimer = bundle.contains( WAVE_TIMER ) ? bundle.getInt( WAVE_TIMER ) : 0;
     }
 
     @Override
@@ -227,6 +233,41 @@ public class WaveArenaLevel extends Level {
         return true;
     }
 
+    private static final int SHOP_STOCK_CAP = 12;
+
+    private boolean insideShop( int cell ) {
+        int x = cell % width();
+        int y = cell / width();
+        return x >= ROOM_LEFT - 1 && x <= ROOM_RIGHT + 1 && y >= ROOM_TOP - 1 && y <= ROOM_BOTTOM + 1;
+    }
+
+    private Heap stockedHeap( Item item ) {
+        for (int y = ROOM_TOP; y <= ROOM_BOTTOM; y++) {
+            for (int x = ROOM_LEFT; x <= ROOM_RIGHT; x++) {
+                Heap heap = heaps.get( x + y * width() );
+                if (heap != null && heap.type == Heap.Type.FOR_SALE && heap.peek() != null
+                        && heap.peek().getClass() == item.getClass()) {
+                    return heap;
+                }
+            }
+        }
+        return null;
+    }
+
+    private int freeShopCell() {
+        ArrayList<Integer> free = new ArrayList<>();
+        int entrancePos = entrance();
+        for (int y = ROOM_TOP; y <= ROOM_BOTTOM; y++) {
+            for (int x = ROOM_LEFT; x <= ROOM_RIGHT; x++) {
+                int cell = x + y * width();
+                if (cell == entrancePos || cell == arenaDoor) continue;
+                if (heaps.get( cell ) != null || findMob( cell ) != null) continue;
+                free.add( cell );
+            }
+        }
+        return free.isEmpty() ? -1 : Random.element( free );
+    }
+
     public void generateItems() {
 
         itemsToSpawn = new ArrayList<>();
@@ -235,17 +276,18 @@ public class WaveArenaLevel extends Level {
 
         for (Item item : itemsToSpawn) {
 
-            //TODO possible infinite loop here, needs fix
-            //     and we need a gold effect when spawning
-            //     the items.
-            int cell;
-            do {
-                cell = pointToCell(new Point(
-                        Random.IntRange( ROOM_LEFT, ROOM_RIGHT ),
-                        Random.IntRange( ROOM_TOP, ROOM_BOTTOM )
-                ));
-            } while (cell == entrance || cell == arenaDoor
-                    || heaps.get( cell ) != null || findMob( cell ) != null);
+            Heap existing = stockedHeap( item );
+            if (existing != null) {
+                Item stocked = existing.peek();
+                BigInteger cap = BigInteger.valueOf( SHOP_STOCK_CAP );
+                if (stocked.quantity().compareTo( cap ) < 0) {
+                    stocked.quantity( stocked.quantity().add( item.quantity() ).min( cap ) );
+                }
+                continue;
+            }
+
+            int cell = freeShopCell();
+            if (cell == -1) continue;
 
             drop( item, cell ).type = Heap.Type.FOR_SALE;
         }
@@ -330,6 +372,8 @@ public class WaveArenaLevel extends Level {
     private void startNextWave() {
         waveNumber++;
         waveActive = true;
+        waveTimer = 0;
+        announcedRemaining = -1;
 
         int waveSize = waveSizeFor( waveNumber );
 
@@ -338,9 +382,11 @@ public class WaveArenaLevel extends Level {
             Mob mob = createMobforWaveArena( waveNumber );
             if (mob == null) continue;
 
+            int spawnCell = waveSpawnCell( mob );
+            if (spawnCell == -1) continue;
+
             mob.state = mob.WANDERING;
-            mob.pos = randomRespawnCell( mob );
-            if (mob.pos == -1) continue;
+            mob.pos = spawnCell;
 
             GameScene.add( mob );
             mob.beckon( Dungeon.hero.pos );
@@ -360,6 +406,19 @@ public class WaveArenaLevel extends Level {
         }
     }
 
+    private int waveSpawnCell( Mob mob ) {
+        for (int pass = 0; pass < 2; pass++) {
+            for (int i = 0; i < 80; i++) {
+                int cell = Random.Int( length() );
+                if (!passable[cell] || Actor.findChar( cell ) != null || insideShop( cell )) continue;
+                if (Char.hasProp( mob, Char.Property.LARGE ) && !openSpace[cell]) continue;
+                if (pass == 0 && (heroFOV[cell] || distance( cell, Dungeon.hero.pos ) < 6)) continue;
+                return cell;
+            }
+        }
+        return -1;
+    }
+
     private static int waveSizeFor( int wave ) {
         return Math.min( 60, 2 + wave / 3); //grows by 1 every 3 waves
     }
@@ -367,6 +426,9 @@ public class WaveArenaLevel extends Level {
     //the actual "mobs get stronger per wave" scaling
     private static void scaleMobForWave( Mob mob, int wave ) {
         int power = wave * 5;
+
+        mob.HT = mob.HT.multiply( BigInteger.valueOf( 100 + wave * 10L ) ).divide( BigInteger.valueOf( 100 ) );
+        mob.HP = mob.HT;
 
         Buff.affect( mob, Stamina.class, power );
         mob.aggro( Dungeon.hero );
@@ -380,13 +442,13 @@ public class WaveArenaLevel extends Level {
         if (wave >= 15) {
             Buff.affect( mob, RageShield.class ).set( power * 2 );
         }
-        if (wave >= 20) {
-            mob.HP = mob.HT = BigInteger.valueOf(Big.toInt(((Big.dec(mob.HT).multiply(Big.dec((1 + wave / 10f))))).toBigInteger()));
-        }
         if (wave >= 25 && Random.Int( 3 ) == 0) {
             ChampionEnemy.rollForChampion( mob );
         }
     }
+
+    private static final int STRAGGLER_TURNS = 120;
+    private static final int TIMEOUT_TURNS = 500;
 
     public static class WaveRespawner extends MobSpawner {
 
@@ -398,26 +460,57 @@ public class WaveArenaLevel extends Level {
         protected boolean act() {
             WaveArenaLevel level = (WaveArenaLevel) Dungeon.level;
 
-            int aliveWaveMobs = 0;
+            ArrayList<Mob> remaining = new ArrayList<>();
             for (Mob mob : level.mobs.toArray(new Mob[0])) {
-                if (mob.alignment == Char.Alignment.ENEMY && mob.buff( WaveMob.class ) != null) {
-                    aliveWaveMobs++;
+                if (mob.alignment == Char.Alignment.ENEMY && mob.isAlive()) {
+                    remaining.add( mob );
                 }
             }
 
-            if (aliveWaveMobs == 0 && level.waveActive) {
-                level.waveActive = false;
-                GLog.p( Messages.get( WaveArenaLevel.class, "wave_cleared", level.waveNumber ) );
-                PotionOfHealing.heal( Dungeon.hero );
+            if (level.waveActive) {
+                level.waveTimer++;
+
+                if (remaining.isEmpty()) {
+                    level.waveActive = false;
+                    level.waveTimer = 0;
+                    level.announcedRemaining = -1;
+                    GLog.p( Messages.get( WaveArenaLevel.class, "wave_cleared", level.waveNumber ) );
+                    PotionOfHealing.heal( Dungeon.hero );
+
+                    BigInteger reward = new Gold().random().quantity()
+                            .multiply( BigInteger.valueOf( 1 + level.waveNumber / 5 ) );
+                    Dungeon.gold = Dungeon.gold.add( reward );
+                    GLog.p( Messages.get( WaveArenaLevel.class, "wave_reward", Big.fmt( reward ) ) );
+                } else {
+                    if (remaining.size() <= 3 && remaining.size() != level.announcedRemaining) {
+                        level.announcedRemaining = remaining.size();
+                        GLog.i( Messages.get( WaveArenaLevel.class, "wave_remaining", remaining.size() ) );
+                    }
+                    if (level.waveTimer == STRAGGLER_TURNS) {
+                        GLog.w( Messages.get( WaveArenaLevel.class, "wave_stragglers" ) );
+                        for (Mob mob : remaining) {
+                            mob.aggro( Dungeon.hero );
+                            mob.beckon( Dungeon.hero.pos );
+                        }
+                    } else if (level.waveTimer >= TIMEOUT_TURNS) {
+                        GLog.w( Messages.get( WaveArenaLevel.class, "wave_timeout" ) );
+                        for (Mob mob : remaining) {
+                            mob.die( Dungeon.hero );
+                        }
+                    }
+                }
             }
 
             if (!level.waveActive && Dungeon.hero != null && Dungeon.hero.isAlive()) {
+                float needed = WAVE_INTERMISSION + Math.min( 12, level.waveNumber / 2 );
+
                 WaveCountdown countdown = Dungeon.hero.buff( WaveCountdown.class );
                 if (countdown == null) {
                     countdown = Buff.affect( Dungeon.hero, WaveCountdown.class );
+                    GLog.i( Messages.get( WaveArenaLevel.class, "wave_next", (int) needed ) );
                 }
 
-                if (countdown.count() >= WAVE_INTERMISSION) {
+                if (countdown.count() >= needed) {
                     countdown.detach();
                     level.startNextWave();
                 } else {
