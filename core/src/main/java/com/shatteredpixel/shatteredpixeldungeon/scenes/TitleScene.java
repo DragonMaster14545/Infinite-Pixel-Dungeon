@@ -40,6 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.services.news.News;
 import com.shatteredpixel.shatteredpixeldungeon.services.updates.AvailableUpdateData;
 import com.shatteredpixel.shatteredpixeldungeon.services.updates.Updates;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
+import com.shatteredpixel.shatteredpixeldungeon.ui.AnnouncementButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Archs;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ExitButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
@@ -210,6 +211,10 @@ public class TitleScene extends PixelScene {
 			btnSettings.setRect(btnSave.left(), btnSave.bottom()+GAP, btnRankings.width(), BTN_HEIGHT);
 			btnAbout.setRect(btnSettings.right()+2, btnSettings.top(), btnSettings.width(), BTN_HEIGHT);
 		}
+
+		AnnouncementButton btnAnnounce = new AnnouncementButton(GREY_TR, Messages.get(this, "announcements"));
+		btnAnnounce.setRect( 2, h - 18, 52, 16 );
+		add( btnAnnounce );
 
 		BitmapText version = new BitmapText( "v" + Game.version, pixelFont);
 		version.measure();

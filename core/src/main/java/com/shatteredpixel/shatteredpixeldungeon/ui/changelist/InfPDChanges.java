@@ -150,13 +150,14 @@ public class InfPDChanges {
                 "A new wand that functions as a zoning wand! It can damage enemies with elemental power."));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
-                "_-_ You can now change the color of borders in the settings"
+                "_-_ You can now change the color of borders in the settings\n" +
+                            "_-_ You can now view announcements on title scene"
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
                 "_-_ Fixed hero upgrades doesn't load in the next load when not upgraded\n" +
                             "_-_ Fixed quantities of missile weapons exceeds to its limits when obtained through fishing rods and treasure bags\n" +
-                            "_-_ Fixed seceral bugs on Waved Arena Level"
+                            "_-_ Fixed several bugs on Waved Arena Level"
         ));
 
         changes = new ChangeInfo("InfPD-0.2.0", true, "");
