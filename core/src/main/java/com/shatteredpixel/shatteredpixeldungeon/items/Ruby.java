@@ -70,7 +70,7 @@ public class Ruby extends Item {
 
     @Override
     public Item random() {
-        quantity = BigInteger.valueOf(Random.IntRange(1, 3));
+        quantity = BigInteger.valueOf(Random.IntRange(1, 2));
         return this;
     }
 }
