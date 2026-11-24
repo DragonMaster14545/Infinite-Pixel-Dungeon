@@ -69,7 +69,10 @@ public class Perks {
         FRIENDLY_BEES,
         RARITIZE_MAGIC,
         SUPPLY_RATIONS,
-        DUNGEON_BERRY;
+        DUNGEON_BERRY,
+        SCROLL_MASTER,
+        POTION_MASTER,
+        EFF_EXPBOMBS;
 
         public String desc() {
             return Messages.get(Perks.class, name() + ".desc");

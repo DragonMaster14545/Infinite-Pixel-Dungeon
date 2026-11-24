@@ -78,6 +78,12 @@ public class InfPDChanges {
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.TALENT), "New Hero Perks",
+                "New perks has been added to the game!\n\n" +
+                        "_-_ Scroll/Potion Master: drops a random scroll/potion in 25% chance when killing an enemy.\n" +
+                        "_-_ Efficient Experience Bombs: experience bombs now give additional 4 stacks of wrath of excalibur."
+        ));
+
         changes.addButton( new ChangeButton(Icons.get(Icons.STAIRS), "New Rooms",
                 "There are new rooms to mess with the dungeon. We've added 5 rooms on each type: Crystal, Special and Secret rooms.",
                             "_Special Rooms:_\n\n" +

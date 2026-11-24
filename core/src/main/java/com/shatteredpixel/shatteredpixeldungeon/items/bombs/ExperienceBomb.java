@@ -33,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Freezing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Perks;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Longsword;
@@ -59,6 +60,9 @@ public class ExperienceBomb extends Bomb {
 				Char ch = Actor.findChar(i);
 				if (ch != null){
 					Buff.affect(ch, Longsword.HolyExpEffect.class).stacks++;
+					if (Dungeon.hero.perks.contains(Perks.Perk.EFF_EXPBOMBS)) {
+						Buff.affect(ch, Longsword.HolyExpEffect.class).stacks += 4;
+					}
 				}
 			}
 		}

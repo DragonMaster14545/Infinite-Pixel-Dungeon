@@ -1039,6 +1039,14 @@ public abstract class Mob extends Char {
 			}
 		}
 
+		if (Dungeon.hero.perks.contains(Perks.Perk.SCROLL_MASTER) && Random.Float() < 0.25f){
+			Dungeon.level.drop(Generator.random(Generator.Category.SCROLL), pos).sprite.drop();
+		}
+
+		if (Dungeon.hero.perks.contains(Perks.Perk.POTION_MASTER) && Random.Float() < 0.25f){
+			Dungeon.level.drop(Generator.random(Generator.Category.POTION), pos).sprite.drop();
+		}
+
 		if (Dungeon.hero.grinding && Dungeon.hero.heroClass == HeroClass.MAGE && Random.Float() < 0.33f){
 			Dungeon.level.drop(Generator.random(Generator.Category.SCROLL), pos).sprite.drop();
 		}
