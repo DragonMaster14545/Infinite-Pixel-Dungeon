@@ -151,7 +151,8 @@ public class InfPDChanges {
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
                 "_-_ You can now change the color of borders in the settings\n" +
-                            "_-_ You can now view announcements on title scene"
+                            "_-_ You can now view announcements on title scene\n" +
+                            "_-_ Max additional room size multiplier increased to 100%, from 65%. This will set the current strength potions to 2 instead of 1."
         ));
 
         changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",

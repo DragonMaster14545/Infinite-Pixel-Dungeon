@@ -300,7 +300,7 @@ public class Hero extends Char {
 		return 0.65f;
 	}
 	public float getRoomMaxAdditionalSizeMultiplier() {
-		return 0.65f;
+		return 1f;
 	}
 	public float getMobMultiplier() {
 		return 2f * StaircaseTotem.additionalMobMulti();
