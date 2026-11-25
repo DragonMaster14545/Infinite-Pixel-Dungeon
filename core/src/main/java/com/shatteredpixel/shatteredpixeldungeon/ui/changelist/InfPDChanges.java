@@ -88,6 +88,10 @@ public class InfPDChanges {
                         " on the vault link window."
         ));
 
+        changes.addButton( new ChangeButton(Icons.BUFFS.get(), "Buffs and Nerfs",
+                "_-_ Consumables' quantity on fishing rods increased by x1/x3/x4/x5 within 60%/30%/10%/0.001%, gold increased by x2 but fishing rods' prices increased by 25%\n"
+        ));
+
         changes = new ChangeInfo("A", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);

@@ -198,7 +198,7 @@ public class FishingHook extends Ring {
 		switch (Random.Int(4)){
 			case 0: default:
 				Item i = new Gold().random();
-				return i.quantity(i.quantity());
+				return i.quantity(i.quantity().multiply(BigInteger.valueOf(2)));
 			case 1:
 				return Generator.random(Generator.Category.STONE);
 			case 2:
@@ -212,7 +212,7 @@ public class FishingHook extends Ring {
 		switch (Random.Int(7)){
 			case 0: default:
 				Item i = genLowValueConsumable();
-				return i.quantity(i.quantity().multiply(BigInteger.valueOf(2)));
+				return i.quantity(i.quantity().multiply(BigInteger.valueOf(3)));
 			case 1:
 				i = Generator.randomUsingDefaults(Generator.Category.POTION);
 				if (!(i instanceof ExoticPotion)) {
@@ -243,7 +243,7 @@ public class FishingHook extends Ring {
 				if (i instanceof Bomb){
 					return new Bomb.DoubleBomb();
 				} else {
-					return i.quantity(i.quantity().multiply(BigInteger.valueOf(2)));
+					return i.quantity(i.quantity().multiply(BigInteger.valueOf(4)));
 				}
 			case 1:
 				return new StoneOfEnchantment();
@@ -263,7 +263,7 @@ public class FishingHook extends Ring {
                 if (i instanceof Bomb) {
 					return new Bomb.DoubleBomb();
 				} else {
-					return i.quantity(i.quantity().multiply(BigInteger.valueOf(2)));
+					return i.quantity(i.quantity().multiply(BigInteger.valueOf(5)));
 				}
             case 1:
                 return new IdealBag();

@@ -228,6 +228,6 @@ public abstract class FishingRod extends Item {
 
     @Override
     public BigInteger value() {
-        return BigInteger.valueOf(60).multiply(Dungeon.escalatingDepth()).divide(BigInteger.valueOf(5));
+        return BigInteger.valueOf(75).multiply(Dungeon.escalatingDepth()).divide(BigInteger.valueOf(5));
     }
 }
