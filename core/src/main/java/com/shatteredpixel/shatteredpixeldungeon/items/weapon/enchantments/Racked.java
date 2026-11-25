@@ -63,7 +63,7 @@ public class Racked extends Weapon.Enchantment {
 		}
 
 		if (attacker.buff(RackedEnchantmentCooldown.class) == null) {
-			Buff.affect(attacker, StackTracker.class).set(30f);
+			Buff.affect(attacker, StackTracker.class).set(40f);
 		}
 
 		return damage;
@@ -77,7 +77,7 @@ public class Racked extends Weapon.Enchantment {
 	public static class StackTracker extends Buff {
 
 		public int stacks = 0;
-		public float duration = 30f;
+		public float duration = 40f;
 
 		@Override
 		public int icon() {
