@@ -55,6 +55,7 @@ public class RegrowingSlasher extends BlacksmithWeapon implements InternalKillsT
         hitSound = Assets.Sounds.HIT_SLASH;
         hitSoundPitch = 1.1f;
 
+        DLY = 0.95f;
     }
 
     static final Class<Plant>[] harmfulPlants = new Class[]{Sorrowmoss.class, Stormvine.class, Firebloom.class, Blindweed.class};

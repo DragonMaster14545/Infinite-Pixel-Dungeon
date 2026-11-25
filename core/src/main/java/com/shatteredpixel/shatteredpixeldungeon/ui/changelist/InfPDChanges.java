@@ -93,7 +93,8 @@ public class InfPDChanges {
                             "_-_ Reduced Item Quantifier's recipe cost and increased both unique and normal cost multipliers by +3%\n" +
                             "_-_ Increased Reclaim Trap spell's output recipe by 1 (from 5, to 6)\n" +
                             "_-_ Reduced Pocket Alchemy spell cooldown by 50 turns (from 500, to 450)\n" +
-                            "_-_ Increased Searing Slasher's max initial damage to 30, from ~23"
+                            "_-_ Increased Searing Slasher's max initial damage to 30, from ~23\n" +
+                            "_-_ Increased Regrowing Slasher's attack speed by ~5%\n"
         ));
 
         changes = new ChangeInfo("A", false, "");
