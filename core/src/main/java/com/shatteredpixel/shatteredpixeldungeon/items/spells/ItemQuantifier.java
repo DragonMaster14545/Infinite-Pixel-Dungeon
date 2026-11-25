@@ -77,7 +77,7 @@ public class ItemQuantifier extends InventorySpell {
 					item.quantity(item.quantity().add(BigInteger.valueOf(2)));
 					GLog.p(Messages.get(this, "quantified_unique", item.quantity()));
 					curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
-					increaseCost += Random.Double(0.75d);
+					increaseCost += Random.Double(0.78d);
 				} else {
 					item.quantity(item.quantity().subtract(BigInteger.ONE));
 					GLog.p(Messages.get(this, "false_quantify_unique", item.quantity()));
@@ -88,7 +88,7 @@ public class ItemQuantifier extends InventorySpell {
 					item.quantity(item.quantity().add(BigInteger.valueOf(3)));
 					GLog.p(Messages.get(this, "quantified", item.quantity()));
 					curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 10);
-					increaseCost += Random.Double(0.25d);
+					increaseCost += Random.Double(0.28d);
 				} else {
 					item.quantity(item.quantity().subtract(BigInteger.ONE));
 					GLog.p(Messages.get(this, "false_quantify", item.quantity()));
@@ -141,9 +141,9 @@ public class ItemQuantifier extends InventorySpell {
 		@Override
 		public BigInteger cost( ArrayList<Item> ingredients ) {
 			if (Dungeon.hero == null || !Dungeon.hero.isAlive()) {
-				return BigInteger.valueOf(150);
+				return BigInteger.valueOf(75);
 			} else {
-				return Big.of((150 * increaseCost()));
+				return Big.of((75 * increaseCost()));
 			}
 		}
 		
