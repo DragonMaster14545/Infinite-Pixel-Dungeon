@@ -6,6 +6,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BadgeBanner;
 import com.shatteredpixel.shatteredpixeldungeon.items.BlackPsycheChest;
 import com.shatteredpixel.shatteredpixeldungeon.items.CompartmentBox;
+import com.shatteredpixel.shatteredpixeldungeon.items.GiftBox;
 import com.shatteredpixel.shatteredpixeldungeon.items.InfoPage;
 import com.shatteredpixel.shatteredpixeldungeon.items.LostBackpack;
 import com.shatteredpixel.shatteredpixeldungeon.items.PrismBox;
@@ -75,6 +76,19 @@ public class InfPDChanges {
         ));
 
         changes = new ChangeInfo("InfPD-0.2.1", true, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes = new ChangeInfo("B", false, "");
+        changes.hardlight(0x00FFFF);
+        changeInfos.add(changes);
+
+        changes.addButton( new ChangeButton(new GiftBox(),
+                "You can now gift everyone using the new item, the Gift Box. To craft one, you need to unlock the vault link recipe. To redeem them, click the \"redeem\" button" +
+                        " on the vault link window."
+        ));
+
+        changes = new ChangeInfo("A", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);
 

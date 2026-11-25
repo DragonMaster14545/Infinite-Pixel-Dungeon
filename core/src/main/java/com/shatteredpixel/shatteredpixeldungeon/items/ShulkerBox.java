@@ -87,7 +87,7 @@ public class ShulkerBox extends Item {
         return true;
     }
 
-    private long boxId = newId();
+    public long boxId = newId();
 
     public ArrayList<Item> contents() {
         return new ArrayList<>(contents);
@@ -157,6 +157,7 @@ public class ShulkerBox extends Item {
 				&& (!filter.isActive() || filter.matches(item))
                 && item != null
                 && !item.keptBound
+                && !item.gifted
                 && !(item instanceof Bag)
                 && !(item instanceof ShulkerBox)
                 && !item.isEquipped(hero)
@@ -461,9 +462,9 @@ public class ShulkerBox extends Item {
         });
     }
 
-    private boolean customColor = true;
+    public boolean customColor = true;
     private boolean playerColor = false;
-    private int color = hueColor(boxId);
+    public int color = hueColor(boxId);
 
     public ShulkerBox setColor(int rgb) {
         customColor = true;

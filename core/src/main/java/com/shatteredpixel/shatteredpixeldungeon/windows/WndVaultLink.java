@@ -2,6 +2,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 
 
+import com.shatteredpixel.shatteredpixeldungeon.items.GiftBox;
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -62,7 +63,7 @@ public class WndVaultLink extends Window {
 		}
 		int gridHeight = slotHeight * ROWS + SLOT_MARGIN * (ROWS - 1);
 		while (slotHeight >= 20
-				&& (TITLE_HEIGHT + gridHeight + nav + BUTTON_HEIGHT * 4 + 7 + 20 + chrome.marginTop()) > PixelScene.uiCamera.height) {
+				&& (TITLE_HEIGHT + gridHeight + nav + BUTTON_HEIGHT * 5 + 7 + 20 + chrome.marginTop()) > PixelScene.uiCamera.height) {
 			slotHeight--;
 			gridHeight -= ROWS;
 		}
@@ -196,7 +197,17 @@ public class WndVaultLink extends Window {
 		history.setRect(0, y + (BUTTON_HEIGHT + SLOT_MARGIN) * 3, windowWidth, BUTTON_HEIGHT);
 		add(history);
 
-		resize(windowWidth, (int) (y + BUTTON_HEIGHT * 4 + SLOT_MARGIN * 3));
+		RedButton redeem = new RedButton(Messages.get(link, "btn_redeem")) {
+			@Override
+			public void onClick() {
+				hide();
+				GiftBox.redeem(WndVaultLink.this.link, reopen());
+			}
+		};
+		redeem.setRect(0, y + (BUTTON_HEIGHT + SLOT_MARGIN) * 4, windowWidth, BUTTON_HEIGHT);
+		add(redeem);
+
+		resize(windowWidth, (int) (y + BUTTON_HEIGHT * 5 + SLOT_MARGIN * 3));
 	}
 
 	private void goTo(long newPage) {

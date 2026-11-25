@@ -267,7 +267,8 @@ public abstract class Recipe {
 			new ItemGetter.Recipe(),
 			new Powerless.Recipe(),
 			new Raritize.MergeRecipe(),
-			new SmokedBuffs.Recipe()
+			new SmokedBuffs.Recipe(),
+			new GiftBox.Recipe()
 	};
 	
 	private static Recipe[] threeIngredientRecipes = new Recipe[]{

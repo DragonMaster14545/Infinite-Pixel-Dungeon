@@ -25,6 +25,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 
+import com.shatteredpixel.shatteredpixeldungeon.items.GiftBox;
 import com.shatteredpixel.shatteredpixeldungeon.items.specialitems.BowOfHunter;
 import com.shatteredpixel.shatteredpixeldungeon.items.specialitems.CloakCloth;
 import com.shatteredpixel.shatteredpixeldungeon.items.specialitems.DuelistsRapier;
@@ -452,6 +453,7 @@ public class QuickRecipe extends Component {
             case 9:
                 if (Badges.isUnlocked(Badges.Badge.WAND_QUEST_6)) result.add(new QuickRecipe(new WandOfEarthblast.Recipe(), new ArrayList<>(Arrays.asList(new WandOfFireblast(), new WandOfLivingEarth(), new Cheese())), new WandOfEarthblast()));
 				if (Badges.isUnlocked(Badges.Badge.KIT_UNLOCKED)) result.add(new QuickRecipe(new VaultLink.Recipe(), new ArrayList<>(Arrays.asList(new ShulkerBox(), new ScrollOfUpgrade(), new ElixirOfMight())), new VaultLink()));
+				if (Badges.isUnlocked(Badges.Badge.KIT_UNLOCKED)) result.add(new QuickRecipe(new GiftBox.Recipe()));
 				result.add(new QuickRecipe(new EnchantmentRune.Recipe()));
 				result.add(new QuickRecipe(new WandOfTeleportation.Recipe()));
                 result.add(new QuickRecipe(new WandOfLifesteal.Recipe()));

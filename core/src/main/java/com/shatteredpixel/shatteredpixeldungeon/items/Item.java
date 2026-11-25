@@ -242,6 +242,7 @@ public class Item implements Bundlable {
 	public boolean wereOofed = false;
     public boolean canCollectWithSOH = false;
 	public boolean keptBound = false;
+	public boolean gifted = false;
 	
 	public static final Comparator<Item> itemComparator = new Comparator<Item>() {
 		@Override
@@ -613,7 +614,7 @@ public class Item implements Bundlable {
 	}
 	
 	public boolean isSimilar( Item item ) {
-		return getClass() == item.getClass() && rarity == item.rarity;
+		return getClass() == item.getClass() && rarity == item.rarity && gifted == item.gifted && keptBound == item.keptBound;
 	}
 
 	public void onDetach(){}
@@ -820,6 +821,9 @@ public class Item implements Bundlable {
 			if (keptBound) {
 				joint += Messages.get(this, "kept_bound") + "\n\n";
 			}
+
+			if (gifted) joint += Messages.get(Item.class, "gifted") + "\n\n";
+
             return joint + desc();
 		}
 
@@ -891,6 +895,7 @@ public class Item implements Bundlable {
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		bundle.put( "kept_bound", keptBound );
+		bundle.put( "gifted", gifted );
 		Big.put(bundle, QUANTITY, quantity);
 		Big.put(bundle, LEVEL, level);
 		bundle.put( LEVEL_KNOWN, levelKnown );
@@ -914,6 +919,7 @@ public class Item implements Bundlable {
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		keptBound = bundle.getBoolean( "kept_bound" );
+		gifted = bundle.getBoolean( "gifted" );
 		quantity	= Big.getBig(bundle, QUANTITY);
 		levelKnown	= bundle.getBoolean( LEVEL_KNOWN );
 		cursedKnown	= bundle.getBoolean( CURSED_KNOWN );
