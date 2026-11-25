@@ -53,7 +53,7 @@ public class SearingSlasher extends MeleeWeapon {
 
     @Override
     public BigInteger max(BigInteger lvl) {
-        return  Big.roundD(4.5d*(tier+1)).add(lvl.multiply(Big.roundD(0.9d*(tier+1))));  //+4-5 per level
+        return  Big.roundD(6d*(tier+1)).add(lvl.multiply(Big.roundD(0.9d*(tier+1))));  //+4-5 per level
     }
 
     @Override

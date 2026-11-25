@@ -92,7 +92,8 @@ public class InfPDChanges {
                 "_-_ Consumables' quantity on fishing rods increased by x1/x3/x4/x5 within 60%/30%/10%/0.001%, gold increased by x2 but fishing rods' prices increased by 25%\n" +
                             "_-_ Reduced Item Quantifier's recipe cost and increased both unique and normal cost multipliers by +3%\n" +
                             "_-_ Increased Reclaim Trap spell's output recipe by 1 (from 5, to 6)\n" +
-                            "_-_ Reduced Pocket Alchemy spell cooldown by 50 turns (from 500, to 450)\n"
+                            "_-_ Reduced Pocket Alchemy spell cooldown by 50 turns (from 500, to 450)\n" +
+                            "_-_ Increased Searing Slasher's max initial damage to 30, from ~23"
         ));
 
         changes = new ChangeInfo("A", false, "");
