@@ -23,6 +23,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.watabou.noosa.Game;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.FileUtils;
 import com.watabou.utils.PlatformSupport;
 
@@ -237,6 +238,10 @@ public class GiftBox extends ShulkerBox {
 	}
 
 	private void share( final Hero hero ) {
+		if (DeviceCompat.isDebug()) {
+			GLog.i( Messages.get( GiftBox.class, "debug_build" ) );
+			return;
+		}
 		if (contents.isEmpty()) {
 			GLog.i( Messages.get( GiftBox.class, "share_empty" ) );
 			return;
