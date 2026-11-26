@@ -98,7 +98,8 @@ public class InfPDChanges {
                             "_-_ Racked enchantment's stack duration increased to 40, from 30\n" +
                             "_-_ You can no longer craft vault links below cycle 1\n" +
                             "_-_ Dimensional Sundial's max level increased to 25, from 10 and reduced its base energy cost to 4, from 6\n" +
-                            "_-_ Eye of Newt's max level increased to 15 from 3, its max reduced vision still caps at 50% and the base energy cost increased to 8, from 6"
+                            "_-_ Eye of Newt's max level increased to 15 from 3, its max reduced vision still caps at 50% and the base energy cost increased to 8, from 6\n" +
+                            "_-_ Mimic Tooth's max level increased to 15 from 5, its Ebony mimic chance is capped at 100% anf the additional energy cost per level is increased to 3, from 2\n"
         ));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",

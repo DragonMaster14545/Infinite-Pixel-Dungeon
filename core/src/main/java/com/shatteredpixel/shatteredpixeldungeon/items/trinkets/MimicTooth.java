@@ -37,12 +37,12 @@ public class MimicTooth extends Trinket {
 	@Override
 	protected BigInteger upgradeEnergyCost() {
 		//6 -> 8(14) -> 10(24) -> 12(36)
-		return BigInteger.valueOf(6).add(BigInteger.valueOf(2).multiply(level()));
+		return BigInteger.valueOf(6).add(BigInteger.valueOf(3).multiply(level()));
 	}
 
     @Override
     public BigInteger maxUpgrade() {
-        return BigInteger.valueOf(5);
+        return BigInteger.valueOf(15);
     }
 
 	@Override
@@ -80,7 +80,7 @@ public class MimicTooth extends Trinket {
 
 	public static float ebonyMimicChance( int level ){
 		if (level >= 0){
-			return 0.125f + 0.125f * level;
+			return Math.min(0.125f + 0.125f * level, 1f);
 		} else {
 			return 0;
 		}
