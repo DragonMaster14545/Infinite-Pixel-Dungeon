@@ -70,7 +70,7 @@ public class Clayball extends MissileWeapon {
 
 	@Override
 	public BigInteger value() {
-		return BigInteger.valueOf(826).multiply(quantity);
+		return BigInteger.valueOf(826).multiply(quantity).multiply(getRarityMultiplier());
 	}
 
 	@Override

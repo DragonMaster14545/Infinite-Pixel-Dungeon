@@ -657,7 +657,7 @@ public class Armor extends EquipableItem implements EquipableItem.Tierable {
 		if ((price.compareTo(BigInteger.ONE) < 0)) {
 			price = BigInteger.ONE;
 		}
-		return (price);
+		return price.multiply(getRarityMultiplier());
 	}
 
 	public Armor inscribe( Glyph glyph ) {

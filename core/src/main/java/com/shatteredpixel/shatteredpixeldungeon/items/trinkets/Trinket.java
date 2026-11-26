@@ -73,7 +73,7 @@ public abstract class Trinket extends Item {
 	public abstract String statsDesc();
 
 	public BigInteger energyVal() {
-		return BigInteger.valueOf(5);
+		return BigInteger.valueOf(5).multiply(getRarityMultiplier());
 	}
     public BigInteger maxUpgrade() {
         return BigInteger.valueOf(3);

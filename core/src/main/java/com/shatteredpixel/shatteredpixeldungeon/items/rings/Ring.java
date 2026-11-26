@@ -316,7 +316,7 @@ public class Ring extends KindofMisc {
 		if ((price.compareTo(BigInteger.ONE) < 0)) {
 			price = BigInteger.ONE;
 		}
-		return (price);
+		return price.multiply(getRarityMultiplier());
 	}
 	
 	protected RingBuff buff() {

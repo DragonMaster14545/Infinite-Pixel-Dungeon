@@ -766,7 +766,7 @@ abstract public class MissileWeapon extends Weapon {
 		if ((price.compareTo(BigInteger.ONE) < 0)) {
 			price = BigInteger.ONE;
 		}
-		return price;
+		return price.multiply(getRarityMultiplier());
 	}
 
 	private static final String SET_ID = "set_id";

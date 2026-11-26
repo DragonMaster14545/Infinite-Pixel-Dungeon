@@ -562,7 +562,7 @@ public abstract class Wand extends Item {
 		if ((price.compareTo(BigInteger.ONE) < 0)) {
 			price = BigInteger.ONE;
 		}
-		return price;
+		return price.multiply(getRarityMultiplier());
 	}
 	
 	private static final String USES_LEFT_TO_ID     = "uses_left_to_id";

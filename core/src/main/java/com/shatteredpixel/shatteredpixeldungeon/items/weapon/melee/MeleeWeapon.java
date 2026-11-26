@@ -468,7 +468,7 @@ private static boolean evaluatingTwinUpgrades = false;
 		if ((price.compareTo(BigInteger.ONE) < 0)) {
 			price = BigInteger.ONE;
 		}
-		return (price);
+		return price.multiply(getRarityMultiplier());
 	}
     private static final String TIER = "tier";
     @Override
