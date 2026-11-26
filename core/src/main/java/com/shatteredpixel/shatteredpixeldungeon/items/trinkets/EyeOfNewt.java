@@ -37,7 +37,12 @@ public class EyeOfNewt extends Trinket {
 	@Override
 	protected BigInteger upgradeEnergyCost() {
 		//6 -> 8(14) -> 10(24) -> 12(36)
-		return BigInteger.valueOf(6).add(BigInteger.valueOf(2).multiply(level()));
+		return BigInteger.valueOf(8).add(BigInteger.valueOf(2).multiply(level()));
+	}
+
+	@Override
+	public BigInteger maxUpgrade() {
+		return BigInteger.valueOf(15);
 	}
 
 	@Override
@@ -61,7 +66,7 @@ public class EyeOfNewt extends Trinket {
 		if (level < 0){
 			return 1;
 		} else {
-			return 0.875f - 0.125f*level;
+			return Math.max(0.875f - 0.125f*level, 0.5f);
 		}
 	}
 
