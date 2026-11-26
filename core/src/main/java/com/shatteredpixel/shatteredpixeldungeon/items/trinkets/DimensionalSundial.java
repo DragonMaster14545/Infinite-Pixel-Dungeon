@@ -41,12 +41,12 @@ public class DimensionalSundial extends Trinket {
 	@Override
 	protected BigInteger upgradeEnergyCost() {
 		//6 -> 8(14) -> 10(24) -> 12(36)
-		return BigInteger.valueOf(6).add(BigInteger.valueOf(2).multiply(level()));
+		return BigInteger.valueOf(4).add(BigInteger.valueOf(2).multiply(level()));
 	}
 
     @Override
     public BigInteger maxUpgrade() {
-        return BigInteger.TEN;
+        return BigInteger.valueOf(25);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class DimensionalSundial extends Trinket {
 		if (level == -1){
 			return 1f;
 		} else {
-			return 0.95f - 0.05f*level;
+			return Math.max(0.95f - 0.05f*level, 0.05f);
 		}
 	}
 
