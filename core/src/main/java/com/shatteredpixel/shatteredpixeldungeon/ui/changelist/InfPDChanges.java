@@ -95,7 +95,8 @@ public class InfPDChanges {
                             "_-_ Reduced Pocket Alchemy spell cooldown by 50 turns (from 500, to 450)\n" +
                             "_-_ Increased Searing Slasher's max initial damage to 30, from ~23\n" +
                             "_-_ Increased Regrowing Slasher's attack speed by ~5%\n" +
-                            "_-_ Racked enchantment's stack duration increased to 40, from 30\n"
+                            "_-_ Racked enchantment's stack duration increased to 40, from 30\n" +
+                            "_-_ You can no longer craft vault links below cycle 1\n"
         ));
 
         changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",

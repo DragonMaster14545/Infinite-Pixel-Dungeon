@@ -645,8 +645,10 @@ public class VaultLink extends Artifact {
 			boolean shulker = false;
 			boolean scroll = false;
 			boolean luck = false;
+			boolean cycler = false;
 
 			if (Badges.isUnlocked(Badges.Badge.KIT_UNLOCKED)) kit = true;
+			if (Dungeon.level != null && Dungeon.cycle > 0) cycler = true;
 
 			for (Item ingredient : ingredients){
 				if ((ingredient.quantity().compareTo(BigInteger.ZERO) > 0)) {
@@ -660,7 +662,7 @@ public class VaultLink extends Artifact {
 				}
 			}
 
-			return kit && shulker && scroll && luck;
+			return kit && shulker && scroll && luck && cycler;
 		}
 
 		@Override
