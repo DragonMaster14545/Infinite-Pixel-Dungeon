@@ -66,25 +66,29 @@ public class RingOfEnergy extends Ring {
 		return new Energy();
 	}
 	
+	private static double energyMultiplier( Char target ){
+		BigInteger bonus = getBuffedBonus(target, Energy.class);
+		double multiplier = 1d;
+		if (bonus.compareTo(BigInteger.ZERO) > 0) multiplier = 1.1d;
+		if (bonus.compareTo(BigInteger.ONE) > 0) multiplier += Big.dec(bonus).multiply(Big.dec(0.0125)).doubleValue();
+		if (Double.isNaN(multiplier)) return 1d;
+		return Math.min(multiplier, 1e300);
+	}
+
+	public static double artifactChargeMultiplierD( Char target ){
+		return energyMultiplier(target);
+	}
+
 	public static float wandChargeMultiplier( Char target ){
-        float multiplier = 1f;
-        if ((getBuffedBonus(target, Energy.class).compareTo(BigInteger.ZERO) > 0)) multiplier = 1.1f;
-        if ((getBuffedBonus(target, Energy.class).compareTo(BigInteger.ONE) > 0)) multiplier += Big.dec(getBuffedBonus(target, Energy.class)).multiply(Big.dec(0.0125)).floatValue();
-        return multiplier;
+		return (float) Math.min(energyMultiplier(target), 1e6d);
 	}
 
 	public static float artifactChargeMultiplier( Char target ){
-        float multiplier = 1f;
-        if ((getBuffedBonus(target, Energy.class).compareTo(BigInteger.ZERO) > 0)) multiplier = 1.1f;
-        if ((getBuffedBonus(target, Energy.class).compareTo(BigInteger.ONE) > 0)) multiplier += Big.dec(getBuffedBonus(target, Energy.class)).multiply(Big.dec(0.0125)).floatValue();
-        return multiplier;
+		return (float) Math.min(energyMultiplier(target), 1e6d);
 	}
 
 	public static float armorChargeMultiplier( Char target ){
-		float multiplier = 1f;
-		if ((getBuffedBonus(target, Energy.class).compareTo(BigInteger.ZERO) > 0)) multiplier = 1.1f;
-		if ((getBuffedBonus(target, Energy.class).compareTo(BigInteger.ONE) > 0)) multiplier += Big.dec(getBuffedBonus(target, Energy.class)).multiply(Big.dec(0.0125)).floatValue();
-		return multiplier;
+		return (float) Math.min(energyMultiplier(target), 1e6d);
 	}
 
 	public class Energy extends RingBuff {

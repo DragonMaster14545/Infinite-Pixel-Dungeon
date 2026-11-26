@@ -103,6 +103,10 @@ public class InfPDChanges {
                             "_-_ Revamped Battlepass UI and infinite tier rewards now changes items after each claim"
         ));
 
+        changes.addButton(new ChangeButton(new Image(Assets.Sprites.SPINNER, 144, 0, 16, 16), "Fixes",
+                "_-_ Fixed some artifacts not charging at high levels with a ring of energy above +200B \n"
+        ));
+
         changes = new ChangeInfo("A", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);

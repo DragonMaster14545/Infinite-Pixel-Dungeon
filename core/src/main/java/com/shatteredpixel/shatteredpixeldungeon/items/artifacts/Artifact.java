@@ -27,6 +27,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 
 import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -225,6 +226,30 @@ public class Artifact extends KindofMisc {
 	
 	public void charge(Hero target, float amount){
 		//do nothing by default;
+	}
+
+	protected void addPartialCharge( double amount, BigInteger cap ){
+		if (Double.isNaN( amount ) || amount <= 0) return;
+		partialCharge += amount;
+		takePartialCharge( cap );
+	}
+
+	protected void takePartialCharge( BigInteger cap ){
+		if (Double.isNaN( partialCharge ) || partialCharge < 0) partialCharge = 0;
+		if (Double.isInfinite( partialCharge )) partialCharge = Double.MAX_VALUE;
+		if (partialCharge >= 1) {
+			double whole = Math.floor( partialCharge );
+			BigInteger add = new BigDecimal( whole ).toBigInteger();
+			if (cap != null) {
+				add = add.min( cap.subtract( charge ).max( BigInteger.ZERO ) );
+			}
+			charge = charge.add( add );
+			partialCharge -= whole;
+			if (partialCharge < 0 || whole >= 9007199254740992d) partialCharge = 0;
+		}
+		if (cap != null && charge.compareTo( cap ) >= 0) {
+			partialCharge = 0;
+		}
 	}
 
 	public BigInteger getChargeCap() {

@@ -324,17 +324,14 @@ public class EtherealChains extends Artifact {
 					&& target.buff(MagicImmune.class) == null
 					&& Regeneration.regenOn()) {
 				//gains a charge in 40 - 2*missingCharge turns
-				float chargeGain = (Big.div(Big.dec(1), Big.dec(1).max(Big.dec(40f).subtract(Big.dec((chargeTarget.subtract(charge))).multiply(Big.dec(2f)))))).floatValue();
-				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
-				partialCharge += chargeGain;
+				double turns = Big.dec(40f).subtract(Big.dec((chargeTarget.subtract(charge))).multiply(Big.dec(2f))).max(Big.dec(1f)).doubleValue();
+				double chargeGain = (1d / turns) * RingOfEnergy.artifactChargeMultiplierD(target);
+				addPartialCharge( chargeGain, chargeTarget );
 			} else if (cursed && Random.Int(100) == 0) {
 				Buff.prolong(target, Cripple.class, 10f);
 			}
 
-			while (partialCharge >= 1) {
-				partialCharge--;
-				charge = charge.add(BigInteger.ONE);
-			}
+			takePartialCharge( null );
 
 			updateQuickslot();
 
@@ -350,7 +347,7 @@ public class EtherealChains extends Artifact {
 
 			//past the soft charge cap, gaining  charge from leveling is slowed.
 			if ((charge.compareTo(BigInteger.valueOf(5).add((level().multiply(BigInteger.valueOf(2))))) > 0)) {
-				levelPortion *= Big.div(Big.dec((5 + (level().floatValue() * 2))), Big.dec(charge)).floatValue();
+				levelPortion *= Big.div(Big.dec(BigInteger.valueOf(5).add(level().multiply(BigInteger.valueOf(2)))), Big.dec(charge)).floatValue();
 			}
 			partialCharge += levelPortion * 6f;
 

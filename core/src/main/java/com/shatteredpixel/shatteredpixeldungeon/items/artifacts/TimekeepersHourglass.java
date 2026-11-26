@@ -169,13 +169,7 @@ public class TimekeepersHourglass extends Artifact {
 		if ((charge.compareTo(getChargeCap()) < 0) && !cursed && target.buff(MagicImmune.class) == null){
 			partialCharge += 0.25f*amount;
 			partialCharge *= getRarityMultiplier().doubleValue();
-			while (partialCharge >= 1){
-				partialCharge--;
-				charge = charge.add(BigInteger.ONE);
-			}
-			if ((charge.compareTo(getChargeCap()) >= 0)){
-				partialCharge = 0;
-			}
+			takePartialCharge( getChargeCap() );
 			updateQuickslot();
 		}
 	}
@@ -246,18 +240,9 @@ public class TimekeepersHourglass extends Artifact {
 					&& target.buff(MagicImmune.class) == null
 					&& Regeneration.regenOn()) {
 				//90 turns to charge at full, 60 turns to charge at 0/10
-				float chargeGain = Big.div(Big.dec(1), (Big.dec(90f).subtract(Big.dec((getChargeCap().subtract(charge))).multiply(Big.dec(3f))))).floatValue();
-				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
-				partialCharge += chargeGain;
-
-				while (partialCharge >= 1) {
-					partialCharge --;
-					charge = charge.add(BigInteger.ONE);
-
-					if ((charge.compareTo(getChargeCap()) == 0)){
-						partialCharge = 0;
-					}
-				}
+				double turns = Big.dec(90f).subtract(Big.dec((getChargeCap().subtract(charge))).multiply(Big.dec(3f))).max(Big.dec(1f)).doubleValue();
+				double chargeGain = (1d / turns) * RingOfEnergy.artifactChargeMultiplierD(target);
+				addPartialCharge( chargeGain, getChargeCap() );
 			} else if (cursed && Random.Int(10) == 0)
 				((Hero) target).spend( TICK );
 

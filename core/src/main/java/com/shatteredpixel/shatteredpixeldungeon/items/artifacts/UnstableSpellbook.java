@@ -230,13 +230,7 @@ public class UnstableSpellbook extends Artifact {
 		if ((charge.compareTo(getChargeCap()) < 0) && !cursed && target.buff(MagicImmune.class) == null){
 			partialCharge += 0.1f*amount;
 			partialCharge *= getRarityMultiplier().doubleValue();
-			while (partialCharge >= 1){
-				partialCharge--;
-				charge = charge.add(BigInteger.ONE);
-			}
-			if ((charge.compareTo(getChargeCap()) >= 0)){
-				partialCharge = 0;
-			}
+			takePartialCharge( getChargeCap() );
 			updateQuickslot();
 		}
 	}
@@ -301,18 +295,9 @@ public class UnstableSpellbook extends Artifact {
 					&& target.buff(MagicImmune.class) == null
 					&& Regeneration.regenOn()) {
 				//120 turns to charge at full, 80 turns to charge at 0/8
-				float chargeGain = Big.div(Big.dec(1), (Big.dec(120f).subtract(Big.dec((getChargeCap().subtract(charge))).multiply(Big.dec(5f))))).floatValue();
-				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
-				partialCharge += chargeGain;
-
-				while (partialCharge >= 1) {
-					partialCharge --;
-					charge = charge.add(BigInteger.ONE);
-
-					if ((charge.compareTo(getChargeCap()) == 0)){
-						partialCharge = 0;
-					}
-				}
+				double turns = Big.dec(120f).subtract(Big.dec((getChargeCap().subtract(charge))).multiply(Big.dec(5f))).max(Big.dec(1f)).doubleValue();
+				double chargeGain = (1d / turns) * RingOfEnergy.artifactChargeMultiplierD(target);
+				addPartialCharge( chargeGain, getChargeCap() );
 			}
 
 			updateQuickslot();
