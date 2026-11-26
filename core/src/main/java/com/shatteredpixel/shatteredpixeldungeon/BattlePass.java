@@ -190,8 +190,8 @@ public class BattlePass {
             if (!record.premium) return null;
             if (tier == REPEATABLE_TIER) {
                 if (record.premiumRepeatableTiersClaimed >= record.repeatableTiersReached()) return null;
+                reward = BattlePassTiers.premiumRepeatableRewardAt( record.premiumRepeatableTiersClaimed );
                 record.premiumRepeatableTiersClaimed++;
-                reward = BattlePassTiers.premiumRepeatableRewardFor();
             } else {
                 if (record.premiumClaimedTiers.contains( tier )) return null;
                 record.premiumClaimedTiers.add( tier );
@@ -200,8 +200,8 @@ public class BattlePass {
         } else {
             if (tier == REPEATABLE_TIER) {
                 if (record.repeatableTiersClaimed >= record.repeatableTiersReached()) return null;
+                reward = BattlePassTiers.repeatableRewardAt( record.repeatableTiersClaimed );
                 record.repeatableTiersClaimed++;
-                reward = BattlePassTiers.repeatableRewardFor();
             } else {
                 if (record.claimedTiers.contains( tier )) return null;
                 record.claimedTiers.add( tier );
@@ -693,8 +693,8 @@ public class BattlePass {
         ArrayList<Item> extras = BattlePassTiers.premiumRewardExtrasFor( tier );
 
         if (tier == REPEATABLE_TIER) {
-            premiumRepeatableTiersClaimed++;
             bonus = BattlePassTiers.premiumRepeatableRewardFor();
+            premiumRepeatableTiersClaimed++;
         } else {
             premiumClaimedTiers.add( tier );
             bonus = BattlePassTiers.premiumRewardFor( tier );
@@ -727,8 +727,8 @@ public class BattlePass {
         ArrayList<Item> extras = BattlePassTiers.rewardExtrasFor( tier );
 
         if (tier == REPEATABLE_TIER){
-            repeatableTiersClaimed++;
             Item reward = BattlePassTiers.repeatableRewardFor();
+            repeatableTiersClaimed++;
             if (reward != null && Dungeon.hero != null){
                 reward.collect();
                 result = reward;

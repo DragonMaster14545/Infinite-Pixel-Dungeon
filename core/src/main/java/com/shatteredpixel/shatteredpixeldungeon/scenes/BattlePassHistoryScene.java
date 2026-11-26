@@ -27,10 +27,6 @@ package com.shatteredpixel.shatteredpixeldungeon.scenes;
 import com.shatteredpixel.shatteredpixeldungeon.BattlePass;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
-import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
-import com.shatteredpixel.shatteredpixeldungeon.items.test_tubes.Tubes;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Archs;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
@@ -44,11 +40,11 @@ import java.util.List;
 
 public class BattlePassHistoryScene extends PixelScene {
 
-    private static final int ROW_HEIGHT = 24;
-    private static final int ROW_GAP    = 2;
-    private static final int MARGIN     = 8;
-    private static final int HEADER_H   = 32;
-    private static final int FOOTER_H   = 28;
+    private static final int ROW_HEIGHT = 30;
+    private static final int ROW_GAP    = 3;
+    private static final int MARGIN     = BattlePassUI.MARGIN;
+    private static final int BTN_H      = 20;
+    private static final int FOOTER_H   = BTN_H + 12;
 
     @Override
     public void create() {
@@ -56,71 +52,69 @@ public class BattlePassHistoryScene extends PixelScene {
 
         int w = Camera.main.width;
         int h = Camera.main.height;
+        float inner = w - MARGIN * 2;
 
         Archs archs = new Archs();
         archs.setSize( w, h );
         add( archs );
 
         RenderedTextBlock title = renderTextBlock( Messages.get( this, "title" ), 12 );
-        title.hardlight( 0xFFFF44 );
+        title.hardlight( BattlePassUI.GOLD );
         title.setPos( (w - title.width()) / 2f, 6 );
         align( title );
         add( title );
 
         List<BattlePass.MonthRecord> history = BattlePass.history();
 
+        RenderedTextBlock summary = renderTextBlock( Messages.get( this, "summary", history.size() ), 8 );
+        summary.hardlight( BattlePassUI.GREY );
+        summary.setPos( (w - summary.width()) / 2f, title.bottom() + 3 );
+        align( summary );
+        add( summary );
+
         Component content = new Component();
-        final ArrayList<StyledButton> rows = new ArrayList<>();
+        final ArrayList<SeasonRow> rows = new ArrayList<>();
 
+        int y = 0;
         if (history.isEmpty()) {
-
             RenderedTextBlock empty = renderTextBlock( Messages.get( this, "empty" ), 9 );
+            empty.maxWidth( (int) inner );
             empty.setPos( 0, 0 );
             content.add( empty );
-            content.setSize( w - MARGIN*2, (int)empty.height() );
-
+            y = (int) empty.height();
         } else {
-
-            int y = 0;
             for (final BattlePass.MonthRecord rec : history) {
-                StyledButton row = new StyledButton( Chrome.Type.GREY_BUTTON_TR,
-                        Messages.get( this, "row", rec.label(), rec.tiersReached(), BattlePass.TIER_XP.length ) ){
-                    @Override
-                    public void onClick(){
-                        BattlePassScene.seeMonth( rec.monthKey );
-                    }
-                };
-                row.setRect( 0, y, w - MARGIN*2, ROW_HEIGHT );
+                SeasonRow row = new SeasonRow( rec );
+                row.setRect( 0, y, inner, ROW_HEIGHT );
                 content.add( row );
                 rows.add( row );
                 y += ROW_HEIGHT + ROW_GAP;
             }
-            content.setSize( w - MARGIN*2, Math.max( 0, y - ROW_GAP ) );
         }
+        content.setSize( inner, Math.max( 0, y - ROW_GAP ) );
 
-        int listTop = HEADER_H;
-        int listHeight = h - HEADER_H - FOOTER_H;
+        int listTop = (int) summary.bottom() + 6;
         ScrollPane list = new ScrollPane( content ) {
             @Override
             public void onClick( float x, float y ) {
-                for (StyledButton row : rows) {
-                    if (x >= row.left() && x <= row.right() && y >= row.top() && y <= row.bottom()) {
-                        row.onClick();
+                for (SeasonRow row : rows) {
+                    if (row.hit( x, y )) {
+                        row.open();
                         break;
                     }
                 }
             }
         };
         add( list );
-        list.setRect( MARGIN, listTop, w - MARGIN*2, listHeight );
+        list.setRect( MARGIN, listTop, inner, h - listTop - FOOTER_H );
 
-        StyledButton btnBack = new StyledButton( Chrome.Type.GREY_BUTTON_TR, Messages.get( this, "back" ) ){
+        StyledButton btnBack = new StyledButton( Chrome.Type.GREY_BUTTON_TR, Messages.get( this, "back" ), 8 ){
             @Override
             public void onClick(){
                 onBackPressed();
             }
         };
-        btnBack.setRect( (w - 100) / 2f, h - FOOTER_H + 4, 100, FOOTER_H - 8 );
+        btnBack.setRect( MARGIN, h - FOOTER_H + 6, inner, BTN_H );
         add( btnBack );
 
         fadeIn();
@@ -129,5 +123,70 @@ public class BattlePassHistoryScene extends PixelScene {
     @Override
     protected void onBackPressed(){
         ShatteredPixelDungeon.switchNoFade( BattlePassScene.class );
+    }
+
+    private class SeasonRow extends Component {
+
+        private final BattlePass.MonthRecord rec;
+        private BattlePassUI.Panel panel;
+        private RenderedTextBlock name;
+        private RenderedTextBlock tag;
+        private BattlePassUI.Bar bar;
+
+        SeasonRow( BattlePass.MonthRecord rec ){
+            super();
+            this.rec = rec;
+            layout();
+        }
+
+        boolean hit( float px, float py ){
+            return px >= x && px <= x + width && py >= y && py <= y + height;
+        }
+
+        void open(){
+            BattlePassScene.seeMonth( rec.monthKey );
+        }
+
+        @Override
+        protected void createChildren(){
+            panel = new BattlePassUI.Panel();
+            add( panel );
+
+            name = PixelScene.renderTextBlock( 8 );
+            add( name );
+
+            tag = PixelScene.renderTextBlock( 7 );
+            add( tag );
+
+            bar = new BattlePassUI.Bar();
+            add( bar );
+        }
+
+        @Override
+        protected void layout(){
+            if (rec == null || panel == null) return;
+            panel.setRect( x, y, width, height );
+            panel.style( rec.premium ? BattlePassUI.PURPLE : 0xFFFFFF, 0.10f, 0x000000, 0.8f );
+
+            name.text( rec.label() );
+            name.hardlight( BattlePassUI.GREY );
+            name.setPos( x + 5, y + 4 );
+
+            if (rec.premium) {
+                tag.text( Messages.get( BattlePassHistoryScene.class, "premium" ) );
+                tag.hardlight( BattlePassUI.GOLD );
+                tag.setPos( x + width - tag.width() - 5, y + 4 );
+                tag.visible = true;
+            } else {
+                tag.visible = false;
+            }
+
+            int total = BattlePass.TIER_XP.length;
+            int reached = rec.tiersReached();
+            bar.setRect( x + 5, y + height - 13, width - 10, 9 );
+            bar.set( reached / (float) Math.max( 1, total ),
+                    Messages.get( BattlePassHistoryScene.class, "tiers", reached, total ),
+                    reached >= total ? BattlePassUI.GREEN : BattlePassUI.GOLD );
+        }
     }
 }

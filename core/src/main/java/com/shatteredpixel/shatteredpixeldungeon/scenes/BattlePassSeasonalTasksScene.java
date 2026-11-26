@@ -24,6 +24,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+import java.math.BigInteger;
+
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.SeasonalTasks;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -32,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.Archs;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ScrollPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.StyledButton;
+import com.shatteredpixel.shatteredpixeldungeon.utils.Big;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.ui.Component;
@@ -40,13 +43,14 @@ import java.util.ArrayList;
 
 public class BattlePassSeasonalTasksScene extends PixelScene {
 
-    private static final int ROW_HEIGHT = 24;
-    private static final int ROW_GAP    = 2;
-    private static final int MARGIN     = 8;
-    private static final int HEADER_H   = 40;
-    private static final int FOOTER_H   = 28;
+    private static final int ROW_HEIGHT = 36;
+    private static final int ROW_GAP    = 3;
+    private static final int MARGIN     = BattlePassUI.MARGIN;
+    private static final int BTN_H      = 20;
+    private static final int FOOTER_H   = BTN_H + 12;
 
     private final ArrayList<TaskRow> rows = new ArrayList<>();
+    private RenderedTextBlock summary;
 
     @Override
     public void create() {
@@ -54,22 +58,31 @@ public class BattlePassSeasonalTasksScene extends PixelScene {
 
         int w = Camera.main.width;
         int h = Camera.main.height;
+        float inner = w - MARGIN * 2;
 
         Archs archs = new Archs();
         archs.setSize( w, h );
         add( archs );
 
         RenderedTextBlock title = renderTextBlock( Messages.get( this, "title" ), 12 );
-        title.hardlight( 0xFFD700 );
+        title.hardlight( BattlePassUI.GOLD );
         title.setPos( (w - title.width()) / 2f, 6 );
         align( title );
         add( title );
 
-        RenderedTextBlock notice = renderTextBlock( Messages.get( this, "notice" ), 9 );
-        notice.hardlight( 0xCACFC2 );
-        notice.setPos( (w - notice.width()) / 2f, title.bottom() + 4 );
+        RenderedTextBlock notice = renderTextBlock( Messages.get( this, "notice" ), 8 );
+        notice.hardlight( BattlePassUI.GREY );
+        notice.maxWidth( (int) inner );
+        notice.setPos( (w - notice.width()) / 2f, title.bottom() + 3 );
         align( notice );
         add( notice );
+
+        summary = renderTextBlock( "", 8 );
+        summary.hardlight( BattlePassUI.GREEN );
+        add( summary );
+        updateSummary();
+        summary.setPos( (w - summary.width()) / 2f, notice.bottom() + 3 );
+        align( summary );
 
         Component content = new Component();
 
@@ -77,22 +90,22 @@ public class BattlePassSeasonalTasksScene extends PixelScene {
         int y = 0;
         if (SeasonalTasks.tasks.isEmpty()) {
             RenderedTextBlock empty = renderTextBlock( Messages.get( this, "empty" ), 9 );
+            empty.maxWidth( (int) inner );
             empty.setPos( 0, 0 );
             content.add( empty );
             y = (int) empty.height();
         } else {
             for (SeasonalTasks.Task task : SeasonalTasks.tasks) {
                 TaskRow row = new TaskRow( task );
-                row.setRect( 0, y, w - MARGIN*2, ROW_HEIGHT );
+                row.setRect( 0, y, inner, ROW_HEIGHT );
                 content.add( row );
                 rows.add( row );
                 y += ROW_HEIGHT + ROW_GAP;
             }
         }
-        content.setSize( w - MARGIN*2, Math.max( 0, y - ROW_GAP ) );
+        content.setSize( inner, Math.max( 0, y - ROW_GAP ) );
 
-        int listTop = (int) notice.bottom() + 6;
-        int listHeight = h - listTop - FOOTER_H;
+        int listTop = (int) summary.bottom() + 6;
         ScrollPane list = new ScrollPane( content ) {
             @Override
             public void onClick( float x, float y ) {
@@ -104,18 +117,24 @@ public class BattlePassSeasonalTasksScene extends PixelScene {
             }
         };
         add( list );
-        list.setRect( MARGIN, listTop, w - MARGIN*2, listHeight );
+        list.setRect( MARGIN, listTop, inner, h - listTop - FOOTER_H );
 
-        StyledButton btnBack = new StyledButton( Chrome.Type.GREY_BUTTON_TR, Messages.get( this, "back" ) ){
+        StyledButton btnBack = new StyledButton( Chrome.Type.GREY_BUTTON_TR, Messages.get( this, "back" ), 8 ){
             @Override
             public void onClick(){
                 onBackPressed();
             }
         };
-        btnBack.setRect( (w - 100) / 2f, h - FOOTER_H + 4, 100, FOOTER_H - 8 );
+        btnBack.setRect( MARGIN, h - FOOTER_H + 6, inner, BTN_H );
         add( btnBack );
 
         fadeIn();
+    }
+
+    private void updateSummary(){
+        int done = 0;
+        for (SeasonalTasks.Task t : SeasonalTasks.tasks) if (t.claimed) done++;
+        summary.text( Messages.get( this, "summary", done, SeasonalTasks.tasks.size() ) );
     }
 
     @Override
@@ -127,22 +146,37 @@ public class BattlePassSeasonalTasksScene extends PixelScene {
         for (TaskRow row : rows) {
             row.layout();
         }
+        updateSummary();
     }
 
     private class TaskRow extends Component {
 
         private final SeasonalTasks.Task task;
+        private BattlePassUI.Panel panel;
         private RenderedTextBlock label;
+        private RenderedTextBlock status;
+        private BattlePassUI.Bar bar;
         private StyledButton btnClaim;
 
         TaskRow( SeasonalTasks.Task task ){
+            super();
             this.task = task;
+            layout();
         }
 
         @Override
         protected void createChildren(){
-            label = PixelScene.renderTextBlock( 9 );
+            panel = new BattlePassUI.Panel();
+            add( panel );
+
+            label = PixelScene.renderTextBlock( 8 );
             add( label );
+
+            status = PixelScene.renderTextBlock( 7 );
+            add( status );
+
+            bar = new BattlePassUI.Bar();
+            add( bar );
 
             btnClaim = new StyledButton( Chrome.Type.RED_BUTTON, Messages.get( BattlePassSeasonalTasksScene.class, "claim" ), 8 ){
                 @Override
@@ -160,10 +194,10 @@ public class BattlePassSeasonalTasksScene extends PixelScene {
             }
         }
 
-        boolean tryClaimClick( float x, float y ){
+        boolean tryClaimClick( float px, float py ){
             if (btnClaim.visible && btnClaim.active
-                    && x >= btnClaim.left() && x <= btnClaim.right()
-                    && y >= btnClaim.top() && y <= btnClaim.bottom()) {
+                    && px >= btnClaim.left() && px <= btnClaim.right()
+                    && py >= btnClaim.top() && py <= btnClaim.bottom()) {
                 claim();
                 return true;
             }
@@ -172,17 +206,45 @@ public class BattlePassSeasonalTasksScene extends PixelScene {
 
         @Override
         protected void layout(){
-            String status = task.claimed
+            if (task == null || panel == null) return;
+
+            boolean ready = task.completed && !task.claimed;
+            if (ready) {
+                panel.style( BattlePassUI.GOLD, 0.22f, BattlePassUI.GOLD, 1f );
+            } else if (task.claimed) {
+                panel.style( BattlePassUI.GREEN, 0.10f, 0x000000, 0.8f );
+            } else {
+                panel.style( 0xFFFFFF, 0.10f, 0x000000, 0.8f );
+            }
+            panel.setRect( x, y, width, height );
+
+            float btnW = 40;
+            btnClaim.visible = btnClaim.active = ready;
+            btnClaim.setRect( x + width - btnW - 4, y + 4, btnW, height - 8 );
+
+            String st = task.claimed
                     ? Messages.get( BattlePassSeasonalTasksScene.class, "claimed" )
                     : task.completed
                       ? Messages.get( BattlePassSeasonalTasksScene.class, "ready" )
-                      : task.progress + "/" + task.target;
+                      : "";
+            status.text( st );
+            status.hardlight( task.claimed ? BattlePassUI.GREEN : BattlePassUI.GOLD );
+            status.visible = !st.isEmpty() && !ready;
+            status.setPos( x + width - status.width() - 5, y + 4 );
 
-            label.text( task.description() + "\n" + status );
-            label.setPos( x + 4, y + (height() - label.height()) / 2f );
+            float textRight = (ready ? btnClaim.left() : (status.visible ? status.left() : x + width - 4)) - 4;
+            label.text( task.description() );
+            label.hardlight( task.claimed ? 0x888888 : BattlePassUI.GREY );
+            label.maxWidth( (int) Math.max( 20, textRight - (x + 5) ) );
+            label.setPos( x + 5, y + 4 );
 
-            btnClaim.visible = btnClaim.active = task.completed && !task.claimed;
-            btnClaim.setRect( x + width() - 44, y + 2, 40, height() - 4 );
+            float barW = (ready ? btnClaim.left() - 4 : x + width - 5) - (x + 5);
+            bar.setRect( x + 5, y + height - 13, Math.max( 10, barW ), 9 );
+            BigInteger target = task.target == null ? BigInteger.ONE : task.target;
+            BigInteger prog = task.progress == null ? BigInteger.ZERO : task.progress;
+            bar.set( BattlePassUI.frac( prog.min( target ), target ),
+                    Big.fmt( prog.min( target ) ) + " / " + Big.fmt( target ),
+                    task.claimed ? BattlePassUI.GREEN : BattlePassUI.GOLD );
         }
     }
 }

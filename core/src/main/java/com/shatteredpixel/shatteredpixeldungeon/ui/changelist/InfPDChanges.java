@@ -98,6 +98,11 @@ public class InfPDChanges {
                             "_-_ Racked enchantment's stack duration increased to 40, from 30\n"
         ));
 
+        changes.addButton( new ChangeButton(Icons.get(Icons.PREFS), "Other Changes",
+                "_-_ Equipments' value can now be multiplied by rarity\n" +
+                            "_-_ Revamped Battlepass UI and infinite tier rewards now changes items after each claim"
+        ));
+
         changes = new ChangeInfo("A", false, "");
         changes.hardlight(0x00FFFF);
         changeInfos.add(changes);

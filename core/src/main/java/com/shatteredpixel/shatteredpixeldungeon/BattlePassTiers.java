@@ -102,10 +102,9 @@ public class BattlePassTiers {
         premiumRewardCache.clear();
         rewardExtraCache.clear();
         premiumRewardExtraCache.clear();
-        repeatableItemClass = null;
-        repeatableItemClassKey = null;
-        premiumRepeatableItemClass = null;
-        premiumRepeatableItemClassKey = null;
+        repeatableClasses.clear();
+        premiumRepeatableClasses.clear();
+        repeatableClassesMonth = null;
     }
 
     public static HashMap<Integer, Item> rewardSnapshot() {
@@ -199,70 +198,64 @@ public class BattlePassTiers {
         premiumRewardCache.putAll( snapshot );
     }
 
-    private static Class<? extends Item> repeatableItemClass;
-    private static String repeatableItemClassKey;
+    private static final HashMap<Integer, Class<? extends Item>> repeatableClasses = new HashMap<>();
+    private static final HashMap<Integer, Class<? extends Item>> premiumRepeatableClasses = new HashMap<>();
+    private static String repeatableClassesMonth;
 
-    private static Class<? extends Item> generateRepeatableItem(){
+    private static Class<? extends Item> pickRepeatable( String tag, int index, HashMap<Integer, Class<? extends Item>> cache ){
         String monthKey = BattlePass.currentMonthKey();
-        if (!monthKey.equals( repeatableItemClassKey )){
-            Generator.Category[] categories = Generator.Category.values();
-            long hash = 1125899906842597L;
-            String seed = monthKey + ":repeat";
-            for (int i = 0; i < seed.length(); i++){
-                hash = 31*hash + seed.charAt(i);
-            }
-            int index = (int) Math.floorMod( hash, categories.length );
-            Item sample = Generator.random( categories[index] );
-            while (sample instanceof Tubes) {
-                sample = Generator.random( categories[index] );
-            } 
-            repeatableItemClass = sample != null ? sample.getClass() : null;
-            repeatableItemClassKey = monthKey;
+        if (!monthKey.equals( repeatableClassesMonth )){
+            repeatableClasses.clear();
+            premiumRepeatableClasses.clear();
+            repeatableClassesMonth = monthKey;
         }
-        return repeatableItemClass;
+        if (cache.containsKey( index )) return cache.get( index );
+        Generator.Category[] categories = Generator.Category.values();
+        long hash = 1125899906842597L;
+        String seed = monthKey + ":" + tag + ":" + index;
+        for (int i = 0; i < seed.length(); i++){
+            hash = 31*hash + seed.charAt(i);
+        }
+        int catIndex = (int) Math.floorMod( hash, categories.length );
+        Class<? extends Item> result = null;
+        com.watabou.utils.Random.pushGenerator( hash );
+        try {
+            Item sample = Generator.random( categories[catIndex] );
+            int guard = 0;
+            while (sample instanceof Tubes && guard++ < 50) {
+                sample = Generator.random( categories[catIndex] );
+            }
+            if (sample != null && !(sample instanceof Tubes)) result = sample.getClass();
+        } finally {
+            com.watabou.utils.Random.popGenerator();
+        }
+        cache.put( index, result );
+        return result;
+    }
+
+    private static Item instance( Class<? extends Item> cls ){
+        if (cls == null) return null;
+        try {
+            return cls.newInstance();
+        } catch (Exception e){
+            return null;
+        }
+    }
+
+    public static Item repeatableRewardAt( int index ){
+        return instance( pickRepeatable( "repeat", index, repeatableClasses ) );
+    }
+
+    public static Item premiumRepeatableRewardAt( int index ){
+        return instance( pickRepeatable( "premiumRepeat", index, premiumRepeatableClasses ) );
     }
 
     public static Item repeatableRewardFor(){
-        Class<? extends Item> cls = generateRepeatableItem();
-        if (cls == null) return null;
-        try {
-            return cls.newInstance();
-        } catch (Exception e){
-            return null;
-        }
-    }
-
-    private static Class<? extends Item> premiumRepeatableItemClass;
-    private static String premiumRepeatableItemClassKey;
-
-    private static Class<? extends Item> generatePremiumRepeatableItem(){
-        String monthKey = BattlePass.currentMonthKey();
-        if (!monthKey.equals( premiumRepeatableItemClassKey )){
-            Generator.Category[] categories = Generator.Category.values();
-            long hash = 1125899906842597L;
-            String seed = monthKey + ":premiumRepeat";
-            for (int i = 0; i < seed.length(); i++){
-                hash = 31*hash + seed.charAt(i);
-            }
-            int index = (int) Math.floorMod( hash, categories.length );
-            Item sample = Generator.random( categories[index] );
-            while (sample instanceof Tubes) {
-                sample = Generator.random( categories[index] );
-            } 
-            premiumRepeatableItemClass = sample != null ? sample.getClass() : null;
-            premiumRepeatableItemClassKey = monthKey;
-        }
-        return premiumRepeatableItemClass;
+        return repeatableRewardAt( BattlePass.repeatableTiersClaimed );
     }
 
     public static Item premiumRepeatableRewardFor(){
-        Class<? extends Item> cls = generatePremiumRepeatableItem();
-        if (cls == null) return null;
-        try {
-            return cls.newInstance();
-        } catch (Exception e){
-            return null;
-        }
+        return premiumRepeatableRewardAt( BattlePass.premiumRepeatableTiersClaimed );
     }
 
     private static final double BONUS_ITEM_CHANCE = 0.2;
